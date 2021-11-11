@@ -1,0 +1,444 @@
+﻿<dialogs:BaseDialogUserControl
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:dx="http://schemas.devexpress.com/winfx/2008/xaml/core"
+    xmlns:dxe="http://schemas.devexpress.com/winfx/2008/xaml/editors"
+    xmlns:dxlc="http://schemas.devexpress.com/winfx/2008/xaml/layoutcontrol"
+    xmlns:dxmvvm="http://schemas.devexpress.com/winfx/2008/xaml/mvvm"
+    xmlns:components="clr-namespace:RetailTradeServer.Components"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:dialogs="clr-namespace:RetailTradeServer.Dialogs"
+    x:Class="RetailTradeServer.Views.Dialogs.CreateProductDialogForm"
+                               Width="600"
+    Height="400"
+    KeyUp="BaseDialogUserControl_KeyUp">
+
+
+
+    <dxmvvm:Interaction.Behaviors>
+        <dxmvvm:EventToCommand Event="PreviewTextInput" Command="{Binding PreviewTextInputCommand}"/>
+    </dxmvvm:Interaction.Behaviors>
+
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+
+        <dx:DXTabControl Grid.Row="0">
+
+            <dxmvvm:Interaction.Behaviors>
+                <dxmvvm:EventToCommand EventName="SelectionChanging" 
+                                   Command="{Binding TabSelectionChangingCommand}"
+                                   PassEventArgsToCommand="True"/>
+            </dxmvvm:Interaction.Behaviors>
+
+            <dx:DXTabItem Header="Штучные товары">
+                <dxlc:LayoutControl ItemSpace="15"
+                                Orientation="Vertical">
+
+                    <dxlc:LayoutGroup Orientation="Vertical">
+
+                        <dxlc:LayoutItem Label="Поставщик">
+                            <dxe:ComboBoxEdit ItemsSource="{Binding Suppliers}"
+                                          DisplayMember="ShortName"
+                                          ValueMember="Id"
+                                          IncrementalSearch="True"
+                                          AutoComplete="True"
+                                          EditValue="{Binding SelectedSupplierId, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
+
+                                <dxe:ComboBoxEdit.Buttons>
+                                    <dxe:ButtonInfo GlyphKind="Plus" Command="{Binding CreateSupplierCommand}"/>
+                                </dxe:ComboBoxEdit.Buttons>
+
+                            </dxe:ComboBoxEdit>
+                        </dxlc:LayoutItem>
+
+                        <dxlc:LayoutItem Label="Штрих код">
+                            <dxe:TextEdit Text="{Binding Barcode, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+                        </dxlc:LayoutItem>
+
+                        <dxlc:LayoutItem Label="Наименование товара">
+                            <dxe:TextEdit Text="{Binding Name, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+                        </dxlc:LayoutItem>
+
+                        <dxlc:LayoutItem Label="Группа товара">
+                            <dxe:ComboBoxEdit ItemsSource="{Binding ProductCategories}"
+                                          DisplayMember="Name"
+                                          ValueMember="Id"
+                                          IncrementalSearch="True"
+                                          AutoComplete="True"
+                                          EditValue="{Binding SelectedProductCategoryId, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
+
+                                <dxe:ComboBoxEdit.Buttons>
+                                    <dxe:ButtonInfo GlyphKind="Plus" Command="{Binding CreateProductCategoryCommand}"/>
+                                </dxe:ComboBoxEdit.Buttons>
+
+                            </dxe:ComboBoxEdit>
+                        </dxlc:LayoutItem>
+
+                        <dxlc:LayoutItem Label="Категория товара">
+                            <dxe:ComboBoxEdit ItemsSource="{Binding ProductSubCategories}"
+                                          DisplayMember="Name"
+                                          ValueMember="Id"
+                                          IncrementalSearch="True"
+                                          AutoComplete="True"
+                                          EditValue="{Binding SelectedProductSubcategoryId, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
+
+                                <dxe:ComboBoxEdit.Buttons>
+                                    <dxe:ButtonInfo GlyphKind="Plus" Command="{Binding CreateProductSubcategoryCommand}"/>
+                                </dxe:ComboBoxEdit.Buttons>
+
+                            </dxe:ComboBoxEdit>
+                        </dxlc:LayoutItem>
+
+                        <dxlc:LayoutItem Label="Единица измерения">
+                            <dxe:ComboBoxEdit ItemsSource="{Binding Units}"
+                                          DisplayMember="ShortName"
+                                          ValueMember="Id"
+                                          IncrementalSearch="True"
+                                          AutoComplete="True"
+                                          EditValue="{Binding SelectedUnitId, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+                        </dxlc:LayoutItem>
+
+                        <dxlc:LayoutItem Label="Цена приход">
+                            <dxe:TextEdit Text="{Binding ArrivalPrice, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" 
+                                      MaskType="Numeric"
+                                      MaskUseAsDisplayFormat="True"
+                                      SelectAllOnMouseUp="True"/>
+                        </dxlc:LayoutItem>
+
+                        <dxlc:LayoutItem Label="Цена продажи">
+                            <dxe:TextEdit Text="{Binding SalePrice, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" 
+                                      MaskType="Numeric"
+                                      MaskUseAsDisplayFormat="True"
+                                      SelectAllOnMouseUp="True"/>
+                        </dxlc:LayoutItem>
+
+                        <dxlc:LayoutItem Label="ТН ВЭД">
+                            <dxe:TextEdit Text="{Binding TNVED, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" 
+                                      MaskType="Numeric"/>
+                        </dxlc:LayoutItem>
+
+                        <dxlc:LayoutGroup Orientation="Horizontal"
+                                      HorizontalAlignment="Right"
+                                      VerticalAlignment="Top">
+
+                            <Button Content="Сохранить"
+                                Command="{Binding SavePieceProductCommand}"/>
+
+                            <Button Content="Отменить"
+                                Margin="5 0 0 0"
+                                Command="{Binding CloseCommand}"
+                                IsEnabled="False"/>
+
+                        </dxlc:LayoutGroup>
+
+                    </dxlc:LayoutGroup>
+
+                </dxlc:LayoutControl>
+            </dx:DXTabItem>
+
+            <dx:DXTabItem Header="Фасованные товары">
+                <dxlc:LayoutControl ItemSpace="15"
+                                Orientation="Vertical">
+
+                    <dxlc:LayoutGroup Orientation="Vertical">
+
+                        <dxlc:LayoutItem Label="Поставщик">
+                            <dxe:ComboBoxEdit ItemsSource="{Binding Suppliers}"
+                                          DisplayMember="ShortName"
+                                          ValueMember="Id"
+                                          IncrementalSearch="True"
+                                          AutoComplete="True"
+                                          EditValue="{Binding SelectedSupplierId, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
+
+                                <dxe:ComboBoxEdit.Buttons>
+                                    <dxe:ButtonInfo GlyphKind="Plus" Command="{Binding CreateSupplierCommand}"/>
+                                </dxe:ComboBoxEdit.Buttons>
+
+                            </dxe:ComboBoxEdit>
+                        </dxlc:LayoutItem>
+
+                        <dxlc:LayoutItem Label="Наименование товара">
+                            <dxe:TextEdit Text="{Binding Name, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+                        </dxlc:LayoutItem>
+
+                        <dxlc:LayoutItem Label="Группа товара">
+                            <dxe:ComboBoxEdit ItemsSource="{Binding ProductCategories}"
+                                          DisplayMember="Name"
+                                          ValueMember="Id"
+                                          IncrementalSearch="True"
+                                          AutoComplete="True"
+                                          EditValue="{Binding SelectedProductCategoryId, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
+
+                                <dxe:ComboBoxEdit.Buttons>
+                                    <dxe:ButtonInfo GlyphKind="Plus" Command="{Binding CreateProductCategoryCommand}"/>
+                                </dxe:ComboBoxEdit.Buttons>
+
+                            </dxe:ComboBoxEdit>
+                        </dxlc:LayoutItem>
+
+                        <dxlc:LayoutItem Label="Категория товара">
+                            <dxe:ComboBoxEdit ItemsSource="{Binding ProductSubCategories}"
+                                          DisplayMember="Name"
+                                          ValueMember="Id"
+                                          IncrementalSearch="True"
+                                          AutoComplete="True"
+                                          EditValue="{Binding SelectedProductSubcategoryId, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
+
+                                <dxe:ComboBoxEdit.Buttons>
+                                    <dxe:ButtonInfo GlyphKind="Plus" Command="{Binding CreateProductSubcategoryCommand}"/>
+                                </dxe:ComboBoxEdit.Buttons>
+
+                            </dxe:ComboBoxEdit>
+                        </dxlc:LayoutItem>
+
+                        <dxlc:LayoutItem Label="Единица измерения">
+                            <dxe:ComboBoxEdit ItemsSource="{Binding Units}"
+                                          DisplayMember="ShortName"
+                                          ValueMember="Id"
+                                          IncrementalSearch="True"
+                                          AutoComplete="True"
+                                          EditValue="{Binding SelectedUnitId, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+                        </dxlc:LayoutItem>
+
+                        <dxlc:LayoutItem Label="Цена приход">
+                            <dxe:TextEdit Text="{Binding ArrivalPrice, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" 
+                              MaskType="Numeric"/>
+                        </dxlc:LayoutItem>
+
+                        <dxlc:LayoutItem Label="Цена продажи">
+                            <dxe:TextEdit Text="{Binding SalePrice, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" 
+                                  MaskType="Numeric"/>
+                        </dxlc:LayoutItem>
+
+                        <dxlc:LayoutItem Label="ТН ВЭД">
+                            <dxe:TextEdit Text="{Binding TNVED, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" 
+                                  MaskType="Numeric"/>
+                        </dxlc:LayoutItem>
+
+                        <dxlc:LayoutGroup Orientation="Horizontal"
+                                      HorizontalAlignment="Right"
+                                      VerticalAlignment="Top">
+
+                            <Button Content="Сохранить"
+                            Command="{Binding SavePackagedProductCommand}"/>
+
+                            <Button Content="Отменить"
+                        Margin="5 0 0 0"
+                        Command="{Binding CloseCommand}"
+                        IsEnabled="False"/>
+
+                        </dxlc:LayoutGroup>
+
+                    </dxlc:LayoutGroup>
+
+                </dxlc:LayoutControl>
+
+            </dx:DXTabItem>
+
+            <dx:DXTabItem Header="Весовые товары">
+                <dxlc:LayoutControl ItemSpace="15"
+                                Orientation="Vertical">
+
+                    <dxlc:LayoutGroup Orientation="Vertical">
+
+                        <dxlc:LayoutItem Label="Поставщик">
+                            <dxe:ComboBoxEdit ItemsSource="{Binding Suppliers}"
+                                          DisplayMember="ShortName"
+                                          ValueMember="Id"
+                                          IncrementalSearch="True"
+                                          AutoComplete="True"
+                                          EditValue="{Binding SelectedSupplierId, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
+
+                                <dxe:ComboBoxEdit.Buttons>
+                                    <dxe:ButtonInfo GlyphKind="Plus" Command="{Binding CreateSupplierCommand}"/>
+                                </dxe:ComboBoxEdit.Buttons>
+
+                            </dxe:ComboBoxEdit>
+                        </dxlc:LayoutItem>
+
+                        <dxlc:LayoutItem Label="Наименование товара">
+                            <dxe:TextEdit Text="{Binding Name, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+                        </dxlc:LayoutItem>
+
+                        <dxlc:LayoutItem Label="Группа товара">
+                            <dxe:ComboBoxEdit ItemsSource="{Binding ProductCategories}"
+                                          DisplayMember="Name"
+                                          ValueMember="Id"
+                                          IncrementalSearch="True"
+                                          AutoComplete="True"
+                                          EditValue="{Binding SelectedProductCategoryId, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
+
+                                <dxe:ComboBoxEdit.Buttons>
+                                    <dxe:ButtonInfo GlyphKind="Plus" Command="{Binding CreateProductCategoryCommand}"/>
+                                </dxe:ComboBoxEdit.Buttons>
+
+                            </dxe:ComboBoxEdit>
+                        </dxlc:LayoutItem>
+
+                        <dxlc:LayoutItem Label="Категория товара">
+                            <dxe:ComboBoxEdit ItemsSource="{Binding ProductSubCategories}"
+                                          DisplayMember="Name"
+                                          ValueMember="Id"
+                                          IncrementalSearch="True"
+                                          AutoComplete="True"
+                                          EditValue="{Binding SelectedProductSubcategoryId, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
+
+                                <dxe:ComboBoxEdit.Buttons>
+                                    <dxe:ButtonInfo GlyphKind="Plus" Command="{Binding CreateProductSubcategoryCommand}"/>
+                                </dxe:ComboBoxEdit.Buttons>
+
+                            </dxe:ComboBoxEdit>
+                        </dxlc:LayoutItem>
+
+                        <dxlc:LayoutItem Label="Единица измерения">
+                            <dxe:ComboBoxEdit ItemsSource="{Binding Units}"
+                                          DisplayMember="ShortName"
+                                          ValueMember="Id"
+                                          IncrementalSearch="True"
+                                          AutoComplete="True"
+                                          EditValue="{Binding SelectedUnitId, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+                        </dxlc:LayoutItem>
+
+                        <dxlc:LayoutItem Label="Цена приход">
+                            <dxe:TextEdit Text="{Binding ArrivalPrice, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" 
+                              MaskType="Numeric"/>
+                        </dxlc:LayoutItem>
+
+                        <dxlc:LayoutItem Label="Цена продажи">
+                            <dxe:TextEdit Text="{Binding SalePrice, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" 
+                                  MaskType="Numeric"/>
+                        </dxlc:LayoutItem>
+
+                        <dxlc:LayoutItem Label="ТН ВЭД">
+                            <dxe:TextEdit Text="{Binding TNVED, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" 
+                                  MaskType="Numeric"/>
+                        </dxlc:LayoutItem>
+
+                        <dxlc:LayoutGroup Orientation="Horizontal"
+                                      HorizontalAlignment="Right"
+                                      VerticalAlignment="Top">
+
+                            <Button Content="Сохранить"
+                            Command="{Binding SaveWeightProductCommand}"/>
+
+                            <Button Content="Отменить"
+                        Margin="5 0 0 0"
+                        Command="{Binding CloseCommand}"
+                        IsEnabled="False"/>
+
+                        </dxlc:LayoutGroup>
+
+                    </dxlc:LayoutGroup>
+
+                </dxlc:LayoutControl>
+            </dx:DXTabItem>
+
+            <dx:DXTabItem Header="Товары без штрихкода">
+                <dxlc:LayoutControl ItemSpace="15"
+                                Orientation="Vertical">
+
+                    <dxlc:LayoutGroup Orientation="Vertical">
+
+                        <dxlc:LayoutItem Label="Поставщик">
+                            <dxe:ComboBoxEdit ItemsSource="{Binding Suppliers}"
+                                          DisplayMember="ShortName"
+                                          ValueMember="Id"
+                                          IncrementalSearch="True"
+                                          AutoComplete="True"
+                                          EditValue="{Binding SelectedSupplierId, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
+
+                                <dxe:ComboBoxEdit.Buttons>
+                                    <dxe:ButtonInfo GlyphKind="Plus" Command="{Binding CreateSupplierCommand}"/>
+                                </dxe:ComboBoxEdit.Buttons>
+
+                            </dxe:ComboBoxEdit>
+                        </dxlc:LayoutItem>
+
+                        <dxlc:LayoutItem Label="Наименование товара">
+                            <dxe:TextEdit Text="{Binding Name, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+                        </dxlc:LayoutItem>
+
+                        <dxlc:LayoutItem Label="Группа товара">
+                            <dxe:ComboBoxEdit ItemsSource="{Binding ProductCategories}"
+                                          DisplayMember="Name"
+                                          ValueMember="Id"
+                                          IncrementalSearch="True"
+                                          AutoComplete="True"
+                                          EditValue="{Binding SelectedProductCategoryId, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
+
+                                <dxe:ComboBoxEdit.Buttons>
+                                    <dxe:ButtonInfo GlyphKind="Plus" Command="{Binding CreateProductCategoryCommand}"/>
+                                </dxe:ComboBoxEdit.Buttons>
+
+                            </dxe:ComboBoxEdit>
+                        </dxlc:LayoutItem>
+
+                        <dxlc:LayoutItem Label="Категория товара">
+                            <dxe:ComboBoxEdit ItemsSource="{Binding ProductSubCategories}"
+                                          DisplayMember="Name"
+                                          ValueMember="Id"
+                                          IncrementalSearch="True"
+                                          AutoComplete="True"
+                                          EditValue="{Binding SelectedProductSubcategoryId, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
+
+                                <dxe:ComboBoxEdit.Buttons>
+                                    <dxe:ButtonInfo GlyphKind="Plus" Command="{Binding CreateProductSubcategoryCommand}"/>
+                                </dxe:ComboBoxEdit.Buttons>
+
+                            </dxe:ComboBoxEdit>
+                        </dxlc:LayoutItem>
+
+                        <dxlc:LayoutItem Label="Единица измерения">
+                            <dxe:ComboBoxEdit ItemsSource="{Binding Units}"
+                                          DisplayMember="ShortName"
+                                          ValueMember="Id"
+                                          IncrementalSearch="True"
+                                          AutoComplete="True"
+                                          EditValue="{Binding SelectedUnitId, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+                        </dxlc:LayoutItem>
+
+                        <dxlc:LayoutItem Label="Цена приход">
+                            <dxe:TextEdit Text="{Binding ArrivalPrice, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" 
+                              MaskType="Numeric"/>
+                        </dxlc:LayoutItem>
+
+                        <dxlc:LayoutItem Label="Цена продажи">
+                            <dxe:TextEdit Text="{Binding SalePrice, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" 
+                                  MaskType="Numeric"/>
+                        </dxlc:LayoutItem>
+
+                        <dxlc:LayoutItem Label="ТН ВЭД">
+                            <dxe:TextEdit Text="{Binding TNVED, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" 
+                                  MaskType="Numeric"/>
+                        </dxlc:LayoutItem>
+
+                        <dxlc:LayoutGroup Orientation="Horizontal"
+                                      HorizontalAlignment="Right"
+                                      VerticalAlignment="Top">
+
+                            <Button Content="Сохранить"
+                            Command="{Binding SaveProductWithoutBarcodeCommand}"/>
+
+                            <Button Content="Отменить"
+                        Margin="5 0 0 0"
+                        Command="{Binding CloseCommand}"
+                        IsEnabled="False"/>
+
+                        </dxlc:LayoutGroup>
+
+                    </dxlc:LayoutGroup>
+
+                </dxlc:LayoutControl>
+            </dx:DXTabItem>
+
+        </dx:DXTabControl>
+
+        <components:GlobalMessageBaner DataContext="{Binding GlobalMessageViewModel}"
+                                       Grid.Row="1"
+                                       Margin="10"/>
+
+    </Grid>
+
+</dialogs:BaseDialogUserControl>

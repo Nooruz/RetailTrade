@@ -1,0 +1,86 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<XtraReportsLayoutSerializer SerializerVersion="21.1.6.0" Ref="0" ControlType="DevExpress.XtraReports.UI.XtraReport, DevExpress.XtraReports.v21.1, Version=21.1.6.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a" Name="XReport" RollPaper="true" Margins="20, 20, 11, 10" PaperKind="Custom" PageWidth="302" PageHeight="1100" Version="21.1">
+  <Extensions>
+    <Item1 Ref="1" Key="VSReportExtInfo" Value=".vsrepx" />
+  </Extensions>
+  <Bands>
+    <Item1 Ref="2" ControlType="TopMarginBand" Name="topMarginBand1" HeightF="11.458333" />
+    <Item2 Ref="3" ControlType="DetailBand" Name="detailBand1" HeightF="89.00463">
+      <Controls>
+        <Item1 Ref="4" ControlType="XRLabel" Name="lbCashOnHand" Multiline="true" Text="5 475 сом" TextAlignment="MiddleRight" SizeF="140.763916,17.0000038" LocationFloat="121.236084,67.99999" Padding="2,2,0,0,100">
+          <StylePriority Ref="5" UseTextAlignment="false" />
+        </Item1>
+        <Item2 Ref="6" ControlType="XRLabel" Name="label6" Multiline="true" Text="Наличность в кассе:" TextAlignment="MiddleLeft" SizeF="121.236084,17" LocationFloat="0,68" Padding="2,2,0,0,100">
+          <StylePriority Ref="7" UseTextAlignment="false" />
+        </Item2>
+        <Item3 Ref="8" ControlType="XRLabel" Name="lbReceiptCount" Multiline="true" Text="#00012" TextAlignment="MiddleRight" SizeF="140.763916,17.0000038" LocationFloat="121.236084,50.99999" Padding="2,2,0,0,100">
+          <StylePriority Ref="9" UseTextAlignment="false" />
+        </Item3>
+        <Item4 Ref="10" ControlType="XRLabel" Name="label5" Multiline="true" Text="Чеков продаж:" TextAlignment="MiddleLeft" SizeF="121.236084,17.0000038" LocationFloat="0,50.99999" Padding="2,2,0,0,100">
+          <StylePriority Ref="11" UseTextAlignment="false" />
+        </Item4>
+        <Item5 Ref="12" ControlType="XRLabel" Name="lbCashlessSum" Multiline="true" Text="3 850 сом" TextAlignment="MiddleRight" SizeF="140.763916,17" LocationFloat="121.236084,34.0000038" Padding="2,2,0,0,100">
+          <StylePriority Ref="13" UseTextAlignment="false" />
+        </Item5>
+        <Item6 Ref="14" ControlType="XRLabel" Name="lbCashSum" Multiline="true" Text="5 475 сом" TextAlignment="MiddleRight" SizeF="140.763916,17.0000019" LocationFloat="121.236084,17.0000019" Padding="2,2,0,0,100">
+          <StylePriority Ref="15" UseTextAlignment="false" />
+        </Item6>
+        <Item7 Ref="16" ControlType="XRLabel" Name="label4" Multiline="true" Text="Безналичными:" TextAlignment="MiddleLeft" SizeF="121.236084,17" LocationFloat="0,34.0000038" Padding="2,2,0,0,100">
+          <StylePriority Ref="17" UseTextAlignment="false" />
+        </Item7>
+        <Item8 Ref="18" ControlType="XRLabel" Name="label3" Multiline="true" Text="Наличными:" TextAlignment="MiddleLeft" SizeF="121.236084,17.0000019" LocationFloat="0,17.0000019" Padding="2,2,0,0,100">
+          <StylePriority Ref="19" UseTextAlignment="false" />
+        </Item8>
+        <Item9 Ref="20" ControlType="XRLabel" Name="label2" Multiline="true" Text="Вид оплаты:" TextAlignment="MiddleLeft" SizeF="121.236084,17" LocationFloat="0,0" Padding="2,2,0,0,96">
+          <StylePriority Ref="21" UseTextAlignment="false" />
+        </Item9>
+      </Controls>
+    </Item2>
+    <Item3 Ref="22" ControlType="BottomMarginBand" Name="bottomMarginBand1" HeightF="9.953674" />
+    <Item4 Ref="23" ControlType="ReportHeaderBand" Name="ReportHeader" HeightF="65.7986145">
+      <SubBands>
+        <Item1 Ref="24" ControlType="SubBand" Name="SubBand1" HeightF="120.388924">
+          <Controls>
+            <Item1 Ref="25" ControlType="XRLabel" Name="lbCashierName" Multiline="true" Text="Асанов Асан" TextAlignment="MiddleCenter" SizeF="262,18" LocationFloat="0,38.5926132" Padding="2,2,0,0,100">
+              <StylePriority Ref="26" UseTextAlignment="false" />
+            </Item1>
+            <Item2 Ref="27" ControlType="XRLine" Name="line3" LineWidth="2" LineStyle="Dot" SizeF="262,6.796307" LocationFloat="0,113.592613" />
+            <Item3 Ref="28" ControlType="XRLabel" Name="lbStartShift" Multiline="true" Text="Начало смены: 24.10.2021 23:00" TextAlignment="MiddleLeft" SizeF="262,18" LocationFloat="0,95.59261" Padding="2,2,0,0,100">
+              <StylePriority Ref="29" UseTextAlignment="false" />
+            </Item3>
+            <Item4 Ref="30" ControlType="XRLabel" Name="lbShiftNumber" Multiline="true" Text="Смена № 0007" TextAlignment="MiddleLeft" SizeF="128.236084,18" LocationFloat="0,77.59261" Padding="2,2,0,0,100">
+              <StylePriority Ref="31" UseTextAlignment="false" />
+            </Item4>
+            <Item5 Ref="32" ControlType="XRLabel" Name="lbReportDate" Multiline="true" Text="24.10.2021 23:30" TextAlignment="MiddleLeft" SizeF="128.236084,18" LocationFloat="0,59.5926132" Padding="2,2,0,0,100">
+              <StylePriority Ref="33" UseTextAlignment="false" />
+            </Item5>
+            <Item6 Ref="34" ControlType="XRLine" Name="line2" LineWidth="2" LineStyle="Dot" SizeF="262,6.796307" LocationFloat="0,29.7963066" />
+            <Item7 Ref="35" ControlType="XRLabel" Name="label1" Multiline="true" Text="СМЕННЫЙ Х-ОТЧЕТ" TextAlignment="MiddleCenter" SizeF="262,23" LocationFloat="0,6.796306" Font="Arial, 9.75pt, style=Bold, charSet=204" Padding="2,2,0,0,100">
+              <StylePriority Ref="36" UseFont="false" UseTextAlignment="false" />
+            </Item7>
+            <Item8 Ref="37" ControlType="XRLine" Name="line1" LineWidth="2" LineStyle="Dot" SizeF="262,6.796307" LocationFloat="0,0" />
+          </Controls>
+        </Item1>
+      </SubBands>
+      <Controls>
+        <Item1 Ref="38" ControlType="XRLabel" Name="Address" Multiline="true" Text="г. Ош, село Гулбаар-Толойкон, ул. Жаны Чек 33" TextAlignment="MiddleCenter" SizeF="262,23" LocationFloat="0,33.0000076" Font="Arial, 9.75pt, charSet=204" Padding="2,2,0,0,100">
+          <StylePriority Ref="39" UseFont="false" UseTextAlignment="false" />
+        </Item1>
+        <Item2 Ref="40" ControlType="XRLabel" Name="OrganizationName" Multiline="true" Text="ОсОО Мастер" TextAlignment="MiddleCenter" SizeF="262,23" LocationFloat="0,10.0000067" Font="Arial, 12pt, style=Bold, charSet=204" Padding="2,2,0,0,100">
+          <StylePriority Ref="41" UseFont="false" UseTextAlignment="false" />
+        </Item2>
+      </Controls>
+    </Item4>
+    <Item5 Ref="42" ControlType="ReportFooterBand" Name="ReportFooter" HeightF="28.2407475">
+      <Controls>
+        <Item1 Ref="43" ControlType="XRLabel" Name="lbShiftTotal" Multiline="true" Text="9 325 сом" TextAlignment="MiddleRight" SizeF="161.504669,17" LocationFloat="100.495331,6.796306" Font="Times New Roman, 9.75pt, style=Bold, charSet=204" Padding="2,2,0,0,100">
+          <StylePriority Ref="44" UseFont="false" UseTextAlignment="false" />
+        </Item1>
+        <Item2 Ref="45" ControlType="XRLabel" Name="label7" Multiline="true" Text="Сменный итог:" TextAlignment="MiddleLeft" SizeF="100.495331,17" LocationFloat="0,6.796306" Font="Times New Roman, 9.75pt, style=Bold, charSet=204" Padding="2,2,0,0,100">
+          <StylePriority Ref="46" UseFont="false" UseTextAlignment="false" />
+        </Item2>
+        <Item3 Ref="47" ControlType="XRLine" Name="line4" LineWidth="2" LineStyle="Dot" SizeF="262,6.796307" LocationFloat="0,0" />
+      </Controls>
+    </Item5>
+  </Bands>
+</XtraReportsLayoutSerializer>

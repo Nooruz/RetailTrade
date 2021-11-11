@@ -1,0 +1,59 @@
+﻿<UserControl
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:dx="http://schemas.devexpress.com/winfx/2008/xaml/core"
+    xmlns:dxe="http://schemas.devexpress.com/winfx/2008/xaml/editors"
+    xmlns:dxlc="http://schemas.devexpress.com/winfx/2008/xaml/layoutcontrol"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:components="clr-namespace:RetailTradeServer.Components"
+    x:Class="RetailTradeServer.Views.LoginView">
+
+    <Grid VerticalAlignment="Center"
+          HorizontalAlignment="Center"
+          Width="400">
+
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+
+        <TextBlock Grid.Row="0"
+                   Text="Добро пожаловать!"
+                   HorizontalAlignment="Center"
+                   FontSize="26"/>
+
+        <dxlc:LayoutControl Grid.Row="1"
+                            Orientation="Vertical">
+
+            <dxlc:LayoutGroup Orientation="Vertical"
+                              View="GroupBox"
+                              Header="Войдите в систему">
+
+                <dxlc:LayoutItem Label="Имя пользователя:">
+                    <dxe:TextEdit Text="{Binding Username, UpdateSourceTrigger=PropertyChanged}"/>
+                </dxlc:LayoutItem>
+
+                <dxlc:LayoutItem Label="Пароль:">
+                    <dxe:PasswordBoxEdit Text="{Binding Password, UpdateSourceTrigger=PropertyChanged}"/>
+                </dxlc:LayoutItem>
+
+                <components:GlobalMessageBaner DataContext="{Binding GlobalMessageViewModel}"/>
+
+                <dxlc:LayoutGroup Orientation="Horizontal">
+
+                    <dx:SimpleButton Content="Войти"
+                                     Command="{Binding LoginCommand}"
+                                     IsDefault="True"/>
+                    
+                    <!--<dx:SimpleButton Content="Выход"/>-->
+
+                </dxlc:LayoutGroup>
+
+            </dxlc:LayoutGroup>
+
+            
+
+        </dxlc:LayoutControl>
+
+    </Grid>
+
+</UserControl>

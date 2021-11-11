@@ -1,0 +1,146 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<XtraReportsLayoutSerializer SerializerVersion="21.1.6.0" Ref="1" ControlType="DevExpress.XtraReports.UI.XtraReport, DevExpress.XtraReports.v21.1, Version=21.1.6.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a" Name="ClosingShiftsReport" Landscape="true" PageWidth="1100" PageHeight="850" Version="21.1" DataSource="#Ref-0">
+  <Extensions>
+    <Item1 Ref="2" Key="VSReportExtInfo" Value=".vsrepx" />
+  </Extensions>
+  <Parameters>
+    <Item1 Ref="4" Description="Дата начало" Name="StartDate" Type="#Ref-3" />
+    <Item2 Ref="5" Description="Дата окончание" ValueInfo="2021-10-26" Name="EndDate" Type="#Ref-3" />
+  </Parameters>
+  <Bands>
+    <Item1 Ref="6" ControlType="TopMarginBand" Name="topMarginBand1" />
+    <Item2 Ref="7" ControlType="DetailBand" Name="detailBand1" HeightF="25">
+      <Controls>
+        <Item1 Ref="8" ControlType="XRTable" Name="tbShifts" TextAlignment="MiddleLeft" SizeF="900.000061,25" LocationFloat="0,0" Padding="2,2,0,0,96" Borders="Left, Right, Bottom">
+          <Rows>
+            <Item1 Ref="9" ControlType="XRTableRow" Name="tableRow2" Weight="1">
+              <Cells>
+                <Item1 Ref="10" ControlType="XRTableCell" Name="tableCell7" Weight="2.1715389752554346" TextFormatString="Закрытие № {0:D6}" Multiline="true" Text="tableCell7">
+                  <ExpressionBindings>
+                    <Item1 Ref="11" EventName="BeforePrint" PropertyName="Text" Expression="[Id]" />
+                  </ExpressionBindings>
+                </Item1>
+                <Item2 Ref="12" ControlType="XRTableCell" Name="tableCell14" Weight="1.0634276016462003" TextFormatString="{0:dd.MM.yyyy HH:mm}" Multiline="true" Text="tableCell14">
+                  <ExpressionBindings>
+                    <Item1 Ref="13" EventName="BeforePrint" PropertyName="Text" Expression="[ClosingDate]" />
+                  </ExpressionBindings>
+                </Item2>
+                <Item3 Ref="14" ControlType="XRTableCell" Name="tableCell8" Weight="1.4859985274386622" TextFormatString="{0:N2}" Multiline="true" Text="tableCell8" TextAlignment="MiddleRight">
+                  <ExpressionBindings>
+                    <Item1 Ref="15" EventName="BeforePrint" PropertyName="Text" Expression="[Receipts].Sum([Sum])" />
+                  </ExpressionBindings>
+                  <StylePriority Ref="16" UseTextAlignment="false" />
+                </Item3>
+                <Item4 Ref="17" ControlType="XRTableCell" Name="tableCell9" Weight="1.0731923569273583" TextFormatString="{0:N2}" Multiline="true" Text="tableCell9" TextAlignment="MiddleRight">
+                  <ExpressionBindings>
+                    <Item1 Ref="18" EventName="BeforePrint" PropertyName="Text" Expression="[Receipts].Sum([PaidInCash])" />
+                  </ExpressionBindings>
+                  <StylePriority Ref="19" UseTextAlignment="false" />
+                </Item4>
+                <Item5 Ref="20" ControlType="XRTableCell" Name="tableCell10" Weight="1.1936658508779117" TextFormatString="{0:N2}" Multiline="true" Text="tableCell10" TextAlignment="MiddleRight">
+                  <ExpressionBindings>
+                    <Item1 Ref="21" EventName="BeforePrint" PropertyName="Text" Expression="[Receipts].Sum([PaidInCashless])" />
+                  </ExpressionBindings>
+                  <StylePriority Ref="22" UseTextAlignment="false" />
+                </Item5>
+                <Item6 Ref="23" ControlType="XRTableCell" Name="tableCell11" Weight="0.843592634938596" Multiline="true" TextAlignment="MiddleRight">
+                  <StylePriority Ref="24" UseTextAlignment="false" />
+                </Item6>
+                <Item7 Ref="25" ControlType="XRTableCell" Name="tableCell12" Weight="0.75844355299558686" Multiline="true" TextAlignment="MiddleRight">
+                  <StylePriority Ref="26" UseTextAlignment="false" />
+                </Item7>
+              </Cells>
+            </Item1>
+          </Rows>
+          <StylePriority Ref="27" UseBorders="false" UseTextAlignment="false" />
+        </Item1>
+      </Controls>
+    </Item2>
+    <Item3 Ref="28" ControlType="BottomMarginBand" Name="bottomMarginBand1" />
+    <Item4 Ref="29" ControlType="ReportHeaderBand" Name="ReportHeader" HeightF="83.33334">
+      <SubBands>
+        <Item1 Ref="30" ControlType="SubBand" Name="SubBand1" HeightF="123.611122">
+          <Controls>
+            <Item1 Ref="31" ControlType="XRTable" Name="table1" TextAlignment="MiddleCenter" SizeF="900,25.0000076" LocationFloat="0,98.61111" Font="Times New Roman, 12pt, style=Bold, charSet=204" Padding="2,2,0,0,96" Borders="All">
+              <Rows>
+                <Item1 Ref="32" ControlType="XRTableRow" Name="tableRow1" Weight="1">
+                  <Cells>
+                    <Item1 Ref="33" ControlType="XRTableCell" Name="tableCell1" Weight="1.8007605154106967" Multiline="true" Text="Смена" />
+                    <Item2 Ref="34" ControlType="XRTableCell" Name="tableCell13" Weight="0.8818525060885537" Multiline="true" Text="Дата" />
+                    <Item3 Ref="35" ControlType="XRTableCell" Name="tableCell2" Weight="1.2322724734465971" Multiline="true" Text="Итого" />
+                    <Item4 Ref="36" ControlType="XRTableCell" Name="tableCell3" Weight="0.89318561745391212" Multiline="true" Text="Наличными" />
+                    <Item5 Ref="37" ControlType="XRTableCell" Name="tableCell4" Weight="0.98871051950634636" Multiline="true" Text="Безналичными" />
+                    <Item6 Ref="38" ControlType="XRTableCell" Name="tableCell5" Weight="0.69845210498311849" Multiline="true" Text="Расходы" />
+                    <Item7 Ref="39" ControlType="XRTableCell" Name="tableCell6" Weight="0.62795272431228866" Multiline="true" Text="ККМ" />
+                  </Cells>
+                </Item1>
+              </Rows>
+              <StylePriority Ref="40" UseFont="false" UseBorders="false" UseTextAlignment="false" />
+            </Item1>
+            <Item2 Ref="41" ControlType="XRLabel" Name="lbDateRange" Multiline="true" Text="с 01.10.2021 по 26.10.2021" TextAlignment="MiddleCenter" SizeF="900,23" LocationFloat="0,33.00005" Font="Times New Roman, 12pt, charSet=204" Padding="2,2,0,0,100">
+              <StylePriority Ref="42" UseFont="false" UseTextAlignment="false" />
+            </Item2>
+            <Item3 Ref="43" ControlType="XRLabel" Name="label1" Multiline="true" Text="Закрытие смены" TextAlignment="MiddleCenter" SizeF="900,23" LocationFloat="0,10.0000181" Font="Times New Roman, 12pt, charSet=204" Padding="2,2,0,0,100">
+              <StylePriority Ref="44" UseFont="false" UseTextAlignment="false" />
+            </Item3>
+          </Controls>
+        </Item1>
+      </SubBands>
+      <Controls>
+        <Item1 Ref="45" ControlType="XRLabel" Name="lbAddress" Multiline="true" Text="г. Ош ул. Улица 5" TextAlignment="MiddleCenter" SizeF="900,23.0000076" LocationFloat="0,32.9999962" Padding="2,2,0,0,100">
+          <StylePriority Ref="46" UseTextAlignment="false" />
+        </Item1>
+        <Item2 Ref="47" ControlType="XRLabel" Name="lbOrganizationName" Multiline="true" Text="Магазин &quot;Мастер&quot;" TextAlignment="MiddleCenter" SizeF="900,23" LocationFloat="0,9.999992" Font="Times New Roman, 15.75pt, style=Bold, charSet=204" Padding="2,2,0,0,100">
+          <StylePriority Ref="48" UseFont="false" UseTextAlignment="false" />
+        </Item2>
+      </Controls>
+    </Item4>
+    <Item5 Ref="49" ControlType="ReportFooterBand" Name="ReportFooter">
+      <Controls>
+        <Item1 Ref="50" ControlType="XRTable" Name="table2" TextAlignment="MiddleLeft" SizeF="900.000061,25" LocationFloat="0,0" Font="Times New Roman, 9.75pt, style=Bold, charSet=204" Padding="2,2,0,0,96" Borders="Left, Right, Bottom">
+          <Rows>
+            <Item1 Ref="51" ControlType="XRTableRow" Name="tableRow3" Weight="1">
+              <Cells>
+                <Item1 Ref="52" ControlType="XRTableCell" Name="tableCell15" Weight="2.1715389752554346" Multiline="true" Text="Итого" Font="Times New Roman, 9.75pt, style=Bold, charSet=204">
+                  <StylePriority Ref="53" UseFont="false" />
+                </Item1>
+                <Item2 Ref="54" ControlType="XRTableCell" Name="tableCell16" Weight="1.0634276016462003" Multiline="true" />
+                <Item3 Ref="55" ControlType="XRTableCell" Name="tableCell17" Weight="1.4859985274386622" TextFormatString="{0:N2}" Multiline="true" Text="tableCell8" TextAlignment="MiddleRight">
+                  <ExpressionBindings>
+                    <Item1 Ref="56" EventName="BeforePrint" PropertyName="Text" Expression="Sum([Receipts].Sum([Sum]))" />
+                  </ExpressionBindings>
+                  <StylePriority Ref="57" UseTextAlignment="false" />
+                </Item3>
+                <Item4 Ref="58" ControlType="XRTableCell" Name="tableCell18" Weight="1.0731923569273583" TextFormatString="{0:N2}" Multiline="true" Text="tableCell9" TextAlignment="MiddleRight">
+                  <ExpressionBindings>
+                    <Item1 Ref="59" EventName="BeforePrint" PropertyName="Text" Expression="Sum([Receipts].[PaidInCash])" />
+                  </ExpressionBindings>
+                  <StylePriority Ref="60" UseTextAlignment="false" />
+                </Item4>
+                <Item5 Ref="61" ControlType="XRTableCell" Name="tableCell19" Weight="1.1936658508779117" TextFormatString="{0:N2}" Multiline="true" Text="tableCell10" TextAlignment="MiddleRight">
+                  <ExpressionBindings>
+                    <Item1 Ref="62" EventName="BeforePrint" PropertyName="Text" Expression="Sum([Receipts].[PaidInCashless])" />
+                  </ExpressionBindings>
+                  <StylePriority Ref="63" UseTextAlignment="false" />
+                </Item5>
+                <Item6 Ref="64" ControlType="XRTableCell" Name="tableCell20" Weight="0.843592634938596" Multiline="true" TextAlignment="MiddleRight">
+                  <StylePriority Ref="65" UseTextAlignment="false" />
+                </Item6>
+                <Item7 Ref="66" ControlType="XRTableCell" Name="tableCell21" Weight="0.75844355299558686" Multiline="true" TextAlignment="MiddleRight">
+                  <StylePriority Ref="67" UseTextAlignment="false" />
+                </Item7>
+              </Cells>
+            </Item1>
+          </Rows>
+          <StylePriority Ref="68" UseFont="false" UseBorders="false" UseTextAlignment="false" />
+        </Item1>
+      </Controls>
+    </Item5>
+  </Bands>
+  <ComponentStorage>
+    <Item1 Ref="0" ObjectType="DevExpress.DataAccess.ObjectBinding.ObjectDataSource,DevExpress.DataAccess.v21.1" Name="dsShifts" Base64="PE9iamVjdERhdGFTb3VyY2UgTmFtZT0iZHNTaGlmdHMiIC8+" />
+  </ComponentStorage>
+  <ObjectStorage>
+    <Item1 ObjectType="DevExpress.XtraReports.Serialization.ObjectStorageInfo, DevExpress.XtraReports.v21.1" Ref="3" Content="System.DateTime" Type="System.Type" />
+  </ObjectStorage>
+</XtraReportsLayoutSerializer>

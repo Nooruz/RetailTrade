@@ -1,0 +1,48 @@
+﻿<dialogs:BaseDialogUserControl     x:Class="RetailTradeClient.Views.Dialogs.PrinterView"
+                                   xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                                   xmlns:dxe="http://schemas.devexpress.com/winfx/2008/xaml/editors"
+                                   xmlns:dxlc="http://schemas.devexpress.com/winfx/2008/xaml/layoutcontrol"
+                                   xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                                   xmlns:dialogs="clr-namespace:RetailTradeClient.Dialogs"
+                                   xmlns:components="clr-namespace:RetailTradeClient.Components"
+                                   Width="350"
+                                   MinHeight="110">
+
+    <dxlc:LayoutControl Orientation="Vertical">
+
+        <dxlc:LayoutItem Label="Принтер чеков">
+
+            <dxe:ComboBoxEdit ItemsSource="{Binding LocalPrinters}"
+                              DisplayMember="Name"
+                              ValueMember="Id"
+                              EditValue="{Binding SelectedLocalPrinterId, UpdateSourceTrigger=PropertyChanged}"
+                              SelectedItem="{Binding SelectedLocalPrinter, UpdateSourceTrigger=PropertyChanged}">
+
+                <dxe:ComboBoxEdit.Buttons>
+                    <dxe:ButtonInfo GlyphKind="Refresh" 
+                                    Command="{Binding UpdateLocalPrinterListCommand}"
+                                    ToolTip="Обновить список принтеров"/>
+                </dxe:ComboBoxEdit.Buttons>
+
+            </dxe:ComboBoxEdit>
+
+        </dxlc:LayoutItem>
+
+        <dxlc:LayoutGroup Orientation="Horizontal"
+                          HorizontalAlignment="Right"
+                          VerticalAlignment="Bottom">
+
+            <Button Content="Сохранить"
+                    Command="{Binding SaveCommand}"/>
+
+            <Button Content="Отменить"
+                    Command="{Binding CloseCommand}"/>
+
+        </dxlc:LayoutGroup>
+
+        <components:GlobalMessageBaner VerticalAlignment="Bottom"
+                                       DataContext="{Binding GlobalMessageViewModel}"/>
+
+    </dxlc:LayoutControl>
+    
+</dialogs:BaseDialogUserControl>

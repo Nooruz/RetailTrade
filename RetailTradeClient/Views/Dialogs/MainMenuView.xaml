@@ -1,0 +1,36 @@
+﻿<dialogs:BaseDialogUserControl     x:Class="RetailTradeClient.Views.Dialogs.MainMenuView"
+                                   xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                                   xmlns:dxlc="http://schemas.devexpress.com/winfx/2008/xaml/layoutcontrol"
+                                   xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                                   xmlns:dialogs="clr-namespace:RetailTradeClient.Dialogs">
+
+    <dxlc:LayoutControl>
+
+        <dxlc:LayoutGroup VerticalAlignment="Top"
+                          Orientation="Vertical">
+
+            <Button Content="Регистрация продаж"
+                    Tag="{StaticResource faFileAlt}"
+                    Style="{StaticResource btnWithHorizontalIcon}"
+                    Command="{Binding SaleRegistrationCommand}"/>
+
+            <Button Content="Открытие смены"
+                    Tag="{StaticResource faCashRegister}"
+                    Style="{StaticResource btnWithHorizontalIcon}"
+                    Command="{Binding OpeningShiftCommand}"/>
+
+            <Button Content="Закрыть смену"
+                    Tag="{StaticResource faCashRegister}"
+                    Style="{StaticResource btnWithHorizontalIcon}"
+                    Command="{Binding ClosingShiftCommand}"/>
+
+            <Button Content="Настройки"
+                    Tag="{StaticResource faCheckCircle}"
+                    Style="{StaticResource btnWithHorizontalIcon}"
+                    Command="{Binding SettingCommand}"/>
+
+        </dxlc:LayoutGroup>
+        
+    </dxlc:LayoutControl>
+    
+</dialogs:BaseDialogUserControl>

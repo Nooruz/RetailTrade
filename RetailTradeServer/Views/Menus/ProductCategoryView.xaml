@@ -1,0 +1,120 @@
+﻿<UserControl
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:dxe="http://schemas.devexpress.com/winfx/2008/xaml/editors"
+    xmlns:dxg="http://schemas.devexpress.com/winfx/2008/xaml/grid"
+    xmlns:dxlc="http://schemas.devexpress.com/winfx/2008/xaml/layoutcontrol"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:dxmvvm="http://schemas.devexpress.com/winfx/2008/xaml/mvvm"
+    x:Class="RetailTradeServer.Views.Menus.ProductCategoryView">
+
+    <dxmvvm:Interaction.Behaviors>
+        <dxmvvm:EventToCommand EventName="Loaded" Command="{Binding GetProductsCommandAsync}"/>
+    </dxmvvm:Interaction.Behaviors>
+
+    <dxlc:LayoutControl Padding="0">
+
+        <Grid>
+
+            <Grid.ColumnDefinitions>
+
+                <ColumnDefinition Width="1*"/>
+                <ColumnDefinition Width="10"/>
+                <ColumnDefinition Width="3*"/>
+
+            </Grid.ColumnDefinitions>
+
+            <dxlc:LayoutGroup Orientation="Vertical"
+                              Grid.Column="0">
+
+                <dxlc:LayoutGroup Orientation="Horizontal"
+                                  VerticalAlignment="Top"
+                                  HorizontalAlignment="Left">
+
+                    <Button Content="Добавить группу"
+                            Command="{Binding CreateProductCategoryCommand}"/>
+
+                    <Button Content="Добавить категорию"
+                            Command="{Binding CreateProductSubcategoryCommand}"/>
+
+                </dxlc:LayoutGroup>
+
+                <dxg:TreeViewControl ItemsSource="{Binding ProductCategories}"
+                                     ChildNodesPath="ProductSubcategories"
+                                     KeyFieldName="Name"
+                                     TreeViewFieldName="Name"
+                                     SelectedItem="{Binding SelectedProductGroup}">
+                    <dxmvvm:Interaction.Behaviors>
+                        <dxmvvm:EventToCommand EventName="SelectedItemChanged" 
+                                               Command="{Binding SelectedItemChangedCommand}"/>
+                    </dxmvvm:Interaction.Behaviors>
+                </dxg:TreeViewControl>
+
+
+            </dxlc:LayoutGroup>
+
+            <dxlc:LayoutGroup Orientation="Vertical"
+                              Grid.Column="2">
+
+                <dxlc:LayoutGroup Orientation="Horizontal"
+                                  VerticalAlignment="Top"
+                                  HorizontalAlignment="Left">
+
+                    <Button Content="Новый товар"
+                            Command="{Binding CreateProductCommand}"/>
+
+                </dxlc:LayoutGroup>
+
+                <dxg:GridControl ItemsSource="{Binding GetProducts}"
+                                 AutoGenerateColumns="None">
+                    <dxg:GridControl.Style>
+                        <Style TargetType="{x:Type dxg:GridControl}">
+                            <Style.Triggers>
+                                <Trigger Property="ItemsSource" Value="{x:Null}">
+                                    <Setter Property="ShowLoadingPanel" Value="True"/>
+                                </Trigger>
+                            </Style.Triggers>
+                        </Style>
+                    </dxg:GridControl.Style>
+                    <dxg:GridControl.View>
+                        <dxg:TableView ShowTotalSummary="True" 
+                                       AllowEditing="False" 
+                                       AutoWidth="True"
+                                       AllowPaging="True"
+                                       PageSize="500"/>
+                    </dxg:GridControl.View>
+
+                    <dxg:GridControl.TotalSummary>
+                        <dxg:GridSummaryItem FieldName="Id" SummaryType="Count" DisplayFormat="Кол-во {0:N0}"/>
+                    </dxg:GridControl.TotalSummary>
+                    
+                    <dxg:GridColumn FieldName="Id"
+                                    Header="Код">
+                        <dxg:GridColumn.EditSettings>
+                            <dxe:TextEditSettings DisplayFormat="D6"/>
+                        </dxg:GridColumn.EditSettings>
+                    </dxg:GridColumn>
+                    <dxg:GridColumn FieldName="Name" Header="Наименование"/>
+                    <dxg:GridColumn FieldName="ProductSubcategory.ProductCategory.Name" Header="Группа товара"/>
+                    <dxg:GridColumn FieldName="ProductSubcategory.Name" Header="Категория товара"/>
+                    <dxg:GridColumn FieldName="Unit.ShortName" Header="Ед. изм."/>
+                    <dxg:GridColumn FieldName="Barcode" Header="Штрих код"/>
+                    <dxg:GridColumn FieldName="ArrivalPrice" Header="Цена приход">
+                        <dxg:GridColumn.EditSettings>
+                            <dxe:TextEditSettings MaskType="Numeric"/>
+                        </dxg:GridColumn.EditSettings>
+                    </dxg:GridColumn>
+                    <dxg:GridColumn FieldName="SalePrice" Header="Цена продажа"/>
+                    <dxg:GridColumn FieldName="Quantity" Header="Количество"/>
+                    <dxg:GridColumn FieldName="TNVED" Header="ТН ВЭД"/>
+
+
+                </dxg:GridControl>
+
+
+            </dxlc:LayoutGroup>
+
+        </Grid>
+
+    </dxlc:LayoutControl>
+
+</UserControl>

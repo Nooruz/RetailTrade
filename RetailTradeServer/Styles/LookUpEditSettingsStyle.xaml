@@ -1,0 +1,48 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:dxg="http://schemas.devexpress.com/winfx/2008/xaml/grid">
+
+    <Style TargetType="{x:Type dxg:LookUpEditSettings}" x:Key="luesProduct">
+
+        <Setter Property="ItemsSource" Value="{Binding Products}"/>
+        <Setter Property="PopupWidth" Value="200"/>
+        <Setter Property="DisplayMember" Value="Name"/>
+        <Setter Property="ValueMember" Value="Id"/>
+        <Setter Property="IsTextEditable" Value="False"/>
+        <Setter Property="AutoPopulateColumns" Value="False"/>
+        <Setter Property="StyleSettings">
+            <Setter.Value>
+                <dxg:SearchLookUpEditStyleSettings ShowColumnHeaders="True" />
+            </Setter.Value>
+        </Setter>
+        <Setter Property="PopupContentTemplate">
+            <Setter.Value>
+                <ControlTemplate>
+                    <dxg:GridControl Name="PART_GridControl"
+                                     SelectedItem="{Binding RelativeSource={RelativeSource AncestorType=UserControl, Mode=FindAncestor}, Path=DataContext.SelectedProduct}">
+                        <dxg:GridControl.Style>
+                            <Style TargetType="{x:Type dxg:GridControl}">
+                                <Style.Triggers>
+                                    <Trigger Property="ItemsSource" Value="{x:Null}">
+                                        <Setter Property="ShowLoadingPanel" Value="True"/>
+                                    </Trigger>
+                                </Style.Triggers>
+                            </Style>
+                        </dxg:GridControl.Style>
+                        <dxg:GridControl.View>
+                            <dxg:TableView AllowEditing="False" 
+                                           AutoWidth="True"
+                                           AllowPaging="True"
+                                           PageSize="500"/>
+                        </dxg:GridControl.View>
+                        <dxg:GridControl.Columns>
+                            <dxg:GridColumn Header="Наименование товара" FieldName="Name"/>
+                        </dxg:GridControl.Columns>
+                    </dxg:GridControl>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+
+    </Style>
+    
+</ResourceDictionary>

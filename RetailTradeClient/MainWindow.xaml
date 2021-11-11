@@ -1,0 +1,21 @@
+﻿<dxc:DXWindow
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:dxc="http://schemas.devexpress.com/winfx/2008/xaml/core"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    x:Class="RetailTradeClient.MainWindow"
+    Title="Управление розничной торговлей"
+    WindowState="Maximized"
+    Height="450" 
+    Width="800"
+    WindowStyle="None">
+
+    <dxc:DXWindow.InputBindings>
+
+        <KeyBinding Command="{Binding LogoutCommand}"
+                    Key="Escape"/>
+
+    </dxc:DXWindow.InputBindings>
+
+    <ContentControl Content="{Binding CurrentViewModel, UpdateSourceTrigger=PropertyChanged}"/>
+
+</dxc:DXWindow>

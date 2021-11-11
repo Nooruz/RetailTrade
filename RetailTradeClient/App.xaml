@@ -1,0 +1,42 @@
+﻿<Application x:Class="RetailTradeClient.App"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"             
+             xmlns:viewModels="clr-namespace:RetailTradeClient.ViewModels"
+             xmlns:views="clr-namespace:RetailTradeClient.Views"
+             xmlns:dialogs="clr-namespace:RetailTradeClient.Dialogs"
+             xmlns:dialogViewModels="clr-namespace:RetailTradeClient.ViewModels.Dialogs">
+    
+    <Application.Resources>
+
+        <ResourceDictionary>
+
+            <DataTemplate DataType="{x:Type viewModels:LoginViewModel}">
+                <views:LoginView/>
+            </DataTemplate>
+
+            <DataTemplate DataType="{x:Type viewModels:HomeViewModel}">
+                <views:HomeView/>
+            </DataTemplate>
+
+            <DataTemplate DataType="{x:Type dialogViewModels:MessageBoxDialogViewModel}">
+                <dialogs:DialogMessageBox/>
+            </DataTemplate>
+
+            <ResourceDictionary.MergedDictionaries>
+
+                <ResourceDictionary Source="/Styles/Fonts.xaml"/>
+                <ResourceDictionary Source="/Styles/Colors.xaml"/>
+                <ResourceDictionary Source="/Styles/TextBlockStyle.xaml"/>
+                <ResourceDictionary Source="/Styles/ButtonStyle.xaml"/>
+                <ResourceDictionary Source="/Styles/TextEditStyle.xaml"/>
+                <ResourceDictionary Source="/Styles/ListViewStyle.xaml"/>
+                <ResourceDictionary Source="/Styles/LayoutItemStyle.xaml"/>
+                <ResourceDictionary Source="/Styles/ItemsControlStyle.xaml"/>
+
+            </ResourceDictionary.MergedDictionaries>
+
+        </ResourceDictionary>
+        
+    </Application.Resources>
+    
+</Application>

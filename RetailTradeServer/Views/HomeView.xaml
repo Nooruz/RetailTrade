@@ -1,0 +1,78 @@
+﻿<UserControl
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:dxwui="http://schemas.devexpress.com/winfx/2008/xaml/windowsui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    x:Class="RetailTradeServer.Views.HomeView">
+
+    <dxwui:HamburgerMenu OpenPaneWidth="220" 
+                         ViewState="Opened"
+                         AllowBuiltInNavigation="True"
+                         Content="{Binding CurrentMenuViewModel}">
+
+        <dxwui:HamburgerSubMenu Content="Товары"
+                                Style="{StaticResource DefaultHamburgerSubMenu}"
+                                Tag="{StaticResource faPlay}">
+
+            <dxwui:HamburgerSubMenuNavigationButton Content="Каталог товаров"
+                                                    Command="{Binding ProductCategoryCommand}"/>
+
+            <dxwui:HamburgerSubMenuNavigationButton Content="Приход товара"
+                                                    Command="{Binding ArrivalProductCommand}"
+                                                    Focusable="False"/>
+
+            <dxwui:HamburgerSubMenuNavigationButton Content="Списание товара"
+                                                    Command="{Binding WriteDownProductCommand}"/>
+
+            <dxwui:HamburgerSubMenuNavigationButton Content="Возврат поставщику"
+                                                    Command="{Binding RefundToSupplierCommand}"/>
+
+            <dxwui:HamburgerSubMenuNavigationButton Content="Заказ товара поставщику"
+                                                    Command="{Binding OrderProductCommand}"/>
+
+        </dxwui:HamburgerSubMenu>
+
+        <dxwui:HamburgerSubMenu Content="Кассовые операции"
+                                Style="{StaticResource DefaultHamburgerSubMenu}"
+                                Tag="{StaticResource faCashRegister}"
+                                />
+
+        <dxwui:HamburgerSubMenu Content="Отчеты"
+                                Style="{StaticResource DefaultHamburgerSubMenu}"
+                                Tag="{StaticResource faCopy}">
+            <dxwui:HamburgerSubMenuNavigationButton Content="Закрытие смены"
+                                                    Command="{Binding ReportClosingShiftsCommand}"/>
+            <dxwui:HamburgerSubMenuNavigationButton Content="Протокол событий"/>
+            <dxwui:HamburgerSubMenuNavigationButton Content="Выручка за период"/>
+            <dxwui:HamburgerSubMenuNavigationButton Content="Прибыль от продаж"/>
+            <dxwui:HamburgerSubMenuNavigationButton Content="Продажи по кассирам"/>
+            <dxwui:HamburgerSubMenuNavigationButton Content="Возвраты кассиров"/>
+        </dxwui:HamburgerSubMenu>
+
+        <dxwui:HamburgerSubMenu Content="Справочники и инструменты"
+                                Style="{StaticResource DefaultHamburgerSubMenu}"
+                                Tag="{StaticResource faTools}">
+            <dxwui:HamburgerSubMenuNavigationButton Content="Пользователи"
+                                                    Command="{Binding UserCommand}"/>
+            <dxwui:HamburgerSubMenuNavigationButton Content="Поставщики"/>
+            <dxwui:HamburgerSubMenuNavigationButton Content="Ценники и этикетки (Штрих-код)"
+                                                    Command="{Binding BarcodeCommand}"/>
+            <dxwui:HamburgerSubMenuNavigationButton Content="Филиалы"
+                                                    Command="{Binding BranchCommand}"/>
+            <dxwui:HamburgerSubMenuNavigationButton Content="Экспорт/Импорт товара"/>
+        </dxwui:HamburgerSubMenu>
+
+        <dxwui:HamburgerSubMenu Content="Инвентарь"
+                                Style="{StaticResource DefaultHamburgerSubMenu}"
+                                Tag="{StaticResource faDesktop}">
+            <dxwui:HamburgerSubMenuNavigationButton Content=""/>
+        </dxwui:HamburgerSubMenu>
+
+        <dxwui:HamburgerSubMenu Content="Настройки"
+                                Style="{StaticResource DefaultHamburgerSubMenu}"
+                                Tag="{StaticResource faSlidersH}">
+            <dxwui:HamburgerSubMenuNavigationButton Content="Другие настройки"/>
+        </dxwui:HamburgerSubMenu>
+
+    </dxwui:HamburgerMenu>
+
+</UserControl>

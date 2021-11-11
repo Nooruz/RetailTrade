@@ -1,0 +1,80 @@
+﻿<local:BaseMenuView x:Class="RetailTradeServer.Views.Menus.WriteDownProductView"
+                    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:dxe="http://schemas.devexpress.com/winfx/2008/xaml/editors"
+                    xmlns:dxg="http://schemas.devexpress.com/winfx/2008/xaml/grid"
+                    xmlns:dxmvvm="http://schemas.devexpress.com/winfx/2008/xaml/mvvm"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:dxlc="http://schemas.devexpress.com/winfx/2008/xaml/layoutcontrol"
+                    xmlns:local="clr-namespace:RetailTradeServer.Views.Menus"
+                    ShowDefaultButtons="False"
+                    Title="Списание товара">
+
+    <dxmvvm:Interaction.Behaviors>
+        <dxmvvm:EventToCommand EventName="Loaded" Command="{Binding GetProductsAsyncCommand}"/>
+    </dxmvvm:Interaction.Behaviors>
+
+    <dxlc:LayoutControl Grid.Row="0"
+                        ItemSpace="10"
+                        Orientation="Vertical">
+
+        <dxg:GridControl SelectionMode="Row"
+                         ItemsSource="{Binding WriteDownProducts}">
+
+            <dxg:GridControl.View>
+                <dxg:TableView AutoWidth="True"
+                               NewItemRowPosition="Top"
+                               ShowGroupPanel="False"
+                               InvalidRowException="TableView_InvalidRowException">
+                    <dxmvvm:Interaction.Behaviors>
+                        <dxmvvm:EventToCommand EventName="ValidateRow" 
+                                               Command="{Binding ValidateRowCommand}"
+                                               PassEventArgsToCommand="True"/>
+                    </dxmvvm:Interaction.Behaviors>
+                </dxg:TableView>
+            </dxg:GridControl.View>
+
+            <dxg:GridColumn Header="Наименование"
+                            Binding="{Binding ProductId, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
+                <dxg:GridColumn.EditSettings>
+                    <dxg:LookUpEditSettings Style="{StaticResource luesProduct}"/>
+                </dxg:GridColumn.EditSettings>
+            </dxg:GridColumn>
+
+            <dxg:GridColumn Header="Штрих-код"
+                            Binding="{Binding Product.Barcode}"
+                            AllowEditing="False"/>
+
+            <dxg:GridColumn Header="Количество на скалде"
+                            Binding="{Binding Product.Quantity}"
+                            AllowEditing="False"/>
+
+            <dxg:GridColumn Header="Количество"
+                            Binding="{Binding Quantity, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                            AllowEditing="True"
+                            IsSmart="True">
+                <dxg:GridColumn.EditSettings>
+                    <dxe:SpinEditSettings AllowRoundOutOfRangeValue="True"
+                                          SelectAllOnMouseUp="True"
+                                          MaskUseAsDisplayFormat="True"
+                                          DisplayFormat="N2"/>
+                </dxg:GridColumn.EditSettings>
+            </dxg:GridColumn>
+
+        </dxg:GridControl>
+
+        <dxlc:LayoutGroup HorizontalAlignment="Right"
+                          VerticalAlignment="Bottom">
+
+            <Button Content="Списать"
+                    IsEnabled="{Binding CanWriteDownProduct}"
+                    Command="{Binding WriteDownProductCommand}"/>
+
+            <Button Content="Очистить"
+                    Margin="10 0 0 0"
+                    Command="{Binding CloseCommand}"/>
+
+        </dxlc:LayoutGroup>
+
+    </dxlc:LayoutControl>
+
+</local:BaseMenuView>

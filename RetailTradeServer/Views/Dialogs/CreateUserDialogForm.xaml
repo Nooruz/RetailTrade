@@ -1,0 +1,45 @@
+﻿<dialogs:BaseDialogUserControl     x:Class="RetailTradeServer.Views.Dialogs.CreateUserDialogForm"
+                                   xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                                   xmlns:dxe="http://schemas.devexpress.com/winfx/2008/xaml/editors"
+                                   xmlns:dxlc="http://schemas.devexpress.com/winfx/2008/xaml/layoutcontrol"
+                                   xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                                   xmlns:dialogs="clr-namespace:RetailTradeServer.Dialogs"
+                                   Width="350">
+
+    <dxlc:LayoutControl Orientation="Vertical">
+
+        <dxlc:LayoutItem Label="Логин">
+            <dxe:TextEdit Text="{Binding Username, UpdateSourceTrigger=PropertyChanged}"/>
+        </dxlc:LayoutItem>
+
+        <dxlc:LayoutItem Label="ФИО">
+            <dxe:TextEdit Text="{Binding FullName, UpdateSourceTrigger=PropertyChanged}"/>
+        </dxlc:LayoutItem>
+
+        <dxlc:LayoutItem Label="Парль">
+            <dxe:PasswordBoxEdit Text="{Binding Password}"/>
+        </dxlc:LayoutItem>
+
+        <dxlc:LayoutItem Label="Подтвердите парль">
+            <dxe:PasswordBoxEdit Text="{Binding ConfirmPassword}"/>
+        </dxlc:LayoutItem>
+
+        <dxlc:LayoutItem Label="Роль">
+            <dxe:ComboBoxEdit ItemsSource="{Binding Roles}"
+                              DisplayMember="Name"
+                              ValueMember="Id"
+                              EditValue="{Binding SelectedRoleId, UpdateSourceTrigger=PropertyChanged}"/>
+        </dxlc:LayoutItem>
+
+        <dxlc:LayoutGroup Orientation="Horizontal"
+                          VerticalAlignment="Bottom"
+                          HorizontalAlignment="Right">
+            <Button Content="Создать"
+                    Command="{Binding CreateUserCommand}"/>
+            <Button Content="Отменить"
+                    Command="{Binding CloseCommand}"/>
+        </dxlc:LayoutGroup>
+
+    </dxlc:LayoutControl>
+    
+</dialogs:BaseDialogUserControl>

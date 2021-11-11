@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+ <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <edmx:Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <!-- Diagram content (shape and connector positions) -->
+    <edmx:Diagrams>
+      <Diagram DiagramId="b6b3b3ca1290416abfc7587031619778" Name="Diagram1">
+        <EntityTypeShape EntityType="RetailTradeDbModel.Branches" Width="1.5" PointX="3" PointY="19" IsExpanded="true" />
+        <EntityTypeShape EntityType="RetailTradeDbModel.Organizations" Width="1.5" PointX="5.75" PointY="5.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="RetailTradeDbModel.ProductCategories" Width="1.5" PointX="0.75" PointY="2.125" IsExpanded="true" />
+        <EntityTypeShape EntityType="RetailTradeDbModel.Products" Width="1.5" PointX="5.25" PointY="1" IsExpanded="true" />
+        <EntityTypeShape EntityType="RetailTradeDbModel.ProductSales" Width="1.5" PointX="7.5" PointY="1.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="RetailTradeDbModel.ProductSubcategories" Width="1.5" PointX="3" PointY="2" IsExpanded="true" />
+        <EntityTypeShape EntityType="RetailTradeDbModel.Receipts" Width="1.5" PointX="5.25" PointY="12.625" IsExpanded="true" />
+        <EntityTypeShape EntityType="RetailTradeDbModel.Roles" Width="1.5" PointX="1.5" PointY="16.125" IsExpanded="true" />
+        <EntityTypeShape EntityType="RetailTradeDbModel.Shifts" Width="1.5" PointX="3" PointY="12.875" IsExpanded="true" />
+        <EntityTypeShape EntityType="RetailTradeDbModel.Suppliers" Width="1.5" PointX="3" PointY="6.25" IsExpanded="true" />
+        <EntityTypeShape EntityType="RetailTradeDbModel.Units" Width="1.5" PointX="3" PointY="9.625" IsExpanded="true" />
+        <EntityTypeShape EntityType="RetailTradeDbModel.Users" Width="1.5" PointX="0.75" PointY="12.625" IsExpanded="true" />
+        <AssociationConnector Association="RetailTradeDbModel.FK_Branches_Users_UserId" ManuallyRouted="false" />
+        <AssociationConnector Association="RetailTradeDbModel.FK_ProductSubcategories_ProductCategories_ProductCategoryId" ManuallyRouted="false" />
+        <AssociationConnector Association="RetailTradeDbModel.FK_Products_ProductSubcategories_ProductSubcategoryId" ManuallyRouted="false" />
+        <AssociationConnector Association="RetailTradeDbModel.FK_Products_Suppliers_SupplierId" ManuallyRouted="false" />
+        <AssociationConnector Association="RetailTradeDbModel.FK_Products_Units_UnitId" ManuallyRouted="false" />
+        <AssociationConnector Association="RetailTradeDbModel.FK_ProductSales_Products_ProductId" ManuallyRouted="false" />
+        <AssociationConnector Association="RetailTradeDbModel.FK_ProductSales_Receipts_ReceiptId" ManuallyRouted="false" />
+        <AssociationConnector Association="RetailTradeDbModel.FK_Receipts_Shifts_ShiftId" ManuallyRouted="false" />
+        <AssociationConnector Association="RetailTradeDbModel.FK_Users_Roles_RoleId" ManuallyRouted="false" />
+        <AssociationConnector Association="RetailTradeDbModel.FK_Shifts_Users_UserId" ManuallyRouted="false" />
+      </Diagram>
+    </edmx:Diagrams>
+  </edmx:Designer>
+</edmx:Edmx>

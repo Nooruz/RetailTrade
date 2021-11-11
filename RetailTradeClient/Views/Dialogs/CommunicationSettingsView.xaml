@@ -1,0 +1,95 @@
+﻿<dialogs:BaseDialogUserControl x:Class="RetailTradeClient.Views.Dialogs.CommunicationSettingsView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:dxe="http://schemas.devexpress.com/winfx/2008/xaml/editors"
+             xmlns:dxg="http://schemas.devexpress.com/winfx/2008/xaml/grid"
+             xmlns:dxlc="http://schemas.devexpress.com/winfx/2008/xaml/layoutcontrol"
+             xmlns:dialogs="clr-namespace:RetailTradeClient.Dialogs"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             Width="400">
+
+    <dxlc:LayoutControl Orientation="Vertical">
+
+        <dxlc:LayoutGroup Orientation="Vertical"
+                          View="GroupBox">
+
+            <dxlc:LayoutGroup>
+
+                <dxlc:LayoutItem Label="COM порт:"
+                                 LabelPosition="Top">
+                    <dxe:ComboBoxEdit ItemsSource="{Binding COMPorts}"
+                                      SelectedItem="{Binding SelectedCOMPort}"
+                                      IsTextEditable="False"/>
+                </dxlc:LayoutItem>
+
+                <dxlc:LayoutItem Label="Скорость:"
+                                 LabelPosition="Top">
+                    <dxe:ComboBoxEdit ItemsSource="{Binding BaudRates}"
+                                      SelectedItem="{Binding SelectedBaudRate}"
+                                      IsTextEditable="False"/>
+                </dxlc:LayoutItem>
+
+                <dxlc:LayoutItem Label="Номер ККМ:"
+                                 LabelPosition="Top">
+                    <dxe:TextEdit/>
+                </dxlc:LayoutItem>
+
+            </dxlc:LayoutGroup>
+
+            <dxlc:LayoutGroup>
+
+                <dxlc:LayoutItem Label="Тайм-аут между ком. (мс):"
+                                 LabelPosition="Top">
+                    <dxe:TextEdit EditValue="{Binding TimeoutBetweenComputer, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+                </dxlc:LayoutItem>
+
+                <dxlc:LayoutItem Label="Тайм-аут (мс):"
+                                 LabelPosition="Top">
+                    <dxe:TextEdit EditValue="{Binding Timeout, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+                </dxlc:LayoutItem>
+
+            </dxlc:LayoutGroup>
+
+        </dxlc:LayoutGroup>
+
+        <dxlc:LayoutGroup View="GroupBox"
+                          Orientation="Vertical">
+
+            <dxg:GridControl MinHeight="150"
+                             ItemsSource="{Binding GetCRMs}">
+                <dxg:GridControl.View>
+                    <dxg:TableView ShowGroupPanel="False"
+                                   AutoWidth="True"/>
+                </dxg:GridControl.View>
+                <dxg:GridColumn FieldName="COMPort" Header="COM порт"/>
+                <dxg:GridColumn FieldName="CRMNumber" Header="Номер ККМ"/>
+                <dxg:GridColumn FieldName="BaudRate" Header="Скорость"/>
+
+            </dxg:GridControl>
+
+            <Button VerticalAlignment="Bottom"
+                    Content="Поиск"
+                    Command="{Binding SearchCRMCommand}"/>
+
+        </dxlc:LayoutGroup>
+
+        <dxlc:LayoutGroup View="GroupBox"
+                              Orientation="Vertical"
+                              VerticalAlignment="Top">
+
+            <dxe:TextEdit />
+            <Button Content="Получить номер ККМ"
+                    Command="{Binding GetCRMNumberCommand}"/>
+
+        </dxlc:LayoutGroup>
+
+        <dxlc:LayoutGroup HorizontalAlignment="Right"
+                          VerticalAlignment="Top">
+
+            <Button Content="Применить"/>
+            <Button Content="Закрыть"/>
+
+        </dxlc:LayoutGroup>
+
+    </dxlc:LayoutControl>
+
+</dialogs:BaseDialogUserControl>

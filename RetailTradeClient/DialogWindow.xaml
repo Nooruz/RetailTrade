@@ -1,0 +1,16 @@
+﻿<dxc:DXWindow
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:dxc="http://schemas.devexpress.com/winfx/2008/xaml/core"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    x:Class="RetailTradeClient.DialogWindow"
+    Title="{Binding Title}"
+    WindowState="{Binding WindowState}"
+    ResizeMode="{Binding ResizeMode}"
+    SizeToContent="{Binding SizeToContent}"
+    Height="450" 
+    Width="800"
+    WindowStartupLocation="CenterScreen">
+
+    <ContentControl Content="{Binding Content}"/>
+
+</dxc:DXWindow>

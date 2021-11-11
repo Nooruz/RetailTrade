@@ -1,0 +1,24 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+
+    <Color x:Key="PrimeryColor">#25C4CB</Color>
+    <SolidColorBrush x:Key="PrimeryColorBrush" Color="{StaticResource PrimeryColor}"/>
+
+    <Color x:Key="FocusedButtonColor">#F2CB7F</Color>
+    <SolidColorBrush x:Key="FocusedButtonColorBrush" Color="{StaticResource FocusedButtonColor}"/>
+
+    <Color x:Key="DarkSilver">#747474</Color>
+    <SolidColorBrush x:Key="DarkSilverBrush" Color="{StaticResource DarkSilver}"/>
+
+    <Color x:Key="ThinSilver">#FAFAFA</Color>
+    <SolidColorBrush x:Key="ThinSilverBrush" Color="{StaticResource ThinSilver}"/>
+
+    <Color x:Key="LightSilver">#E5E5E5</Color>
+    <SolidColorBrush x:Key="LightSilverBrush" Color="{StaticResource LightSilver}"/>
+    
+    <Color x:Key="TextBoxHover">#1E9DD8</Color>
+    <SolidColorBrush x:Key="TextBoxHoverBrush" Color="{StaticResource TextBoxHover}"/>
+    
+    
+
+</ResourceDictionary>

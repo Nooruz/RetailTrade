@@ -1,0 +1,111 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <TargetFramework>net5.0-windows</TargetFramework>
+    <UseWPF>true</UseWPF>
+    <UserSecretsId>69d24dac-b046-4e85-93fb-b43a50e0103d</UserSecretsId>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Remove="Controls\**" />
+    <EmbeddedResource Remove="Controls\**" />
+    <None Remove="Controls\**" />
+    <Page Remove="Controls\**" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Remove="Fonts\fa-brands-400.ttf" />
+    <None Remove="Fonts\fa-regular-400.ttf" />
+    <None Remove="Fonts\fa-solid-900.ttf" />
+    <None Remove="Report\ClosingShiftsReport.vsrepx" />
+    <None Remove="Report\ProductBarcodeReport.vsrepx" />
+    <None Remove="Resources\Images\logo.png" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Include="Report\ClosingShiftsReport.vsrepx" />
+    <EmbeddedResource Include="Report\ProductBarcodeReport.vsrepx" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="DevExpress.Reporting.Core" Version="21.1.6" />
+    <PackageReference Include="devexpress.wpf.controls" Version="21.1.6" />
+    <PackageReference Include="DevExpress.Wpf.Dashboard" Version="21.1.6" />
+    <PackageReference Include="devexpress.wpf.grid.core" Version="21.1.6" />
+    <PackageReference Include="devexpress.wpf.layoutcontrol" Version="21.1.6" />
+    <PackageReference Include="devexpress.wpf.navbar" Version="21.1.6" />
+    <PackageReference Include="devexpress.wpf.printing" Version="21.1.6" />
+    <PackageReference Include="Microsoft.AspNet.Identity.Core" Version="2.2.3" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="5.0.11">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+    <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="5.0.11" />
+    <PackageReference Include="Microsoft.Extensions.Configuration.UserSecrets" Version="5.0.0" />
+    <PackageReference Include="Microsoft.Extensions.Hosting" Version="5.0.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\RetailTrade.Domain\RetailTrade.Domain.csproj" />
+    <ProjectReference Include="..\RetailTrade.EntityFramework\RetailTrade.EntityFramework.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Resource Include="Fonts\fa-brands-400.ttf">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Fonts\fa-regular-400.ttf">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Fonts\fa-solid-900.ttf">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Resources\Images\logo.png" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Update="Properties\Settings.Designer.cs">
+      <DesignTimeSharedInput>True</DesignTimeSharedInput>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Settings.settings</DependentUpon>
+    </Compile>
+    <Compile Update="Report\ClosingShiftsReport.cs">
+      <DependentUpon>ClosingShiftsReport.vsrepx</DependentUpon>
+    </Compile>
+    <Compile Update="Report\ClosingShiftsReport.Designer.cs">
+      <DependentUpon>ClosingShiftsReport.vsrepx</DependentUpon>
+    </Compile>
+    <Compile Update="Report\ProductBarcodeReport.cs">
+      <DependentUpon>ProductBarcodeReport.vsrepx</DependentUpon>
+    </Compile>
+    <Compile Update="Report\ProductBarcodeReport.Designer.cs">
+      <DependentUpon>ProductBarcodeReport.vsrepx</DependentUpon>
+    </Compile>
+    <Compile Update="RetailTradeDashboard.cs" />
+    <Compile Update="RetailTradeDashboard.Designer.cs">
+      <DependentUpon>RetailTradeDashboard.cs</DependentUpon>
+    </Compile>
+    <Compile Update="Views\Dialogs\CreateProductSubcategoryDialogForm.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Update="Properties\Settings.settings">
+      <Generator>SettingsSingleFileGenerator</Generator>
+      <LastGenOutput>Settings.Designer.cs</LastGenOutput>
+    </None>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Page Update="Views\Dialogs\CreateProductSubcategoryDialogForm.xaml">
+      <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Update="Views\Menus\ProductCategoryView.xaml">
+      <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
+    </Page>
+  </ItemGroup>
+
+</Project>
