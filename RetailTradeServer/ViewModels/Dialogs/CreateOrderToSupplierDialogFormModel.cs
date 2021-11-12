@@ -55,7 +55,7 @@ namespace RetailTradeServer.ViewModels.Dialogs
             }
         }
 
-        public bool CanRefundProduct => OrderProducts.FirstOrDefault(p => p.Quantity == 0) == null;
+        public bool CanOrderProduct => OrderProducts.Count == 0 ? false : OrderProducts.FirstOrDefault(p => p.Quantity == 0) == null;
 
         #endregion
 
@@ -115,11 +115,13 @@ namespace RetailTradeServer.ViewModels.Dialogs
                 }
             }
             OnPropertyChanged(nameof(OrderProducts));
+            OnPropertyChanged(nameof(CanOrderProduct));
         }
         
         private void Item_PropertyChanged(object sender, PropertyChangedEventArgs e)
         {
             OnPropertyChanged(nameof(OrderProducts));
+            OnPropertyChanged(nameof(CanOrderProduct));
         }
 
         private void RowDoubleClick()
@@ -141,9 +143,9 @@ namespace RetailTradeServer.ViewModels.Dialogs
         {
             if (parameter is GridCellValidationEventArgs e)
             {
-                if (((ProductRefundToSupplier)e.Row).Product != null)
+                if (((OrderProduct)e.Row).Product != null)
                 {
-                    if (((ProductRefundToSupplier)e.Row).Product.Quantity < (decimal)e.Value)
+                    if (((OrderProduct)e.Row).Product.Quantity < (decimal)e.Value)
                     {
                         e.IsValid = false;
                         e.ErrorContent = "Количество возврата не должно превышать количество на складе.";
@@ -151,6 +153,7 @@ namespace RetailTradeServer.ViewModels.Dialogs
                     }
                 }
             }
+            OnPropertyChanged(nameof(CanOrderProduct));
         }
 
         private async void Order()

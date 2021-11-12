@@ -83,7 +83,7 @@
 
             <Button Content="Возврат"
                     Command="{Binding RefundProductCommand}"
-                    IsEnabled="{Binding CanRefundProduct, UpdateSourceTrigger=PropertyChanged}"/>
+                    IsEnabled="{Binding CanOrderProduct, UpdateSourceTrigger=PropertyChanged}"/>
 
             <Button Content="Очистить"
                     Command="{Binding ClearCommand}"/>
