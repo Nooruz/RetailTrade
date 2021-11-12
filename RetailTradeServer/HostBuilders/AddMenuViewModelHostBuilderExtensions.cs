@@ -72,7 +72,10 @@ namespace RetailTradeServer.HostBuilders
 
         private static OrderProductViewModel CreateOrderProductViewModel(IServiceProvider services)
         {
-            return new OrderProductViewModel(services.GetRequiredService<IUIManager>());
+            return new OrderProductViewModel(services.GetRequiredService<IOrderToSupplierService>(),
+                services.GetRequiredService<IUIManager>(),
+                services.GetRequiredService<IProductService>(),
+                services.GetRequiredService<ISupplierService>());
         }
 
         private static ProductBarcodeViewModel CreateProductBarcodeViewModel(IServiceProvider services)

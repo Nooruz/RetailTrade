@@ -16,8 +16,10 @@
                           VerticalAlignment="Top"
                           HorizontalAlignment="Left">
 
-            <Button Content="Создать"/>
-            <Button Content="Удалить"/>
+            <Button Content="Создать"
+                    Command="{Binding CreateOrderCommand}"/>
+            <Button Content="Удалить"
+                    Command="{Binding DeleteOrderCommand}"/>
 
         </dxlc:LayoutGroup>
 
