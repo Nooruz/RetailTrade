@@ -11,7 +11,7 @@ namespace RetailTrade.Domain.Models
         public string FullName { get; set; }
 
         /// <summary>
-        /// Полное наименование поставщика
+        /// Краткое наименование поставщика
         /// </summary>
         public string ShortName { get; set; }
         public string Address { get; set; }

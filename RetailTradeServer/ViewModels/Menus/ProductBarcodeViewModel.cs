@@ -11,6 +11,7 @@ using System.Collections.ObjectModel;
 using System.Collections.Specialized;
 using System.ComponentModel;
 using System.Linq;
+using System.Windows;
 using System.Windows.Input;
 
 namespace RetailTradeServer.ViewModels.Menus
@@ -28,7 +29,7 @@ namespace RetailTradeServer.ViewModels.Menus
         #region Public Properties
 
         public IEnumerable<Product> Products => _productService.GetAll();
-        public ObservableCollection<ProductBarcodePrinting> ProductBarcodePrintings { get; set; }
+        public ObservableCollection<ProductBarcodePrinting> ProductBarcodePrinting { get; set; }
         public Product SelectedProduct
         {
             get => _selectedProduct;
@@ -56,12 +57,12 @@ namespace RetailTradeServer.ViewModels.Menus
             _productService = productService;
             _manager = manager;
 
-            ProductBarcodePrintings = new ObservableCollection<ProductBarcodePrinting>();
+            ProductBarcodePrinting = new ObservableCollection<ProductBarcodePrinting>();
 
             AddProductToPrintCommand = new RelayCommand(AddProductToPrint);
             PrintProductBarcodeCommand = new RelayCommand(PrintProductBarcode);
 
-            ProductBarcodePrintings.CollectionChanged += ProductBarcodePrintings_CollectionChanged;
+            ProductBarcodePrinting.CollectionChanged += ProductBarcodePrintings_CollectionChanged;
         }        
 
         #endregion
@@ -70,9 +71,9 @@ namespace RetailTradeServer.ViewModels.Menus
 
         private void AddProductToPrint()
         {
-            if (ProductBarcodePrintings.FirstOrDefault(p => p.Id == SelectedProduct.Id) == null)
+            if (ProductBarcodePrinting.FirstOrDefault(p => p.Id == SelectedProduct.Id) == null)
             {
-                ProductBarcodePrintings.Add(new ProductBarcodePrinting
+                ProductBarcodePrinting.Add(new ProductBarcodePrinting
                 {
                     Id = SelectedProduct.Id,
                     Name = SelectedProduct.Name,
@@ -85,9 +86,19 @@ namespace RetailTradeServer.ViewModels.Menus
 
         private void PrintProductBarcode()
         {
-            var report = new ProductBarcodeReport();
+            ProductBarcodeReport report = new();
 
-            report.DataSource = ProductBarcodePrintings;
+            List<ProductBarcodePrinting> productBarcodePrintings = new();
+
+            foreach (var item in ProductBarcodePrinting)
+            {
+                productBarcodePrintings.Add(new ProductBarcodePrinting
+                {
+
+                });
+            }
+
+            report.DataSource = ProductBarcodePrinting;
             report.CreateDocument();
 
             _manager.ShowDialog(new DocumentViewerViewModel
@@ -96,9 +107,9 @@ namespace RetailTradeServer.ViewModels.Menus
                 PrintingDocument = report
             },
                 new DocumentViewerView(),
-                System.Windows.WindowState.Maximized,
-                System.Windows.ResizeMode.CanResize,
-                System.Windows.SizeToContent.Manual);
+                WindowState.Maximized,
+                ResizeMode.CanResize,
+                SizeToContent.Manual);
         }
 
         private void ProductBarcodePrintings_CollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
@@ -127,7 +138,7 @@ namespace RetailTradeServer.ViewModels.Menus
 
         private void Item_PropertyChanged(object sender, PropertyChangedEventArgs e)
         {
-            OnPropertyChanged(nameof(ProductBarcodePrintings));
+            OnPropertyChanged(nameof(ProductBarcodePrinting));
         }
 
         #endregion

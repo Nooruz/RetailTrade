@@ -53,7 +53,8 @@
                                 Tag="{StaticResource faTools}">
             <dxwui:HamburgerSubMenuNavigationButton Content="Пользователи"
                                                     Command="{Binding UserCommand}"/>
-            <dxwui:HamburgerSubMenuNavigationButton Content="Поставщики"/>
+            <dxwui:HamburgerSubMenuNavigationButton Content="Поставщики"
+                                                    Command="{Binding SupplierCommand}"/>
             <dxwui:HamburgerSubMenuNavigationButton Content="Ценники и этикетки (Штрих-код)"
                                                     Command="{Binding BarcodeCommand}"/>
             <dxwui:HamburgerSubMenuNavigationButton Content="Филиалы"

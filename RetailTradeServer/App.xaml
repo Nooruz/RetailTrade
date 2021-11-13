@@ -77,6 +77,10 @@
                 <menuViews:RefundToSupplierView/>
             </DataTemplate>
 
+            <DataTemplate DataType="{x:Type menuViewModels:SupplierViewModel}">
+                <menuViews:SupplierView/>
+            </DataTemplate>
+
             <ResourceDictionary.MergedDictionaries>
                 <ResourceDictionary Source="/Styles/Fonts.xaml"/>
                 <ResourceDictionary Source="/Styles/Colors.xaml"/>

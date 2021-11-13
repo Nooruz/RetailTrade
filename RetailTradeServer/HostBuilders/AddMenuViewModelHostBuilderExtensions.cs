@@ -30,6 +30,7 @@ namespace RetailTradeServer.HostBuilders
                 services.AddTransient(CreateBranchViewModel);
                 services.AddTransient(CreateUserViewModel);
                 services.AddTransient(CreateRefundToSupplierViewModel);
+                services.AddTransient(CreateSupplierViewModel);
 
                 services.AddSingleton<CreateMenuViewModel<ProductCategoryViewModel>>(servicesProvider => () => CreateProductCategoryViewModel(servicesProvider));
                 services.AddSingleton<CreateMenuViewModel<ArrivalProductViewModel>>(servicesProvider => () => CreateArrivalProductViewModel(servicesProvider));
@@ -40,9 +41,16 @@ namespace RetailTradeServer.HostBuilders
                 services.AddSingleton<CreateMenuViewModel<BranchViewModel>>(servicesProvider => () => CreateBranchViewModel(servicesProvider));
                 services.AddSingleton<CreateMenuViewModel<UserViewModel>>(servicesProvider => () => CreateUserViewModel(servicesProvider));
                 services.AddSingleton<CreateMenuViewModel<RefundToSupplierViewModel>>(servicesProvider => () => CreateRefundToSupplierViewModel(servicesProvider));
+                services.AddSingleton<CreateMenuViewModel<SupplierViewModel>>(servicesProvider => () => CreateSupplierViewModel(servicesProvider));
 
                 services.AddSingleton<IMenuViewModelFactory, MenuViewModelFactory>();
             });
+        }
+
+        private static SupplierViewModel CreateSupplierViewModel(IServiceProvider services)
+        {
+            return new SupplierViewModel(services.GetRequiredService<ISupplierService>(),
+                services.GetRequiredService<IUIManager>());
         }
 
         private static ProductCategoryViewModel CreateProductCategoryViewModel(IServiceProvider services)

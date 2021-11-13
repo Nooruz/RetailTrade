@@ -48,7 +48,12 @@ namespace RetailTradeServer.State.Navigators
         /// <summary>
         /// Возврат поставшику
         /// </summary>
-        RefundToSupplier
+        RefundToSupplier,
+
+        /// <summary>
+        /// Поставщики
+        /// </summary>
+        Supplier
     }
     public interface IMenuNavigator
     {

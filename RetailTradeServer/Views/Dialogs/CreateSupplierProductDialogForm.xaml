@@ -32,8 +32,7 @@
                 </dxlc:LayoutItem>
 
                 <dxlc:LayoutItem Label="ИНН">
-                    <dxe:TextEdit Text="{Binding Inn, UpdateSourceTrigger=PropertyChanged}" 
-                                  MaskType="Numeric"
+                    <dxe:TextEdit Text="{Binding Inn, UpdateSourceTrigger=PropertyChanged}"                                   
                                   MaxLength="14"/>
                 </dxlc:LayoutItem>
 
@@ -45,8 +44,22 @@
                           ItemSpace="10">
 
                 <Button Content="Создать" 
-                        Command="{Binding CreateCommand}"/>
-                
+                        Command="{Binding CreateCommand}">
+                    <Button.Style>
+                        <Style TargetType="{x:Type Button}">
+                            <Style.Triggers>
+                                <DataTrigger Binding="{Binding IsEditing}" Value="True">
+                                    <Setter Property="Visibility" Value="Collapsed"/>
+                                </DataTrigger>
+                            </Style.Triggers>
+                        </Style>
+                    </Button.Style>
+                </Button>
+
+                <Button Content="Сохранить" 
+                        Command="{Binding SaveCommand}"
+                        Visibility="{Binding IsEditing, Converter={StaticResource BooleanToVisibilityConverter}}"/>
+
                 <Button Content="Отменить"
                         Command="{Binding CloseCommand}"/>
 

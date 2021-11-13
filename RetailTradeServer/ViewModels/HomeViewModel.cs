@@ -45,6 +45,7 @@ namespace RetailTradeServer.ViewModels
         public ICommand BarcodeCommand { get; }
         public ICommand UserCommand { get; }
         public ICommand BranchCommand { get; }
+        public ICommand SupplierCommand { get; }
 
         #endregion
 
@@ -78,6 +79,7 @@ namespace RetailTradeServer.ViewModels
             BranchCommand = new RelayCommand(Branch);
             ReportClosingShiftsCommand = new RelayCommand(ReportClosingShifts);
             RefundToSupplierCommand = new RelayCommand(RefundToSupplier);
+            SupplierCommand = new RelayCommand(OpenSupplier);
 
             _menuNavigator.StateChanged += MenuNavigator_StateChanged;
         }
@@ -85,6 +87,11 @@ namespace RetailTradeServer.ViewModels
         #endregion
 
         #region Private Voids
+
+        private void OpenSupplier()
+        {
+            UpdateCurrentMenuViewModelCommand.Execute(MenuViewType.Supplier);
+        }
 
         private void ProductCategory()
         {

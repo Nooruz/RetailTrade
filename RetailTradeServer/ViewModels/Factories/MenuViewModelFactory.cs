@@ -18,6 +18,7 @@ namespace RetailTradeServer.ViewModels.Factories
         private readonly CreateMenuViewModel<BranchViewModel> _createBranchViewModel;
         private readonly CreateMenuViewModel<UserViewModel> _createUserViewModel;
         private readonly CreateMenuViewModel<RefundToSupplierViewModel> _createRefundToSupplierViewModel;
+        private readonly CreateMenuViewModel<SupplierViewModel> _createSupplierViewModel;
 
         #endregion
 
@@ -31,7 +32,8 @@ namespace RetailTradeServer.ViewModels.Factories
             CreateMenuViewModel<AnalyticalPanelViewModel> createAnalyticalPanelViewModel,
             CreateMenuViewModel<BranchViewModel> createBranchViewModel,
             CreateMenuViewModel<UserViewModel> createUserViewModel,
-            CreateMenuViewModel<RefundToSupplierViewModel> createRefundToSupplierViewModel)
+            CreateMenuViewModel<RefundToSupplierViewModel> createRefundToSupplierViewModel,
+            CreateMenuViewModel<SupplierViewModel> createSupplierViewModel)
         {
             _createProductCategoryViewModel = createProductCategoryViewModel;
             _createArrivalProductViewModel = createArrivalProductViewModel;
@@ -42,6 +44,7 @@ namespace RetailTradeServer.ViewModels.Factories
             _createBranchViewModel = createBranchViewModel;
             _createUserViewModel = createUserViewModel;
             _createRefundToSupplierViewModel = createRefundToSupplierViewModel;
+            _createSupplierViewModel = createSupplierViewModel;
         }
 
         #endregion
@@ -59,6 +62,7 @@ namespace RetailTradeServer.ViewModels.Factories
                 MenuViewType.Branch => _createBranchViewModel(),
                 MenuViewType.User => _createUserViewModel(),
                 MenuViewType.RefundToSupplier => _createRefundToSupplierViewModel(),
+                MenuViewType.Supplier => _createSupplierViewModel(),
                 _ => throw new ArgumentException("The ViewType does not have a ViewModel.", "viewType"),
             };
         }

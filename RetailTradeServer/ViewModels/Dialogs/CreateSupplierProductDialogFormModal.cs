@@ -24,6 +24,8 @@ namespace RetailTradeServer.ViewModels.Dialogs
 
         #region Public Properties
 
+        public int Id { get; set; }
+
         public string FullName
         {
             get => _fullName;
@@ -74,11 +76,14 @@ namespace RetailTradeServer.ViewModels.Dialogs
             }
         }
 
+        public bool IsEditing { get; set; }
+
         #endregion
 
         #region Commands
 
         public ICommand CreateCommand { get; }
+        public ICommand SaveCommand { get; }
 
         #endregion
 
@@ -90,6 +95,7 @@ namespace RetailTradeServer.ViewModels.Dialogs
             _supplierService = supplierService;
             _manager = manager;
             CreateCommand = new RelayCommand(Create);
+            SaveCommand = new RelayCommand(Save);
         }
 
         #endregion
@@ -108,6 +114,21 @@ namespace RetailTradeServer.ViewModels.Dialogs
                 Phone = Phone,
                 Inn = Inn,
                 CreateDate = DateTime.Now
+            });
+            _manager.Close();
+        }
+
+        private async void Save()
+        {
+            if (string.IsNullOrEmpty(FullName) || string.IsNullOrEmpty(ShortName))
+                return;
+            await _supplierService.UpdateAsync(Id, new Supplier
+            {
+                FullName = FullName,
+                ShortName = ShortName,
+                Address = Address,
+                Phone = Phone,
+                Inn = Inn
             });
             _manager.Close();
         }
