@@ -1,5 +1,7 @@
 ﻿using RetailTrade.Domain.Models;
+using System;
 using System.Collections.Generic;
+using System.Linq.Expressions;
 using System.Threading.Tasks;
 
 namespace RetailTrade.Domain.Services
@@ -43,5 +45,6 @@ namespace RetailTrade.Domain.Services
         /// <param name="supplierId">Код поставшика</param>
         /// <returns></returns>
         IEnumerable<Product> GetForRefund(int supplierId);
+        Task<IEnumerable<Product>> PredicateSelect(Expression<Func<Product, bool>> predicate, Expression<Func<Product, Product>> select);
     }
 }

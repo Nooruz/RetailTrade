@@ -2,8 +2,11 @@
 using RetailTrade.Domain.Models;
 using RetailTrade.Domain.Services;
 using RetailTradeServer.Commands;
+using RetailTradeServer.Report;
 using RetailTradeServer.State.Dialogs;
+using RetailTradeServer.State.Users;
 using RetailTradeServer.ViewModels.Dialogs.Base;
+using RetailTradeServer.Views.Dialogs;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -22,26 +25,37 @@ namespace RetailTradeServer.ViewModels.Dialogs
         private readonly IProductService _productService;
         private readonly ISupplierService _supplierService;
         private readonly IOrderToSupplierService _orderToSupplierService;
+        private readonly IUserStore _userStore;
         private readonly IUIManager _manager;
-        private int? _selectedSupplierId;
+        private Supplier _selectedSupplier;
         private Product _selectedProduct;
         private string _comment;
+        private IEnumerable<Supplier> _suppliers;
+        private IEnumerable<Product> _products;
 
         #endregion
 
         #region Public Properties
 
-        public IEnumerable<Supplier> Suppliers => _supplierService.GetOnlyNames();
-
-        public int? SelectedSupplierId
+        public IEnumerable<Supplier> Suppliers
         {
-            get => _selectedSupplierId;
+            get => _suppliers;
             set
             {
-                _selectedSupplierId = value;
-                OnPropertyChanged(nameof(SelectedSupplierId));
+                _suppliers = value;
+                OnPropertyChanged(nameof(Suppliers));
+            }
+        }
+        public Supplier SelectedSupplier
+        {
+            get => _selectedSupplier;
+            set
+            {
+                _selectedSupplier = value;
+                OnPropertyChanged(nameof(SelectedSupplier));
                 OnPropertyChanged(nameof(Products));
                 Cleare();
+                GetProducts();
             }
         }
         public string Comment
@@ -53,20 +67,25 @@ namespace RetailTradeServer.ViewModels.Dialogs
                 OnPropertyChanged(nameof(Comment));
             }
         }
-        public IEnumerable<Product> Products => SelectedSupplierId != null ? _productService.GetForRefund(SelectedSupplierId.Value) : null;
-
+        public IEnumerable<Product> Products
+        {
+            get => _products;
+            set
+            {
+                _products = value;
+                OnPropertyChanged(nameof(Products));
+            }
+        }
         public ObservableCollection<OrderProduct> OrderProducts { get; set; }
-
         public Product SelectedProduct
         {
             get => _selectedProduct;
             set
             {
                 _selectedProduct = value;
-                OnPropertyChanged(nameof(SelectedProduct));
+                OnPropertyChanged(nameof(SelectedProduct));                
             }
         }
-
         public bool CanOrderProduct => OrderProducts.Count == 0 ? false : OrderProducts.FirstOrDefault(p => p.Quantity == 0) == null;
 
         #endregion
@@ -85,14 +104,18 @@ namespace RetailTradeServer.ViewModels.Dialogs
         public CreateOrderToSupplierDialogFormModel(IProductService productService,
             ISupplierService supplierService,
             IOrderToSupplierService orderToSupplierService,
+            IUserStore userStore,
             IUIManager manager)
         {
             _productService = productService;
             _supplierService = supplierService;
             _orderToSupplierService = orderToSupplierService;
+            _userStore = userStore;
             _manager = manager;
 
             OrderProducts = new();
+
+            GetSupplier();
 
             RowDoubleClickCommand = new RelayCommand(RowDoubleClick);
             ValidateCellCommand = new ParameterCommand(parameter => ValidateCell(parameter));
@@ -186,17 +209,44 @@ namespace RetailTradeServer.ViewModels.Dialogs
                 OrderToSupplier order = await _orderToSupplierService.CreateAsync(new OrderToSupplier
                 {
                     OrderDate = DateTime.Now,
-                    SupplierId = SelectedSupplierId.Value,
+                    SupplierId = SelectedSupplier.Id,
                     OrderStatusId = 1,
                     Comment = Comment,
                     OrderProducts = orders
                 });
+
+                OrderToSupplierReport report = new(order, SelectedSupplier, _userStore.CurrentOrganization)
+                {
+                    DataSource = OrderProducts
+                };
+
+                await report.CreateDocumentAsync();
+
+                await _manager.ShowDialog(new DocumentViewerViewModel() { PrintingDocument = report }, 
+                    new DocumentViewerView(), 
+                    WindowState.Maximized, 
+                    ResizeMode.NoResize, 
+                    SizeToContent.Manual);
+
             }
         }
 
         private void Cleare()
         {
             OrderProducts.Clear();
+        }
+
+        private async void GetProducts()
+        {
+            if (SelectedSupplier != null)
+            {
+                Products = await _productService.PredicateSelect(p => p.SupplierId == SelectedSupplier.Id, p => new Product { Id = p.Id, Name = p.Name, Quantity = p.Quantity, Unit = p.Unit });
+            }
+        }
+
+        private async void GetSupplier()
+        {
+            Suppliers = await _supplierService.GetAllAsync();
         }
 
         #endregion

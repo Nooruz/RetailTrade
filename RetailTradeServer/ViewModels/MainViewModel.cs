@@ -69,7 +69,7 @@ namespace RetailTradeServer.ViewModels
 
             UpdateCurrentViewModelCommand = new UpdateCurrentViewModelCommand(navigator, retailTradeViewModelFactory);
             UpdateCurrentMenuViewModelCommand = new UpdateCurrentMenuViewModelCommand(menuNavigator, menuViewModelFactory);
-            UpdateCurrentViewModelCommand.Execute(Settings.Default.AdminCreated ? ViewType.Home : ViewType.Registration);
+            UpdateCurrentViewModelCommand.Execute(Settings.Default.AdminCreated ? ViewType.Login : ViewType.Registration);
             UpdateCurrentMenuViewModelCommand.Execute(MenuViewType.OrderProduct);
         }
 

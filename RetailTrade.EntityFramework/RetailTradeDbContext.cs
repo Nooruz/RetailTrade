@@ -99,6 +99,11 @@ namespace RetailTrade.EntityFramework
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+            modelBuilder.Entity<OrderToSupplier>()
+                .HasMany(o => o.OrderProducts)
+                .WithOne(o => o.OrderToSupplier)
+                .OnDelete(DeleteBehavior.Cascade);
+
             modelBuilder.Entity<Unit>().HasData(
                 new Unit { Id = 1, LongName = "Килограмм", ShortName = "кг" },
                 new Unit { Id = 2, LongName = "Грамм", ShortName = "г" },

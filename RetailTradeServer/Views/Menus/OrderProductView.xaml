@@ -24,14 +24,33 @@
         </dxlc:LayoutGroup>
 
         <dxg:GridControl SelectionMode="Row"
-                         ItemsSource="{Binding ArrivalProducts, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}">
+                         ItemsSource="{Binding OrdersToSuppliers, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"
+                         SelectedItem="{Binding SelectedOrderToSupplier}">
             
             <dxg:GridControl.View>
                 <dxg:TableView AutoWidth="True"/>
             </dxg:GridControl.View>
 
+            <dxg:GridControl.DetailDescriptor>
+                <dxg:TabViewDetailDescriptor>
+                    <dxg:TabViewDetailDescriptor.DetailDescriptors>
+                        <dxg:DataControlDetailDescriptor ItemsSourcePath="OrderProducts">
+                            <dxg:DataControlDetailDescriptor.DataControl>
+                                <dxg:GridControl AutoGenerateColumns="None">
+                                    <dxg:GridControl.View>
+                                        <dxg:TableView DetailHeaderContent="Заказанные товары" AutoWidth="True" ShowGroupPanel="False"/>
+                                    </dxg:GridControl.View>
+                                    <dxg:GridColumn Header="Наименование" FieldName="Product.Name"/>
+                                    <dxg:GridColumn Header="Количество" FieldName="Quantity"/>
+                                </dxg:GridControl>
+                            </dxg:DataControlDetailDescriptor.DataControl>
+                        </dxg:DataControlDetailDescriptor>
+                    </dxg:TabViewDetailDescriptor.DetailDescriptors>
+                </dxg:TabViewDetailDescriptor>
+            </dxg:GridControl.DetailDescriptor>
+
             <dxg:GridColumn Header="Поставщик" 
-                            Binding="{Binding Supplier.ShorName}"
+                            Binding="{Binding Supplier.ShortName}"
                             AllowEditing="False"/>
 
             <dxg:GridColumn Header="Дата" 
@@ -45,7 +64,7 @@
                             AllowEditing="True"
                             IsSmart="True">
                 <dxg:GridColumn.EditSettings>
-                    <dxe:ComboBoxEditSettings ItemsSource="OrderStatuses"
+                    <dxe:ComboBoxEditSettings ItemsSource="{Binding OrderStatuses}"
                                               DisplayMember="Name"
                                               ValueMember="Id"/>
                 </dxg:GridColumn.EditSettings>

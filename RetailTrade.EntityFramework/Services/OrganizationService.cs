@@ -105,6 +105,21 @@ namespace RetailTrade.EntityFramework.Services
             return null;
         }
 
+        public async Task<Organization> GetCurrentOrganization()
+        {
+            try
+            {
+                await using var context = _contextFactory.CreateDbContext();
+                return await context.Organizations
+                    .FirstOrDefaultAsync();
+            }
+            catch (Exception e)
+            {
+                //ignore
+            }
+            return null;
+        }
+
         public async Task<Organization> UpdateAsync(int id, Organization entity)
         {
             var result = await _nonQueryDataService.Update(id, entity);

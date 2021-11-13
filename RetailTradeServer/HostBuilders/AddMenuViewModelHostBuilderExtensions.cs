@@ -5,6 +5,7 @@ using RetailTrade.Domain.Services;
 using RetailTradeServer.State.Authenticators;
 using RetailTradeServer.State.Dialogs;
 using RetailTradeServer.State.Messages;
+using RetailTradeServer.State.Users;
 using RetailTradeServer.ViewModels;
 using RetailTradeServer.ViewModels.Base;
 using RetailTradeServer.ViewModels.Factories;
@@ -75,7 +76,9 @@ namespace RetailTradeServer.HostBuilders
             return new OrderProductViewModel(services.GetRequiredService<IOrderToSupplierService>(),
                 services.GetRequiredService<IUIManager>(),
                 services.GetRequiredService<IProductService>(),
-                services.GetRequiredService<ISupplierService>());
+                services.GetRequiredService<ISupplierService>(),
+                services.GetRequiredService<IOrderStatusService>(),
+                services.GetRequiredService<IUserStore>());
         }
 
         private static ProductBarcodeViewModel CreateProductBarcodeViewModel(IServiceProvider services)

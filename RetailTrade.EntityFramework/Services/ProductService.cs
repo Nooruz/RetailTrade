@@ -6,6 +6,7 @@ using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Threading.Tasks;
 
 namespace RetailTrade.EntityFramework.Services
@@ -324,6 +325,23 @@ namespace RetailTrade.EntityFramework.Services
                     .Where(p => p.Quantity > 0 && p.SupplierId == supplierId)
                     .Select(p => new Product { Id = p.Id, Name = p.Name, Quantity = p.Quantity })
                     .ToList();
+            }
+            catch (Exception e)
+            {
+                //ignore
+            }
+            return null;
+        }
+
+        public async Task<IEnumerable<Product>> PredicateSelect(Expression<Func<Product, bool>> predicate, Expression<Func<Product, Product>> select)
+        {
+            try
+            {
+                await using var context = _contextFactory.CreateDbContext();
+                return await context.Products
+                    .Where(predicate)
+                    .Select(select)
+                    .ToListAsync();
             }
             catch (Exception e)
             {

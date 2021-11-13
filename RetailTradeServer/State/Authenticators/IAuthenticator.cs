@@ -8,6 +8,7 @@ namespace RetailTradeServer.State.Authenticators
     public interface IAuthenticator
     {
         User CurrentUser { get; }
+        Organization CurrentOrganization { get; }
 
         event Action StateChanged;
 

@@ -1,4 +1,5 @@
 ﻿using RetailTrade.Domain.Models;
+using RetailTrade.Domain.Services;
 using RetailTrade.Domain.Services.AuthenticationServices;
 using RetailTradeServer.State.Navigators;
 using RetailTradeServer.State.Users;
@@ -13,6 +14,7 @@ namespace RetailTradeServer.State.Authenticators
         #region Private Members
 
         private readonly IAuthenticationService _authenticationService;
+        private readonly IOrganizationService _organizationService;
         private readonly IUserStore _userStore;
         private readonly INavigator _navigator;
         private readonly IRetailTradeViewModelFactory _viewModelFactory;
@@ -24,12 +26,14 @@ namespace RetailTradeServer.State.Authenticators
         public Authenticator(IAuthenticationService authenticationService,
             IUserStore userStore,
             INavigator navigator,
-            IRetailTradeViewModelFactory viewModelFactory)
+            IRetailTradeViewModelFactory viewModelFactory,
+            IOrganizationService organizationService)
         {
             _authenticationService = authenticationService;
             _userStore = userStore;
             _navigator = navigator;
             _viewModelFactory = viewModelFactory;
+            _organizationService = organizationService;
         }
 
         #endregion
@@ -46,6 +50,16 @@ namespace RetailTradeServer.State.Authenticators
             }
         }
 
+        public Organization CurrentOrganization
+        {
+            get => _userStore.CurrentOrganization;
+            private set
+            {
+                _userStore.CurrentOrganization = value;
+                StateChanged?.Invoke();
+            }
+        }
+
         public event Action StateChanged;
 
         #endregion
@@ -53,6 +67,7 @@ namespace RetailTradeServer.State.Authenticators
         public async Task Login(string username, string password)
         {
             CurrentUser = await _authenticationService.Login(username, password);
+            CurrentOrganization = await _organizationService.GetCurrentOrganization();
         }
 
         public void Logout()

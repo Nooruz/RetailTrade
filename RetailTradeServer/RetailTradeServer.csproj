@@ -19,12 +19,14 @@
     <None Remove="Fonts\fa-regular-400.ttf" />
     <None Remove="Fonts\fa-solid-900.ttf" />
     <None Remove="Report\ClosingShiftsReport.vsrepx" />
+    <None Remove="Report\OrderToSupplierReport.vsrepx" />
     <None Remove="Report\ProductBarcodeReport.vsrepx" />
     <None Remove="Resources\Images\logo.png" />
   </ItemGroup>
 
   <ItemGroup>
     <EmbeddedResource Include="Report\ClosingShiftsReport.vsrepx" />
+    <EmbeddedResource Include="Report\OrderToSupplierReport.vsrepx" />
     <EmbeddedResource Include="Report\ProductBarcodeReport.vsrepx" />
   </ItemGroup>
 
@@ -75,6 +77,12 @@
     </Compile>
     <Compile Update="Report\ClosingShiftsReport.Designer.cs">
       <DependentUpon>ClosingShiftsReport.vsrepx</DependentUpon>
+    </Compile>
+    <Compile Update="Report\OrderToSupplierReport.cs">
+      <DependentUpon>OrderToSupplierReport.vsrepx</DependentUpon>
+    </Compile>
+    <Compile Update="Report\OrderToSupplierReport.Designer.cs">
+      <DependentUpon>OrderToSupplierReport.vsrepx</DependentUpon>
     </Compile>
     <Compile Update="Report\ProductBarcodeReport.cs">
       <DependentUpon>ProductBarcodeReport.vsrepx</DependentUpon>

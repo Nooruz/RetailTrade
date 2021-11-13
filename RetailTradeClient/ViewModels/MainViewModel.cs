@@ -39,7 +39,7 @@ namespace RetailTradeClient.ViewModels
 
             _navigator.StateChanged += Navigator_StateChanged;
 
-            userStore.Organization = organizationService.Get();
+            //userStore.Organization = organizationService.Get();
 
             UpdateCurrentViewModelCommand = new UpdateCurrentViewModelCommand(navigator, viewModelFactory);
 

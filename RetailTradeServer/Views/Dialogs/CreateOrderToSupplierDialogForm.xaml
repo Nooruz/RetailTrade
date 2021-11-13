@@ -16,8 +16,7 @@
         <dxlc:LayoutItem Label="Поставщик:">
             <dxe:ComboBoxEdit ItemsSource="{Binding Suppliers}"
                               DisplayMember="ShortName"
-                              ValueMember="Id"
-                              EditValue="{Binding SelectedSupplierId, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+                              SelectedItem="{Binding SelectedSupplier}"/>
         </dxlc:LayoutItem>
 
         <dxg:GridControl SelectionMode="Row"
