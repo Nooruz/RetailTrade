@@ -70,7 +70,7 @@ namespace RetailTradeServer.ViewModels.Menus
 
         private void CreateOrder()
         {
-            _manager.ShowDialog(new CreateOrderToSupplierDialogFormModel(_productService, _supplierService, _manager) { Title = "Заказ поставшику (новый)" }, 
+            _manager.ShowDialog(new CreateOrderToSupplierDialogFormModel(_productService, _supplierService, _orderToSupplierService, _manager) { Title = "Заказ поставшику (новый)" }, 
                 new CreateOrderToSupplierDialogForm());
         }
 

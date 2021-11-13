@@ -24,6 +24,7 @@ namespace RetailTrade.Domain.Models
                 OnPropertyChanged(nameof(ProductId));
             }
         }
+        public int OrderToSupplierId { get; set; }
         public decimal Quantity
         {
             get => _quantity;
@@ -42,7 +43,7 @@ namespace RetailTrade.Domain.Models
                 OnPropertyChanged(nameof(Product));
             }
         }
-        public ICollection<OrderToSupplier> OrderToSuppliers { get; set; }
+        public OrderToSupplier OrderToSupplier { get; set; }
 
         #endregion        
 

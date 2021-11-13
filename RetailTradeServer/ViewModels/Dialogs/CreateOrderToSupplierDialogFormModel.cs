@@ -4,6 +4,7 @@ using RetailTrade.Domain.Services;
 using RetailTradeServer.Commands;
 using RetailTradeServer.State.Dialogs;
 using RetailTradeServer.ViewModels.Dialogs.Base;
+using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Collections.Specialized;
@@ -20,9 +21,11 @@ namespace RetailTradeServer.ViewModels.Dialogs
 
         private readonly IProductService _productService;
         private readonly ISupplierService _supplierService;
+        private readonly IOrderToSupplierService _orderToSupplierService;
         private readonly IUIManager _manager;
         private int? _selectedSupplierId;
         private Product _selectedProduct;
+        private string _comment;
 
         #endregion
 
@@ -38,9 +41,18 @@ namespace RetailTradeServer.ViewModels.Dialogs
                 _selectedSupplierId = value;
                 OnPropertyChanged(nameof(SelectedSupplierId));
                 OnPropertyChanged(nameof(Products));
+                Cleare();
             }
         }
-
+        public string Comment
+        {
+            get => _comment;
+            set
+            {
+                _comment = value;
+                OnPropertyChanged(nameof(Comment));
+            }
+        }
         public IEnumerable<Product> Products => SelectedSupplierId != null ? _productService.GetForRefund(SelectedSupplierId.Value) : null;
 
         public ObservableCollection<OrderProduct> OrderProducts { get; set; }
@@ -72,17 +84,19 @@ namespace RetailTradeServer.ViewModels.Dialogs
 
         public CreateOrderToSupplierDialogFormModel(IProductService productService,
             ISupplierService supplierService,
+            IOrderToSupplierService orderToSupplierService,
             IUIManager manager)
         {
             _productService = productService;
             _supplierService = supplierService;
+            _orderToSupplierService = orderToSupplierService;
             _manager = manager;
 
             OrderProducts = new();
 
             RowDoubleClickCommand = new RelayCommand(RowDoubleClick);
             ValidateCellCommand = new ParameterCommand(parameter => ValidateCell(parameter));
-            OrderProductCommand = new RelayCommand(Order);
+            OrderProductCommand = new RelayCommand(CreateOrder);
             ClearCommand = new RelayCommand(Cleare);
 
             OrderProducts.CollectionChanged += ProductRefunds_CollectionChanged;
@@ -145,30 +159,38 @@ namespace RetailTradeServer.ViewModels.Dialogs
             {
                 if (((OrderProduct)e.Row).Product != null)
                 {
-                    if (((OrderProduct)e.Row).Product.Quantity < (decimal)e.Value)
+                    if (((OrderProduct)e.Row).Product.Quantity < 0)
                     {
                         e.IsValid = false;
-                        e.ErrorContent = "Количество возврата не должно превышать количество на складе.";
-                        _manager.ShowMessage("Количество возврата не должно превышать количество на складе.", "", MessageBoxButton.OK, MessageBoxImage.Error);
+                        e.ErrorContent = "Количество заказа не должно быть 0.";
+                        _manager.ShowMessage("Количество заказа не должно быть 0.", "", MessageBoxButton.OK, MessageBoxImage.Error);
                     }
                 }
             }
             OnPropertyChanged(nameof(CanOrderProduct));
         }
 
-        private async void Order()
+        private async void CreateOrder()
         {
-            if (OrderProducts.Count > 0)
+            if (CanOrderProduct)
             {
-                //if (await _productRefundToSupplierService.AddRangeAsync(ProductRefunds.ToList()))
-                //{
-                //    _manager.ShowMessage("Операция успешно выполнена.", "", MessageBoxButton.OK, MessageBoxImage.Information);
-                //    Cleare();
-                //}
-                //else
-                //{
-                //    _manager.ShowMessage("Ошибка при выполнении операции.", "", MessageBoxButton.OK, MessageBoxImage.Error);
-                //}
+                List<OrderProduct> orders = new();
+                foreach (var item in OrderProducts)
+                {
+                    orders.Add(new OrderProduct
+                    {
+                        ProductId = item.ProductId,
+                        Quantity = item.Quantity
+                    });
+                }
+                OrderToSupplier order = await _orderToSupplierService.CreateAsync(new OrderToSupplier
+                {
+                    OrderDate = DateTime.Now,
+                    SupplierId = SelectedSupplierId.Value,
+                    OrderStatusId = 1,
+                    Comment = Comment,
+                    OrderProducts = orders
+                });
             }
         }
 

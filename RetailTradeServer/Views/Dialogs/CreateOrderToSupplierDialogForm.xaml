@@ -7,7 +7,7 @@
                                xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
                                xmlns:dialogs="clr-namespace:RetailTradeServer.Dialogs"
                                Width="600"
-                               Height="400">
+                               Height="500">
 
     <dxlc:LayoutControl Grid.Row="0"
                         ItemSpace="10"
@@ -78,11 +78,17 @@
 
         </dxg:GridControl>
 
+        <dxlc:LayoutItem LabelPosition="Top"
+                         Label="Комментарий">
+            <dxe:TextEdit Text="{Binding Comment, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                          Height="70"/>
+        </dxlc:LayoutItem>
+
         <dxlc:LayoutGroup HorizontalAlignment="Right"
                           VerticalAlignment="Bottom">
 
-            <Button Content="Возврат"
-                    Command="{Binding RefundProductCommand}"
+            <Button Content="Заказать"
+                    Command="{Binding OrderProductCommand}"
                     IsEnabled="{Binding CanOrderProduct, UpdateSourceTrigger=PropertyChanged}"/>
 
             <Button Content="Очистить"
