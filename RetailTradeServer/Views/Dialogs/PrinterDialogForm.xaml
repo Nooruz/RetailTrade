@@ -53,7 +53,7 @@
             <Button Content="Сохранить"
                     Command="{Binding SaveCommand}"/>
             <Button Content="Отменить"
-                    Command="{Binding CancelCommand}"/>
+                    Command="{Binding CloseCommand}"/>
 
         </dxlc:LayoutGroup>
 

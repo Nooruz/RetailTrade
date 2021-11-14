@@ -225,9 +225,9 @@
                             Command="{Binding SavePackagedProductCommand}"/>
 
                             <Button Content="Отменить"
-                        Margin="5 0 0 0"
-                        Command="{Binding CloseCommand}"
-                        IsEnabled="False"/>
+                                    Margin="5 0 0 0"
+                                    Command="{Binding CloseCommand}"
+                                    IsEnabled="False"/>
 
                         </dxlc:LayoutGroup>
 
@@ -324,9 +324,9 @@
                             Command="{Binding SaveWeightProductCommand}"/>
 
                             <Button Content="Отменить"
-                        Margin="5 0 0 0"
-                        Command="{Binding CloseCommand}"
-                        IsEnabled="False"/>
+                                    Margin="5 0 0 0"
+                                    Command="{Binding CloseCommand}"
+                                    IsEnabled="False"/>
 
                         </dxlc:LayoutGroup>
 
@@ -422,9 +422,9 @@
                             Command="{Binding SaveProductWithoutBarcodeCommand}"/>
 
                             <Button Content="Отменить"
-                        Margin="5 0 0 0"
-                        Command="{Binding CloseCommand}"
-                        IsEnabled="False"/>
+                                    Margin="5 0 0 0"
+                                    Command="{Binding CloseCommand}"
+                                    IsEnabled="False"/>
 
                         </dxlc:LayoutGroup>
 

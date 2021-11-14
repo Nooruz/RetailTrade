@@ -26,5 +26,7 @@
     <system:String x:Key="faInfoCircle">&#xf05a;</system:String>
     <system:String x:Key="faExclamationTriangle">&#xf071;</system:String>
     <system:String x:Key="faCheckCircle">&#xf058;</system:String>
+    <system:String x:Key="faPrint">&#xf02f;</system:String>
+    <system:String x:Key="faTrashAlt">&#xf2ed;</system:String>
 
 </ResourceDictionary>

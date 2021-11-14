@@ -5,8 +5,6 @@ using RetailTradeServer.Commands;
 using RetailTradeServer.Report;
 using RetailTradeServer.State.Dialogs;
 using RetailTradeServer.ViewModels.Base;
-using RetailTradeServer.ViewModels.Dialogs;
-using RetailTradeServer.Views.Dialogs;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;

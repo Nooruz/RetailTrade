@@ -22,8 +22,8 @@ namespace RetailTradeServer.ViewModels.Menus
         private readonly IProductService _productService;
         private readonly ISupplierService _supplierService;
         private readonly IUserStore _userStore;
-        private IEnumerable<OrderToSupplier> _ordersToSuppliers;
         private IEnumerable<OrderStatus> _orderStatuses;
+        private IEnumerable<OrderToSupplier> _ordersToSuppliers;
 
         #endregion
 
@@ -55,6 +55,9 @@ namespace RetailTradeServer.ViewModels.Menus
 
         public ICommand CreateOrderCommand { get; }
         public ICommand DeleteOrderCommand { get; }
+        public ICommand ValidateCommand { get; }
+        public ICommand DuplicateOrderCommand { get; }
+        public ICommand PrintOrderCommand { get; }
 
         #endregion
 
@@ -76,16 +79,48 @@ namespace RetailTradeServer.ViewModels.Menus
 
             CreateOrderCommand = new RelayCommand(CreateOrder);
             DeleteOrderCommand = new RelayCommand(DeleteOrder);
+            ValidateCommand = new ParameterCommand(parameter => Validate(parameter));
+            DuplicateOrderCommand = new RelayCommand(DuplicateOrder);
+            PrintOrderCommand = new RelayCommand(PrintOrder);
 
             GetOrdersToSuppliers();
             GetOrderStatuses();
 
             _orderToSupplierService.PropertiesChanged += GetOrdersToSuppliers;
-        }        
+        }
 
         #endregion
 
         #region Private Voids
+
+        private async void PrintOrder()
+        {
+            if (SelectedOrderToSupplier != null)
+            {
+
+            }
+            else
+            {
+                _manager.ShowMessage("Выберите заказ.", "", MessageBoxButton.OK, MessageBoxImage.Exclamation);
+            }
+        }
+
+        private async void DuplicateOrder()
+        {
+            if (SelectedOrderToSupplier != null)
+            {
+
+            }
+            else
+            {
+                _manager.ShowMessage("Выберите заказ.", "", MessageBoxButton.OK, MessageBoxImage.Exclamation);
+            }
+        }
+
+        private void Validate(object parameter)
+        {
+
+        }
 
         private async void GetOrdersToSuppliers()
         {
@@ -104,7 +139,7 @@ namespace RetailTradeServer.ViewModels.Menus
         }
 
         private async void DeleteOrder()
-        { 
+        {
             if (SelectedOrderToSupplier != null)
             {
                 if (_manager.ShowMessage("Вы точно хотите удалит выбранный заказ?", "", MessageBoxButton.YesNo, MessageBoxImage.Question) == MessageBoxResult.Yes)

@@ -4,8 +4,9 @@
                     xmlns:dxg="http://schemas.devexpress.com/winfx/2008/xaml/grid"
                     xmlns:dxlc="http://schemas.devexpress.com/winfx/2008/xaml/layoutcontrol"
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:dxmvvm="http://schemas.devexpress.com/winfx/2008/xaml/mvvm"
                     xmlns:local="clr-namespace:RetailTradeServer.Views.Menus"
-                    Title="Заказ поставщику"
+                    Title="Заказы поставщикам"
                     ShowDefaultButtons="False">
 
     <dxlc:LayoutControl Grid.Row="0"
@@ -18,8 +19,18 @@
 
             <Button Content="Создать"
                     Command="{Binding CreateOrderCommand}"/>
-            <Button Content="Удалить"
-                    Command="{Binding DeleteOrderCommand}"/>
+            <Button ToolTip="Удалить"
+                    Style="{StaticResource FAButton}"
+                    Command="{Binding DeleteOrderCommand}"
+                    Content="{StaticResource faTrashAlt}"/>
+            <Button Command="{Binding DuplicateOrderCommand}"
+                    ToolTip="Дублировать заказ"
+                    Style="{StaticResource FAButton}"
+                    Content="{StaticResource faCopy}"/>
+            <Button Command="{Binding PrintOrderCommand}"
+                    ToolTip="Печатать заказ"
+                    Style="{StaticResource FAButton}"
+                    Content="{StaticResource faPrint}"/>
 
         </dxlc:LayoutGroup>
 
@@ -49,6 +60,10 @@
                 </dxg:TabViewDetailDescriptor>
             </dxg:GridControl.DetailDescriptor>
 
+            <dxg:GridColumn Header="Номер" 
+                            FieldName="Id"
+                            AllowEditing="False"/>
+            
             <dxg:GridColumn Header="Поставщик" 
                             Binding="{Binding Supplier.ShortName}"
                             AllowEditing="False"/>
@@ -68,6 +83,11 @@
                                               DisplayMember="Name"
                                               ValueMember="Id"/>
                 </dxg:GridColumn.EditSettings>
+                <dxmvvm:Interaction.Behaviors>
+                    <dxmvvm:EventToCommand EventName="Validate" 
+                                           Command="{Binding ValidateCommand}"
+                                           PassEventArgsToCommand="True"/>
+                </dxmvvm:Interaction.Behaviors>
             </dxg:GridColumn>
 
             <dxg:GridColumn Header="Комментарий" 

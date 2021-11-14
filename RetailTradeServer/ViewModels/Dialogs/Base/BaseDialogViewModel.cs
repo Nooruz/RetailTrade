@@ -1,6 +1,4 @@
-﻿using RetailTradeServer.Commands;
-using RetailTradeServer.ViewModels.Base;
-using System.Windows;
+﻿using RetailTradeServer.ViewModels.Base;
 using System.Windows.Input;
 
 namespace RetailTradeServer.ViewModels.Dialogs.Base
@@ -21,7 +19,7 @@ namespace RetailTradeServer.ViewModels.Dialogs.Base
 
         #region Commands
 
-        public ICommand CancelCommand { get; }
+        public ICommand CloseCommand { get; set; }
 
         #endregion
 
@@ -30,17 +28,6 @@ namespace RetailTradeServer.ViewModels.Dialogs.Base
         public BaseDialogViewModel()
         {
             ErrorMessageViewModel = new MessageViewModel();
-
-            CancelCommand = new RelayCommand(Cancel);
-        }
-
-        #endregion
-
-        #region Private Voids
-
-        private void Cancel()
-        {
-
         }
 
         #endregion

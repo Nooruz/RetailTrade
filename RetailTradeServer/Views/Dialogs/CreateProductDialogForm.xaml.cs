@@ -1,5 +1,4 @@
-﻿using DevExpress.Xpf.Editors;
-using RetailTradeServer.Dialogs;
+﻿using RetailTradeServer.Dialogs;
 using System.Windows.Input;
 
 namespace RetailTradeServer.Views.Dialogs

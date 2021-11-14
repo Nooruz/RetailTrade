@@ -24,7 +24,8 @@
         <dxlc:LayoutGroup HorizontalAlignment="Right">
             <Button Content="Загрузить"
                     Command="{Binding PrintClosingShiftsCommand}"/>
-            <Button Content="Закрыть"/>
+            <Button Content="Закрыть"
+                    Command="{Binding CloseCommand}"/>
         </dxlc:LayoutGroup>
 
     </dxlc:LayoutControl>

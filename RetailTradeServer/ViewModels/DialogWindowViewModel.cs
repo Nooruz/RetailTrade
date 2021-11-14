@@ -13,6 +13,7 @@ namespace RetailTradeServer.ViewModels
         private WindowState _windowState = WindowState.Normal;
         private ResizeMode _resizeMode = ResizeMode.NoResize;
         private SizeToContent _sizeToContent = SizeToContent.WidthAndHeight;
+        private Window _window;
 
         #endregion
 
@@ -47,7 +48,7 @@ namespace RetailTradeServer.ViewModels
 
         #region Commands
 
-        private ICommand CloseCommand { get; }
+        public ICommand CloseCommand { get; }
 
         #endregion
 
@@ -58,7 +59,17 @@ namespace RetailTradeServer.ViewModels
         /// </summary>
         public DialogWindowViewModel(Window window)
         {
-            CloseCommand = new RelayCommand(() => window.Close());
+            _window = window;
+            CloseCommand = new RelayCommand(Close);
+        }
+
+        #endregion
+
+        #region Private Voids
+
+        private void Close()
+        {
+            _window?.Close();
         }
 
         #endregion

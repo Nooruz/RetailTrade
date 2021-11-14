@@ -26,13 +26,12 @@
             <dxwui:HamburgerSubMenuNavigationButton Content="Возврат поставщику"
                                                     Command="{Binding RefundToSupplierCommand}"/>
 
-            <dxwui:HamburgerSubMenuNavigationButton Content="Заказ товара поставщику"
+            <dxwui:HamburgerSubMenuNavigationButton Content="Заказы поставщикам"
                                                     Command="{Binding OrderProductCommand}"/>
 
         </dxwui:HamburgerSubMenu>
 
-        <dxwui:HamburgerSubMenu Content="Кассовые операции"
-                                Style="{StaticResource DefaultHamburgerSubMenu}"
+        <dxwui:HamburgerMenuNavigationButton Content="Кассовые операции"
                                 Tag="{StaticResource faCashRegister}"
                                 />
 
