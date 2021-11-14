@@ -59,7 +59,8 @@ namespace RetailTradeServer.HostBuilders
             return new HomeViewModel(services.GetRequiredService<IMenuNavigator>(),
                 services.GetRequiredService<IMenuViewModelFactory>(),
                 services.GetRequiredService<IUIManager>(),
-                services.GetRequiredService<IShiftService>());
+                services.GetRequiredService<IShiftService>(),
+                services.GetRequiredService<IMessageStore>());
         }
 
         private static LoginViewModel CreateLoginViewModel(IServiceProvider services)

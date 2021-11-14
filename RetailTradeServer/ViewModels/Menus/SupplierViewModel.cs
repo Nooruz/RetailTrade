@@ -7,7 +7,6 @@ using RetailTradeServer.ViewModels.Dialogs;
 using RetailTradeServer.Views.Dialogs;
 using System.Collections.Generic;
 using System.Windows;
-using System.Windows.Input;
 
 namespace RetailTradeServer.ViewModels.Menus
 {
@@ -40,8 +39,7 @@ namespace RetailTradeServer.ViewModels.Menus
 
         #region Commands
 
-        public ICommand CreateCommand { get; }
-        public ICommand UpdateCommand { get; }
+
 
         #endregion
 
@@ -54,7 +52,7 @@ namespace RetailTradeServer.ViewModels.Menus
             _manager = manager;
 
             CreateCommand = new RelayCommand(Create);
-            UpdateCommand = new RelayCommand(Update);
+            EditCommand = new RelayCommand(Edit);
 
             GetSuppliers();
 
@@ -76,7 +74,7 @@ namespace RetailTradeServer.ViewModels.Menus
                 new CreateSupplierProductDialogForm());
         }
 
-        private void Update()
+        private void Edit()
         {
             if (SelectedSupplier != null)
             {

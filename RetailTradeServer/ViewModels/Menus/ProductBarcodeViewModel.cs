@@ -1,4 +1,5 @@
-﻿using RetailTrade.Domain.Models;
+﻿using DevExpress.XtraPrinting;
+using RetailTrade.Domain.Models;
 using RetailTrade.Domain.Services;
 using RetailTradeServer.Commands;
 using RetailTradeServer.Report;
@@ -6,6 +7,7 @@ using RetailTradeServer.State.Dialogs;
 using RetailTradeServer.ViewModels.Base;
 using RetailTradeServer.ViewModels.Dialogs;
 using RetailTradeServer.Views.Dialogs;
+using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Collections.Specialized;
@@ -86,37 +88,39 @@ namespace RetailTradeServer.ViewModels.Menus
             }
         }
 
-        private void PrintProductBarcode()
+        private async void PrintProductBarcode()
         {
-            ProductBarcodeReport report = new();
-
-            List<ProductBarcodePrinting> productBarcodePrintings = new();
-
-            foreach (var item in ProductBarcodePrintings)
+            if (string.IsNullOrEmpty(Properties.Settings.Default.DefaultLabelPrinter))
             {
-                for (int i = 0; i < item.Quantity; i++)
-                {
-                    productBarcodePrintings.Add(new ProductBarcodePrinting
-                    {
-                        Name = item.Name,
-                        Barcode = item.Barcode,
-                        Price = item.Price
-                    });
-                }  
+                _manager.ShowMessage("Принтер для печати этикеток не настроен.", "", MessageBoxButton.OK, MessageBoxImage.Error);
             }
-
-            report.DataSource = productBarcodePrintings;
-            report.CreateDocument();
-
-            _manager.ShowDialog(new DocumentViewerViewModel
+            else
             {
-                Title = "Предварительный просмотр",
-                PrintingDocument = report
-            },
-                new DocumentViewerView(),
-                WindowState.Maximized,
-                ResizeMode.CanResize,
-                SizeToContent.Manual);
+                ProductBarcodeReport report = new();
+
+                List<ProductBarcodePrinting> productBarcodePrintings = new();
+
+                foreach (var item in ProductBarcodePrintings)
+                {
+                    for (int i = 0; i < item.Quantity; i++)
+                    {
+                        productBarcodePrintings.Add(new ProductBarcodePrinting
+                        {
+                            Name = item.Name,
+                            Barcode = item.Barcode,
+                            Price = item.Price
+                        });
+                    }
+                }
+
+                report.DataSource = productBarcodePrintings;
+                await report.CreateDocumentAsync();
+
+                PrintToolBase tool = new(report.PrintingSystem);
+                tool.PrinterSettings.PrinterName = Properties.Settings.Default.DefaultLabelPrinter;
+                tool.PrintingSystem.EndPrint += PrintingSystem_EndPrint;
+                tool.Print();
+            }
         }
 
         private void ProductBarcodePrintings_CollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
@@ -149,6 +153,11 @@ namespace RetailTradeServer.ViewModels.Menus
         }
 
         private void Clear()
+        {
+            ProductBarcodePrintings.Clear();
+        }
+
+        private void PrintingSystem_EndPrint(object sender, EventArgs e)
         {
             ProductBarcodePrintings.Clear();
         }

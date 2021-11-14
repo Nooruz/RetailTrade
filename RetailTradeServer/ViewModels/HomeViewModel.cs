@@ -1,6 +1,7 @@
 ﻿using RetailTrade.Domain.Services;
 using RetailTradeServer.Commands;
 using RetailTradeServer.State.Dialogs;
+using RetailTradeServer.State.Messages;
 using RetailTradeServer.State.Navigators;
 using RetailTradeServer.ViewModels.Base;
 using RetailTradeServer.ViewModels.Dialogs;
@@ -15,6 +16,7 @@ namespace RetailTradeServer.ViewModels
         #region Private Members
 
         private readonly IMenuNavigator _menuNavigator;
+        private readonly IMessageStore _messageStore;
         private readonly IUIManager _manager;
         private readonly IShiftService _shiftService;
 
@@ -55,6 +57,12 @@ namespace RetailTradeServer.ViewModels
 
         #endregion
 
+        #region Настройки
+
+        public ICommand PrinterCommand { get; }
+
+        #endregion
+
         #endregion
 
         #region Constructor
@@ -62,11 +70,13 @@ namespace RetailTradeServer.ViewModels
         public HomeViewModel(IMenuNavigator menuNavigator,
             IMenuViewModelFactory menuViewModelFactory,
             IUIManager manager,
-            IShiftService shiftService)
+            IShiftService shiftService,
+            IMessageStore messageStore)
         {
             _menuNavigator = menuNavigator;
             _manager = manager;
             _shiftService = shiftService;
+            _messageStore = messageStore;
 
             UpdateCurrentMenuViewModelCommand = new UpdateCurrentMenuViewModelCommand(_menuNavigator, menuViewModelFactory);
 
@@ -80,6 +90,7 @@ namespace RetailTradeServer.ViewModels
             ReportClosingShiftsCommand = new RelayCommand(ReportClosingShifts);
             RefundToSupplierCommand = new RelayCommand(RefundToSupplier);
             SupplierCommand = new RelayCommand(OpenSupplier);
+            PrinterCommand = new RelayCommand(Printer);
 
             _menuNavigator.StateChanged += MenuNavigator_StateChanged;
         }
@@ -87,6 +98,11 @@ namespace RetailTradeServer.ViewModels
         #endregion
 
         #region Private Voids
+
+        private void Printer()
+        {
+            _manager.ShowDialog(new PrinterDialogFormModel(_messageStore) { Title = "Настройки принтеров" }, new PrinterDialogForm());
+        }
 
         private void OpenSupplier()
         {

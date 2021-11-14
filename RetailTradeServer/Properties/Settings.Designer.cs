@@ -25,29 +25,6 @@ namespace RetailTradeServer.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        public global::System.Collections.Specialized.StringCollection Usernames {
-            get {
-                return ((global::System.Collections.Specialized.StringCollection)(this["Usernames"]));
-            }
-            set {
-                this["Usernames"] = value;
-            }
-        }
-        
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("")]
-        public string DefaultUsername {
-            get {
-                return ((string)(this["DefaultUsername"]));
-            }
-            set {
-                this["DefaultUsername"] = value;
-            }
-        }
-        
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("False")]
         public bool AdminCreated {
             get {
@@ -55,6 +32,30 @@ namespace RetailTradeServer.Properties {
             }
             set {
                 this["AdminCreated"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string DefaultLabelPrinter {
+            get {
+                return ((string)(this["DefaultLabelPrinter"]));
+            }
+            set {
+                this["DefaultLabelPrinter"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string DefaultReportPrinter {
+            get {
+                return ((string)(this["DefaultReportPrinter"]));
+            }
+            set {
+                this["DefaultReportPrinter"] = value;
             }
         }
     }

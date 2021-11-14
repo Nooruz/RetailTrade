@@ -1,5 +1,6 @@
-﻿using RetailTradeClient.Commands;
-using RetailTradeClient.State.Messages;
+﻿using RetailTradeServer.Commands;
+using RetailTradeServer.State.Messages;
+using RetailTradeServer.ViewModels.Dialogs.Base;
 using System.Collections.ObjectModel;
 using System.Collections.Specialized;
 using System.ComponentModel;
@@ -7,40 +8,22 @@ using System.Drawing.Printing;
 using System.Linq;
 using System.Windows.Input;
 
-namespace RetailTradeClient.ViewModels.Dialogs
+namespace RetailTradeServer.ViewModels.Dialogs
 {
-    public class PrinterViewModel : BaseDialogViewModel
+    public class PrinterDialogFormModel : BaseDialogViewModel
     {
         #region Private Members
 
         private readonly IMessageStore _messageStore;
-        private int? _selectedLocalPrinterId;
-        private LocalPrinter _selectedLocalPrinter;
 
         #endregion
 
         #region Public Properties
 
         public ObservableCollection<LocalPrinter> LocalPrinters { get; set; }
-        public int? SelectedLocalPrinterId
-        {
-            get => _selectedLocalPrinterId;
-            set
-            {
-                _selectedLocalPrinterId = value;
-                OnPropertyChanged(nameof(SelectedLocalPrinterId));
-            }
-        }
-        public LocalPrinter SelectedLocalPrinter
-        {
-            get => _selectedLocalPrinter;
-            set
-            {
-                _selectedLocalPrinter = value;
-                OnPropertyChanged(nameof(SelectedLocalPrinter));
-            }
-        }
         public GlobalMessageViewModel GlobalMessageViewModel { get; }
+        public LocalPrinter SelectedLabelPrinter { get; set; }
+        public LocalPrinter SelectedReportPrinter { get; set; }
 
         #endregion
 
@@ -53,11 +36,11 @@ namespace RetailTradeClient.ViewModels.Dialogs
 
         #region Constructor
 
-        public PrinterViewModel(IMessageStore messageStore)
+        public PrinterDialogFormModel(IMessageStore messageStore)
         {
             _messageStore = messageStore;
-            GlobalMessageViewModel = new(messageStore);
 
+            GlobalMessageViewModel = new(messageStore);
             LocalPrinters = new();
 
             UpdateLocalPrinterListCommand = new RelayCommand(UpdateLocalPrinterList);
@@ -67,7 +50,8 @@ namespace RetailTradeClient.ViewModels.Dialogs
 
             if (LocalPrinters.Count > 0)
             {
-                SelectedLocalPrinter = LocalPrinters.FirstOrDefault(lp => lp.Name == Properties.Settings.Default.DefaultReceiptPrinter);
+                SelectedLabelPrinter = LocalPrinters.FirstOrDefault(lp => lp.Name == Properties.Settings.Default.DefaultLabelPrinter);
+                SelectedReportPrinter = LocalPrinters.FirstOrDefault(lp => lp.Name == Properties.Settings.Default.DefaultReportPrinter);
             }
 
             LocalPrinters.CollectionChanged += LocalPrinters_CollectionChanged;
@@ -75,7 +59,7 @@ namespace RetailTradeClient.ViewModels.Dialogs
 
         #endregion
 
-        #region Private Members
+        #region Private Voids
 
         private void UpdateLocalPrinterList()
         {
@@ -94,10 +78,18 @@ namespace RetailTradeClient.ViewModels.Dialogs
 
         private void Save()
         {
-            if (SelectedLocalPrinter != null)
+            if (SelectedLabelPrinter != null)
             {
-                Properties.Settings.Default.DefaultReceiptPrinter = SelectedLocalPrinter.Name;
+                Properties.Settings.Default.DefaultLabelPrinter = SelectedLabelPrinter.Name;
                 Properties.Settings.Default.Save();
+            }
+            if (SelectedReportPrinter != null)
+            {
+                Properties.Settings.Default.DefaultReportPrinter = SelectedReportPrinter.Name;
+                Properties.Settings.Default.Save();
+            }
+            if (SelectedLabelPrinter != null || SelectedReportPrinter != null)
+            {
                 _messageStore.SetCurrentMessage("Принтеры по умолчанию сохранены.", MessageType.Success);
             }
         }

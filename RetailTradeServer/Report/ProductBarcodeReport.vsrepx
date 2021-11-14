@@ -9,12 +9,12 @@
       <HierarchyPrintOptions Ref="5" Indent="50.8" />
       <Controls>
         <Item1 Ref="6" ControlType="XRBarCode" Name="barCode1" Module="5.08" AutoModule="true" SizeF="471,129.680878" LocationFloat="0,58.4200058" Dpi="254" Padding="26,26,0,0,254">
-          <Symbology Ref="7" Name="Code128" />
+          <Symbology Ref="7" Name="EAN13" />
           <ExpressionBindings>
             <Item1 Ref="8" EventName="BeforePrint" PropertyName="Text" Expression="[Barcode]" />
           </ExpressionBindings>
         </Item1>
-        <Item2 Ref="9" ControlType="XRLabel" Name="label3" Multiline="true" Text="label3" TextAlignment="MiddleCenter" SizeF="375.75,58.4199829" LocationFloat="95.25,188.100876" Dpi="254" Padding="5,5,0,0,254">
+        <Item2 Ref="9" ControlType="XRLabel" Name="label3" TextFormatString="{0} сом" Multiline="true" Text="label3" TextAlignment="MiddleCenter" SizeF="375.75,58.4199829" LocationFloat="95.25,188.100876" Dpi="254" Padding="5,5,0,0,254">
           <ExpressionBindings>
             <Item1 Ref="10" EventName="BeforePrint" PropertyName="Text" Expression="[Price]" />
           </ExpressionBindings>
