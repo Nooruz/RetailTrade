@@ -29,7 +29,7 @@ namespace RetailTradeServer.ViewModels.Menus
         #region Public Properties
 
         public IEnumerable<Product> Products => _productService.GetAll();
-        public ObservableCollection<ProductBarcodePrinting> ProductBarcodePrinting { get; set; }
+        public ObservableCollection<ProductBarcodePrinting> ProductBarcodePrintings { get; set; }
         public Product SelectedProduct
         {
             get => _selectedProduct;
@@ -46,6 +46,7 @@ namespace RetailTradeServer.ViewModels.Menus
 
         public ICommand AddProductToPrintCommand { get; }
         public ICommand PrintProductBarcodeCommand { get; }
+        public ICommand ClearCommand { get; set; }
 
         #endregion
 
@@ -57,12 +58,13 @@ namespace RetailTradeServer.ViewModels.Menus
             _productService = productService;
             _manager = manager;
 
-            ProductBarcodePrinting = new ObservableCollection<ProductBarcodePrinting>();
+            ProductBarcodePrintings = new();
 
             AddProductToPrintCommand = new RelayCommand(AddProductToPrint);
             PrintProductBarcodeCommand = new RelayCommand(PrintProductBarcode);
+            ClearCommand = new RelayCommand(Clear);
 
-            ProductBarcodePrinting.CollectionChanged += ProductBarcodePrintings_CollectionChanged;
+            ProductBarcodePrintings.CollectionChanged += ProductBarcodePrintings_CollectionChanged;
         }        
 
         #endregion
@@ -71,9 +73,9 @@ namespace RetailTradeServer.ViewModels.Menus
 
         private void AddProductToPrint()
         {
-            if (ProductBarcodePrinting.FirstOrDefault(p => p.Id == SelectedProduct.Id) == null)
+            if (ProductBarcodePrintings.FirstOrDefault(p => p.Id == SelectedProduct.Id) == null)
             {
-                ProductBarcodePrinting.Add(new ProductBarcodePrinting
+                ProductBarcodePrintings.Add(new ProductBarcodePrinting
                 {
                     Id = SelectedProduct.Id,
                     Name = SelectedProduct.Name,
@@ -90,15 +92,20 @@ namespace RetailTradeServer.ViewModels.Menus
 
             List<ProductBarcodePrinting> productBarcodePrintings = new();
 
-            foreach (var item in ProductBarcodePrinting)
+            foreach (var item in ProductBarcodePrintings)
             {
-                productBarcodePrintings.Add(new ProductBarcodePrinting
+                for (int i = 0; i < item.Quantity; i++)
                 {
-
-                });
+                    productBarcodePrintings.Add(new ProductBarcodePrinting
+                    {
+                        Name = item.Name,
+                        Barcode = item.Barcode,
+                        Price = item.Price
+                    });
+                }  
             }
 
-            report.DataSource = ProductBarcodePrinting;
+            report.DataSource = productBarcodePrintings;
             report.CreateDocument();
 
             _manager.ShowDialog(new DocumentViewerViewModel
@@ -139,6 +146,11 @@ namespace RetailTradeServer.ViewModels.Menus
         private void Item_PropertyChanged(object sender, PropertyChangedEventArgs e)
         {
             OnPropertyChanged(nameof(ProductBarcodePrinting));
+        }
+
+        private void Clear()
+        {
+            ProductBarcodePrintings.Clear();
         }
 
         #endregion

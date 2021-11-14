@@ -47,8 +47,8 @@
 
             <Button Content="Печатать"
                     Command="{Binding PrintProductBarcodeCommand}"/>
-            <Button Content="Очистить"/>
-            <Button Content="Закрыть"/>
+            <Button Content="Очистить"
+                    Command="{Binding ClearCommand}"/>
 
         </dxlc:LayoutGroup>
 
