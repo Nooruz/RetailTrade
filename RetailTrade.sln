@@ -15,7 +15,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RetailTrade.Web", "RetailTr
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RetailTrade.Dashboard", "RetailTrade.Dashboard\RetailTrade.Dashboard.csproj", "{EDACF875-86D8-4443-9968-7AD16291928D}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RetailTrade.CashRegisterMachine", "RetailTrade.CashRegisterMachine\RetailTrade.CashRegisterMachine.csproj", "{AC188347-A244-498D-94E9-3E573520AA73}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RetailTrade.CashRegisterMachine", "RetailTrade.CashRegisterMachine\RetailTrade.CashRegisterMachine.csproj", "{AC188347-A244-498D-94E9-3E573520AA73}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -56,6 +56,7 @@ Global
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
+		BuildVersion_StartDate = 2000/1/1
 		SolutionGuid = {1B5BED5D-604D-4352-A831-4FDEE07951CB}
 	EndGlobalSection
 EndGlobal

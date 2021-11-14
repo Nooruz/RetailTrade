@@ -5,6 +5,10 @@
     <TargetFramework>net5.0-windows</TargetFramework>
     <UseWPF>true</UseWPF>
     <UserSecretsId>69d24dac-b046-4e85-93fb-b43a50e0103d</UserSecretsId>
+    <Authors>Ашимжан уулу Ноорузбек</Authors>
+    <Company>Sale Page</Company>
+    <Version>1.0.0</Version>
+    <AssemblyVersion>1.0.0.0</AssemblyVersion>
   </PropertyGroup>
 
   <ItemGroup>
@@ -115,5 +119,7 @@
       <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
     </Page>
   </ItemGroup>
+
+  <ProjectExtensions><VisualStudio><UserProperties BuildVersion_AssemblyInfoFilename="..\RetailTradeClient\AssemblyInfo.cs" BuildVersion_BuildAction="Build" BuildVersion_IncrementBeforeBuild="False" BuildVersion_ReplaceNonNumerics="False" BuildVersion_StartDate="" BuildVersion_UpdateAssemblyVersion="True" BuildVersion_UpdateFileVersion="True" /></VisualStudio></ProjectExtensions>
 
 </Project>
