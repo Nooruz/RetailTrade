@@ -4,6 +4,7 @@ using RetailTradeServer.State.Authenticators;
 using RetailTradeServer.State.Navigators;
 using RetailTradeServer.ViewModels.Base;
 using RetailTradeServer.ViewModels.Factories;
+using System.Reflection;
 using System.Windows.Input;
 
 namespace RetailTradeServer.ViewModels
@@ -30,6 +31,7 @@ namespace RetailTradeServer.ViewModels
                 OnPropertyChanged(nameof(IsConnected));
             }
         }
+        public string WindowTitle => $"Управление розничной торговлей, версия {Assembly.GetExecutingAssembly().GetName().Version}";
 
         #endregion
 
