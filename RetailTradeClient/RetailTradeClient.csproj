@@ -61,10 +61,10 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="DevExpress.Images" Version="21.1.6" />
-    <PackageReference Include="DevExpress.Reporting.Core" Version="21.1.6" />
-    <PackageReference Include="DevExpress.Wpf.Controls" Version="21.1.6" />
-    <PackageReference Include="DevExpress.Wpf.Printing" Version="21.1.6" />
+    <PackageReference Include="DevExpress.Images.ru" Version="21.2.3" />
+    <PackageReference Include="DevExpress.Reporting.Core.ru" Version="21.2.3" />
+    <PackageReference Include="DevExpress.Wpf.Controls.ru" Version="21.2.3" />
+    <PackageReference Include="DevExpress.Wpf.Printing.ru" Version="21.2.3" />
     <PackageReference Include="Microsoft.AspNet.Identity.Core" Version="2.2.3" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="5.0.11">
       <PrivateAssets>all</PrivateAssets>

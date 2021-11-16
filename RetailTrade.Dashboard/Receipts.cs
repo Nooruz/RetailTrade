@@ -14,12 +14,6 @@ namespace RetailTrade.Dashboard
     
     public partial class Receipts
     {
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
-        public Receipts()
-        {
-            this.ProductSales = new HashSet<ProductSales>();
-        }
-    
         public int Id { get; set; }
         public System.DateTime DateOfPurchase { get; set; }
         public int ShiftId { get; set; }
@@ -27,9 +21,5 @@ namespace RetailTrade.Dashboard
         public decimal Change { get; set; }
         public decimal PaidInCash { get; set; }
         public decimal PaidInCashless { get; set; }
-    
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<ProductSales> ProductSales { get; set; }
-        public virtual Shifts Shifts { get; set; }
     }
 }

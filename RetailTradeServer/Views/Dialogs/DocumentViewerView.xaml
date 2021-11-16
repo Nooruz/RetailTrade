@@ -4,6 +4,9 @@
                                xmlns:dialogs="clr-namespace:RetailTradeServer.Dialogs"
                                xmlns:dxp="http://schemas.devexpress.com/winfx/2008/xaml/printing" >
 
-    <dxp:DocumentPreviewControl DocumentSource="{Binding PrintingDocument}"/>
+    <dxp:DocumentPreviewControl DocumentSource="{Binding PrintingDocument}" 
+                                CommandBarStyle="Bars"
+                                AutoShowParametersPanel="False"
+                                ShowNavigationPane="False"/>
 
 </dialogs:BaseDialogUserControl>

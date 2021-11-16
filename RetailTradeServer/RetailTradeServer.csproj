@@ -26,6 +26,7 @@
     <None Remove="Report\OrderToSupplierReport.vsrepx" />
     <None Remove="Report\ProductBarcodeReport.vsrepx" />
     <None Remove="Resources\Images\logo.png" />
+    <None Remove="Views\HomeView.xaml~RF1dc6ec.TMP" />
   </ItemGroup>
 
   <ItemGroup>
@@ -35,13 +36,13 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="DevExpress.Reporting.Core" Version="21.1.6" />
-    <PackageReference Include="devexpress.wpf.controls" Version="21.1.6" />
-    <PackageReference Include="DevExpress.Wpf.Dashboard" Version="21.1.6" />
-    <PackageReference Include="devexpress.wpf.grid.core" Version="21.1.6" />
-    <PackageReference Include="devexpress.wpf.layoutcontrol" Version="21.1.6" />
-    <PackageReference Include="devexpress.wpf.navbar" Version="21.1.6" />
-    <PackageReference Include="devexpress.wpf.printing" Version="21.1.6" />
+    <PackageReference Include="DevExpress.Reporting.Core.ru" Version="21.2.3" />
+    <PackageReference Include="DevExpress.Wpf.Controls.ru" Version="21.2.3" />
+    <PackageReference Include="DevExpress.Wpf.Dashboard.ru" Version="21.2.3" />
+    <PackageReference Include="DevExpress.Wpf.Grid.Core.ru" Version="21.2.3" />
+    <PackageReference Include="DevExpress.Wpf.LayoutControl.ru" Version="21.2.3" />
+    <PackageReference Include="DevExpress.Wpf.NavBar.ru" Version="21.2.3" />
+    <PackageReference Include="DevExpress.Wpf.Printing.ru" Version="21.2.3" />
     <PackageReference Include="Microsoft.AspNet.Identity.Core" Version="2.2.3" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="5.0.11">
       <PrivateAssets>all</PrivateAssets>
@@ -94,7 +95,9 @@
     <Compile Update="Report\ProductBarcodeReport.Designer.cs">
       <DependentUpon>ProductBarcodeReport.vsrepx</DependentUpon>
     </Compile>
-    <Compile Update="RetailTradeDashboard.cs" />
+    <Compile Update="RetailTradeDashboard.cs">
+      <SubType>Component</SubType>
+    </Compile>
     <Compile Update="RetailTradeDashboard.Designer.cs">
       <DependentUpon>RetailTradeDashboard.cs</DependentUpon>
     </Compile>

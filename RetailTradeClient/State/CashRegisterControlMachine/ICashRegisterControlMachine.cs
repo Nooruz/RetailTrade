@@ -1,5 +1,4 @@
 ﻿using DrvFRLib;
-using System.Threading.Tasks;
 
 namespace RetailTradeClient.State.CashRegisterControlMachine
 {

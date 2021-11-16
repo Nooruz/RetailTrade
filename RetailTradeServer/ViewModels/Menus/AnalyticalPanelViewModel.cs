@@ -32,7 +32,7 @@ namespace RetailTradeServer.ViewModels.Menus
 
         private async void GetAllReceipts()
         {
-            RetailTradeDashboard.Receipts.DataSource = await _receiptService.GetReceiptsAsync();
+            //RetailTradeDashboard.Receipts.DataSource = await _receiptService.GetReceiptsAsync();
         }
 
         #endregion

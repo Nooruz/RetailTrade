@@ -1,5 +1,4 @@
 ﻿using DevExpress.Xpf.Core;
-using System.Windows.Input;
 
 namespace RetailTradeClient
 {
@@ -8,8 +7,6 @@ namespace RetailTradeClient
     /// </summary>
     public partial class MainWindow : DXWindow
     {
-        private string barcode;
-
         public MainWindow()
         {
             InitializeComponent();

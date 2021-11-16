@@ -31,7 +31,7 @@ namespace RetailTradeServer.ViewModels
                 OnPropertyChanged(nameof(IsConnected));
             }
         }
-        public string WindowTitle => $"Управление розничной торговлей, версия {Assembly.GetExecutingAssembly().GetName().Version}";
+        public string WindowTitle => $"SP: Магазин, версия {Assembly.GetExecutingAssembly().GetName().Version}";
 
         #endregion
 
@@ -71,8 +71,8 @@ namespace RetailTradeServer.ViewModels
 
             UpdateCurrentViewModelCommand = new UpdateCurrentViewModelCommand(navigator, retailTradeViewModelFactory);
             UpdateCurrentMenuViewModelCommand = new UpdateCurrentMenuViewModelCommand(menuNavigator, menuViewModelFactory);
-            UpdateCurrentViewModelCommand.Execute(Settings.Default.AdminCreated ? ViewType.Home : ViewType.Registration);
-            UpdateCurrentMenuViewModelCommand.Execute(MenuViewType.Supplier);
+            UpdateCurrentViewModelCommand.Execute(Settings.Default.AdminCreated ? ViewType.Login : ViewType.Registration);
+            UpdateCurrentMenuViewModelCommand.Execute(MenuViewType.AnalyticalPanel);
         }
 
         #endregion

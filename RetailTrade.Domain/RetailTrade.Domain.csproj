@@ -8,12 +8,6 @@
     <PackageReference Include="Microsoft.AspNet.Identity.Core" Version="2.2.3" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Reference Include="DevExpress.DataAccess.v21.1">
-      <HintPath>..\..\..\..\..\..\..\Program Files (x86)\DevExpress 21.1\Components\Offline Packages\devexpress.dataaccess\21.1.6\lib\netstandard2.0\DevExpress.DataAccess.v21.1.dll</HintPath>
-    </Reference>
-  </ItemGroup>
-
   <ProjectExtensions><VisualStudio><UserProperties BuildVersion_StartDate="2000/1/1" /></VisualStudio></ProjectExtensions>
 
 </Project>
