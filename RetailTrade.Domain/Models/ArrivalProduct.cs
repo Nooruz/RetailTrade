@@ -18,10 +18,7 @@ namespace RetailTrade.Domain.Models
 
         #region Public Properties
 
-        /// <summary>
-        /// Дата прихода
-        /// </summary>
-        public DateTime ArrivalDate { get; set; }
+        public int ArrivalId { get; set; }
 
         /// <summary>
         /// Код товара
@@ -62,14 +59,7 @@ namespace RetailTrade.Domain.Models
             }
         }
 
-        #endregion
-
-        #region Constructor
-
-        public ArrivalProduct()
-        {
-
-        }
+        public Arrival Arrival { get; set; }
 
         #endregion
 

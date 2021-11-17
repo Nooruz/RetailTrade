@@ -9,72 +9,78 @@
                     ShowDefaultButtons="False"
                     Title="Приход товара">
 
-    <dxmvvm:Interaction.Behaviors>
-        <dxmvvm:EventToCommand EventName="Loaded" Command="{Binding GetProductsAsyncCommand}"/>
-    </dxmvvm:Interaction.Behaviors>
-
     <dxlc:LayoutControl Grid.Row="0"
-                        ItemSpace="10"
-                        Orientation="Vertical">
+                            ItemSpace="10"
+                            Orientation="Vertical">
 
-        <dxg:GridControl SelectionMode="Row"
-                         ItemsSource="{Binding ArrivalProducts}">
+        <dxlc:LayoutGroup Orientation="Horizontal"
+                          VerticalAlignment="Top"
+                          HorizontalAlignment="Left">
 
-            <dxg:GridControl.View>
-                <dxg:TableView AutoWidth="True" 
-                               NewItemRowPosition="Top"
-                               InvalidRowException="TableView_InvalidRowException"
-                               ShowGroupPanel="False">
-                    <dxmvvm:Interaction.Behaviors>
-                        <dxmvvm:EventToCommand EventName="ValidateRow" 
-                                               Command="{Binding ValidateRowCommand}"
-                                               PassEventArgsToCommand="True"/>
-                    </dxmvvm:Interaction.Behaviors>
-
-                </dxg:TableView>
-            </dxg:GridControl.View>
-
-            <dxg:GridColumn Header="Наименование"                            
-                            Binding="{Binding ProductId, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
-                <dxg:GridColumn.EditSettings>
-                    <dxg:LookUpEditSettings Style="{StaticResource luesProduct}"/>
-                </dxg:GridColumn.EditSettings>
-            </dxg:GridColumn>
-
-            <dxg:GridColumn Header="Штрих-код" 
-                            Binding="{Binding Product.Barcode, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-                            Width="60"
-                            IsSmart="True">
-                <dxg:GridColumn.EditSettings>
-                    <dxe:TextEditSettings/>
-                </dxg:GridColumn.EditSettings>
-            </dxg:GridColumn>
-
-            <dxg:GridColumn Header="Количество" 
-                            Width="50"
-                            Binding="{Binding Quantity, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-                            AllowEditing="True"
-                            IsSmart="True">
-                <dxg:GridColumn.EditSettings>
-                    <dxe:SpinEditSettings AllowRoundOutOfRangeValue="True"
-                                          SelectAllOnMouseUp="True"
-                                          MaskUseAsDisplayFormat="True"
-                                          DisplayFormat="N2"/>
-                </dxg:GridColumn.EditSettings>
-            </dxg:GridColumn>
-
-        </dxg:GridControl>
-
-        <dxlc:LayoutGroup HorizontalAlignment="Right"
-                          VerticalAlignment="Bottom">
-
-            <Button Content="Принять"
-                        Command="{Binding AddProductCommand}"/>
-
-            <Button Content="Очистить"
-                        Command="{Binding CleareCommand}"/>
+            <Button Content="Создать"
+                    Command="{Binding CreateArrivalProductCommand}"/>
+            <Button ToolTip="Удалить"
+                    Style="{StaticResource FAButton}"
+                    Command="{Binding DeleteArrivalProductCommand}"
+                    Content="{StaticResource faTrashAlt}"/>
+            <Button Command="{Binding DuplicateArrivalProductCommand}"
+                    ToolTip="Дублировать приход"
+                    Style="{StaticResource FAButton}"
+                    Content="{StaticResource faCopy}"/>
+            <Button Command="{Binding PrintOrderCommand}"
+                    ToolTip="Печатать приход"
+                    Style="{StaticResource FAButton}"
+                    Content="{StaticResource faPrint}"/>
 
         </dxlc:LayoutGroup>
+
+        <dxg:GridControl SelectionMode="Row"
+                         ItemsSource="{Binding ArrivalProducts, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"
+                         SelectedItem="{Binding SelectedArrivalProduct}">
+
+            <dxg:GridControl.View>
+                <dxg:TableView AutoWidth="True"/>
+            </dxg:GridControl.View>
+
+            <dxg:GridControl.DetailDescriptor>
+                <dxg:TabViewDetailDescriptor>
+                    <dxg:TabViewDetailDescriptor.DetailDescriptors>
+                        <dxg:DataControlDetailDescriptor ItemsSourcePath="Products">
+                            <dxg:DataControlDetailDescriptor.DataControl>
+                                <dxg:GridControl AutoGenerateColumns="None">
+                                    <dxg:GridControl.View>
+                                        <dxg:TableView DetailHeaderContent="Заказанные товары" AutoWidth="True" ShowGroupPanel="False"/>
+                                    </dxg:GridControl.View>
+                                    <dxg:GridColumn Header="Наименование" FieldName="Product.Name"/>
+                                    <dxg:GridColumn Header="Количество" FieldName="Quantity"/>
+                                </dxg:GridControl>
+                            </dxg:DataControlDetailDescriptor.DataControl>
+                        </dxg:DataControlDetailDescriptor>
+                    </dxg:TabViewDetailDescriptor.DetailDescriptors>
+                </dxg:TabViewDetailDescriptor>
+            </dxg:GridControl.DetailDescriptor>
+
+            <dxg:GridColumn Header="Номер" 
+                            FieldName="Id"
+                            Width="50"
+                            AllowEditing="False"/>
+
+            <dxg:GridColumn Header="Поставщик" 
+                            Binding="{Binding Supplier.ShortName}"
+                            AllowEditing="False"/>
+
+            <dxg:GridColumn Header="Дата" 
+                            Binding="{Binding OrderDate}"
+                            Width="60"
+                            AllowEditing="False"/>
+
+            <dxg:GridColumn Header="Комментарий" 
+                            Width="50"
+                            Binding="{Binding Comment, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"
+                            AllowEditing="True"
+                            IsSmart="True"/>
+
+        </dxg:GridControl>
 
     </dxlc:LayoutControl>
 

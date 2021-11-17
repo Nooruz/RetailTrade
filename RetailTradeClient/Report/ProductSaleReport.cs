@@ -16,8 +16,8 @@ namespace RetailTradeClient.Report
                 CashTime.Text = $"Время: {receipt.DateOfPurchase.ToShortTimeString()}";
                 CashReceipt.Text = $"Товарный чек № {receipt.Id.ToString("D6")}";
                 lbUserFullName.Text = userStore.CurrentUser.FullName;
-                OrganizationName.Text = userStore.Organization.Name;
-                Address.Text = userStore.Organization.Address;
+                //OrganizationName.Text = userStore.Organization.Name;
+                //Address.Text = userStore.Organization.Address;
             }
             catch (Exception e)
             {
