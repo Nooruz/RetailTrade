@@ -1,5 +1,4 @@
-﻿using System;
-using System.ComponentModel;
+﻿using System.ComponentModel;
 
 namespace RetailTrade.Domain.Models
 {
@@ -18,10 +17,7 @@ namespace RetailTrade.Domain.Models
 
         #region Public Properties
 
-        /// <summary>
-        /// Дата списания товара
-        /// </summary>
-        public DateTime WriteDownDate { get; set; }
+        public int WriteDownId { get; set; }
 
         /// <summary>
         /// Код товара
@@ -61,6 +57,8 @@ namespace RetailTrade.Domain.Models
                 OnPropertyChanged(nameof(Product));
             }
         }
+
+        public WriteDown WriteDown { get; set; }
 
         #endregion        
 

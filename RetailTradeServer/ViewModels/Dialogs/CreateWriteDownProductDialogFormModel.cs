@@ -15,13 +15,13 @@ using System.Windows.Input;
 
 namespace RetailTradeServer.ViewModels.Dialogs
 {
-    public class CreateArrivalProductDialogFormModel : BaseDialogViewModel
+    public class CreateWriteDownProductDialogFormModel : BaseDialogViewModel
     {
         #region Private Members
 
         private readonly IProductService _productService;
         private readonly ISupplierService _supplierService;
-        private readonly IArrivalService _arrivalService;
+        private readonly IWriteDownService _writeDownService;
         private readonly IUIManager _manager;
         private Supplier _selectedSupplier;
         private Product _selectedProduct;
@@ -72,7 +72,7 @@ namespace RetailTradeServer.ViewModels.Dialogs
                 OnPropertyChanged(nameof(Products));
             }
         }
-        public ObservableCollection<ArrivalProduct> ArrivalProducts { get; set; }
+        public ObservableCollection<WriteDownProduct> WriteDownProducts { get; set; }
         public Product SelectedProduct
         {
             get => _selectedProduct;
@@ -82,7 +82,7 @@ namespace RetailTradeServer.ViewModels.Dialogs
                 OnPropertyChanged(nameof(SelectedProduct));
             }
         }
-        public bool CanArrivalProduct => ArrivalProducts.Count == 0 ? false : ArrivalProducts.FirstOrDefault(p => p.Quantity == 0) == null;
+        public bool CanWriteDownProduct => WriteDownProducts.Count == 0 ? false : WriteDownProducts.FirstOrDefault(p => p.Quantity == 0) == null;
 
         #endregion
 
@@ -90,33 +90,33 @@ namespace RetailTradeServer.ViewModels.Dialogs
 
         public ICommand RowDoubleClickCommand { get; }
         public ICommand ValidateCellCommand { get; }
-        public ICommand ArrivalProductCommand { get; }
+        public ICommand WriteDownProductCommand { get; }
         public ICommand ClearCommand { get; }
 
         #endregion
 
         #region Constructor
 
-        public CreateArrivalProductDialogFormModel(IProductService productService,
+        public CreateWriteDownProductDialogFormModel(IProductService productService,
             ISupplierService supplierService,
-            IArrivalService arrivalService,
+            IWriteDownService writeDownService,
             IUIManager manager)
         {
             _productService = productService;
             _supplierService = supplierService;
-            _arrivalService = arrivalService;
+            _writeDownService = writeDownService;
             _manager = manager;
 
-            ArrivalProducts = new();
+            WriteDownProducts = new();
 
             GetSupplier();
 
             RowDoubleClickCommand = new RelayCommand(RowDoubleClick);
             ValidateCellCommand = new ParameterCommand(parameter => ValidateCell(parameter));
-            ArrivalProductCommand = new RelayCommand(CreateArrival);
+            WriteDownProductCommand = new RelayCommand(CreateArrival);
             ClearCommand = new RelayCommand(Cleare);
 
-            ArrivalProducts.CollectionChanged += ProductRefunds_CollectionChanged;
+            WriteDownProducts.CollectionChanged += ProductRefunds_CollectionChanged;
         }
 
         #endregion
@@ -145,23 +145,23 @@ namespace RetailTradeServer.ViewModels.Dialogs
                     }
                 }
             }
-            OnPropertyChanged(nameof(ArrivalProducts));
-            OnPropertyChanged(nameof(CanArrivalProduct));
+            OnPropertyChanged(nameof(WriteDownProducts));
+            OnPropertyChanged(nameof(CanWriteDownProduct));
         }
 
         private void Item_PropertyChanged(object sender, PropertyChangedEventArgs e)
         {
-            OnPropertyChanged(nameof(ArrivalProducts));
-            OnPropertyChanged(nameof(CanArrivalProduct));
+            OnPropertyChanged(nameof(WriteDownProducts));
+            OnPropertyChanged(nameof(CanWriteDownProduct));
         }
 
         private void RowDoubleClick()
         {
             if (SelectedProduct != null)
             {
-                if (ArrivalProducts.FirstOrDefault(pr => pr.ProductId == SelectedProduct.Id) == null)
+                if (WriteDownProducts.FirstOrDefault(pr => pr.ProductId == SelectedProduct.Id) == null)
                 {
-                    ArrivalProducts.Add(new ArrivalProduct
+                    WriteDownProducts.Add(new WriteDownProduct
                     {
                         Product = SelectedProduct,
                         ProductId = SelectedProduct.Id
@@ -174,27 +174,27 @@ namespace RetailTradeServer.ViewModels.Dialogs
         {
             if (parameter is GridCellValidationEventArgs e)
             {
-                if (((ArrivalProduct)e.Row).Product != null)
+                if (((WriteDownProduct)e.Row).Product != null)
                 {
-                    if (((ArrivalProduct)e.Row).Product.Quantity < 0)
+                    if ((decimal)e.Value > ((WriteDownProduct)e.Row).Product.Quantity)
                     {
                         e.IsValid = false;
-                        e.ErrorContent = "Количество не должно быть 0.";
-                        _manager.ShowMessage("Количество не должно быть 0.", "", MessageBoxButton.OK, MessageBoxImage.Error);
+                        e.ErrorContent = "Количество списание товаров не должно превышать количество на складе.";
+                        _manager.ShowMessage("Количество списание товаров не должно превышать количество на складе.", "", MessageBoxButton.OK, MessageBoxImage.Error);
                     }
                 }
             }
-            OnPropertyChanged(nameof(CanArrivalProduct));
+            OnPropertyChanged(nameof(CanWriteDownProduct));
         }
 
         private async void CreateArrival()
         {
-            if (CanArrivalProduct)
+            if (CanWriteDownProduct)
             {
-                List<ArrivalProduct> arrivals = new();
-                foreach (var item in ArrivalProducts)
+                List<WriteDownProduct> writeDownProducts = new();
+                foreach (WriteDownProduct item in WriteDownProducts)
                 {
-                    arrivals.Add(new ArrivalProduct
+                    writeDownProducts.Add(new WriteDownProduct
                     {
                         ProductId = item.ProductId,
                         Quantity = item.Quantity
@@ -202,12 +202,12 @@ namespace RetailTradeServer.ViewModels.Dialogs
                 }
                 try
                 {
-                    Arrival arrival = await _arrivalService.CreateAsync(new Arrival
+                    _ = await _writeDownService.CreateAsync(new WriteDown
                     {
-                        ArrivalDate = DateTime.Now,
+                        WriteDownDate = DateTime.Now,
                         SupplierId = SelectedSupplier.Id,
                         Comment = Comment,
-                        ArrivalProducts = arrivals
+                        WriteDownProducts = writeDownProducts
                     });
                 }
                 catch (Exception e)
@@ -221,14 +221,14 @@ namespace RetailTradeServer.ViewModels.Dialogs
 
         private void Cleare()
         {
-            ArrivalProducts.Clear();
+            WriteDownProducts.Clear();
         }
 
         private async void GetProducts()
         {
             if (SelectedSupplier != null)
             {
-                Products = await _productService.PredicateSelect(p => p.SupplierId == SelectedSupplier.Id, p => new Product { Id = p.Id, Name = p.Name, Quantity = p.Quantity, Unit = p.Unit });
+                Products = await _productService.PredicateSelect(p => p.SupplierId == SelectedSupplier.Id && p.Quantity > 0, p => new Product { Id = p.Id, Name = p.Name, Quantity = p.Quantity, Unit = p.Unit });
             }
         }
 

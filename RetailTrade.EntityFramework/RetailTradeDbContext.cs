@@ -77,6 +77,9 @@ namespace RetailTrade.EntityFramework
         /// </summary>
         public DbSet<WriteDownProduct> WriteDownProducts { get; set; }
 
+
+        public DbSet<WriteDown> WriteDowns { get; set; }
+
         /// <summary>
         /// Товары возврашенные поставшику
         /// </summary>
@@ -109,6 +112,11 @@ namespace RetailTrade.EntityFramework
             modelBuilder.Entity<Arrival>()
                 .HasMany(o => o.ArrivalProducts)
                 .WithOne(o => o.Arrival)
+                .OnDelete(DeleteBehavior.Cascade);
+
+            modelBuilder.Entity<WriteDown>()
+                .HasMany(o => o.WriteDownProducts)
+                .WithOne(o => o.WriteDown)
                 .OnDelete(DeleteBehavior.Cascade);
 
             modelBuilder.Entity<Unit>().HasData(

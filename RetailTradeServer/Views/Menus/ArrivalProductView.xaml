@@ -14,9 +14,8 @@
                                Command="{Binding LoadedCommand}"/>
     </dxmvvm:Interaction.Behaviors>
 
-    <dxlc:LayoutControl Grid.Row="0"
-                            ItemSpace="10"
-                            Orientation="Vertical">
+    <dxlc:LayoutControl ItemSpace="10"
+                        Orientation="Vertical">
 
         <dxlc:LayoutGroup Orientation="Horizontal"
                           VerticalAlignment="Top"
