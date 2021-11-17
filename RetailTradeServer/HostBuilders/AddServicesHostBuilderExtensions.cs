@@ -34,6 +34,7 @@ namespace RetailTradeServer.HostBuilders
                 services.AddSingleton<IOrderStatusService, OrderStatusService>();
                 services.AddSingleton<IOrderProductService, OrderProductService>();
                 services.AddSingleton<IOrderToSupplierService, OrderToSupplierService>();
+                services.AddSingleton<IArrivalService, ArrivalService>();
             });
         }
     }

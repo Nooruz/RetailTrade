@@ -1,15 +1,11 @@
-﻿using DevExpress.Xpf.Grid;
-using RetailTrade.Domain.Models;
+﻿using RetailTrade.Domain.Models;
 using RetailTrade.Domain.Services;
 using RetailTradeServer.Commands;
 using RetailTradeServer.State.Dialogs;
 using RetailTradeServer.ViewModels.Base;
+using RetailTradeServer.ViewModels.Dialogs;
+using RetailTradeServer.Views.Dialogs;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.Collections.Specialized;
-using System.ComponentModel;
-using System.Linq;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Input;
 
@@ -20,32 +16,33 @@ namespace RetailTradeServer.ViewModels.Menus
         #region Private members
 
         private readonly IProductService _productService;
+        private readonly IArrivalService _arrivalService;
         private readonly IArrivalProductService _arrivalProductService;
+        private readonly ISupplierService _supplierService;
         private readonly IUIManager _manager;
-        private Product _selectedProduct;
-        private IEnumerable<Product> _products;
+        private Arrival _selectedArrival;
+        private IEnumerable<Arrival> _arrivals;
 
         #endregion
 
         #region Public properties
 
-        public IEnumerable<Product> Products
+        public IEnumerable<Arrival> Arrivals
         {
-            get => _products;
+            get => _arrivals;
             set
             {
-                _products = value;
-                OnPropertyChanged(nameof(Products));
+                _arrivals = value;
+                OnPropertyChanged(nameof(Arrivals));
             }
         }
-        public ObservableCollection<ArrivalProduct> ArrivalProducts { get; set; }
-        public Product SelectedProduct
+        public Arrival SelectedArrival
         {
-            get => _selectedProduct;
+            get => _selectedArrival;
             set
             {
-                _selectedProduct = value;
-                OnPropertyChanged(nameof(SelectedProduct));
+                _selectedArrival = value;
+                OnPropertyChanged(nameof(SelectedArrival));
             }
         }
 
@@ -53,112 +50,85 @@ namespace RetailTradeServer.ViewModels.Menus
 
         #region Commands
 
-        public ICommand AddProductCommand { get; }
-        public ICommand ValidateRowCommand { get; }
-        public ICommand ClearCommand { get; }
-        public ICommand GetProductsAsyncCommand { get; }
+        public ICommand LoadedCommand { get; }
+        public ICommand CreateArrivalCommand { get; }
+        public ICommand DeleteArrivalCommand { get; }
+        public ICommand DuplicateArrivalCommand { get; }
 
         #endregion
 
         #region Constructor
 
         public ArrivalProductViewModel(IProductService productService,
+            IArrivalService arrivalService,
             IArrivalProductService arrivalProductService,
+            ISupplierService supplierService,
             IUIManager manager)
         {
             _productService = productService;
+            _arrivalService = arrivalService;
             _arrivalProductService = arrivalProductService;
+            _supplierService = supplierService;
             _manager = manager;
 
-            ArrivalProducts = new();
+            LoadedCommand = new RelayCommand(GetArrivalsAsync);
+            CreateArrivalCommand = new RelayCommand(CreateArrival);
+            DeleteArrivalCommand = new RelayCommand(DeleteArrival);
+            DuplicateArrivalCommand = new RelayCommand(DuplicateArrival);
 
-            AddProductCommand = new RelayCommand(AddProduct);
-            ClearCommand = new RelayCommand(Cleare);
-            ValidateRowCommand = new ParameterCommand(parameter => ValidateRow(parameter));
-            GetProductsAsyncCommand = new RelayCommand(async () => { Products = await GetProductsAsync(); });
-
-            ArrivalProducts.CollectionChanged += ArrivalProducts_CollectionChanged;
+            _arrivalService.PropertiesChanged += GetArrivalsAsync;
         }        
 
         #endregion
 
         #region Private Voids
 
-        private async Task<IEnumerable<Product>> GetProductsAsync()
+        private async void GetArrivalsAsync()
         {
-            return await _productService.Queryable();
+            Arrivals = await _arrivalService.GetAllAsync();
         }
 
-        private async void AddProduct()
+        private async void CreateArrival()
         {
-            if (await _arrivalProductService.AddRangeAsync(ArrivalProducts.Where(ap => ap.ProductId != 0).ToList()))
+            await _manager.ShowDialog(new CreateArrivalProductDialogFormModel(_productService, _supplierService, _arrivalService, _manager) { Title = "Приход товаров (новый)" }, 
+                new CreateArrivalProductDialogForm());
+        }
+
+        private async void DeleteArrival()
+        {
+            if (SelectedArrival != null)
             {
-                _manager.ShowMessage("Все товары успешно добавлены.", "", MessageBoxButton.OK);
-                ArrivalProducts.Clear();
+                if (_manager.ShowMessage("Вы точно хотите удалить выбранный приход?", "", MessageBoxButton.YesNo, MessageBoxImage.Question) == MessageBoxResult.Yes)
+                {
+                    await _arrivalService.DeleteAsync(SelectedArrival.Id);
+                }
             }
             else
             {
-                _manager.ShowMessage("Ошибка при добавление товаров.", "", MessageBoxButton.OK);
+                _manager.ShowMessage("Выберите приход!", "", MessageBoxButton.OK, MessageBoxImage.Exclamation);
             }
         }
 
-        private void ArrivalProducts_CollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
+        private async void DuplicateArrival()
         {
-            if (e.OldItems != null)
+            if (SelectedArrival != null)
             {
-                foreach (INotifyPropertyChanged item in e.OldItems)
+                if (_manager.ShowMessage("Дублировать выбранный приход?", "", MessageBoxButton.YesNo, MessageBoxImage.Question) == MessageBoxResult.Yes)
                 {
-                    if (item != null)
-                    {
-                        item.PropertyChanged -= Item_PropertyChanged;
-                    }
+                    await _manager.ShowDialog(
+                        new CreateArrivalProductDialogFormModel(_productService, _supplierService, _arrivalService, _manager) 
+                        { 
+                            Title = "Приход товаров (дублирование)",
+                            SelectedSupplier = SelectedArrival.Supplier,
+                            ArrivalProducts = new(SelectedArrival.ArrivalProducts)
+                        },
+                        new CreateArrivalProductDialogForm());
                 }
             }
-            if (e.NewItems != null)
+            else
             {
-                foreach (INotifyPropertyChanged item in e.NewItems)
-                {
-                    if (item != null)
-                    {
-                        item.PropertyChanged += Item_PropertyChanged;
-                    }
-                }
+                _manager.ShowMessage("Выберите приход!", "", MessageBoxButton.OK, MessageBoxImage.Exclamation);
             }
-        }
-
-        private void Item_PropertyChanged(object sender, PropertyChangedEventArgs e)
-        {
-            if (e.PropertyName == nameof(ArrivalProduct.ProductId))
-            {
-                if (sender is ArrivalProduct arrivalProduct)
-                {
-                    arrivalProduct.Product = SelectedProduct;
-                }
-            }
-        }
-
-        private void ValidateRow(object parameter)
-        {
-            if (parameter is GridRowValidationEventArgs e)
-            {
-                if (((ArrivalProduct)e.Row).ProductId == 0)
-                {
-                    e.IsValid = false;
-                    e.ErrorContent = "Введите наименованине товара!";
-                    _manager.ShowMessage("Введите наименованине товара!", "", MessageBoxButton.OK, MessageBoxImage.Error);
-                }
-                if (((ArrivalProduct)e.Row).Quantity == 0)
-                {
-                    e.IsValid = false;
-                    e.ErrorContent = "Количество не должно быть 0!";
-                    _manager.ShowMessage("Количество не должно быть 0!", "", MessageBoxButton.OK, MessageBoxImage.Error);
-                }
-            }
-        }
-
-        private void Cleare()
-        {
-            ArrivalProducts.Clear();
         }
 
         #endregion

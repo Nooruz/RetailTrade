@@ -4,12 +4,12 @@ using RetailTrade.Domain.Services;
 using RetailTradeServer.Commands;
 using RetailTradeServer.State.Dialogs;
 using RetailTradeServer.ViewModels.Dialogs.Base;
+using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Collections.Specialized;
 using System.ComponentModel;
 using System.Linq;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Input;
 
@@ -17,18 +17,52 @@ namespace RetailTradeServer.ViewModels.Dialogs
 {
     public class CreateArrivalProductDialogFormModel : BaseDialogViewModel
     {
-        #region Private members
+        #region Private Members
 
         private readonly IProductService _productService;
-        private readonly IArrivalProductService _arrivalProductService;
+        private readonly ISupplierService _supplierService;
+        private readonly IArrivalService _arrivalService;
         private readonly IUIManager _manager;
+        private Supplier _selectedSupplier;
         private Product _selectedProduct;
+        private string _comment;
+        private IEnumerable<Supplier> _suppliers;
         private IEnumerable<Product> _products;
 
         #endregion
 
-        #region Public properties
+        #region Public Properties
 
+        public IEnumerable<Supplier> Suppliers
+        {
+            get => _suppliers;
+            set
+            {
+                _suppliers = value;
+                OnPropertyChanged(nameof(Suppliers));
+            }
+        }
+        public Supplier SelectedSupplier
+        {
+            get => _selectedSupplier;
+            set
+            {
+                _selectedSupplier = value;
+                OnPropertyChanged(nameof(SelectedSupplier));
+                OnPropertyChanged(nameof(Products));
+                Cleare();
+                GetProducts();
+            }
+        }
+        public string Comment
+        {
+            get => _comment;
+            set
+            {
+                _comment = value;
+                OnPropertyChanged(nameof(Comment));
+            }
+        }
         public IEnumerable<Product> Products
         {
             get => _products;
@@ -48,61 +82,48 @@ namespace RetailTradeServer.ViewModels.Dialogs
                 OnPropertyChanged(nameof(SelectedProduct));
             }
         }
+        public bool CanArrivalProduct => ArrivalProducts.Count == 0 ? false : ArrivalProducts.FirstOrDefault(p => p.Quantity == 0) == null;
 
         #endregion
 
         #region Commands
 
-        public ICommand AddProductCommand { get; }
-        public ICommand ValidateRowCommand { get; }
+        public ICommand RowDoubleClickCommand { get; }
+        public ICommand ValidateCellCommand { get; }
+        public ICommand ArrivalProductCommand { get; }
         public ICommand ClearCommand { get; }
-        public ICommand GetProductsAsyncCommand { get; }
 
         #endregion
 
         #region Constructor
 
         public CreateArrivalProductDialogFormModel(IProductService productService,
-            IArrivalProductService arrivalProductService,
+            ISupplierService supplierService,
+            IArrivalService arrivalService,
             IUIManager manager)
         {
             _productService = productService;
-            _arrivalProductService = arrivalProductService;
+            _supplierService = supplierService;
+            _arrivalService = arrivalService;
             _manager = manager;
 
             ArrivalProducts = new();
 
-            AddProductCommand = new RelayCommand(AddProduct);
-            ClearCommand = new RelayCommand(Cleare);
-            ValidateRowCommand = new ParameterCommand(parameter => ValidateRow(parameter));
-            GetProductsAsyncCommand = new RelayCommand(async () => { Products = await GetProductsAsync(); });
+            GetSupplier();
 
-            ArrivalProducts.CollectionChanged += ArrivalProducts_CollectionChanged;
+            RowDoubleClickCommand = new RelayCommand(RowDoubleClick);
+            ValidateCellCommand = new ParameterCommand(parameter => ValidateCell(parameter));
+            ArrivalProductCommand = new RelayCommand(CreateArrival);
+            ClearCommand = new RelayCommand(Cleare);
+
+            ArrivalProducts.CollectionChanged += ProductRefunds_CollectionChanged;
         }
 
         #endregion
 
         #region Private Voids
 
-        private async Task<IEnumerable<Product>> GetProductsAsync()
-        {
-            return await _productService.Queryable();
-        }
-
-        private async void AddProduct()
-        {
-            if (await _arrivalProductService.AddRangeAsync(ArrivalProducts.Where(ap => ap.ProductId != 0).ToList()))
-            {
-                _manager.ShowMessage("Все товары успешно добавлены.", "", MessageBoxButton.OK);
-                ArrivalProducts.Clear();
-            }
-            else
-            {
-                _manager.ShowMessage("Ошибка при добавление товаров.", "", MessageBoxButton.OK);
-            }
-        }
-
-        private void ArrivalProducts_CollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
+        private void ProductRefunds_CollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
         {
             if (e.OldItems != null)
             {
@@ -124,41 +145,96 @@ namespace RetailTradeServer.ViewModels.Dialogs
                     }
                 }
             }
+            OnPropertyChanged(nameof(ArrivalProducts));
+            OnPropertyChanged(nameof(CanArrivalProduct));
         }
 
         private void Item_PropertyChanged(object sender, PropertyChangedEventArgs e)
         {
-            if (e.PropertyName == nameof(ArrivalProduct.ProductId))
+            OnPropertyChanged(nameof(ArrivalProducts));
+            OnPropertyChanged(nameof(CanArrivalProduct));
+        }
+
+        private void RowDoubleClick()
+        {
+            if (SelectedProduct != null)
             {
-                if (sender is ArrivalProduct arrivalProduct)
+                if (ArrivalProducts.FirstOrDefault(pr => pr.ProductId == SelectedProduct.Id) == null)
                 {
-                    arrivalProduct.Product = SelectedProduct;
+                    ArrivalProducts.Add(new ArrivalProduct
+                    {
+                        Product = SelectedProduct,
+                        ProductId = SelectedProduct.Id
+                    });
                 }
             }
         }
 
-        private void ValidateRow(object parameter)
+        private void ValidateCell(object parameter)
         {
-            if (parameter is GridRowValidationEventArgs e)
+            if (parameter is GridCellValidationEventArgs e)
             {
-                if (((ArrivalProduct)e.Row).ProductId == 0)
+                if (((ArrivalProduct)e.Row).Product != null)
                 {
-                    e.IsValid = false;
-                    e.ErrorContent = "Введите наименованине товара!";
-                    _manager.ShowMessage("Введите наименованине товара!", "", MessageBoxButton.OK, MessageBoxImage.Error);
+                    if (((ArrivalProduct)e.Row).Product.Quantity < 0)
+                    {
+                        e.IsValid = false;
+                        e.ErrorContent = "Количество заказа не должно быть 0.";
+                        _manager.ShowMessage("Количество заказа не должно быть 0.", "", MessageBoxButton.OK, MessageBoxImage.Error);
+                    }
                 }
-                if (((ArrivalProduct)e.Row).Quantity == 0)
+            }
+            OnPropertyChanged(nameof(CanArrivalProduct));
+        }
+
+        private async void CreateArrival()
+        {
+            if (CanArrivalProduct)
+            {
+                List<ArrivalProduct> arrivals = new();
+                foreach (var item in ArrivalProducts)
                 {
-                    e.IsValid = false;
-                    e.ErrorContent = "Количество не должно быть 0!";
-                    _manager.ShowMessage("Количество не должно быть 0!", "", MessageBoxButton.OK, MessageBoxImage.Error);
+                    arrivals.Add(new ArrivalProduct
+                    {
+                        ProductId = item.ProductId,
+                        Quantity = item.Quantity
+                    });
                 }
+                try
+                {
+                    Arrival arrival = await _arrivalService.CreateAsync(new Arrival
+                    {
+                        ArrivalDate = DateTime.Now,
+                        SupplierId = SelectedSupplier.Id,
+                        Comment = Comment,
+                        ArrivalProducts = arrivals
+                    });
+                }
+                catch (Exception e)
+                {
+                    //ignore
+                }
+
+                _manager.Close();
             }
         }
 
         private void Cleare()
         {
             ArrivalProducts.Clear();
+        }
+
+        private async void GetProducts()
+        {
+            if (SelectedSupplier != null)
+            {
+                Products = await _productService.PredicateSelect(p => p.SupplierId == SelectedSupplier.Id, p => new Product { Id = p.Id, Name = p.Name, Quantity = p.Quantity, Unit = p.Unit });
+            }
+        }
+
+        private async void GetSupplier()
+        {
+            Suppliers = await _supplierService.GetAllAsync();
         }
 
         #endregion

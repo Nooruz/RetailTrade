@@ -9,51 +9,64 @@
                                Width="600"
                                Height="400">
 
-    <dxmvvm:Interaction.Behaviors>
-        <dxmvvm:EventToCommand EventName="Loaded" Command="{Binding GetProductsAsyncCommand}"/>
-    </dxmvvm:Interaction.Behaviors>
-
-    <dxlc:LayoutControl ItemSpace="10"
+    <dxlc:LayoutControl Grid.Row="0"
+                        ItemSpace="10"
                         Orientation="Vertical">
 
-        <dxg:GridControl SelectionMode="Row"
-                         ItemsSource="{Binding ArrivalProducts}">
+        <dxlc:LayoutItem Label="Поставщик:">
+            <dxe:ComboBoxEdit ItemsSource="{Binding Suppliers}"
+                              DisplayMember="ShortName"
+                              SelectedItem="{Binding SelectedSupplier}"/>
+        </dxlc:LayoutItem>
 
+        <dxg:GridControl SelectionMode="Row"
+                         ItemsSource="{Binding Products}"
+                         SelectedItem="{Binding SelectedProduct, UpdateSourceTrigger=PropertyChanged}">
             <dxg:GridControl.View>
-                <dxg:TableView AutoWidth="True" 
-                               NewItemRowPosition="Top"
-                               InvalidRowException="TableView_InvalidRowException"
+                <dxg:TableView AutoWidth="True"
                                ShowGroupPanel="False">
                     <dxmvvm:Interaction.Behaviors>
-                        <dxmvvm:EventToCommand EventName="ValidateRow" 
-                                               Command="{Binding ValidateRowCommand}"
-                                               PassEventArgsToCommand="True"/>
+                        <dxmvvm:EventToCommand EventName="RowDoubleClick" 
+                                               Command="{Binding RowDoubleClickCommand}"/>
                     </dxmvvm:Interaction.Behaviors>
 
                 </dxg:TableView>
             </dxg:GridControl.View>
 
             <dxg:GridColumn Header="Наименование"                            
-                            Binding="{Binding ProductId, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
-                <dxg:GridColumn.EditSettings>
-                    <dxg:LookUpEditSettings Style="{StaticResource luesProduct}"/>
-                </dxg:GridColumn.EditSettings>
-            </dxg:GridColumn>
+                            Binding="{Binding Name}"/>
 
-            <dxg:GridColumn Header="Штрих-код" 
-                            Binding="{Binding Product.Barcode, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-                            Width="60"
-                            IsSmart="True">
-                <dxg:GridColumn.EditSettings>
-                    <dxe:TextEditSettings/>
-                </dxg:GridColumn.EditSettings>
-            </dxg:GridColumn>
-
-            <dxg:GridColumn Header="Количество" 
+            <dxg:GridColumn Header="Количество на складе" 
                             Width="50"
+                            Binding="{Binding Quantity}"
+                            AllowEditing="True"
+                            IsSmart="True"/>
+
+        </dxg:GridControl>
+
+        <dxg:GridControl SelectionMode="Row"
+                         ItemsSource="{Binding ArrivalProducts}">
+
+            <dxg:GridControl.View>
+                <dxg:TableView AutoWidth="True"
+                               InvalidRowException="TableView_InvalidRowException"
+                               ShowGroupPanel="False"/>
+            </dxg:GridControl.View>
+
+            <dxg:GridColumn Header="Наименование"                            
+                            Binding="{Binding Product.Name}"/>
+
+            <dxg:GridColumn Header="Количество заказа" 
+                            Width="50"   
+                            ShowValidationAttributeErrors="True"
                             Binding="{Binding Quantity, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                             AllowEditing="True"
                             IsSmart="True">
+                <dxmvvm:Interaction.Behaviors>
+                    <dxmvvm:EventToCommand EventName="Validate" 
+                                           Command="{Binding ValidateCellCommand}"
+                                           PassEventArgsToCommand="True"/>
+                </dxmvvm:Interaction.Behaviors>
                 <dxg:GridColumn.EditSettings>
                     <dxe:SpinEditSettings AllowRoundOutOfRangeValue="True"
                                           SelectAllOnMouseUp="True"
@@ -64,14 +77,26 @@
 
         </dxg:GridControl>
 
+        <dxlc:LayoutItem LabelPosition="Top"
+                         Label="Комментарий">
+            <dxe:TextEdit Text="{Binding Comment, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                          TextWrapping="Wrap"
+                          VerticalContentAlignment="Top"
+                          Height="70"/>
+        </dxlc:LayoutItem>
+
         <dxlc:LayoutGroup HorizontalAlignment="Right"
                           VerticalAlignment="Bottom">
 
-            <Button Content="Принять"
-                        Command="{Binding AddProductCommand}"/>
+            <Button Content="Создать"
+                    Command="{Binding ArrivalProductCommand}"
+                    IsEnabled="{Binding CanArrivalProduct, UpdateSourceTrigger=PropertyChanged}"/>
 
             <Button Content="Очистить"
-                        Command="{Binding CleareCommand}"/>
+                    Command="{Binding ClearCommand}"/>
+
+            <Button Content="Закрыть"
+                    Command="{Binding CancelCommand}"/>
 
         </dxlc:LayoutGroup>
 

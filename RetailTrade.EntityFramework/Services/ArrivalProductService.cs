@@ -104,8 +104,7 @@ namespace RetailTrade.EntityFramework.Services
                     await CreateAsync(new ArrivalProduct
                     {
                         ProductId = item.ProductId,
-                        Quantity = item.Quantity,
-                        ArrivalDate = DateTime.Now
+                        Quantity = item.Quantity
                     });
                     Product product = await _productService.GetByIdAsync(item.ProductId);
                     product.Quantity += item.Quantity;

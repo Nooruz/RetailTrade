@@ -65,6 +65,8 @@ namespace RetailTrade.EntityFramework
         /// </summary>
         public DbSet<Shift> Shifts { get; set; }
 
+        public DbSet<Arrival> Arrivals { get; set; }
+
         /// <summary>
         /// Приход товаров
         /// </summary>
@@ -102,6 +104,11 @@ namespace RetailTrade.EntityFramework
             modelBuilder.Entity<OrderToSupplier>()
                 .HasMany(o => o.OrderProducts)
                 .WithOne(o => o.OrderToSupplier)
+                .OnDelete(DeleteBehavior.Cascade);
+
+            modelBuilder.Entity<Arrival>()
+                .HasMany(o => o.ArrivalProducts)
+                .WithOne(o => o.Arrival)
                 .OnDelete(DeleteBehavior.Cascade);
 
             modelBuilder.Entity<Unit>().HasData(

@@ -80,6 +80,8 @@
         <dxlc:LayoutItem LabelPosition="Top"
                          Label="Комментарий">
             <dxe:TextEdit Text="{Binding Comment, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                          TextWrapping="Wrap"
+                          VerticalContentAlignment="Top"
                           Height="70"/>
         </dxlc:LayoutItem>
 
