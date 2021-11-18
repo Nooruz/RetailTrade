@@ -54,7 +54,7 @@ namespace RetailTrade.EntityFramework.Services
             try
             {
                 await using var context = _contextFactory.CreateDbContext();
-                return await context.ProductRefunds
+                return await context.RefundToSupplierProducts
                     .FirstOrDefaultAsync((e) => e.Id == id);
             }
             catch (Exception e)
@@ -69,7 +69,7 @@ namespace RetailTrade.EntityFramework.Services
             try
             {
                 using var context = _contextFactory.CreateDbContext();
-                return context.ProductRefunds
+                return context.RefundToSupplierProducts
                     .ToList();
             }
             catch (Exception e)
@@ -84,7 +84,7 @@ namespace RetailTrade.EntityFramework.Services
             try
             {
                 await using var context = _contextFactory.CreateDbContext();
-                return await context.ProductRefunds
+                return await context.RefundToSupplierProducts
                     .ToListAsync();
             }
             catch (Exception e)

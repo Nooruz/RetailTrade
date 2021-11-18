@@ -122,9 +122,10 @@ namespace RetailTradeServer.HostBuilders
         private static RefundToSupplierViewModel CreateRefundToSupplierViewModel(IServiceProvider services)
         {
             return new RefundToSupplierViewModel(services.GetRequiredService<IProductService>(),
+                services.GetRequiredService<IRefundToSupplierService>(),
+                services.GetRequiredService<IRefundToSupplierServiceProduct>(),
                 services.GetRequiredService<ISupplierService>(),
-                services.GetRequiredService<IUIManager>(),
-                services.GetRequiredService<IRefundToSupplierServiceProduct>());
+                services.GetRequiredService<IUIManager>());
         }
     }
 }

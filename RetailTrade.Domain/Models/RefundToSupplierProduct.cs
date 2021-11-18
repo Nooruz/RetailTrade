@@ -13,6 +13,7 @@ namespace RetailTrade.Domain.Models
 
         #region Public Properties
 
+        public int RefundToSupplierId { get; set; }
         public int ProductId { get; set; }
         public decimal Quantity
         {
@@ -32,6 +33,7 @@ namespace RetailTrade.Domain.Models
                 OnPropertyChanged(nameof(Product));
             }
         }
+        public RefundToSupplier RefundToSupplier { get; set; }
 
         #endregion        
 

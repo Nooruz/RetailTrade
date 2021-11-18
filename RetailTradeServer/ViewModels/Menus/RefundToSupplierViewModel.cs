@@ -1,14 +1,11 @@
-﻿using DevExpress.Xpf.Grid;
-using RetailTrade.Domain.Models;
+﻿using RetailTrade.Domain.Models;
 using RetailTrade.Domain.Services;
 using RetailTradeServer.Commands;
 using RetailTradeServer.State.Dialogs;
 using RetailTradeServer.ViewModels.Base;
+using RetailTradeServer.ViewModels.Dialogs;
+using RetailTradeServer.Views.Dialogs;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.Collections.Specialized;
-using System.ComponentModel;
-using System.Linq;
 using System.Windows;
 using System.Windows.Input;
 
@@ -16,165 +13,96 @@ namespace RetailTradeServer.ViewModels.Menus
 {
     public class RefundToSupplierViewModel : BaseViewModel
     {
-        #region Private Members
+        #region Private members
 
         private readonly IProductService _productService;
+        private readonly IRefundToSupplierService _refundToSupplierService;
+        private readonly IRefundToSupplierServiceProduct _refundToSupplierServiceProduct;
         private readonly ISupplierService _supplierService;
         private readonly IUIManager _manager;
-        private readonly IRefundToSupplierServiceProduct _productRefundToSupplierService;
-        private int? _selectedSupplierId;
-        private Product _selectedProduct;
+        private RefundToSupplier _selectedRefundToSupplier;
+        private IEnumerable<RefundToSupplier> _refundToSuppliers;
 
         #endregion
 
-        #region Public Properties
+        #region Public properties
 
-        public IEnumerable<Supplier> Suppliers => _supplierService.GetOnlyNames();        
-
-        public int? SelectedSupplierId
+        public IEnumerable<RefundToSupplier> RefundToSuppliers
         {
-            get => _selectedSupplierId;
-            set 
-            { 
-                _selectedSupplierId = value;
-                OnPropertyChanged(nameof(SelectedSupplierId));
-                OnPropertyChanged(nameof(Products));
-            }
-        }
-
-        public IEnumerable<Product> Products => SelectedSupplierId != null ? _productService.GetForRefund(SelectedSupplierId.Value) : null;
-
-        public ObservableCollection<RefundToSupplierProduct> ProductRefunds { get; set; }
-
-        public Product SelectedProduct
-        {
-            get => _selectedProduct;
+            get => _refundToSuppliers;
             set
             {
-                _selectedProduct = value;
-                OnPropertyChanged(nameof(SelectedProduct));
+                _refundToSuppliers = value;
+                OnPropertyChanged(nameof(RefundToSuppliers));
+            }
+        }
+        public RefundToSupplier SelectedRefundToSupplier
+        {
+            get => _selectedRefundToSupplier;
+            set
+            {
+                _selectedRefundToSupplier = value;
+                OnPropertyChanged(nameof(SelectedRefundToSupplier));
             }
         }
 
-        public bool CanRefundProduct => ProductRefunds.FirstOrDefault(p => p.Quantity == 0) == null;
-
         #endregion
 
-        #region Commmands
+        #region Commands
 
-        public ICommand RowDoubleClickCommand { get; }
-        public ICommand ValidateCellCommand { get; }
-        public ICommand RefundProductCommand { get; }
-        public ICommand ClearCommand { get; }
+        public ICommand LoadedCommand { get; }
 
         #endregion
 
         #region Constructor
 
         public RefundToSupplierViewModel(IProductService productService,
+            IRefundToSupplierService refundToSupplierService,
+            IRefundToSupplierServiceProduct refundToSupplierServiceProduct,
             ISupplierService supplierService,
-            IUIManager manager,
-            IRefundToSupplierServiceProduct productRefundToSupplierService)
+            IUIManager manager)
         {
             _productService = productService;
+            _refundToSupplierService = refundToSupplierService;
+            _refundToSupplierServiceProduct = refundToSupplierServiceProduct;
             _supplierService = supplierService;
             _manager = manager;
-            _productRefundToSupplierService = productRefundToSupplierService;
 
-            ProductRefunds = new();
+            LoadedCommand = new RelayCommand(GetRefundToSuppliersAsync);
+            CreateCommand = new RelayCommand(Create);
+            DeleteCommand = new RelayCommand(Delete);
 
-            RowDoubleClickCommand = new RelayCommand(RowDoubleClick);
-            ValidateCellCommand = new ParameterCommand(parameter => ValidateCell(parameter));
-            RefundProductCommand = new RelayCommand(RefundProduct);
-            ClearCommand = new RelayCommand(Cleare);
-
-            ProductRefunds.CollectionChanged += ProductRefunds_CollectionChanged;
+            _refundToSupplierService.PropertiesChanged += GetRefundToSuppliersAsync;
         }
 
         #endregion
 
         #region Private Voids
 
-        private void ProductRefunds_CollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
+        private async void GetRefundToSuppliersAsync()
         {
-            if (e.OldItems != null)
-            {
-                foreach (INotifyPropertyChanged item in e.OldItems)
-                {
-                    if (item != null)
-                    {
-                        item.PropertyChanged -= Item_PropertyChanged;
-                    }
-                }
-            }
-            if (e.NewItems != null)
-            {
-                foreach (INotifyPropertyChanged item in e.NewItems)
-                {
-                    if (item != null)
-                    {
-                        item.PropertyChanged += Item_PropertyChanged;
-                    }
-                }
-            }
-            OnPropertyChanged(nameof(ProductRefunds));
+            RefundToSuppliers = await _refundToSupplierService.GetAllAsync();
         }
 
-        private void Item_PropertyChanged(object sender, PropertyChangedEventArgs e)
+        private async void Create()
         {
-            OnPropertyChanged(nameof(ProductRefunds));
+            await _manager.ShowDialog(new CreateRefundToSupplierDialogFormModel(_productService, _supplierService, _refundToSupplierService, _manager) { Title = "Возврат поставщику (новый)" },
+                new CreateRefundToSupplierDialogForm());
         }
 
-        private void RowDoubleClick()
+        private async void Delete()
         {
-            if (SelectedProduct != null)
+            if (SelectedRefundToSupplier != null)
             {
-                if (ProductRefunds.FirstOrDefault(pr => pr.ProductId == SelectedProduct.Id) == null)
+                if (_manager.ShowMessage("Вы точно хотите удалить выбранный элемент?", "", MessageBoxButton.YesNo, MessageBoxImage.Question) == MessageBoxResult.Yes)
                 {
-                    ProductRefunds.Add(new RefundToSupplierProduct
-                    {
-                        Product = SelectedProduct,
-                        ProductId = SelectedProduct.Id
-                    });
+                    await _refundToSupplierService.DeleteAsync(SelectedRefundToSupplier.Id);
                 }
             }
-        }
-
-        private void ValidateCell(object parameter)
-        {
-            if (parameter is GridCellValidationEventArgs e)
+            else
             {
-                if (((RefundToSupplierProduct)e.Row).Product != null)
-                {
-                    if (((RefundToSupplierProduct)e.Row).Product.Quantity < (decimal)e.Value)
-                    {
-                        e.IsValid = false;
-                        e.ErrorContent = "Количество возврата не должно превышать количество на складе.";
-                        _manager.ShowMessage("Количество возврата не должно превышать количество на складе.", "", MessageBoxButton.OK, MessageBoxImage.Error);
-                    }
-                }
+                _manager.ShowMessage("Выберите элемент!", "", MessageBoxButton.OK, MessageBoxImage.Exclamation);
             }
-        }
-
-        private async void RefundProduct()
-        {
-            if (ProductRefunds.Count > 0)
-            {
-                if (await _productRefundToSupplierService.AddRangeAsync(ProductRefunds.ToList()))
-                {
-                    _manager.ShowMessage("Операция успешно выполнена.", "", MessageBoxButton.OK, MessageBoxImage.Information);
-                    Cleare();
-                }
-                else
-                {
-                    _manager.ShowMessage("Ошибка при выполнении операции.", "", MessageBoxButton.OK, MessageBoxImage.Error);
-                }
-            }
-        }
-
-        private void Cleare()
-        {
-            ProductRefunds.Clear();
         }
 
         #endregion

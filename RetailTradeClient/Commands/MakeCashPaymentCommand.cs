@@ -86,11 +86,12 @@ namespace RetailTradeClient.Commands
 
                             _cashRegisterControlMachine.Quantity = Convert.ToDouble(sale.Quantity);
                             _cashRegisterControlMachine.Price = sale.SalePrice;
-                            _cashRegisterControlMachine.Department = 1;
-                            var sum1 = Math.Round(sale.SalePrice * 2 / 102, 2);
-                            string sum = Math.Round(sum1 * 100, 0).ToString();
-                            _cashRegisterControlMachine.StringForPrinting = $";;;;1;0;4;{sum};{Environment.NewLine + sale.Name}";
-                            //string.Join(";", new string[] { "4000417703002", "654654", "", "", "1", "0", "4", Math.Round(sale.SalePrice * 2 / 102, 2).ToString(), Environment.NewLine + sale.Name });
+                            var sum1NSP = Math.Round(sale.SalePrice * 1 / 113, 2);
+                            var sum1NDS = Math.Round(sale.SalePrice * 12 / 113, 2);
+                            string sumNSP = Math.Round(sum1NSP * 100, 0).ToString();
+                            string sumNDS = Math.Round(sum1NDS * 100, 0).ToString();
+                            _cashRegisterControlMachine.StringForPrinting = 
+                                string.Join(",", new string[] { "", "", "", "", "2", sumNDS, "3", sumNSP + Environment.NewLine + sale.Name });
                             _cashRegisterControlMachine.Sale();
                         }
                         _cashRegisterControlMachine.Summ1 = newReceipt.Sum;

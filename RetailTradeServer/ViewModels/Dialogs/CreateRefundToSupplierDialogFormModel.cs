@@ -21,7 +21,7 @@ namespace RetailTradeServer.ViewModels.Dialogs
 
         private readonly IProductService _productService;
         private readonly ISupplierService _supplierService;
-        private readonly IArrivalService _arrivalService;
+        private readonly IRefundToSupplierService _refundToSupplierService;
         private readonly IUIManager _manager;
         private Supplier _selectedSupplier;
         private Product _selectedProduct;
@@ -72,7 +72,7 @@ namespace RetailTradeServer.ViewModels.Dialogs
                 OnPropertyChanged(nameof(Products));
             }
         }
-        public ObservableCollection<ArrivalProduct> ArrivalProducts { get; set; }
+        public ObservableCollection<RefundToSupplierProduct> RefundToSupplierProducts { get; set; }
         public Product SelectedProduct
         {
             get => _selectedProduct;
@@ -82,7 +82,7 @@ namespace RetailTradeServer.ViewModels.Dialogs
                 OnPropertyChanged(nameof(SelectedProduct));
             }
         }
-        public bool CanArrivalProduct => ArrivalProducts.Count == 0 ? false : ArrivalProducts.FirstOrDefault(p => p.Quantity == 0) == null;
+        public bool CanRefundToSupplierProduct => RefundToSupplierProducts.Count == 0 ? false : RefundToSupplierProducts.FirstOrDefault(p => p.Quantity == 0) == null;
 
         #endregion
 
@@ -90,7 +90,7 @@ namespace RetailTradeServer.ViewModels.Dialogs
 
         public ICommand RowDoubleClickCommand { get; }
         public ICommand ValidateCellCommand { get; }
-        public ICommand ArrivalProductCommand { get; }
+        public ICommand RefundToSupplierProductCommand { get; }
         public ICommand ClearCommand { get; }
 
         #endregion
@@ -99,24 +99,24 @@ namespace RetailTradeServer.ViewModels.Dialogs
 
         public CreateRefundToSupplierDialogFormModel(IProductService productService,
             ISupplierService supplierService,
-            IArrivalService arrivalService,
+            IRefundToSupplierService refundToSupplierService,
             IUIManager manager)
         {
             _productService = productService;
             _supplierService = supplierService;
-            _arrivalService = arrivalService;
+            _refundToSupplierService = refundToSupplierService;
             _manager = manager;
 
-            ArrivalProducts = new();
+            RefundToSupplierProducts = new();
 
             GetSupplier();
 
             RowDoubleClickCommand = new RelayCommand(RowDoubleClick);
             ValidateCellCommand = new ParameterCommand(parameter => ValidateCell(parameter));
-            ArrivalProductCommand = new RelayCommand(CreateArrival);
+            RefundToSupplierProductCommand = new RelayCommand(CreateRefundToSupplierProduct);
             ClearCommand = new RelayCommand(Cleare);
 
-            ArrivalProducts.CollectionChanged += ProductRefunds_CollectionChanged;
+            RefundToSupplierProducts.CollectionChanged += ProductRefunds_CollectionChanged;
         }
 
         #endregion
@@ -145,23 +145,23 @@ namespace RetailTradeServer.ViewModels.Dialogs
                     }
                 }
             }
-            OnPropertyChanged(nameof(ArrivalProducts));
-            OnPropertyChanged(nameof(CanArrivalProduct));
+            OnPropertyChanged(nameof(RefundToSupplierProducts));
+            OnPropertyChanged(nameof(CanRefundToSupplierProduct));
         }
 
         private void Item_PropertyChanged(object sender, PropertyChangedEventArgs e)
         {
-            OnPropertyChanged(nameof(ArrivalProducts));
-            OnPropertyChanged(nameof(CanArrivalProduct));
+            OnPropertyChanged(nameof(RefundToSupplierProducts));
+            OnPropertyChanged(nameof(CanRefundToSupplierProduct));
         }
 
         private void RowDoubleClick()
         {
             if (SelectedProduct != null)
             {
-                if (ArrivalProducts.FirstOrDefault(pr => pr.ProductId == SelectedProduct.Id) == null)
+                if (RefundToSupplierProducts.FirstOrDefault(pr => pr.ProductId == SelectedProduct.Id) == null)
                 {
-                    ArrivalProducts.Add(new ArrivalProduct
+                    RefundToSupplierProducts.Add(new RefundToSupplierProduct
                     {
                         Product = SelectedProduct,
                         ProductId = SelectedProduct.Id
@@ -174,9 +174,9 @@ namespace RetailTradeServer.ViewModels.Dialogs
         {
             if (parameter is GridCellValidationEventArgs e)
             {
-                if (((ArrivalProduct)e.Row).Product != null)
+                if (((RefundToSupplierProduct)e.Row).Product != null)
                 {
-                    if (((ArrivalProduct)e.Row).Product.Quantity < 0)
+                    if (((RefundToSupplierProduct)e.Row).Product.Quantity < 0)
                     {
                         e.IsValid = false;
                         e.ErrorContent = "Количество не должно быть 0.";
@@ -184,17 +184,17 @@ namespace RetailTradeServer.ViewModels.Dialogs
                     }
                 }
             }
-            OnPropertyChanged(nameof(CanArrivalProduct));
+            OnPropertyChanged(nameof(CanRefundToSupplierProduct));
         }
 
-        private async void CreateArrival()
+        private async void CreateRefundToSupplierProduct()
         {
-            if (CanArrivalProduct)
+            if (CanRefundToSupplierProduct)
             {
-                List<ArrivalProduct> arrivals = new();
-                foreach (var item in ArrivalProducts)
+                List<RefundToSupplierProduct> refundToSupplierProducts = new();
+                foreach (var item in RefundToSupplierProducts)
                 {
-                    arrivals.Add(new ArrivalProduct
+                    refundToSupplierProducts.Add(new RefundToSupplierProduct
                     {
                         ProductId = item.ProductId,
                         Quantity = item.Quantity
@@ -202,12 +202,12 @@ namespace RetailTradeServer.ViewModels.Dialogs
                 }
                 try
                 {
-                    Arrival arrival = await _arrivalService.CreateAsync(new Arrival
+                    RefundToSupplier refundToSupplier = await _refundToSupplierService.CreateAsync(new RefundToSupplier
                     {
-                        ArrivalDate = DateTime.Now,
+                        RefundToSupplierDate = DateTime.Now,
                         SupplierId = SelectedSupplier.Id,
                         Comment = Comment,
-                        ArrivalProducts = arrivals
+                        RefundToSupplierProducts = refundToSupplierProducts
                     });
                 }
                 catch (Exception e)
@@ -221,7 +221,7 @@ namespace RetailTradeServer.ViewModels.Dialogs
 
         private void Cleare()
         {
-            ArrivalProducts.Clear();
+            RefundToSupplierProducts.Clear();
         }
 
         private async void GetProducts()

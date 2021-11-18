@@ -83,7 +83,9 @@ namespace RetailTrade.EntityFramework
         /// <summary>
         /// Товары возврашенные поставшику
         /// </summary>
-        public DbSet<RefundToSupplierProduct> ProductRefunds { get; set; }
+        public DbSet<RefundToSupplierProduct> RefundToSupplierProducts { get; set; }
+
+        public DbSet<RefundToSupplier> RefundsToSuppliers { get; set; }
 
         /// <summary>
         /// Статусы заказа
@@ -117,6 +119,11 @@ namespace RetailTrade.EntityFramework
             modelBuilder.Entity<WriteDown>()
                 .HasMany(o => o.WriteDownProducts)
                 .WithOne(o => o.WriteDown)
+                .OnDelete(DeleteBehavior.Cascade);
+
+            modelBuilder.Entity<RefundToSupplier>()
+                .HasMany(o => o.RefundToSupplierProducts)
+                .WithOne(o => o.RefundToSupplier)
                 .OnDelete(DeleteBehavior.Cascade);
 
             modelBuilder.Entity<Unit>().HasData(
