@@ -9,23 +9,23 @@ using System.Threading.Tasks;
 
 namespace RetailTrade.EntityFramework.Services
 {
-    public class ProductRefundToSupplierService : IProductRefundToSupplierService
+    public class RefundToSupplierServiceProduct : IRefundToSupplierServiceProduct
     {
         private readonly RetailTradeDbContextFactory _contextFactory;
-        private readonly NonQueryDataService<ProductRefundToSupplier> _nonQueryDataService;
+        private readonly NonQueryDataService<RefundToSupplierProduct> _nonQueryDataService;
         private readonly IProductService _productService;
 
         public event Action PropertiesChanged;
 
-        public ProductRefundToSupplierService(RetailTradeDbContextFactory contextFactory,
+        public RefundToSupplierServiceProduct(RetailTradeDbContextFactory contextFactory,
             IProductService productService)
         {
             _contextFactory = contextFactory;
             _productService = productService;
-            _nonQueryDataService = new NonQueryDataService<ProductRefundToSupplier>(_contextFactory);
+            _nonQueryDataService = new NonQueryDataService<RefundToSupplierProduct>(_contextFactory);
         }
 
-        public async Task<ProductRefundToSupplier> CreateAsync(ProductRefundToSupplier entity)
+        public async Task<RefundToSupplierProduct> CreateAsync(RefundToSupplierProduct entity)
         {
             var result = await _nonQueryDataService.Create(entity);
             if (result != null)
@@ -41,7 +41,7 @@ namespace RetailTrade.EntityFramework.Services
             return result;
         }
 
-        public async Task<ProductRefundToSupplier> UpdateAsync(int id, ProductRefundToSupplier entity)
+        public async Task<RefundToSupplierProduct> UpdateAsync(int id, RefundToSupplierProduct entity)
         {
             var result = await _nonQueryDataService.Update(id, entity);
             if (result != null)
@@ -49,7 +49,7 @@ namespace RetailTrade.EntityFramework.Services
             return result;
         }
 
-        public async Task<ProductRefundToSupplier> GetAsync(int id)
+        public async Task<RefundToSupplierProduct> GetAsync(int id)
         {
             try
             {
@@ -64,7 +64,7 @@ namespace RetailTrade.EntityFramework.Services
             return null;
         }
 
-        public IEnumerable<ProductRefundToSupplier> GetAll()
+        public IEnumerable<RefundToSupplierProduct> GetAll()
         {
             try
             {
@@ -79,7 +79,7 @@ namespace RetailTrade.EntityFramework.Services
             return null;
         }
 
-        public async Task<IEnumerable<ProductRefundToSupplier>> GetAllAsync()
+        public async Task<IEnumerable<RefundToSupplierProduct>> GetAllAsync()
         {
             try
             {
@@ -94,18 +94,17 @@ namespace RetailTrade.EntityFramework.Services
             return null;
         }
 
-        public async Task<bool> AddRangeAsync(List<ProductRefundToSupplier> productRefunds)
+        public async Task<bool> AddRangeAsync(List<RefundToSupplierProduct> productRefunds)
         {
             try
             {
                 await using var context = _contextFactory.CreateDbContext();
-                foreach (ProductRefundToSupplier item in productRefunds)
+                foreach (RefundToSupplierProduct item in productRefunds)
                 {
-                    await CreateAsync(new ProductRefundToSupplier
+                    await CreateAsync(new RefundToSupplierProduct
                     {
                         ProductId = item.ProductId,
-                        Quantity = item.Quantity,
-                        RefundDate = DateTime.Now
+                        Quantity = item.Quantity
                     });
                     Product product = await _productService.GetByIdAsync(item.ProductId);
                     product.Quantity -= item.Quantity;

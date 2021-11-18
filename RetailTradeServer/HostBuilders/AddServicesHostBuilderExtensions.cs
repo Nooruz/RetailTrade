@@ -30,7 +30,7 @@ namespace RetailTradeServer.HostBuilders
                 services.AddSingleton<IShiftService, ShiftService>();
                 services.AddSingleton<IArrivalProductService, ArrivalProductService>();
                 services.AddSingleton<IWriteDownProductService, WriteDownProductService>();
-                services.AddSingleton<IProductRefundToSupplierService, ProductRefundToSupplierService>();
+                services.AddSingleton<IRefundToSupplierServiceProduct, RefundToSupplierServiceProduct>();
                 services.AddSingleton<IOrderStatusService, OrderStatusService>();
                 services.AddSingleton<IOrderProductService, OrderProductService>();
                 services.AddSingleton<IOrderToSupplierService, OrderToSupplierService>();

@@ -44,10 +44,10 @@
                                                     Command="{Binding ArrivalProductCommand}"
                                                     Focusable="False"/>
 
-            <dxwui:HamburgerSubMenuNavigationButton Content="Списание товара"
+            <dxwui:HamburgerSubMenuNavigationButton Content="Списание товаров"
                                                     Command="{Binding WriteDownProductCommand}"/>
 
-            <dxwui:HamburgerSubMenuNavigationButton Content="Возврат поставщику"
+            <dxwui:HamburgerSubMenuNavigationButton Content="Возвраты поставщикам"
                                                     Command="{Binding RefundToSupplierCommand}"/>
 
             <dxwui:HamburgerSubMenuNavigationButton Content="Заказы поставщикам"

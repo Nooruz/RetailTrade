@@ -63,7 +63,7 @@ namespace RetailTrade.Domain.Models
         public ICollection<ProductSale> ProductSales { get; set; }
         public ICollection<ArrivalProduct> ArrivalProducts { get; set; }
         public ICollection<WriteDownProduct> WriteDownProducts { get; set; }
-        public ICollection<ProductRefundToSupplier> ProductRefundToSuppliers { get; set; }
+        public ICollection<RefundToSupplierProduct> ProductRefundToSuppliers { get; set; }
         public ICollection<OrderProduct> Orders { get; set; }
     }
 }

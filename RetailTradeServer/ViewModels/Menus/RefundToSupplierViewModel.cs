@@ -21,7 +21,7 @@ namespace RetailTradeServer.ViewModels.Menus
         private readonly IProductService _productService;
         private readonly ISupplierService _supplierService;
         private readonly IUIManager _manager;
-        private readonly IProductRefundToSupplierService _productRefundToSupplierService;
+        private readonly IRefundToSupplierServiceProduct _productRefundToSupplierService;
         private int? _selectedSupplierId;
         private Product _selectedProduct;
 
@@ -44,7 +44,7 @@ namespace RetailTradeServer.ViewModels.Menus
 
         public IEnumerable<Product> Products => SelectedSupplierId != null ? _productService.GetForRefund(SelectedSupplierId.Value) : null;
 
-        public ObservableCollection<ProductRefundToSupplier> ProductRefunds { get; set; }
+        public ObservableCollection<RefundToSupplierProduct> ProductRefunds { get; set; }
 
         public Product SelectedProduct
         {
@@ -74,7 +74,7 @@ namespace RetailTradeServer.ViewModels.Menus
         public RefundToSupplierViewModel(IProductService productService,
             ISupplierService supplierService,
             IUIManager manager,
-            IProductRefundToSupplierService productRefundToSupplierService)
+            IRefundToSupplierServiceProduct productRefundToSupplierService)
         {
             _productService = productService;
             _supplierService = supplierService;
@@ -131,7 +131,7 @@ namespace RetailTradeServer.ViewModels.Menus
             {
                 if (ProductRefunds.FirstOrDefault(pr => pr.ProductId == SelectedProduct.Id) == null)
                 {
-                    ProductRefunds.Add(new ProductRefundToSupplier
+                    ProductRefunds.Add(new RefundToSupplierProduct
                     {
                         Product = SelectedProduct,
                         ProductId = SelectedProduct.Id
@@ -144,9 +144,9 @@ namespace RetailTradeServer.ViewModels.Menus
         {
             if (parameter is GridCellValidationEventArgs e)
             {
-                if (((ProductRefundToSupplier)e.Row).Product != null)
+                if (((RefundToSupplierProduct)e.Row).Product != null)
                 {
-                    if (((ProductRefundToSupplier)e.Row).Product.Quantity < (decimal)e.Value)
+                    if (((RefundToSupplierProduct)e.Row).Product.Quantity < (decimal)e.Value)
                     {
                         e.IsValid = false;
                         e.ErrorContent = "Количество возврата не должно превышать количество на складе.";

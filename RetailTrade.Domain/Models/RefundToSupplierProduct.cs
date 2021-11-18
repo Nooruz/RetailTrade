@@ -1,9 +1,8 @@
-﻿using System;
-using System.ComponentModel;
+﻿using System.ComponentModel;
 
 namespace RetailTrade.Domain.Models
 {
-    public class ProductRefundToSupplier : DomainObject, INotifyPropertyChanged
+    public class RefundToSupplierProduct : DomainObject, INotifyPropertyChanged
     {
         #region Private Members
 
@@ -24,7 +23,6 @@ namespace RetailTrade.Domain.Models
                 OnPropertyChanged(nameof(Quantity));
             }
         }
-        public DateTime RefundDate { get; set; }
         public Product Product
         {
             get => _product;

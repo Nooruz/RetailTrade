@@ -83,7 +83,7 @@ namespace RetailTrade.EntityFramework
         /// <summary>
         /// Товары возврашенные поставшику
         /// </summary>
-        public DbSet<ProductRefundToSupplier> ProductRefunds { get; set; }
+        public DbSet<RefundToSupplierProduct> ProductRefunds { get; set; }
 
         /// <summary>
         /// Статусы заказа

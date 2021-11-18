@@ -1,4 +1,5 @@
-﻿using RetailTrade.Domain.Models;
+﻿using DevExpress.Xpf.Editors;
+using RetailTrade.Domain.Models;
 using RetailTrade.Domain.Services;
 using RetailTradeClient.Commands;
 using RetailTradeClient.State.CashRegisterControlMachine;
@@ -8,6 +9,7 @@ using RetailTradeClient.State.Users;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Windows;
 using System.Windows.Input;
 
 namespace RetailTradeClient.ViewModels.Dialogs
@@ -24,6 +26,8 @@ namespace RetailTradeClient.ViewModels.Dialogs
         #endregion
 
         #region Public Properties
+
+        public bool IsEnteredFocusable { get; set; }
 
         /// <summary>
         /// Внесено
@@ -122,12 +126,14 @@ namespace RetailTradeClient.ViewModels.Dialogs
         /// <summary>
         /// Оплатить
         /// </summary>
-        public ICommand MakeCashPaymentCommand { get; set; }
+        public ICommand MakeCashPaymentCommand { get; }
 
         /// <summary>
         /// Следить за нажатием кнопки клавиатуры
         /// </summary>
-        public ICommand TextInputCommand { get; set; }
+        public ICommand TextInputCommand { get; }
+
+        public ICommand EnteredLoadedCommand { get; }
 
 
         #endregion
@@ -149,6 +155,7 @@ namespace RetailTradeClient.ViewModels.Dialogs
             BackspaceCommand = new RelayCommand(Baclspace);
             CommaButtonPressCommand = new RelayCommand(CommaButtonPress);
             MakeCashPaymentCommand = new MakeCashPaymentCommand(this, receiptService, productSaleService, manager, cashRegisterControlMachine, shiftStore, userStore);
+            EnteredLoadedCommand = new ParameterCommand(parameter => EnteredLoaded(parameter));
 
             _userStore.StateChanged += UserStore_StateChanged;
         }
@@ -156,6 +163,19 @@ namespace RetailTradeClient.ViewModels.Dialogs
         #endregion
 
         #region Private Voids
+
+        private void EnteredLoaded(object parameter)
+        {
+            if (parameter is RoutedEventArgs e)
+            {
+                if (e.Source is TextEdit sender)
+                {
+                    sender.SelectAll();
+                    sender.Focus();
+                    IsEnteredFocusable = true;
+                }
+            }
+        }
 
         private void TextInput(object parameter)
         {
@@ -183,7 +203,7 @@ namespace RetailTradeClient.ViewModels.Dialogs
                         }
                         if (count > 0 && count < 2)
                         {
-                            Entered = Convert.ToDecimal(Entered.ToString() + number.ToString());
+                            Entered = IsEnteredFocusable ? Convert.ToDecimal(number.ToString()) : Convert.ToDecimal(Entered.ToString() + number.ToString());
                         }
                     }
                 }
@@ -193,10 +213,11 @@ namespace RetailTradeClient.ViewModels.Dialogs
                         Entered = number;
                     else if (Entered <= Convert.ToDecimal("999999999999,99"))
                     {
-                        Entered = Convert.ToDecimal(Entered.ToString() + number.ToString());
+                        Entered = IsEnteredFocusable ? Convert.ToDecimal(number.ToString()) : Convert.ToDecimal(Entered.ToString() + number.ToString());
                     }
-                }         
+                }      
             }
+            if (IsEnteredFocusable) IsEnteredFocusable = false;
         }
 
         private void Clear()

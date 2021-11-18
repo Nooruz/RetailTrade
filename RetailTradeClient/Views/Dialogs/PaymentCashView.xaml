@@ -37,7 +37,13 @@
             <dxlc:LayoutItem Label="Внесено:"
                              Style="{StaticResource liCash}">
                 <dxe:TextEdit Style="{StaticResource teCash}"
-                              Text="{Binding Entered, UpdateSourceTrigger=PropertyChanged}"/>
+                              Text="{Binding Entered, UpdateSourceTrigger=PropertyChanged}">
+                    <dxmvvm:Interaction.Behaviors>
+                        <dxmvvm:EventToCommand EventName="Loaded" 
+                                               Command="{Binding EnteredLoadedCommand}"
+                                               PassEventArgsToCommand="True"/>
+                    </dxmvvm:Interaction.Behaviors>
+                </dxe:TextEdit>
             </dxlc:LayoutItem>
 
             <dxlc:LayoutItem Label="К оплате:"
