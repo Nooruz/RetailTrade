@@ -187,6 +187,12 @@ namespace RetailTradeClient.ViewModels
                     item.PropertyChanged -= Item_PropertyChanged;
                 }
             }
+
+            if (e.NewStartingIndex > 47)
+            {
+                _manager.ShowMessage("49", "", MessageBoxButton.OK, MessageBoxImage.Information);
+            }
+
             if (e.NewItems != null)
             {
                 foreach (INotifyPropertyChanged item in e.NewItems)
@@ -194,6 +200,7 @@ namespace RetailTradeClient.ViewModels
                     item.PropertyChanged += Item_PropertyChanged;
                 }
             }
+
             OnPropertyChanged(nameof(Sum));
             OnPropertyChanged(nameof(FocusedRowHandle));
         }
