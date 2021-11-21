@@ -53,10 +53,6 @@ namespace RetailTradeServer.Report {
             this.tableCell20 = reportInitializer.GetControl<DevExpress.XtraReports.UI.XRTableCell>("tableCell20");
             this.tableCell21 = reportInitializer.GetControl<DevExpress.XtraReports.UI.XRTableCell>("tableCell21");
 
-            // Parameters
-            this.StartDate = reportInitializer.GetParameter("StartDate");
-            this.EndDate = reportInitializer.GetParameter("EndDate");
-
             // Data Sources
             this.dsShifts = reportInitializer.GetDataSource<DevExpress.DataAccess.ObjectBinding.ObjectDataSource>("dsShifts");
             this.dsShifts.DataSource = typeof(RetailTrade.Domain.Models.Shift);
@@ -99,7 +95,5 @@ namespace RetailTradeServer.Report {
         private DevExpress.XtraReports.UI.XRTableCell tableCell20;
         private DevExpress.XtraReports.UI.XRTableCell tableCell21;
         private DevExpress.DataAccess.ObjectBinding.ObjectDataSource dsShifts;
-        public DevExpress.XtraReports.Parameters.Parameter StartDate;
-        public DevExpress.XtraReports.Parameters.Parameter EndDate;
     }
 }

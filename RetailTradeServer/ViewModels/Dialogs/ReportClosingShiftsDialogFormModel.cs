@@ -68,17 +68,18 @@ namespace RetailTradeServer.ViewModels.Dialogs
 
         private async void PrintClosingShifts()
         {
-            ClosingShiftsReport closingShiftsReport = new()
+            ClosingShiftsReport closingShiftsReport = new(SelectedStartDate, SelectedEndDate)
             {
                 DataSource = await _shiftService.GetClosingShifts(SelectedStartDate, SelectedEndDate)
             };
 
-            closingShiftsReport.StartDate.Value = SelectedStartDate;
-            closingShiftsReport.EndDate.Value = SelectedEndDate;
-
             await closingShiftsReport.CreateDocumentAsync();
 
-            await _manager.ShowDialog(new DocumentViewerViewModel() { PrintingDocument = closingShiftsReport }, 
+            await _manager.ShowDialog(new DocumentViewerViewModel()
+            { 
+                Title = "Закрытие смены",
+                PrintingDocument = closingShiftsReport
+            },
                 new DocumentViewerView(),
                 WindowState.Maximized,
                 ResizeMode.CanResize,

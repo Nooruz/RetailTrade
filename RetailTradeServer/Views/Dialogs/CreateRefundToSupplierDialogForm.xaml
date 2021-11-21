@@ -9,19 +9,13 @@
                                Width="600"
                                Height="500">
 
-    <dxmvvm:Interaction.Behaviors>
-        <dxmvvm:EventToCommand EventName="Loaded" Command="{Binding GetProductsAsyncCommand}"/>
-    </dxmvvm:Interaction.Behaviors>
-
-    <dxlc:LayoutControl Grid.Row="0"
-                        ItemSpace="10"
+    <dxlc:LayoutControl ItemSpace="10"
                         Orientation="Vertical">
 
         <dxlc:LayoutItem Label="Поставщик:">
             <dxe:ComboBoxEdit ItemsSource="{Binding Suppliers}"
                               DisplayMember="ShortName"
-                              ValueMember="Id"
-                              EditValue="{Binding SelectedSupplierId, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+                              SelectedItem="{Binding SelectedSupplier}"/>
         </dxlc:LayoutItem>
 
         <dxg:GridControl SelectionMode="Row"
@@ -50,7 +44,7 @@
         </dxg:GridControl>
 
         <dxg:GridControl SelectionMode="Row"
-                         ItemsSource="{Binding ProductRefunds}">
+                         ItemsSource="{Binding RefundToSupplierProducts}">
 
             <dxg:GridControl.View>
                 <dxg:TableView AutoWidth="True"
@@ -90,8 +84,8 @@
                           VerticalAlignment="Bottom">
 
             <Button Content="Возврат"
-                    Command="{Binding RefundProductCommand}"
-                    IsEnabled="{Binding CanRefundProduct, UpdateSourceTrigger=PropertyChanged}"/>
+                    Command="{Binding RefundToSupplierProductCommand}"
+                    IsEnabled="{Binding CanRefundToSupplierProduct, UpdateSourceTrigger=PropertyChanged}"/>
 
             <Button Content="Очистить"
                     Command="{Binding ClearCommand}"/>

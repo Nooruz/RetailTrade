@@ -81,5 +81,24 @@ namespace RetailTrade.EntityFramework.Services
                 .ToListAsync();
             return result;
         }
+
+        public async Task<IEnumerable<Receipt>> GetReceiptsByDateAsync(DateTime dateTime)
+        {
+            try
+            {
+                await using RetailTradeDbContext context = _contextFactory.CreateDbContext();
+                var result = await context.Receipts
+                    .Where(r => r.DateOfPurchase.Date == dateTime.Date)
+                    .Include(r => r.Shift)
+                    .ThenInclude(r => r.User)
+                    .ToListAsync();
+                return result;
+            }
+            catch (Exception e)
+            {
+                //ignore
+            }
+            return null;
+        }
     }
 }

@@ -176,11 +176,11 @@ namespace RetailTradeServer.ViewModels.Dialogs
             {
                 if (((RefundToSupplierProduct)e.Row).Product != null)
                 {
-                    if (((RefundToSupplierProduct)e.Row).Product.Quantity < 0)
+                    if (((RefundToSupplierProduct)e.Row).Product.Quantity < (decimal)e.Value)
                     {
                         e.IsValid = false;
-                        e.ErrorContent = "Количество не должно быть 0.";
-                        _manager.ShowMessage("Количество не должно быть 0.", "", MessageBoxButton.OK, MessageBoxImage.Error);
+                        e.ErrorContent = "Количество не должно превышать количество товаров на складе.";
+                        _manager.ShowMessage("Количество не должно превышать количество товаров на складе.", "", MessageBoxButton.OK, MessageBoxImage.Error);
                     }
                 }
             }
@@ -202,7 +202,7 @@ namespace RetailTradeServer.ViewModels.Dialogs
                 }
                 try
                 {
-                    RefundToSupplier refundToSupplier = await _refundToSupplierService.CreateAsync(new RefundToSupplier
+                    _ = await _refundToSupplierService.CreateAsync(new RefundToSupplier
                     {
                         RefundToSupplierDate = DateTime.Now,
                         SupplierId = SelectedSupplier.Id,
@@ -228,7 +228,7 @@ namespace RetailTradeServer.ViewModels.Dialogs
         {
             if (SelectedSupplier != null)
             {
-                Products = await _productService.PredicateSelect(p => p.SupplierId == SelectedSupplier.Id, p => new Product { Id = p.Id, Name = p.Name, Quantity = p.Quantity, Unit = p.Unit });
+                Products = await _productService.PredicateSelect(p => p.SupplierId == SelectedSupplier.Id && p.Quantity > 0, p => new Product { Id = p.Id, Name = p.Name, Quantity = p.Quantity, Unit = p.Unit });
             }
         }
 

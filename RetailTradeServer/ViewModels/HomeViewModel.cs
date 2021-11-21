@@ -166,7 +166,8 @@ namespace RetailTradeServer.ViewModels
 
         private void ReportClosingShifts()
         {
-            _manager.ShowDialog(new ReportClosingShiftsDialogFormModel(_manager, _shiftService), new ReportClosingShiftsDialogForm());
+            _manager.ShowDialog(new ReportClosingShiftsDialogFormModel(_manager, _shiftService) { Title = "Закрытие смены" },
+                new ReportClosingShiftsDialogForm());
         }
 
         #endregion

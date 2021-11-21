@@ -27,13 +27,13 @@ namespace RetailTradeServer.ViewModels.Menus
 
         #region Public properties
 
-        public IEnumerable<RefundToSupplier> RefundToSuppliers
+        public IEnumerable<RefundToSupplier> RefundsToSuppliers
         {
             get => _refundToSuppliers;
             set
             {
                 _refundToSuppliers = value;
-                OnPropertyChanged(nameof(RefundToSuppliers));
+                OnPropertyChanged(nameof(RefundsToSuppliers));
             }
         }
         public RefundToSupplier SelectedRefundToSupplier
@@ -81,7 +81,7 @@ namespace RetailTradeServer.ViewModels.Menus
 
         private async void GetRefundToSuppliersAsync()
         {
-            RefundToSuppliers = await _refundToSupplierService.GetAllAsync();
+            RefundsToSuppliers = await _refundToSupplierService.GetAllAsync();
         }
 
         private async void Create()
@@ -96,7 +96,7 @@ namespace RetailTradeServer.ViewModels.Menus
             {
                 if (_manager.ShowMessage("Вы точно хотите удалить выбранный элемент?", "", MessageBoxButton.YesNo, MessageBoxImage.Question) == MessageBoxResult.Yes)
                 {
-                    await _refundToSupplierService.DeleteAsync(SelectedRefundToSupplier.Id);
+                    _ = await _refundToSupplierService.DeleteAsync(SelectedRefundToSupplier.Id);
                 }
             }
             else
