@@ -349,5 +349,22 @@ namespace RetailTrade.EntityFramework.Services
             }
             return null;
         }
+
+        public async Task<Product> Predicate(Expression<Func<Product, bool>> predicate, Expression<Func<Product, Product>> select)
+        {
+            try
+            {
+                await using var context = _contextFactory.CreateDbContext();
+                return await context.Products
+                    .Where(predicate)
+                    .Select(select)
+                    .FirstOrDefaultAsync();
+            }
+            catch (Exception e)
+            {
+                //ignore
+            }
+            return null;
+        }
     }
 }

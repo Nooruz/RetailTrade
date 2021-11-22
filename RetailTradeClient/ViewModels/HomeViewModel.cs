@@ -1,4 +1,5 @@
-﻿using RetailTrade.Domain.Models;
+﻿using DevExpress.Xpf.Grid;
+using RetailTrade.Domain.Models;
 using RetailTrade.Domain.Services;
 using RetailTradeClient.Commands;
 using RetailTradeClient.State.Authenticators;
@@ -9,6 +10,7 @@ using RetailTradeClient.State.Shifts;
 using RetailTradeClient.State.Users;
 using RetailTradeClient.ViewModels.Base;
 using RetailTradeClient.ViewModels.Dialogs;
+using RetailTradeClient.Views;
 using RetailTradeClient.Views.Dialogs;
 using System;
 using System.Collections.Generic;
@@ -27,28 +29,54 @@ namespace RetailTradeClient.ViewModels
 
         private readonly IUserStore _userStore;
         private readonly IProductService _productService;
-        private readonly IDataService<ProductSale> _productSaleService;
+        private readonly IProductSaleService _productSaleService;
         private readonly IReceiptService _receiptService;
         private readonly IUIManager _manager;
         private readonly IMessageStore _messageStore;
         private readonly IAuthenticator _authenticator;
         private readonly ICashRegisterControlMachine _cashRegisterControlMachine;
         private readonly IShiftStore _shiftStore;
+        private readonly PaymentCashViewModel _paymentCashViewModel;
         private string _barcode;
         private Sale _selectedProductSale;
+        private ObservableCollection<Product> _products;
+        private decimal _change;
 
         #endregion
 
         #region Public Properties
 
-        public IEnumerable<Product> Products { get; set; }
+        public ObservableCollection<Product> Products
+        {
+            get => _products;
+            set
+            {
+                _products = value;
+                OnPropertyChanged(nameof(Products));
+            }
+        }
         public ObservableCollection<Sale> SaleProducts { get; set; }
         public decimal Sum
         {
-            get => SaleProducts.Sum(sp => sp.Sum);
+            get
+            {
+                decimal sum = SaleProducts.Sum(sp => sp.Sum);
+                if (sum != 0)
+                    Change = 0;
+                return sum;
+            }
             set
             {
 
+            }
+        }
+        public decimal Change
+        {
+            get => _change;
+            set
+            {
+                _change = value;
+                OnPropertyChanged(nameof(Change));
             }
         }
         public decimal ToBePaid => Sum;
@@ -130,13 +158,30 @@ namespace RetailTradeClient.ViewModels
         /// </summary>
         public ICommand CRMSettingsCommand { get; }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        public ICommand LoadedHomeViewCommand { get; }
+
+        /// <summary>
+        /// Проверка ввода количестов товаров для продажи
+        /// </summary>
+        public ICommand QuantityContentChangedCommand { get; }
+
+        /// <summary>
+        /// Отменить
+        /// </summary>
+        public ICommand CancelCommand { get; }
+
+        public ICommand QuantityCellLoadedCommand { get; }
+
         #endregion
 
         #region Constructor
 
         public HomeViewModel(IUserStore userStore,
             IProductService productService,
-            IDataService<ProductSale> productSaleService,
+            IProductSaleService productSaleService,
             IReceiptService receiptService,
             IUIManager manager,
             IMessageStore messageStore,
@@ -154,9 +199,10 @@ namespace RetailTradeClient.ViewModels
             _cashRegisterControlMachine = cashRegisterControlMachine;
             _shiftStore = shiftStore;
 
-            Products = _productService.GetAll().Take(50);
-            SaleProducts = new ObservableCollection<Sale>();
+            SaleProducts = new();
             PostponeReceipts = new List<PostponeReceipt>();
+
+            _paymentCashViewModel = new(_receiptService, _productSaleService, _userStore, _manager, _cashRegisterControlMachine, _shiftStore) { Title = "Оплата наличными" };
 
             LogoutCommand = new RelayCommand(Logout);
             TextInputCommand = new ParameterCommand(parameter => TextInput(parameter));
@@ -169,8 +215,14 @@ namespace RetailTradeClient.ViewModels
             DeleteSelectedRowCommand = new RelayCommand(DeleteSelectedRow);
             PrintXReportCommand = new PrintXReportCommand();
             CRMSettingsCommand = new RelayCommand(CRMSettings);
+            LoadedHomeViewCommand = new ParameterCommand(parameter => LoadedHomeView(parameter));
+            QuantityContentChangedCommand = new ParameterCommand(parameter => QuantityContentChanged(parameter));
+            CancelCommand = new RelayCommand(Cancel);
+            QuantityCellLoadedCommand = new ParameterCommand(parameter => QuantityCellLoaded(parameter));
 
             SaleProducts.CollectionChanged += SaleProducts_CollectionChanged;
+            _productService.PropertiesChanged += ProductService_PropertiesChanged;
+            _paymentCashViewModel.PropertyChanged += PaymentCashViewModel_PropertyChanged;
             OpenMainMenu();
         }
 
@@ -212,6 +264,37 @@ namespace RetailTradeClient.ViewModels
             OnPropertyChanged(nameof(FocusedRowHandle));
         }
 
+        private void LoadedHomeView(object parameter)
+        {
+            ProductService_PropertiesChanged();
+            if (parameter is RoutedEventArgs e)
+            {
+                if (e.Source is HomeView homeView)
+                {
+                    homeView.Focus();
+                }
+            }
+        }
+
+        private async void ProductService_PropertiesChanged()
+        {
+            Products = new(await _productService.PredicateSelect(p => p.Quantity > 0,
+                p => new Product { Id = p.Id, Name = p.Name, SalePrice = p.SalePrice, Quantity = p.Quantity }));
+        }
+
+        private void QuantityValidate(object parameter)
+        {
+            if (parameter is GridCellValidationEventArgs e)
+            {
+                if (((Sale)e.Row).QuantityInStock < Convert.ToDecimal(e.Value))
+                {
+                    _manager.ShowMessage("Количество превышает остаток.", "", MessageBoxButton.OK, MessageBoxImage.Information);
+                    e.ErrorContent = "Количество превышает остаток.";
+                    e.IsValid = false;
+                }
+            }
+        }
+
         /// <summary>
         /// Штрих-код сканер менен сканлерлеп жаткандагы цифраларды алуу
         /// </summary>
@@ -234,7 +317,8 @@ namespace RetailTradeClient.ViewModels
             {
                 if (e.Key == Key.Enter)
                 {
-                    var newProduct = await _productService.GetByBarcodeAsync(Barcode);
+                    var newProduct = await _productService.Predicate(p => p.Barcode == Barcode && p.Quantity > 0,
+                        p => new Product { Id = p.Id, Name = p.Name, Quantity = p.Quantity, SalePrice = p.SalePrice });
                     if (newProduct != null)
                     {
                         var product = SaleProducts.FirstOrDefault(sp => sp.Id == newProduct.Id);
@@ -245,6 +329,7 @@ namespace RetailTradeClient.ViewModels
                                 Id = newProduct.Id,
                                 Name = newProduct.Name,
                                 Quantity = 1,
+                                QuantityInStock = newProduct.Quantity,
                                 SalePrice = newProduct.SalePrice,
                                 Sum = newProduct.SalePrice * 1
                             });
@@ -321,7 +406,8 @@ namespace RetailTradeClient.ViewModels
                         Name = product.Name,
                         Quantity = 1,
                         SalePrice = product.SalePrice,
-                        Sum = product.SalePrice
+                        Sum = product.SalePrice,
+                        QuantityInStock = product.Quantity - 1
                     });
                 }
                 else
@@ -338,11 +424,9 @@ namespace RetailTradeClient.ViewModels
         {
             if (SaleProducts.Count > 0)
             {
-                if (await _manager.ShowDialog(new PaymentCashViewModel(_receiptService, _productSaleService, _userStore, _manager, _cashRegisterControlMachine, _shiftStore)
-                {
-                    Title = "Оплата наличными",
-                    SaleProducts = SaleProducts.ToList()
-                },
+                _paymentCashViewModel.SaleProducts = SaleProducts.ToList();
+
+                if (await _manager.ShowDialog(_paymentCashViewModel,
                 new PaymentCashView()))
                 {
                     SaleProducts.Clear();
@@ -387,6 +471,30 @@ namespace RetailTradeClient.ViewModels
         private async void CRMSettings()
         {
             await _manager.ShowDialog(new CommunicationSettingsViewModel() { Title = "Настройка связи с ККМ" }, new CommunicationSettingsView());
+        }
+
+        private void PaymentCashViewModel_PropertyChanged(object sender, PropertyChangedEventArgs e)
+        {
+            if (e.PropertyName == nameof(PaymentCashViewModel.Change))
+            {
+                if (sender is PaymentCashViewModel viewModel)
+                {
+                    Change = viewModel.Change;
+                }
+            }
+        }
+
+        /// <summary>
+        /// Отменить
+        /// </summary>
+        private void Cancel()
+        {
+            SaleProducts.Clear();
+        }
+
+        private void QuantityContentChanged(object parameter)
+        {
+
         }
 
         #endregion

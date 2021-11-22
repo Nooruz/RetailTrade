@@ -18,5 +18,6 @@
     <system:String x:Key="faCreditCard">&#xf09d;</system:String>
     <system:String x:Key="faFileAlt">&#xf15c;</system:String>
     <system:String x:Key="faCashRegister">&#xf788;</system:String>
+    <system:String x:Key="faTimesCircle">&#xf057;</system:String>
 
 </ResourceDictionary>

@@ -6,33 +6,25 @@ namespace RetailTrade.Domain.Models
     {
         #region Private Members
 
-        private int _id;
-        private string _name;
         private decimal _quantity;
-        private decimal _sum;
 
         #endregion
 
         #region Public Properties
 
-        public int Id
-        {
-            get => _id;
-            set
-            {
-                _id = value;
-                OnPropertyChanged(nameof(Id));
-            }
-        }
-        public string Name
-        {
-            get => _name;
-            set
-            {
-                _name = value;
-                OnPropertyChanged(nameof(Name));
-            }
-        }
+        /// <summary>
+        /// Код товара
+        /// </summary>
+        public int Id { get; set; }
+
+        /// <summary>
+        /// Наименование товара
+        /// </summary>
+        public string Name { get; set; }
+
+        /// <summary>
+        /// Количество покупки
+        /// </summary>
         public decimal Quantity
         {
             get => _quantity;
@@ -46,16 +38,21 @@ namespace RetailTrade.Domain.Models
                 OnPropertyChanged(nameof(Quantity));
             }
         }
+
+        /// <summary>
+        /// Цена продажи
+        /// </summary>
         public decimal SalePrice { get; set; }
-        public decimal Sum
-        {
-            get => _sum;
-            set
-            {                
-                _sum = value;
-                OnPropertyChanged(nameof(Sum));
-            }
-        }
+
+        /// <summary>
+        /// Сумма покупки
+        /// </summary>
+        public decimal Sum { get; set; }
+
+        /// <summary>
+        /// Количество на складе
+        /// </summary>
+        public decimal QuantityInStock { get; set; }
 
         #endregion        
 

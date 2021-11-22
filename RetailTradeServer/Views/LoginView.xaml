@@ -26,7 +26,7 @@
 
             <dxlc:LayoutGroup Orientation="Vertical"
                               View="GroupBox"
-                              Header="Войдите в систему">
+                              Header="Войти в систему">
 
                 <dxlc:LayoutItem Label="Имя пользователя:">
                     <dxe:TextEdit Text="{Binding Username, UpdateSourceTrigger=PropertyChanged}"/>

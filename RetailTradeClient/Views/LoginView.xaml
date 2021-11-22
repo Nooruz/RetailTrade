@@ -3,34 +3,36 @@
                  xmlns:dxe="http://schemas.devexpress.com/winfx/2008/xaml/editors"
                  xmlns:dxlc="http://schemas.devexpress.com/winfx/2008/xaml/layoutcontrol"
                  xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                 xmlns:components="clr-namespace:RetailTradeClient.Components"
                  Width="300"
                  HorizontalAlignment="Center"
                  VerticalAlignment="Center">
 
     <dxlc:LayoutControl Orientation="Vertical">
 
-        <dxlc:LayoutItem Label="Имя">
-            <dxe:ComboBoxEdit ItemsSource="{Binding Users}"
+        <dxlc:LayoutGroup Orientation="Vertical"
+                          View="GroupBox"
+                          Header="Войти в систему">
+
+            <dxlc:LayoutItem Label="Имя">
+                <dxe:ComboBoxEdit ItemsSource="{Binding Users}"
                               DisplayMember="Username"
                               ValueMember="Id"
                               IncrementalSearch="True"
                               AutoComplete="True"
                               SelectedItem="{Binding SelectedUser, UpdateSourceTrigger=PropertyChanged}"/>
-        </dxlc:LayoutItem>
+            </dxlc:LayoutItem>
 
-        <dxlc:LayoutItem Label="Пароль">
-            <dxe:PasswordBoxEdit Text="{Binding Password, UpdateSourceTrigger=PropertyChanged}"/>
-        </dxlc:LayoutItem>
+            <dxlc:LayoutItem Label="Пароль">
+                <dxe:PasswordBoxEdit Text="{Binding Password, UpdateSourceTrigger=PropertyChanged}"/>
+            </dxlc:LayoutItem>
 
-        <dxlc:LayoutGroup Orientation="Horizontal"
-                          VerticalAlignment="Top"
-                          HorizontalAlignment="Right">
+            <components:GlobalMessageBaner DataContext="{Binding GlobalMessageViewModel}"/>
 
             <Button Content="Войти"
-                    Command="{Binding LoginCommand}"/>
-            
-            <Button Content="Закрыть"
-                    Command="{Binding CloseCommand}"/>
+                    Command="{Binding LoginCommand}"
+                    VerticalAlignment="Top"
+                    IsDefault="True"/>
 
         </dxlc:LayoutGroup>
 

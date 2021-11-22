@@ -14,7 +14,7 @@ namespace RetailTradeClient.State.CashRegisterControlMachine
 
         public CashRegisterControlMachine(DrvFR cashRegisterControlMachine)
         {
-            cashRegisterControlMachine.ComNumber = 7;
+            cashRegisterControlMachine.ComNumber = 3;
             cashRegisterControlMachine.BaudRate = 6;
             cashRegisterControlMachine.Timeout = 2100;
 

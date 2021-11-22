@@ -25,7 +25,8 @@ namespace RetailTradeClient.ViewModels.Dialogs
                     Buttons.Add(new UIButton
                     {
                         Content = "Ок",
-                        Command = new RelayCommand(Ok)
+                        Command = new RelayCommand(Ok),
+                        IsDefault = true
                     });
                     break;
                 case MessageBoxButton.OKCancel:
@@ -34,7 +35,8 @@ namespace RetailTradeClient.ViewModels.Dialogs
                         new UIButton
                         {
                             Content = "Ок",
-                            Command = new RelayCommand(Ok)
+                            Command = new RelayCommand(Ok),
+                            IsDefault = true
                         },
                         new UIButton
                         {
@@ -49,7 +51,8 @@ namespace RetailTradeClient.ViewModels.Dialogs
                         new UIButton
                         {
                             Content = "Да",
-                            Command = new RelayCommand(Yes)
+                            Command = new RelayCommand(Yes),
+                            IsDefault = true
                         },
                         new UIButton
                         {
@@ -64,7 +67,8 @@ namespace RetailTradeClient.ViewModels.Dialogs
                         new UIButton
                         {
                             Content = "Да",
-                            Command = new RelayCommand(Yes)
+                            Command = new RelayCommand(Yes),
+                            IsDefault = true
                         },
                         new UIButton
                         {
@@ -109,7 +113,8 @@ namespace RetailTradeClient.ViewModels.Dialogs
                     Buttons.Add(new UIButton
                     {
                         Content = "Ок",
-                        Command = new RelayCommand(Ok)
+                        Command = new RelayCommand(Ok),
+                        IsDefault = true
                     });
                     break;
                 case MessageBoxButton.OKCancel:
@@ -118,7 +123,8 @@ namespace RetailTradeClient.ViewModels.Dialogs
                         new UIButton
                         {
                             Content = "Ок",
-                            Command = new RelayCommand(Ok)
+                            Command = new RelayCommand(Ok),
+                            IsDefault = true
                         },
                         new UIButton
                         {
@@ -133,7 +139,8 @@ namespace RetailTradeClient.ViewModels.Dialogs
                         new UIButton
                         {
                             Content = "Да",
-                            Command = new RelayCommand(Yes)
+                            Command = new RelayCommand(Yes),
+                            IsDefault = true
                         },
                         new UIButton
                         {
@@ -148,7 +155,8 @@ namespace RetailTradeClient.ViewModels.Dialogs
                         new UIButton
                         {
                             Content = "Да",
-                            Command = new RelayCommand(Yes)
+                            Command = new RelayCommand(Yes),
+                            IsDefault = true
                         },
                         new UIButton
                         {
@@ -172,7 +180,8 @@ namespace RetailTradeClient.ViewModels.Dialogs
                 new UIButton
                 {
                     Content = "Ок",
-                    Command = new RelayCommand(Ok)
+                    Command = new RelayCommand(Ok),
+                    IsDefault = true
                 }
             };
             Message = message;

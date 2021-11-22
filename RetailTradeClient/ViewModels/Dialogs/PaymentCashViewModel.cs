@@ -141,7 +141,7 @@ namespace RetailTradeClient.ViewModels.Dialogs
         #region Constructor
 
         public PaymentCashViewModel(IReceiptService receiptService,
-            IDataService<ProductSale> productSaleService,
+            IProductSaleService productSaleService,
             IUserStore userStore,
             IUIManager manager,
             ICashRegisterControlMachine cashRegisterControlMachine,

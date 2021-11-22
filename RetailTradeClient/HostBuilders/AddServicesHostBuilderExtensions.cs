@@ -2,7 +2,6 @@
 using Microsoft.AspNet.Identity;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using RetailTrade.Domain.Models;
 using RetailTrade.Domain.Services;
 using RetailTrade.Domain.Services.AuthenticationServices;
 using RetailTrade.EntityFramework.Services;
@@ -23,7 +22,7 @@ namespace RetailTradeClient.HostBuilders
                 services.AddSingleton<IUserService, UserService>();
                 services.AddSingleton<IProductService, ProductService>();
                 services.AddSingleton<IOrganizationService, OrganizationService>();
-                services.AddSingleton<IDataService<ProductSale>, GenericService<ProductSale>>();
+                services.AddSingleton<IProductSaleService, ProductSaleService>();
                 services.AddSingleton<IShiftService, ShiftService>();
             });
         }

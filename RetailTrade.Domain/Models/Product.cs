@@ -1,12 +1,21 @@
 ﻿using System.Collections.Generic;
+using System.ComponentModel;
 
 namespace RetailTrade.Domain.Models
 {
     /// <summary>
     /// Товары
     /// </summary>
-    public class Product : DomainObject
+    public class Product : DomainObject, INotifyPropertyChanged
     {
+        #region Private Members
+
+        private decimal _quantity;
+
+        #endregion
+
+        #region Public Properties
+
         /// <summary>
         /// Наименование товара
         /// </summary>
@@ -50,7 +59,15 @@ namespace RetailTrade.Domain.Models
         /// <summary>
         /// Количество на склада
         /// </summary>
-        public decimal Quantity { get; set; }
+        public decimal Quantity
+        {
+            get => _quantity;
+            set
+            {
+                _quantity = value;
+                OnPropertyChanged(nameof(Quantity));
+            }
+        }
 
         /// <summary>
         /// Цена продажа
@@ -65,5 +82,14 @@ namespace RetailTrade.Domain.Models
         public ICollection<WriteDownProduct> WriteDownProducts { get; set; }
         public ICollection<RefundToSupplierProduct> ProductRefundToSuppliers { get; set; }
         public ICollection<OrderProduct> Orders { get; set; }
+
+        #endregion        
+
+        public event PropertyChangedEventHandler PropertyChanged;
+
+        protected void OnPropertyChanged(string propertyName)
+        {
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+        }
     }
 }

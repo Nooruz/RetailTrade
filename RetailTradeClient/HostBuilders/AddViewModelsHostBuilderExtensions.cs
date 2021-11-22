@@ -51,7 +51,7 @@ namespace RetailTradeClient.HostBuilders
         {
             return new HomeViewModel(services.GetRequiredService<IUserStore>(),
                 services.GetRequiredService<IProductService>(),
-                services.GetRequiredService<IDataService<ProductSale>>(),
+                services.GetRequiredService<IProductSaleService>(),
                 services.GetRequiredService<IReceiptService>(),
                 services.GetRequiredService<IUIManager>(),
                 services.GetRequiredService<IMessageStore>(),
