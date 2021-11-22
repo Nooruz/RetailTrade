@@ -166,14 +166,14 @@ namespace RetailTradeClient.ViewModels
         /// <summary>
         /// Проверка ввода количестов товаров для продажи
         /// </summary>
-        public ICommand QuantityContentChangedCommand { get; }
+        public ICommand QuantityValidateCommand { get; }
 
         /// <summary>
         /// Отменить
         /// </summary>
         public ICommand CancelCommand { get; }
 
-        public ICommand QuantityCellLoadedCommand { get; }
+        public ICommand QuantityContentChangedCommand { get; }
 
         #endregion
 
@@ -216,9 +216,9 @@ namespace RetailTradeClient.ViewModels
             PrintXReportCommand = new PrintXReportCommand();
             CRMSettingsCommand = new RelayCommand(CRMSettings);
             LoadedHomeViewCommand = new ParameterCommand(parameter => LoadedHomeView(parameter));
-            QuantityContentChangedCommand = new ParameterCommand(parameter => QuantityContentChanged(parameter));
+            QuantityValidateCommand = new ParameterCommand(parameter => QuantityValidate(parameter));
             CancelCommand = new RelayCommand(Cancel);
-            QuantityCellLoadedCommand = new ParameterCommand(parameter => QuantityCellLoaded(parameter));
+            QuantityContentChangedCommand = new ParameterCommand(parameter => QuantityContentChanged(parameter));
 
             SaleProducts.CollectionChanged += SaleProducts_CollectionChanged;
             _productService.PropertiesChanged += ProductService_PropertiesChanged;
