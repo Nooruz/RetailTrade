@@ -1,5 +1,7 @@
+using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Media.Animation;
 
 namespace RetailTrade.LoadingPanelControl
 {
@@ -45,15 +47,20 @@ namespace RetailTrade.LoadingPanelControl
             DependencyProperty.Register(nameof(Text), typeof(string), typeof(LoadingPanel), new PropertyMetadata("Загузка..."));
 
 
-
-
-
-
         public LoadingPanel()
         {
             InitializeComponent();
 
             DataContext = this;
+        }
+
+        private async Task RunStoryboard(Storyboard story, FrameworkElement item)
+        {
+            story.Begin(item);
+            while (story.GetCurrentState() == ClockState.Active && story.GetCurrentTime() == story.Duration)
+            {
+                await Task.Delay(100);
+            }
         }
     }
 }

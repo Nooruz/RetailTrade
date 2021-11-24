@@ -1,7 +1,8 @@
 ﻿<ResourceDictionary   xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
                       xmlns:dxlc="http://schemas.devexpress.com/winfx/2008/xaml/layoutcontrol"
                       xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-                      xmlns:menu="clr-namespace:RetailTradeServer.Views.Menus">
+                      xmlns:menu="clr-namespace:RetailTradeServer.Views.Menus"
+                      xmlns:custom="clr-namespace:RetailTrade.LoadingPanelControl;assembly=RetailTrade.LoadingPanelControl">
 
     <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter"/>
 
@@ -15,41 +16,40 @@
                             BorderBrush="{TemplateBinding BorderBrush}">
 
                         <Grid>
-                            <Grid.RowDefinitions>
-                                <RowDefinition Height="*"/>
-                                <RowDefinition Height="*"/>
-                            </Grid.RowDefinitions>
+
+                            <!--<custom:LoadingPanel IsLoading="{Binding ShowLoadingPanel, UpdateSourceTrigger=PropertyChanged}"
+                                                 Title="{Binding LoadingPanelTitle}"
+                                                 Text="{Binding LoadingPanelText}"
+                                                 Panel.ZIndex="1"/>-->
 
                             <dxlc:LayoutControl Orientation="Vertical"
-                                            ItemSpace="15"
-                                            Padding="0">
+                                                ItemSpace="15"
+                                                Padding="0">
 
                                 <TextBlock Text="{TemplateBinding Title}"
-                                       FontSize="24"
-                                       HorizontalAlignment="Center"
-                                       VerticalAlignment="Top"/>
+                                           FontSize="24"
+                                           HorizontalAlignment="Center"
+                                           VerticalAlignment="Top"/>
 
                                 <dxlc:LayoutGroup Orientation="Horizontal"
-                                              VerticalAlignment="Top"
-                                              Visibility="{TemplateBinding ShowDefaultButtons, Converter={StaticResource BooleanToVisibilityConverter}}"
-                                              HorizontalAlignment="Left">
+                                                  VerticalAlignment="Top"
+                                                  Visibility="{TemplateBinding ShowDefaultButtons, Converter={StaticResource BooleanToVisibilityConverter}}"
+                                                  HorizontalAlignment="Left">
 
                                     <Button Content="Создать"
-                                        Command="{Binding CreateCommand}"/>
+                                            Command="{Binding CreateCommand}"/>
 
                                     <Button Content="Редактировать"
-                                        Command="{Binding UpdateCommand}"/>
+                                            Command="{Binding UpdateCommand}"/>
 
                                     <Button Content="Удалить"
-                                        Command="{Binding DeleteCommand}"/>
+                                            Command="{Binding DeleteCommand}"/>
 
                                 </dxlc:LayoutGroup>
 
                                 <ContentPresenter/>
 
                             </dxlc:LayoutControl>
-                            
-                            
 
                         </Grid>
 

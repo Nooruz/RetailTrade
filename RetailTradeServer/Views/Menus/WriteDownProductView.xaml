@@ -16,13 +16,8 @@
 
     <Grid>
 
-        <Grid.RowDefinitions>
-            <RowDefinition/>
-            <RowDefinition/>
-        </Grid.RowDefinitions>
-
-        <custom:LoadingPanel IsLoading="True"
-                             Grid.Row="0"/>
+        <custom:LoadingPanel IsLoading="{Binding ShowLoadingPanel, UpdateSourceTrigger=PropertyChanged, FallbackValue=True}"
+                                                 Panel.ZIndex="1"/>
 
         <dxlc:LayoutControl Grid.Row="1"
                             ItemSpace="10"
@@ -100,5 +95,6 @@
         </dxlc:LayoutControl>
 
     </Grid>
+    
 
 </local:BaseMenuView>

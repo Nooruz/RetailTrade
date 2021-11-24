@@ -6,6 +6,7 @@ using RetailTradeServer.State.Dialogs;
 using RetailTradeServer.ViewModels.Base;
 using RetailTradeServer.ViewModels.Dialogs;
 using RetailTradeServer.Views.Dialogs;
+using System;
 using System.Collections.Generic;
 using System.Windows;
 using System.Windows.Input;
@@ -22,6 +23,7 @@ namespace RetailTradeServer.ViewModels.Menus
         private readonly IUIManager _manager;
         private WriteDown _selectedWriteDown;
         private IEnumerable<WriteDown> _writeDowns;
+        private bool _showLoadingPanel;
 
         #endregion
 
@@ -43,6 +45,15 @@ namespace RetailTradeServer.ViewModels.Menus
             {
                 _selectedWriteDown = value;
                 OnPropertyChanged(nameof(SelectedWriteDown));
+            }
+        }
+        public bool ShowLoadingPanel
+        {
+            get => _showLoadingPanel;
+            set
+            {
+                _showLoadingPanel = value;
+                OnPropertyChanged(nameof(ShowLoadingPanel));
             }
         }
 
@@ -81,19 +92,32 @@ namespace RetailTradeServer.ViewModels.Menus
 
         #region Private Voids
 
-        private async void Print()
+        private void Print()
         {
-            if (SelectedWriteDown != null)
+            try
             {
-                WriteDownProductReport report = new(SelectedWriteDown.Id, SelectedWriteDown.WriteDownDate);
-                report.DataSource = SelectedWriteDown.WriteDownProducts;
-                await report.CreateDocumentAsync();
-                await _manager.ShowDialog(new DocumentViewerViewModel() { PrintingDocument = report },
-                    new DocumentViewerView(), WindowState.Maximized, ResizeMode.CanResize, SizeToContent.Manual);
+                ShowLoadingPanel = true;
+                //if (SelectedWriteDown != null)
+                //{
+                //    WriteDownProductReport report = new(SelectedWriteDown.Id, SelectedWriteDown.WriteDownDate);
+                //    report.DataSource = SelectedWriteDown.WriteDownProducts;
+                //    await report.CreateDocumentAsync();
+                //    await _manager.ShowDialog(new DocumentViewerViewModel() { PrintingDocument = report },
+                //        new DocumentViewerView(), WindowState.Maximized, ResizeMode.CanResize, SizeToContent.Manual);
+                //}
+                //else
+                //{
+                //    _manager.ShowMessage("Выберите элемент.", "", MessageBoxButton.OKCancel, MessageBoxImage.Exclamation);
+                //}
             }
-            else
+            catch (Exception e)
             {
-                _manager.ShowMessage("Выберите элемент.", "", MessageBoxButton.OKCancel, MessageBoxImage.Exclamation);
+
+                throw;
+            }
+            finally
+            {
+                //ShowLoadingPanel = false;
             }
         }
 
