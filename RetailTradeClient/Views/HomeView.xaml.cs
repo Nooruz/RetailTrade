@@ -19,7 +19,7 @@ namespace RetailTradeClient.Views
         {
             var tableView = sender as TableView;
             Dispatcher.BeginInvoke((Action)tableView.Grid.View.ShowEditor, DispatcherPriority.Input);
-            tableView.Grid.CurrentColumn = tableView.Grid.Columns[2];
+            //tableView.Grid.CurrentColumn = tableView.Grid.Columns[2];
         }
 
         private void TableView_InvalidRowException(object sender, InvalidRowExceptionEventArgs e)

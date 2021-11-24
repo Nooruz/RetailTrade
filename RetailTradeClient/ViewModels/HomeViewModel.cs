@@ -381,7 +381,7 @@ namespace RetailTradeClient.ViewModels
         {
             if (PostponeReceipts.Count > 0)
             {
-                if (await _manager.ShowDialog(new PostponeReceiptViewModel(this, _manager) { Title = "Выбор чека" }, new PostponeReceiptView()))
+                if (await _manager.ShowDialog(new PostponeReceiptViewModel(this, _manager, _productService) { Title = "Выбор чека" }, new PostponeReceiptView()))
                 {
 
                 }

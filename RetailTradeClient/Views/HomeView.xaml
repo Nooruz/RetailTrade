@@ -204,7 +204,8 @@
                                     AllowColumnFiltering="False"
                                     AllowEditing="False"/>
                     <dxg:GridColumn Header="Количество" 
-                                    IsSmart="True"
+                                    IsSmart="True"                          
+                                    AllowColumnFiltering="False"
                                     Focusable="False"
                                     Binding="{Binding Quantity, Mode=TwoWay}">
                         <dxmvvm:Interaction.Behaviors>
@@ -222,6 +223,27 @@
                                 </dxmvvm:Interaction.Behaviors>
                             </dxe:SpinEditSettings>
                         </dxg:GridColumn.EditSettings>
+                        <dxg:GridColumn.InputBindings>
+                            <KeyBinding Key="Escape"
+                                        Command="{Binding LogoutCommand}"/>
+
+                            <KeyBinding Key="F5"
+                                        Command="{Binding PaymentCashCommand}"/>
+
+                            <KeyBinding Key="F6"
+                                        Command="{Binding PaymentCashlessCommand}"/>
+
+                            <KeyBinding Key="F5" 
+                                        Modifiers="Alt"
+                                        Command="{Binding PostponeReceiptCommand}"/>
+
+                            <KeyBinding Key="F5" 
+                                        Modifiers="Ctrl"
+                                        Command="{Binding OpenPostponeReceiptCommand}"/>
+
+                            <KeyBinding Key="Delete"
+                                        Command="{Binding DeleteSelectedRowCommand}"/>
+                        </dxg:GridColumn.InputBindings>
                     </dxg:GridColumn>
                     <dxg:GridColumn Header="Цена" 
                                     FieldName="SalePrice"
@@ -241,6 +263,7 @@
                     </dxg:GridColumn>
                     <dxg:GridColumn Header="Остаток"
                                     FieldName="QuantityInStock"
+                                    AllowColumnFiltering="False"
                                     AllowEditing="False">
                         <dxg:GridColumn.EditSettings>
                             <dxe:SpinEditSettings/>

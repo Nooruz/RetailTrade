@@ -366,5 +366,23 @@ namespace RetailTrade.EntityFramework.Services
             }
             return null;
         }
+
+        public async Task<decimal> GetQuantity(int id)
+        {
+            try
+            {
+                await using var context = _contextFactory.CreateDbContext();
+                Product product = await context.Products
+                                               .Where(p => p.Id == id)
+                                               .Select(p => new Product { Quantity = p.Quantity })
+                                               .FirstOrDefaultAsync();
+                return product.Quantity;
+            }
+            catch (Exception e)
+            {
+                //ignore
+            }
+            return 0;
+        }
     }
 }

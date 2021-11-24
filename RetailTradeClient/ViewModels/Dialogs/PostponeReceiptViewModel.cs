@@ -1,10 +1,9 @@
 ﻿using RetailTrade.Domain.Models;
+using RetailTrade.Domain.Services;
 using RetailTradeClient.Commands;
 using RetailTradeClient.State.Dialogs;
 using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.Linq;
 using System.Windows.Input;
 
 namespace RetailTradeClient.ViewModels.Dialogs
@@ -13,6 +12,7 @@ namespace RetailTradeClient.ViewModels.Dialogs
     {
         #region Private Members
 
+        private readonly IProductService _productService;
         private readonly HomeViewModel _viewModel;
         private readonly IUIManager _manager;
         private PostponeReceipt _selectedPostponeReceipt;
@@ -44,10 +44,12 @@ namespace RetailTradeClient.ViewModels.Dialogs
         #region Constructor
 
         public PostponeReceiptViewModel(HomeViewModel viewModel,
-            IUIManager manager)
+            IUIManager manager,
+            IProductService productService)
         {
             _viewModel = viewModel;
             _manager = manager;
+            _productService = productService;
 
             PostponeReceipts = _viewModel.PostponeReceipts;
             ResumeReceiptCommand = new RelayCommand(ResumeReceipt);
@@ -58,7 +60,7 @@ namespace RetailTradeClient.ViewModels.Dialogs
 
         #region Private Voids
 
-        private void ResumeReceipt()
+        private async void ResumeReceipt()
         {
             if (SelectedPostponeReceipt != null)
             {
@@ -73,7 +75,8 @@ namespace RetailTradeClient.ViewModels.Dialogs
                             Name = postponeProduct.Name,
                             SalePrice = postponeProduct.SalePrice,
                             Quantity = postponeProduct.Quantity,
-                            Sum = postponeProduct.Sum
+                            Sum = postponeProduct.Sum,
+                            QuantityInStock = await _productService.GetQuantity(postponeProduct.Id)
                         });
                     }
                     _viewModel.PostponeReceipts.Remove(SelectedPostponeReceipt);
