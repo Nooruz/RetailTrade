@@ -31,7 +31,7 @@ namespace RetailTradeServer.ViewModels.Menus
                 GetAllReceipts(SelectedDate);
             }
         }
-        public RetailTradeDashboard RetailTradeDashboard { get; set; }
+        //public RetailTradeDashboard RetailTradeDashboard { get; set; }
         public DashboardControl RetailTradeDashboardControl { get; set; }
 
         #endregion
@@ -47,7 +47,7 @@ namespace RetailTradeServer.ViewModels.Menus
         public AnalyticalPanelViewModel(IReceiptService receiptService)
         {
             _receiptService = receiptService;
-            RetailTradeDashboard = new RetailTradeDashboard();
+            //RetailTradeDashboard = new RetailTradeDashboard();
             LoadedDashboardControlCommand = new ParameterCommand(parameter => LoadedDashboardControl(parameter));
             GetAllReceipts(DateTime.Now.Date);
         }
@@ -58,7 +58,7 @@ namespace RetailTradeServer.ViewModels.Menus
 
         private async void GetAllReceipts(DateTime dateTime)
         {
-            RetailTradeDashboard.ReceiptDataSource.DataSource = await _receiptService.GetReceiptsByDateAsync(dateTime);
+            //RetailTradeDashboard.ReceiptDataSource.DataSource = await _receiptService.GetReceiptsByDateAsync(dateTime);
             RetailTradeDashboardControl?.ReloadData();
         }
 

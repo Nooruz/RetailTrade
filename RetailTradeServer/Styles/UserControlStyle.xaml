@@ -14,35 +14,45 @@
                     <Border Background="{TemplateBinding Background}"
                             BorderBrush="{TemplateBinding BorderBrush}">
 
-                        <dxlc:LayoutControl Orientation="Vertical"
+                        <Grid>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="*"/>
+                                <RowDefinition Height="*"/>
+                            </Grid.RowDefinitions>
+
+                            <dxlc:LayoutControl Orientation="Vertical"
                                             ItemSpace="15"
                                             Padding="0">
 
-                            <TextBlock Text="{TemplateBinding Title}"
+                                <TextBlock Text="{TemplateBinding Title}"
                                        FontSize="24"
                                        HorizontalAlignment="Center"
                                        VerticalAlignment="Top"/>
 
-                            <dxlc:LayoutGroup Orientation="Horizontal"
+                                <dxlc:LayoutGroup Orientation="Horizontal"
                                               VerticalAlignment="Top"
                                               Visibility="{TemplateBinding ShowDefaultButtons, Converter={StaticResource BooleanToVisibilityConverter}}"
                                               HorizontalAlignment="Left">
-                                
-                                <Button Content="Создать"
+
+                                    <Button Content="Создать"
                                         Command="{Binding CreateCommand}"/>
 
-                                <Button Content="Редактировать"
+                                    <Button Content="Редактировать"
                                         Command="{Binding UpdateCommand}"/>
 
-                                <Button Content="Удалить"
+                                    <Button Content="Удалить"
                                         Command="{Binding DeleteCommand}"/>
 
-                            </dxlc:LayoutGroup>
+                                </dxlc:LayoutGroup>
 
-                            <ContentPresenter/>
+                                <ContentPresenter/>
 
-                        </dxlc:LayoutControl>
-                        
+                            </dxlc:LayoutControl>
+                            
+                            
+
+                        </Grid>
+
                     </Border>
 
                 </ControlTemplate>

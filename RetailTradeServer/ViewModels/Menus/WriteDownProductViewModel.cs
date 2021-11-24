@@ -1,6 +1,7 @@
 ﻿using RetailTrade.Domain.Models;
 using RetailTrade.Domain.Services;
 using RetailTradeServer.Commands;
+using RetailTradeServer.Report;
 using RetailTradeServer.State.Dialogs;
 using RetailTradeServer.ViewModels.Base;
 using RetailTradeServer.ViewModels.Dialogs;
@@ -17,7 +18,6 @@ namespace RetailTradeServer.ViewModels.Menus
 
         private readonly IProductService _productService;
         private readonly IWriteDownService _writeDownService;
-        private readonly IWriteDownProductService _writeDownProductService;
         private readonly ISupplierService _supplierService;
         private readonly IUIManager _manager;
         private WriteDown _selectedWriteDown;
@@ -60,13 +60,11 @@ namespace RetailTradeServer.ViewModels.Menus
 
         public WriteDownProductViewModel(IProductService productService,
             IWriteDownService writeDownService,
-            IWriteDownProductService writeDownProductService,
             ISupplierService supplierService,
             IUIManager manager)
         {
             _productService = productService;
             _writeDownService = writeDownService;
-            _writeDownProductService = writeDownProductService;
             _supplierService = supplierService;
             _manager = manager;
 
@@ -87,7 +85,11 @@ namespace RetailTradeServer.ViewModels.Menus
         {
             if (SelectedWriteDown != null)
             {
-
+                WriteDownProductReport report = new(SelectedWriteDown.Id, SelectedWriteDown.WriteDownDate);
+                report.DataSource = SelectedWriteDown.WriteDownProducts;
+                await report.CreateDocumentAsync();
+                await _manager.ShowDialog(new DocumentViewerViewModel() { PrintingDocument = report },
+                    new DocumentViewerView(), WindowState.Maximized, ResizeMode.CanResize, SizeToContent.Manual);
             }
             else
             {

@@ -77,7 +77,6 @@ namespace RetailTradeServer.HostBuilders
         {
             return new WriteDownProductViewModel(services.GetRequiredService<IProductService>(),
                 services.GetRequiredService<IWriteDownService>(),
-                services.GetRequiredService<IWriteDownProductService>(),
                 services.GetRequiredService<ISupplierService>(),
                 services.GetRequiredService<IUIManager>());
         }

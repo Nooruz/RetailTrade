@@ -85,14 +85,6 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
-    <Compile Include="..\RetailTradeServer\RetailTradeDashboard.cs">
-      <Link>RetailTradeDashboard.cs</Link>
-      <SubType>Component</SubType>
-    </Compile>
-    <Compile Include="..\RetailTradeServer\RetailTradeDashboard.designer.cs">
-      <Link>RetailTradeDashboard.designer.cs</Link>
-      <DependentUpon>RetailTradeDashboard.cs</DependentUpon>
-    </Compile>
     <Compile Include="Dashboard1.cs">
       <SubType>Component</SubType>
     </Compile>
@@ -144,10 +136,6 @@
       <DependentUpon>Settings.settings</DependentUpon>
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
     </Compile>
-    <EmbeddedResource Include="..\RetailTradeServer\RetailTradeDashboard.resx">
-      <Link>RetailTradeDashboard.resx</Link>
-      <DependentUpon>RetailTradeDashboard.cs</DependentUpon>
-    </EmbeddedResource>
     <EmbeddedResource Include="Dashboard1.resx">
       <DependentUpon>Dashboard1.cs</DependentUpon>
     </EmbeddedResource>
