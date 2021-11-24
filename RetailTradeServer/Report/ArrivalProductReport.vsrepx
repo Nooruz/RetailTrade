@@ -1,0 +1,92 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<XtraReportsLayoutSerializer SerializerVersion="21.2.3.0" Ref="1" ControlType="DevExpress.XtraReports.UI.XtraReport, DevExpress.XtraReports.v21.2, Version=21.2.3.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a" Name="ArrivalProductReport" Margins="100, 100, 40, 100" PageWidth="850" PageHeight="1100" Version="21.2" DataSource="#Ref-0">
+  <Extensions>
+    <Item1 Ref="2" Key="VSReportExtInfo" Value=".vsrepx" />
+  </Extensions>
+  <Bands>
+    <Item1 Ref="3" ControlType="TopMarginBand" Name="topMarginBand1" HeightF="39.5833321" />
+    <Item2 Ref="4" ControlType="DetailBand" Name="detailBand1" HeightF="25">
+      <Controls>
+        <Item1 Ref="5" ControlType="XRTable" Name="table2" SizeF="630,25" LocationFloat="10.0000076,0" Padding="2,2,0,0,96" Borders="Left, Right, Bottom">
+          <Rows>
+            <Item1 Ref="6" ControlType="XRTableRow" Name="tableRow2" Weight="1">
+              <Cells>
+                <Item1 Ref="7" ControlType="XRTableCell" Name="tableCell5" Weight="0.30590431395031159" Multiline="true" TextAlignment="MiddleCenter">
+                  <ExpressionBindings>
+                    <Item1 Ref="8" EventName="BeforePrint" PropertyName="Text" Expression="[DataSource.CurrentRowIndex]+1" />
+                  </ExpressionBindings>
+                  <StylePriority Ref="9" UseTextAlignment="false" />
+                </Item1>
+                <Item2 Ref="10" ControlType="XRTableCell" Name="tableCell6" Weight="2.2698587223840136" Multiline="true" TextAlignment="MiddleLeft">
+                  <ExpressionBindings>
+                    <Item1 Ref="11" EventName="BeforePrint" PropertyName="Text" Expression="[Product].[Name]" />
+                  </ExpressionBindings>
+                  <StylePriority Ref="12" UseTextAlignment="false" />
+                </Item2>
+                <Item3 Ref="13" ControlType="XRTableCell" Name="tableCell7" Weight="0.59505518353174613" Multiline="true" TextAlignment="MiddleCenter">
+                  <ExpressionBindings>
+                    <Item1 Ref="14" EventName="BeforePrint" PropertyName="Text" Expression="[Product].[Unit].[ShortName]" />
+                  </ExpressionBindings>
+                  <StylePriority Ref="15" UseTextAlignment="false" />
+                </Item3>
+                <Item4 Ref="16" ControlType="XRTableCell" Name="tableCell8" Weight="0.82918178013392851" TextFormatString="{0:N2}" Multiline="true" TextAlignment="MiddleRight">
+                  <ExpressionBindings>
+                    <Item1 Ref="17" EventName="BeforePrint" PropertyName="Text" Expression="[Quantity]" />
+                  </ExpressionBindings>
+                  <StylePriority Ref="18" UseTextAlignment="false" />
+                </Item4>
+              </Cells>
+            </Item1>
+          </Rows>
+          <StylePriority Ref="19" UseBorders="false" />
+        </Item1>
+      </Controls>
+    </Item2>
+    <Item3 Ref="20" ControlType="BottomMarginBand" Name="bottomMarginBand1" />
+    <Item4 Ref="21" ControlType="ReportHeaderBand" Name="ReportHeader" HeightF="126.041664">
+      <Controls>
+        <Item1 Ref="22" ControlType="XRLabel" Name="lbTitle" Multiline="true" TextAlignment="MiddleCenter" SizeF="630,23" LocationFloat="10.0000067,53.0833244" Font="Times New Roman, 14.25pt, style=Bold, charSet=204" Padding="2,2,0,0,100">
+          <StylePriority Ref="23" UseFont="false" UseTextAlignment="false" />
+        </Item1>
+        <Item2 Ref="24" ControlType="XRTable" Name="table1" TextAlignment="MiddleCenter" SizeF="630,25" LocationFloat="10.0000067,101.041664" Font="Times New Roman, 9.75pt, style=Bold, charSet=204" Padding="2,2,0,0,96" Borders="All">
+          <Rows>
+            <Item1 Ref="25" ControlType="XRTableRow" Name="tableRow1" Weight="1">
+              <Cells>
+                <Item1 Ref="26" ControlType="XRTableCell" Name="tableCell1" Weight="0.32539672851562496" Multiline="true" Text="№" />
+                <Item2 Ref="27" ControlType="XRTableCell" Name="tableCell2" Weight="2.4144956812104783" Multiline="true" Text="Наименование товара" />
+                <Item3 Ref="28" ControlType="XRTableCell" Name="tableCell3" Weight="0.63297251832706491" Multiline="true" Text="Ед. изм." />
+                <Item4 Ref="29" ControlType="XRTableCell" Name="tableCell4" Weight="0.88201793213054747" Multiline="true" Text="Кол-во" />
+              </Cells>
+            </Item1>
+          </Rows>
+          <StylePriority Ref="30" UseFont="false" UseBorders="false" UseTextAlignment="false" />
+        </Item2>
+        <Item3 Ref="31" ControlType="XRLabel" Name="lbSupplier" TextFormatString="Поставщик: {0}" Multiline="true" TextAlignment="MiddleLeft" SizeF="630,23" LocationFloat="10.0000067,10.0000067" Font="Times New Roman, 12pt, style=Bold, charSet=204" Padding="2,2,0,0,100">
+          <StylePriority Ref="32" UseFont="false" UseTextAlignment="false" />
+        </Item3>
+      </Controls>
+    </Item4>
+    <Item5 Ref="33" ControlType="GroupFooterBand" Name="GroupFooter1" HeightF="150">
+      <Controls>
+        <Item1 Ref="34" ControlType="XRLabel" Name="label5" Multiline="true" Text="Ответственное лицо:______________" TextAlignment="MiddleLeft" SizeF="370.416779,22.9999847" LocationFloat="10.0000067,117.000015" Font="Times New Roman, 12pt, style=Bold, charSet=204" Padding="2,2,0,0,100">
+          <StylePriority Ref="35" UseFont="false" UseTextAlignment="false" />
+        </Item1>
+        <Item2 Ref="36" ControlType="XRLabel" Name="label2" TextFormatString="Всего наименований {0}" Multiline="true" TextAlignment="MiddleLeft" SizeF="630,23" LocationFloat="10.0000076,54.1060753" Font="Times New Roman, 12pt, charSet=204" Padding="2,2,0,0,100">
+          <ExpressionBindings>
+            <Item1 Ref="37" EventName="BeforePrint" PropertyName="Text" Expression="[DataSource.RowCount]" />
+          </ExpressionBindings>
+          <StylePriority Ref="38" UseFont="false" UseTextAlignment="false" />
+        </Item2>
+        <Item3 Ref="39" ControlType="XRLine" Name="line1" SizeF="630,10.6894226" LocationFloat="10.0000067,43.41666" BorderWidth="2">
+          <StylePriority Ref="40" UseBorderWidth="false" />
+        </Item3>
+      </Controls>
+    </Item5>
+  </Bands>
+  <StyleSheet>
+    <Item1 Ref="41" Name="Style1" BorderStyle="Inset" Padding="0,0,0,0,100" StringFormat="Near;Near;0;None;Character;Default" />
+  </StyleSheet>
+  <ComponentStorage>
+    <Item1 Ref="0" ObjectType="DevExpress.DataAccess.ObjectBinding.ObjectDataSource,DevExpress.DataAccess.v21.2" Name="ArrivalProducts" Base64="PE9iamVjdERhdGFTb3VyY2UgTmFtZT0iQXJyaXZhbFByb2R1Y3RzIiAvPg==" />
+  </ComponentStorage>
+</XtraReportsLayoutSerializer>

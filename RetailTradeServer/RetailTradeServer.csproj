@@ -8,7 +8,7 @@
     <Authors>Ашимжан уулу Ноорузбек</Authors>
     <Company>Sale Page</Company>
     <Version>1.0.0</Version>
-    <AssemblyVersion>1.0.0.61</AssemblyVersion>
+    <AssemblyVersion>1.0.0.68</AssemblyVersion>
     <FileVersion>1.0.0.2</FileVersion>
   </PropertyGroup>
 
@@ -23,17 +23,21 @@
     <None Remove="Fonts\fa-brands-400.ttf" />
     <None Remove="Fonts\fa-regular-400.ttf" />
     <None Remove="Fonts\fa-solid-900.ttf" />
+    <None Remove="Report\ArrivalProductReport.vsrepx" />
     <None Remove="Report\ClosingShiftsReport.vsrepx" />
     <None Remove="Report\OrderToSupplierReport.vsrepx" />
     <None Remove="Report\ProductBarcodeReport.vsrepx" />
+    <None Remove="Report\WriteDownProductReport.vsrepx" />
     <None Remove="Resources\Images\logo.png" />
     <None Remove="Views\HomeView.xaml~RF1dc6ec.TMP" />
   </ItemGroup>
 
   <ItemGroup>
+    <EmbeddedResource Include="Report\ArrivalProductReport.vsrepx" />
     <EmbeddedResource Include="Report\ClosingShiftsReport.vsrepx" />
     <EmbeddedResource Include="Report\OrderToSupplierReport.vsrepx" />
     <EmbeddedResource Include="Report\ProductBarcodeReport.vsrepx" />
+    <EmbeddedResource Include="Report\WriteDownProductReport.vsrepx" />
   </ItemGroup>
 
   <ItemGroup>
@@ -79,6 +83,12 @@
       <AutoGen>True</AutoGen>
       <DependentUpon>Settings.settings</DependentUpon>
     </Compile>
+    <Compile Update="Report\ArrivalProductReport.cs">
+      <DependentUpon>ArrivalProductReport.vsrepx</DependentUpon>
+    </Compile>
+    <Compile Update="Report\ArrivalProductReport.Designer.cs">
+      <DependentUpon>ArrivalProductReport.vsrepx</DependentUpon>
+    </Compile>
     <Compile Update="Report\ClosingShiftsReport.cs">
       <DependentUpon>ClosingShiftsReport.vsrepx</DependentUpon>
     </Compile>
@@ -96,6 +106,12 @@
     </Compile>
     <Compile Update="Report\ProductBarcodeReport.Designer.cs">
       <DependentUpon>ProductBarcodeReport.vsrepx</DependentUpon>
+    </Compile>
+    <Compile Update="Report\WriteDownProductReport.cs">
+      <DependentUpon>WriteDownProductReport.vsrepx</DependentUpon>
+    </Compile>
+    <Compile Update="Report\WriteDownProductReport.Designer.cs">
+      <DependentUpon>WriteDownProductReport.vsrepx</DependentUpon>
     </Compile>
     <Compile Update="RetailTradeDashboard.cs">
       <SubType>Component</SubType>

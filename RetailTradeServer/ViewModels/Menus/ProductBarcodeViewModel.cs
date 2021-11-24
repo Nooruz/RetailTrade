@@ -164,6 +164,8 @@ namespace RetailTradeServer.ViewModels.Menus
 
         public override void Dispose()
         {
+            ProductBarcodePrintings.Clear();
+            SelectedProduct = null;
             base.Dispose();
         }
     }

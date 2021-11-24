@@ -106,5 +106,12 @@ namespace RetailTradeServer.ViewModels.Menus
         }
 
         #endregion
+
+        public override void Dispose()
+        {
+            RefundsToSuppliers = null;
+            SelectedRefundToSupplier = null;
+            base.Dispose();
+        }
     }
 }

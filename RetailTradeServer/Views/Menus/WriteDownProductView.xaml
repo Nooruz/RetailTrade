@@ -29,11 +29,11 @@
             <!--<Button Command="{Binding DuplicateArrivalCommand}"
                     ToolTip="Дублировать приход"
                     Style="{StaticResource FAButton}"
-                    Content="{StaticResource faCopy}"/>
-            <Button Command="{Binding PrintArrivalCommand}"
-                    ToolTip="Печатать приход"
+                    Content="{StaticResource faCopy}"/>-->
+            <Button Command="{Binding PrintCommand}"
+                    ToolTip="Печатать"
                     Style="{StaticResource FAButton}"
-                    Content="{StaticResource faPrint}"/>-->
+                    Content="{StaticResource faPrint}"/>
 
         </dxlc:LayoutGroup>
 

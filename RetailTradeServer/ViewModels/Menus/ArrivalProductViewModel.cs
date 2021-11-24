@@ -1,6 +1,7 @@
 ﻿using RetailTrade.Domain.Models;
 using RetailTrade.Domain.Services;
 using RetailTradeServer.Commands;
+using RetailTradeServer.Report;
 using RetailTradeServer.State.Dialogs;
 using RetailTradeServer.ViewModels.Base;
 using RetailTradeServer.ViewModels.Dialogs;
@@ -17,7 +18,6 @@ namespace RetailTradeServer.ViewModels.Menus
 
         private readonly IProductService _productService;
         private readonly IArrivalService _arrivalService;
-        private readonly IArrivalProductService _arrivalProductService;
         private readonly ISupplierService _supplierService;
         private readonly IUIManager _manager;
         private Arrival _selectedArrival;
@@ -54,6 +54,7 @@ namespace RetailTradeServer.ViewModels.Menus
         public ICommand CreateArrivalCommand { get; }
         public ICommand DeleteArrivalCommand { get; }
         public ICommand DuplicateArrivalCommand { get; }
+        public ICommand PrintArrivalCommand { get; }
 
         #endregion
 
@@ -61,13 +62,11 @@ namespace RetailTradeServer.ViewModels.Menus
 
         public ArrivalProductViewModel(IProductService productService,
             IArrivalService arrivalService,
-            IArrivalProductService arrivalProductService,
             ISupplierService supplierService,
             IUIManager manager)
         {
             _productService = productService;
             _arrivalService = arrivalService;
-            _arrivalProductService = arrivalProductService;
             _supplierService = supplierService;
             _manager = manager;
 
@@ -75,6 +74,7 @@ namespace RetailTradeServer.ViewModels.Menus
             CreateArrivalCommand = new RelayCommand(CreateArrival);
             DeleteArrivalCommand = new RelayCommand(DeleteArrival);
             DuplicateArrivalCommand = new RelayCommand(DuplicateArrival);
+            PrintArrivalCommand = new RelayCommand(PrintArrival);
 
             _arrivalService.PropertiesChanged += GetArrivalsAsync;
         }        
@@ -82,6 +82,25 @@ namespace RetailTradeServer.ViewModels.Menus
         #endregion
 
         #region Private Voids
+
+        private async void PrintArrival()
+        {
+            if (SelectedArrival != null)
+            {
+                ArrivalProductReport report = new(new Arrival { Id = SelectedArrival.Id, 
+                    Supplier = SelectedArrival.Supplier, ArrivalDate = SelectedArrival.ArrivalDate});
+                report.DataSource = SelectedArrival.ArrivalProducts;
+
+                await report.CreateDocumentAsync();
+
+                await _manager.ShowDialog(new DocumentViewerViewModel() { PrintingDocument = report },
+                    new DocumentViewerView(), WindowState.Maximized, ResizeMode.CanResize, SizeToContent.Manual);
+            }
+            else
+            {
+                _ = _manager.ShowMessage("Выберите приход", "", MessageBoxButton.OK, MessageBoxImage.Exclamation);
+            }
+        }
 
         private async void GetArrivalsAsync()
         {
@@ -132,5 +151,13 @@ namespace RetailTradeServer.ViewModels.Menus
         }
 
         #endregion
+
+        public override void Dispose()
+        {
+            SelectedArrival = null;
+            Arrivals = null;
+
+            base.Dispose();
+        }
     }
 }

@@ -154,5 +154,13 @@ namespace RetailTradeServer.ViewModels.Menus
         }
 
         #endregion
+
+        public override void Dispose()
+        {
+            OrdersToSuppliers = null;
+            OrderStatuses = null;
+            SelectedOrderToSupplier = null;
+            base.Dispose();
+        }
     }
 }

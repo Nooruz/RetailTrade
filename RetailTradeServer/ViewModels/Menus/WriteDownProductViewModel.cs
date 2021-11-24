@@ -52,6 +52,7 @@ namespace RetailTradeServer.ViewModels.Menus
 
         public ICommand LoadedCommand { get; }
         public ICommand DuplicateCommand { get; }
+        public ICommand PrintCommand { get; }
 
         #endregion
 
@@ -72,6 +73,7 @@ namespace RetailTradeServer.ViewModels.Menus
             LoadedCommand = new RelayCommand(GetWriteDownsAsync);
             CreateCommand = new RelayCommand(Create);
             DeleteCommand = new RelayCommand(Delete);
+            PrintCommand = new RelayCommand(Print);
             //DuplicateCommand = new RelayCommand(DuplicateArrival);
 
             _writeDownService.PropertiesChanged += GetWriteDownsAsync;
@@ -80,6 +82,18 @@ namespace RetailTradeServer.ViewModels.Menus
         #endregion
 
         #region Private Voids
+
+        private async void Print()
+        {
+            if (SelectedWriteDown != null)
+            {
+
+            }
+            else
+            {
+                _manager.ShowMessage("Выберите элемент.", "", MessageBoxButton.OKCancel, MessageBoxImage.Exclamation);
+            }
+        }
 
         private async void GetWriteDownsAsync()
         {
@@ -108,5 +122,13 @@ namespace RetailTradeServer.ViewModels.Menus
         }
 
         #endregion
+
+        public override void Dispose()
+        {
+            WriteDowns = null;
+            SelectedWriteDown = null;
+
+            base.Dispose();
+        }
     }
 }

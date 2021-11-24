@@ -172,6 +172,8 @@ namespace RetailTradeServer.ViewModels.Menus
         public override void Dispose()
         {
             GlobalMessageViewModel.Dispose();
+            GetProducts = null;
+            SelectedProductGroup = null;
 
             base.Dispose();
         }

@@ -137,6 +137,7 @@ namespace RetailTrade.EntityFramework.Services
                 return await context.Arrivals
                     .Include(o => o.ArrivalProducts)
                     .ThenInclude(o => o.Product)
+                    .ThenInclude(o => o.Unit)
                     .Include(o => o.Supplier)
                     .ToListAsync();
             }

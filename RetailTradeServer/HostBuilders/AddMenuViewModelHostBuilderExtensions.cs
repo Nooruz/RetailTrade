@@ -69,7 +69,6 @@ namespace RetailTradeServer.HostBuilders
         {
             return new ArrivalProductViewModel(services.GetRequiredService<IProductService>(),
                 services.GetRequiredService<IArrivalService>(),
-                services.GetRequiredService<IArrivalProductService>(),
                 services.GetRequiredService<ISupplierService>(),
                 services.GetRequiredService<IUIManager>());
         }

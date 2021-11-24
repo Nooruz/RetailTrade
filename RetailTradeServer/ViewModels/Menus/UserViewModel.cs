@@ -6,11 +6,7 @@ using RetailTradeServer.State.Dialogs;
 using RetailTradeServer.ViewModels.Base;
 using RetailTradeServer.ViewModels.Dialogs;
 using RetailTradeServer.Views.Dialogs;
-using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace RetailTradeServer.ViewModels.Menus
 {
