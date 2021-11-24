@@ -52,6 +52,8 @@ namespace RetailTrade.LoadingPanelControl
         public LoadingPanel()
         {
             InitializeComponent();
+
+            DataContext = this;
         }
     }
 }
