@@ -26,6 +26,7 @@ namespace RetailTradeServer.ViewModels.Menus
         private readonly IMessageStore _messageStore;
         private object _selectedProductGroup;
         private IEnumerable<Product> _getProducts;
+        private bool _canShowLoadingPanel = true;
 
         #endregion
 
@@ -50,6 +51,7 @@ namespace RetailTradeServer.ViewModels.Menus
             {
                 _getProducts = value;
                 OnPropertyChanged(nameof(GetProducts));
+                CanShowLoadingPanel = !GetProducts.Any();
             }
         }
         public object SelectedProductGroup
@@ -61,7 +63,15 @@ namespace RetailTradeServer.ViewModels.Menus
                 OnPropertyChanged(nameof(SelectedProductGroup));
             }
         }
-        public bool CanShowLoadingPanel => GetProducts != null && GetProducts.Any();
+        public bool CanShowLoadingPanel
+        {
+            get => _canShowLoadingPanel;
+            set
+            {
+                _canShowLoadingPanel = value;
+                OnPropertyChanged(nameof(CanShowLoadingPanel));
+            }
+        }
 
         #endregion
 

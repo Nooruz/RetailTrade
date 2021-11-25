@@ -38,6 +38,7 @@ namespace RetailTradeServer.HostBuilders
                 services.AddSingleton<IWriteDownService, WriteDownService>();
                 services.AddSingleton<IRefundToSupplierService, RefundToSupplierService>();
                 services.AddSingleton<IProductSaleService, ProductSaleService>();
+                services.AddSingleton<IRefundService, RefundService>();
             });
         }
     }

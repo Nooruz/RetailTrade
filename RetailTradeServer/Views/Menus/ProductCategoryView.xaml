@@ -72,6 +72,9 @@
                                 <Trigger Property="ItemsSource" Value="{x:Null}">
                                     <Setter Property="ShowLoadingPanel" Value="True"/>
                                 </Trigger>
+                                <DataTrigger Binding="{Binding CanShowLoadingPanel}" Value="False">
+                                    <Setter Property="ShowLoadingPanel" Value="False"/>
+                                </DataTrigger>
                             </Style.Triggers>
                         </Style>
                     </dxg:GridControl.Style>

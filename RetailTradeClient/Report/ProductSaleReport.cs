@@ -11,7 +11,7 @@ namespace RetailTradeClient.Report
         {
             InitializeComponent();
             try
-            {                                
+            {
                 CashDate.Text = $"Дата: {receipt.DateOfPurchase.ToShortDateString()}";
                 CashTime.Text = $"Время: {receipt.DateOfPurchase.ToShortTimeString()}";
                 CashReceipt.Text = $"Товарный чек № {receipt.Id.ToString("D6")}";
