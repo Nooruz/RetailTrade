@@ -10,6 +10,7 @@ using RetailTradeClient.State.Users;
 using RetailTradeClient.ViewModels;
 using RetailTradeClient.ViewModels.Dialogs;
 using System;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace RetailTradeClient.Commands
@@ -67,7 +68,15 @@ namespace RetailTradeClient.Commands
                         Sum = _paymentCashViewModel.AmountToBePaid,
                         PaidInCash = _paymentCashViewModel.Entered,
                         ShiftId = _shiftStore.CurrentShift.Id,
-                        Change = _paymentCashViewModel.Change
+                        Change = _paymentCashViewModel.Change,
+                        ProductSales = _paymentCashViewModel.SaleProducts.Select(s =>
+                            new ProductSale
+                            {
+                                ProductId = s.Id,
+                                Quantity = s.Quantity,
+                                Sum = s.Sum,
+                                SalePrice = s.SalePrice
+                            }).ToList()
                     });
 
                     _cashRegisterControlMachine.Connect();
@@ -77,13 +86,6 @@ namespace RetailTradeClient.Commands
                     {
                         foreach (Sale sale in _paymentCashViewModel.SaleProducts)
                         {
-                            _ = await _productSaleService.CreateAsync(new ProductSale
-                            {
-                                ProductId = sale.Id,
-                                Quantity = sale.Quantity,
-                                Sum = sale.Sum,
-                                ReceiptId = newReceipt.Id
-                            });
 
                             _cashRegisterControlMachine.Quantity = Convert.ToDouble(sale.Quantity);
                             _cashRegisterControlMachine.Price = sale.SalePrice;

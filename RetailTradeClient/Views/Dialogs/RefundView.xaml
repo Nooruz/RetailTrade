@@ -36,7 +36,7 @@
                                     </dxg:GridControl.View>
                                     <dxg:GridColumn Header="Наименование" FieldName="Product.Name"/>
                                     <dxg:GridColumn Header="Количество" FieldName="Quantity"/>
-                                    <dxg:GridColumn Header="Цена" FieldName="Product.SalePrice"/>
+                                    <dxg:GridColumn Header="Цена" FieldName="SalePrice"/>
                                     <dxg:GridColumn Header="Сумма" FieldName="Sum"/>
                                 </dxg:GridControl>
                             </dxg:DataControlDetailDescriptor.DataControl>
