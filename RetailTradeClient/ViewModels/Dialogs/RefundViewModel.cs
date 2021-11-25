@@ -4,6 +4,7 @@ using RetailTradeClient.Commands;
 using RetailTradeClient.State.Dialogs;
 using RetailTradeClient.State.Shifts;
 using System.Collections.Generic;
+using System.Linq;
 using System.Windows;
 using System.Windows.Input;
 
@@ -17,7 +18,7 @@ namespace RetailTradeClient.ViewModels.Dialogs
         private readonly IShiftStore _shiftStore;
         private readonly IUIManager _manager;
         private readonly IRefundService _refundService;
-        private IEnumerable<Receipt> _receipts;        
+        private IEnumerable<Receipt> _receipts; 
 
         #endregion
 
@@ -30,9 +31,11 @@ namespace RetailTradeClient.ViewModels.Dialogs
             {
                 _receipts = value;
                 OnPropertyChanged(nameof(Receipts));
+                OnPropertyChanged(nameof(CanShowLoadingPanel));
             }
         }
         public Receipt SelectedReceipt { get; set; }
+        public bool CanShowLoadingPanel => Receipts != null && Receipts.Any();
 
         #endregion
 

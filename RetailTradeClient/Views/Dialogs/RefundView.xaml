@@ -21,6 +21,18 @@
         <dxg:GridControl AutoGenerateColumns="None"
                          ItemsSource="{Binding Receipts}"
                          SelectedItem="{Binding SelectedReceipt}">
+            <dxg:GridControl.Style>
+                <Style TargetType="{x:Type dxg:GridControl}">
+                    <Style.Triggers>
+                        <Trigger Property="ItemsSource" Value="{x:Null}">
+                            <Setter Property="ShowLoadingPanel" Value="True"/>
+                        </Trigger>
+                        <DataTrigger Binding="{Binding CanShowLoadingPanel}" Value="False">
+                            <Setter Property="ShowLoadingPanel" Value="False"/>
+                        </DataTrigger>
+                    </Style.Triggers>
+                </Style>
+            </dxg:GridControl.Style>
             <dxg:GridControl.View>
                 <dxg:TableView AllowEditing="False"
                                AutoWidth="True"/>

@@ -7,6 +7,7 @@ using RetailTradeServer.ViewModels.Base;
 using RetailTradeServer.ViewModels.Dialogs;
 using RetailTradeServer.Views.Dialogs;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Input;
 
@@ -42,7 +43,6 @@ namespace RetailTradeServer.ViewModels.Menus
 
         public GlobalMessageViewModel GlobalMessageViewModel { get; }
         public List<ProductCategory> ProductCategories => _productCategoryService.GetAllList();
-
         public IEnumerable<Product> GetProducts
         {
             get => _getProducts;
@@ -52,7 +52,6 @@ namespace RetailTradeServer.ViewModels.Menus
                 OnPropertyChanged(nameof(GetProducts));
             }
         }
-
         public object SelectedProductGroup
         {
             get => _selectedProductGroup;
@@ -61,7 +60,8 @@ namespace RetailTradeServer.ViewModels.Menus
                 _selectedProductGroup = value;
                 OnPropertyChanged(nameof(SelectedProductGroup));
             }
-        }        
+        }
+        public bool CanShowLoadingPanel => GetProducts != null && GetProducts.Any();
 
         #endregion
 
