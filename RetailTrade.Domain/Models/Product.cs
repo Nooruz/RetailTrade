@@ -78,6 +78,7 @@ namespace RetailTrade.Domain.Models
         public Supplier Supplier { get; set; }
         public Unit Unit { get; set; }
         public ICollection<ProductSale> ProductSales { get; set; }
+        public ICollection<ProductRefund> ProductRefunds { get; set; }
         public ICollection<ArrivalProduct> ArrivalProducts { get; set; }
         public ICollection<WriteDownProduct> WriteDownProducts { get; set; }
         public ICollection<RefundToSupplierProduct> ProductRefundToSuppliers { get; set; }

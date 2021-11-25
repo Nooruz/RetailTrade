@@ -6,7 +6,7 @@
     xmlns:dxmvvm="http://schemas.devexpress.com/winfx/2008/xaml/mvvm"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:dialogs="clr-namespace:RetailTradeClient.Dialogs"
-    x:Class="RetailTradeClient.Views.Dialogs.ReturnOfGoodsView"
+    x:Class="RetailTradeClient.Views.Dialogs.RefundView"
     Width="600"
     Height="400">
 

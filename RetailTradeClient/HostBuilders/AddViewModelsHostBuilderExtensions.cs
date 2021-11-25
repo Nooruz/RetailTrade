@@ -57,7 +57,8 @@ namespace RetailTradeClient.HostBuilders
                 services.GetRequiredService<IMessageStore>(),
                 services.GetRequiredService<IAuthenticator>(),
                 services.GetRequiredService<ICashRegisterControlMachine>(),
-                services.GetRequiredService<IShiftStore>());
+                services.GetRequiredService<IShiftStore>(),
+                services.GetRequiredService<IRefundService>());
         }
 
         private static LoginViewModel CreateLoginViewModel(IServiceProvider services)

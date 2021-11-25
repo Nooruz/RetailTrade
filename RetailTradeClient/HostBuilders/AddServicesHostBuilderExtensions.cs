@@ -24,6 +24,7 @@ namespace RetailTradeClient.HostBuilders
                 services.AddSingleton<IOrganizationService, OrganizationService>();
                 services.AddSingleton<IProductSaleService, ProductSaleService>();
                 services.AddSingleton<IShiftService, ShiftService>();
+                services.AddSingleton<IRefundService, RefundService>();
             });
         }
     }

@@ -9,13 +9,14 @@ using System.Windows.Input;
 
 namespace RetailTradeClient.ViewModels.Dialogs
 {
-    public class ReturnOfGoodsViewModel : BaseDialogViewModel
+    public class RefundViewModel : BaseDialogViewModel
     {
         #region Private Members
 
         private readonly IReceiptService _receiptService;
         private readonly IShiftStore _shiftStore;
         private readonly IUIManager _manager;
+        private readonly IRefundService _refundService;
         private IEnumerable<Receipt> _receipts;        
 
         #endregion
@@ -44,12 +45,14 @@ namespace RetailTradeClient.ViewModels.Dialogs
 
         #region Constructor
 
-        public ReturnOfGoodsViewModel(IReceiptService receiptService,
+        public RefundViewModel(IReceiptService receiptService,
             IShiftStore shiftStore,
+            IRefundService refundService,
             IUIManager manager)
         {
             _receiptService = receiptService;
             _shiftStore = shiftStore;
+            _refundService = refundService;
             _manager = manager;
 
             LoadedCommand = new RelayCommand(Loaded);
@@ -65,11 +68,12 @@ namespace RetailTradeClient.ViewModels.Dialogs
             Receipts = await _receiptService.GetReceiptsFromCurrentShift(_shiftStore.CurrentShift.Id);
         }
 
-        private void Return()
+        private async void Return()
         {
             if (SelectedReceipt != null)
             {
-
+                await _receiptService.Refund(SelectedReceipt);
+                _manager.Close();
             }
             else
             {

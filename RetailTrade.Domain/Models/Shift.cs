@@ -32,5 +32,10 @@ namespace RetailTrade.Domain.Models
         /// Список чеков
         /// </summary>
         public IEnumerable<Receipt> Receipts { get; set; }
+
+        /// <summary>
+        /// Список возвратов
+        /// </summary>
+        public IEnumerable<Refund> Refunds { get; set; }
     }
 }

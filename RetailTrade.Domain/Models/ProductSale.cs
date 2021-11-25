@@ -13,6 +13,11 @@
         public decimal Sum { get; set; }
 
         /// <summary>
+        /// Цена продажи
+        /// </summary>
+        public decimal SalePrice { get; set; }
+
+        /// <summary>
         /// Код товара
         /// </summary>
         public int ProductId { get; set; }

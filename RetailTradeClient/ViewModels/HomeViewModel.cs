@@ -1,5 +1,4 @@
-﻿using DevExpress.Xpf.Editors.Settings;
-using DevExpress.Xpf.Grid;
+﻿using DevExpress.Xpf.Grid;
 using RetailTrade.Domain.Models;
 using RetailTrade.Domain.Services;
 using RetailTradeClient.Commands;
@@ -21,7 +20,6 @@ using System.ComponentModel;
 using System.Linq;
 using System.Windows;
 using System.Windows.Input;
-using System.Windows.Threading;
 
 namespace RetailTradeClient.ViewModels
 {
@@ -38,6 +36,7 @@ namespace RetailTradeClient.ViewModels
         private readonly IAuthenticator _authenticator;
         private readonly ICashRegisterControlMachine _cashRegisterControlMachine;
         private readonly IShiftStore _shiftStore;
+        private readonly IRefundService _refundService;
         private readonly PaymentCashViewModel _paymentCashViewModel;
         private string _barcode;
         private Sale _selectedProductSale;
@@ -197,7 +196,8 @@ namespace RetailTradeClient.ViewModels
             IMessageStore messageStore,
             IAuthenticator authenticator,
             ICashRegisterControlMachine cashRegisterControlMachine,
-            IShiftStore shiftStore)
+            IShiftStore shiftStore,
+            IRefundService refundService)
         {
             _userStore = userStore;
             _productService = productService;
@@ -208,6 +208,7 @@ namespace RetailTradeClient.ViewModels
             _authenticator = authenticator;
             _cashRegisterControlMachine = cashRegisterControlMachine;
             _shiftStore = shiftStore;
+            _refundService = refundService;
 
             SaleProducts = new();
             PostponeReceipts = new List<PostponeReceipt>();
@@ -245,8 +246,8 @@ namespace RetailTradeClient.ViewModels
 
         private void ReturnGoods()
         {
-            _ = _manager.ShowDialog(new ReturnOfGoodsViewModel(_receiptService, _shiftStore) { Title = "Возврат товаров" },
-                new ReturnOfGoodsView());
+            _ = _manager.ShowDialog(new RefundViewModel(_receiptService, _shiftStore, _refundService, _manager) { Title = "Возврат товаров" },
+                new RefundView());
         }
 
         private void QuantityMouseEnter(object parameter)

@@ -102,6 +102,16 @@ namespace RetailTrade.EntityFramework
         /// </summary>
         public DbSet<OrderToSupplier> OrdersToSuppliers { get; set; }
 
+        /// <summary>
+        /// Возвраты
+        /// </summary>
+        public DbSet<Refund> Refunds { get; set; }
+
+        /// <summary>
+        /// Возврат товары
+        /// </summary>
+        public DbSet<ProductRefund> ProductRefunds { get; set; }
+
         public RetailTradeDbContext(DbContextOptions<RetailTradeDbContext> options) : base(options) { }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -124,6 +134,11 @@ namespace RetailTrade.EntityFramework
             modelBuilder.Entity<RefundToSupplier>()
                 .HasMany(o => o.RefundToSupplierProducts)
                 .WithOne(o => o.RefundToSupplier)
+                .OnDelete(DeleteBehavior.Cascade);
+
+            modelBuilder.Entity<Refund>()
+                .HasMany(o => o.ProductRefunds)
+                .WithOne(o => o.Refund)
                 .OnDelete(DeleteBehavior.Cascade);
 
             modelBuilder.Entity<Unit>().HasData(

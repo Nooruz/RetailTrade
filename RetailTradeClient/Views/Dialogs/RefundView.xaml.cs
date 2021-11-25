@@ -5,9 +5,9 @@ namespace RetailTradeClient.Views.Dialogs
     /// <summary>
     /// Логика взаимодействия для ReturnOfGoodsView.xaml
     /// </summary>
-    public partial class ReturnOfGoodsView : BaseDialogUserControl
+    public partial class RefundView : BaseDialogUserControl
     {
-        public ReturnOfGoodsView()
+        public RefundView()
         {
             InitializeComponent();
         }

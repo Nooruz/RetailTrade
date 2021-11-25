@@ -13,12 +13,15 @@ namespace RetailTrade.EntityFramework.Services
     {
         private readonly RetailTradeDbContextFactory _contextFactory;
         private readonly NonQueryDataService<Receipt> _nonQueryDataService;
+        private readonly IRefundService _refundService;
 
         public event Action PropertiesChanged;
 
-        public ReceiptService(RetailTradeDbContextFactory contextFactory)
+        public ReceiptService(RetailTradeDbContextFactory contextFactory,
+            IRefundService refundService)
         {
             _contextFactory = contextFactory;
+            _refundService = refundService;
             _nonQueryDataService = new NonQueryDataService<Receipt>(_contextFactory);
         }
 
@@ -118,6 +121,33 @@ namespace RetailTrade.EntityFramework.Services
                 //ignore
             }
             return null;
+        }
+
+        public async Task<bool> Refund(Receipt receipt)
+        {
+            try
+            {
+                _ = await _refundService.CreateAsync(new Refund
+                {
+                    DateOfRefund = DateTime.Now,
+                    ShiftId = receipt.ShiftId,
+                    Sum = receipt.Sum,
+                    ProductRefunds = receipt.ProductSales.Select(p => new ProductRefund
+                    {
+                        Quantity = p.Quantity,
+                        Sum = p.Sum,
+                        SalePrice = p.SalePrice,
+                        ProductId = p.ProductId
+                    }).ToList()
+                });
+
+                await DeleteAsync(receipt.Id);
+            }
+            catch (Exception e)
+            {
+                //ignore
+            }
+            return false;
         }
     }
 }

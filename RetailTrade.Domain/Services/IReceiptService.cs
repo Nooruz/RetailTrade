@@ -15,5 +15,7 @@ namespace RetailTrade.Domain.Services
         /// </summary>
         /// <returns>Список квитанции</returns>
         Task<IEnumerable<Receipt>> GetReceiptsFromCurrentShift(int shiftId);
+
+        Task<bool> Refund(Receipt receipt);
     }
 }
