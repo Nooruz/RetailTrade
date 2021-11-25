@@ -9,5 +9,11 @@ namespace RetailTrade.Domain.Services
     {
         Task<IEnumerable<Receipt>> GetReceiptsAsync();
         Task<IEnumerable<Receipt>> GetReceiptsByDateAsync(DateTime dateTime);
+
+        /// <summary>
+        /// Получить квитанции из текущего смена
+        /// </summary>
+        /// <returns>Список квитанции</returns>
+        Task<IEnumerable<Receipt>> GetReceiptsFromCurrentShift(int shiftId);
     }
 }

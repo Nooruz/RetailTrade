@@ -71,6 +71,7 @@
                                 Height="{Binding RelativeSource={RelativeSource Mode=Self}, Path=ActualWidth}"
                                 Command="{Binding RelativeSource={RelativeSource AncestorType=UserControl},Path=DataContext.AddProductToSaleCommand}"
                                 CommandParameter="{Binding Id}"
+                                Focusable="False"
                                 Margin="2.5 5"/>
                     </Grid>
                 </DataTemplate>

@@ -100,5 +100,24 @@ namespace RetailTrade.EntityFramework.Services
             }
             return null;
         }
+
+        public async Task<IEnumerable<Receipt>> GetReceiptsFromCurrentShift(int shiftId)
+        {
+            try
+            {
+                await using RetailTradeDbContext context = _contextFactory.CreateDbContext();
+                var result = await context.Receipts
+                    .Where(r => r.ShiftId == shiftId)
+                    .Include(r => r.ProductSales)
+                    .ThenInclude(r => r.Product)
+                    .ToListAsync();
+                return result;
+            }
+            catch (Exception e)
+            {
+                //ignore
+            }
+            return null;
+        }
     }
 }

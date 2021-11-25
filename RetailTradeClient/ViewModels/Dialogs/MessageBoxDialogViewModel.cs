@@ -26,7 +26,8 @@ namespace RetailTradeClient.ViewModels.Dialogs
                     {
                         Content = "Ок",
                         Command = new RelayCommand(Ok),
-                        IsDefault = true
+                        IsDefault = true,
+                        Focusable = true
                     });
                     break;
                 case MessageBoxButton.OKCancel:
@@ -36,7 +37,8 @@ namespace RetailTradeClient.ViewModels.Dialogs
                         {
                             Content = "Ок",
                             Command = new RelayCommand(Ok),
-                            IsDefault = true
+                            IsDefault = true,
+                            Focusable = true
                         },
                         new UIButton
                         {
@@ -51,13 +53,14 @@ namespace RetailTradeClient.ViewModels.Dialogs
                         new UIButton
                         {
                             Content = "Да",
-                            Command = new RelayCommand(Yes),
-                            IsDefault = true
+                            Command = new RelayCommand(Yes)                            
                         },
                         new UIButton
                         {
                             Content = "Нет",
-                            Command = new RelayCommand(No)
+                            Command = new RelayCommand(No),
+                            IsDefault = true,
+                            Focusable = true
                         }
                     });
                     break;
@@ -67,8 +70,7 @@ namespace RetailTradeClient.ViewModels.Dialogs
                         new UIButton
                         {
                             Content = "Да",
-                            Command = new RelayCommand(Yes),
-                            IsDefault = true
+                            Command = new RelayCommand(Yes)
                         },
                         new UIButton
                         {
@@ -78,7 +80,9 @@ namespace RetailTradeClient.ViewModels.Dialogs
                         new UIButton
                         {
                             Content = "Отмена",
-                            Command = new RelayCommand(Cancel)
+                            Command = new RelayCommand(Cancel),
+                            IsDefault = true,
+                            Focusable = true
                         }
                     });
                     break;
@@ -114,7 +118,8 @@ namespace RetailTradeClient.ViewModels.Dialogs
                     {
                         Content = "Ок",
                         Command = new RelayCommand(Ok),
-                        IsDefault = true
+                        IsDefault = true,
+                        Focusable = true
                     });
                     break;
                 case MessageBoxButton.OKCancel:
@@ -124,7 +129,8 @@ namespace RetailTradeClient.ViewModels.Dialogs
                         {
                             Content = "Ок",
                             Command = new RelayCommand(Ok),
-                            IsDefault = true
+                            IsDefault = true,
+                            Focusable = true
                         },
                         new UIButton
                         {
@@ -139,13 +145,14 @@ namespace RetailTradeClient.ViewModels.Dialogs
                         new UIButton
                         {
                             Content = "Да",
-                            Command = new RelayCommand(Yes),
-                            IsDefault = true
+                            Command = new RelayCommand(Yes)
                         },
                         new UIButton
                         {
                             Content = "Нет",
-                            Command = new RelayCommand(No)
+                            Command = new RelayCommand(No),
+                            IsDefault = true,
+                            Focusable = true
                         }
                     });
                     break;
@@ -155,8 +162,7 @@ namespace RetailTradeClient.ViewModels.Dialogs
                         new UIButton
                         {
                             Content = "Да",
-                            Command = new RelayCommand(Yes),
-                            IsDefault = true
+                            Command = new RelayCommand(Yes)
                         },
                         new UIButton
                         {
@@ -166,7 +172,9 @@ namespace RetailTradeClient.ViewModels.Dialogs
                         new UIButton
                         {
                             Content = "Отмена",
-                            Command = new RelayCommand(Cancel)
+                            Command = new RelayCommand(Cancel),
+                            IsDefault = true,
+                            Focusable = true
                         }
                     });
                     break;

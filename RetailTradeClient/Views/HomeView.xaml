@@ -26,7 +26,7 @@
         <KeyBinding Key="Escape"
                     Command="{Binding LogoutCommand}"/>
 
-        <KeyBinding Key="F5"
+        <KeyBinding Key="Add"
                     Command="{Binding PaymentCashCommand}"/>
 
         <KeyBinding Key="F6"
@@ -42,6 +42,9 @@
 
         <KeyBinding Key="Delete"
                     Command="{Binding DeleteSelectedRowCommand}"/>
+
+        <KeyBinding Key="Multiply"
+                    Command="{Binding MultiplyCommand}"/>
 
     </UserControl.InputBindings>
 
@@ -132,7 +135,7 @@
                 <dxlc:LayoutGroup Orientation="Horizontal"
                                   VerticalAlignment="Top">
 
-                    <Button Content="Наличными (F5)"
+                    <Button Content="Наличными (+)"
                             Style="{StaticResource ButtonWithIcon}"
                             Tag="{StaticResource faMoneyBillAlt}"
                             Command="{Binding PaymentCashCommand}"/>
@@ -142,9 +145,10 @@
                             Tag="{StaticResource faCreditCard}"
                             ToolTip="Оплата безналичными"/>
 
-                    <Button Content="Возврат (F7)"
+                    <Button Content="Возврат (-)"
                             Style="{StaticResource ButtonWithIcon}"
-                            Tag="{StaticResource faUndoAlt}"/>
+                            Tag="{StaticResource faUndoAlt}"
+                            Command="{Binding ReturnGoodsCommand}"/>
 
                     <Button Content="Отложить чек (Alt + F5)"
                             Style="{StaticResource ButtonWithIcon}"
@@ -180,7 +184,6 @@
                                        Focusable="False"
                                        NavigationStyle="Cell"
                                        FocusedRowHandle="{Binding FocusedRowHandle}"
-                                       FocusedRowHandleChanged="TableView_FocusedRowHandleChanged"
                                        InvalidRowException="TableView_InvalidRowException"
                                        AllowDragDrop="False"
                                        AllowGrouping="False">
@@ -189,6 +192,11 @@
                                     <dx:Format Foreground="#FFFF0000"/>
                                 </dxg:FormatCondition>
                             </dxg:TableView.FormatConditions>
+                            <dxmvvm:Interaction.Behaviors>
+                                <dxmvvm:EventToCommand EventName="Loaded"
+                                                       Command="{Binding SaleTableViewLoadedCommand}"
+                                                       PassEventArgsToCommand="True"/>
+                            </dxmvvm:Interaction.Behaviors>
                         </dxg:TableView>
                     </dxg:GridControl.View>
                     <dxg:GridColumn Header="Код" 
@@ -209,8 +217,11 @@
                                     Focusable="False"
                                     Binding="{Binding Quantity, Mode=TwoWay}">
                         <dxmvvm:Interaction.Behaviors>
-                            <dxmvvm:EventToCommand EventName="ContentChanged"
-                                                   Command="{Binding QuantityContentChangedCommand}"
+                            <dxmvvm:EventToCommand EventName="Validate"
+                                                   Command="{Binding QuantityValidateCommand}"
+                                                   PassEventArgsToCommand="True"/>
+                            <dxmvvm:EventToCommand EventName="MouseUp"
+                                                   Command="{Binding QuantityMouseEnterCommand}"
                                                    PassEventArgsToCommand="True"/>
                         </dxmvvm:Interaction.Behaviors>
                         <dxg:GridColumn.EditSettings>

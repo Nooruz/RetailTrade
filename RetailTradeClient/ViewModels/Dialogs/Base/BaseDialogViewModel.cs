@@ -11,14 +11,5 @@ namespace RetailTradeClient.ViewModels.Dialogs
         public bool Result { get; set; }
 
         #endregion
-
-        #region Constructor
-
-        public BaseDialogViewModel()
-        {
-            
-        }
-
-        #endregion
     }
 }

@@ -1,4 +1,5 @@
-﻿using DevExpress.Xpf.Grid;
+﻿using DevExpress.Xpf.Editors.Settings;
+using DevExpress.Xpf.Grid;
 using RetailTrade.Domain.Models;
 using RetailTrade.Domain.Services;
 using RetailTradeClient.Commands;
@@ -20,6 +21,7 @@ using System.ComponentModel;
 using System.Linq;
 using System.Windows;
 using System.Windows.Input;
+using System.Windows.Threading;
 
 namespace RetailTradeClient.ViewModels
 {
@@ -101,6 +103,7 @@ namespace RetailTradeClient.ViewModels
             }
         }
         public int FocusedRowHandle => SaleProducts.Count - 1;
+        public TableView SaleTableView { get; set; }
 
         #endregion
 
@@ -169,11 +172,18 @@ namespace RetailTradeClient.ViewModels
         public ICommand QuantityValidateCommand { get; }
 
         /// <summary>
+        /// Возврат товаров
+        /// </summary>
+        public ICommand ReturnGoodsCommand { get; }
+
+        /// <summary>
         /// Отменить
         /// </summary>
         public ICommand CancelCommand { get; }
 
-        public ICommand QuantityContentChangedCommand { get; }
+        public ICommand SaleTableViewLoadedCommand { get; }
+        public ICommand MultiplyCommand { get; }
+        public ICommand QuantityMouseEnterCommand { get; }
 
         #endregion
 
@@ -218,7 +228,10 @@ namespace RetailTradeClient.ViewModels
             LoadedHomeViewCommand = new ParameterCommand(parameter => LoadedHomeView(parameter));
             QuantityValidateCommand = new ParameterCommand(parameter => QuantityValidate(parameter));
             CancelCommand = new RelayCommand(Cancel);
-            QuantityContentChangedCommand = new ParameterCommand(parameter => QuantityContentChanged(parameter));
+            SaleTableViewLoadedCommand = new ParameterCommand(parameter => SaleTableViewLoaded(parameter));
+            MultiplyCommand = new RelayCommand(Multiply);
+            QuantityMouseEnterCommand = new ParameterCommand(parameter => QuantityMouseEnter(parameter));
+            ReturnGoodsCommand = new RelayCommand(ReturnGoods);
 
             SaleProducts.CollectionChanged += SaleProducts_CollectionChanged;
             _productService.PropertiesChanged += ProductService_PropertiesChanged;
@@ -229,6 +242,55 @@ namespace RetailTradeClient.ViewModels
         #endregion
 
         #region Private Voids
+
+        private void ReturnGoods()
+        {
+            _ = _manager.ShowDialog(new ReturnOfGoodsViewModel(_receiptService, _shiftStore) { Title = "Возврат товаров" },
+                new ReturnOfGoodsView());
+        }
+
+        private void QuantityMouseEnter(object parameter)
+        {
+
+        }
+
+        private void Multiply()
+        {
+            if (SaleTableView != null)
+            {
+                if (SaleTableView.Grid.CurrentItem == null)
+                {
+                    SaleTableView.Grid.CurrentItem = SaleProducts.LastOrDefault();
+                }
+                SaleTableView.Grid.CurrentColumn = SaleTableView.Grid.Columns[2];                
+                SaleTableView.Grid.View.ShowEditor();
+            }
+        }
+
+        private void SaleTableView_ShownEditor(object sender, EditorEventArgs e)
+        {
+            SaleTableView.Grid.View.ActiveEditor.SelectAll();            
+        }
+
+        private void SaleTableView_CellValueChanged(object sender, CellValueChangedEventArgs e)
+        {
+            SaleTableView.Grid.CurrentColumn = null;
+            SaleTableView.Grid.CurrentItem = null;
+            SelectedProductSale = null;
+        }
+
+        private void SaleTableViewLoaded(object parameter)
+        {
+            if (parameter is RoutedEventArgs e)
+            {
+                if (e.Source is TableView tableView)
+                {
+                    SaleTableView = tableView;
+                    SaleTableView.ShownEditor += SaleTableView_ShownEditor;
+                    SaleTableView.CellValueChanged += SaleTableView_CellValueChanged;
+                }
+            }
+        }        
 
         private void SaleProducts_CollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
         {
@@ -288,7 +350,7 @@ namespace RetailTradeClient.ViewModels
             {
                 if (((Sale)e.Row).QuantityInStock < Convert.ToDecimal(e.Value))
                 {
-                    _manager.ShowMessage("Количество превышает остаток.", "", MessageBoxButton.OK, MessageBoxImage.Information);
+                    _ = _manager.ShowMessage("Количество превышает остаток.", "", MessageBoxButton.OK, MessageBoxImage.Information);
                     e.ErrorContent = "Количество превышает остаток.";
                     e.IsValid = false;
                 }
@@ -334,10 +396,14 @@ namespace RetailTradeClient.ViewModels
                                 Sum = newProduct.SalePrice * 1
                             });
                         }
-                        else
+                        else if (product.Quantity < product.QuantityInStock)
                         {
                             product.Quantity++;
                             product.Sum = product.SalePrice * product.Quantity;
+                        }
+                        else
+                        {
+                            _ = _manager.ShowMessage("Количество превышает остаток.", "", MessageBoxButton.OK, MessageBoxImage.Information);
                         }
                     }
                     OnPropertyChanged(nameof(Sum));
@@ -407,12 +473,16 @@ namespace RetailTradeClient.ViewModels
                         Quantity = 1,
                         SalePrice = product.SalePrice,
                         Sum = product.SalePrice,
-                        QuantityInStock = product.Quantity - 1
+                        QuantityInStock = product.Quantity
                     });
+                }
+                else if (saleProduct.Quantity < saleProduct.QuantityInStock)
+                {
+                    saleProduct.Quantity++;
                 }
                 else
                 {
-                    saleProduct.Quantity++;
+                    _ = _manager.ShowMessage("Количество превышает остаток.", "", MessageBoxButton.OK, MessageBoxImage.Information);
                 }
             }
         }
@@ -463,6 +533,10 @@ namespace RetailTradeClient.ViewModels
             {
                 SaleProducts.Remove(SelectedProductSale);
             }
+            else if (SaleProducts.Count > 0)
+            {
+                SaleProducts.Remove(SaleProducts.LastOrDefault());
+            }
         }
 
         /// <summary>
@@ -490,11 +564,6 @@ namespace RetailTradeClient.ViewModels
         private void Cancel()
         {
             SaleProducts.Clear();
-        }
-
-        private void QuantityContentChanged(object parameter)
-        {
-
         }
 
         #endregion
