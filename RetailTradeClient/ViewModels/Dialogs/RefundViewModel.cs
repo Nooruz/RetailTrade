@@ -72,8 +72,11 @@ namespace RetailTradeClient.ViewModels.Dialogs
         {
             if (SelectedReceipt != null)
             {
-                await _receiptService.Refund(SelectedReceipt);
-                _manager.Close();
+                if (_manager.ShowMessage("Вы уверены?", "", MessageBoxButton.YesNo, MessageBoxImage.Question) == MessageBoxResult.Yes)
+                {
+                    _ = await _receiptService.Refund(SelectedReceipt);
+                    _manager.Close();
+                }
             }
             else
             {
