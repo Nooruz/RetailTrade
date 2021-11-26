@@ -13,11 +13,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RetailTradeClient", "Retail
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RetailTrade.Web", "RetailTrade.Web\RetailTrade.Web.csproj", "{E92C7DB1-7D45-4352-9843-F4AAFBFD5DE4}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RetailTrade.Dashboard", "RetailTrade.Dashboard\RetailTrade.Dashboard.csproj", "{EDACF875-86D8-4443-9968-7AD16291928D}"
-EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RetailTrade.CashRegisterMachine", "RetailTrade.CashRegisterMachine\RetailTrade.CashRegisterMachine.csproj", "{AC188347-A244-498D-94E9-3E573520AA73}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RetailTrade.LoadingPanelControl", "RetailTrade.LoadingPanelControl\RetailTrade.LoadingPanelControl.csproj", "{31F0ACA4-5A51-4269-884B-0CA9CAF7E1B8}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RetailTrade.LoadingPanelControl", "RetailTrade.LoadingPanelControl\RetailTrade.LoadingPanelControl.csproj", "{31F0ACA4-5A51-4269-884B-0CA9CAF7E1B8}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -45,10 +43,6 @@ Global
 		{E92C7DB1-7D45-4352-9843-F4AAFBFD5DE4}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{E92C7DB1-7D45-4352-9843-F4AAFBFD5DE4}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{E92C7DB1-7D45-4352-9843-F4AAFBFD5DE4}.Release|Any CPU.Build.0 = Release|Any CPU
-		{EDACF875-86D8-4443-9968-7AD16291928D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{EDACF875-86D8-4443-9968-7AD16291928D}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{EDACF875-86D8-4443-9968-7AD16291928D}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{EDACF875-86D8-4443-9968-7AD16291928D}.Release|Any CPU.Build.0 = Release|Any CPU
 		{AC188347-A244-498D-94E9-3E573520AA73}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{AC188347-A244-498D-94E9-3E573520AA73}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{AC188347-A244-498D-94E9-3E573520AA73}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -62,7 +56,7 @@ Global
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
-		SolutionGuid = {1B5BED5D-604D-4352-A831-4FDEE07951CB}
 		BuildVersion_StartDate = 2000/1/1
+		SolutionGuid = {1B5BED5D-604D-4352-A831-4FDEE07951CB}
 	EndGlobalSection
 EndGlobal

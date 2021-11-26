@@ -8,8 +8,8 @@
     <Authors>Ашимжан уулу Ноорузбек</Authors>
     <Company>Sale Page</Company>
     <Version>1.0.0</Version>
-    <AssemblyVersion>1.0.0.91</AssemblyVersion>
-    <FileVersion>1.0.0.2</FileVersion>
+    <AssemblyVersion>1.0.0.99</AssemblyVersion>
+    <FileVersion>1.0.0.10</FileVersion>
   </PropertyGroup>
 
   <ItemGroup>
@@ -139,6 +139,9 @@
     <Page Update="Views\Dialogs\CreateProductSubcategoryDialogForm.xaml">
       <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
       <SubType>Designer</SubType>
+    </Page>
+    <Page Update="Views\Dialogs\ReportRevenueForPeriodDialogForm.xaml">
+      <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
     </Page>
     <Page Update="Views\Menus\ProductCategoryView.xaml">
       <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>

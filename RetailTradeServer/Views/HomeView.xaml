@@ -61,7 +61,8 @@
             <dxwui:HamburgerSubMenuNavigationButton Content="Закрытие смены"
                                                     Command="{Binding ReportClosingShiftsCommand}"/>
             <dxwui:HamburgerSubMenuNavigationButton Content="Протокол событий"/>
-            <dxwui:HamburgerSubMenuNavigationButton Content="Выручка за период"/>
+            <dxwui:HamburgerSubMenuNavigationButton Content="Выручка за период"
+                                                    Command="{Binding RevenueForPeriodCommand}"/>
             <dxwui:HamburgerSubMenuNavigationButton Content="Прибыль от продаж"/>
             <dxwui:HamburgerSubMenuNavigationButton Content="Продажи по кассирам"/>
             <dxwui:HamburgerSubMenuNavigationButton Content="Возвраты кассиров"/>

@@ -55,6 +55,7 @@ namespace RetailTradeServer.ViewModels
         #region Отчеты
 
         public ICommand ReportClosingShiftsCommand { get; }
+        public ICommand RevenueForPeriodCommand { get; }
 
         #endregion
 
@@ -93,6 +94,7 @@ namespace RetailTradeServer.ViewModels
             RefundToSupplierCommand = new RelayCommand(RefundToSupplier);
             SupplierCommand = new RelayCommand(OpenSupplier);
             PrinterCommand = new RelayCommand(Printer);
+            RevenueForPeriodCommand = new RelayCommand(RevenueForPeriod);
 
             _menuNavigator.StateChanged += MenuNavigator_StateChanged;
         }
@@ -166,8 +168,14 @@ namespace RetailTradeServer.ViewModels
 
         private void ReportClosingShifts()
         {
-            _manager.ShowDialog(new ReportClosingShiftsDialogFormModel(_manager, _shiftService) { Title = "Закрытие смены" },
+            _ = _manager.ShowDialog(new ReportClosingShiftsDialogFormModel(_manager, _shiftService) { Title = "Закрытие смены" },
                 new ReportClosingShiftsDialogForm());
+        }
+
+        private void RevenueForPeriod()
+        {
+            _ = _manager.ShowDialog(new ReportRevenueForPeriodDialogFormModel(_manager, _shiftService) { Title = "Выручка за период" },
+                new ReportRevenueForPeriodDialogForm());
         }
 
         #endregion

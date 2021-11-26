@@ -51,7 +51,7 @@ namespace RetailTradeServer.ViewModels.Menus
             {
                 _getProducts = value;
                 OnPropertyChanged(nameof(GetProducts));
-                CanShowLoadingPanel = !GetProducts.Any();
+                //CanShowLoadingPanel = !GetProducts.Any();
             }
         }
         public object SelectedProductGroup

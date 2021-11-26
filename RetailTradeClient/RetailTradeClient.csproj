@@ -5,8 +5,8 @@
     <TargetFramework>net5.0-windows</TargetFramework>
     <UseWPF>true</UseWPF>
     <UserSecretsId>e17f6f34-ec0a-49b6-b92d-1745a39f188e</UserSecretsId>
-    <AssemblyVersion>1.0.0.183</AssemblyVersion>
-    <FileVersion>1.0.0.34</FileVersion>
+    <AssemblyVersion>1.0.0.186</AssemblyVersion>
+    <FileVersion>1.0.0.37</FileVersion>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
