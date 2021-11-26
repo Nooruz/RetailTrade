@@ -8,7 +8,7 @@
     <Authors>Ашимжан уулу Ноорузбек</Authors>
     <Company>Sale Page</Company>
     <Version>1.0.0</Version>
-    <AssemblyVersion>1.0.0.99</AssemblyVersion>
+    <AssemblyVersion>1.0.0.106</AssemblyVersion>
     <FileVersion>1.0.0.10</FileVersion>
   </PropertyGroup>
 
@@ -29,6 +29,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <None Remove="appsettings.json" />
     <None Remove="Fonts\fa-brands-400.ttf" />
     <None Remove="Fonts\fa-regular-400.ttf" />
     <None Remove="Fonts\fa-solid-900.ttf" />
@@ -75,6 +76,9 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Content Include="appsettings.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
     <Resource Include="Fonts\fa-brands-400.ttf">
       <CopyToOutputDirectory>Never</CopyToOutputDirectory>
     </Resource>

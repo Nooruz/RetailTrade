@@ -9,8 +9,8 @@ namespace RetailTradeClient.HostBuilders
         {
             return host.ConfigureAppConfiguration(c =>
             {
-                c.AddUserSecrets<App>();
-                //c.AddJsonFile("appsettings.json");
+                //c.AddUserSecrets<App>();
+                c.AddJsonFile("appsettings.json");
                 c.AddEnvironmentVariables();
             });
         }

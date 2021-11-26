@@ -3,8 +3,10 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using RetailTrade.EntityFramework;
 using RetailTradeServer.HostBuilders;
+using RetailTradeServer.State.Dialogs;
 using RetailTradeServer.ViewModels;
 using System;
+using System.Data.SqlClient;
 using System.Globalization;
 using System.Threading;
 using System.Windows;
@@ -19,6 +21,7 @@ namespace RetailTradeServer
         #region Private Members
 
         private readonly IHost _host;
+        private IUIManager _manager;
 
         #endregion
 
@@ -48,26 +51,31 @@ namespace RetailTradeServer
 
             var contextFactory = _host.Services.GetRequiredService<RetailTradeDbContextFactory>();
 
-            try
+            _manager = _host.Services.GetRequiredService<IUIManager>();
+
+            using (var context = contextFactory.CreateDbContext())
             {
-                using (var context = contextFactory.CreateDbContext())
+                if (CheckConnectionString(context.Database.GetConnectionString()))
                 {
-                    context.Database.Migrate();
+                    context.Database.Migrate();                    
                 }
-
-                Window window = _host.Services.GetRequiredService<MainWindow>();
-                window.DataContext = _host.Services.GetRequiredService<MainViewModel>();
-                window.Show();
-            }
-            catch (Exception exception)
-            {
-                MessageBox.Show(exception.Message, "", MessageBoxButton.OK, MessageBoxImage.Error);
+                else
+                {
+                    _manager.ShowMessage("Не удалось подключиться к базе данных.", "", MessageBoxButton.OK, MessageBoxImage.Error);
+                    Current.Shutdown();
+                    return;
+                }    
             }
 
-            base.OnStartup(e);
+            Window window = _host.Services.GetRequiredService<MainWindow>();
+            window.DataContext = _host.Services.GetRequiredService<MainViewModel>();
+            window.Show();
+
             CultureInfo newCulture = new("ru-RU");
             Thread.CurrentThread.CurrentCulture = newCulture;
             Thread.CurrentThread.CurrentUICulture = newCulture;
+
+            base.OnStartup(e);            
         }
 
         protected override async void OnExit(ExitEventArgs e)
@@ -76,6 +84,20 @@ namespace RetailTradeServer
             _host.Dispose();
 
             base.OnExit(e);
+        }
+
+        private bool CheckConnectionString(string connectionString)
+        {
+            try
+            {
+                using SqlConnection connection = new(connectionString);
+                connection.Open();
+                return true;
+            }
+            catch (Exception e)
+            {
+                return false;
+            }
         }
     }
 }
