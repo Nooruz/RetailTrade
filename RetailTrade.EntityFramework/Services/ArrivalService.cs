@@ -34,22 +34,16 @@ namespace RetailTrade.EntityFramework.Services
                     .Include(a => a.ArrivalProducts)
                     .FirstOrDefaultAsync(a => a.Id == id);
 
-                List<ArrivalProduct> arrivalProducts = new();
-
-                foreach (var item in arrival.ArrivalProducts)
+                await CreateAsync(new Arrival
                 {
-                    arrivalProducts.Add(new ArrivalProduct
-                    {
-                        ProductId = item.ProductId,
-                        Quantity = item.Quantity
-                    });
-                }
-
-                arrival.Id = 0;
-                arrival.ArrivalDate = DateTime.Now;
-                arrival.ArrivalProducts = arrivalProducts;
-
-                await CreateAsync(arrival);
+                    ArrivalDate = DateTime.Now,
+                    ArrivalProducts = arrival.ArrivalProducts.Select(a =>
+                        new ArrivalProduct
+                        {
+                            ProductId = a.ProductId,
+                            Quantity = a.Quantity
+                        }).ToList()
+                });
             }
             catch (Exception e)
             {
