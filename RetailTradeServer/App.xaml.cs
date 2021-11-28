@@ -3,8 +3,11 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using RetailTrade.EntityFramework;
 using RetailTradeServer.HostBuilders;
+using RetailTradeServer.Properties;
 using RetailTradeServer.State.Dialogs;
 using RetailTradeServer.ViewModels;
+using RetailTradeServer.ViewModels.Dialogs;
+using RetailTradeServer.Views.Dialogs;
 using System;
 using System.Data.SqlClient;
 using System.Globalization;
@@ -48,34 +51,49 @@ namespace RetailTradeServer
         protected override void OnStartup(StartupEventArgs e)
         {
             _host.Start();
-
-            var contextFactory = _host.Services.GetRequiredService<RetailTradeDbContextFactory>();
-
             _manager = _host.Services.GetRequiredService<IUIManager>();
 
-            using (var context = contextFactory.CreateDbContext())
+            Settings.Default.IsFirstLaunch = true;
+            Settings.Default.Save();
+
+            if (Settings.Default.IsFirstLaunch)
             {
-                if (CheckConnectionString(context.Database.GetConnectionString()))
-                {
-                    context.Database.Migrate();                    
-                }
-                else
-                {
-                    _manager.ShowMessage("Не удалось подключиться к базе данных.", "", MessageBoxButton.OK, MessageBoxImage.Error);
-                    Current.Shutdown();
-                    return;
-                }    
+                _manager.ShowDialog(new AddConnectionDialogFormModel(_manager) { Title = "Добавить подключение" },
+                    new AddConnectionDialogForm());
             }
 
-            Window window = _host.Services.GetRequiredService<MainWindow>();
-            window.DataContext = _host.Services.GetRequiredService<MainViewModel>();
-            window.Show();
+            if (Settings.Default.IsDataBaseConnectionAdded)
+            {
+                var contextFactory = _host.Services.GetRequiredService<RetailTradeDbContextFactory>();
+
+                using (var context = contextFactory.CreateDbContext())
+                {
+                    if (CheckConnectionString(context.Database.GetConnectionString()))
+                    {
+                        context.Database.Migrate();
+                    }
+                    else
+                    {
+                        _manager.ShowMessage("Не удалось подключиться к базе данных.", "", MessageBoxButton.OK, MessageBoxImage.Error);
+                        Current.Shutdown();
+                        return;
+                    }
+                }
+
+                Window window = _host.Services.GetRequiredService<MainWindow>();
+                window.DataContext = _host.Services.GetRequiredService<MainViewModel>();
+                window.Show();
+            }
+            else
+            {
+                _manager.ShowMessage("Ошибка. Обратитесь к программистам.", "", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
 
             CultureInfo newCulture = new("ru-RU");
             Thread.CurrentThread.CurrentCulture = newCulture;
             Thread.CurrentThread.CurrentUICulture = newCulture;
 
-            base.OnStartup(e);            
+            base.OnStartup(e);
         }
 
         protected override async void OnExit(ExitEventArgs e)

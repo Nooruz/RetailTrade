@@ -49,9 +49,7 @@ namespace RetailTradeServer.HostBuilders
         {
             return new MainViewModel(services.GetRequiredService<INavigator>(),
                 services.GetRequiredService<IRetailTradeViewModelFactory>(),
-                services.GetRequiredService<IAuthenticator>(),
-                services.GetRequiredService<IMenuNavigator>(),
-                services.GetRequiredService<IMenuViewModelFactory>());
+                services.GetRequiredService<IAuthenticator>());
         }
 
         private static HomeViewModel CreateHomeViewModel(IServiceProvider services)

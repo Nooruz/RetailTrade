@@ -38,7 +38,6 @@ namespace RetailTradeServer.ViewModels
         #region Command
 
         public ICommand UpdateCurrentViewModelCommand { get; }
-        public ICommand UpdateCurrentMenuViewModelCommand { get; }
         public ICommand UsersCommand { get; }
         public ICommand CurrencyCommand { get; }
         public ICommand AboutCommand { get; }
@@ -50,12 +49,7 @@ namespace RetailTradeServer.ViewModels
 
         public MainViewModel(INavigator navigator,
             IRetailTradeViewModelFactory retailTradeViewModelFactory,
-            IAuthenticator authenticator,
-
-            //Потом удалить
-            IMenuNavigator menuNavigator,
-            IMenuViewModelFactory menuViewModelFactory
-            )
+            IAuthenticator authenticator)
         {
             _navigator = navigator;
             _authenticator = authenticator;
@@ -66,14 +60,11 @@ namespace RetailTradeServer.ViewModels
             _navigator.StateChanged += Navigator_StateChanged;
             _authenticator.StateChanged += AuthenticatorStateChanged;
 
-            //Settings.Default.AdminCreated = false;
-            //Settings.Default.Save();
+            Settings.Default.AdminCreated = false;
+            Settings.Default.Save();
 
             UpdateCurrentViewModelCommand = new UpdateCurrentViewModelCommand(navigator, retailTradeViewModelFactory);
-            UpdateCurrentMenuViewModelCommand = new UpdateCurrentMenuViewModelCommand(menuNavigator, menuViewModelFactory);
-            //UpdateCurrentViewModelCommand.Execute(Settings.Default.AdminCreated ? ViewType.Login : ViewType.Registration);
-            UpdateCurrentViewModelCommand.Execute(ViewType.Login);
-            UpdateCurrentMenuViewModelCommand.Execute(MenuViewType.AnalyticalPanel);
+            UpdateCurrentViewModelCommand.Execute(Settings.Default.AdminCreated ? ViewType.Login : ViewType.Registration);
         }
 
         #endregion

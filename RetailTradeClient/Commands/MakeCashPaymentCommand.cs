@@ -7,7 +7,6 @@ using RetailTradeClient.State.CashRegisterControlMachine;
 using RetailTradeClient.State.Dialogs;
 using RetailTradeClient.State.Shifts;
 using RetailTradeClient.State.Users;
-using RetailTradeClient.ViewModels;
 using RetailTradeClient.ViewModels.Dialogs;
 using System;
 using System.Linq;
