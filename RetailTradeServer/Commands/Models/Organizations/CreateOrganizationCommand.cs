@@ -1,10 +1,12 @@
 ﻿using RetailTrade.Domain.Models;
 using RetailTrade.Domain.Services;
-using RetailTradeServer.State.Users;
+using RetailTradeServer.State.Navigators;
 using RetailTradeServer.ViewModels;
+using RetailTradeServer.ViewModels.Factories;
 using System;
 using System.ComponentModel;
 using System.Threading.Tasks;
+using System.Windows.Input;
 
 namespace RetailTradeServer.Commands
 {
@@ -13,20 +15,27 @@ namespace RetailTradeServer.Commands
         #region Private Members
 
         private readonly IOrganizationService _organizationService;
-        private readonly IUserStore _userStore;
         private OrganizationViewModel _viewModel;
+
+        #endregion
+
+        #region Commands
+
+        public ICommand UpdateCurrentViewModelCommand { get; }
 
         #endregion
 
         #region Constructor
 
         public CreateOrganizationCommand(IOrganizationService organizationService,
-            IUserStore userStore,
+            IRetailTradeViewModelFactory viewModelFactory,
+            INavigator navigator,
             OrganizationViewModel viewModel)
         {
             _organizationService = organizationService;
-            _userStore = userStore;
             _viewModel = viewModel;
+
+            UpdateCurrentViewModelCommand = new UpdateCurrentViewModelCommand(navigator, viewModelFactory);
 
             _viewModel.PropertyChanged += ViewModel_PropertyChanged;
         }
@@ -40,8 +49,6 @@ namespace RetailTradeServer.Commands
 
         public override async Task ExecuteAsync(object parameter)
         {
-            _viewModel.ErrorMessage = string.Empty;
-
             try
             {
                 Organization organization = new()
@@ -52,11 +59,12 @@ namespace RetailTradeServer.Commands
                     Phone = _viewModel.Phone,
                     Inn = _viewModel.Inn
                 };
-                await _organizationService.CreateAsync(organization);
+                _ = await _organizationService.CreateAsync(organization);
+                UpdateCurrentViewModelCommand.Execute(ViewType.Home);
             }
             catch (Exception e)
             {
-                _viewModel.ErrorMessage = e.Message;
+                //ignore
             }
         }
 

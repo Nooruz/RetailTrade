@@ -1,9 +1,8 @@
-﻿using RetailTrade.Domain.Models;
-using RetailTrade.Domain.Services;
+﻿using RetailTrade.Domain.Services;
 using RetailTradeServer.Commands;
-using RetailTradeServer.State.Users;
+using RetailTradeServer.State.Navigators;
 using RetailTradeServer.ViewModels.Base;
-using System.Collections.Generic;
+using RetailTradeServer.ViewModels.Factories;
 using System.Windows.Input;
 
 namespace RetailTradeServer.ViewModels
@@ -72,11 +71,6 @@ namespace RetailTradeServer.ViewModels
                 OnPropertyChanged(nameof(CanCreate));
             }
         }
-        public MessageViewModel ErrorMessageViewModel { get; }
-        public string ErrorMessage
-        {
-            set => ErrorMessageViewModel.Message = value;
-        }
         public bool CanCreate => !string.IsNullOrEmpty(Name) &&
             !string.IsNullOrEmpty(Address) &&
             !string.IsNullOrEmpty(Name) &&
@@ -94,10 +88,10 @@ namespace RetailTradeServer.ViewModels
         #region Constructor
 
         public OrganizationViewModel(IOrganizationService organizationService,
-            IUserStore userStore)
+            IRetailTradeViewModelFactory viewModelFactory,
+            INavigator navigator)
         {
-            CreateOrganizationCommand = new CreateOrganizationCommand(organizationService, userStore, this);
-            ErrorMessageViewModel = new MessageViewModel();
+            CreateOrganizationCommand = new CreateOrganizationCommand(organizationService, viewModelFactory, navigator, this);
         }
 
         #endregion

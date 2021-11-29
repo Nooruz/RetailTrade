@@ -65,19 +65,21 @@ namespace RetailTradeServer
 
             if (Settings.Default.IsDataBaseConnectionAdded)
             {
-
-                using (var context = contextFactory.CreateDbContext())
+                try
                 {
-                    if (CheckConnectionString(context.Database.GetConnectionString()))
+                    using (var context = contextFactory.CreateDbContext())
                     {
-                        context.Database.Migrate();
+                        if (CheckConnectionString(context.Database.GetConnectionString()))
+                        {
+                            context.Database.Migrate();
+                        }
                     }
-                    else
-                    {
-                        _ = _manager.ShowMessage("Не удалось подключиться к базе данных.", "", MessageBoxButton.OK, MessageBoxImage.Error);
-                        Current.Shutdown();
-                        return;
-                    }
+                }
+                catch (Exception exception)
+                {
+                    _ = _manager.ShowMessage(exception.Message, "", MessageBoxButton.OK, MessageBoxImage.Error);
+                    Current.Shutdown();
+                    return;
                 }
 
                 Window window = _host.Services.GetRequiredService<MainWindow>();

@@ -1,6 +1,7 @@
 ﻿using RetailTrade.Domain.Services;
 using RetailTradeServer.Commands;
 using RetailTradeServer.State.Authenticators;
+using RetailTradeServer.State.Messages;
 using RetailTradeServer.State.Navigators;
 using RetailTradeServer.ViewModels.Base;
 using RetailTradeServer.ViewModels.Factories;
@@ -30,12 +31,28 @@ namespace RetailTradeServer.ViewModels
                 OnPropertyChanged(nameof(CanCreate));
             }
         }
-        public bool CanCreate => !string.IsNullOrEmpty(Username);
-        public MessageViewModel ErrorMessageViewModel { get; }
-        public string ErrorMessage
+        public string Password
         {
-            set => ErrorMessageViewModel.Message = value;
+            get => _password;
+            set
+            {
+                _password = value;
+                OnPropertyChanged(nameof(Password));
+                OnPropertyChanged(nameof(CanCreate));
+            }
         }
+        public string ConfirmPassword
+        {
+            get => _confirmPassword;
+            set
+            {
+                _confirmPassword = value;
+                OnPropertyChanged(nameof(ConfirmPassword));
+                OnPropertyChanged(nameof(CanCreate));
+            }
+        }
+        public bool CanCreate => !string.IsNullOrEmpty(Username) && !string.IsNullOrEmpty(Password) && !string.IsNullOrEmpty(ConfirmPassword);
+        public GlobalMessageViewModel GlobalMessageViewModel { get; }
 
         #endregion
 
@@ -50,10 +67,13 @@ namespace RetailTradeServer.ViewModels
         public RegistrationViewModel(IRoleService roleService,
             INavigator navigator,
             IAuthenticator authenticator,
-            IRetailTradeViewModelFactory viewModelFactory)
+            IRetailTradeViewModelFactory viewModelFactory,
+            GlobalMessageViewModel globalMessageViewModel,
+            IMessageStore messageStore)
         {
-            AdminRegistrationCommand = new AdminRegistrationCommand(roleService, navigator, authenticator, this, viewModelFactory);
-            ErrorMessageViewModel = new MessageViewModel();
+            GlobalMessageViewModel = globalMessageViewModel;
+
+            AdminRegistrationCommand = new AdminRegistrationCommand(roleService, navigator, authenticator, this, viewModelFactory, messageStore);            
         }
 
         #endregion

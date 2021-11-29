@@ -6,14 +6,8 @@
     xmlns:dxmvvm="http://schemas.devexpress.com/winfx/2008/xaml/mvvm"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     x:Class="RetailTradeServer.Views.Menus.AnalyticalPanelView">
-    
+
     <dxlc:LayoutControl Orientation="Vertical">
-
-        <dxlc:LayoutItem Label="Дата:">
-
-            <dxe:DateEdit EditValue="{Binding SelectedDate, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
-
-        </dxlc:LayoutItem>
 
         <dxdash:DashboardControl Dashboard="{Binding RetailTradeDashboard}"
                                  VerticalAlignment="Top">

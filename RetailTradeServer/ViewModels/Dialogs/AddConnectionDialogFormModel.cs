@@ -196,7 +196,6 @@ namespace RetailTradeServer.ViewModels.Dialogs
                 Settings.Default.IsFirstLaunch = false;
                 Settings.Default.Save();
                 _manager.Close();
-                System.Windows.Forms.Application.Restart();
             }
             catch (Exception)
             {

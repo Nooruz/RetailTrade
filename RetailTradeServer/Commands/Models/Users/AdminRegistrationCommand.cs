@@ -2,12 +2,13 @@
 using RetailTrade.Domain.Services;
 using RetailTrade.Domain.Services.AuthenticationServices;
 using RetailTradeServer.State.Authenticators;
+using RetailTradeServer.State.Messages;
 using RetailTradeServer.State.Navigators;
 using RetailTradeServer.ViewModels;
 using RetailTradeServer.ViewModels.Factories;
 using System;
+using System.ComponentModel;
 using System.Threading.Tasks;
-using System.Windows.Controls;
 using System.Windows.Input;
 
 namespace RetailTradeServer.Commands
@@ -18,9 +19,8 @@ namespace RetailTradeServer.Commands
 
         private readonly IRoleService _roleService;
         private readonly IAuthenticator _authenticator;
+        private readonly IMessageStore _messageStore;
         private readonly RegistrationViewModel _viewModel;
-        private PasswordBox _password;
-        private PasswordBox _confirmPassword;
 
         #endregion
 
@@ -36,50 +36,30 @@ namespace RetailTradeServer.Commands
             INavigator navigator,
             IAuthenticator authenticator,
             RegistrationViewModel viewModel,
-            IRetailTradeViewModelFactory viewModelFactory)
+            IRetailTradeViewModelFactory viewModelFactory,
+            IMessageStore messageStore)
         {
             _roleService = roleService;
             _authenticator = authenticator;
             _viewModel = viewModel;
+            _messageStore = messageStore;
 
             UpdateCurrentViewModelCommand = new UpdateCurrentViewModelCommand(navigator, viewModelFactory);
+
+            _viewModel.PropertyChanged += ViewModel_PropertyChanged;
         }
 
-        #endregion        
+        #endregion
 
         public override bool CanExecute(object parameter)
         {
-            var objects = (object[])parameter;
-
-            if (objects[0] is PasswordBox password)
-            {
-                _password = password;
-                _password.PasswordChanged += Password_PasswordChanged;
-            }
-            else
-            {
-                return false;
-            }
-
-            if (objects[1] is PasswordBox confirmPassword)
-            {
-                _confirmPassword = confirmPassword;
-                _confirmPassword.PasswordChanged += ConfirmPassword_PasswordChanged;
-            }
-            else
-            {
-                return false;
-            }
-
             return _viewModel.CanCreate
-                && !string.IsNullOrEmpty(_password.Password)
-                && !string.IsNullOrEmpty(_confirmPassword.Password);
+                && !string.IsNullOrEmpty(_viewModel.Password)
+                && !string.IsNullOrEmpty(_viewModel.ConfirmPassword);
         }
 
         public override async Task ExecuteAsync(object parameter)
         {
-            _viewModel.ErrorMessage = string.Empty;
-
             try
             {
                 //Администратор ролун алуу
@@ -94,39 +74,39 @@ namespace RetailTradeServer.Commands
                         RoleId = role.Id
                     };
 
-                    var registrationResult = await _authenticator.Register(user, _password.Password, _confirmPassword.Password);
+                    var registrationResult = await _authenticator.Register(user, _viewModel.Password, _viewModel.ConfirmPassword);
 
                     switch (registrationResult)
                     {
                         case RegistrationResult.Success:
-                            await _authenticator.Login(_viewModel.Username, _password.Password);
-                            UpdateCurrentViewModelCommand.Execute(ViewType.Organization);
+                            await _authenticator.Login(_viewModel.Username, _viewModel.ConfirmPassword);
                             Properties.Settings.Default.AdminCreated = true;
                             Properties.Settings.Default.Save();
+                            UpdateCurrentViewModelCommand.Execute(ViewType.Organization);                            
                             break;
                         case RegistrationResult.PasswordsDoNotMatch:
-                            _viewModel.ErrorMessage = "Пароль не совпадает с паролем подтверждения.";
+                            _messageStore.SetCurrentMessage("Пароль не совпадает с паролем подтверждения.", MessageType.Error);
                             break;
                         case RegistrationResult.UsernameAlreadyExists:
-                            _viewModel.ErrorMessage = "Имя пользователя уже существует.";
+                            _messageStore.SetCurrentMessage("Имя пользователя уже существует.", MessageType.Error);
                             break;
                         case RegistrationResult.UsernameDoesNotRequirements:
-                            _viewModel.ErrorMessage = "Имя пользователя должно соответствовать нижеследующим требованиям:\n" +
+                            _messageStore.SetCurrentMessage("Имя пользователя должно соответствовать нижеследующим требованиям:\n" +
                                                       "1) Должно содержать только латинские буквы (a-z) и цифры (0-9).\n" +
                                                       "2) Должно начинатся с буквы.\n" +
-                                                      "3) Длина должно быть от 3 до 10 символов.";
+                                                      "3) Длина должно быть от 3 до 10 символов.", MessageType.Error);
                             break;
                         case RegistrationResult.PasswordDoesNotRequirements:
-                            _viewModel.ErrorMessage = "Пароль должно соответствовать нижеследующим требованиям:\n" +
+                            _messageStore.SetCurrentMessage("Пароль должно соответствовать нижеследующим требованиям:\n" +
                                                       "1) \n" +
                                                       "2) \n" +
-                                                      "3) ";
+                                                      "3) ", MessageType.Error);
                             break;
                         case RegistrationResult.OtherError:
-                            _viewModel.ErrorMessage = "Не удалось создать администратора.";
+                            _messageStore.SetCurrentMessage("Не удалось создать администратора.", MessageType.Error);
                             break;
                         default:
-                            _viewModel.ErrorMessage = "Регистрация не удалась.";
+                            _messageStore.SetCurrentMessage("Регистрация не удалась.", MessageType.Error);
                             break;
                     }
 
@@ -134,18 +114,16 @@ namespace RetailTradeServer.Commands
             }
             catch (Exception e)
             {
-                _viewModel.ErrorMessage = e.Message;
+                _messageStore.SetCurrentMessage(e.Message, MessageType.Error);
             }
         }
 
-        private void ConfirmPassword_PasswordChanged(object sender, System.Windows.RoutedEventArgs e)
+        private void ViewModel_PropertyChanged(object sender, PropertyChangedEventArgs e)
         {
-            OnCanExecuteChanged();
-        }
-
-        private void Password_PasswordChanged(object sender, System.Windows.RoutedEventArgs e)
-        {
-            OnCanExecuteChanged();
+            if (e.PropertyName == nameof(_viewModel.CanCreate))
+            {
+                OnCanExecuteChanged();
+            }
         }
     }
 }

@@ -1,16 +1,11 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>net5.0-windows</TargetFramework>
+    <TargetFramework>net6.0-windows</TargetFramework>
     <UseWPF>true</UseWPF>
     <AssemblyVersion>1.0.0.17</AssemblyVersion>
     <FileVersion>1.0.0.3</FileVersion>
   </PropertyGroup>
-
-  <ItemGroup>
-    <PackageReference Include="devexpress.wpf.grid.core" Version="21.1.6" />
-    <PackageReference Include="devexpress.wpf.layoutcontrol" Version="21.1.6" />
-  </ItemGroup>
 
   <ProjectExtensions><VisualStudio><UserProperties BuildVersion_StartDate="2000/1/1" /></VisualStudio></ProjectExtensions>
 

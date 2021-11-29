@@ -75,13 +75,16 @@ namespace RetailTradeServer.HostBuilders
             return new RegistrationViewModel(services.GetRequiredService<IRoleService>(),
                 services.GetRequiredService<INavigator>(),
                 services.GetRequiredService<IAuthenticator>(),
-                services.GetRequiredService<IRetailTradeViewModelFactory>());
+                services.GetRequiredService<IRetailTradeViewModelFactory>(),
+                services.GetRequiredService<GlobalMessageViewModel>(),
+                services.GetRequiredService<IMessageStore>());
         }
 
         private static OrganizationViewModel CreateOrganizationViewModel(IServiceProvider services)
         {
             return new OrganizationViewModel(services.GetRequiredService<IOrganizationService>(),
-                services.GetRequiredService<IUserStore>());
+                services.GetRequiredService<IRetailTradeViewModelFactory>(),
+                services.GetRequiredService<INavigator>());
         }
 
         private static SaleViewModel CreateSaleViewModel(IServiceProvider services)

@@ -1,95 +1,39 @@
 ﻿<UserControl x:Class="RetailTradeServer.Views.RegistrationView"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:dxe="http://schemas.devexpress.com/winfx/2008/xaml/editors"
+             xmlns:dxlc="http://schemas.devexpress.com/winfx/2008/xaml/layoutcontrol"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
-             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
-             xmlns:local="clr-namespace:RetailTradeServer.Views"
-             mc:Ignorable="d" 
-             d:DesignHeight="450" d:DesignWidth="800">
+             xmlns:components="clr-namespace:RetailTradeServer.Components">
 
-    <Border BorderThickness="2"
-            CornerRadius="5"
-            BorderBrush="Red"
-            Width="350"
-            HorizontalAlignment="Center"
-            VerticalAlignment="Center"
-            Padding="10">
+    <dxlc:LayoutControl ItemSpace="10"
+                        Width="400"
+                        VerticalAlignment="Center"
+                        HorizontalAlignment="Center">
 
-        <Grid>
+        <dxlc:LayoutGroup View="GroupBox"
+                          Header="Добавьте администратора"
+                          Orientation="Vertical">
 
-            <Grid.RowDefinitions>
-                <RowDefinition/>
-                <RowDefinition/>
-                <RowDefinition Height="5"/>
-                <RowDefinition/>
-                <RowDefinition Height="5"/>
-                <RowDefinition/>
-                <RowDefinition Height="5"/>
-                <RowDefinition/>
-                <RowDefinition Height="5"/>
-                <RowDefinition/>
-            </Grid.RowDefinitions>
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="Auto"/>
-                <ColumnDefinition Width="5"/>
-                <ColumnDefinition/>
-            </Grid.ColumnDefinitions>
+            <dxlc:LayoutItem Label="Имя:">
+                <dxe:TextEdit Text="{Binding Username, UpdateSourceTrigger=PropertyChanged}"/>
+            </dxlc:LayoutItem>
 
-            <TextBlock Grid.Row="0"
-                       Grid.Column="0"
-                       Grid.ColumnSpan="3"
-                       Text="Добавьте администратора"
-                       HorizontalAlignment="Center"
-                       FontSize="20"
-                       FontWeight="Bold"
-                       Margin="0 10"/>
+            <dxlc:LayoutItem Label="Пароль:">
+                <dxe:PasswordBoxEdit Text="{Binding Password, UpdateSourceTrigger=PropertyChanged}"/>
+            </dxlc:LayoutItem>
 
-            <!--Username-->
-            <TextBlock Grid.Row="1"
-                       Text="Имя:"/>
-            <TextBox Grid.Row="1"
-                     Grid.Column="2"
-                     Text="{Binding Username}"/>
+            <dxlc:LayoutItem Label="Подтвердите пароль:">
+                <dxe:PasswordBoxEdit Text="{Binding ConfirmPassword, UpdateSourceTrigger=PropertyChanged}"/>
+            </dxlc:LayoutItem>
 
-            <!--Password-->
-            <TextBlock Grid.Row="3"
-                       Text="Пароль:"/>
-            <PasswordBox Grid.Row="3"
-                         Grid.Column="2"
-                         x:Name="Password"/>
+            <components:GlobalMessageBaner DataContext="{Binding GlobalMessageViewModel}"/>
 
-            <!--Confirm password-->
-            <TextBlock Grid.Row="5"
-                       Text="Подтвердите пароль:"/>
-            <PasswordBox Grid.Row="5"
-                         Grid.Column="2"
-                         x:Name="ConfirmPassword"/>
-            
-            <!--Message-->
-            <TextBlock Grid.Row="7" 
-                       Grid.Column="0"
-                       Grid.ColumnSpan="3"
-                       Margin="0 5"
-                       DataContext="{Binding ErrorMessageViewModel}" TextWrapping="Wrap" 
-                       Text="{Binding Message}"
-                       Foreground="Red"/>
-            
-            <!--Button-->
-            <Button Grid.Row="9"
-                    Grid.Column="0"
-                    Grid.ColumnSpan="3"
-                    Content="Добавить и продолжить"
-                    Command="{Binding AdminRegistrationCommand}">
-                <Button.CommandParameter>
-                    <MultiBinding Converter="{StaticResource PasswordMultiBindingConverter}">
-                        <Binding ElementName="Password"/>
-                        <Binding ElementName="ConfirmPassword"/>
-                    </MultiBinding>
-                </Button.CommandParameter>
-            </Button>
+            <Button Content="Добавить и продолжить"
+                    Command="{Binding AdminRegistrationCommand}"
+                    VerticalAlignment="Bottom"/>
 
-        </Grid>
-        
-    </Border>
-    
+        </dxlc:LayoutGroup>
+
+    </dxlc:LayoutControl>
+
 </UserControl>
