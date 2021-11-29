@@ -14,7 +14,7 @@ namespace RetailTrade.EntityFramework
 
         public RetailTradeDbContext CreateDbContext()
         {
-            DbContextOptionsBuilder<RetailTradeDbContext> options = new DbContextOptionsBuilder<RetailTradeDbContext>();
+            DbContextOptionsBuilder<RetailTradeDbContext> options = new();
 
             _configureDbContext(options);
 

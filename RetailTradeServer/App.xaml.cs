@@ -52,19 +52,19 @@ namespace RetailTradeServer
         {
             _host.Start();
             _manager = _host.Services.GetRequiredService<IUIManager>();
+            var contextFactory = _host.Services.GetRequiredService<RetailTradeDbContextFactory>();
 
-            Settings.Default.IsFirstLaunch = true;
-            Settings.Default.Save();
+            //Settings.Default.IsFirstLaunch = true;
+            //Settings.Default.Save();
 
             if (Settings.Default.IsFirstLaunch)
             {
-                _manager.ShowDialog(new AddConnectionDialogFormModel(_manager) { Title = "Добавить подключение" },
+                _ = _manager.ShowDialog(new AddConnectionDialogFormModel(_manager, contextFactory) { Title = "Добавить подключение" },
                     new AddConnectionDialogForm());
             }
 
             if (Settings.Default.IsDataBaseConnectionAdded)
             {
-                var contextFactory = _host.Services.GetRequiredService<RetailTradeDbContextFactory>();
 
                 using (var context = contextFactory.CreateDbContext())
                 {
@@ -74,7 +74,7 @@ namespace RetailTradeServer
                     }
                     else
                     {
-                        _manager.ShowMessage("Не удалось подключиться к базе данных.", "", MessageBoxButton.OK, MessageBoxImage.Error);
+                        _ = _manager.ShowMessage("Не удалось подключиться к базе данных.", "", MessageBoxButton.OK, MessageBoxImage.Error);
                         Current.Shutdown();
                         return;
                     }
@@ -86,7 +86,7 @@ namespace RetailTradeServer
             }
             else
             {
-                _manager.ShowMessage("Ошибка. Обратитесь к программистам.", "", MessageBoxButton.OK, MessageBoxImage.Error);
+                _ = _manager.ShowMessage("Ошибка. Обратитесь к программистам.", "", MessageBoxButton.OK, MessageBoxImage.Error);
             }
 
             CultureInfo newCulture = new("ru-RU");

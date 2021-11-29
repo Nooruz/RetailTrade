@@ -1,115 +1,66 @@
-﻿<dialogs:BaseDialogUserControl xmlns:dx="http://schemas.devexpress.com/winfx/2008/xaml/core" 
+﻿<dialogs:BaseDialogUserControl
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:dx="http://schemas.devexpress.com/winfx/2008/xaml/core"
     xmlns:dxe="http://schemas.devexpress.com/winfx/2008/xaml/editors"
     xmlns:dxlc="http://schemas.devexpress.com/winfx/2008/xaml/layoutcontrol"
+    xmlns:dxmvvm="http://schemas.devexpress.com/winfx/2008/xaml/mvvm"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:dialogs="clr-namespace:RetailTradeServer.Dialogs"
     x:Class="RetailTradeServer.Views.Dialogs.AddConnectionDialogForm"
-    xmlns:dxmvvm="http://schemas.devexpress.com/winfx/2008/xaml/mvvm"
-                                 Width="500">
+    Width="550">
 
-    <dx:DXTabControl>
+    <dxlc:LayoutControl Orientation="Vertical"
+                                ItemSpace="10">
 
-        <dx:DXTabItem Header="Новое подключение">
-            <dxlc:LayoutControl Orientation="Vertical"
-                        ItemSpace="10">
-
-                <TextBlock Text="Введите данные для подключения к источнику данных."/>
+        <TextBlock Text="Введите данные для подключения к источнику данных."/>
 
 
-                <dxlc:LayoutGroup>
+        <dxlc:LayoutGroup>
 
-                    <dxlc:LayoutItem LabelPosition="Top"
+            <dxlc:LayoutItem LabelPosition="Top"
                              Label="Имя сервера:">
 
-                        <dxe:ComboBoxEdit ItemsSource="{Binding Servers}"
+                <dxe:ComboBoxEdit ItemsSource="{Binding Servers}"
                                   EditValue="{Binding ServerName, UpdateSourceTrigger=PropertyChanged}">
-                            <dxmvvm:Interaction.Behaviors>
-                                <dxmvvm:EventToCommand EventName="EditValueChanged"
+                    <dxmvvm:Interaction.Behaviors>
+                        <dxmvvm:EventToCommand EventName="EditValueChanged"
                                                Command="{Binding ServerNameEditValueChangedCommand}"/>
-                            </dxmvvm:Interaction.Behaviors>
-                        </dxe:ComboBoxEdit>
+                    </dxmvvm:Interaction.Behaviors>
+                </dxe:ComboBoxEdit>
 
-                    </dxlc:LayoutItem>
+            </dxlc:LayoutItem>
 
-                    <Button Content="Обновить"
+            <Button Content="Обновить"
                     HorizontalAlignment="Right"
                     VerticalAlignment="Bottom"/>
 
-                </dxlc:LayoutGroup>
+        </dxlc:LayoutGroup>
 
-                <dxlc:LayoutGroup View="GroupBox"
-                                  Header="Вход на сервер"
-                                  Orientation="Vertical"
-                                  IsEnabled="{Binding CanLogin}">
-                    
-                    <dxlc:LayoutItem Label="Проверка подлинности:">
-                        <dxe:ComboBoxEdit SelectedIndex="{Binding AuthenticationId, UpdateSourceTrigger=PropertyChanged}"
-                                          >
-                            <dxe:ComboBoxEdit.Items>
-                                <dxe:ComboBoxEditItem Content="Проверка подлинности Windows"/>
-                                <dxe:ComboBoxEditItem Content="Проверка подлинности SQL Server"/>
-                            </dxe:ComboBoxEdit.Items>
-                        </dxe:ComboBoxEdit>
-                    </dxlc:LayoutItem>
-                    
+        <dxlc:LayoutGroup>
 
-                    <dxlc:LayoutItem Label="Имя пользователя:"
-                                     IsEnabled="{Binding IsSQLServerAuthentication}">
-                        <dxe:TextEdit Text="{Binding Username, UpdateSourceTrigger=PropertyChanged}"/>
-                    </dxlc:LayoutItem>
-
-                    <dxlc:LayoutItem Label="Пароль:"
-                                     IsEnabled="{Binding IsSQLServerAuthentication}">
-                        <dxe:PasswordBoxEdit Text="{Binding Password, UpdateSourceTrigger=PropertyChanged}"/>
-                    </dxlc:LayoutItem>
-
-                </dxlc:LayoutGroup>
-
-                <dxlc:LayoutGroup View="GroupBox"
-                                  Header="Подключение к базе данных"
-                                  Orientation="Vertical">
-
-                    <dxlc:LayoutItem Label="Выберите или введите имя базы данных:"
-                                     LabelPosition="Top"
-                                     IsEnabled="{Binding CanSelectDataBase, UpdateSourceTrigger=PropertyChanged}">
-                        <dxe:ComboBoxEdit EditValue="{Binding DataBaseName, UpdateSourceTrigger=PropertyChanged}">
-                            <dxmvvm:Interaction.Behaviors>
-                                <dxmvvm:EventToCommand EventName="Loaded"
-                                                       Command="{Binding ComboBoxLoadedCommand}"
-                                                       PassEventArgsToCommand="True"/>
-                            </dxmvvm:Interaction.Behaviors>
-                        </dxe:ComboBoxEdit>
-                    </dxlc:LayoutItem>
-
-                </dxlc:LayoutGroup>
-
-                <dxlc:LayoutGroup>
-
-                    <Button Content="Проверить подключение"
+            <Button Content="Проверить подключение"
                     HorizontalAlignment="Left"
                     Command="{Binding CheckConnectionCommand}"/>
 
-                    <Button Content="Ок"
+            <Button Content="Создать БД"
+                    HorizontalAlignment="Right"
+                    Width="100"
+                    Command="{Binding CreateDataBaseCommand}"
+                    IsEnabled="{Binding CanCreateDataBase, UpdateSourceTrigger=PropertyChanged}"/>
+
+            <Button Content="Ок"
                     HorizontalAlignment="Right"
                     Width="100"
                     Command="{Binding OkCommand}"
                     IsEnabled="{Binding CanCreateConnection, UpdateSourceTrigger=PropertyChanged}"/>
 
-                    <Button Content="Отмена"
+            <Button Content="Отмена"
                     HorizontalAlignment="Right"
                     Width="100"
                     Command="{Binding CloseCommand}"/>
 
-                </dxlc:LayoutGroup>
+        </dxlc:LayoutGroup>
 
-            </dxlc:LayoutControl>
-        </dx:DXTabItem>
-
-        <dx:DXTabItem Header="Подключится к существую">
-            
-        </dx:DXTabItem>
-        
-    </dx:DXTabControl>
+    </dxlc:LayoutControl>
 
 </dialogs:BaseDialogUserControl>

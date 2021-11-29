@@ -1,6 +1,7 @@
 ﻿using DevExpress.Xpf.Editors;
 using Microsoft.Win32;
 using Newtonsoft.Json;
+using RetailTrade.EntityFramework;
 using RetailTradeServer.Commands;
 using RetailTradeServer.Properties;
 using RetailTradeServer.State.Dialogs;
@@ -23,40 +24,16 @@ namespace RetailTradeServer.ViewModels.Dialogs
         #region Private Members
 
         private readonly IUIManager _manager;
+        private readonly RetailTradeDbContextFactory _contextFactory;
         private string _serverName;
-        private string _username;
-        private string _password;
-        private string _dataBaseName;
         private ObservableCollection<string> _dataBases;
-        private int _authenticationId;
+        private bool _canCreateConnection;
 
         #endregion
 
         #region Public Properties
 
         public static IEnumerable<string> Servers => ListLocalSqlInstances();
-        public string Username
-        {
-            get => _username;
-            set
-            {
-                _username = value;
-                OnPropertyChanged(nameof(Username));
-                OnPropertyChanged(nameof(CanConnection));
-                OnPropertyChanged(nameof(ConnectionString));                
-            }
-        }
-        public string Password
-        {
-            get => _password;
-            set
-            {
-                _password = value;
-                OnPropertyChanged(nameof(Password));
-                OnPropertyChanged(nameof(CanConnection));
-                OnPropertyChanged(nameof(ConnectionString));
-            }
-        }
         public string ServerName
         {
             get => _serverName;
@@ -64,40 +41,22 @@ namespace RetailTradeServer.ViewModels.Dialogs
             {
                 _serverName = value;
                 OnPropertyChanged(nameof(ServerName));
-                OnPropertyChanged(nameof(CanConnection));
+                OnPropertyChanged(nameof(CanCreateDataBase));
                 OnPropertyChanged(nameof(ConnectionString));
-                OnPropertyChanged(nameof(CanLogin));
             }
         }
-        public string DataBaseName
+        public bool CanCreateDataBase => !string.IsNullOrEmpty(ServerName) && !CanCreateConnection;
+        public bool CanCreateConnection
         {
-            get => _dataBaseName;
+            get => _canCreateConnection;
             set
             {
-                _dataBaseName = value;
-                OnPropertyChanged(nameof(DataBaseName));
+                _canCreateConnection = value;
                 OnPropertyChanged(nameof(CanCreateConnection));
-                OnPropertyChanged(nameof(CanSelectDataBase));
+                OnPropertyChanged(nameof(CanCreateDataBase));
             }
         }
-        public bool CanConnection => !string.IsNullOrEmpty(ServerName) &&
-            !string.IsNullOrEmpty(Username) &&
-            !string.IsNullOrEmpty(Password);
-        public int AuthenticationId
-        {
-            get => _authenticationId;
-            set
-            {
-                _authenticationId = value;
-                OnPropertyChanged(nameof(AuthenticationId));
-                OnPropertyChanged(nameof(IsSQLServerAuthentication));
-            }
-        }
-        public bool IsSQLServerAuthentication => AuthenticationId == 1;
-        public bool CanLogin => !string.IsNullOrEmpty(ServerName);
-        public bool CanCreateConnection => !string.IsNullOrEmpty(DataBaseName);
-        public bool CanSelectDataBase => !string.IsNullOrEmpty(DataBaseName);
-        public string ConnectionString => $"Server={ServerName};User Id={Username};Password={Password};";
+        public string ConnectionString => $"Server={ServerName};Trusted_Connection=True;";
         public ObservableCollection<string> DataBases
         {
             get => _dataBases ?? (new());
@@ -117,19 +76,21 @@ namespace RetailTradeServer.ViewModels.Dialogs
 
         public ICommand CheckConnectionCommand { get; }
         public ICommand OkCommand { get; }
-        public ICommand ComboBoxLoadedCommand { get; }
+        public ICommand CreateDataBaseCommand { get; }
 
         #endregion
 
         #region Constructor
 
-        public AddConnectionDialogFormModel(IUIManager manager)
+        public AddConnectionDialogFormModel(IUIManager manager,
+            RetailTradeDbContextFactory contextFactory)
         {
             _manager = manager;
+            _contextFactory = contextFactory;
 
             CheckConnectionCommand = new RelayCommand(CheckConnection);
             OkCommand = new RelayCommand(Ok);
-            ComboBoxLoadedCommand = new ParameterCommand(parameter => ComboBoxLoaded(parameter));
+            CreateDataBaseCommand = new RelayCommand(CreateDataBase);
 
             DataBases.CollectionChanged += DataBases_CollectionChanged;
         }
@@ -205,26 +166,16 @@ namespace RetailTradeServer.ViewModels.Dialogs
         {
             if (CheckConnectionString(ConnectionString))
             {
-                _manager.ShowMessage("Проверка подключения выполнена.", "", MessageBoxButton.OK, MessageBoxImage.Information);
+               _ = _manager.ShowMessage("Проверка подключения выполнена.", "", MessageBoxButton.OK, MessageBoxImage.Information);
             }
             else if (string.IsNullOrEmpty(ServerName))
             {
-                _manager.ShowMessage("Не удается проверить это подключение, поскольку не указано имя сервера.", 
+                _ = _manager.ShowMessage("Не удается проверить это подключение, поскольку не указано имя сервера.", 
                     "", MessageBoxButton.OK, MessageBoxImage.Information);
-            }
-            else if (string.IsNullOrEmpty(Username))
-            {
-                _manager.ShowMessage("Не удается проверить это подключение, поскольку не указано имя пользователя.",
-                    "", MessageBoxButton.OK, MessageBoxImage.Information);
-            }
-            else if (string.IsNullOrEmpty(Password))
-            {
-                _manager.ShowMessage("Не удается проверить это подключение, поскольку не указан пароль.",
-                    "", MessageBoxButton.OK, MessageBoxImage.Information);
-            }
+            }            
             else
             {
-                _manager.ShowMessage(SQLExeption.Message,
+                _ = _manager.ShowMessage(SQLExeption.Message,
                     "", MessageBoxButton.OK, MessageBoxImage.Information);
             }
         }
@@ -237,7 +188,7 @@ namespace RetailTradeServer.ViewModels.Dialogs
                 if (!string.IsNullOrEmpty(appSettings))
                 {
                     dynamic jsonObj = JsonConvert.DeserializeObject(appSettings);
-                    jsonObj["ConnectionStrings"]["DefaultConnection"] = ConnectionString + $"Database={DataBaseName};";
+                    jsonObj["ConnectionStrings"]["DefaultConnection"] = ConnectionString + $"Database=RetailTradeDb;";
                     string outAppSettings = JsonConvert.SerializeObject(jsonObj, Formatting.Indented);
                     File.WriteAllText("appsettings.json", outAppSettings);
                 }
@@ -253,109 +204,6 @@ namespace RetailTradeServer.ViewModels.Dialogs
             }            
         }
 
-        private void ComboBoxLoaded(object paramter)
-        {
-            if (paramter is RoutedEventArgs e)
-            {
-                if (e.Source is ComboBoxEdit comboBoxEdit)
-                {
-                    ComboBoxEdit = comboBoxEdit;
-                    ComboBoxEdit.PopupOpening += ComboBoxEdit_PopupOpening;
-                }
-            }
-        }
-
-        private void ComboBoxEdit_PopupOpening(object sender, RoutedEventArgs e)
-        {
-            if (CanConnection)
-            {
-                if (CheckConnectionString(ConnectionString))
-                {
-                    ComboBoxEdit.Items.Clear();
-                    using SqlCommand sqlCommand = new("Select name from master.sys.databases", SqlConnection);
-                    using IDataReader dataReader = sqlCommand.ExecuteReader();
-
-                    while (dataReader.Read())
-                    {
-                        string dataBaseName = dataReader[0].ToString();
-                        if (dataBaseName == "RetailTradeDb")
-                        {
-                            ComboBoxEdit.Items.Add(dataReader[0].ToString());
-                        }                        
-                    }
-
-                    if (ComboBoxEdit.Items.Count == 0)
-                    {
-                        using SqlCommand checkUserSQLCommand = new($"SELECT [Name] FROM sys.sql_logins where [Name] = '{Username}';", SqlConnection);
-                        using IDataReader checkUserDataReader = checkUserSQLCommand.ExecuteReader();                        
-                    }
-
-                }
-                else
-                {
-                    if (CheckConnectionString($"Server={ServerName};Trusted_Connection=True;"))
-                    {
-                        using SqlCommand checkUserSQLCommand = new($"SELECT [Name] FROM sys.sql_logins where [Name] = '{Username}';", SqlConnection);
-                        using IDataReader checkUserDataReader = checkUserSQLCommand.ExecuteReader();
-
-                        string username = "";
-
-                        while (checkUserDataReader.Read())
-                        {
-                            username = checkUserDataReader[0].ToString();
-                        }
-
-                        checkUserDataReader.Close();
-
-                        if (string.IsNullOrEmpty(username))
-                        {
-                            try
-                            {
-                                using SqlCommand userCreateSQLCommand = new($"CREATE LOGIN {Username} WITH PASSWORD = '{Password}';", SqlConnection);
-                                using IDataReader userCreateDataReader = userCreateSQLCommand.ExecuteReader();
-                                userCreateDataReader.Close();
-
-                                if (CheckConnectionString($"Server={ServerName};User Id={Username};Password={Password}"))
-                                {
-
-                                }
-                                else
-                                {
-                                    _ = _manager.ShowMessage("Ошибка. Обратитесь к программистам.", "", MessageBoxButton.OK, MessageBoxImage.Error);
-                                }
-
-                            }
-                            catch (SqlException)
-                            {
-                                //ignore
-                                throw;
-                            }
-                        }
-                        else
-                        {
-                            _ = _manager.ShowMessage("Ошибка. Обратитесь к программистам.", "", MessageBoxButton.OK, MessageBoxImage.Error);
-                        }
-                    }
-                }
-            } 
-            else if (!IsSQLServerAuthentication)
-            {
-                ComboBoxEdit.Items.Clear();
-                using SqlCommand sqlCommand = new("Select name from master.sys.databases", SqlConnection);
-                using IDataReader dataReader = sqlCommand.ExecuteReader();
-
-                while (dataReader.Read())
-                {
-                    string dataBaseName = dataReader[0].ToString();
-                    if (dataBaseName == "RetailTradeDb")
-                    {
-                        ComboBoxEdit.Items.Add(dataReader[0].ToString());
-                    }
-                }
-
-            }
-        }
-
         private bool CheckConnectionString(string connectionString)
         {
             try
@@ -368,6 +216,32 @@ namespace RetailTradeServer.ViewModels.Dialogs
             {
                 SQLExeption = e;
                 return false;
+            }
+        }
+
+        private void CreateDataBase()
+        {
+            if (CheckConnectionString(ConnectionString + "Integrated security=SSPI;database=master;"))
+            {
+                SqlCommand createDBSQLCommand = new("CREATE DATABASE RetailTradeDb", SqlConnection);
+
+                try
+                {
+                    createDBSQLCommand.ExecuteNonQuery();
+                    _ = _manager.ShowMessage("База данных успешно создана.", "", MessageBoxButton.OK, MessageBoxImage.Information);
+                    CanCreateConnection = true;
+                }
+                catch (SqlException e)
+                {
+                    _ = _manager.ShowMessage(e.Message, "", MessageBoxButton.OK, MessageBoxImage.Information);
+                }
+                finally
+                {
+                    if (SqlConnection.State == ConnectionState.Open)
+                    {
+                        SqlConnection.Close();
+                    }
+                }
             }
         }
 
