@@ -53,10 +53,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="DevExpress.Dashboard.Core.ru" Version="21.2.3" />
     <PackageReference Include="DevExpress.Reporting.Core.ru" Version="21.2.3" />
-    <PackageReference Include="DevExpress.Wpf.Controls.ru" Version="21.2.3" />
-    <PackageReference Include="DevExpress.Wpf.Dashboard.ru" Version="21.2.3" />
     <PackageReference Include="DevExpress.Wpf.Grid.Core.ru" Version="21.2.3" />
     <PackageReference Include="DevExpress.Wpf.LayoutControl.ru" Version="21.2.3" />
     <PackageReference Include="DevExpress.Wpf.NavBar.ru" Version="21.2.3" />
@@ -67,9 +64,7 @@
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
     <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="6.0.0" />
-    <PackageReference Include="Microsoft.Extensions.Configuration.UserSecrets" Version="6.0.0" />
     <PackageReference Include="Microsoft.Extensions.Hosting" Version="6.0.0" />
-    <PackageReference Include="Microsoft.SqlServer.SqlManagementObjects" Version="161.46521.71" />
     <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
   </ItemGroup>
 

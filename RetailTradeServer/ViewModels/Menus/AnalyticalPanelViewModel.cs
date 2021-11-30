@@ -1,7 +1,4 @@
-﻿using DevExpress.DashboardCommon;
-using DevExpress.DashboardWpf;
-using DevExpress.DataAccess;
-using RetailTrade.Domain.Services;
+﻿using RetailTrade.Domain.Services;
 using RetailTradeServer.Commands;
 using RetailTradeServer.ViewModels.Base;
 using System;
@@ -32,7 +29,7 @@ namespace RetailTradeServer.ViewModels.Menus
             }
         }
         //public RetailTradeDashboard RetailTradeDashboard { get; set; }
-        public DashboardControl RetailTradeDashboardControl { get; set; }
+        //public DashboardControl RetailTradeDashboardControl { get; set; }
 
         #endregion
 
@@ -59,17 +56,17 @@ namespace RetailTradeServer.ViewModels.Menus
         private async void GetAllReceipts(DateTime dateTime)
         {
             //RetailTradeDashboard.ReceiptDataSource.DataSource = await _receiptService.GetReceiptsByDateAsync(dateTime);
-            RetailTradeDashboardControl?.ReloadData();
+            //RetailTradeDashboardControl?.ReloadData();
         }
 
         private void LoadedDashboardControl(object parameter)
         {
             if (parameter is RoutedEventArgs e)
             {
-                if (e.Source is DashboardControl sender)
-                {
-                    RetailTradeDashboardControl = sender;                    
-                }
+                //if (e.Source is DashboardControl sender)
+                //{
+                //    RetailTradeDashboardControl = sender;                    
+                //}
             }
         }
 

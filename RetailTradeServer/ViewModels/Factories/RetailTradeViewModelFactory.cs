@@ -12,7 +12,6 @@ namespace RetailTradeServer.ViewModels.Factories
         private readonly CreateViewModel<HomeViewModel> _createHomeViewModel;
         private readonly CreateViewModel<RegistrationViewModel> _createRegistrationViewModel;
         private readonly CreateViewModel<OrganizationViewModel> _createOrganizationViewModel;
-        private readonly CreateViewModel<SaleViewModel> _createSaleViewModel;
 
         #endregion
 
@@ -21,14 +20,12 @@ namespace RetailTradeServer.ViewModels.Factories
         public RetailTradeViewModelFactory(CreateViewModel<LoginViewModel> createLoginViewModel,
             CreateViewModel<HomeViewModel> createHomeViewModel,
             CreateViewModel<RegistrationViewModel> createRegistrationViewModel,
-            CreateViewModel<OrganizationViewModel> createOrganizationViewModel,
-            CreateViewModel<SaleViewModel> createSaleViewModel)
+            CreateViewModel<OrganizationViewModel> createOrganizationViewModel)
         {
             _createLoginViewModel = createLoginViewModel;
             _createHomeViewModel = createHomeViewModel;
             _createRegistrationViewModel = createRegistrationViewModel;
             _createOrganizationViewModel = createOrganizationViewModel;
-            _createSaleViewModel = createSaleViewModel;
         }
 
         #endregion
@@ -47,8 +44,6 @@ namespace RetailTradeServer.ViewModels.Factories
                     return _createHomeViewModel();
                 case ViewType.Organization:
                     return _createOrganizationViewModel();
-                case ViewType.Sale:
-                    return _createSaleViewModel();
                 default:
                     throw new ArgumentException("The ViewType does not have a ViewModel.", "viewType");
             }

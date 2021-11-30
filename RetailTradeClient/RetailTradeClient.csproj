@@ -63,7 +63,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="DevExpress.Images.ru" Version="21.2.3" />
     <PackageReference Include="DevExpress.Reporting.Core.ru" Version="21.2.3" />
     <PackageReference Include="DevExpress.Wpf.Controls.ru" Version="21.2.3" />
     <PackageReference Include="DevExpress.Wpf.Printing.ru" Version="21.2.3" />
@@ -74,10 +73,8 @@
     </PackageReference>
     <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="6.0.0" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="6.0.0" />
-    <PackageReference Include="Microsoft.Extensions.Configuration.UserSecrets" Version="6.0.0" />
     <PackageReference Include="Microsoft.Extensions.Hosting" Version="6.0.0" />
     <PackageReference Include="System.Data.SQLite" Version="1.0.115.5" />
-    <PackageReference Include="System.IO.Ports" Version="6.0.0" />
   </ItemGroup>
 
   <ItemGroup>

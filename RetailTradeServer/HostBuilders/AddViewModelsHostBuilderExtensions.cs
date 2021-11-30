@@ -5,7 +5,6 @@ using RetailTradeServer.State.Authenticators;
 using RetailTradeServer.State.Dialogs;
 using RetailTradeServer.State.Messages;
 using RetailTradeServer.State.Navigators;
-using RetailTradeServer.State.Users;
 using RetailTradeServer.ViewModels;
 using RetailTradeServer.ViewModels.Base;
 using RetailTradeServer.ViewModels.Factories;
@@ -26,14 +25,12 @@ namespace RetailTradeServer.HostBuilders
                 services.AddTransient(CreateLoginViewModel);
                 services.AddTransient(CreateRegistrationViewModel);
                 services.AddTransient(CreateOrganizationViewModel);
-                services.AddTransient(CreateSaleViewModel);
                 services.AddTransient(CreateGlobalMessageViewModel);
 
                 services.AddSingleton<CreateViewModel<LoginViewModel>>(servicesProvider => () => CreateLoginViewModel(servicesProvider));
                 services.AddSingleton<CreateViewModel<RegistrationViewModel>>(servicesProvider => () => CreateRegistrationViewModel(servicesProvider));
                 services.AddSingleton<CreateViewModel<HomeViewModel>>(servicesProvider => () => CreateHomeViewModel(servicesProvider));
                 services.AddSingleton<CreateViewModel<OrganizationViewModel>>(servicesProvider => () => CreateOrganizationViewModel(servicesProvider));
-                services.AddSingleton<CreateViewModel<SaleViewModel>>(servicesProvider => () => CreateSaleViewModel(servicesProvider));                
 
                 services.AddSingleton<IRetailTradeViewModelFactory, RetailTradeViewModelFactory>();
 
@@ -41,7 +38,6 @@ namespace RetailTradeServer.HostBuilders
                 services.AddSingleton<ViewModelDelegateRenavigator<HomeViewModel>>();
                 services.AddSingleton<ViewModelDelegateRenavigator<RegistrationViewModel>>();
                 services.AddSingleton<ViewModelDelegateRenavigator<OrganizationViewModel>>();
-                services.AddSingleton<ViewModelDelegateRenavigator<SaleViewModel>>();
             });
         }
 
@@ -85,11 +81,6 @@ namespace RetailTradeServer.HostBuilders
             return new OrganizationViewModel(services.GetRequiredService<IOrganizationService>(),
                 services.GetRequiredService<IRetailTradeViewModelFactory>(),
                 services.GetRequiredService<INavigator>());
-        }
-
-        private static SaleViewModel CreateSaleViewModel(IServiceProvider services)
-        {
-            return new SaleViewModel();
         }
 
         private static GlobalMessageViewModel CreateGlobalMessageViewModel(IServiceProvider services)

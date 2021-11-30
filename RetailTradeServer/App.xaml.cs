@@ -54,7 +54,7 @@ namespace RetailTradeServer
             _manager = _host.Services.GetRequiredService<IUIManager>();
             var contextFactory = _host.Services.GetRequiredService<RetailTradeDbContextFactory>();
 
-            //Settings.Default.IsFirstLaunch = true;
+            //Settings.Default.AdminCreated = false;
             //Settings.Default.Save();
 
             //if (Settings.Default.IsFirstLaunch)

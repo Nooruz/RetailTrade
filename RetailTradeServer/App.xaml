@@ -31,10 +31,6 @@
                 <views:OrganizationView/>
             </DataTemplate>
 
-            <DataTemplate DataType="{x:Type viewModels:SaleViewModel}">
-                <views:SaleView/>
-            </DataTemplate>
-
             <DataTemplate DataType="{x:Type dialogViewModels:MessageBoxDialogViewModel}">
                 <dialogs:DialogMessageBox/>
             </DataTemplate>
