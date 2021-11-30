@@ -138,6 +138,9 @@
   </ItemGroup>
 
   <ItemGroup>
+    <None Update="Data\RetailTradeDb.mdf">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <None Update="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>

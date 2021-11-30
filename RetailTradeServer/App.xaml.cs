@@ -57,14 +57,14 @@ namespace RetailTradeServer
             //Settings.Default.IsFirstLaunch = true;
             //Settings.Default.Save();
 
-            if (Settings.Default.IsFirstLaunch)
-            {
-                _ = _manager.ShowDialog(new AddConnectionDialogFormModel(_manager, contextFactory) { Title = "Добавить подключение" },
-                    new AddConnectionDialogForm());
-            }
+            //if (Settings.Default.IsFirstLaunch)
+            //{
+            //    _ = _manager.ShowDialog(new AddConnectionDialogFormModel(_manager, contextFactory) { Title = "Добавить подключение" },
+            //        new AddConnectionDialogForm());
+            //}
 
-            if (Settings.Default.IsDataBaseConnectionAdded)
-            {
+            //if (Settings.Default.IsDataBaseConnectionAdded)
+            //{
                 try
                 {
                     using (var context = contextFactory.CreateDbContext())
@@ -85,11 +85,11 @@ namespace RetailTradeServer
                 Window window = _host.Services.GetRequiredService<MainWindow>();
                 window.DataContext = _host.Services.GetRequiredService<MainViewModel>();
                 window.Show();
-            }
-            else
-            {
-                _ = _manager.ShowMessage("Ошибка. Обратитесь к программистам.", "", MessageBoxButton.OK, MessageBoxImage.Error);
-            }
+            //}
+            //else
+            //{
+            //    _ = _manager.ShowMessage("Ошибка. Обратитесь к программистам.", "", MessageBoxButton.OK, MessageBoxImage.Error);
+            //}
 
             CultureInfo newCulture = new("ru-RU");
             Thread.CurrentThread.CurrentCulture = newCulture;
