@@ -60,9 +60,6 @@ namespace RetailTradeServer.ViewModels
             _navigator.StateChanged += Navigator_StateChanged;
             _authenticator.StateChanged += AuthenticatorStateChanged;
 
-            //Settings.Default.AdminCreated = false;
-            //Settings.Default.Save();
-
             UpdateCurrentViewModelCommand = new UpdateCurrentViewModelCommand(navigator, retailTradeViewModelFactory);
             UpdateCurrentViewModelCommand.Execute(Settings.Default.AdminCreated ? ViewType.Login : ViewType.Registration);
         }

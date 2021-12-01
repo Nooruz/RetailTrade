@@ -39,6 +39,7 @@
     <None Remove="Report\ClosingShiftsReport.vsrepx" />
     <None Remove="Report\OrderToSupplierReport.vsrepx" />
     <None Remove="Report\ProductBarcodeReport.vsrepx" />
+    <None Remove="Report\RevenueForPeriodReport.vsrepx" />
     <None Remove="Report\WriteDownProductReport.vsrepx" />
     <None Remove="Resources\Images\sp.png" />
     <None Remove="Views\HomeView.xaml~RF1dc6ec.TMP" />
@@ -49,6 +50,7 @@
     <EmbeddedResource Include="Report\ClosingShiftsReport.vsrepx" />
     <EmbeddedResource Include="Report\OrderToSupplierReport.vsrepx" />
     <EmbeddedResource Include="Report\ProductBarcodeReport.vsrepx" />
+    <EmbeddedResource Include="Report\RevenueForPeriodReport.vsrepx" />
     <EmbeddedResource Include="Report\WriteDownProductReport.vsrepx" />
   </ItemGroup>
 
@@ -120,6 +122,12 @@
     </Compile>
     <Compile Update="Report\ProductBarcodeReport.Designer.cs">
       <DependentUpon>ProductBarcodeReport.vsrepx</DependentUpon>
+    </Compile>
+    <Compile Update="Report\RevenueForPeriodReport.cs">
+      <DependentUpon>RevenueForPeriodReport.vsrepx</DependentUpon>
+    </Compile>
+    <Compile Update="Report\RevenueForPeriodReport.Designer.cs">
+      <DependentUpon>RevenueForPeriodReport.vsrepx</DependentUpon>
     </Compile>
     <Compile Update="Report\WriteDownProductReport.cs">
       <DependentUpon>WriteDownProductReport.vsrepx</DependentUpon>

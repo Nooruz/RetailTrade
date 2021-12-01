@@ -47,7 +47,7 @@ namespace RetailTradeServer.ViewModels.Dialogs
 
         #region Commands
 
-        public ICommand PrintClosingShiftsCommand { get; }
+        public ICommand PrintRevenueForPeriodCommand { get; }
 
         #endregion
 
@@ -59,26 +59,26 @@ namespace RetailTradeServer.ViewModels.Dialogs
             _manager = manager;
             _shiftService = shiftService;
 
-            PrintClosingShiftsCommand = new RelayCommand(PrintClosingShifts);
+            PrintRevenueForPeriodCommand = new RelayCommand(PrintRevenueForPeriod);
         }
 
         #endregion
 
         #region Private Voids
 
-        private async void PrintClosingShifts()
+        private async void PrintRevenueForPeriod()
         {
-            ClosingShiftsReport closingShiftsReport = new(SelectedStartDate, SelectedEndDate)
+            RevenueForPeriodReport revenueForPeriodReport = new()
             {
                 DataSource = await _shiftService.GetClosingShifts(SelectedStartDate, SelectedEndDate)
             };
 
-            await closingShiftsReport.CreateDocumentAsync();
+            await revenueForPeriodReport.CreateDocumentAsync();
 
             await _manager.ShowDialog(new DocumentViewerViewModel()
             { 
                 Title = "Закрытие смены",
-                PrintingDocument = closingShiftsReport
+                PrintingDocument = revenueForPeriodReport
             },
                 new DocumentViewerView(),
                 WindowState.Maximized,

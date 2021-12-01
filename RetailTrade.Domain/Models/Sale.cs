@@ -45,6 +45,11 @@ namespace RetailTrade.Domain.Models
         public decimal SalePrice { get; set; }
 
         /// <summary>
+        /// Цена прихода
+        /// </summary>
+        public decimal ArrivalPrice { get; set; }
+
+        /// <summary>
         /// Сумма покупки
         /// </summary>
         public decimal Sum { get; set; }

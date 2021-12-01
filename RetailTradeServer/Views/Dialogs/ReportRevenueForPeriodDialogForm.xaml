@@ -23,7 +23,7 @@
 
         <dxlc:LayoutGroup HorizontalAlignment="Right">
             <Button Content="Загрузить"
-                    Command="{Binding PrintClosingShiftsCommand}"/>
+                    Command="{Binding PrintRevenueForPeriodCommand}"/>
             <Button Content="Закрыть"
                     Command="{Binding CloseCommand}"/>
         </dxlc:LayoutGroup>

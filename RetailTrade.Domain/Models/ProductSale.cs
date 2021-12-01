@@ -18,6 +18,11 @@
         public decimal SalePrice { get; set; }
 
         /// <summary>
+        /// Цена прихода
+        /// </summary>
+        public decimal ArrivalPrice { get; set; }
+
+        /// <summary>
         /// Код товара
         /// </summary>
         public int ProductId { get; set; }
