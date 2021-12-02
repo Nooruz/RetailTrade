@@ -4,6 +4,7 @@ using RetailTrade.Domain.Services;
 using RetailTrade.EntityFramework.Services.Common;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -16,6 +17,7 @@ namespace RetailTrade.EntityFramework.Services
         private readonly NonQueryDataService<ProductCategory> _nonQueryDataService;
 
         public event Action PropertiesChanged;
+        public event Action<ProductCategory> OnProductCategoryCreated;
 
         public ProductCategoryService(RetailTradeDbContextFactory contextFactory)
         {
@@ -27,7 +29,7 @@ namespace RetailTrade.EntityFramework.Services
         {
             var result = await _nonQueryDataService.Create(entity);
             if (result != null)
-                PropertiesChanged?.Invoke();
+                OnProductCategoryCreated?.Invoke(result);
             return result;
         }
 
@@ -122,17 +124,17 @@ namespace RetailTrade.EntityFramework.Services
             return null;
         }
 
-        public List<ProductCategory> GetAllList()
+        public async Task<ObservableCollection<ProductCategory>> GetAllListAsync()
         {
             try
             {
-                using var context = _contextFactory.CreateDbContext();
-                List<ProductCategory> productCategories = new List<ProductCategory>
+                await using var context = _contextFactory.CreateDbContext();
+                List<ProductCategory> productCategories = new()
                 {
                     new ProductCategory { Id = 0, Name = "Все категории" }
                 };
-                productCategories.AddRange(context.ProductCategories.Include(pc => pc.ProductSubcategories).ToList());
-                return productCategories;
+                productCategories.AddRange(await context.ProductCategories.Include(pc => pc.ProductSubcategories).ToListAsync());
+                return new(productCategories);
             }
             catch (Exception e)
             {

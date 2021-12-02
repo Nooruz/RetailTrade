@@ -1,24 +1,12 @@
-﻿using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.DependencyInjection;
+﻿using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using RetailTrade.EntityFramework;
 using RetailTradeClient.HostBuilders;
 using RetailTradeClient.ViewModels;
 using System;
-using System.Runtime.InteropServices;
 using System.Windows;
 
 namespace RetailTradeClient
 {
-
-    public static class OkaPF
-    {
-        [DllImport("drvasOkaMF_KZ.dll", EntryPoint = "Sale")]
-        public static extern void Sale(
-            [MarshalAs(UnmanagedType.BStr)]
-            out string err);
-    }
-
     /// <summary>
     /// Interaction logic for App.xaml
     /// </summary>
@@ -34,9 +22,6 @@ namespace RetailTradeClient
 
         public App()
         {
-            //string err;
-
-            //OkaPF.Sale(out err);
             _host = CreateHostBuilder().Build();
         }
 
@@ -56,16 +41,8 @@ namespace RetailTradeClient
         {
             _host.Start();
 
-            var contextFactory = _host.Services.GetRequiredService<RetailTradeDbContextFactory>();
-            var clientContextFactory = _host.Services.GetRequiredService<ClientRetailTradeDbContextFactory>();
-
             try
             {
-                using (var context = clientContextFactory.CreateDbContext())
-                {
-                    context.Database.Migrate();
-                }
-
                 Window window = _host.Services.GetRequiredService<MainWindow>();
                 window.DataContext = _host.Services.GetRequiredService<MainViewModel>();
                 window.Show();

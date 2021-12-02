@@ -17,6 +17,7 @@ namespace RetailTrade.EntityFramework.Services
         private readonly NonQueryDataService<Product> _nonQueryDataService;
 
         public event Action PropertiesChanged;
+        public event Action<Product> OnProductCreated;
 
         public ProductService(RetailTradeDbContextFactory contextFactory)
         {
@@ -28,7 +29,7 @@ namespace RetailTrade.EntityFramework.Services
         {
             var result = await _nonQueryDataService.Create(entity);
             if (result != null)
-                PropertiesChanged?.Invoke();
+                OnProductCreated?.Invoke(await GetAsync(result.Id));
             return result;
         }
 
@@ -53,7 +54,10 @@ namespace RetailTrade.EntityFramework.Services
             try
             {
                 await using var context = _contextFactory.CreateDbContext();
-                return await context.Products
+                return await context.Products                    
+                    .Include(p => p.Supplier)
+                    .Include(p => p.ProductSubcategory)
+                    .ThenInclude(p => p.ProductCategory)
                     .FirstOrDefaultAsync((e) => e.Id == id);
             }
             catch (Exception e)
@@ -88,57 +92,6 @@ namespace RetailTrade.EntityFramework.Services
                     .Include(p => p.ProductSubcategory)
                     .ThenInclude(p => p.ProductCategory)
                     .ToListAsync();
-            }
-            catch (Exception e)
-            {
-                //ignore
-            }
-            return null;
-        }
-
-        public async Task<Product> GetFirstOrDefaultAsync()
-        {
-            try
-            {
-                await using var context = _contextFactory.CreateDbContext();
-                return await context.Products.FirstOrDefaultAsync();
-            }
-            catch (Exception e)
-            {
-                //ignore
-            }
-            return null;
-        }
-
-        public IEnumerable<Product> GetByInclude()
-        {
-            try
-            {
-                using var context = _contextFactory.CreateDbContext();
-                return context.Products
-                    .Include(p => p.Unit)
-                    .Include(p => p.ProductSubcategory)
-                    .ThenInclude(p => p.ProductCategory)
-                    .ToList();
-            }
-            catch (Exception e)
-            {
-                //ignore
-            }
-            return null;
-        }
-
-        public IEnumerable<Product> GetByProductSubcategoryId(int productSubcategoryId)
-        {
-            try
-            {
-                using var context = _contextFactory.CreateDbContext();
-                return context.Products
-                    .Where(p => p.ProductSubcategoryId == productSubcategoryId)
-                    .Include(p => p.Unit)
-                    .Include(p => p.ProductSubcategory)
-                    .ThenInclude(p => p.ProductCategory)
-                    .ToList();
             }
             catch (Exception e)
             {
@@ -185,62 +138,6 @@ namespace RetailTrade.EntityFramework.Services
             return null;
         }
 
-        public IEnumerable<Product> GetByProductCategoryId(int productCategoryId)
-        {
-            try
-            {
-                using var context = _contextFactory.CreateDbContext();
-                return context.Products
-                    .Where(p => p.ProductSubcategory.ProductCategoryId == productCategoryId)
-                    .Include(p => p.Unit)
-                    .Include(p => p.ProductSubcategory)
-                    .ThenInclude(p => p.ProductCategory)
-                    .ToList();
-            }
-            catch (Exception e)
-            {
-                //ignore
-            }
-            return null;
-        }
-
-        public IEnumerable<Product> GetBySupplierId(int supplierId)
-        {
-            try
-            {
-                using var context = _contextFactory.CreateDbContext();
-                return context.Products
-                    .Where(p => p.SupplierId == supplierId)
-                    .Select(p => new Product { Id = p.Id, Name = p.Name, Quantity = p.Quantity })
-                    .ToList();
-            }
-            catch (Exception e)
-            {
-                //ignore
-            }
-            return null;
-        }
-        
-        public async Task<bool> ArrivalProducts(List<ArrivalProduct> arrivalProducts)
-        {
-            try
-            {
-                await using var context = _contextFactory.CreateDbContext();
-                foreach (ArrivalProduct arrivalProduct in arrivalProducts)
-                {
-                    Product product = await GetByIdAsync(arrivalProduct.Id);
-                    product.Quantity += arrivalProduct.Quantity;
-                    await UpdateAsync(product.Id, product);
-                }
-                return true;
-            }
-            catch
-            {
-                //ignore
-                return false;
-            }
-        }
-
         public async Task<Product> GetByIdAsync(int id)
         {
             try
@@ -248,66 +145,6 @@ namespace RetailTrade.EntityFramework.Services
                 await using var context = _contextFactory.CreateDbContext();
                 return await context.Products
                     .FirstOrDefaultAsync(p => p.Id == id);
-            }
-            catch (Exception e)
-            {
-                //ignore
-            }
-            return null;
-        }
-
-        public async Task<Product> GetByBarcodeAsync(string barcode)
-        {
-            try
-            {
-                await using var context = _contextFactory.CreateDbContext();
-                return await context.Products
-                    .FirstOrDefaultAsync(p => p.Barcode == barcode);
-            }
-            catch (Exception e)
-            {
-                //ignore
-            }
-            return null;
-        }
-
-        public Product GetByBarcode(string barcode)
-        {
-            try
-            {
-                using var context = _contextFactory.CreateDbContext();
-                return context.Products.FirstOrDefault(p => p.Barcode == barcode);
-            }
-            catch (Exception e)
-            {
-                //ignore
-            }
-            return null;
-        }
-
-        public IEnumerable<Product> GetByWithoutBarcode()
-        {
-            try
-            {
-                using var context = _contextFactory.CreateDbContext();
-                return context.Products
-                    .ToList();
-            }
-            catch (Exception e)
-            {
-                //ignore
-            }
-            return null;
-        }
-
-        public async Task<IEnumerable<Product>> Queryable()
-        {
-            try
-            {
-                await using var context = _contextFactory.CreateDbContext();
-                return await context.Products
-                    .Select(p => new Product { Id = p.Id, Name = p.Name, Barcode = p.Barcode, Quantity = p.Quantity })
-                    .ToListAsync();
             }
             catch (Exception e)
             {
@@ -338,10 +175,11 @@ namespace RetailTrade.EntityFramework.Services
             try
             {
                 await using var context = _contextFactory.CreateDbContext();
-                return await context.Products
+                var result = await context.Products
                     .Where(predicate)
                     .Select(select)
                     .ToListAsync();
+                return result;
             }
             catch (Exception e)
             {

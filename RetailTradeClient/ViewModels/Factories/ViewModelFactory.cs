@@ -26,15 +26,12 @@ namespace RetailTradeClient.ViewModels.Factories
 
         public BaseViewModel CreateViewModel(ViewType viewType)
         {
-            switch (viewType)
+            return viewType switch
             {
-                case ViewType.Login:
-                    return _createLoginViewModel();
-                case ViewType.Home:
-                    return _createHomeViewModel();
-                default:
-                    throw new ArgumentException("The ViewType does not have a ViewModel.", "viewType");
-            }
+                ViewType.Login => _createLoginViewModel(),
+                ViewType.Home => _createHomeViewModel(),
+                _ => throw new ArgumentException("The ViewType does not have a ViewModel.", "viewType"),
+            };
         }
     }
 }

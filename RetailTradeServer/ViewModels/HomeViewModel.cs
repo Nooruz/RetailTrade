@@ -3,6 +3,7 @@ using RetailTradeServer.Commands;
 using RetailTradeServer.State.Dialogs;
 using RetailTradeServer.State.Messages;
 using RetailTradeServer.State.Navigators;
+using RetailTradeServer.State.Users;
 using RetailTradeServer.ViewModels.Base;
 using RetailTradeServer.ViewModels.Dialogs;
 using RetailTradeServer.ViewModels.Factories;
@@ -19,6 +20,9 @@ namespace RetailTradeServer.ViewModels
         private readonly IMessageStore _messageStore;
         private readonly IUIManager _manager;
         private readonly IShiftService _shiftService;
+        private readonly IProductSaleService _productSaleService;
+        private readonly IReceiptService _receiptService;
+        private readonly IUserStore _userStore;
 
         #endregion
 
@@ -73,12 +77,18 @@ namespace RetailTradeServer.ViewModels
             IMenuViewModelFactory menuViewModelFactory,
             IUIManager manager,
             IShiftService shiftService,
-            IMessageStore messageStore)
+            IMessageStore messageStore,
+            IProductSaleService productSaleService,
+            IUserStore userStore,
+            IReceiptService receiptService)
         {
             _menuNavigator = menuNavigator;
             _manager = manager;
             _shiftService = shiftService;
             _messageStore = messageStore;
+            _productSaleService = productSaleService;
+            _userStore = userStore;
+            _receiptService = receiptService;
 
             UpdateCurrentMenuViewModelCommand = new UpdateCurrentMenuViewModelCommand(_menuNavigator, menuViewModelFactory);
 
@@ -96,7 +106,7 @@ namespace RetailTradeServer.ViewModels
             PrinterCommand = new RelayCommand(Printer);
             RevenueForPeriodCommand = new RelayCommand(RevenueForPeriod);
 
-            _menuNavigator.StateChanged += MenuNavigator_StateChanged;
+            _menuNavigator.StateChanged += MenuNavigator_StateChanged;            
         }
 
         #endregion
@@ -174,7 +184,7 @@ namespace RetailTradeServer.ViewModels
 
         private void RevenueForPeriod()
         {
-            _ = _manager.ShowDialog(new ReportRevenueForPeriodDialogFormModel(_manager, _shiftService) { Title = "Выручка за период" },
+            _ = _manager.ShowDialog(new ReportRevenueForPeriodDialogFormModel(_manager, _receiptService, _userStore) { Title = "Выручка за период" },
                 new ReportRevenueForPeriodDialogForm());
         }
 

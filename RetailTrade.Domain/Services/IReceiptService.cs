@@ -1,15 +1,13 @@
 ﻿using RetailTrade.Domain.Models;
 using System;
 using System.Collections.Generic;
+using System.Linq.Expressions;
 using System.Threading.Tasks;
 
 namespace RetailTrade.Domain.Services
 {
     public interface IReceiptService : IDataService<Receipt>
     {
-        Task<IEnumerable<Receipt>> GetReceiptsAsync();
-        Task<IEnumerable<Receipt>> GetReceiptsByDateAsync(DateTime dateTime);
-
         /// <summary>
         /// Получить квитанции из текущего смена
         /// </summary>
@@ -17,5 +15,7 @@ namespace RetailTrade.Domain.Services
         Task<IEnumerable<Receipt>> GetReceiptsFromCurrentShift(int shiftId);
 
         Task<bool> Refund(Receipt receipt);
+
+        Task<IEnumerable<Receipt>> Predicate(Expression<Func<Receipt, bool>> predicate, Expression<Func<Receipt, Receipt>> select);
     }
 }

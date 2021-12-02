@@ -462,7 +462,8 @@ namespace RetailTradeServer.ViewModels.Dialogs
                 UnitId = SelectedUnitId.Value,
                 TNVED = TNVED,
                 ArrivalPrice = ArrivalPrice,
-                SalePrice = SalePrice
+                SalePrice = SalePrice,
+                WithoutBarcode = true
             });
 
             if (product != null)

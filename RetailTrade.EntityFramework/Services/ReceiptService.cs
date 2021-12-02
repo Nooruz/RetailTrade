@@ -5,6 +5,7 @@ using RetailTrade.EntityFramework.Services.Common;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Threading.Tasks;
 
 namespace RetailTrade.EntityFramework.Services
@@ -14,23 +15,40 @@ namespace RetailTrade.EntityFramework.Services
         private readonly RetailTradeDbContextFactory _contextFactory;
         private readonly NonQueryDataService<Receipt> _nonQueryDataService;
         private readonly IRefundService _refundService;
+        private readonly IProductService _productService;
 
         public event Action PropertiesChanged;
 
         public ReceiptService(RetailTradeDbContextFactory contextFactory,
-            IRefundService refundService)
+            IRefundService refundService,
+            IProductService productService)
         {
             _contextFactory = contextFactory;
             _refundService = refundService;
-            _nonQueryDataService = new NonQueryDataService<Receipt>(_contextFactory);
+            _productService = productService;
+            _nonQueryDataService = new NonQueryDataService<Receipt>(_contextFactory);            
         }
 
         public async Task<Receipt> CreateAsync(Receipt entity)
         {
-            var result = await _nonQueryDataService.Create(entity);
-            if (result != null)
-                PropertiesChanged?.Invoke();
-            return result;
+            try
+            {
+                var result = await _nonQueryDataService.Create(entity);
+                foreach (var productSale in entity.ProductSales)
+                {
+                    var product = await _productService.GetAsync(productSale.ProductId);
+                    product.Quantity -= productSale.Quantity;
+                    await _productService.UpdateAsync(product.Id, product);
+                }
+                if (result != null)
+                    PropertiesChanged?.Invoke();
+                return result;
+            }
+            catch (Exception)
+            {
+                //ignore
+            }
+            return null;
         }
 
         public async Task<bool> DeleteAsync(int id)
@@ -43,20 +61,16 @@ namespace RetailTrade.EntityFramework.Services
 
         public async Task<Receipt> GetAsync(int id)
         {
-            await using (RetailTradeDbContext context = _contextFactory.CreateDbContext())
-            {
-                Receipt entity = await context.Receipts.FirstOrDefaultAsync((e) => e.Id == id);
-                return entity;
-            }
+            await using RetailTradeDbContext context = _contextFactory.CreateDbContext();
+            Receipt entity = await context.Receipts.FirstOrDefaultAsync((e) => e.Id == id);
+            return entity;
         }
 
         public async Task<IEnumerable<Receipt>> GetAllAsync()
         {
-            await using (RetailTradeDbContext context = _contextFactory.CreateDbContext())
-            {
-                IEnumerable<Receipt> entities = await context.Receipts.ToListAsync();
-                return entities;
-            }
+            await using RetailTradeDbContext context = _contextFactory.CreateDbContext();
+            IEnumerable<Receipt> entities = await context.Receipts.ToListAsync();
+            return entities;
         }
 
         public async Task<Receipt> UpdateAsync(int id, Receipt entity)
@@ -69,39 +83,8 @@ namespace RetailTrade.EntityFramework.Services
 
         public IEnumerable<Receipt> GetAll()
         {
-            using (RetailTradeDbContext context = _contextFactory.CreateDbContext())
-            {
-                return context.Receipts.ToList();
-            }
-        }
-
-        public async Task<IEnumerable<Receipt>> GetReceiptsAsync()
-        {
-            await using RetailTradeDbContext context = _contextFactory.CreateDbContext();
-            var result = await context.Receipts
-                .Include(r => r.Shift)
-                .ThenInclude(r => r.User)
-                .ToListAsync();
-            return result;
-        }
-
-        public async Task<IEnumerable<Receipt>> GetReceiptsByDateAsync(DateTime dateTime)
-        {
-            try
-            {
-                await using RetailTradeDbContext context = _contextFactory.CreateDbContext();
-                var result = await context.Receipts
-                    .Where(r => r.DateOfPurchase.Date == dateTime.Date)
-                    .Include(r => r.Shift)
-                    .ThenInclude(r => r.User)
-                    .ToListAsync();
-                return result;
-            }
-            catch (Exception e)
-            {
-                //ignore
-            }
-            return null;
+            using RetailTradeDbContext context = _contextFactory.CreateDbContext();
+            return context.Receipts.ToList();
         }
 
         public async Task<IEnumerable<Receipt>> GetReceiptsFromCurrentShift(int shiftId)
@@ -148,6 +131,26 @@ namespace RetailTrade.EntityFramework.Services
                 //ignore
             }
             return false;
+        }
+
+        public async Task<IEnumerable<Receipt>> Predicate(Expression<Func<Receipt, bool>> predicate, Expression<Func<Receipt, Receipt>> select)
+        {
+            try
+            {
+                await using var context = _contextFactory.CreateDbContext();
+                return await context.Receipts
+                    .Where(predicate)
+                    .Include(r => r.ProductSales)
+                    .Include(r => r.Shift)
+                    .ThenInclude(r => r.User)
+                    .Select(select)
+                    .ToListAsync();
+            }
+            catch (Exception e)
+            {
+                //ignore
+            }
+            return null;
         }
     }
 }

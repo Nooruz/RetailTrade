@@ -126,7 +126,7 @@
 
                 <ListView Style="{StaticResource lvWithoutBarcode}"
                           Margin="-2.5 0"
-                          ItemsSource="{Binding Products, UpdateSourceTrigger=PropertyChanged}"/>
+                          ItemsSource="{Binding ProductsWithoutBarcode, UpdateSourceTrigger=PropertyChanged}"/>
 
             </dxlc:LayoutGroup>
 

@@ -1,10 +1,13 @@
-﻿using RetailTrade.Domain.Services;
+﻿using RetailTrade.Domain.Models;
+using RetailTrade.Domain.Services;
 using RetailTradeServer.Commands;
 using RetailTradeServer.Report;
 using RetailTradeServer.State.Dialogs;
+using RetailTradeServer.State.Users;
 using RetailTradeServer.ViewModels.Dialogs.Base;
 using RetailTradeServer.Views.Dialogs;
 using System;
+using System.Linq;
 using System.Windows;
 using System.Windows.Input;
 
@@ -15,7 +18,8 @@ namespace RetailTradeServer.ViewModels.Dialogs
         #region Private Members
 
         private readonly IUIManager _manager;
-        private readonly IShiftService _shiftService;
+        private readonly IReceiptService _receiptService;
+        private readonly IUserStore _userStore;
         private DateTime _selectedStartDate = DateTime.Now.Date.AddDays(-30);
         private DateTime _selectedEndDate = DateTime.Now.Date;
 
@@ -54,10 +58,12 @@ namespace RetailTradeServer.ViewModels.Dialogs
         #region Constructor
 
         public ReportRevenueForPeriodDialogFormModel(IUIManager manager,
-            IShiftService shiftService)
+            IReceiptService receiptService,
+            IUserStore userStore)
         {
             _manager = manager;
-            _shiftService = shiftService;
+            _receiptService = receiptService;
+            _userStore = userStore;
 
             PrintRevenueForPeriodCommand = new RelayCommand(PrintRevenueForPeriod);
         }
@@ -68,15 +74,19 @@ namespace RetailTradeServer.ViewModels.Dialogs
 
         private async void PrintRevenueForPeriod()
         {
-            RevenueForPeriodReport revenueForPeriodReport = new()
+            RevenueForPeriodReport revenueForPeriodReport = new(_userStore.CurrentOrganization, SelectedStartDate, SelectedEndDate)
             {
-                DataSource = await _shiftService.GetClosingShifts(SelectedStartDate, SelectedEndDate)
+                DataSource = await _receiptService.Predicate(r => r.DateOfPurchase.Date >= SelectedStartDate && r.DateOfPurchase.Date <= SelectedEndDate,
+                    r => new Receipt { Sum = r.Sum, ProductSales =
+                    r.ProductSales.Select(p => new ProductSale { ArrivalPrice = p.ArrivalPrice, SalePrice = p.SalePrice, Quantity = p.Quantity }).ToList(),
+                        Shift = r.Shift
+                    })
             };
 
             await revenueForPeriodReport.CreateDocumentAsync();
 
             await _manager.ShowDialog(new DocumentViewerViewModel()
-            { 
+            {
                 Title = "Закрытие смены",
                 PrintingDocument = revenueForPeriodReport
             },

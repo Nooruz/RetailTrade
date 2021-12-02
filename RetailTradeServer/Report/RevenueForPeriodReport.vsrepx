@@ -1,28 +1,33 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<XtraReportsLayoutSerializer SerializerVersion="21.2.3.0" Ref="0" ControlType="DevExpress.XtraReports.UI.XtraReport, DevExpress.XtraReports.v21.2, Version=21.2.3.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a" Name="RevenueForPeriodReport" PageWidth="850" PageHeight="1100" Version="21.2">
+<XtraReportsLayoutSerializer SerializerVersion="21.2.3.0" Ref="1" ControlType="DevExpress.XtraReports.UI.XtraReport, DevExpress.XtraReports.v21.2, Version=21.2.3.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a" Name="RevenueForPeriodReport" PageWidth="850" PageHeight="1100" Version="21.2" DataSource="#Ref-0">
   <Extensions>
-    <Item1 Ref="1" Key="VSReportExtInfo" Value=".vsrepx" />
+    <Item1 Ref="2" Key="VSReportExtInfo" Value=".vsrepx" />
   </Extensions>
   <Bands>
-    <Item1 Ref="2" ControlType="TopMarginBand" Name="topMarginBand1" />
-    <Item2 Ref="3" ControlType="DetailBand" Name="detailBand1" HeightF="50">
+    <Item1 Ref="3" ControlType="TopMarginBand" Name="topMarginBand1" />
+    <Item2 Ref="4" ControlType="DetailBand" Name="detailBand1" HeightF="25">
       <Controls>
-        <Item1 Ref="4" ControlType="XRTable" Name="table1" TextAlignment="MiddleLeft" SizeF="630,50" LocationFloat="10,0" Font="Times New Roman, 12pt, charSet=204" Padding="2,2,0,0,96" Borders="All">
+        <Item1 Ref="5" ControlType="XRTable" Name="table1" TextAlignment="MiddleLeft" SizeF="630,25" LocationFloat="10,0" Font="Times New Roman, 12pt, charSet=204" Padding="2,2,0,0,96" Borders="All">
           <Rows>
-            <Item1 Ref="5" ControlType="XRTableRow" Name="tableRow1" Weight="1">
+            <Item1 Ref="6" ControlType="XRTableRow" Name="tableRow1" Weight="1">
               <Cells>
-                <Item1 Ref="6" ControlType="XRTableCell" Name="tableCell1" Weight="0.6428571428571429" Multiline="true" Text="Касса:" />
-                <Item2 Ref="7" ControlType="XRTableCell" Name="tcCash" Weight="0.92063482375372008" TextFormatString="{0:N2}" Multiline="true" Text="tcCash" />
-                <Item3 Ref="8" ControlType="XRTableCell" Name="tableCell3" Weight="1.4365080333891369" Multiline="true" Text="tableCell3" />
+                <Item1 Ref="7" ControlType="XRTableCell" Name="tableCell1" Weight="1.5357142857142858" Multiline="true">
+                  <ExpressionBindings>
+                    <Item1 Ref="8" EventName="BeforePrint" PropertyName="Text" Expression="[Shift].[User].[FullName]" />
+                  </ExpressionBindings>
+                </Item1>
+                <Item2 Ref="9" ControlType="XRTableCell" Name="tcCash" Weight="0.727182442801339" TextFormatString="{0:N2}" Multiline="true">
+                  <ExpressionBindings>
+                    <Item1 Ref="10" EventName="BeforePrint" PropertyName="Text" Expression="[Sum]" />
+                  </ExpressionBindings>
+                </Item2>
+                <Item3 Ref="11" ControlType="XRTableCell" Name="tableCell3" Weight="0.737103271484375" TextFormatString="{0:N2}" Multiline="true">
+                  <ExpressionBindings>
+                    <Item1 Ref="12" EventName="BeforePrint" PropertyName="Text" Expression="([ProductSales].[SalePrice]-[ProductSales].[ArrivalPrice])*[ProductSales].[Quantity]" />
+                  </ExpressionBindings>
+                </Item3>
               </Cells>
             </Item1>
-            <Item2 Ref="9" ControlType="XRTableRow" Name="tableRow2" Weight="1">
-              <Cells>
-                <Item1 Ref="10" ControlType="XRTableCell" Name="tableCell4" Weight="0.6428571428571429" Multiline="true" Text="Расход:" />
-                <Item2 Ref="11" ControlType="XRTableCell" Name="tcExpenditure" Weight="0.92063482375372008" TextFormatString="{0:N2}" Multiline="true" Text="tcExpenditure" />
-                <Item3 Ref="12" ControlType="XRTableCell" Name="tableCell6" Weight="1.4365080333891369" Multiline="true" Text="tableCell6" />
-              </Cells>
-            </Item2>
           </Rows>
           <StylePriority Ref="13" UseFont="false" UseBorders="false" UseTextAlignment="false" />
         </Item1>
@@ -39,27 +44,51 @@
         </Item2>
       </Controls>
     </Item4>
-    <Item5 Ref="20" ControlType="ReportFooterBand" Name="ReportFooter">
+    <Item5 Ref="20" ControlType="ReportFooterBand" Name="ReportFooter" HeightF="137.5">
       <Controls>
-        <Item1 Ref="21" ControlType="XRTable" Name="table2" TextAlignment="MiddleLeft" SizeF="328.3333,25" LocationFloat="10,0" Font="Times New Roman, 12pt, style=Bold, charSet=204" Padding="2,2,0,0,96" Borders="Left, Right, Bottom">
+        <Item1 Ref="21" ControlType="XRTable" Name="table2" TextAlignment="MiddleLeft" SizeF="630,25" LocationFloat="10,0" Font="Times New Roman, 12pt, style=Bold, charSet=204" Padding="2,2,0,0,96" Borders="Left, Right, Bottom">
           <Rows>
             <Item1 Ref="22" ControlType="XRTableRow" Name="tableRow3" Weight="1">
               <Cells>
-                <Item1 Ref="23" ControlType="XRTableCell" Name="tableCell7" Weight="0.6428571428571429" Multiline="true" Text="Итого:" />
-                <Item2 Ref="24" ControlType="XRTableCell" Name="tableCell8" Weight="0.92063482375372008" TextFormatString="{0:N2}" Multiline="true" Text="tableCell2" />
+                <Item1 Ref="23" ControlType="XRTableCell" Name="tableCell7" Weight="2.6520065309548224" Multiline="true" Text="Итого:" />
+                <Item2 Ref="24" ControlType="XRTableCell" Name="tableCell4" Weight="1.255762853623164" TextFormatString="{0:N2}" Multiline="true" Text="tableCell4">
+                  <ExpressionBindings>
+                    <Item1 Ref="25" EventName="BeforePrint" PropertyName="Text" Expression="Sum([Sum])" />
+                  </ExpressionBindings>
+                </Item2>
+                <Item3 Ref="26" ControlType="XRTableCell" Name="tableCell8" Weight="1.2728943316001093" TextFormatString="{0:N2}" Multiline="true" Text="tableCell2">
+                  <ExpressionBindings>
+                    <Item1 Ref="27" EventName="BeforePrint" PropertyName="Text" Expression="Sum(([ProductSales].[SalePrice]-[ProductSales].[ArrivalPrice])*[ProductSales].[Quantity]&#xA;)" />
+                  </ExpressionBindings>
+                </Item3>
               </Cells>
             </Item1>
           </Rows>
-          <StylePriority Ref="25" UseFont="false" UseBorders="false" UseTextAlignment="false" />
+          <StylePriority Ref="28" UseFont="false" UseBorders="false" UseTextAlignment="false" />
         </Item1>
       </Controls>
     </Item5>
-    <Item6 Ref="26" ControlType="GroupHeaderBand" Name="GroupHeader1" HeightF="53.125">
+    <Item6 Ref="29" ControlType="GroupHeaderBand" Name="GroupHeader1">
       <Controls>
-        <Item1 Ref="27" ControlType="XRLabel" Name="lbTitle" Multiline="true" Text="Выручка за период с 01.11.2021 по 30.11.2021" TextAlignment="MiddleCenter" SizeF="630,23" LocationFloat="10,10.0000181" Font="Times New Roman, 12pt, charSet=204" Padding="2,2,0,0,100">
-          <StylePriority Ref="28" UseFont="false" UseTextAlignment="false" />
+        <Item1 Ref="30" ControlType="XRTable" Name="table3" TextAlignment="MiddleCenter" SizeF="630,25" LocationFloat="10,75" Font="Times New Roman, 12pt, style=Bold, charSet=204" Padding="2,2,0,0,96" Borders="Left, Top, Right">
+          <Rows>
+            <Item1 Ref="31" ControlType="XRTableRow" Name="tableRow4" Weight="1">
+              <Cells>
+                <Item1 Ref="32" ControlType="XRTableCell" Name="tableCell2" Weight="1.5357142857142858" Multiline="true" Text="Кассиры" />
+                <Item2 Ref="33" ControlType="XRTableCell" Name="tableCell5" Weight="0.727182442801339" Multiline="true" Text="Выручка" />
+                <Item3 Ref="34" ControlType="XRTableCell" Name="tableCell9" Weight="0.737103271484375" Multiline="true" Text="Валовая прибыль" />
+              </Cells>
+            </Item1>
+          </Rows>
+          <StylePriority Ref="35" UseFont="false" UseBorders="false" UseTextAlignment="false" />
         </Item1>
+        <Item2 Ref="36" ControlType="XRLabel" Name="lbTitle" Multiline="true" Text="Выручка за период с 01.11.2021 по 30.11.2021" TextAlignment="MiddleCenter" SizeF="630,23" LocationFloat="10,10.0000181" Font="Times New Roman, 12pt, charSet=204" Padding="2,2,0,0,100">
+          <StylePriority Ref="37" UseFont="false" UseTextAlignment="false" />
+        </Item2>
       </Controls>
     </Item6>
   </Bands>
+  <ComponentStorage>
+    <Item1 Ref="0" ObjectType="DevExpress.DataAccess.ObjectBinding.ObjectDataSource,DevExpress.DataAccess.v21.2" Name="objectDataSource1" Base64="PE9iamVjdERhdGFTb3VyY2UgTmFtZT0ib2JqZWN0RGF0YVNvdXJjZTEiIC8+" />
+  </ComponentStorage>
 </XtraReportsLayoutSerializer>

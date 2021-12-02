@@ -47,13 +47,13 @@ namespace RetailTradeClient.ViewModels
 
         #region Public Properties
 
-        public ObservableCollection<Product> Products
+        public ObservableCollection<Product> ProductsWithoutBarcode
         {
             get => _products;
             set
             {
                 _products = value;
-                OnPropertyChanged(nameof(Products));
+                OnPropertyChanged(nameof(ProductsWithoutBarcode));
             }
         }
         public ObservableCollection<Sale> SaleProducts { get; set; }
@@ -341,8 +341,8 @@ namespace RetailTradeClient.ViewModels
 
         private async void ProductService_PropertiesChanged()
         {
-            Products = new(await _productService.PredicateSelect(p => p.Quantity > 0,
-                p => new Product { Id = p.Id, Name = p.Name, SalePrice = p.SalePrice, Quantity = p.Quantity }));
+            ProductsWithoutBarcode = new(await _productService.PredicateSelect(p => p.Quantity > 0,
+                p => new Product { Id = p.Id, Name = p.Name, SalePrice = p.SalePrice, ArrivalPrice = p.ArrivalPrice, Quantity = p.Quantity, WithoutBarcode = true }));
         }
 
         private void QuantityValidate(object parameter)
@@ -366,7 +366,7 @@ namespace RetailTradeClient.ViewModels
         {
             if (parameter is TextCompositionEventArgs e)
             {
-                Barcode = Barcode + e.Text;
+                Barcode += e.Text;
             }
         }
 
@@ -434,7 +434,7 @@ namespace RetailTradeClient.ViewModels
                     Id = new Guid(),
                     DateTime = DateTime.Now,       
                     Sum = SaleProducts.Sum(sp => sp.Sum),
-                    PostponeProducts = SaleProducts.Select(sp => new PostponeProduct { Id = sp.Id, Name = sp.Name, SalePrice = sp.SalePrice, Quantity = sp.Quantity, Sum = sp.Sum }).ToList()
+                    PostponeProducts = SaleProducts.Select(sp => new PostponeProduct { Id = sp.Id, Name = sp.Name, ArrivalPrice = sp.ArrivalPrice, SalePrice = sp.SalePrice, Quantity = sp.Quantity, Sum = sp.Sum }).ToList()
                 });
                 SaleProducts.Clear();
                 OnPropertyChanged(nameof(Sum));
@@ -463,7 +463,7 @@ namespace RetailTradeClient.ViewModels
         {
             if (parameter is int id)
             {
-                var product = Products.FirstOrDefault(p => p.Id == id);
+                var product = ProductsWithoutBarcode.FirstOrDefault(p => p.Id == id);
                 var saleProduct = SaleProducts.FirstOrDefault(sp => sp.Id == id);
                 if (saleProduct == null)
                 {
@@ -473,6 +473,7 @@ namespace RetailTradeClient.ViewModels
                         Name = product.Name,
                         Quantity = 1,
                         SalePrice = product.SalePrice,
+                        ArrivalPrice = product.ArrivalPrice,
                         Sum = product.SalePrice,
                         QuantityInStock = product.Quantity
                     });
@@ -518,9 +519,9 @@ namespace RetailTradeClient.ViewModels
 
         private async void OpenMainMenu()
         {
-            var result = await _manager.ShowDialog(new MainMenuViewModel(_cashRegisterControlMachine, _shiftStore, _userStore.CurrentUser.Id, _manager)
+            _ = await _manager.ShowDialog(new MainMenuViewModel(_cashRegisterControlMachine, _shiftStore, _userStore.CurrentUser.Id, _manager)
             {
-                Title = $"РМК: {(_userStore.CurrentUser != null ? _userStore.CurrentUser.FullName : null)}"
+                Title = $"РМК: {(_userStore.CurrentUser?.FullName)}"
             },
                 new MainMenuView());
         }

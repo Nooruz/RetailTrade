@@ -6,6 +6,8 @@ using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using RetailTrade.EntityFramework;
 
+#nullable disable
+
 namespace RetailTrade.EntityFramework.Migrations
 {
     [DbContext(typeof(RetailTradeDbContext))]
@@ -15,16 +17,18 @@ namespace RetailTrade.EntityFramework.Migrations
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("Relational:MaxIdentifierLength", 128)
-                .HasAnnotation("ProductVersion", "5.0.11")
-                .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                .HasAnnotation("ProductVersion", "6.0.0")
+                .HasAnnotation("Relational:MaxIdentifierLength", 128);
+
+            SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder, 1L, 1);
 
             modelBuilder.Entity("RetailTrade.Domain.Models.Arrival", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
 
                     b.Property<DateTime>("ArrivalDate")
                         .HasColumnType("datetime2");
@@ -46,8 +50,9 @@ namespace RetailTrade.EntityFramework.Migrations
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
 
                     b.Property<int>("ArrivalId")
                         .HasColumnType("int");
@@ -71,8 +76,9 @@ namespace RetailTrade.EntityFramework.Migrations
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
 
                     b.Property<string>("Address")
                         .HasColumnType("nvarchar(max)");
@@ -95,8 +101,9 @@ namespace RetailTrade.EntityFramework.Migrations
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
 
                     b.Property<int>("OrderToSupplierId")
                         .HasColumnType("int");
@@ -120,8 +127,9 @@ namespace RetailTrade.EntityFramework.Migrations
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
 
                     b.Property<string>("Name")
                         .HasColumnType("nvarchar(max)");
@@ -152,8 +160,9 @@ namespace RetailTrade.EntityFramework.Migrations
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
 
                     b.Property<string>("Comment")
                         .HasColumnType("nvarchar(max)");
@@ -180,8 +189,9 @@ namespace RetailTrade.EntityFramework.Migrations
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
 
                     b.Property<string>("Address")
                         .HasColumnType("nvarchar(max)");
@@ -207,8 +217,9 @@ namespace RetailTrade.EntityFramework.Migrations
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
 
                     b.Property<decimal>("ArrivalPrice")
                         .HasColumnType("decimal(18,2)");
@@ -255,8 +266,9 @@ namespace RetailTrade.EntityFramework.Migrations
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
 
                     b.Property<string>("Name")
                         .HasColumnType("nvarchar(max)");
@@ -264,81 +276,15 @@ namespace RetailTrade.EntityFramework.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("ProductCategories");
-
-                    b.HasData(
-                        new
-                        {
-                            Id = 1,
-                            Name = "Алкоголь"
-                        },
-                        new
-                        {
-                            Id = 2,
-                            Name = "Бакалея"
-                        },
-                        new
-                        {
-                            Id = 3,
-                            Name = "Бытовая химия"
-                        },
-                        new
-                        {
-                            Id = 4,
-                            Name = "Колбасы"
-                        },
-                        new
-                        {
-                            Id = 5,
-                            Name = "Консервы"
-                        },
-                        new
-                        {
-                            Id = 6,
-                            Name = "Молочные продукты"
-                        },
-                        new
-                        {
-                            Id = 7,
-                            Name = "Напитки"
-                        },
-                        new
-                        {
-                            Id = 8,
-                            Name = "Сигареты"
-                        },
-                        new
-                        {
-                            Id = 9,
-                            Name = "Сладости"
-                        },
-                        new
-                        {
-                            Id = 10,
-                            Name = "Снэки"
-                        },
-                        new
-                        {
-                            Id = 11,
-                            Name = "Хлебо-булочные издели"
-                        },
-                        new
-                        {
-                            Id = 12,
-                            Name = "Чай, кофе"
-                        },
-                        new
-                        {
-                            Id = 13,
-                            Name = "Прочие"
-                        });
                 });
 
             modelBuilder.Entity("RetailTrade.Domain.Models.ProductRefund", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
 
                     b.Property<int>("ProductId")
                         .HasColumnType("int");
@@ -371,8 +317,12 @@ namespace RetailTrade.EntityFramework.Migrations
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+
+                    b.Property<decimal>("ArrivalPrice")
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<int>("ProductId")
                         .HasColumnType("int");
@@ -402,8 +352,9 @@ namespace RetailTrade.EntityFramework.Migrations
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
 
                     b.Property<string>("Name")
                         .HasColumnType("nvarchar(max)");
@@ -416,274 +367,15 @@ namespace RetailTrade.EntityFramework.Migrations
                     b.HasIndex("ProductCategoryId");
 
                     b.ToTable("ProductSubcategories");
-
-                    b.HasData(
-                        new
-                        {
-                            Id = 1,
-                            Name = "Водка",
-                            ProductCategoryId = 1
-                        },
-                        new
-                        {
-                            Id = 2,
-                            Name = "Пиво",
-                            ProductCategoryId = 1
-                        },
-                        new
-                        {
-                            Id = 3,
-                            Name = "Крупы",
-                            ProductCategoryId = 2
-                        },
-                        new
-                        {
-                            Id = 4,
-                            Name = "Макаронные изделия",
-                            ProductCategoryId = 2
-                        },
-                        new
-                        {
-                            Id = 5,
-                            Name = "Масло подсолнечное",
-                            ProductCategoryId = 2
-                        },
-                        new
-                        {
-                            Id = 6,
-                            Name = "Мука",
-                            ProductCategoryId = 2
-                        },
-                        new
-                        {
-                            Id = 7,
-                            Name = "Салаты",
-                            ProductCategoryId = 2
-                        },
-                        new
-                        {
-                            Id = 8,
-                            Name = "Мыло",
-                            ProductCategoryId = 3
-                        },
-                        new
-                        {
-                            Id = 9,
-                            Name = "Освежитель воздуха",
-                            ProductCategoryId = 3
-                        },
-                        new
-                        {
-                            Id = 10,
-                            Name = "Бекон",
-                            ProductCategoryId = 4
-                        },
-                        new
-                        {
-                            Id = 11,
-                            Name = "Колбаса вареная",
-                            ProductCategoryId = 4
-                        },
-                        new
-                        {
-                            Id = 12,
-                            Name = "Колбаса копченная",
-                            ProductCategoryId = 4
-                        },
-                        new
-                        {
-                            Id = 13,
-                            Name = "Сосиски",
-                            ProductCategoryId = 4
-                        },
-                        new
-                        {
-                            Id = 14,
-                            Name = "Сыры",
-                            ProductCategoryId = 4
-                        },
-                        new
-                        {
-                            Id = 15,
-                            Name = "Грибы",
-                            ProductCategoryId = 5
-                        },
-                        new
-                        {
-                            Id = 16,
-                            Name = "Маслины, оливки",
-                            ProductCategoryId = 5
-                        },
-                        new
-                        {
-                            Id = 17,
-                            Name = "Овощные консервы",
-                            ProductCategoryId = 5
-                        },
-                        new
-                        {
-                            Id = 18,
-                            Name = "Рыбные консервы",
-                            ProductCategoryId = 5
-                        },
-                        new
-                        {
-                            Id = 19,
-                            Name = "Кефир и йогурт",
-                            ProductCategoryId = 6
-                        },
-                        new
-                        {
-                            Id = 20,
-                            Name = "Масло сливочное",
-                            ProductCategoryId = 6
-                        },
-                        new
-                        {
-                            Id = 21,
-                            Name = "Молоко",
-                            ProductCategoryId = 6
-                        },
-                        new
-                        {
-                            Id = 22,
-                            Name = "Мороженое",
-                            ProductCategoryId = 6
-                        },
-                        new
-                        {
-                            Id = 23,
-                            Name = "Сыр",
-                            ProductCategoryId = 6
-                        },
-                        new
-                        {
-                            Id = 24,
-                            Name = "Творог",
-                            ProductCategoryId = 6
-                        },
-                        new
-                        {
-                            Id = 25,
-                            Name = "Минеральная вода",
-                            ProductCategoryId = 7
-                        },
-                        new
-                        {
-                            Id = 26,
-                            Name = "Соки",
-                            ProductCategoryId = 7
-                        },
-                        new
-                        {
-                            Id = 27,
-                            Name = "Кент",
-                            ProductCategoryId = 8
-                        },
-                        new
-                        {
-                            Id = 28,
-                            Name = "Бонд",
-                            ProductCategoryId = 8
-                        },
-                        new
-                        {
-                            Id = 29,
-                            Name = "Винстон",
-                            ProductCategoryId = 8
-                        },
-                        new
-                        {
-                            Id = 30,
-                            Name = "Боксы",
-                            ProductCategoryId = 9
-                        },
-                        new
-                        {
-                            Id = 31,
-                            Name = "Вафли",
-                            ProductCategoryId = 9
-                        },
-                        new
-                        {
-                            Id = 32,
-                            Name = "Конфеты",
-                            ProductCategoryId = 9
-                        },
-                        new
-                        {
-                            Id = 33,
-                            Name = "Печенье",
-                            ProductCategoryId = 9
-                        },
-                        new
-                        {
-                            Id = 34,
-                            Name = "Пряники",
-                            ProductCategoryId = 9
-                        },
-                        new
-                        {
-                            Id = 35,
-                            Name = "Шоколад",
-                            ProductCategoryId = 9
-                        },
-                        new
-                        {
-                            Id = 36,
-                            Name = "Сухарики",
-                            ProductCategoryId = 10
-                        },
-                        new
-                        {
-                            Id = 37,
-                            Name = "Фисташки",
-                            ProductCategoryId = 10
-                        },
-                        new
-                        {
-                            Id = 38,
-                            Name = "Чипсы",
-                            ProductCategoryId = 10
-                        },
-                        new
-                        {
-                            Id = 39,
-                            Name = "Сдоба",
-                            ProductCategoryId = 11
-                        },
-                        new
-                        {
-                            Id = 40,
-                            Name = "Хлеб",
-                            ProductCategoryId = 11
-                        },
-                        new
-                        {
-                            Id = 41,
-                            Name = "Кофе",
-                            ProductCategoryId = 12
-                        },
-                        new
-                        {
-                            Id = 42,
-                            Name = "Чай",
-                            ProductCategoryId = 12
-                        },
-                        new
-                        {
-                            Id = 43,
-                            Name = "Цукерка",
-                            ProductCategoryId = 12
-                        });
                 });
 
             modelBuilder.Entity("RetailTrade.Domain.Models.Receipt", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
 
                     b.Property<decimal>("Change")
                         .HasColumnType("decimal(18,2)");
@@ -714,8 +406,9 @@ namespace RetailTrade.EntityFramework.Migrations
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
 
                     b.Property<DateTime>("DateOfRefund")
                         .HasColumnType("datetime2");
@@ -737,8 +430,9 @@ namespace RetailTrade.EntityFramework.Migrations
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
 
                     b.Property<string>("Comment")
                         .HasColumnType("nvarchar(max)");
@@ -760,8 +454,9 @@ namespace RetailTrade.EntityFramework.Migrations
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
 
                     b.Property<int>("ProductId")
                         .HasColumnType("int");
@@ -785,8 +480,9 @@ namespace RetailTrade.EntityFramework.Migrations
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
 
                     b.Property<string>("Name")
                         .HasColumnType("nvarchar(max)");
@@ -812,8 +508,9 @@ namespace RetailTrade.EntityFramework.Migrations
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
 
                     b.Property<DateTime?>("ClosingDate")
                         .HasColumnType("datetime2");
@@ -835,8 +532,9 @@ namespace RetailTrade.EntityFramework.Migrations
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
 
                     b.Property<string>("Address")
                         .HasColumnType("nvarchar(max)");
@@ -865,8 +563,9 @@ namespace RetailTrade.EntityFramework.Migrations
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
 
                     b.Property<string>("LongName")
                         .HasColumnType("nvarchar(max)");
@@ -915,8 +614,9 @@ namespace RetailTrade.EntityFramework.Migrations
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
 
                     b.Property<string>("FullName")
                         .HasColumnType("nvarchar(max)");
@@ -944,8 +644,9 @@ namespace RetailTrade.EntityFramework.Migrations
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
 
                     b.Property<string>("Comment")
                         .HasColumnType("nvarchar(max)");
@@ -967,8 +668,9 @@ namespace RetailTrade.EntityFramework.Migrations
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
 
                     b.Property<int>("ProductId")
                         .HasColumnType("int");
@@ -1265,9 +967,9 @@ namespace RetailTrade.EntityFramework.Migrations
 
                     b.Navigation("Orders");
 
-                    b.Navigation("ProductRefunds");
-
                     b.Navigation("ProductRefundToSuppliers");
+
+                    b.Navigation("ProductRefunds");
 
                     b.Navigation("ProductSales");
 

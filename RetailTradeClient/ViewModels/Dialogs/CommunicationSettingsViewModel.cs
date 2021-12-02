@@ -1,8 +1,6 @@
 ﻿using RetailTradeClient.Commands;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.IO.Ports;
-using System.Linq;
 using System.Runtime.InteropServices;
 using System.Windows.Input;
 
@@ -12,11 +10,11 @@ namespace RetailTradeClient.ViewModels.Dialogs
     {
         #region Private Members
 
-        private string _selectedCOMPort = SerialPort.GetPortNames().Length == 0 ? string.Empty : SerialPort.GetPortNames()[0];
+        //private string _selectedCOMPort = SerialPort.GetPortNames().Length == 0 ? string.Empty : SerialPort.GetPortNames()[0];
         private int _selectedBaudRate = 115200;
         private int _timeoutBetweenComputer = 500;
         private int _timeout = 7500;
-        private SerialPort Port;
+        //private SerialPort Port;
 
         #endregion
 
@@ -25,7 +23,7 @@ namespace RetailTradeClient.ViewModels.Dialogs
         /// <summary>
         /// Список доступных COM портов
         /// </summary>
-        public List<string> COMPorts => new(SerialPort.GetPortNames());
+        //public List<string> COMPorts => new(SerialPort.GetPortNames());
 
         public ObservableCollection<CRM> GetCRMs { get; set; }
 
@@ -37,15 +35,15 @@ namespace RetailTradeClient.ViewModels.Dialogs
         /// <summary>
         /// Выбранный COM порт
         /// </summary>
-        public string SelectedCOMPort
-        {
-            get => _selectedCOMPort;
-            set
-            {
-                _selectedCOMPort = value;
-                OnPropertyChanged(nameof(SelectedCOMPort));
-            }
-        }
+        //public string SelectedCOMPort
+        //{
+        //    get => _selectedCOMPort;
+        //    set
+        //    {
+        //        _selectedCOMPort = value;
+        //        OnPropertyChanged(nameof(SelectedCOMPort));
+        //    }
+        //}
 
         /// <summary>
         /// Выбранный бодрейт

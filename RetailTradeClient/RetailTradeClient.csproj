@@ -21,15 +21,12 @@
   </ItemGroup>
 
   <ItemGroup>
-    <None Remove="drvasOkaMF_KZ.dll" />
-    <None Remove="drvOKA1C.dll" />
     <None Remove="Fonts\fa-brands-400.ttf" />
     <None Remove="Fonts\fa-regular-400.ttf" />
     <None Remove="Fonts\fa-solid-900.ttf" />
     <None Remove="Report\ProductSaleReport.vsrepx" />
     <None Remove="Report\XReport.vsrepx" />
     <None Remove="Report\ZReport.vsrepx" />
-    <None Remove="Test.dll" />
   </ItemGroup>
 
   <ItemGroup>
@@ -42,18 +39,6 @@
       <Isolated>false</Isolated>
       <EmbedInteropTypes>true</EmbedInteropTypes>
     </COMReference>
-  </ItemGroup>
-
-  <ItemGroup>
-    <Content Include="drvasOkaMF_KZ.dll">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="drvOKA1C.dll">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Test.dll">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
   </ItemGroup>
 
   <ItemGroup>
@@ -78,6 +63,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\RetailTrade.CashRegisterMachine\RetailTrade.CashRegisterMachine.csproj" />
     <ProjectReference Include="..\RetailTrade.Domain\RetailTrade.Domain.csproj" />
     <ProjectReference Include="..\RetailTrade.EntityFramework\RetailTrade.EntityFramework.csproj" />
   </ItemGroup>

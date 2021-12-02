@@ -47,6 +47,6 @@ namespace RetailTrade.Domain.Models
         /// <summary>
         /// Товары
         /// </summary>
-        public ICollection<ProductSale> ProductSales { get; set; }
+        public List<ProductSale> ProductSales { get; set; }
     }
 }

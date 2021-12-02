@@ -5,6 +5,7 @@ using RetailTradeServer.State.Authenticators;
 using RetailTradeServer.State.Dialogs;
 using RetailTradeServer.State.Messages;
 using RetailTradeServer.State.Navigators;
+using RetailTradeServer.State.Users;
 using RetailTradeServer.ViewModels;
 using RetailTradeServer.ViewModels.Base;
 using RetailTradeServer.ViewModels.Factories;
@@ -54,7 +55,10 @@ namespace RetailTradeServer.HostBuilders
                 services.GetRequiredService<IMenuViewModelFactory>(),
                 services.GetRequiredService<IUIManager>(),
                 services.GetRequiredService<IShiftService>(),
-                services.GetRequiredService<IMessageStore>());
+                services.GetRequiredService<IMessageStore>(),
+                services.GetRequiredService<IProductSaleService>(),
+                services.GetRequiredService<IUserStore>(),
+                services.GetRequiredService<IReceiptService>());
         }
 
         private static LoginViewModel CreateLoginViewModel(IServiceProvider services)

@@ -111,6 +111,25 @@ namespace RetailTrade.EntityFramework.Services
             return null;
         }
 
+        public async Task<IEnumerable<ProductSale>> GetProductSalesByDateRange(DateTime startDate, DateTime endDate)
+        {
+            try
+            {
+                await using var context = _contextFactory.CreateDbContext();
+                var result = await context.ProductSales
+                    .Include(p => p.Receipt)
+                    .Where(p => p.Receipt.DateOfPurchase.Date >= startDate && p.Receipt.DateOfPurchase.Date <= endDate)
+                    .Select(p => new ProductSale { ArrivalPrice = p.ArrivalPrice, SalePrice = p.SalePrice, Quantity = p.Quantity })
+                    .ToListAsync();
+                return result;
+            }
+            catch (Exception e)
+            {
+                //ignore
+            }
+            return null;
+        }
+
         public async Task<ProductSale> UpdateAsync(int id, ProductSale entity)
         {
             var result = await _nonQueryDataService.Update(id, entity);

@@ -42,7 +42,7 @@
                                      ChildNodesPath="ProductSubcategories"
                                      KeyFieldName="Name"
                                      TreeViewFieldName="Name"
-                                     SelectedItem="{Binding SelectedProductGroup}">
+                                     SelectedItem="{Binding SelectedProductGroup}" >
                     <dxmvvm:Interaction.Behaviors>
                         <dxmvvm:EventToCommand EventName="SelectedItemChanged" 
                                                Command="{Binding SelectedItemChangedCommand}"/>

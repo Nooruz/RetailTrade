@@ -6,9 +6,8 @@ using RetailTradeServer.State.Messages;
 using RetailTradeServer.ViewModels.Base;
 using RetailTradeServer.ViewModels.Dialogs;
 using RetailTradeServer.Views.Dialogs;
-using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
-using System.Threading.Tasks;
 using System.Windows.Input;
 
 namespace RetailTradeServer.ViewModels.Menus
@@ -25,7 +24,8 @@ namespace RetailTradeServer.ViewModels.Menus
         private readonly ISupplierService _supplierService;
         private readonly IMessageStore _messageStore;
         private object _selectedProductGroup;
-        private IEnumerable<Product> _getProducts;
+        private ObservableCollection<Product> _getProducts;
+        private ObservableCollection<ProductCategory> _productCategories;
         private bool _canShowLoadingPanel = true;
 
         #endregion
@@ -43,8 +43,24 @@ namespace RetailTradeServer.ViewModels.Menus
         #region Public Properties
 
         public GlobalMessageViewModel GlobalMessageViewModel { get; }
-        public List<ProductCategory> ProductCategories => _productCategoryService.GetAllList();
-        public IEnumerable<Product> GetProducts
+        public ObservableCollection<ProductCategory> ProductCategories
+        {
+            get
+            {
+                if (_productCategories != null)
+                {
+                    return _productCategories;
+                }
+                _productCategories = new();
+                return _productCategories;
+            }
+            set
+            {
+                _productCategories = value;
+                OnPropertyChanged(nameof(ProductCategories));
+            }
+        }
+        public ObservableCollection<Product> GetProducts
         {
             get => _getProducts;
             set
@@ -101,9 +117,11 @@ namespace RetailTradeServer.ViewModels.Menus
             GetProductsCommandAsync = new RelayCommand(GetProductsAsync);
             SelectedItemChangedCommand = new RelayCommand(GetProductsAsync);
 
-            _productCategoryService.PropertiesChanged += ProductCategoryService_PropertiesChanged;
-            _productSubcategoryService.PropertiesChanged += ProductSubcategoryService_PropertiesChanged;
-            _productService.PropertiesChanged += GetProductsAsync;
+            GetProductCategories();
+
+            _productCategoryService.OnProductCategoryCreated += ProductCategoryService_OnProductCategoryCreated;
+            _productSubcategoryService.OnProductSubcategoryCreated += ProductSubcategoryService_OnProductSubcategoryCreated;
+            _productService.OnProductCreated += ProductService_OnProductCreated;
         }
 
         #endregion
@@ -149,32 +167,46 @@ namespace RetailTradeServer.ViewModels.Menus
             new CreateProductDialogForm());
         }
 
-        private void ProductCategoryService_PropertiesChanged()
-        {
-            OnPropertyChanged(nameof(ProductCategories));
-        }
-
-        private void ProductSubcategoryService_PropertiesChanged()
-        {
-            OnPropertyChanged(nameof(ProductCategories));
-        }
-
         private async void GetProductsAsync()
         {
             if (SelectedProductGroup is ProductCategory productCategory)
             {
                 if (productCategory.Id != 0)
                 {
-                    GetProducts = await _productService.GetByProductCategoryIdAsync(productCategory.Id);
+                    GetProducts = new(await _productService.GetByProductCategoryIdAsync(productCategory.Id));
                     return;
                 }
             }
             if (SelectedProductGroup is ProductSubcategory productSubcategory)
             {
-                GetProducts = await _productService.GetByProductSubcategoryIdAsync(productSubcategory.Id);
+                GetProducts = new(await _productService.GetByProductSubcategoryIdAsync(productSubcategory.Id));
                 return;
             }
-            GetProducts = await _productService.GetAllAsync();
+            GetProducts = new(await _productService.GetAllAsync());
+        }
+
+        private async void GetProductCategories()
+        {
+            ProductCategories = await _productCategoryService.GetAllListAsync();
+        }
+
+        private void ProductCategoryService_OnProductCategoryCreated(ProductCategory productCategory)
+        {
+            ProductCategories.Add(productCategory);
+        }
+
+        private void ProductSubcategoryService_OnProductSubcategoryCreated(ProductSubcategory productSubcategory)
+        {
+            if (SelectedProductGroup is ProductCategory productCategory)
+            {
+                ProductCategory updateProductCategory = ProductCategories.FirstOrDefault(p => p.Id == productCategory.Id);
+                updateProductCategory.ProductSubcategories.Add(productSubcategory);
+            }
+        }
+
+        private void ProductService_OnProductCreated(Product product)
+        {
+            GetProducts.Add(product);
         }
 
         #endregion

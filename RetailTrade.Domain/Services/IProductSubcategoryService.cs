@@ -1,4 +1,5 @@
 ﻿using RetailTrade.Domain.Models;
+using System;
 using System.Collections.Generic;
 
 namespace RetailTrade.Domain.Services
@@ -7,5 +8,7 @@ namespace RetailTrade.Domain.Services
     {
         IEnumerable<ProductSubcategory> GetAllByProductCategoryId(int id);
         IEnumerable<ProductSubcategory> GetAllIncludeProductCategory();
+
+        event Action<ProductSubcategory> OnProductSubcategoryCreated;
     }
 }
