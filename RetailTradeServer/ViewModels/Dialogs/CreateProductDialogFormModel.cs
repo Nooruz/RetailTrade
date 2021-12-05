@@ -424,6 +424,11 @@ namespace RetailTradeServer.ViewModels.Dialogs
         /// </summary>
         private async void SaveProductWithoutBarcode()
         {
+            if (SelectedSupplierId == null || SelectedSupplierId == 0)
+            {
+                _messageStore.SetCurrentMessage("Выберите поставщика.", MessageType.Error);
+                return;
+            }
             if (string.IsNullOrEmpty(Name))
             {
                 _messageStore.SetCurrentMessage("Введите наименование товара.", MessageType.Error);
@@ -460,6 +465,7 @@ namespace RetailTradeServer.ViewModels.Dialogs
                 Name = Name,
                 ProductSubcategoryId = SelectedProductSubcategoryId.Value,
                 UnitId = SelectedUnitId.Value,
+                SupplierId = SelectedSupplierId.Value,
                 TNVED = TNVED,
                 ArrivalPrice = ArrivalPrice,
                 SalePrice = SalePrice,

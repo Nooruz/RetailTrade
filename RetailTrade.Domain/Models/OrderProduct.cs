@@ -8,13 +8,16 @@ namespace RetailTrade.Domain.Models
         #region Private Members
 
         private int _productId;
-        private decimal _quantity;
+        private double _quantity;
         private Product _product;
 
         #endregion
 
         #region Public Properties
 
+        /// <summary>
+        /// Код товара
+        /// </summary>
         public int ProductId
         {
             get => _productId;
@@ -24,8 +27,16 @@ namespace RetailTrade.Domain.Models
                 OnPropertyChanged(nameof(ProductId));
             }
         }
+
+        /// <summary>
+        /// Код заказа
+        /// </summary>
         public int OrderToSupplierId { get; set; }
-        public decimal Quantity
+
+        /// <summary>
+        /// Количество
+        /// </summary>
+        public double Quantity
         {
             get => _quantity;
             set
@@ -34,6 +45,20 @@ namespace RetailTrade.Domain.Models
                 OnPropertyChanged(nameof(Quantity));
             }
         }
+
+        /// <summary>
+        /// Цена прихода
+        /// </summary>
+        public decimal ArrivalPrice { get; set; }
+
+        /// <summary>
+        /// Цена продажи
+        /// </summary>
+        public decimal SalePrice { get; set; }
+
+        /// <summary>
+        /// Товар
+        /// </summary>
         public Product Product
         {
             get => _product;
@@ -43,6 +68,10 @@ namespace RetailTrade.Domain.Models
                 OnPropertyChanged(nameof(Product));
             }
         }
+
+        /// <summary>
+        /// Заказ
+        /// </summary>
         public OrderToSupplier OrderToSupplier { get; set; }
 
         #endregion        

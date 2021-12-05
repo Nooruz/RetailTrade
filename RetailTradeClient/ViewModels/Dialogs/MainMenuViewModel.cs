@@ -1,5 +1,4 @@
 ﻿using RetailTradeClient.Commands;
-using RetailTradeClient.State.CashRegisterControlMachine;
 using RetailTradeClient.State.Dialogs;
 using RetailTradeClient.State.Shifts;
 using System.Runtime.InteropServices;
@@ -19,7 +18,6 @@ namespace RetailTradeClient.ViewModels.Dialogs
     {
         #region Private Members
 
-        private readonly ICashRegisterControlMachine _cashRegisterControlMachine;
         private readonly IShiftStore _shiftStore;
         private readonly IUIManager _manager;
 
@@ -42,12 +40,10 @@ namespace RetailTradeClient.ViewModels.Dialogs
 
         #region Constructor
 
-        public MainMenuViewModel(ICashRegisterControlMachine cashRegisterControlMachine,
-            IShiftStore shiftStore,
+        public MainMenuViewModel(IShiftStore shiftStore,
             int userId,
             IUIManager manager)
         {
-            _cashRegisterControlMachine = cashRegisterControlMachine;
             _shiftStore = shiftStore;
             _manager = manager;
 

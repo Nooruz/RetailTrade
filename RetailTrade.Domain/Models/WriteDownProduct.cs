@@ -10,7 +10,7 @@ namespace RetailTrade.Domain.Models
         #region Private Members
 
         private int _productId;
-        private decimal _quantity;
+        private double _quantity;
         private Product _product;
 
         #endregion
@@ -35,7 +35,7 @@ namespace RetailTrade.Domain.Models
         /// <summary>
         /// Количество для списания
         /// </summary>
-        public decimal Quantity
+        public double Quantity
         {
             get => _quantity;
             set

@@ -1,5 +1,4 @@
-﻿using DrvFRLib;
-using Microsoft.AspNet.Identity;
+﻿using Microsoft.AspNet.Identity;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using RetailTrade.Domain.Services;
@@ -15,8 +14,6 @@ namespace RetailTradeClient.HostBuilders
             return host.ConfigureServices(services =>
             {
                 services.AddSingleton<IPasswordHasher, PasswordHasher>();
-
-                services.AddSingleton(s => new DrvFR());
 
                 services.AddSingleton<IAuthenticationService, AuthenticationService>();
                 services.AddSingleton<IUserService, UserService>();

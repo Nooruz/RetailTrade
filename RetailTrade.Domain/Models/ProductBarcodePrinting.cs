@@ -11,7 +11,7 @@ namespace RetailTrade.Domain.Models
 
         private int _id;
         private string _name;
-        private decimal _quantity;
+        private double _quantity;
         private string _barcode;
         private decimal _price;
 
@@ -33,7 +33,7 @@ namespace RetailTrade.Domain.Models
                 OnPropertyChanged(nameof(Name));
             }
         }
-        public decimal Quantity
+        public double Quantity
         {
             get => _quantity;
             set

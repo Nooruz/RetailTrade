@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio Version 16
-VisualStudioVersion = 16.0.31729.503
+# Visual Studio Version 17
+VisualStudioVersion = 17.0.31919.166
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RetailTrade.Domain", "RetailTrade.Domain\RetailTrade.Domain.csproj", "{4A12F857-8E1C-4C44-A132-FBE08C68E5E3}"
 EndProject
@@ -10,8 +10,6 @@ EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RetailTradeServer", "RetailTradeServer\RetailTradeServer.csproj", "{FC90E58D-E250-496C-AA7C-7625A9FF7AF1}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RetailTradeClient", "RetailTradeClient\RetailTradeClient.csproj", "{62502428-81B0-4FEE-A0AE-8C4F349A64C3}"
-EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RetailTrade.Web", "RetailTrade.Web\RetailTrade.Web.csproj", "{E92C7DB1-7D45-4352-9843-F4AAFBFD5DE4}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RetailTrade.CashRegisterMachine", "RetailTrade.CashRegisterMachine\RetailTrade.CashRegisterMachine.csproj", "{AC188347-A244-498D-94E9-3E573520AA73}"
 EndProject
@@ -39,10 +37,6 @@ Global
 		{62502428-81B0-4FEE-A0AE-8C4F349A64C3}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{62502428-81B0-4FEE-A0AE-8C4F349A64C3}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{62502428-81B0-4FEE-A0AE-8C4F349A64C3}.Release|Any CPU.Build.0 = Release|Any CPU
-		{E92C7DB1-7D45-4352-9843-F4AAFBFD5DE4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{E92C7DB1-7D45-4352-9843-F4AAFBFD5DE4}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{E92C7DB1-7D45-4352-9843-F4AAFBFD5DE4}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{E92C7DB1-7D45-4352-9843-F4AAFBFD5DE4}.Release|Any CPU.Build.0 = Release|Any CPU
 		{AC188347-A244-498D-94E9-3E573520AA73}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{AC188347-A244-498D-94E9-3E573520AA73}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{AC188347-A244-498D-94E9-3E573520AA73}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -56,7 +50,7 @@ Global
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
-		BuildVersion_StartDate = 2000/1/1
 		SolutionGuid = {1B5BED5D-604D-4352-A831-4FDEE07951CB}
+		BuildVersion_StartDate = 2000/1/1
 	EndGlobalSection
 EndGlobal

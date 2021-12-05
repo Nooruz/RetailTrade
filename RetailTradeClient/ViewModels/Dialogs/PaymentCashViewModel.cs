@@ -2,7 +2,6 @@
 using RetailTrade.Domain.Models;
 using RetailTrade.Domain.Services;
 using RetailTradeClient.Commands;
-using RetailTradeClient.State.CashRegisterControlMachine;
 using RetailTradeClient.State.Dialogs;
 using RetailTradeClient.State.Shifts;
 using RetailTradeClient.State.Users;
@@ -144,7 +143,6 @@ namespace RetailTradeClient.ViewModels.Dialogs
             IProductSaleService productSaleService,
             IUserStore userStore,
             IUIManager manager,
-            ICashRegisterControlMachine cashRegisterControlMachine,
             IShiftStore shiftStore)
         {
             _userStore = userStore;
@@ -154,7 +152,7 @@ namespace RetailTradeClient.ViewModels.Dialogs
             ClearCommand = new RelayCommand(Clear);
             BackspaceCommand = new RelayCommand(Baclspace);
             CommaButtonPressCommand = new RelayCommand(CommaButtonPress);
-            MakeCashPaymentCommand = new MakeCashPaymentCommand(this, receiptService, productSaleService, manager, cashRegisterControlMachine, shiftStore, userStore);
+            MakeCashPaymentCommand = new MakeCashPaymentCommand(this, receiptService, manager, shiftStore, userStore);
             EnteredLoadedCommand = new ParameterCommand(parameter => EnteredLoaded(parameter));
 
             _userStore.StateChanged += UserStore_StateChanged;

@@ -21,11 +21,6 @@ namespace RetailTrade.Domain.Models
             }
         }
 
-        public ProductCategory()
-        {
-
-        }
-
         public event PropertyChangedEventHandler PropertyChanged;
 
         protected void OnPropertyChanged(string propertyName)

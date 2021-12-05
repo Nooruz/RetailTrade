@@ -1,10 +1,8 @@
 ﻿using DevExpress.XtraPrinting;
-using DrvFRLib;
 using RetailTrade.CashRegisterMachine;
 using RetailTrade.Domain.Models;
 using RetailTrade.Domain.Services;
 using RetailTradeClient.Report;
-using RetailTradeClient.State.CashRegisterControlMachine;
 using RetailTradeClient.State.Dialogs;
 using RetailTradeClient.State.Shifts;
 using RetailTradeClient.State.Users;
@@ -21,11 +19,9 @@ namespace RetailTradeClient.Commands
 
         private readonly PaymentCashViewModel _paymentCashViewModel;
         private readonly IReceiptService _receiptService;
-        private readonly IProductSaleService _productSaleService;
         private readonly IUIManager _manager;
         private readonly IShiftStore _shiftStore;
         private readonly IUserStore _userStore;
-        private DrvFR _cashRegisterControlMachine;
 
         #endregion
 
@@ -33,17 +29,13 @@ namespace RetailTradeClient.Commands
 
         public MakeCashPaymentCommand(PaymentCashViewModel paymentCashViewModel,
             IReceiptService receiptService,
-            IProductSaleService productSaleService,
             IUIManager manager,
-            ICashRegisterControlMachine cashRegisterControlMachine,
             IShiftStore shiftStore,
             IUserStore userStore)
         {
             _paymentCashViewModel = paymentCashViewModel;
             _receiptService = receiptService;
-            _productSaleService = productSaleService;
             _manager = manager;
-            _cashRegisterControlMachine = cashRegisterControlMachine.GetCashRegisterControlMachine();
             _shiftStore = shiftStore;
             _userStore = userStore;
         }

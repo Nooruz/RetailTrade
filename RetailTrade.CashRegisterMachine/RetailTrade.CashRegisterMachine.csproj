@@ -28,12 +28,15 @@
       <Isolated>false</Isolated>
       <EmbedInteropTypes>true</EmbedInteropTypes>
     </COMReference>
-  </ItemGroup>
-
-  <ItemGroup>
-    <Reference Include="Interop.DrvFRLib">
-      <HintPath>..\RetailTradeClient\obj\Debug\net6.0-windows\Interop.DrvFRLib.dll</HintPath>
-    </Reference>
+    <COMReference Include="DrvFRLib">
+      <VersionMinor>3</VersionMinor>
+      <VersionMajor>1</VersionMajor>
+      <Guid>332c8050-469c-4b4d-a192-68cd3cb252ba</Guid>
+      <Lcid>0</Lcid>
+      <WrapperTool>tlbimp</WrapperTool>
+      <Isolated>false</Isolated>
+      <EmbedInteropTypes>true</EmbedInteropTypes>
+    </COMReference>
   </ItemGroup>
 
 </Project>

@@ -3,7 +3,6 @@ using RetailTrade.Domain.Models;
 using RetailTrade.Domain.Services;
 using RetailTradeClient.Commands;
 using RetailTradeClient.State.Authenticators;
-using RetailTradeClient.State.CashRegisterControlMachine;
 using RetailTradeClient.State.Dialogs;
 using RetailTradeClient.State.Messages;
 using RetailTradeClient.State.Shifts;
@@ -34,7 +33,6 @@ namespace RetailTradeClient.ViewModels
         private readonly IUIManager _manager;
         private readonly IMessageStore _messageStore;
         private readonly IAuthenticator _authenticator;
-        private readonly ICashRegisterControlMachine _cashRegisterControlMachine;
         private readonly IShiftStore _shiftStore;
         private readonly IRefundService _refundService;
         private readonly PaymentCashViewModel _paymentCashViewModel;
@@ -195,7 +193,6 @@ namespace RetailTradeClient.ViewModels
             IUIManager manager,
             IMessageStore messageStore,
             IAuthenticator authenticator,
-            ICashRegisterControlMachine cashRegisterControlMachine,
             IShiftStore shiftStore,
             IRefundService refundService)
         {
@@ -206,14 +203,13 @@ namespace RetailTradeClient.ViewModels
             _manager = manager;
             _messageStore = messageStore;
             _authenticator = authenticator;
-            _cashRegisterControlMachine = cashRegisterControlMachine;
             _shiftStore = shiftStore;
             _refundService = refundService;
 
             SaleProducts = new();
             PostponeReceipts = new List<PostponeReceipt>();
 
-            _paymentCashViewModel = new(_receiptService, _productSaleService, _userStore, _manager, _cashRegisterControlMachine, _shiftStore) { Title = "Оплата наличными" };
+            _paymentCashViewModel = new(_receiptService, _productSaleService, _userStore, _manager, _shiftStore) { Title = "Оплата наличными" };
 
             LogoutCommand = new RelayCommand(Logout);
             TextInputCommand = new ParameterCommand(parameter => TextInput(parameter));
@@ -341,15 +337,15 @@ namespace RetailTradeClient.ViewModels
 
         private async void ProductService_PropertiesChanged()
         {
-            ProductsWithoutBarcode = new(await _productService.PredicateSelect(p => p.Quantity > 0,
-                p => new Product { Id = p.Id, Name = p.Name, SalePrice = p.SalePrice, ArrivalPrice = p.ArrivalPrice, Quantity = p.Quantity, WithoutBarcode = true }));
+            ProductsWithoutBarcode = new(await _productService.PredicateSelect(p => p.Quantity > 0 && p.WithoutBarcode == true,
+                p => new Product { Id = p.Id, Name = p.Name, SalePrice = p.SalePrice, ArrivalPrice = p.ArrivalPrice, Quantity = p.Quantity }));
         }
 
         private void QuantityValidate(object parameter)
         {
             if (parameter is GridCellValidationEventArgs e)
             {
-                if (((Sale)e.Row).QuantityInStock < Convert.ToDecimal(e.Value))
+                if (((Sale)e.Row).QuantityInStock < Convert.ToDouble(e.Value))
                 {
                     _ = _manager.ShowMessage("Количество превышает остаток.", "", MessageBoxButton.OK, MessageBoxImage.Information);
                     e.ErrorContent = "Количество превышает остаток.";
@@ -400,7 +396,7 @@ namespace RetailTradeClient.ViewModels
                         else if (product.Quantity < product.QuantityInStock)
                         {
                             product.Quantity++;
-                            product.Sum = product.SalePrice * product.Quantity;
+                            product.Sum = product.SalePrice * (decimal)product.Quantity;
                         }
                         else
                         {
@@ -519,7 +515,7 @@ namespace RetailTradeClient.ViewModels
 
         private async void OpenMainMenu()
         {
-            _ = await _manager.ShowDialog(new MainMenuViewModel(_cashRegisterControlMachine, _shiftStore, _userStore.CurrentUser.Id, _manager)
+            _ = await _manager.ShowDialog(new MainMenuViewModel(_shiftStore, _userStore.CurrentUser.Id, _manager)
             {
                 Title = $"РМК: {(_userStore.CurrentUser?.FullName)}"
             },

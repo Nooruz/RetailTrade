@@ -176,7 +176,7 @@ namespace RetailTradeServer.ViewModels.Dialogs
             {
                 if (((WriteDownProduct)e.Row).Product != null)
                 {
-                    if ((decimal)e.Value > ((WriteDownProduct)e.Row).Product.Quantity)
+                    if ((double)e.Value > ((WriteDownProduct)e.Row).Product.Quantity)
                     {
                         e.IsValid = false;
                         e.ErrorContent = "Количество списание товаров не должно превышать количество на складе.";

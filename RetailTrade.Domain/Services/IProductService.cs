@@ -20,7 +20,7 @@ namespace RetailTrade.Domain.Services
         IEnumerable<Product> GetForRefund(int supplierId);
         Task<IEnumerable<Product>> PredicateSelect(Expression<Func<Product, bool>> predicate, Expression<Func<Product, Product>> select);
         Task<Product> Predicate(Expression<Func<Product, bool>> predicate, Expression<Func<Product, Product>> select);
-        Task<decimal> GetQuantity(int id);
+        Task<double> GetQuantity(int id);
 
         event Action<Product> OnProductCreated;
     }

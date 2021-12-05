@@ -57,6 +57,7 @@ namespace RetailTradeServer.ViewModels.Menus
             set
             {
                 _productCategories = value;
+                _ = _productCategories.Where(p => p.Id != 0).OrderByDescending(p => p.Name);
                 OnPropertyChanged(nameof(ProductCategories));
             }
         }
@@ -200,7 +201,15 @@ namespace RetailTradeServer.ViewModels.Menus
             if (SelectedProductGroup is ProductCategory productCategory)
             {
                 ProductCategory updateProductCategory = ProductCategories.FirstOrDefault(p => p.Id == productCategory.Id);
-                updateProductCategory.ProductSubcategories.Add(productSubcategory);
+                if (updateProductCategory.ProductSubcategories != null)
+                {
+                    updateProductCategory.ProductSubcategories.Add(productSubcategory);
+                }
+                else
+                {
+                    updateProductCategory.ProductSubcategories = new();
+                    updateProductCategory.ProductSubcategories.Add(productSubcategory);
+                }
             }
         }
 
@@ -211,6 +220,8 @@ namespace RetailTradeServer.ViewModels.Menus
 
         #endregion
 
+        #region Dispose
+
         public override void Dispose()
         {
             GlobalMessageViewModel.Dispose();
@@ -219,5 +230,7 @@ namespace RetailTradeServer.ViewModels.Menus
 
             base.Dispose();
         }
+
+        #endregion        
     }
 }

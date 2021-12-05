@@ -6,7 +6,7 @@ namespace RetailTrade.Domain.Models
     {
         #region Private Members
 
-        private decimal _quantity;
+        private double _quantity;
 
         #endregion
 
@@ -25,7 +25,7 @@ namespace RetailTrade.Domain.Models
         /// <summary>
         /// Количество покупки
         /// </summary>
-        public decimal Quantity
+        public double Quantity
         {
             get => _quantity;
             set
@@ -33,7 +33,7 @@ namespace RetailTrade.Domain.Models
                 if (value > 0)
                 {
                     _quantity = value;
-                    Sum = SalePrice * _quantity;
+                    Sum = SalePrice * (decimal)_quantity;
                 }
                 OnPropertyChanged(nameof(Quantity));
             }
@@ -57,7 +57,7 @@ namespace RetailTrade.Domain.Models
         /// <summary>
         /// Количество на складе
         /// </summary>
-        public decimal QuantityInStock { get; set; }
+        public double QuantityInStock { get; set; }
 
         #endregion        
 

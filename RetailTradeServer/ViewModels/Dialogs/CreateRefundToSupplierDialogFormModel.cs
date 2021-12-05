@@ -176,7 +176,7 @@ namespace RetailTradeServer.ViewModels.Dialogs
             {
                 if (((RefundToSupplierProduct)e.Row).Product != null)
                 {
-                    if (((RefundToSupplierProduct)e.Row).Product.Quantity < (decimal)e.Value)
+                    if (((RefundToSupplierProduct)e.Row).Product.Quantity < (double)e.Value)
                     {
                         e.IsValid = false;
                         e.ErrorContent = "Количество не должно превышать количество товаров на складе.";

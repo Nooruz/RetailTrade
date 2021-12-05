@@ -205,7 +205,7 @@ namespace RetailTrade.EntityFramework.Services
             return null;
         }
 
-        public async Task<decimal> GetQuantity(int id)
+        public async Task<double> GetQuantity(int id)
         {
             try
             {

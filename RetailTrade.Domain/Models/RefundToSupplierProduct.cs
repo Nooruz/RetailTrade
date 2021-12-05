@@ -6,7 +6,7 @@ namespace RetailTrade.Domain.Models
     {
         #region Private Members
 
-        private decimal _quantity;
+        private double _quantity;
         private Product _product;
 
         #endregion
@@ -15,7 +15,7 @@ namespace RetailTrade.Domain.Models
 
         public int RefundToSupplierId { get; set; }
         public int ProductId { get; set; }
-        public decimal Quantity
+        public double Quantity
         {
             get => _quantity;
             set

@@ -1,9 +1,7 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using RetailTrade.Domain.Models;
 using RetailTrade.Domain.Services;
 using RetailTradeClient.State.Authenticators;
-using RetailTradeClient.State.CashRegisterControlMachine;
 using RetailTradeClient.State.Dialogs;
 using RetailTradeClient.State.Messages;
 using RetailTradeClient.State.Navigators;
@@ -56,7 +54,6 @@ namespace RetailTradeClient.HostBuilders
                 services.GetRequiredService<IUIManager>(),
                 services.GetRequiredService<IMessageStore>(),
                 services.GetRequiredService<IAuthenticator>(),
-                services.GetRequiredService<ICashRegisterControlMachine>(),
                 services.GetRequiredService<IShiftStore>(),
                 services.GetRequiredService<IRefundService>());
         }

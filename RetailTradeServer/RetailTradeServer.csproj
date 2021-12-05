@@ -8,17 +8,21 @@
     <Authors>Ашимжан уулу Ноорузбек</Authors>
     <Company>Sale Page</Company>
     <Version>1.0.0</Version>
-    <AssemblyVersion>1.0.0.150</AssemblyVersion>
-    <FileVersion>1.0.0.45</FileVersion>
+    <AssemblyVersion>1.0.0.210</AssemblyVersion>
+    <FileVersion>1.0.0.102</FileVersion>
     <ApplicationIcon>Resources\Icons\lgog.ico</ApplicationIcon>
 	<RuntimeIdentifier>win-x64</RuntimeIdentifier>
   </PropertyGroup>
 
   <ItemGroup>
     <Compile Remove="Controls\**" />
+    <Compile Remove="Data\**" />
     <EmbeddedResource Remove="Controls\**" />
+    <EmbeddedResource Remove="Data\**" />
     <None Remove="Controls\**" />
+    <None Remove="Data\**" />
     <Page Remove="Controls\**" />
+    <Page Remove="Data\**" />
   </ItemGroup>
 
   <ItemGroup>
@@ -141,9 +145,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <None Update="Data\RetailTradeDb.mdf">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
     <None Update="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
@@ -161,10 +162,6 @@
     <Page Update="Views\Menus\ProductCategoryView.xaml">
       <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
     </Page>
-  </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="Data\" />
   </ItemGroup>
 
   <ProjectExtensions><VisualStudio><UserProperties BuildVersion_AssemblyInfoFilename="..\RetailTradeClient\AssemblyInfo.cs" BuildVersion_BuildAction="Build" BuildVersion_IncrementBeforeBuild="False" BuildVersion_ReplaceNonNumerics="False" BuildVersion_StartDate="" BuildVersion_UpdateAssemblyVersion="True" BuildVersion_UpdateFileVersion="True" /></VisualStudio></ProjectExtensions>

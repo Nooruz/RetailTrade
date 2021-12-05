@@ -3,7 +3,6 @@ using Microsoft.Extensions.Hosting;
 using RetailTrade.Domain.Services;
 using RetailTrade.EntityFramework.Services;
 using RetailTradeClient.State.Authenticators;
-using RetailTradeClient.State.CashRegisterControlMachine;
 using RetailTradeClient.State.Dialogs;
 using RetailTradeClient.State.Messages;
 using RetailTradeClient.State.Navigators;
@@ -24,7 +23,6 @@ namespace RetailTradeClient.HostBuilders
                 services.AddSingleton<IUIManager, UIManager>();
                 services.AddSingleton<IMessageStore, MessageStore>();
                 services.AddSingleton<IReceiptService, ReceiptService>();
-                services.AddSingleton<ICashRegisterControlMachine, CashRegisterControlMachine>();
                 services.AddSingleton<IShiftStore, ShiftStore>();
             });
         }

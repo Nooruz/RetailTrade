@@ -5,12 +5,17 @@
         /// <summary>
         /// Количество
         /// </summary>
-        public decimal Quantity { get; set; }
+        public double Quantity { get; set; }
 
         /// <summary>
         /// Сумма
         /// </summary>
         public decimal Sum { get; set; }
+
+        /// <summary>
+        /// Цена прихода
+        /// </summary>
+        public decimal ArrivalPrice { get; set; }
 
         /// <summary>
         /// Цена продажи
