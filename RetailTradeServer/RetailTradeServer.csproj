@@ -16,13 +16,9 @@
 
   <ItemGroup>
     <Compile Remove="Controls\**" />
-    <Compile Remove="Data\**" />
     <EmbeddedResource Remove="Controls\**" />
-    <EmbeddedResource Remove="Data\**" />
     <None Remove="Controls\**" />
-    <None Remove="Data\**" />
     <Page Remove="Controls\**" />
-    <Page Remove="Data\**" />
   </ItemGroup>
 
   <ItemGroup>
@@ -145,6 +141,9 @@
   </ItemGroup>
 
   <ItemGroup>
+    <None Update="Data\RetailTradeDb.mdf">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <None Update="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
