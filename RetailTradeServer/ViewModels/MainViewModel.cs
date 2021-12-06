@@ -31,7 +31,7 @@ namespace RetailTradeServer.ViewModels
                 OnPropertyChanged(nameof(IsConnected));
             }
         }
-        public string WindowTitle => $"SP: Магазин, версия {Assembly.GetExecutingAssembly().GetName().Version}";
+        public static string WindowTitle => $"SP: Магазин, версия {Assembly.GetExecutingAssembly().GetName().Version}";
 
         #endregion
 
@@ -59,9 +59,6 @@ namespace RetailTradeServer.ViewModels
 
             _navigator.StateChanged += Navigator_StateChanged;
             _authenticator.StateChanged += AuthenticatorStateChanged;
-
-            Settings.Default.AdminCreated = true;
-            Settings.Default.Save();
 
             UpdateCurrentViewModelCommand = new UpdateCurrentViewModelCommand(navigator, retailTradeViewModelFactory);
             UpdateCurrentViewModelCommand.Execute(Settings.Default.AdminCreated ? ViewType.Login : ViewType.Registration);

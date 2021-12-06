@@ -25,6 +25,7 @@ namespace RetailTradeServer
 
         private readonly IHost _host;
         private IUIManager _manager;
+        private static SqlException _sqlException;
 
         #endregion
 
@@ -67,12 +68,16 @@ namespace RetailTradeServer
             //{
                 try
                 {
-                    using (var context = contextFactory.CreateDbContext())
+                    using var context = contextFactory.CreateDbContext();
+                    if (CheckConnectionString(context.Database.GetConnectionString()))
                     {
-                        if (CheckConnectionString(context.Database.GetConnectionString()))
-                        {
-                            context.Database.Migrate();
-                        }
+                        context.Database.Migrate();
+                }
+                    else
+                    {
+                        _ = _manager.ShowMessage(_sqlException.Message, "", MessageBoxButton.OK, MessageBoxImage.Error);
+                        Current.Shutdown();
+                        return;
                     }
                 }
                 catch (Exception exception)
@@ -106,17 +111,22 @@ namespace RetailTradeServer
             base.OnExit(e);
         }
 
-        private bool CheckConnectionString(string connectionString)
+        private static bool CheckConnectionString(string connectionString)
         {
+            using SqlConnection connection = new(connectionString);
             try
-            {
-                using SqlConnection connection = new(connectionString);
+            {                
                 connection.Open();
                 return true;
             }
-            catch (Exception e)
+            catch (SqlException sqlException)
             {
+                _sqlException = sqlException;
                 return false;
+            }
+            finally
+            {
+                connection.Close();
             }
         }
     }

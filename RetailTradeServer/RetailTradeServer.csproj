@@ -9,8 +9,8 @@
     <Company>Sale Page</Company>
     <Version>1.0.0</Version>
     <AssemblyVersion>1.0.0.210</AssemblyVersion>
-    <FileVersion>1.0.0.102</FileVersion>
-    <ApplicationIcon>Resources\Icons\lgog.ico</ApplicationIcon>
+    <FileVersion>1.0.0.210</FileVersion>
+    <ApplicationIcon>Resources\Icons\newlogo.ico</ApplicationIcon>
 	<RuntimeIdentifier>win-x64</RuntimeIdentifier>
   </PropertyGroup>
 
@@ -41,6 +41,8 @@
     <None Remove="Report\ProductBarcodeReport.vsrepx" />
     <None Remove="Report\RevenueForPeriodReport.vsrepx" />
     <None Remove="Report\WriteDownProductReport.vsrepx" />
+    <None Remove="Resources\Icons\newlogo.ico" />
+    <None Remove="Resources\Images\newlogo.png" />
     <None Remove="Resources\Images\sp.png" />
     <None Remove="Views\HomeView.xaml~RF1dc6ec.TMP" />
   </ItemGroup>
@@ -81,6 +83,7 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="Resources\Icons\lgog.ico" />
+    <Content Include="Resources\Icons\newlogo.ico" />
     <Resource Include="Fonts\fa-brands-400.ttf">
       <CopyToOutputDirectory>Never</CopyToOutputDirectory>
     </Resource>
@@ -90,6 +93,7 @@
     <Resource Include="Fonts\fa-solid-900.ttf">
       <CopyToOutputDirectory>Never</CopyToOutputDirectory>
     </Resource>
+    <Resource Include="Resources\Images\newlogo.png" />
     <Resource Include="Resources\Images\sp.png" />
   </ItemGroup>
 
