@@ -1,4 +1,6 @@
-﻿using RetailTrade.Domain.Models;
+﻿using DevExpress.Xpf.Bars;
+using DevExpress.Xpf.Grid.TreeList;
+using RetailTrade.Domain.Models;
 using RetailTrade.Domain.Services;
 using RetailTradeServer.Commands;
 using RetailTradeServer.State.Dialogs;
@@ -7,7 +9,10 @@ using RetailTradeServer.ViewModels.Base;
 using RetailTradeServer.ViewModels.Dialogs;
 using RetailTradeServer.Views.Dialogs;
 using System.Collections.ObjectModel;
+using System.Collections.Specialized;
+using System.ComponentModel;
 using System.Linq;
+using System.Windows;
 using System.Windows.Input;
 
 namespace RetailTradeServer.ViewModels.Menus
@@ -27,6 +32,7 @@ namespace RetailTradeServer.ViewModels.Menus
         private ObservableCollection<Product> _getProducts;
         private ObservableCollection<ProductCategory> _productCategories;
         private bool _canShowLoadingPanel = true;
+        private Product _selectedProduct;
 
         #endregion
 
@@ -35,8 +41,13 @@ namespace RetailTradeServer.ViewModels.Menus
         public ICommand CreateProductCategoryCommand { get; }
         public ICommand CreateProductSubcategoryCommand { get; }
         public ICommand CreateProductCommand { get; }
+        public ICommand EditProductCommand { get; }
         public ICommand GetProductsCommandAsync { get; set; }
         public ICommand SelectedItemChangedCommand { get; }
+        public ICommand OnShowNodeMenuCommand { get; }
+        public ICommand CreateProductCategoryOrSubCategoryCommand { get; }
+        public ICommand EditProductCategoryOrSubCategoryCommand { get; }
+        public ICommand DeleteProductCategoryOrSubCategoryCommand { get; }
 
         #endregion
 
@@ -89,6 +100,15 @@ namespace RetailTradeServer.ViewModels.Menus
                 OnPropertyChanged(nameof(CanShowLoadingPanel));
             }
         }
+        public Product SelectedProduct
+        {
+            get => _selectedProduct;
+            set
+            {
+                _selectedProduct = value;
+                OnPropertyChanged(nameof(SelectedProduct));
+            }
+        }
 
         #endregion
 
@@ -115,8 +135,12 @@ namespace RetailTradeServer.ViewModels.Menus
             CreateProductCategoryCommand = new RelayCommand(CreateProductCategory);
             CreateProductSubcategoryCommand = new RelayCommand(CreateProductSubcategory);
             CreateProductCommand = new RelayCommand(CreateProduct);
+            EditProductCommand = new RelayCommand(EditProduct);
             GetProductsCommandAsync = new RelayCommand(GetProductsAsync);
             SelectedItemChangedCommand = new RelayCommand(GetProductsAsync);
+            OnShowNodeMenuCommand = new ParameterCommand(sender => OnShowNodeMenu(sender));
+            CreateProductCategoryOrSubCategoryCommand = new RelayCommand(CreateProductCategoryOrSubCategory);
+            EditProductCategoryOrSubCategoryCommand = new RelayCommand(EditProductCategoryOrSubCategory);
 
             GetProductCategories();
 
@@ -168,6 +192,18 @@ namespace RetailTradeServer.ViewModels.Menus
             new CreateProductDialogForm());
         }
 
+        private void EditProduct()
+        {
+            if (SelectedProduct != null)
+            {
+
+            }
+            else
+            {
+                _ = _manager.ShowMessage("Выберите товар", "", MessageBoxButton.OK, MessageBoxImage.Exclamation);
+            }
+        }
+
         private async void GetProductsAsync()
         {
             if (SelectedProductGroup is ProductCategory productCategory)
@@ -193,29 +229,65 @@ namespace RetailTradeServer.ViewModels.Menus
 
         private void ProductCategoryService_OnProductCategoryCreated(ProductCategory productCategory)
         {
+            productCategory.ProductSubcategories = new();
             ProductCategories.Add(productCategory);
         }
 
         private void ProductSubcategoryService_OnProductSubcategoryCreated(ProductSubcategory productSubcategory)
         {
-            if (SelectedProductGroup is ProductCategory productCategory)
+            if (productSubcategory != null)
             {
-                ProductCategory updateProductCategory = ProductCategories.FirstOrDefault(p => p.Id == productCategory.Id);
-                if (updateProductCategory.ProductSubcategories != null)
-                {
-                    updateProductCategory.ProductSubcategories.Add(productSubcategory);
-                }
-                else
-                {
-                    updateProductCategory.ProductSubcategories = new();
-                    updateProductCategory.ProductSubcategories.Add(productSubcategory);
-                }
+                ProductCategory updateProductCategory = ProductCategories.FirstOrDefault(p => p.Id == productSubcategory.ProductCategoryId);
+                updateProductCategory.ProductSubcategories.Add(productSubcategory);
             }
         }
 
         private void ProductService_OnProductCreated(Product product)
         {
             GetProducts.Add(product);
+        }
+
+        private void OnShowNodeMenu(object sender)
+        {
+            if (sender is TreeViewNodeMenuEventArgs e)
+            {
+                if (e.Node.Level == 1)
+                {
+                    e.Customizations.Add(new RemoveAction { ElementName = "CreateSubCategory" });
+                }
+                if (SelectedProductGroup is ProductCategory productCategory && productCategory.Id == 0)
+                {
+                    e.Customizations.Add(new RemoveAction { ElementName = "EditCategory" });
+                    e.Customizations.Add(new RemoveAction { ElementName = "DeleteCategory" });
+                    e.Customizations.Add(new RemoveAction { ElementName = "CreateSubCategory" });
+                }
+            }
+        }
+
+        private void CreateProductCategoryOrSubCategory()
+        {
+            _ = _manager.ShowDialog(new CreateProductCategoryOrSubCategoryDialogFormModel(_productCategoryService, _productSubcategoryService, _messageStore, GlobalMessageViewModel) { Title = "Создать категорию или группу товаров" },
+                new CreateProductCategoryOrSubCategoryDialogForm());
+        }
+
+        private void EditProductCategoryOrSubCategory()
+        {
+            if (SelectedProductGroup is ProductCategory productCategory)
+            {
+                var viewModel = new CreateProductCategoryDialogFormModel(_productCategoryService, _manager) 
+                { 
+                    Title = $"Категория товаров ({productCategory.Name})",
+                    EditProductCategory = productCategory,
+                    Name = productCategory.Name,
+                    IsEditMode = true
+                };
+                _ = _manager.ShowDialog(viewModel, new CreateProductCategoryDialogForm());
+            }
+
+            if (SelectedProductGroup is ProductSubcategory productSubcategory)
+            {
+
+            }
         }
 
         #endregion

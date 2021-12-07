@@ -8,10 +8,7 @@ namespace RetailTrade.Domain.Services.AuthenticationServices
         //Каттоо ийгиликтүү өттү
         Success,
 
-        //Колдонуучунун аты талаптарга жооп бербейт
-        UsernameDoesNotRequirements,
-
-        //Колдонуучунун сыр сөзү талаптарга жооп бербейт
+        //Сыр соз талаптарга жооп бербейт
         PasswordDoesNotRequirements,
 
         //Сыр сөз тастыктоочу сыр сөз менен дал келбейт

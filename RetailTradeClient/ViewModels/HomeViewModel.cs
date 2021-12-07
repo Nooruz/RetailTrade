@@ -36,6 +36,7 @@ namespace RetailTradeClient.ViewModels
         private readonly IShiftStore _shiftStore;
         private readonly IRefundService _refundService;
         private readonly PaymentCashViewModel _paymentCashViewModel;
+        private readonly PaymentComplexViewModel _paymentComplexViewModel;
         private string _barcode;
         private Sale _selectedProductSale;
         private ObservableCollection<Product> _products;
@@ -139,6 +140,11 @@ namespace RetailTradeClient.ViewModels
         public ICommand PaymentCashCommand { get; }
 
         /// <summary>
+        /// Сложаня оплата
+        /// </summary>
+        public ICommand PaymentComplexCommand { get; }
+
+        /// <summary>
         /// Удалить выбранную из корзина товара
         /// </summary>
         public ICommand DeleteSelectedRowCommand { get; }
@@ -210,6 +216,7 @@ namespace RetailTradeClient.ViewModels
             PostponeReceipts = new List<PostponeReceipt>();
 
             _paymentCashViewModel = new(_receiptService, _productSaleService, _userStore, _manager, _shiftStore) { Title = "Оплата наличными" };
+            _paymentComplexViewModel = new(_receiptService, _manager, _shiftStore, _userStore) { Title = "Оплата чека" };
 
             LogoutCommand = new RelayCommand(Logout);
             TextInputCommand = new ParameterCommand(parameter => TextInput(parameter));
@@ -219,6 +226,7 @@ namespace RetailTradeClient.ViewModels
             OpenPostponeReceiptCommand = new RelayCommand(OpenPostponeReceipt);
             AddProductToSaleCommand = new ParameterCommand(pc => AddProductToSale(pc));
             PaymentCashCommand = new RelayCommand(PaymentCash);
+            PaymentComplexCommand = new RelayCommand(PaymentComplex);
             DeleteSelectedRowCommand = new RelayCommand(DeleteSelectedRow);
             PrintXReportCommand = new PrintXReportCommand();
             CRMSettingsCommand = new RelayCommand(CRMSettings);
@@ -496,6 +504,20 @@ namespace RetailTradeClient.ViewModels
 
                 if (await _manager.ShowDialog(_paymentCashViewModel,
                 new PaymentCashView()))
+                {
+                    SaleProducts.Clear();
+                }
+            }
+        }
+
+        private async void PaymentComplex()
+        {
+            if (SaleProducts.Count > 0)
+            {
+                _paymentComplexViewModel.SaleProducts = SaleProducts.ToList();
+
+                if (await _manager.ShowDialog(_paymentComplexViewModel,
+                new PaymentComplexView()))
                 {
                     SaleProducts.Clear();
                 }

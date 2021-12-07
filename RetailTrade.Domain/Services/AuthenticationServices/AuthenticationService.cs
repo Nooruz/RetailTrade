@@ -12,7 +12,6 @@ namespace RetailTrade.Domain.Services.AuthenticationServices
 
         private readonly IUserService _userService;
         private readonly IPasswordHasher _passwordHasher;
-        private Regex _usernameRegex;
         private Regex _passwordRegex;
 
         #endregion
@@ -25,8 +24,7 @@ namespace RetailTrade.Domain.Services.AuthenticationServices
             _userService = userService;
             _passwordHasher = passwordHasher;
 
-            _usernameRegex = new Regex("^[a-zA-Z][a-zA-Z0-9]{2,9}$");
-            _passwordRegex = new Regex("");
+            _passwordRegex = new Regex("^[0-9]+$");
         }
 
         #endregion
@@ -52,13 +50,6 @@ namespace RetailTrade.Domain.Services.AuthenticationServices
 
         public async Task<RegistrationResult> Register(User user, string password, string confirmPassword)
         {
-            if (!_usernameRegex.IsMatch(user.Username))
-                return RegistrationResult.UsernameDoesNotRequirements;
-
-            if (!_passwordRegex.IsMatch(password))
-                return RegistrationResult.PasswordDoesNotRequirements;
-
-
             if (password != confirmPassword)
                 return RegistrationResult.PasswordsDoNotMatch;
 
@@ -81,11 +72,6 @@ namespace RetailTrade.Domain.Services.AuthenticationServices
 
         public async Task<RegistrationResult> Update(User user, string password, string confirmPassword)
         {
-            if (_usernameRegex.IsMatch(user.Username))
-            {
-                return RegistrationResult.UsernameDoesNotRequirements;
-            }
-
             try
             {
                 var editUser = await _userService.GetAsync(user.Id);

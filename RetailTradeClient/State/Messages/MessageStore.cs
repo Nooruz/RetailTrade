@@ -38,6 +38,7 @@ namespace RetailTradeClient.State.Messages
 
         public event Action CurrentMessageChanged;
         public event Action CurrentMessageTypeChanged;
+        public event Action CloseChanged;
 
         #endregion
 
@@ -47,6 +48,11 @@ namespace RetailTradeClient.State.Messages
         {
             CurrentMessage = message;
             CurrentMessageType = messageType;
+        }
+
+        public void CLose()
+        {
+            CloseChanged?.Invoke();
         }
 
         #endregion        

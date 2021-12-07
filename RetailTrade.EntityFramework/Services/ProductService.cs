@@ -18,6 +18,7 @@ namespace RetailTrade.EntityFramework.Services
 
         public event Action PropertiesChanged;
         public event Action<Product> OnProductCreated;
+        public event Action<double> OnProductRefunded;
 
         public ProductService(RetailTradeDbContextFactory contextFactory)
         {
@@ -215,6 +216,28 @@ namespace RetailTrade.EntityFramework.Services
                                                .Select(p => new Product { Quantity = p.Quantity })
                                                .FirstOrDefaultAsync();
                 return product.Quantity;
+            }
+            catch (Exception e)
+            {
+                //ignore
+            }
+            return 0;
+        }
+
+        public async Task<double> Refund(int id, double quantity)
+        {
+            try
+            {
+                await using var context = _contextFactory.CreateDbContext();
+                Product editProduct = await context.Products
+                                               .Where(p => p.Id == id)
+                                               .Select(p => new Product { Quantity = p.Quantity })
+                                               .FirstOrDefaultAsync();
+                editProduct.Quantity += quantity;
+
+                await UpdateAsync(editProduct.Id, editProduct);
+
+                return quantity;
             }
             catch (Exception e)
             {

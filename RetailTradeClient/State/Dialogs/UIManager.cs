@@ -1,4 +1,5 @@
-﻿using RetailTradeClient.Dialogs;
+﻿using RetailTradeClient.Commands;
+using RetailTradeClient.Dialogs;
 using RetailTradeClient.ViewModels;
 using RetailTradeClient.ViewModels.Dialogs;
 using System.Threading.Tasks;
@@ -16,7 +17,7 @@ namespace RetailTradeClient.State.Dialogs
             window.ViewModel = new DialogWindowViewModel(window);
             MessageBoxDialogViewModel viewModel = new(message, title, dialogButton, dialogIcon);
             window.Content = viewModel;
-            window.Title = !string.IsNullOrEmpty(title) ? title : "Управление розничной торговлей";
+            window.Title = !string.IsNullOrEmpty(title) ? title : "Sale Page";
             viewModel.DialogWindow = window;
             window.ShowDialog();
             return viewModel.MessageBoxResult;
@@ -51,6 +52,7 @@ namespace RetailTradeClient.State.Dialogs
             where TViewModel : BaseDialogViewModel where TUserControl : BaseDialogUserControl
         {
             _window = userControl.Window;
+            viewModel.CloseCommand = new RelayCommand(Close);
             return userControl.ShowDialog(viewModel);
         }
 
@@ -65,6 +67,7 @@ namespace RetailTradeClient.State.Dialogs
             _window.ViewModel.WindowState = windowState;
             _window.ViewModel.ResizeMode = resizeMode;
             _window.ViewModel.SizeToContent = sizeToContent;
+            viewModel.CloseCommand = new RelayCommand(Close);
             return userControl.ShowDialog(viewModel);
         }
 

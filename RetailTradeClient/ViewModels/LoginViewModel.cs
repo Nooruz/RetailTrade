@@ -17,12 +17,21 @@ namespace RetailTradeClient.ViewModels
         private readonly IUserService _userService;
         private string _password;
         private User _selectedUser;
+        private IEnumerable<User> _users;
 
         #endregion
 
         #region Public Properties
 
-        public IEnumerable<User> Users => _userService.GetAll();
+        public IEnumerable<User> Users
+        {
+            get => _users;
+            set
+            {
+                _users = value;
+                OnPropertyChanged(nameof(Users));
+            }
+        }
         public User SelectedUser
         {
             get => _selectedUser;
@@ -51,6 +60,7 @@ namespace RetailTradeClient.ViewModels
         #region Commands
 
         public ICommand LoginCommand { get; set; }
+        public ICommand UserControlLoadedCommand { get; }
 
         #endregion
 
@@ -67,6 +77,16 @@ namespace RetailTradeClient.ViewModels
             _userService = userService;
 
             LoginCommand = new LoginCommand(this, authenticator, navigato, viewModelFactory, messageStore);
+            UserControlLoadedCommand = new RelayCommand(UserControlLoaded);
+        }
+
+        #endregion
+
+        #region Private Voids
+
+        private async void UserControlLoaded()
+        {
+            Users = await _userService.GetAllAsync();
         }
 
         #endregion

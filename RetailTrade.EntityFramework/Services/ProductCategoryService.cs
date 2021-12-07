@@ -18,6 +18,7 @@ namespace RetailTrade.EntityFramework.Services
 
         public event Action PropertiesChanged;
         public event Action<ProductCategory> OnProductCategoryCreated;
+        public event Action<ProductCategory> OnProductCategoryUpdated;
 
         public ProductCategoryService(RetailTradeDbContextFactory contextFactory)
         {
@@ -45,7 +46,7 @@ namespace RetailTrade.EntityFramework.Services
         {
             var result = await _nonQueryDataService.Update(id, entity);
             if (result != null)
-                PropertiesChanged?.Invoke();
+                OnProductCategoryUpdated?.Invoke(result);
             return result;
         }
 

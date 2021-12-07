@@ -1,6 +1,5 @@
 ﻿using RetailTradeServer.Commands;
 using RetailTradeServer.Dialogs;
-using RetailTradeServer.ViewModels;
 using RetailTradeServer.ViewModels.Dialogs;
 using RetailTradeServer.ViewModels.Dialogs.Base;
 using System.Threading.Tasks;
@@ -19,7 +18,7 @@ namespace RetailTradeServer.State.Dialogs
             window.ViewModel = new(window);
             MessageBoxDialogViewModel viewModel = new(message, title, dialogButton, dialogIcon);
             window.Content = viewModel;
-            window.Title = !string.IsNullOrEmpty(title) ? title : "Управление торговлей";
+            window.Title = !string.IsNullOrEmpty(title) ? title : "Sale Page";
             viewModel.DialogWindow = window;
             _ = window.ShowDialog();
             return viewModel.MessageBoxResult;

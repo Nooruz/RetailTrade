@@ -1,4 +1,5 @@
 ﻿using RetailTrade.Domain.Models;
+using RetailTrade.Domain.Services;
 using RetailTrade.Domain.Services.AuthenticationServices;
 using RetailTradeClient.State.Navigators;
 using RetailTradeClient.State.Users;
@@ -15,6 +16,7 @@ namespace RetailTradeClient.State.Authenticators
         private readonly IUserStore _userStore;
         private readonly INavigator _navigator;
         private readonly IViewModelFactory _viewModelFactory;
+        private readonly IOrganizationService _organizationService;
 
         #endregion
 
@@ -23,12 +25,14 @@ namespace RetailTradeClient.State.Authenticators
         public Authenticator(IAuthenticationService authenticationService,
             IUserStore userStore,
             INavigator navigator,
-            IViewModelFactory viewModelFactory)
+            IViewModelFactory viewModelFactory,
+            IOrganizationService organizationService)
         {
             _authenticationService = authenticationService;
             _userStore = userStore;
             _navigator = navigator;
             _viewModelFactory = viewModelFactory;
+            _organizationService = organizationService;
         }
 
         #endregion
@@ -36,6 +40,7 @@ namespace RetailTradeClient.State.Authenticators
         public async Task Login(string username, string password)
         {
             _userStore.CurrentUser = await _authenticationService.Login(username, password);
+            _userStore.Organization = await _organizationService.GetCurrentOrganization();
         }
 
         public void Logout()

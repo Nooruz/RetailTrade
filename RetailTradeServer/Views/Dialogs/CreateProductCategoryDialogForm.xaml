@@ -21,8 +21,23 @@
                           HorizontalAlignment="Right">
 
             <Button Content="Сохранить"
+                    Command="{Binding SaveCommand}"
+                    IsDefault="True"
+                    Visibility="{Binding IsEditMode, Converter={StaticResource BooleanToVisibilityConverter}}"/>
+
+            <Button Content="Создать"
                     Command="{Binding CreateCommand}"
-                    IsDefault="True"/>
+                    IsDefault="True">
+                <Button.Style>
+                    <Style TargetType="{x:Type Button}">
+                        <Style.Triggers>
+                            <DataTrigger Binding="{Binding IsEditMode}" Value="True">
+                                <Setter Property="Visibility" Value="Collapsed"/>
+                            </DataTrigger>
+                        </Style.Triggers>
+                    </Style>
+                </Button.Style>
+            </Button>
             
             <Button Content="Отменить"
                     Command="{Binding CloseCommand}"/>

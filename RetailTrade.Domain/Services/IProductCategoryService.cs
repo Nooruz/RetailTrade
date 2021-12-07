@@ -12,5 +12,6 @@ namespace RetailTrade.Domain.Services
         Task<ObservableCollection<ProductCategory>> GetAllListAsync();
 
         event Action<ProductCategory> OnProductCategoryCreated;
+        event Action<ProductCategory> OnProductCategoryUpdated;
     }
 }

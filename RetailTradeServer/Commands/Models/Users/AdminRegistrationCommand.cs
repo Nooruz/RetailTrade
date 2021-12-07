@@ -90,12 +90,6 @@ namespace RetailTradeServer.Commands
                         case RegistrationResult.UsernameAlreadyExists:
                             _messageStore.SetCurrentMessage("Имя пользователя уже существует.", MessageType.Error);
                             break;
-                        case RegistrationResult.UsernameDoesNotRequirements:
-                            _messageStore.SetCurrentMessage("Имя пользователя должно соответствовать нижеследующим требованиям:\n" +
-                                                      "1) Должно содержать только латинские буквы (a-z) и цифры (0-9).\n" +
-                                                      "2) Должно начинатся с буквы.\n" +
-                                                      "3) Длина должно быть от 3 до 10 символов.", MessageType.Error);
-                            break;
                         case RegistrationResult.PasswordDoesNotRequirements:
                             _messageStore.SetCurrentMessage("Пароль должно соответствовать нижеследующим требованиям:\n" +
                                                       "1) \n" +

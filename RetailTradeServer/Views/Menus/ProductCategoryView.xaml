@@ -1,10 +1,11 @@
 ﻿<UserControl
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:dxb="http://schemas.devexpress.com/winfx/2008/xaml/bars"
     xmlns:dxe="http://schemas.devexpress.com/winfx/2008/xaml/editors"
     xmlns:dxg="http://schemas.devexpress.com/winfx/2008/xaml/grid"
     xmlns:dxlc="http://schemas.devexpress.com/winfx/2008/xaml/layoutcontrol"
-    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:dxmvvm="http://schemas.devexpress.com/winfx/2008/xaml/mvvm"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     x:Class="RetailTradeServer.Views.Menus.ProductCategoryView">
 
     <dxmvvm:Interaction.Behaviors>
@@ -30,11 +31,20 @@
                                   VerticalAlignment="Top"
                                   HorizontalAlignment="Left">
 
-                    <Button Content="Добавить группу"
-                            Command="{Binding CreateProductCategoryCommand}"/>
+                    <Button Content="{StaticResource faPlus}"
+                            ToolTip="Создать"
+                            Command="{Binding CreateProductCategoryOrSubCategoryCommand}"
+                            Style="{StaticResource FAButton}"/>
 
-                    <Button Content="Добавить категорию"
-                            Command="{Binding CreateProductSubcategoryCommand}"/>
+                    <Button Content="{StaticResource faEdit}"
+                            ToolTip="Изменить выбранный элемент"
+                            Command="{Binding EditProductCategoryOrSubCategoryCommand}"
+                            Style="{StaticResource FAButton}"/>
+
+                    <Button Content="{StaticResource faTrashAlt}"
+                            ToolTip="Удалить выбранный элемент"
+                            Command="{Binding DeleteProductCategoryOrSubCategoryCommand}"
+                            Style="{StaticResource FAButton}"/>
 
                 </dxlc:LayoutGroup>
 
@@ -42,10 +52,30 @@
                                      ChildNodesPath="ProductSubcategories"
                                      KeyFieldName="Name"
                                      TreeViewFieldName="Name"
-                                     SelectedItem="{Binding SelectedProductGroup}" >
+                                     SelectedItem="{Binding SelectedProductGroup}">
+                    <dxg:TreeViewControl.NodeMenuCustomizations>
+                        <dxb:BarButtonItem Name="EditCategory" 
+                                           Content="Изменить"
+                                           Command="{Binding EditCategoryCommand}"/>
+                        <dxb:BarButtonItem Name="DeleteCategory" 
+                                           Content="Удалить"
+                                           Command="{Binding DeleteCategoryCommand}"/>
+                        <dxb:BarButtonItem Name="CreateSubCategory"
+                                           Content="Создать категорию"
+                                           Command="{Binding CreateSubCategoryCommand}"/>
+                    </dxg:TreeViewControl.NodeMenuCustomizations>
+                    <dxg:TreeViewControl.ContextMenu>
+                        <ContextMenu>
+                            <MenuItem Header="Создать группу"/>
+                            <MenuItem Header="Создать категорию"/>
+                        </ContextMenu>
+                    </dxg:TreeViewControl.ContextMenu>
                     <dxmvvm:Interaction.Behaviors>
                         <dxmvvm:EventToCommand EventName="SelectedItemChanged" 
                                                Command="{Binding SelectedItemChangedCommand}"/>
+                        <dxmvvm:EventToCommand EventName="ShowNodeMenu"
+                                               Command="{Binding OnShowNodeMenuCommand}"
+                                               PassEventArgsToCommand="True"/>
                     </dxmvvm:Interaction.Behaviors>
                 </dxg:TreeViewControl>
 
@@ -59,13 +89,17 @@
                                   VerticalAlignment="Top"
                                   HorizontalAlignment="Left">
 
-                    <Button Content="Новый товар"
+                    <Button Content="Создать новый товар"
                             Command="{Binding CreateProductCommand}"/>
+
+                    <Button Content="Редактировать товар"
+                            Command="{Binding EditProductCommand}"/>
 
                 </dxlc:LayoutGroup>
 
                 <dxg:GridControl ItemsSource="{Binding GetProducts}"
-                                 AutoGenerateColumns="None">
+                                 AutoGenerateColumns="None"
+                                 SelectedItem="{Binding SelectedProduct}">
                     <dxg:GridControl.Style>
                         <Style TargetType="{x:Type dxg:GridControl}">
                             <Style.Triggers>

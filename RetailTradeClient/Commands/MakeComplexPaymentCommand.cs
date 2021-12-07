@@ -1,5 +1,4 @@
 ﻿using DevExpress.XtraPrinting;
-using RetailTrade.CashRegisterMachine;
 using RetailTrade.Domain.Models;
 using RetailTrade.Domain.Services;
 using RetailTradeClient.Report;
@@ -10,14 +9,15 @@ using RetailTradeClient.ViewModels.Dialogs;
 using System;
 using System.Linq;
 using System.Threading.Tasks;
+using System.Windows;
 
 namespace RetailTradeClient.Commands
 {
-    public class MakeCashPaymentCommand : AsyncCommandBase
+    public class MakeComplexPaymentCommand : AsyncCommandBase
     {
         #region Private Members
 
-        private readonly PaymentCashViewModel _paymentCashViewModel;
+        private readonly PaymentComplexViewModel _paymentComplexViewModel;
         private readonly IReceiptService _receiptService;
         private readonly IUIManager _manager;
         private readonly IShiftStore _shiftStore;
@@ -27,13 +27,13 @@ namespace RetailTradeClient.Commands
 
         #region Constructor
 
-        public MakeCashPaymentCommand(PaymentCashViewModel paymentCashViewModel,
+        public MakeComplexPaymentCommand(PaymentComplexViewModel paymentComplexViewModel,
             IReceiptService receiptService,
             IUIManager manager,
             IShiftStore shiftStore,
             IUserStore userStore)
         {
-            _paymentCashViewModel = paymentCashViewModel;
+            _paymentComplexViewModel = paymentComplexViewModel;
             _receiptService = receiptService;
             _manager = manager;
             _shiftStore = shiftStore;
@@ -49,7 +49,7 @@ namespace RetailTradeClient.Commands
 
         public override async Task ExecuteAsync(object parameter)
         {
-            if (_paymentCashViewModel.Change >= 0)
+            if (_paymentComplexViewModel.Balance == 0)
             {
                 try
                 {
@@ -57,11 +57,12 @@ namespace RetailTradeClient.Commands
                     Receipt newReceipt = await _receiptService.CreateAsync(new Receipt
                     {
                         DateOfPurchase = DateTime.Now,
-                        Sum = _paymentCashViewModel.AmountToBePaid,
-                        PaidInCash = _paymentCashViewModel.Entered,
+                        Sum = _paymentComplexViewModel.AmountToBePaid,
+                        PaidInCash = _paymentComplexViewModel.PaymentTypes.Where(pt => pt.Id == 1).Sum(pt => pt.Sum),
+                        PaidInCashless = _paymentComplexViewModel.PaymentTypes.Where(pt => pt.Id == 2).Sum(pt => pt.Sum),
                         ShiftId = _shiftStore.CurrentShift.Id,
-                        Change = _paymentCashViewModel.Change,
-                        ProductSales = _paymentCashViewModel.SaleProducts.Select(s =>
+                        Change = 0,
+                        ProductSales = _paymentComplexViewModel.SaleProducts.Select(s =>
                             new ProductSale
                             {
                                 ProductId = s.Id,
@@ -72,43 +73,10 @@ namespace RetailTradeClient.Commands
                             }).ToList()
                     });
 
-                    //ShtrihM.Connect();
-                    //ShtrihM.CheckType = 0;
-
-                    //if (newReceipt != null)
-                    //{
-                    //    foreach (Sale sale in _paymentCashViewModel.SaleProducts)
-                    //    {
-
-                    //        ShtrihM.Quantity = Convert.ToDouble(sale.Quantity);
-                    //        ShtrihM.Price = sale.SalePrice;
-                    //        var sum1NSP = Math.Round(sale.SalePrice * 1 / 113, 2);
-                    //        var sum1NDS = Math.Round(sale.SalePrice * 12 / 113, 2);
-                    //        string sumNSP = Math.Round(sum1NSP * 100, 0).ToString();
-                    //        string sumNDS = Math.Round(sum1NDS * 100, 0).ToString();
-
-                    //        ShtrihM.StringForPrinting =
-                    //            string.Join(";", new string[] { "0", "12345", "0", "0", "2", sumNDS, "3", sumNSP + "\n" + sale.Name });
-
-                    //        ShtrihM.BarCode = "46198488";
-
-                    //        ShtrihM.Tax1 = 2;
-                    //        ShtrihM.Tax2 = 3;
-                    //        ShtrihM.Tax3 = 1;
-                    //        ShtrihM.Tax4 = 4;
-
-                    //        ShtrihM.Sale();
-                    //    }
-                    //    ShtrihM.Summ1 = newReceipt.Sum;
-                    //    ShtrihM.StringForPrinting = "";
-                    //    ShtrihM.CloseCheck();
-                    //    ShtrihM.CutCheck();
-                    //}
-
                     //Подготовка документа для печати чека
                     ProductSaleReport report = new(_userStore, newReceipt)
                     {
-                        DataSource = _paymentCashViewModel.SaleProducts
+                        DataSource = _paymentComplexViewModel.SaleProducts
                     };
                     await report.CreateDocumentAsync();
 
@@ -124,17 +92,17 @@ namespace RetailTradeClient.Commands
                 {
                     //ignore
                 }
-                finally
-                {
-                    //ShtrihM.Disconnect();
-                }
+            }
+            else
+            {
+                _manager.ShowMessage("Остаток должен быть 0", "", MessageBoxButton.OK, MessageBoxImage.Exclamation);
             }
         }
 
         private void PrintingSystem_EndPrint(object sender, EventArgs e)
         {
             _manager.Close();
-            _paymentCashViewModel.Result = true;
+            _paymentComplexViewModel.Result = true;
         }
     }
 }

@@ -59,17 +59,7 @@ namespace RetailTradeServer.ViewModels
         /// </summary>
         public DialogWindowViewModel(Window window)
         {
-            _window = window;
-            CloseCommand = new RelayCommand(Close);
-        }
-
-        #endregion
-
-        #region Private Voids
-
-        private void Close()
-        {
-            _window?.Close();
+            CloseCommand = new RelayCommand(() => window.Close());
         }
 
         #endregion

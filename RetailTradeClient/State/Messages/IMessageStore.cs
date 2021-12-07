@@ -16,5 +16,6 @@ namespace RetailTradeClient.State.Messages
         void SetCurrentMessage(string message, MessageType messageType);
         event Action CurrentMessageChanged;
         event Action CurrentMessageTypeChanged;
+        event Action CloseChanged;
     }
 }

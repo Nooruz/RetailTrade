@@ -1,0 +1,168 @@
+﻿<dialogs:BaseDialogUserControl
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:dxe="http://schemas.devexpress.com/winfx/2008/xaml/editors"
+    xmlns:dxg="http://schemas.devexpress.com/winfx/2008/xaml/grid"
+    xmlns:dxlc="http://schemas.devexpress.com/winfx/2008/xaml/layoutcontrol"
+    xmlns:dxmvvm="http://schemas.devexpress.com/winfx/2008/xaml/mvvm"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:dialogs="clr-namespace:RetailTradeClient.Dialogs"
+    x:Class="RetailTradeClient.Views.Dialogs.PaymentComplexView">
+
+    <dialogs:BaseDialogUserControl.InputBindings>
+
+        <KeyBinding Key="Delete"
+                    Command="{Binding ClearCommand}"/>
+
+        <KeyBinding Key="Backspace"
+                    Command="{Binding BackspaceCommand}"/>
+
+        <KeyBinding Key="OemComma"
+                    Command="{Binding CommaButtonPressCommand}"/>
+
+    </dialogs:BaseDialogUserControl.InputBindings>
+
+    <dxlc:LayoutControl ItemSpace="10">
+
+        <dxlc:LayoutGroup Orientation="Vertical"
+                          Width="400">
+
+            <dxlc:LayoutItem Label="Всего к оплате:"
+                             LabelPosition="Top"
+                             Style="{StaticResource liCash}">
+                <dxe:TextEdit Style="{StaticResource teCash}"
+                              Text="{Binding AmountToBePaid, UpdateSourceTrigger=PropertyChanged}"
+                              IsReadOnly="True"/>
+            </dxlc:LayoutItem>
+
+            <dxg:GridControl ItemsSource="{Binding PaymentTypes}"
+                             AutoGenerateColumns="None"
+                             SelectedItem="{Binding SelectedPaymentType, UpdateSourceTrigger=PropertyChanged}">
+                <dxg:GridControl.View>
+                    <dxg:TableView AllowEditing="False"
+                                   ShowGroupPanel="False"
+                                   AutoWidth="True"
+                                   FocusedRowChanged="TableView_FocusedRowChanged"/>
+                </dxg:GridControl.View>
+                <dxg:GridColumn Header="Вид оплаты"
+                                FieldName="Name"/>
+                <dxg:GridColumn Header="Сумма"
+                                Width="50"
+                                FieldName="Sum"
+                                AllowEditing="True">
+                    <dxg:GridColumn.EditSettings>
+                        <dxe:SpinEditSettings MaskUseAsDisplayFormat="True" 
+                                              Mask="n"
+                                              SelectAllOnMouseUp="True"/>
+                    </dxg:GridColumn.EditSettings>
+                </dxg:GridColumn>
+                <dxmvvm:Interaction.Behaviors>
+                    <dxmvvm:EventToCommand EventName="Loaded"
+                                           Command="{Binding GridControlLoadedCommand}"
+                                           PassEventArgsToCommand="True"/>
+                </dxmvvm:Interaction.Behaviors>
+            </dxg:GridControl>
+
+            <dxlc:LayoutItem Label="Остаток:"
+                             LabelPosition="Top"
+                             Style="{StaticResource liCash}">
+                <dxe:TextEdit Style="{StaticResource teCash}"
+                              Text="{Binding Balance, UpdateSourceTrigger=PropertyChanged}"
+                              IsReadOnly="True"
+                              Foreground="Red"/>
+            </dxlc:LayoutItem>
+
+        </dxlc:LayoutGroup>
+
+        <dxlc:LayoutGroup Orientation="Vertical">
+            <dxlc:LayoutGroup.Resources>
+                <Style TargetType="{x:Type Button}" BasedOn="{StaticResource btnCash}"/>
+                <Style TargetType="{x:Type Button}" BasedOn="{StaticResource btnCash}" x:Key="btnNumber">
+                    <Setter Property="Command" Value="{Binding DigitalButtonPressCommand}"/>
+                    <Setter Property="Focusable" Value="False"/>
+                    <Setter Property="IsTabStop" Value="False"/>
+                    <Setter Property="CommandParameter" Value="{Binding Content, RelativeSource={RelativeSource Self}}"/>
+                </Style>
+            </dxlc:LayoutGroup.Resources>
+
+            <dxlc:LayoutGroup>
+
+                <Button Content="Нал. (F6)"
+                        Width="Auto"
+                        FontSize="14"
+                        Command="{Binding PaymentCashCommand}"/>
+
+                <Button Content="Безнал. (F7)"
+                        Width="Auto"
+                        FontSize="14"
+                        Command="{Binding PaymentCashlessCommand}"/>
+
+            </dxlc:LayoutGroup>
+
+            <dxlc:LayoutGroup>
+
+                <Button Content="7"
+                        Style="{StaticResource btnNumber}"/>
+                <Button Content="8"
+                        Style="{StaticResource btnNumber}"/>
+                <Button Content="9"
+                        Style="{StaticResource btnNumber}"/>
+                <Button Content="{StaticResource faClose}"
+                        Command="{Binding ClearCommand}"
+                        FontFamily="{StaticResource FontAwesomeBold}"/>
+
+            </dxlc:LayoutGroup>
+
+            <dxlc:LayoutGroup>
+
+                <Button Content="4"
+                        Style="{StaticResource btnNumber}"/>
+                <Button Content="5"
+                        Style="{StaticResource btnNumber}"/>
+                <Button Content="6"
+                        Style="{StaticResource btnNumber}"/>
+
+            </dxlc:LayoutGroup>
+
+            <dxlc:LayoutGroup>
+
+                <dxlc:LayoutGroup Orientation="Vertical">
+
+                    <dxlc:LayoutGroup>
+
+                        <Button Content="1"
+                                Style="{StaticResource btnNumber}"/>
+                        <Button Content="2"
+                                Style="{StaticResource btnNumber}"/>
+                        <Button Content="3"
+                                Style="{StaticResource btnNumber}"/>
+
+                    </dxlc:LayoutGroup>
+
+                    <dxlc:LayoutGroup>
+
+                        <Button Content="0"
+                                Style="{StaticResource btnNumber}"/>
+                        <Button Content=","
+                                Command="{Binding CommaButtonPressCommand}"/>
+                        <Button Content="{StaticResource faBackspace}"
+                                Command="{Binding BackspaceCommand}"
+                                FontFamily="{StaticResource FontAwesomeBold}"/>
+
+                    </dxlc:LayoutGroup>
+
+                </dxlc:LayoutGroup>
+
+                <Button Content="Enter"
+                        Height="Auto"
+                        FontSize="14"
+                        Padding="0"
+                        IsDefault="True"
+                        Command="{Binding MakeComplexPaymentCommand}"/>
+
+            </dxlc:LayoutGroup>
+
+        </dxlc:LayoutGroup>
+
+    </dxlc:LayoutControl>
+
+</dialogs:BaseDialogUserControl>

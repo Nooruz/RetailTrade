@@ -6,7 +6,7 @@ namespace RetailTrade.CashRegisterMachine
     {
         #region Private Members
 
-        private static readonly DrvFR drvFR;
+        private static DrvFR drvFR;
 
         #endregion
 

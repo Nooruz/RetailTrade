@@ -28,13 +28,14 @@ namespace RetailTradeServer.ViewModels.Dialogs
                 OnPropertyChanged(nameof(Name));
             }
         }
+        public bool IsEditMode { get; set; }
+        public ProductCategory EditProductCategory { get; set; }
 
         #endregion
 
         #region Commands
 
-        public ICommand CreateCommand { get; }
-        public ICommand CloseCommand { get; }
+        public ICommand SaveCommand { get; }
 
         #endregion
 
@@ -47,7 +48,7 @@ namespace RetailTradeServer.ViewModels.Dialogs
             _manager = manager;
 
             CreateCommand = new RelayCommand(Create);
-            CloseCommand = new RelayCommand(() => _manager?.Close());
+            SaveCommand = new RelayCommand(Save);
         }
 
         #endregion
@@ -62,6 +63,15 @@ namespace RetailTradeServer.ViewModels.Dialogs
             {
                 Name = Name
             });
+            _manager.Close();
+        }
+
+        private async void Save()
+        {
+            if (string.IsNullOrEmpty(Name))
+                return;
+            EditProductCategory.Name = Name;
+            await _productCategoryService.UpdateAsync(EditProductCategory.Id, EditProductCategory);
             _manager.Close();
         }
 

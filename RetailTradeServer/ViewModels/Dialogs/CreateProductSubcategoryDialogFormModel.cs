@@ -22,7 +22,7 @@ namespace RetailTradeServer.ViewModels.Dialogs
         #region Public Properties
 
         public IEnumerable<ProductCategory> ProductCategories => _productCategoryService.GetAll();
-        public int SelectedProductCategoryId { get; set; }
+        public int? SelectedProductCategoryId { get; set; }
         public string Name
         {
             get => _name;
@@ -62,12 +62,12 @@ namespace RetailTradeServer.ViewModels.Dialogs
 
         private async void Create()
         {
-            if (string.IsNullOrEmpty(Name) || SelectedProductCategoryId == 0)
+            if (string.IsNullOrEmpty(Name) || SelectedProductCategoryId != null)
                 return;
             await _productSubcategoryService.CreateAsync(new ProductSubcategory
             {
                 Name = Name,
-                ProductCategoryId = SelectedProductCategoryId
+                ProductCategoryId = SelectedProductCategoryId.Value
             });
             _manager.Close();
         }

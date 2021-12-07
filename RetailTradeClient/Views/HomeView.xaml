@@ -143,8 +143,9 @@
                     <Button Content="Безнал. (F6)"
                             Style="{StaticResource ButtonWithIcon}"
                             Tag="{StaticResource faCreditCard}"
-                            ToolTip="Оплата безналичными"/>
-
+                            ToolTip="Оплата безналичными"
+                            Command="{Binding PaymentComplexCommand}"/>
+    
                     <Button Content="Возврат (-)"
                             Style="{StaticResource ButtonWithIcon}"
                             Tag="{StaticResource faUndoAlt}"

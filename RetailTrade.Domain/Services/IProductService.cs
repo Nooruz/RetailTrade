@@ -21,7 +21,9 @@ namespace RetailTrade.Domain.Services
         Task<IEnumerable<Product>> PredicateSelect(Expression<Func<Product, bool>> predicate, Expression<Func<Product, Product>> select);
         Task<Product> Predicate(Expression<Func<Product, bool>> predicate, Expression<Func<Product, Product>> select);
         Task<double> GetQuantity(int id);
+        Task<double> Refund(int id, double quantity);
 
         event Action<Product> OnProductCreated;
+        event Action<double> OnProductRefunded;
     }
 }

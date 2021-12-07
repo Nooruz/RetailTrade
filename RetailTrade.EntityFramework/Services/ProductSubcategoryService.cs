@@ -107,14 +107,14 @@ namespace RetailTrade.EntityFramework.Services
             return null;
         }
 
-        public IEnumerable<ProductSubcategory> GetAllByProductCategoryId(int id)
+        public async Task<IEnumerable<ProductSubcategory>> GetAllByProductCategoryIdAsync(int id)
         {
             try
             {
-                using var context = _contextFactory.CreateDbContext();
-                return context.ProductSubcategories
+                await using var context = _contextFactory.CreateDbContext();
+                return await context.ProductSubcategories
                     .Where(ps => ps.ProductCategoryId == id)
-                    .ToList();
+                    .ToListAsync();
             }
             catch (Exception e)
             {

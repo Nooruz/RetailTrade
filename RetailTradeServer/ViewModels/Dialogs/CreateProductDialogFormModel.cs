@@ -8,6 +8,7 @@ using RetailTradeServer.ViewModels.Dialogs.Base;
 using RetailTradeServer.Views.Dialogs;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Windows;
 using System.Windows.Input;
 
@@ -33,14 +34,32 @@ namespace RetailTradeServer.ViewModels.Dialogs
         private decimal _arrivalPrice;
         private decimal _salePrice;
         private string _tnved;
+        private ObservableCollection<ProductCategory> _productCategories;
+        private ObservableCollection<ProductSubcategory> _productSubcategory;
 
         #endregion
 
         #region Public Properties
 
         public GlobalMessageViewModel GlobalMessageViewModel { get; }
-        public IEnumerable<ProductCategory> ProductCategories => _productCategoryService.GetAll();
-        public IEnumerable<ProductSubcategory> ProductSubCategories => SelectedProductCategoryId != null ? _productSubcategoryService.GetAllByProductCategoryId(SelectedProductCategoryId.Value) : null;
+        public ObservableCollection<ProductCategory> ProductCategories
+        {
+            get => _productCategories ?? (new());
+            set
+            {
+                _productCategories = value;
+                OnPropertyChanged(nameof(ProductCategories));
+            }
+        }
+        public ObservableCollection<ProductSubcategory> ProductSubCategories
+        {
+            get => _productSubcategory ?? (new());
+            set
+            {
+                _productSubcategory = value;
+                OnPropertyChanged(nameof(ProductSubCategories));
+            }
+        }
         public IEnumerable<Unit> Units => _unitService.GetAll();
         public IEnumerable<Supplier> Suppliers => _supplierService.GetAll();
         public int? SelectedProductCategoryId
@@ -173,7 +192,9 @@ namespace RetailTradeServer.ViewModels.Dialogs
         public ICommand CreateSupplierCommand { get; }
         public ICommand CreateProductCategoryCommand { get; }
         public ICommand CreateProductSubcategoryCommand { get; }
-        public ICommand TabSelectionChangingCommand { get; }
+        public ICommand TabControlLoadedCommand { get; }
+        public ICommand UserControlLoadedCommand { get; }
+        public ICommand SelectedProductCategoryChangedCommand { get; }
 
         #endregion
 
@@ -204,39 +225,74 @@ namespace RetailTradeServer.ViewModels.Dialogs
             CreateSupplierCommand = new RelayCommand(CreateSupplier);
             CreateProductCategoryCommand = new RelayCommand(CreateProductCategory);
             CreateProductSubcategoryCommand = new RelayCommand(CreateProductSubcategory);
-            TabSelectionChangingCommand = new ParameterCommand(parameter => TabSelectionChanging(parameter));
+            TabControlLoadedCommand = new ParameterCommand(sender => TabControlLoaded(sender));
+            UserControlLoadedCommand = new RelayCommand(UserControlLoaded);
+            SelectedProductCategoryChangedCommand = new RelayCommand(SelectedProductCategoryChanged);
 
             _supplierService.PropertiesChanged += SupplierService_PropertiesChanged;
-            _productCategoryService.PropertiesChanged += ProductCategoryService_PropertiesChanged;
-            _productSubcategoryService.PropertiesChanged += ProductSubcategoryService_PropertiesChanged;
+            _productCategoryService.OnProductCategoryCreated += ProductCategoryService_OnProductCategoryCreated;
+            _productSubcategoryService.OnProductSubcategoryCreated += ProductSubcategoryService_OnProductSubcategoryCreated; ;
         }
 
         #endregion
 
         #region Private Voids
 
-        private void TabSelectionChanging(object parameter)
+        private async void SelectedProductCategoryChanged()
         {
-            if (parameter is TabControlSelectionChangingEventArgs e)
+            if (SelectedProductCategoryId != null)
             {
-                if (!CanTabSelect)
+                ProductSubCategories = new(await _productSubcategoryService.GetAllByProductCategoryIdAsync(SelectedProductCategoryId.Value));
+            }
+        }
+
+        private async void UserControlLoaded()
+        {
+            ProductCategories = new(await _productCategoryService.GetAllAsync());
+        }
+
+        private void ProductCategoryService_OnProductCategoryCreated(ProductCategory productCategory)
+        {
+            ProductCategories.Add(productCategory);
+            SelectedProductCategoryId = productCategory.Id;
+        }
+
+        private void ProductSubcategoryService_OnProductSubcategoryCreated(ProductSubcategory productSubcategory)
+        {
+            ProductSubCategories.Add(productSubcategory);
+            SelectedProductSubcategoryId = productSubcategory.Id;
+        }
+
+        private void TabControlLoaded(object sender)
+        {
+            if (sender is RoutedEventArgs e)
+            {
+                if (e.Source is DXTabControl tabControl)
                 {
-                    if (_manager.ShowMessage("Данные не сохранены. Продолжить?", "", MessageBoxButton.YesNo, MessageBoxImage.Question)
-                        == MessageBoxResult.No)
-                    {
-                        e.Cancel = false;
-                        CleareAllItems();
-                    }
-                    else
-                    {
-                        e.Cancel = true;
-                        _messageStore.Close();
-                    }
+                    tabControl.SelectionChanging += TabControl_SelectionChanging;
+                }
+            }
+        }
+
+        private void TabControl_SelectionChanging(object sender, TabControlSelectionChangingEventArgs e)
+        {
+            if (!CanTabSelect)
+            {
+                if (_manager.ShowMessage("Данные не сохранены. Продолжить?", "", MessageBoxButton.YesNo, MessageBoxImage.Question)
+                    == MessageBoxResult.No)
+                {
+                    e.Cancel = false;
+                    CleareAllItems();
                 }
                 else
                 {
+                    e.Cancel = true;
                     _messageStore.Close();
                 }
+            }
+            else
+            {
+                _messageStore.Close();
             }
         }
 
@@ -503,16 +559,6 @@ namespace RetailTradeServer.ViewModels.Dialogs
         private void SupplierService_PropertiesChanged()
         {
             OnPropertyChanged(nameof(Suppliers));
-        }
-
-        private void ProductCategoryService_PropertiesChanged()
-        {
-            OnPropertyChanged(nameof(ProductCategories));
-        }
-
-        private void ProductSubcategoryService_PropertiesChanged()
-        {
-            OnPropertyChanged(nameof(ProductSubCategories));
         }
 
         #endregion

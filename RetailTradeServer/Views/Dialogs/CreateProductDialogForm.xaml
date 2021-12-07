@@ -16,6 +16,7 @@
 
     <dxmvvm:Interaction.Behaviors>
         <dxmvvm:EventToCommand Event="PreviewTextInput" Command="{Binding PreviewTextInputCommand}"/>
+        <dxmvvm:EventToCommand Event="Loaded" Command="{Binding UserControlLoadedCommand}"/>
     </dxmvvm:Interaction.Behaviors>
 
     <Grid>
@@ -27,9 +28,9 @@
         <dx:DXTabControl Grid.Row="0">
 
             <dxmvvm:Interaction.Behaviors>
-                <dxmvvm:EventToCommand EventName="SelectionChanging" 
-                                   Command="{Binding TabSelectionChangingCommand}"
-                                   PassEventArgsToCommand="True"/>
+                <dxmvvm:EventToCommand EventName="Loaded" 
+                                       Command="{Binding TabControlLoadedCommand}"
+                                       PassEventArgsToCommand="True"/>
             </dxmvvm:Interaction.Behaviors>
 
             <dx:DXTabItem Header="Штучные товары">
@@ -63,15 +64,20 @@
 
                         <dxlc:LayoutItem Label="Группа товара">
                             <dxe:ComboBoxEdit ItemsSource="{Binding ProductCategories}"
-                                          DisplayMember="Name"
-                                          ValueMember="Id"
-                                          IncrementalSearch="True"
-                                          AutoComplete="True"
-                                          EditValue="{Binding SelectedProductCategoryId, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
+                                              DisplayMember="Name"
+                                              ValueMember="Id"
+                                              IncrementalSearch="True"
+                                              AutoComplete="True"
+                                              EditValue="{Binding SelectedProductCategoryId, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
 
                                 <dxe:ComboBoxEdit.Buttons>
                                     <dxe:ButtonInfo GlyphKind="Plus" Command="{Binding CreateProductCategoryCommand}"/>
                                 </dxe:ComboBoxEdit.Buttons>
+
+                                <dxmvvm:Interaction.Behaviors>
+                                    <dxmvvm:EventToCommand EventName="SelectedIndexChanged"
+                                                           Command="{Binding SelectedProductCategoryChangedCommand}"/>
+                                </dxmvvm:Interaction.Behaviors>
 
                             </dxe:ComboBoxEdit>
                         </dxlc:LayoutItem>
