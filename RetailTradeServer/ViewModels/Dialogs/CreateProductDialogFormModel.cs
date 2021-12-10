@@ -218,6 +218,8 @@ namespace RetailTradeServer.ViewModels.Dialogs
             GlobalMessageViewModel = globalMessageViewModel;
             _messageStore = messageStore;
 
+            _messageStore.Close();
+
             SavePieceProductCommand = new RelayCommand(SavePieceProduct);
             SavePackagedProductCommand = new RelayCommand(SavePackagedProduct);
             SaveWeightProductCommand = new RelayCommand(SaveWeightProduct);

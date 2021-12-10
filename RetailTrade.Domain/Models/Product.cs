@@ -10,7 +10,17 @@ namespace RetailTrade.Domain.Models
     {
         #region Private Members
 
+        private string _name;
+        private int _productSubcategoryId;
+        private int? _supplierId;
+        private int _unitId;
+        private string _TNVED;
+        private string _barcode;
         private double _quantity;
+        private bool _withoutBarcode;
+        private decimal _arrivalPrice;
+        private decimal _salePrice;
+        private ProductSubcategory _productSubcategory;
 
         #endregion
 
@@ -19,42 +29,106 @@ namespace RetailTrade.Domain.Models
         /// <summary>
         /// Наименование товара
         /// </summary>
-        public string Name { get; set; }
+        public string Name
+        {
+            get => _name;
+            set
+            {
+                _name = value;
+                OnPropertyChanged(nameof(Name));
+            }
+        }
 
         /// <summary>
         /// Категория товара
         /// </summary>
-        public int ProductSubcategoryId { get; set; }
+        public int ProductSubcategoryId
+        {
+            get => _productSubcategoryId;
+            set
+            {
+                _productSubcategoryId = value;
+                OnPropertyChanged(nameof(ProductSubcategoryId));
+            }
+        }
 
         /// <summary>
         /// Поставщик
         /// </summary>
-        public int? SupplierId { get; set; }
+        public int? SupplierId
+        {
+            get => _supplierId;
+            set
+            {
+                _supplierId = value;
+                OnPropertyChanged(nameof(SupplierId));
+            }
+        }
 
         /// <summary>
         /// Единица измерения
         /// </summary>
-        public int UnitId { get; set; }
+        public int UnitId
+        {
+            get => _unitId;
+            set
+            {
+                _unitId = value;
+                OnPropertyChanged(nameof(UnitId));
+            }
+        }
 
         /// <summary>
         /// ТН ВЭД
         /// </summary>
-        public string TNVED { get; set; }
+        public string TNVED
+        {
+            get => _TNVED;
+            set
+            {
+                _TNVED = value;
+                OnPropertyChanged(nameof(TNVED));
+            }
+        }
 
         /// <summary>
         /// Штрих код
         /// </summary>
-        public string Barcode { get; set; }
+        public string Barcode
+        {
+            get => _barcode;
+            set
+            {
+                _barcode = value;
+                OnPropertyChanged(nameof(Barcode));
+            }
+        }
 
         /// <summary>
         /// Товар без штрих кода
         /// </summary>
-        public bool WithoutBarcode { get; set; }
+        public bool WithoutBarcode
+        {
+            get => _withoutBarcode;
+            set
+            {
+                _withoutBarcode = value;
+                OnPropertyChanged(nameof(WithoutBarcode));
+            }
+        }
 
         /// <summary>
         /// Цена приход
         /// </summary>
-        public decimal ArrivalPrice { get; set; }
+        public decimal ArrivalPrice
+        {
+            get => _arrivalPrice;
+            set
+            {
+                _arrivalPrice = value;
+                OnPropertyChanged(nameof(ArrivalPrice));
+            }
+        }
 
         /// <summary>
         /// Количество на склада
@@ -72,9 +146,25 @@ namespace RetailTrade.Domain.Models
         /// <summary>
         /// Цена продажа
         /// </summary>
-        public decimal SalePrice { get; set; }
+        public decimal SalePrice
+        {
+            get => _salePrice;
+            set
+            {
+                _salePrice = value;
+                OnPropertyChanged(nameof(SalePrice));
+            }
+        }
 
-        public ProductSubcategory ProductSubcategory { get; set; }
+        public ProductSubcategory ProductSubcategory
+        {
+            get => _productSubcategory;
+            set
+            {
+                _productSubcategory = value;
+                OnPropertyChanged(nameof(ProductSubcategory));
+            }
+        }
         public Supplier Supplier { get; set; }
         public Unit Unit { get; set; }
         public ICollection<ProductSale> ProductSales { get; set; }

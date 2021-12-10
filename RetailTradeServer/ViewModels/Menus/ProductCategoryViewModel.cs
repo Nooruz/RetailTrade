@@ -1,4 +1,5 @@
 ﻿using DevExpress.Xpf.Bars;
+using DevExpress.Xpf.Grid;
 using DevExpress.Xpf.Grid.TreeList;
 using RetailTrade.Domain.Models;
 using RetailTrade.Domain.Services;
@@ -48,6 +49,7 @@ namespace RetailTradeServer.ViewModels.Menus
         public ICommand CreateProductCategoryOrSubCategoryCommand { get; }
         public ICommand EditProductCategoryOrSubCategoryCommand { get; }
         public ICommand DeleteProductCategoryOrSubCategoryCommand { get; }
+        public ICommand GridControlLoadedCommand { get; }
 
         #endregion
 
@@ -79,7 +81,6 @@ namespace RetailTradeServer.ViewModels.Menus
             {
                 _getProducts = value;
                 OnPropertyChanged(nameof(GetProducts));
-                //CanShowLoadingPanel = !GetProducts.Any();
             }
         }
         public object SelectedProductGroup
@@ -88,6 +89,14 @@ namespace RetailTradeServer.ViewModels.Menus
             set
             {
                 _selectedProductGroup = value;
+                if (_selectedProductGroup is ProductCategory productCategory)
+                {
+                    ProductGridControl.FilterString = productCategory.Id == 0 ? string.Empty : $"[ProductSubcategory.ProductCategoryId] = {productCategory.Id}";
+                }
+                if (_selectedProductGroup is ProductSubcategory productSubcategory)
+                {
+                    ProductGridControl.FilterString = $"[ProductSubcategoryId] = {productSubcategory.Id}";
+                }
                 OnPropertyChanged(nameof(SelectedProductGroup));
             }
         }
@@ -109,6 +118,7 @@ namespace RetailTradeServer.ViewModels.Menus
                 OnPropertyChanged(nameof(SelectedProduct));
             }
         }
+        private GridControl ProductGridControl { get; set; }
 
         #endregion
 
@@ -141,17 +151,30 @@ namespace RetailTradeServer.ViewModels.Menus
             OnShowNodeMenuCommand = new ParameterCommand(sender => OnShowNodeMenu(sender));
             CreateProductCategoryOrSubCategoryCommand = new RelayCommand(CreateProductCategoryOrSubCategory);
             EditProductCategoryOrSubCategoryCommand = new RelayCommand(EditProductCategoryOrSubCategory);
+            GridControlLoadedCommand = new ParameterCommand(sender => GridControlLoaded(sender));
 
             GetProductCategories();
 
             _productCategoryService.OnProductCategoryCreated += ProductCategoryService_OnProductCategoryCreated;
             _productSubcategoryService.OnProductSubcategoryCreated += ProductSubcategoryService_OnProductSubcategoryCreated;
             _productService.OnProductCreated += ProductService_OnProductCreated;
+            _productService.OnProductEdited += ProductService_OnProductEdited;
         }
 
         #endregion
 
         #region Private Voids
+
+        private void GridControlLoaded(object sender)
+        {
+            if (sender is RoutedEventArgs e)
+            {
+                if (e.Source is GridControl gridControl)
+                {
+                    ProductGridControl = gridControl;
+                }
+            }
+        }
 
         private void CreateProductCategory()
         {
@@ -196,7 +219,19 @@ namespace RetailTradeServer.ViewModels.Menus
         {
             if (SelectedProduct != null)
             {
-
+                _manager.ShowDialog(new EditProductWithBarcodeDialogFormModel(_productCategoryService,
+                _productSubcategoryService,
+                _unitService,
+                _productService,
+                _supplierService,
+                _manager,
+                _messageStore,
+                GlobalMessageViewModel)
+                {
+                    Title = "Товаровы (Редактировать)",
+                    EditProduct = SelectedProduct
+                },
+                new EditProductWithBarcodeDialogForm());
             }
             else
             {
@@ -206,20 +241,37 @@ namespace RetailTradeServer.ViewModels.Menus
 
         private async void GetProductsAsync()
         {
-            if (SelectedProductGroup is ProductCategory productCategory)
+            GetProducts = new(await _productService.GetAllAsync());
+            GetProducts.CollectionChanged += GetProducts_CollectionChanged;
+        }
+
+        private void GetProducts_CollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
+        {
+            if (e.OldItems != null)
             {
-                if (productCategory.Id != 0)
+                foreach (INotifyPropertyChanged item in e.OldItems)
                 {
-                    GetProducts = new(await _productService.GetByProductCategoryIdAsync(productCategory.Id));
-                    return;
+                    if (item != null)
+                    {
+                        item.PropertyChanged -= Item_PropertyChanged;
+                    }
                 }
             }
-            if (SelectedProductGroup is ProductSubcategory productSubcategory)
+            if (e.NewItems != null)
             {
-                GetProducts = new(await _productService.GetByProductSubcategoryIdAsync(productSubcategory.Id));
-                return;
+                foreach (INotifyPropertyChanged item in e.NewItems)
+                {
+                    if (item != null)
+                    {
+                        item.PropertyChanged += Item_PropertyChanged;
+                    }
+                }
             }
-            GetProducts = new(await _productService.GetAllAsync());
+        }
+
+        private void Item_PropertyChanged(object sender, PropertyChangedEventArgs e)
+        {
+            OnPropertyChanged(nameof(GetProducts));
         }
 
         private async void GetProductCategories()
@@ -245,6 +297,20 @@ namespace RetailTradeServer.ViewModels.Menus
         private void ProductService_OnProductCreated(Product product)
         {
             GetProducts.Add(product);
+        }
+
+        private void ProductService_OnProductEdited(Product product)
+        {
+            Product editProduct = GetProducts.FirstOrDefault(p => p.Id == product.Id);
+            editProduct.Name = product.Name;
+            editProduct.Barcode = product.Barcode;
+            editProduct.ArrivalPrice = product.ArrivalPrice;
+            editProduct.SalePrice = product.SalePrice;
+            editProduct.WithoutBarcode = product.WithoutBarcode;
+            editProduct.ProductSubcategoryId = product.ProductSubcategoryId;
+            editProduct.ProductSubcategory = product.ProductSubcategory;
+            editProduct.UnitId = product.UnitId;
+            editProduct.SupplierId = product.SupplierId;
         }
 
         private void OnShowNodeMenu(object sender)

@@ -19,6 +19,7 @@ namespace RetailTrade.EntityFramework.Services
         public event Action PropertiesChanged;
         public event Action<Product> OnProductCreated;
         public event Action<double> OnProductRefunded;
+        public event Action<Product> OnProductEdited;
 
         public ProductService(RetailTradeDbContextFactory contextFactory)
         {
@@ -46,7 +47,7 @@ namespace RetailTrade.EntityFramework.Services
         {
             var result = await _nonQueryDataService.Update(id, entity);
             if (result != null)
-                PropertiesChanged?.Invoke();
+                OnProductEdited?.Invoke(result);
             return result;
         }
 

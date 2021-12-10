@@ -162,11 +162,15 @@ namespace RetailTradeServer.ViewModels.Menus
 
         #endregion
 
+        #region Dispose
+
         public override void Dispose()
         {
             ProductBarcodePrintings.Clear();
             SelectedProduct = null;
             base.Dispose();
         }
+
+        #endregion        
     }
 }

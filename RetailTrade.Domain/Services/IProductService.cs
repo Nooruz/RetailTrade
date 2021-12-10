@@ -24,6 +24,7 @@ namespace RetailTrade.Domain.Services
         Task<double> Refund(int id, double quantity);
 
         event Action<Product> OnProductCreated;
+        event Action<Product> OnProductEdited;
         event Action<double> OnProductRefunded;
     }
 }
