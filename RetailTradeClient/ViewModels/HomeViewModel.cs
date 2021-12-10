@@ -269,6 +269,11 @@ namespace RetailTradeClient.ViewModels
 
             viewModel.Title = "Краткий запрос состояния";
 
+            viewModel.Status = "----------------------------------------\r";
+            viewModel.Status = "Режим:\r";
+            viewModel.Status = ShtrihM.GetECRMode() + "\r";
+            viewModel.Status = "----------------------------------------\r";
+
             
 
             _ = _manager.ShowDialog(viewModel, new KKMStatusView());
