@@ -1,5 +1,6 @@
 ﻿using DrvFRLib;
 using RetailTrade.CashRegisterMachine.Properties;
+using System;
 
 namespace RetailTrade.CashRegisterMachine
 {
@@ -145,6 +146,9 @@ namespace RetailTrade.CashRegisterMachine
             drvFR.CloseCheck();
         }
 
+        /// <summary>
+        /// Отрезать чек
+        /// </summary>
         public static void CutCheck()
         {
             drvFR.CutCheck();
@@ -177,6 +181,35 @@ namespace RetailTrade.CashRegisterMachine
                 15 => "Фискальный подкладной документ сформирован",
                 _ => "",
             };
+        }
+
+        /// <summary>
+        /// Анулировать чек
+        /// </summary>
+        /// <returns></returns>
+        public static int SysAdminCancelCheck()
+        {
+            return drvFR.SysAdminCancelCheck();            
+        }
+
+        /// <summary>
+        /// Снять отчет с гашением
+        /// </summary>
+        public static void PrintReportWithCleaning()
+        {
+            drvFR.PrintReportWithCleaning();
+        }
+
+        /// <summary>
+        /// Установить текущее время ККМ
+        /// </summary>
+        public static void SetTime()
+        {
+            if (ECRMode == 4 || ECRMode == 7 || ECRMode == 9)
+            {
+                drvFR.Time = DateTime.Now;
+                drvFR.SetTime();
+            }
         }
 
         #endregion

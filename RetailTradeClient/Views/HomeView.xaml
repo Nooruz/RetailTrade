@@ -65,15 +65,26 @@
                               Command="{Binding ClosingShiftCommand}"/>
                 </MenuItem>
                 <MenuItem Header="ККМ">
-                    <MenuItem Header="Печатать Х отчет"
+                    <MenuItem Header="Отчет без гашения (Х отчет)"
                               Command="{Binding PrintReportWithoutCleaningCommand}"/>
-                    <MenuItem Header="Продолжить печать"/>
-                    <MenuItem Header="Анулировать чек"/>
-                    <MenuItem Header="Состояние ККМ"
+                    <MenuItem Header="Анулировать чек"
+                              Command="{Binding CancelCheckCommand}"/>
+                    <MenuItem Header="Состояние ККМ (ФР)"
                               Command="{Binding GetShortECRStatusCommand}"/>
-                    <MenuItem Header="Закрыть смену Z отчет"/>
                     <MenuItem Header="Настройки ККМ"
                               Command="{Binding CRMSettingsCommand}"/>
+                    <MenuItem Header="Дополнительно">
+                        <MenuItem Header="Открыть смену ККМ (ФР)"
+                                  Command="{Binding OpenSessionCommand}"/>
+                        <MenuItem Header="Закрыть смену ККМ (ФР)"
+                                  Command="{Binding PrintReportWithCleaningCommand}"/>
+                        <Separator/>
+                        <MenuItem Header="Установить текущее время ККМ (ФР)"
+                                  Command="{Binding SetTimeCommand}"/>
+                        <Separator/>
+                        <MenuItem Header="Отрезать чек"
+                                  Command="{Binding CutCheckCommand}"/>
+                    </MenuItem>
                 </MenuItem>
                 <MenuItem Header="Настройки">
                     <MenuItem Header="Принтеры"

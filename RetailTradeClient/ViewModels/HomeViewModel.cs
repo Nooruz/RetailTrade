@@ -171,9 +171,34 @@ namespace RetailTradeClient.ViewModels
         public ICommand PrintReportWithoutCleaningCommand { get; }
 
         /// <summary>
+        /// Снять отчет с гашнием
+        /// </summary>
+        public ICommand PrintReportWithCleaningCommand { get; }
+
+        /// <summary>
+        /// Открыть смену ККМ
+        /// </summary>
+        public ICommand OpenSessionCommand { get; }
+
+        /// <summary>
         /// Краткий запрос
         /// </summary>
         public ICommand GetShortECRStatusCommand { get; }
+
+        /// <summary>
+        /// Анулировать чек
+        /// </summary>
+        public ICommand CancelCheckCommand { get; }
+
+        /// <summary>
+        /// Установить текущее время ККМ
+        /// </summary>
+        public ICommand SetTimeCommand { get; }
+
+        /// <summary>
+        /// Отрезать чек
+        /// </summary>
+        public ICommand CutCheckCommand { get; }
 
         /// <summary>
         /// 
@@ -249,6 +274,11 @@ namespace RetailTradeClient.ViewModels
             QuantityMouseEnterCommand = new ParameterCommand(parameter => QuantityMouseEnter(parameter));
             ReturnGoodsCommand = new RelayCommand(ReturnGoods);
             PrintReportWithoutCleaningCommand = new RelayCommand(() => ShtrihM.PrintReportWithoutCleaning());
+            PrintReportWithCleaningCommand = new RelayCommand(() => ShtrihM.PrintReportWithCleaning());
+            CancelCheckCommand = new RelayCommand(() => ShtrihM.SysAdminCancelCheck());
+            OpenSessionCommand = new RelayCommand(() => ShtrihM.OpenSession());
+            SetTimeCommand = new RelayCommand(() => ShtrihM.SetTime());
+            CutCheckCommand = new RelayCommand(() => ShtrihM.CutCheck());
             GetShortECRStatusCommand = new RelayCommand(GetShortECRStatus);
 
             SaleProducts.CollectionChanged += SaleProducts_CollectionChanged;
@@ -269,10 +299,10 @@ namespace RetailTradeClient.ViewModels
 
             viewModel.Title = "Краткий запрос состояния";
 
-            viewModel.Status = "----------------------------------------\r";
-            viewModel.Status = "Режим:\r";
-            viewModel.Status = ShtrihM.GetECRMode() + "\r";
-            viewModel.Status = "----------------------------------------\r";
+            viewModel.Status += "----------------------------------------\r";
+            viewModel.Status += "Режим:\r";
+            viewModel.Status += ShtrihM.GetECRMode() + "\r";
+            viewModel.Status += "----------------------------------------\r";
 
             
 

@@ -11,7 +11,9 @@
     <dxlc:LayoutControl Orientation="Vertical"
                         ItemSpace="10">
 
-        <dxe:TextEdit Text="{Binding Status}"/>
+        <dxe:TextEdit Text="{Binding Status}"
+                      TextWrapping="Wrap"
+                      VerticalContentAlignment="Top"/>
 
         <Button Content="Ок"
                 VerticalAlignment="Bottom"
