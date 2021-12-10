@@ -1,4 +1,5 @@
-﻿using RetailTrade.Domain.Models;
+﻿using RetailTrade.CashRegisterMachine;
+using RetailTrade.Domain.Models;
 using RetailTrade.Domain.Services;
 using System;
 using System.Threading.Tasks;
@@ -78,23 +79,31 @@ namespace RetailTradeClient.State.Shifts
 
         public async Task<CheckingResult> OpeningShift(int userId)
         {
-            var result = await _shiftService.GetOpenShiftByUserIdAsync(userId);
-            if (result == null)
+            if (ShtrihM.CheckConnection() == 0)
             {
-                var openShift = await _shiftService.OpeningShiftAsync(userId);
-                CurrentShift = openShift;
-                IsShiftOpen = true;                
-                CurrentShiftChanged?.Invoke();
-                return CheckingResult.Open;
+                ShtrihM.OpenSession();
+                var result = await _shiftService.GetOpenShiftByUserIdAsync(userId);
+                if (result == null)
+                {
+                    var openShift = await _shiftService.OpeningShiftAsync(userId);
+                    CurrentShift = openShift;
+                    IsShiftOpen = true;
+                    CurrentShiftChanged?.Invoke();
+                    return CheckingResult.Open;
+                }
+                if (DateTime.Now.Subtract(result.OpeningDate).Days > 0)
+                {
+                    return CheckingResult.Exceeded;
+                }
+                CurrentShift = result;
+                IsShiftOpen = true;
+                CurrentShiftChanged?.Invoke();                
+                return CheckingResult.IsAlreadyOpen;                
             }
-            if (DateTime.Now.Subtract(result.OpeningDate).Days > 0)
+            else
             {
-                return CheckingResult.Exceeded;
+                return CheckingResult.ErrorOpeningShiftKKM;
             }
-            CurrentShift = result;
-            IsShiftOpen = true;
-            CurrentShiftChanged?.Invoke();
-            return CheckingResult.IsAlreadyOpen;
         }
     }
 }

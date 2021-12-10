@@ -1,4 +1,5 @@
 ﻿using DevExpress.XtraPrinting;
+using DrvFRLib;
 using RetailTrade.CashRegisterMachine;
 using RetailTrade.Domain.Models;
 using RetailTrade.Domain.Services;
@@ -72,38 +73,38 @@ namespace RetailTradeClient.Commands
                             }).ToList()
                     });
 
-                    //ShtrihM.Connect();
-                    //ShtrihM.CheckType = 0;
+                    ShtrihM.Connect();
+                    ShtrihM.CheckType = 0;
 
-                    //if (newReceipt != null)
-                    //{
-                    //    foreach (Sale sale in _paymentCashViewModel.SaleProducts)
-                    //    {
+                    if (newReceipt != null)
+                    {
+                        foreach (Sale sale in _paymentCashViewModel.SaleProducts)
+                        {
 
-                    //        ShtrihM.Quantity = Convert.ToDouble(sale.Quantity);
-                    //        ShtrihM.Price = sale.SalePrice;
-                    //        var sum1NSP = Math.Round(sale.SalePrice * 1 / 113, 2);
-                    //        var sum1NDS = Math.Round(sale.SalePrice * 12 / 113, 2);
-                    //        string sumNSP = Math.Round(sum1NSP * 100, 0).ToString();
-                    //        string sumNDS = Math.Round(sum1NDS * 100, 0).ToString();
+                            ShtrihM.Quantity = Convert.ToDouble(sale.Quantity);
+                            ShtrihM.Price = sale.SalePrice;
+                            var sum1NSP = Math.Round(sale.SalePrice * 1 / 113, 2);
+                            var sum1NDS = Math.Round(sale.SalePrice * 12 / 113, 2);
+                            string sumNSP = Math.Round(sum1NSP * 100, 0).ToString();
+                            string sumNDS = Math.Round(sum1NDS * 100, 0).ToString();
 
-                    //        ShtrihM.StringForPrinting =
-                    //            string.Join(";", new string[] { "0", "12345", "0", "0", "2", sumNDS, "3", sumNSP + "\n" + sale.Name });
+                            ShtrihM.StringForPrinting =
+                                string.Join(";", new string[] { "0", "12345", "0", "0", "2", sumNDS, "3", sumNSP + "\n" + sale.Name });
 
-                    //        ShtrihM.BarCode = "46198488";
+                            ShtrihM.BarCode = "46198488";
 
-                    //        ShtrihM.Tax1 = 2;
-                    //        ShtrihM.Tax2 = 3;
-                    //        ShtrihM.Tax3 = 1;
-                    //        ShtrihM.Tax4 = 4;
+                            ShtrihM.Tax1 = 2;
+                            ShtrihM.Tax2 = 3;
+                            ShtrihM.Tax3 = 1;
+                            ShtrihM.Tax4 = 4;
 
-                    //        ShtrihM.Sale();
-                    //    }
-                    //    ShtrihM.Summ1 = newReceipt.Sum;
-                    //    ShtrihM.StringForPrinting = "";
-                    //    ShtrihM.CloseCheck();
-                    //    ShtrihM.CutCheck();
-                    //}
+                            ShtrihM.Sale();
+                        }
+                        ShtrihM.Summ1 = newReceipt.Sum;
+                        ShtrihM.StringForPrinting = "";
+                        ShtrihM.CloseCheck();
+                        ShtrihM.CutCheck();
+                    }
 
                     //Подготовка документа для печати чека
                     ProductSaleReport report = new(_userStore, newReceipt)
@@ -126,7 +127,7 @@ namespace RetailTradeClient.Commands
                 }
                 finally
                 {
-                    //ShtrihM.Disconnect();
+                    ShtrihM.Disconnect();
                 }
             }
         }

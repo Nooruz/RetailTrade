@@ -12,8 +12,6 @@ namespace RetailTradeClient.ViewModels.Dialogs
         public static extern void Demo();
     }
 
-    
-
     public class MainMenuViewModel : BaseDialogViewModel
     {
         #region Private Members

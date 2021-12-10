@@ -48,6 +48,9 @@ namespace RetailTradeClient.Commands
                 case CheckingResult.Exceeded:
                     _manager.ShowMessage("Смена превысила 24 часа. Закройте смену!", "", MessageBoxButton.OK, MessageBoxImage.Exclamation);
                     break;
+                case CheckingResult.ErrorOpeningShiftKKM:
+                    _manager.ShowMessage("Не удалось открыт смену фискального регистратора (ФР)", "", MessageBoxButton.OK, MessageBoxImage.Error);
+                    break;
                 default:
                     break;
             }

@@ -1,4 +1,5 @@
 ﻿using DrvFRLib;
+using RetailTrade.CashRegisterMachine.Properties;
 
 namespace RetailTrade.CashRegisterMachine
 {
@@ -63,13 +64,26 @@ namespace RetailTrade.CashRegisterMachine
             set => drvFR.Summ1 = value;
         }
 
+        public static int ECRMode
+        {
+            get => drvFR.ECRMode;
+        }
+
         #endregion
 
         #region Constructor
 
         static ShtrihM()
         {
-            drvFR = new DrvFR();
+            drvFR = new DrvFR
+            {
+                ComNumber = 3,
+                BaudRate = 6,
+                Timeout = 2100
+            };
+
+            drvFR.SetExchangeParam();
+            drvFR.CheckConnection();
         }
 
         #endregion
@@ -79,6 +93,47 @@ namespace RetailTrade.CashRegisterMachine
         public static void Connect()
         {
             drvFR.Connect();
+        }
+
+        public static void ShowProperties()
+        {
+            drvFR.ShowProperties();
+
+            Settings.Default.ComNumber = drvFR.ComNumber;
+            Settings.Default.BaudRate = drvFR.BaudRate;
+            Settings.Default.Timeout = drvFR.Timeout;
+        }
+
+        /// <summary>
+        /// Краткий запрос
+        /// </summary>
+        public static void GetShortECRStatus()
+        {
+            drvFR.GetShortECRStatus();
+        }
+
+        /// <summary>
+        /// Снаять отчет без гашения
+        /// </summary>
+        public static void PrintReportWithoutCleaning()
+        {
+            drvFR.PrintReportWithoutCleaning();
+        }
+
+        /// <summary>
+        /// Открытие смены ККМ
+        /// </summary>
+        public static void OpenSession()
+        {
+            drvFR.OpenSession();
+        }
+
+        /// <summary>
+        /// Проверка связи
+        /// </summary>
+        public static int CheckConnection()
+        {
+            return drvFR.CheckConnection();
         }
 
         public static void Sale()
@@ -99,6 +154,30 @@ namespace RetailTrade.CashRegisterMachine
         public static void Disconnect()
         {
             drvFR.Disconnect();
+        }
+
+        public static string GetECRMode()
+        {
+            return drvFR.ECRMode switch
+            {
+                0 => "Принтер в рабочем режиме",
+                1 => "Выдача данных",
+                2 => "Открытая смена, 24 часа не кончились",
+                3 => "",
+                4 => "",
+                5 => "",
+                6 => "",
+                7 => "",
+                8 => "",
+                9 => "",
+                10 => "",
+                11 => "",
+                12 => "",
+                13 => "",
+                14 => "",
+                15 => "",
+                _ => "",
+            };
         }
 
         #endregion

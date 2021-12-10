@@ -8,7 +8,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace RetailTradeClient.Properties {
+namespace RetailTrade.CashRegisterMachine.Properties {
     
     
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
@@ -25,34 +25,13 @@ namespace RetailTradeClient.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("")]
-        public string DefaultUsername {
-            get {
-                return ((string)(this["DefaultUsername"]));
-            }
-            set {
-                this["DefaultUsername"] = value;
-            }
-        }
-        
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("")]
-        public string DefaultReceiptPrinter {
-            get {
-                return ((string)(this["DefaultReceiptPrinter"]));
-            }
-            set {
-                this["DefaultReceiptPrinter"] = value;
-            }
-        }
-        
-        [global::System.Configuration.ApplicationScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("0")]
         public int ComNumber {
             get {
                 return ((int)(this["ComNumber"]));
+            }
+            set {
+                this["ComNumber"] = value;
             }
         }
         

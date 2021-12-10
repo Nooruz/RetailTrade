@@ -24,7 +24,12 @@ namespace RetailTradeClient.State.Shifts
         /// <summary>
         /// Смена просрочена
         /// </summary>
-        Exceeded
+        Exceeded,
+
+        /// <summary>
+        /// Ошибка открытия смены ККМ
+        /// </summary>
+        ErrorOpeningShiftKKM
     }
 
     /// <summary>

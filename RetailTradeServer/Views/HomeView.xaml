@@ -77,15 +77,10 @@
                                                     Command="{Binding SupplierCommand}"/>
             <dxwui:HamburgerSubMenuNavigationButton Content="Ценники и этикетки (Штрих-код)"
                                                     Command="{Binding BarcodeCommand}"/>
-            <dxwui:HamburgerSubMenuNavigationButton Content="Филиалы"
-                                                    Command="{Binding BranchCommand}"/>
-            <dxwui:HamburgerSubMenuNavigationButton Content="Экспорт/Импорт товара"/>
-        </dxwui:HamburgerSubMenu>
-
-        <dxwui:HamburgerSubMenu Content="Инвентарь"
-                                Style="{StaticResource DefaultHamburgerSubMenu}"
-                                Tag="{StaticResource faDesktop}">
-            <dxwui:HamburgerSubMenuNavigationButton Content=""/>
+            <dxwui:HamburgerSubMenuNavigationButton Content="Переоценка"
+                                                    Command="{Binding RevaluationCommand}"/>
+            <dxwui:HamburgerSubMenuNavigationButton Content="Экспорт/Импорт товара"
+                                                    Command="{Binding ExportImportCommand}"/>
         </dxwui:HamburgerSubMenu>
 
         <dxwui:HamburgerSubMenu Content="Настройки"

@@ -1,4 +1,5 @@
 ﻿using DevExpress.Xpf.Grid;
+using RetailTrade.CashRegisterMachine;
 using RetailTrade.Domain.Models;
 using RetailTrade.Domain.Services;
 using RetailTradeClient.Commands;
@@ -165,6 +166,16 @@ namespace RetailTradeClient.ViewModels
         public ICommand CRMSettingsCommand { get; }
 
         /// <summary>
+        /// Снять отчет без гашения
+        /// </summary>
+        public ICommand PrintReportWithoutCleaningCommand { get; }
+
+        /// <summary>
+        /// Краткий запрос
+        /// </summary>
+        public ICommand GetShortECRStatusCommand { get; }
+
+        /// <summary>
         /// 
         /// </summary>
         public ICommand LoadedHomeViewCommand { get; }
@@ -237,6 +248,8 @@ namespace RetailTradeClient.ViewModels
             MultiplyCommand = new RelayCommand(Multiply);
             QuantityMouseEnterCommand = new ParameterCommand(parameter => QuantityMouseEnter(parameter));
             ReturnGoodsCommand = new RelayCommand(ReturnGoods);
+            PrintReportWithoutCleaningCommand = new RelayCommand(() => ShtrihM.PrintReportWithoutCleaning());
+            GetShortECRStatusCommand = new RelayCommand(GetShortECRStatus);
 
             SaleProducts.CollectionChanged += SaleProducts_CollectionChanged;
             _productService.PropertiesChanged += ProductService_PropertiesChanged;
@@ -247,6 +260,19 @@ namespace RetailTradeClient.ViewModels
         #endregion
 
         #region Private Voids
+
+        private void GetShortECRStatus()
+        {
+            ShtrihM.GetShortECRStatus();
+
+            KKMStatusViewModel viewModel = new();
+
+            viewModel.Title = "Краткий запрос состояния";
+
+            
+
+            _ = _manager.ShowDialog(viewModel, new KKMStatusView());
+        }
 
         private void ReturnGoods()
         {
@@ -562,9 +588,10 @@ namespace RetailTradeClient.ViewModels
         /// <summary>
         /// Настройки ККМ
         /// </summary>
-        private async void CRMSettings()
+        private void CRMSettings()
         {
-            await _manager.ShowDialog(new CommunicationSettingsViewModel() { Title = "Настройка связи с ККМ" }, new CommunicationSettingsView());
+            //await _manager.ShowDialog(new CommunicationSettingsViewModel() { Title = "Настройка связи с ККМ" }, new CommunicationSettingsView());            
+            ShtrihM.ShowProperties();
         }
 
         private void PaymentCashViewModel_PropertyChanged(object sender, PropertyChangedEventArgs e)

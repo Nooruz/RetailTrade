@@ -65,10 +65,12 @@
                               Command="{Binding ClosingShiftCommand}"/>
                 </MenuItem>
                 <MenuItem Header="ККМ">
-                    <MenuItem Header="Печатать Х отчет"/>
+                    <MenuItem Header="Печатать Х отчет"
+                              Command="{Binding PrintReportWithoutCleaningCommand}"/>
                     <MenuItem Header="Продолжить печать"/>
                     <MenuItem Header="Анулировать чек"/>
-                    <MenuItem Header="Состояние ККМ"/>
+                    <MenuItem Header="Состояние ККМ"
+                              Command="{Binding GetShortECRStatusCommand}"/>
                     <MenuItem Header="Закрыть смену Z отчет"/>
                     <MenuItem Header="Настройки ККМ"
                               Command="{Binding CRMSettingsCommand}"/>
@@ -79,7 +81,9 @@
                 </MenuItem>
             </Menu>
 
-            <TextBlock Text="{Binding Info}"/>
+            <TextBlock Text="{Binding Info}"
+                       VerticalAlignment="Center"
+                       HorizontalAlignment="Center"/>
 
         </dxlc:LayoutGroup>
 
