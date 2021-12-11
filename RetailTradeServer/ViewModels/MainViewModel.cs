@@ -1,9 +1,10 @@
 ﻿using RetailTradeServer.Commands;
-using RetailTradeServer.Properties;
 using RetailTradeServer.State.Authenticators;
 using RetailTradeServer.State.Navigators;
 using RetailTradeServer.ViewModels.Base;
 using RetailTradeServer.ViewModels.Factories;
+using SalePageServer.Properties;
+using System.Diagnostics;
 using System.Reflection;
 using System.Windows.Input;
 
@@ -31,7 +32,7 @@ namespace RetailTradeServer.ViewModels
                 OnPropertyChanged(nameof(IsConnected));
             }
         }
-        public static string WindowTitle => $"SP: Магазин, версия {Assembly.GetExecutingAssembly().GetName().Version}";
+        public static string WindowTitle => $"{FileVersionInfo.GetVersionInfo(Assembly.GetExecutingAssembly().Location).ProductName}, версия {FileVersionInfo.GetVersionInfo(Assembly.GetExecutingAssembly().Location).ProductVersion}";
 
         #endregion
 

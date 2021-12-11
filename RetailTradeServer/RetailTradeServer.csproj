@@ -7,11 +7,15 @@
     <UserSecretsId>69d24dac-b046-4e85-93fb-b43a50e0103d</UserSecretsId>
     <Authors>Ашимжан уулу Ноорузбек</Authors>
     <Company>Sale Page</Company>
-    <Version>1.0.0</Version>
-    <AssemblyVersion>1.0.0.210</AssemblyVersion>
-    <FileVersion>1.0.0.210</FileVersion>
+    <Version>1.0.2-beta1</Version>
+    <AssemblyVersion>1.0.1.210</AssemblyVersion>
+    <FileVersion>1.0.1.210</FileVersion>
     <ApplicationIcon>Resources\Icons\newlogo.ico</ApplicationIcon>
 	<RuntimeIdentifier>win-x64</RuntimeIdentifier>
+	<AssemblyName>SalePageServer</AssemblyName>
+	<Product>SP Магазин</Product>
+	<PackageIcon>newlogo.png</PackageIcon>
+	<RootNamespace>SalePageServer</RootNamespace>
   </PropertyGroup>
 
   <ItemGroup>
@@ -42,7 +46,6 @@
     <None Remove="Report\RevenueForPeriodReport.vsrepx" />
     <None Remove="Report\WriteDownProductReport.vsrepx" />
     <None Remove="Resources\Icons\newlogo.ico" />
-    <None Remove="Resources\Images\newlogo.png" />
     <None Remove="Resources\Images\sp.png" />
     <None Remove="Views\HomeView.xaml~RF1dc6ec.TMP" />
   </ItemGroup>
@@ -151,6 +154,10 @@
     <None Update="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
+    </None>
+    <None Update="Resources\Images\newlogo.png">
+      <Pack>True</Pack>
+      <PackagePath>\</PackagePath>
     </None>
   </ItemGroup>
 

@@ -6,6 +6,7 @@ using RetailTradeServer.State.Messages;
 using RetailTradeServer.State.Navigators;
 using RetailTradeServer.ViewModels;
 using RetailTradeServer.ViewModels.Factories;
+using SalePageServer.Properties;
 using System;
 using System.ComponentModel;
 using System.Threading.Tasks;
@@ -80,8 +81,8 @@ namespace RetailTradeServer.Commands
                     {
                         case RegistrationResult.Success:
                             await _authenticator.Login(_viewModel.Username, _viewModel.ConfirmPassword);
-                            Properties.Settings.Default.AdminCreated = true;
-                            Properties.Settings.Default.Save();
+                            Settings.Default.AdminCreated = true;
+                            Settings.Default.Save();
                             UpdateCurrentViewModelCommand.Execute(ViewType.Organization);                            
                             break;
                         case RegistrationResult.PasswordsDoNotMatch:

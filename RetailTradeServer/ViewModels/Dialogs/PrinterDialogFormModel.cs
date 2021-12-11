@@ -1,6 +1,7 @@
 ﻿using RetailTradeServer.Commands;
 using RetailTradeServer.State.Messages;
 using RetailTradeServer.ViewModels.Dialogs.Base;
+using SalePageServer.Properties;
 using System.Collections.ObjectModel;
 using System.Collections.Specialized;
 using System.ComponentModel;
@@ -50,8 +51,8 @@ namespace RetailTradeServer.ViewModels.Dialogs
 
             if (LocalPrinters.Count > 0)
             {
-                SelectedLabelPrinter = LocalPrinters.FirstOrDefault(lp => lp.Name == Properties.Settings.Default.DefaultLabelPrinter);
-                SelectedReportPrinter = LocalPrinters.FirstOrDefault(lp => lp.Name == Properties.Settings.Default.DefaultReportPrinter);
+                SelectedLabelPrinter = LocalPrinters.FirstOrDefault(lp => lp.Name == Settings.Default.DefaultLabelPrinter);
+                SelectedReportPrinter = LocalPrinters.FirstOrDefault(lp => lp.Name == Settings.Default.DefaultReportPrinter);
             }
 
             LocalPrinters.CollectionChanged += LocalPrinters_CollectionChanged;
@@ -80,13 +81,13 @@ namespace RetailTradeServer.ViewModels.Dialogs
         {
             if (SelectedLabelPrinter != null)
             {
-                Properties.Settings.Default.DefaultLabelPrinter = SelectedLabelPrinter.Name;
-                Properties.Settings.Default.Save();
+                Settings.Default.DefaultLabelPrinter = SelectedLabelPrinter.Name;
+                Settings.Default.Save();
             }
             if (SelectedReportPrinter != null)
             {
-                Properties.Settings.Default.DefaultReportPrinter = SelectedReportPrinter.Name;
-                Properties.Settings.Default.Save();
+                Settings.Default.DefaultReportPrinter = SelectedReportPrinter.Name;
+                Settings.Default.Save();
             }
             if (SelectedLabelPrinter != null || SelectedReportPrinter != null)
             {

@@ -5,6 +5,7 @@ using RetailTradeServer.Commands;
 using RetailTradeServer.Report;
 using RetailTradeServer.State.Dialogs;
 using RetailTradeServer.ViewModels.Base;
+using SalePageServer.Properties;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -88,7 +89,7 @@ namespace RetailTradeServer.ViewModels.Menus
 
         private async void PrintProductBarcode()
         {
-            if (string.IsNullOrEmpty(Properties.Settings.Default.DefaultLabelPrinter))
+            if (string.IsNullOrEmpty(Settings.Default.DefaultLabelPrinter))
             {
                 _manager.ShowMessage("Принтер для печати этикеток не настроен.", "", MessageBoxButton.OK, MessageBoxImage.Error);
             }
@@ -115,7 +116,7 @@ namespace RetailTradeServer.ViewModels.Menus
                 await report.CreateDocumentAsync();
 
                 PrintToolBase tool = new(report.PrintingSystem);
-                tool.PrinterSettings.PrinterName = Properties.Settings.Default.DefaultLabelPrinter;
+                tool.PrinterSettings.PrinterName = Settings.Default.DefaultLabelPrinter;
                 tool.PrintingSystem.EndPrint += PrintingSystem_EndPrint;
                 tool.Print();
             }

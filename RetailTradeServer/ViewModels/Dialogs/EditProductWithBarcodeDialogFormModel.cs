@@ -258,6 +258,7 @@ namespace RetailTradeServer.ViewModels.Dialogs
             EditProduct.Barcode = Barcode;
             EditProduct.SupplierId = SelectedSupplierId.Value;
             EditProduct.UnitId = SelectedUnitId.Value;
+            EditProduct.ProductSubcategory = null;
             EditProduct.ProductSubcategoryId = SelectedProductSubcategoryId.Value;
             EditProduct.WithoutBarcode = string.IsNullOrEmpty(Barcode);
 
