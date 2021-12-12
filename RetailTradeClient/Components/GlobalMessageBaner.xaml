@@ -35,21 +35,26 @@
                                            Text="{TemplateBinding Tag}"
                                            Foreground="{TemplateBinding Foreground}"
                                            FontSize="20"
+                                           Width="25"
+                                           Height="25"
                                            Margin="5 5 0 5"/>
 
                                 <TextBlock x:Name="tbMessage"
-                                           Text="{Binding Message, FallbackValue=Маалымат маалымат маалымат маалымат маалымат маалымат}"
+                                           Text="{Binding Message}"
                                            VerticalAlignment="Center"
                                            HorizontalAlignment="Left"
                                            Foreground="{TemplateBinding Foreground}"
                                            Grid.Column="1"
-                                           Margin="5"/>
+                                           Margin="5"
+                                           TextWrapping="Wrap"/>
 
                                 <Button Style="{StaticResource IconicButton}"
                                         Content="{StaticResource faClose}"
                                         Foreground="{TemplateBinding Foreground}"
                                         Command="{Binding CloseCommand}"
-                                        Grid.Column="2"/>
+                                        Grid.Column="2"
+                                        Width="25"
+                                        Height="25"/>
 
                             </Grid>
 

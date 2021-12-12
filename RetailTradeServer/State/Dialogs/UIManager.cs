@@ -1,4 +1,5 @@
-﻿using RetailTradeServer.Dialogs;
+﻿using RetailTradeServer.Commands;
+using RetailTradeServer.Dialogs;
 using RetailTradeServer.ViewModels.Dialogs;
 using RetailTradeServer.ViewModels.Dialogs.Base;
 using System.Diagnostics;
@@ -54,6 +55,7 @@ namespace RetailTradeServer.State.Dialogs
             where TViewModel : BaseDialogViewModel where TUserControl : BaseDialogUserControl
         {
             _window = userControl.Window;
+            viewModel.CloseCommand = new RelayCommand(Close);
             return userControl.ShowDialog(viewModel);
         }
 
@@ -68,6 +70,7 @@ namespace RetailTradeServer.State.Dialogs
             _window.ViewModel.WindowState = windowState;
             _window.ViewModel.ResizeMode = resizeMode;
             _window.ViewModel.SizeToContent = sizeToContent;
+            viewModel.CloseCommand = new RelayCommand(Close);
             return userControl.ShowDialog(viewModel);
         }
 

@@ -68,6 +68,8 @@ namespace RetailTrade.CashRegisterMachine
         public static int ECRMode => drvFR.ECRMode;
 
         public static bool ReceiptRibbonIsPresent => drvFR.ReceiptRibbonIsPresent;
+        public static string NameOperationReg => drvFR.NameOperationReg;
+        public static int ReceiptNumber => drvFR.ReceiptNumber;
 
         #endregion
 
@@ -75,15 +77,14 @@ namespace RetailTrade.CashRegisterMachine
 
         static ShtrihM()
         {
-            drvFR = new DrvFR
+            drvFR = new DrvFR()
             {
-                ComNumber = 3,
-                BaudRate = 6,
-                Timeout = 2100
+                ComNumber = Settings.Default.ComNumber,
+                BaudRate = Settings.Default.BaudRate,
+                Timeout = Settings.Default.Timeout
             };
 
-            drvFR.SetExchangeParam();
-            drvFR.CheckConnection();
+            //drvFR.SetExchangeParam();
         }
 
         #endregion
@@ -102,6 +103,9 @@ namespace RetailTrade.CashRegisterMachine
             Settings.Default.ComNumber = drvFR.ComNumber;
             Settings.Default.BaudRate = drvFR.BaudRate;
             Settings.Default.Timeout = drvFR.Timeout;
+            Settings.Default.Save();
+
+            drvFR.SetExchangeParam();
         }
 
         /// <summary>
@@ -141,6 +145,9 @@ namespace RetailTrade.CashRegisterMachine
             drvFR.Sale();
         }
 
+        /// <summary>
+        /// Закрыть чек
+        /// </summary>
         public static void CloseCheck()
         {
             drvFR.CloseCheck();
@@ -210,6 +217,11 @@ namespace RetailTrade.CashRegisterMachine
                 drvFR.Time = DateTime.Now;
                 drvFR.SetTime();
             }
+        }
+
+        public static int ReturnSale()
+        {
+            return drvFR.ReturnSale();
         }
 
         #endregion

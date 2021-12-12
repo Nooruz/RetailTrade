@@ -4,6 +4,10 @@
                                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
                                    xmlns:dialogs="clr-namespace:RetailTradeClient.Dialogs">
 
+    <dialogs:BaseDialogUserControl.Resources>
+        <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter"/>
+    </dialogs:BaseDialogUserControl.Resources>
+
     <dxlc:LayoutControl>
 
         <dxlc:LayoutGroup VerticalAlignment="Top"
@@ -12,22 +16,26 @@
             <Button Content="Регистрация продаж"
                     Tag="{StaticResource faFileAlt}"
                     Style="{StaticResource btnWithHorizontalIcon}"
-                    Command="{Binding SaleRegistrationCommand}"/>
+                    Command="{Binding SaleRegistrationCommand}"
+                    Visibility="{Binding Visibility}"/>
 
             <Button Content="Открытие смены"
                     Tag="{StaticResource faCashRegister}"
                     Style="{StaticResource btnWithHorizontalIcon}"
-                    Command="{Binding OpeningShiftCommand}"/>
+                    Command="{Binding OpeningShiftCommand}"
+                    Visibility="{Binding Visibility}"/>
 
             <Button Content="Закрыть смену"
                     Tag="{StaticResource faCashRegister}"
                     Style="{StaticResource btnWithHorizontalIcon}"
-                    Command="{Binding ClosingShiftCommand}"/>
+                    Command="{Binding ClosingShiftCommand}"
+                    Visibility="{Binding Visibility}"/>
 
             <Button Content="Настройки"
                     Tag="{StaticResource faCheckCircle}"
                     Style="{StaticResource btnWithHorizontalIcon}"
-                    Command="{Binding SettingCommand}"/>
+                    Command="{Binding SettingCommand}"
+                    Visibility="{Binding IsUserAdmin, Converter={StaticResource BooleanToVisibilityConverter}}"/>
 
         </dxlc:LayoutGroup>
         

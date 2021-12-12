@@ -282,6 +282,7 @@ namespace RetailTradeServer.ViewModels.Dialogs
             EditProduct.WithoutBarcode = string.IsNullOrEmpty(Barcode);
 
             await _productService.UpdateAsync(EditProduct.Id, EditProduct);
+            _manager.Close();
         }
 
         private async void SelectedProductCategoryChanged()

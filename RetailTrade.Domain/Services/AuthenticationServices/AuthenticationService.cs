@@ -12,6 +12,7 @@ namespace RetailTrade.Domain.Services.AuthenticationServices
 
         private readonly IUserService _userService;
         private readonly IPasswordHasher _passwordHasher;
+        private readonly IShiftService _shiftService;
         private Regex _passwordRegex;
 
         #endregion
@@ -19,10 +20,12 @@ namespace RetailTrade.Domain.Services.AuthenticationServices
         #region Constructor
 
         public AuthenticationService(IUserService userService,
-            IPasswordHasher passwordHasher)
+            IPasswordHasher passwordHasher,
+            IShiftService shiftService)
         {
             _userService = userService;
             _passwordHasher = passwordHasher;
+            _shiftService = shiftService;
 
             _passwordRegex = new Regex("^[0-9]+$");
         }
@@ -35,14 +38,14 @@ namespace RetailTrade.Domain.Services.AuthenticationServices
 
             if (storedUser == null)
             {
-                throw new InvalidUsernameOrPasswordException(username, password);
+                throw new InvalidUsernameOrPasswordException("Неверное имя или пароль.", username, password);
             }
 
             var passwordResult = _passwordHasher.VerifyHashedPassword(storedUser.PasswordHash, password);
 
             if (passwordResult != PasswordVerificationResult.Success)
             {
-                throw new InvalidUsernameOrPasswordException(username, password);
+                throw new InvalidUsernameOrPasswordException("Неверное имя или пароль.", username, password);
             }
 
             return storedUser;

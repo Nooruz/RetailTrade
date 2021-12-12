@@ -27,6 +27,12 @@ namespace RetailTrade.Domain.Services
         /// <returns>Возврашает смену</returns>
         Task<Shift> GetOpenShiftByUserIdAsync(int userId);
 
+        /// <summary>
+        /// Получить открытую смену
+        /// </summary>
+        /// <returns></returns>
+        Task<Shift> GetOpenShift();
+
         Task<IEnumerable<Shift>> GetClosingShifts(DateTime startDate, DateTime endDate);
     }
 }

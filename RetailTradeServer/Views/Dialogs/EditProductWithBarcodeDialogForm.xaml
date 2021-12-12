@@ -27,9 +27,9 @@
                                   SelectedItem="{Binding SelectedSupplier}"
                                   EditValue="{Binding SelectedSupplierId, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
 
-                    <dxe:ComboBoxEdit.Buttons>
+                    <!--<dxe:ComboBoxEdit.Buttons>
                         <dxe:ButtonInfo GlyphKind="Plus" Command="{Binding CreateSupplierCommand}"/>
-                    </dxe:ComboBoxEdit.Buttons>
+                    </dxe:ComboBoxEdit.Buttons>-->
 
                 </dxe:ComboBoxEdit>
             </dxlc:LayoutItem>
@@ -51,9 +51,9 @@
                                   SelectedItem="{Binding SelectedProductCategory}"
                                   EditValue="{Binding SelectedProductCategoryId, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
 
-                    <dxe:ComboBoxEdit.Buttons>
+                    <!--<dxe:ComboBoxEdit.Buttons>
                         <dxe:ButtonInfo GlyphKind="Plus" Command="{Binding CreateProductCategoryCommand}"/>
-                    </dxe:ComboBoxEdit.Buttons>
+                    </dxe:ComboBoxEdit.Buttons>-->
 
                 </dxe:ComboBoxEdit>
             </dxlc:LayoutItem>
@@ -67,9 +67,9 @@
                                   SelectedItem="{Binding SelectedProductSubcategory}"
                                   EditValue="{Binding SelectedProductSubcategoryId, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
 
-                    <dxe:ComboBoxEdit.Buttons>
+                    <!--<dxe:ComboBoxEdit.Buttons>
                         <dxe:ButtonInfo GlyphKind="Plus" Command="{Binding CreateProductSubcategoryCommand}"/>
-                    </dxe:ComboBoxEdit.Buttons>
+                    </dxe:ComboBoxEdit.Buttons>-->
 
                 </dxe:ComboBoxEdit>
             </dxlc:LayoutItem>

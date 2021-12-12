@@ -67,7 +67,8 @@ namespace RetailTradeServer.HostBuilders
                 services.GetRequiredService<ViewModelDelegateRenavigator<RegistrationViewModel>>(),
                 services.GetRequiredService<ViewModelDelegateRenavigator<HomeViewModel>>(),                
                 services.GetRequiredService<IMessageStore>(),
-                services.GetRequiredService<GlobalMessageViewModel>());
+                services.GetRequiredService<GlobalMessageViewModel>(),
+                services.GetRequiredService<IUserService>());
         }
 
         private static RegistrationViewModel CreateRegistrationViewModel(IServiceProvider services)

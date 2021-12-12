@@ -5,7 +5,7 @@
                  xmlns:dxmvvm="http://schemas.devexpress.com/winfx/2008/xaml/mvvm"
                  xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
                  xmlns:components="clr-namespace:RetailTradeClient.Components"
-                 Width="300"
+                 Width="450"
                  HorizontalAlignment="Center"
                  VerticalAlignment="Center">
 
@@ -20,16 +20,15 @@
                           View="GroupBox"
                           Header="Войти в систему">
 
-            <dxlc:LayoutItem Label="Имя">
+            <dxlc:LayoutItem Label="Имя пользователя:">
                 <dxe:ComboBoxEdit ItemsSource="{Binding Users}"
-                              DisplayMember="Username"
-                              ValueMember="Id"
-                              IncrementalSearch="True"
-                              AutoComplete="True"
-                              SelectedItem="{Binding SelectedUser, UpdateSourceTrigger=PropertyChanged}"/>
+                                  DisplayMember="Username"
+                                  IncrementalSearch="True"
+                                  AutoComplete="True"
+                                  SelectedItem="{Binding SelectedUser, UpdateSourceTrigger=PropertyChanged}"/>
             </dxlc:LayoutItem>
 
-            <dxlc:LayoutItem Label="Пароль">
+            <dxlc:LayoutItem Label="Пароль:">
                 <dxe:PasswordBoxEdit Text="{Binding Password, UpdateSourceTrigger=PropertyChanged}"/>
             </dxlc:LayoutItem>
 

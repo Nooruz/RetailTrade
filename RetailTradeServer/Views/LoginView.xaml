@@ -1,35 +1,37 @@
 ﻿<UserControl
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-    xmlns:dx="http://schemas.devexpress.com/winfx/2008/xaml/core"
     xmlns:dxe="http://schemas.devexpress.com/winfx/2008/xaml/editors"
     xmlns:dxlc="http://schemas.devexpress.com/winfx/2008/xaml/layoutcontrol"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:components="clr-namespace:RetailTradeServer.Components"
-    x:Class="RetailTradeServer.Views.LoginView">
+    x:Class="RetailTradeServer.Views.LoginView"
+    Width="500"
+    VerticalAlignment="Center"
+    HorizontalAlignment="Center">
 
-    <Grid VerticalAlignment="Center"
-          HorizontalAlignment="Center"
-          Width="400">
+    <dxlc:LayoutControl ItemSpace="15">
 
-        <Grid.RowDefinitions>
-            <RowDefinition Height="Auto"/>
-            <RowDefinition Height="Auto"/>
-        </Grid.RowDefinitions>
+        <dxlc:LayoutGroup View="GroupBox"
+                          Header="Войти в систему">
+            
+            <Image Source="../Resources/Images/newlogo.png"
+                   VerticalAlignment="Top"
+                   Width="50"
+                   Margin="0 0 10 0"/>
 
-        <TextBlock Grid.Row="0"
-                   Text="Добро пожаловать!"
-                   HorizontalAlignment="Center"
-                   FontSize="26"/>
+            <dxlc:LayoutGroup Orientation="Vertical">
 
-        <dxlc:LayoutControl Grid.Row="1"
-                            Orientation="Vertical">
-
-            <dxlc:LayoutGroup Orientation="Vertical"
-                              View="GroupBox"
-                              Header="Войти в систему">
+                <TextBlock Text="SP Магазин (ОсОО Мастер)"
+                           FontWeight="DemiBold"
+                           FontSize="16"
+                           Margin="0 0 0 10"/>
 
                 <dxlc:LayoutItem Label="Имя пользователя:">
-                    <dxe:TextEdit Text="{Binding Username, UpdateSourceTrigger=PropertyChanged}"/>
+                    <dxe:ComboBoxEdit ItemsSource="{Binding Users}"
+                                      DisplayMember="Username"
+                                      SelectedItem="{Binding SelectedUser, UpdateSourceTrigger=PropertyChanged}"
+                                      IncrementalSearch="True"
+                                      AutoComplete="True"/>
                 </dxlc:LayoutItem>
 
                 <dxlc:LayoutItem Label="Пароль:">
@@ -38,27 +40,21 @@
 
                 <components:GlobalMessageBaner DataContext="{Binding GlobalMessageViewModel}"/>
 
-                <dxlc:LayoutGroup Orientation="Horizontal">
-
-                    <Button Content="Войти"
-                            Command="{Binding LoginCommand}"
-                            IsDefault="True"/>
-                    
-                    <!--<dx:SimpleButton Content="Выход"/>-->
-
-                </dxlc:LayoutGroup>
+                <Button Content="Войти"
+                        Command="{Binding LoginCommand}"
+                        IsDefault="True"
+                        VerticalAlignment="Bottom"/>
 
                 <Button Content="Регистрация"
+                        VerticalAlignment="Bottom"
                         Style="{StaticResource LinkButton}"
                         Command="{Binding RegistrationCommand}"
                         Visibility="{Binding IsAdminCreated}"/>
 
             </dxlc:LayoutGroup>
 
-            
+        </dxlc:LayoutGroup>
 
-        </dxlc:LayoutControl>
-
-    </Grid>
+    </dxlc:LayoutControl>
 
 </UserControl>

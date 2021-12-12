@@ -1,13 +1,15 @@
 ﻿using RetailTrade.Domain.Exceptions;
 using RetailTradeClient.State.Authenticators;
+using RetailTradeClient.State.Dialogs;
 using RetailTradeClient.State.Messages;
 using RetailTradeClient.State.Navigators;
+using RetailTradeClient.State.Shifts;
+using RetailTradeClient.State.Users;
 using RetailTradeClient.ViewModels;
-using RetailTradeClient.ViewModels.Factories;
-using System;
+using RetailTradeClient.ViewModels.Dialogs;
+using RetailTradeClient.Views.Dialogs;
 using System.ComponentModel;
 using System.Threading.Tasks;
-using System.Windows.Input;
 
 namespace RetailTradeClient.Commands
 {
@@ -18,12 +20,10 @@ namespace RetailTradeClient.Commands
         private readonly LoginViewModel _loginViewModel;
         private readonly IAuthenticator _authenticator;
         private readonly IMessageStore _messageStore;
-
-        #endregion
-
-        #region Commands
-
-        public ICommand UpdateCurrentViewModelCommand { get; }
+        private readonly IRenavigator _homeNavigato;
+        private readonly IUIManager _manager;
+        private readonly IShiftStore _shiftStore;
+        private readonly IUserStore _userStore;
 
         #endregion
 
@@ -31,17 +31,21 @@ namespace RetailTradeClient.Commands
 
         public LoginCommand(LoginViewModel loginViewModel,
             IAuthenticator authenticator,
-            INavigator navigator,
-            IViewModelFactory viewModelFactory,
-            IMessageStore messageStore)
+            IRenavigator homeNavigato,
+            IUIManager manager,
+            IMessageStore messageStore,
+            IShiftStore shiftStore,
+            IUserStore userStore)
         {
             _loginViewModel = loginViewModel;
             _authenticator = authenticator;
             _messageStore = messageStore;
+            _homeNavigato = homeNavigato;
+            _manager = manager;
+            _shiftStore = shiftStore;
+            _userStore = userStore;
 
-            UpdateCurrentViewModelCommand = new UpdateCurrentViewModelCommand(navigator, viewModelFactory);
-
-            _loginViewModel.PropertyChanged += _loginViewModel_PropertyChanged;
+            _loginViewModel.PropertyChanged += LoginViewModel_PropertyChanged;
         }
 
         #endregion
@@ -55,21 +59,25 @@ namespace RetailTradeClient.Commands
         {
             try
             {
-                await _authenticator.Login(_loginViewModel.SelectedUser.Username, _loginViewModel.Password);
+                await _authenticator.Login(_loginViewModel.SelectedUser.Username, _loginViewModel.Password);                
 
-                UpdateCurrentViewModelCommand.Execute(ViewType.Home);
+                _ = await _manager.ShowDialog(new MainMenuViewModel(_shiftStore, _userStore.CurrentUser.Id, _manager, _homeNavigato, _userStore)
+                {
+                    Title = $"РМК: {(_userStore.CurrentUser?.FullName)}"
+                },
+                    new MainMenuView());
             }
-            catch (InvalidUsernameOrPasswordException)
+            catch (InvalidUsernameOrPasswordException e)
             {
-                _messageStore.SetCurrentMessage("Неверное имя или пароль.", MessageType.Error);
+                _messageStore.SetCurrentMessage(e.Message, MessageType.Error);
             }
-            catch (Exception e)
+            catch
             {
                 _messageStore.SetCurrentMessage("Ошибка входа.", MessageType.Error);
             }
         }
 
-        private void _loginViewModel_PropertyChanged(object sender, PropertyChangedEventArgs e)
+        private void LoginViewModel_PropertyChanged(object sender, PropertyChangedEventArgs e)
         {
             OnCanExecuteChanged();
         }

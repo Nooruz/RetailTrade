@@ -1,4 +1,5 @@
-﻿using RetailTrade.Domain.Models;
+﻿using RetailTrade.Domain.Exceptions;
+using RetailTrade.Domain.Models;
 using RetailTrade.Domain.Services;
 using RetailTrade.Domain.Services.AuthenticationServices;
 using RetailTradeClient.State.Navigators;
@@ -17,6 +18,7 @@ namespace RetailTradeClient.State.Authenticators
         private readonly INavigator _navigator;
         private readonly IViewModelFactory _viewModelFactory;
         private readonly IOrganizationService _organizationService;
+        private readonly IShiftService _shiftService;
 
         #endregion
 
@@ -26,13 +28,15 @@ namespace RetailTradeClient.State.Authenticators
             IUserStore userStore,
             INavigator navigator,
             IViewModelFactory viewModelFactory,
-            IOrganizationService organizationService)
+            IOrganizationService organizationService,
+            IShiftService shiftService)
         {
             _authenticationService = authenticationService;
             _userStore = userStore;
             _navigator = navigator;
             _viewModelFactory = viewModelFactory;
             _organizationService = organizationService;
+            _shiftService = shiftService;
         }
 
         #endregion
@@ -41,6 +45,20 @@ namespace RetailTradeClient.State.Authenticators
         {
             _userStore.CurrentUser = await _authenticationService.Login(username, password);
             _userStore.Organization = await _organizationService.GetCurrentOrganization();
+
+            if (_userStore.CurrentUser != null && _userStore.CurrentUser.RoleId == 1)
+            {
+                return;
+            }
+            else
+            {
+                Shift shift = await _shiftService.GetOpenShift();
+
+                if (shift != null && shift.UserId != _userStore.CurrentUser.Id)
+                {
+                    throw new InvalidUsernameOrPasswordException(shift, $"Смена открыта пользователем \"{shift.User.FullName}\".");
+                }
+            }            
         }
 
         public void Logout()

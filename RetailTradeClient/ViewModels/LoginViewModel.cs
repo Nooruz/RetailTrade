@@ -2,10 +2,12 @@
 using RetailTrade.Domain.Services;
 using RetailTradeClient.Commands;
 using RetailTradeClient.State.Authenticators;
+using RetailTradeClient.State.Dialogs;
 using RetailTradeClient.State.Messages;
 using RetailTradeClient.State.Navigators;
+using RetailTradeClient.State.Shifts;
+using RetailTradeClient.State.Users;
 using RetailTradeClient.ViewModels.Base;
-using RetailTradeClient.ViewModels.Factories;
 using System.Collections.Generic;
 using System.Windows.Input;
 
@@ -14,6 +16,7 @@ namespace RetailTradeClient.ViewModels
     public class LoginViewModel : BaseViewModel
     {
         #region Private Members
+
         private readonly IUserService _userService;
         private string _password;
         private User _selectedUser;
@@ -67,16 +70,18 @@ namespace RetailTradeClient.ViewModels
         #region Constructor
 
         public LoginViewModel(IAuthenticator authenticator,
-            INavigator navigato,
-            IViewModelFactory viewModelFactory,
+            IRenavigator homeNavigato,
+            IUIManager manager,
             GlobalMessageViewModel globalMessageViewModel,
             IMessageStore messageStore,
-            IUserService userService)
+            IUserService userService,
+            IShiftStore shiftStore,
+            IUserStore userStore)
         {
             GlobalMessageViewModel = globalMessageViewModel;
             _userService = userService;
 
-            LoginCommand = new LoginCommand(this, authenticator, navigato, viewModelFactory, messageStore);
+            LoginCommand = new LoginCommand(this, authenticator, homeNavigato, manager, messageStore, shiftStore, userStore);
             UserControlLoadedCommand = new RelayCommand(UserControlLoaded);
         }
 

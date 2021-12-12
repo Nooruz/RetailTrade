@@ -89,7 +89,7 @@ namespace RetailTradeClient.Commands
                             string sumNDS = Math.Round(sum1NDS * 100, 0).ToString();
 
                             ShtrihM.StringForPrinting =
-                                string.Join(";", new string[] { "0", "12345", "0", "0", "2", sumNDS, "3", sumNSP + "\n" + sale.Name });
+                                string.Join(";", new string[] { "", sale.TNVED, "", "", "2", sumNDS, "3", sumNSP + "\n" + sale.Name });
 
                             ShtrihM.BarCode = "46198488";
 

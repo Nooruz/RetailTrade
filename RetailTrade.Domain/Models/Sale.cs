@@ -59,6 +59,8 @@ namespace RetailTrade.Domain.Models
         /// </summary>
         public double QuantityInStock { get; set; }
 
+        public string TNVED { get; set; }
+
         #endregion        
 
         public event PropertyChangedEventHandler PropertyChanged;

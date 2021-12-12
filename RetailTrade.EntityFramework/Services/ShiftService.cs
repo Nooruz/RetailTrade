@@ -136,5 +136,13 @@ namespace RetailTrade.EntityFramework.Services
                     s.Receipts.Select(r => new Receipt { Sum = r.Sum, PaidInCash = r.PaidInCash, PaidInCashless = r.PaidInCashless }) })
                 .ToListAsync();
         }
+
+        public async Task<Shift> GetOpenShift()
+        {
+            await using RetailTradeDbContext context = _contextFactory.CreateDbContext();
+            return await context.Shifts
+                .Include(sh => sh.User)
+                .FirstOrDefaultAsync(sh => sh.ClosingDate == null);
+        }
     }
 }

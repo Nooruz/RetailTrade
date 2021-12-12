@@ -1,10 +1,13 @@
-﻿using RetailTradeServer.Commands;
+﻿using RetailTrade.Domain.Models;
+using RetailTrade.Domain.Services;
+using RetailTradeServer.Commands;
 using RetailTradeServer.State.Authenticators;
 using RetailTradeServer.State.Messages;
 using RetailTradeServer.State.Navigators;
 using RetailTradeServer.ViewModels.Base;
 using SalePageServer.Commands;
 using SalePageServer.Properties;
+using System.Collections.Generic;
 using System.Windows;
 using System.Windows.Input;
 
@@ -14,21 +17,32 @@ namespace RetailTradeServer.ViewModels
     {
         #region Private Members
 
-        private string _username = "admin";
+        private IUserService _userService;
+        private User _selectedUser;
         private string _password;
+        private IEnumerable<User> _users;
 
         #endregion
 
         #region Public Properties
 
-        public string Username
+        public IEnumerable<User> Users
         {
-            get => _username;
+            get => _users;
             set
             {
-                _username = value;
-                OnPropertyChanged(nameof(Username));
+                _users = value;
+                OnPropertyChanged(nameof(Users));
+            }
+        }
+        public User SelectedUser
+        {
+            get => _selectedUser;
+            set
+            {
+                _selectedUser = value;
                 OnPropertyChanged(nameof(CanLogin));
+                OnPropertyChanged(nameof(SelectedUser));
             }
         }
         public string Password
@@ -42,7 +56,7 @@ namespace RetailTradeServer.ViewModels
             }
         }
         public GlobalMessageViewModel GlobalMessageViewModel { get; }
-        public bool CanLogin => !string.IsNullOrEmpty(Username) && !string.IsNullOrEmpty(Password);
+        public bool CanLogin => SelectedUser != null && !string.IsNullOrEmpty(Password);
         public Visibility IsAdminCreated => Settings.Default.AdminCreated ? Visibility.Collapsed : Visibility.Visible;
 
         #endregion
@@ -60,12 +74,24 @@ namespace RetailTradeServer.ViewModels
             IRenavigator registrationRenavigator,
             IRenavigator homeRenavigator,
             IMessageStore messageStore,
-            GlobalMessageViewModel globalMessageViewModel) : base(authenticator)
+            GlobalMessageViewModel globalMessageViewModel,
+            IUserService userService) : base(authenticator)
         {
+            _userService = userService;
             GlobalMessageViewModel = globalMessageViewModel;
 
             LoginCommand = new LoginCommand(this, authenticator, homeRenavigator, messageStore);
             RegistrationCommand = new RenavigateCommand(registrationRenavigator);
+            GetAllUsers();
+        }
+
+        #endregion
+
+        #region Private Voids
+
+        private async void GetAllUsers()
+        {
+            Users = await _userService.GetAllAsync();
         }
 
         #endregion

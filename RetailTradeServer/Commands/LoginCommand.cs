@@ -46,7 +46,7 @@ namespace RetailTradeServer.Commands
         {
             try
             {
-                await _authenticator.Login(_viewModel.Username, _viewModel.Password);                
+                await _authenticator.Login(_viewModel.SelectedUser.Username, _viewModel.Password);                
                 _homeRavigator.Renavigate();
                 if (!Settings.Default.AdminCreated)
                 {

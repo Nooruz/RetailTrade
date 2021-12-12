@@ -284,7 +284,6 @@ namespace RetailTradeClient.ViewModels
             SaleProducts.CollectionChanged += SaleProducts_CollectionChanged;
             _productService.PropertiesChanged += ProductService_PropertiesChanged;
             _paymentCashViewModel.PropertyChanged += PaymentCashViewModel_PropertyChanged;
-            OpenMainMenu();
         }
 
         #endregion
@@ -446,7 +445,7 @@ namespace RetailTradeClient.ViewModels
                 if (e.Key == Key.Enter)
                 {
                     var newProduct = await _productService.Predicate(p => p.Barcode == Barcode && p.Quantity > 0,
-                        p => new Product { Id = p.Id, Name = p.Name, Quantity = p.Quantity, SalePrice = p.SalePrice });
+                        p => new Product { Id = p.Id, Name = p.Name, Quantity = p.Quantity, SalePrice = p.SalePrice, TNVED = p.TNVED });
                     if (newProduct != null)
                     {
                         var product = SaleProducts.FirstOrDefault(sp => sp.Id == newProduct.Id);
@@ -459,6 +458,7 @@ namespace RetailTradeClient.ViewModels
                                 Quantity = 1,
                                 QuantityInStock = newProduct.Quantity,
                                 SalePrice = newProduct.SalePrice,
+                                TNVED = newProduct.TNVED,
                                 Sum = newProduct.SalePrice * 1
                             });
                         }
@@ -540,7 +540,8 @@ namespace RetailTradeClient.ViewModels
                         SalePrice = product.SalePrice,
                         ArrivalPrice = product.ArrivalPrice,
                         Sum = product.SalePrice,
-                        QuantityInStock = product.Quantity
+                        QuantityInStock = product.Quantity,
+                        TNVED = product.TNVED
                     });
                 }
                 else if (saleProduct.Quantity < saleProduct.QuantityInStock)
@@ -594,15 +595,6 @@ namespace RetailTradeClient.ViewModels
             {
                 _authenticator.Logout();
             }
-        }
-
-        private async void OpenMainMenu()
-        {
-            _ = await _manager.ShowDialog(new MainMenuViewModel(_shiftStore, _userStore.CurrentUser.Id, _manager)
-            {
-                Title = $"РМК: {(_userStore.CurrentUser?.FullName)}"
-            },
-                new MainMenuView());
         }
 
         /// <summary>

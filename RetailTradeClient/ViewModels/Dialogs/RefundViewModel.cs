@@ -1,8 +1,10 @@
-﻿using RetailTrade.Domain.Models;
+﻿using RetailTrade.CashRegisterMachine;
+using RetailTrade.Domain.Models;
 using RetailTrade.Domain.Services;
 using RetailTradeClient.Commands;
 using RetailTradeClient.State.Dialogs;
 using RetailTradeClient.State.Shifts;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Windows;
@@ -78,6 +80,35 @@ namespace RetailTradeClient.ViewModels.Dialogs
                 if (_manager.ShowMessage("Вы уверены?", "", MessageBoxButton.YesNo, MessageBoxImage.Question) == MessageBoxResult.Yes)
                 {
                     _ = await _receiptService.Refund(SelectedReceipt);
+
+                    ShtrihM.Connect();
+                    ShtrihM.CheckType = 2;
+
+                    foreach (ProductSale productSale in SelectedReceipt.ProductSales)
+                    {
+                        var sum1NSP = Math.Round(productSale.SalePrice * 1 / 113, 2);
+                        var sum1NDS = Math.Round(productSale.SalePrice * 12 / 113, 2);
+                        string sumNSP = Math.Round(sum1NSP * 100, 0).ToString();
+                        string sumNDS = Math.Round(sum1NDS * 100, 0).ToString();
+
+                        ShtrihM.Quantity = productSale.Quantity;
+                        ShtrihM.Price = productSale.SalePrice;
+                        ShtrihM.StringForPrinting = string.Join(";", new string[] { "", productSale.Product.TNVED, "", "", "2", sumNDS, "3", sumNSP + "\n" + productSale.Product.Name });
+
+                        ShtrihM.Tax1 = 2;
+                        ShtrihM.Tax2 = 3;
+                        ShtrihM.Tax3 = 1;
+                        ShtrihM.Tax4 = 4;
+
+                        ShtrihM.ReturnSale();
+                    }
+
+                    
+
+                    ShtrihM.StringForPrinting = "";
+                    ShtrihM.CloseCheck();
+                    ShtrihM.CutCheck();
+
                     _manager.Close();
                 }
             }

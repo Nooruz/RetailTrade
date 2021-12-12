@@ -61,11 +61,13 @@ namespace RetailTradeClient.HostBuilders
         private static LoginViewModel CreateLoginViewModel(IServiceProvider services)
         {
             return new LoginViewModel(services.GetRequiredService<IAuthenticator>(),
-                services.GetRequiredService<INavigator>(),
-                services.GetRequiredService<IViewModelFactory>(),
+                services.GetRequiredService<ViewModelDelegateRenavigator<HomeViewModel>>(),
+                services.GetRequiredService<IUIManager>(),
                 services.GetRequiredService<GlobalMessageViewModel>(),
                 services.GetRequiredService<IMessageStore>(),
-                services.GetRequiredService<IUserService>());
+                services.GetRequiredService<IUserService>(),
+                services.GetRequiredService<IShiftStore>(),
+                services.GetRequiredService<IUserStore>());
         }
 
         private static GlobalMessageViewModel CreateGlobalMessageViewModel(IServiceProvider services)
