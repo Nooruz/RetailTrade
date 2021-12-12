@@ -62,7 +62,7 @@ namespace RetailTradeServer.ViewModels.Dialogs
 
         private async void Create()
         {
-            if (string.IsNullOrEmpty(Name) || SelectedProductCategoryId != null)
+            if (string.IsNullOrEmpty(Name) || SelectedProductCategoryId == null)
                 return;
             await _productSubcategoryService.CreateAsync(new ProductSubcategory
             {

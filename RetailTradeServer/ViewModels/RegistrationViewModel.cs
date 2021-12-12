@@ -4,7 +4,7 @@ using RetailTradeServer.State.Authenticators;
 using RetailTradeServer.State.Messages;
 using RetailTradeServer.State.Navigators;
 using RetailTradeServer.ViewModels.Base;
-using RetailTradeServer.ViewModels.Factories;
+using SalePageServer.Commands;
 using System.Windows.Input;
 
 namespace RetailTradeServer.ViewModels
@@ -59,21 +59,23 @@ namespace RetailTradeServer.ViewModels
         #region Commands
 
         public ICommand AdminRegistrationCommand { get; }
+        public ICommand LoginCommand { get; }
 
         #endregion
 
         #region Constructor
 
         public RegistrationViewModel(IRoleService roleService,
-            INavigator navigator,
+            IRenavigator organizationRenavigator,
+            IRenavigator loginRenavigator,
             IAuthenticator authenticator,
-            IRetailTradeViewModelFactory viewModelFactory,
             GlobalMessageViewModel globalMessageViewModel,
             IMessageStore messageStore)
         {
             GlobalMessageViewModel = globalMessageViewModel;
 
-            AdminRegistrationCommand = new AdminRegistrationCommand(roleService, navigator, authenticator, this, viewModelFactory, messageStore);            
+            AdminRegistrationCommand = new AdminRegistrationCommand(roleService, organizationRenavigator, authenticator, this, messageStore);
+            LoginCommand = new RenavigateCommand(loginRenavigator);
         }
 
         #endregion

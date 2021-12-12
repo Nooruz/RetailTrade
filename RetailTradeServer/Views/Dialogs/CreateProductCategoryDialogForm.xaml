@@ -11,7 +11,7 @@
                         Orientation="Vertical">
         
         <dxlc:LayoutGroup ItemSpace="10">
-            <dxlc:LayoutItem Label="Наименование группы">
+            <dxlc:LayoutItem Label="Наименование категории:">
                 <dxe:TextEdit Text="{Binding Name, UpdateSourceTrigger=PropertyChanged}"/>
             </dxlc:LayoutItem>
         </dxlc:LayoutGroup>

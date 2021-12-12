@@ -11,7 +11,7 @@
                         Orientation="Vertical">
 
         <dxlc:LayoutGroup ItemSpace="10">
-            <dxlc:LayoutItem Label="Выберите группу">
+            <dxlc:LayoutItem Label="Выберите категорию:">
                 <dxe:ComboBoxEdit ItemsSource="{Binding ProductCategories}"
                                   DisplayMember="Name"
                                   ValueMember="Id"
@@ -20,7 +20,7 @@
         </dxlc:LayoutGroup>
 
         <dxlc:LayoutGroup ItemSpace="10">
-            <dxlc:LayoutItem Label="Наименование категории">
+            <dxlc:LayoutItem Label="Наименование группы:">
                 <dxe:TextEdit Text="{Binding Name, UpdateSourceTrigger=PropertyChanged}"/>
             </dxlc:LayoutItem>
         </dxlc:LayoutGroup>

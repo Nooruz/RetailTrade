@@ -3,10 +3,9 @@ using RetailTradeServer.State.Authenticators;
 using RetailTradeServer.State.Messages;
 using RetailTradeServer.State.Navigators;
 using RetailTradeServer.ViewModels;
-using RetailTradeServer.ViewModels.Factories;
+using SalePageServer.Properties;
 using System.ComponentModel;
 using System.Threading.Tasks;
-using System.Windows.Input;
 
 namespace RetailTradeServer.Commands
 {
@@ -16,13 +15,8 @@ namespace RetailTradeServer.Commands
 
         private readonly IAuthenticator _authenticator;
         private readonly IMessageStore _messageStore;
+        private readonly IRenavigator _homeRavigator;
         private LoginViewModel _viewModel;
-
-        #endregion
-
-        #region Commands
-
-        public ICommand UpdateCurrentViewModelCommand { get; }
 
         #endregion
 
@@ -30,15 +24,13 @@ namespace RetailTradeServer.Commands
 
         public LoginCommand(LoginViewModel viewModel,
             IAuthenticator authenticator,
-            INavigator navigator,
-            IRetailTradeViewModelFactory viewModelFactory,
+            IRenavigator homeRavigator,
             IMessageStore messageStore)
         {
             _authenticator = authenticator;
             _viewModel = viewModel;
             _messageStore = messageStore;
-
-            UpdateCurrentViewModelCommand = new UpdateCurrentViewModelCommand(navigator, viewModelFactory);
+            _homeRavigator = homeRavigator;
 
             _viewModel.PropertyChanged += LoginViewModel_PropertyChanged;
         }
@@ -54,9 +46,13 @@ namespace RetailTradeServer.Commands
         {
             try
             {
-                await _authenticator.Login(_viewModel.Username, _viewModel.Password);
-
-                UpdateCurrentViewModelCommand.Execute(ViewType.Home);
+                await _authenticator.Login(_viewModel.Username, _viewModel.Password);                
+                _homeRavigator.Renavigate();
+                if (!Settings.Default.AdminCreated)
+                {
+                    Settings.Default.AdminCreated = true;
+                    Settings.Default.Save();
+                }
             }
             catch (InvalidUsernameOrPasswordException)
             {

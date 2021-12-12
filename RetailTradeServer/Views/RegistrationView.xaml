@@ -32,6 +32,11 @@
                     Command="{Binding AdminRegistrationCommand}"
                     VerticalAlignment="Bottom"/>
 
+            <Button Content="Уже есть аккаунт?"
+                    Style="{StaticResource LinkButton}"
+                    Command="{Binding LoginCommand}"
+                    VerticalAlignment="Bottom"/>
+
         </dxlc:LayoutGroup>
 
     </dxlc:LayoutControl>

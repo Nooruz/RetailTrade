@@ -328,12 +328,12 @@ namespace RetailTradeServer.ViewModels.Dialogs
             }
             if (SelectedProductCategoryId == null || SelectedProductCategoryId == 0)
             {
-                _messageStore.SetCurrentMessage("Выберите группу товара.", MessageType.Error);
+                _messageStore.SetCurrentMessage("Выберите категории товара.", MessageType.Error);
                 return;
             }
             if (SelectedProductSubcategoryId == null || SelectedProductSubcategoryId == 0)
             {
-                _messageStore.SetCurrentMessage("Выберите категори товара.", MessageType.Error);
+                _messageStore.SetCurrentMessage("Выберите группу товара.", MessageType.Error);
                 return;
             }
             if (SelectedUnitId == null || SelectedUnitId == 0)
@@ -548,13 +548,13 @@ namespace RetailTradeServer.ViewModels.Dialogs
 
         private void CreateProductCategory()
         {
-            _manager.ShowDialog(new CreateProductCategoryDialogFormModel(_productCategoryService, _manager) { Title = "Группа товара (создания)" }, 
+            _manager.ShowDialog(new CreateProductCategoryDialogFormModel(_productCategoryService, _manager) { Title = "Категория товара (создания)" }, 
                 new CreateProductCategoryDialogForm());
         }
 
         private void CreateProductSubcategory()
         {
-            _manager.ShowDialog(new CreateProductSubcategoryDialogFormModel(_productSubcategoryService, _productCategoryService, _manager) { Title = "Категория товара (создания)" },
+            _manager.ShowDialog(new CreateProductSubcategoryDialogFormModel(_productSubcategoryService, _productCategoryService, _manager) { Title = "Группа товара (создания)" },
                 new CreateProductSubcategoryDialogForm());
         }
 

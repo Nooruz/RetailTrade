@@ -5,12 +5,10 @@ using RetailTradeServer.State.Authenticators;
 using RetailTradeServer.State.Messages;
 using RetailTradeServer.State.Navigators;
 using RetailTradeServer.ViewModels;
-using RetailTradeServer.ViewModels.Factories;
 using SalePageServer.Properties;
 using System;
 using System.ComponentModel;
 using System.Threading.Tasks;
-using System.Windows.Input;
 
 namespace RetailTradeServer.Commands
 {
@@ -21,31 +19,24 @@ namespace RetailTradeServer.Commands
         private readonly IRoleService _roleService;
         private readonly IAuthenticator _authenticator;
         private readonly IMessageStore _messageStore;
+        private readonly IRenavigator _organizationRenavigator;
         private readonly RegistrationViewModel _viewModel;
-
-        #endregion
-
-        #region Commands
-
-        public ICommand UpdateCurrentViewModelCommand { get; }
 
         #endregion
 
         #region Constructor
 
         public AdminRegistrationCommand(IRoleService roleService,
-            INavigator navigator,
+            IRenavigator organizationRenavigator,
             IAuthenticator authenticator,
             RegistrationViewModel viewModel,
-            IRetailTradeViewModelFactory viewModelFactory,
             IMessageStore messageStore)
         {
             _roleService = roleService;
             _authenticator = authenticator;
             _viewModel = viewModel;
             _messageStore = messageStore;
-
-            UpdateCurrentViewModelCommand = new UpdateCurrentViewModelCommand(navigator, viewModelFactory);
+            _organizationRenavigator = organizationRenavigator;
 
             _viewModel.PropertyChanged += ViewModel_PropertyChanged;
         }
@@ -83,7 +74,7 @@ namespace RetailTradeServer.Commands
                             await _authenticator.Login(_viewModel.Username, _viewModel.ConfirmPassword);
                             Settings.Default.AdminCreated = true;
                             Settings.Default.Save();
-                            UpdateCurrentViewModelCommand.Execute(ViewType.Organization);                            
+                            _organizationRenavigator.Renavigate();
                             break;
                         case RegistrationResult.PasswordsDoNotMatch:
                             _messageStore.SetCurrentMessage("Пароль не совпадает с паролем подтверждения.", MessageType.Error);

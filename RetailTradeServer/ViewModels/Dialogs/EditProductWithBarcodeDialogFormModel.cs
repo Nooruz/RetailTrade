@@ -4,7 +4,9 @@ using RetailTradeServer.Commands;
 using RetailTradeServer.State.Dialogs;
 using RetailTradeServer.State.Messages;
 using RetailTradeServer.ViewModels.Dialogs.Base;
+using RetailTradeServer.Views.Dialogs;
 using System.Collections.ObjectModel;
+using System.Linq;
 using System.Windows.Input;
 
 namespace RetailTradeServer.ViewModels.Dialogs
@@ -56,6 +58,7 @@ namespace RetailTradeServer.ViewModels.Dialogs
                     SelectedSupplierId = _editProduct.SupplierId;
                     SelectedUnitId = _editProduct.UnitId;
                     SelectedProductCategoryId = _editProduct.ProductSubcategory.ProductCategoryId;
+                    SelectedProductSubcategoryId = _editProduct.ProductSubcategoryId;
                 }
                 OnPropertyChanged(nameof(EditProduct));
             }
@@ -102,7 +105,6 @@ namespace RetailTradeServer.ViewModels.Dialogs
             set
             {
                 _selectedProductCategoryId = value;
-                SelectedProductSubcategoryId = 0;
                 OnPropertyChanged(nameof(SelectedProductCategoryId));
                 OnPropertyChanged(nameof(ProductSubCategories));
                 SelectedProductCategoryChanged();
@@ -180,6 +182,10 @@ namespace RetailTradeServer.ViewModels.Dialogs
                 OnPropertyChanged(nameof(TNVED));
             }
         }
+        public ProductSubcategory SelectedProductSubcategory { get; set; }
+        public ProductCategory SelectedProductCategory { get; set; }
+        public Unit SelectedUnit { get; set; }
+        public Supplier SelectedSupplier { get; set; }
 
         #endregion
 
@@ -187,6 +193,9 @@ namespace RetailTradeServer.ViewModels.Dialogs
 
         public ICommand UserControlLoadedCommand { get; }
         public ICommand SaveCommand { get; }
+        public ICommand CreateSupplierCommand { get; }
+        public ICommand CreateProductCategoryCommand { get; }
+        public ICommand CreateProductSubcategoryCommand { get; }
 
         #endregion
 
@@ -212,6 +221,13 @@ namespace RetailTradeServer.ViewModels.Dialogs
 
             UserControlLoadedCommand = new RelayCommand(UserControlLoaded);
             SaveCommand = new RelayCommand(Save);
+            CreateSupplierCommand = new RelayCommand(CreateSupplier);
+            CreateProductCategoryCommand = new RelayCommand(CreateProductCategory);
+            CreateProductSubcategoryCommand = new RelayCommand(CreateProductSubcategory);
+
+            _supplierService.OnSupplierCreated += SupplierService_OnSupplierCreated;
+            _productCategoryService.OnProductCategoryCreated += ProductCategoryService_OnProductCategoryCreated;
+            _productSubcategoryService.OnProductSubcategoryCreated += ProductSubcategoryService_OnProductSubcategoryCreated;
         }
 
         #endregion
@@ -227,12 +243,12 @@ namespace RetailTradeServer.ViewModels.Dialogs
             }
             if (SelectedProductCategoryId == null || SelectedProductCategoryId == 0)
             {
-                _messageStore.SetCurrentMessage("Выберите группу товара.", MessageType.Error);
+                _messageStore.SetCurrentMessage("Выберите группу товара.категори товара.", MessageType.Error);
                 return;
             }
             if (SelectedProductSubcategoryId == null || SelectedProductSubcategoryId == 0)
             {
-                _messageStore.SetCurrentMessage("Выберите категори товара.", MessageType.Error);
+                _messageStore.SetCurrentMessage("Выберите группу товара.", MessageType.Error);
                 return;
             }
             if (SelectedUnitId == null || SelectedUnitId == 0)
@@ -251,14 +267,17 @@ namespace RetailTradeServer.ViewModels.Dialogs
                 return;
             }
 
+            SelectedProductSubcategory.ProductCategory = SelectedProductCategory;
             EditProduct.Name = Name;
             EditProduct.ArrivalPrice = ArrivalPrice;
-            EditProduct.SalePrice = SalePrice;
+            EditProduct.SalePrice = SalePrice;            
             EditProduct.TNVED = TNVED;
             EditProduct.Barcode = Barcode;
             EditProduct.SupplierId = SelectedSupplierId.Value;
+            EditProduct.Supplier = SelectedSupplier;
             EditProduct.UnitId = SelectedUnitId.Value;
-            EditProduct.ProductSubcategory = null;
+            EditProduct.Unit = SelectedUnit;
+            EditProduct.ProductSubcategory = SelectedProductSubcategory;
             EditProduct.ProductSubcategoryId = SelectedProductSubcategoryId.Value;
             EditProduct.WithoutBarcode = string.IsNullOrEmpty(Barcode);
 
@@ -271,7 +290,6 @@ namespace RetailTradeServer.ViewModels.Dialogs
             if (SelectedProductCategoryId != null)
             {
                 ProductSubCategories = new(await _productSubcategoryService.GetAllByProductCategoryIdAsync(SelectedProductCategoryId.Value));
-                SelectedProductSubcategoryId = EditProduct.ProductSubcategoryId;
             }
         }
 
@@ -280,6 +298,48 @@ namespace RetailTradeServer.ViewModels.Dialogs
             Suppliers = new(await _supplierService.GetAllAsync());
             ProductCategories = new(await _productCategoryService.GetAllAsync());
             Units = new(await _unitService.GetAllAsync());
+        }
+
+        private void CreateSupplier()
+        {
+            _manager.ShowDialog(new CreateSupplierProductDialogFormModal(_supplierService, _manager)
+            {
+                Title = "Поставщик (создания)"
+            },
+                new CreateSupplierProductDialogForm());
+        }
+
+        private void CreateProductCategory()
+        {
+            _manager.ShowDialog(new CreateProductCategoryDialogFormModel(_productCategoryService, _manager) { Title = "Категория товара (создания)" },
+                new CreateProductCategoryDialogForm());
+        }
+
+        private void CreateProductSubcategory()
+        {
+            _manager.ShowDialog(new CreateProductSubcategoryDialogFormModel(_productSubcategoryService, _productCategoryService, _manager) { Title = "Группа товара (создания)" },
+                new CreateProductSubcategoryDialogForm());
+        }
+
+        private void SupplierService_OnSupplierCreated(Supplier supplier)
+        {
+            Suppliers.Add(supplier);
+            SelectedSupplier = supplier;
+            SelectedSupplierId = supplier.Id;
+        }
+
+        private void ProductCategoryService_OnProductCategoryCreated(ProductCategory productCategory)
+        {
+            ProductCategories.Add(productCategory);
+            SelectedProductCategory = productCategory;
+            SelectedProductCategoryId = productCategory.Id;
+        }
+
+        private void ProductSubcategoryService_OnProductSubcategoryCreated(ProductSubcategory productSubcategory)
+        {
+            ProductSubCategories.Add(productSubcategory);
+            SelectedProductSubcategory = productSubcategory;
+            SelectedProductSubcategoryId = productSubcategory.Id;
         }
 
         #endregion

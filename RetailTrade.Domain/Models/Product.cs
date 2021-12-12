@@ -21,6 +21,7 @@ namespace RetailTrade.Domain.Models
         private decimal _arrivalPrice;
         private decimal _salePrice;
         private ProductSubcategory _productSubcategory;
+        private Unit _unit;
 
         #endregion
 
@@ -166,7 +167,15 @@ namespace RetailTrade.Domain.Models
             }
         }
         public Supplier Supplier { get; set; }
-        public Unit Unit { get; set; }
+        public Unit Unit
+        {
+            get => _unit;
+            set
+            {
+                _unit = value;
+                OnPropertyChanged(nameof(Unit));
+            }
+        }
         public ICollection<ProductSale> ProductSales { get; set; }
         public ICollection<ProductRefund> ProductRefunds { get; set; }
         public ICollection<ArrivalProduct> ArrivalProducts { get; set; }

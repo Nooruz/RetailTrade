@@ -15,6 +15,8 @@ namespace RetailTrade.EntityFramework.Services
         private readonly NonQueryDataService<Supplier> _nonQueryDataService;
 
         public event Action PropertiesChanged;
+        public event Action<Supplier> OnSupplierCreated;
+        public event Action<Supplier> OnSupplierUpdated;
 
         public SupplierService(RetailTradeDbContextFactory contextFactory)
         {
@@ -25,8 +27,8 @@ namespace RetailTrade.EntityFramework.Services
         public async Task<Supplier> CreateAsync(Supplier entity)
         {
             var result = await _nonQueryDataService.Create(entity);
-            if (result != null)
-                PropertiesChanged?.Invoke();
+            if (result != null) { }
+                OnSupplierCreated?.Invoke(result);
             return result;
         }
 
@@ -60,7 +62,7 @@ namespace RetailTrade.EntityFramework.Services
         {
             var result = await _nonQueryDataService.Update(id, entity);
             if (result != null)
-                PropertiesChanged?.Invoke();
+                OnSupplierUpdated?.Invoke(result);
             return result;
         }
 

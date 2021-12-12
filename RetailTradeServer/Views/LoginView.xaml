@@ -40,13 +40,18 @@
 
                 <dxlc:LayoutGroup Orientation="Horizontal">
 
-                    <dx:SimpleButton Content="Войти"
-                                     Command="{Binding LoginCommand}"
-                                     IsDefault="True"/>
+                    <Button Content="Войти"
+                            Command="{Binding LoginCommand}"
+                            IsDefault="True"/>
                     
                     <!--<dx:SimpleButton Content="Выход"/>-->
 
                 </dxlc:LayoutGroup>
+
+                <Button Content="Регистрация"
+                        Style="{StaticResource LinkButton}"
+                        Command="{Binding RegistrationCommand}"
+                        Visibility="{Binding IsAdminCreated}"/>
 
             </dxlc:LayoutGroup>
 

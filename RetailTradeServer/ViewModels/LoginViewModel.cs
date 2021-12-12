@@ -3,7 +3,9 @@ using RetailTradeServer.State.Authenticators;
 using RetailTradeServer.State.Messages;
 using RetailTradeServer.State.Navigators;
 using RetailTradeServer.ViewModels.Base;
-using RetailTradeServer.ViewModels.Factories;
+using SalePageServer.Commands;
+using SalePageServer.Properties;
+using System.Windows;
 using System.Windows.Input;
 
 namespace RetailTradeServer.ViewModels
@@ -41,26 +43,29 @@ namespace RetailTradeServer.ViewModels
         }
         public GlobalMessageViewModel GlobalMessageViewModel { get; }
         public bool CanLogin => !string.IsNullOrEmpty(Username) && !string.IsNullOrEmpty(Password);
+        public Visibility IsAdminCreated => Settings.Default.AdminCreated ? Visibility.Collapsed : Visibility.Visible;
 
         #endregion
 
         #region Commands
 
-        public ICommand LoginCommand { get; set; }
+        public ICommand LoginCommand { get; }
+        public ICommand RegistrationCommand { get; }
 
         #endregion
 
         #region Constructor
 
         public LoginViewModel(IAuthenticator authenticator,
-            INavigator navigato,
-            IRetailTradeViewModelFactory viewModelFactory,
+            IRenavigator registrationRenavigator,
+            IRenavigator homeRenavigator,
             IMessageStore messageStore,
             GlobalMessageViewModel globalMessageViewModel) : base(authenticator)
         {
             GlobalMessageViewModel = globalMessageViewModel;
 
-            LoginCommand = new LoginCommand(this, authenticator, navigato, viewModelFactory, messageStore);
+            LoginCommand = new LoginCommand(this, authenticator, homeRenavigator, messageStore);
+            RegistrationCommand = new RenavigateCommand(registrationRenavigator);
         }
 
         #endregion

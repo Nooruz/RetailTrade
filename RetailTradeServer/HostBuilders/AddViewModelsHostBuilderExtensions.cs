@@ -64,8 +64,8 @@ namespace RetailTradeServer.HostBuilders
         private static LoginViewModel CreateLoginViewModel(IServiceProvider services)
         {
             return new LoginViewModel(services.GetRequiredService<IAuthenticator>(),
-                services.GetRequiredService<INavigator>(),
-                services.GetRequiredService<IRetailTradeViewModelFactory>(),
+                services.GetRequiredService<ViewModelDelegateRenavigator<RegistrationViewModel>>(),
+                services.GetRequiredService<ViewModelDelegateRenavigator<HomeViewModel>>(),                
                 services.GetRequiredService<IMessageStore>(),
                 services.GetRequiredService<GlobalMessageViewModel>());
         }
@@ -73,9 +73,9 @@ namespace RetailTradeServer.HostBuilders
         private static RegistrationViewModel CreateRegistrationViewModel(IServiceProvider services)
         {
             return new RegistrationViewModel(services.GetRequiredService<IRoleService>(),
-                services.GetRequiredService<INavigator>(),
+                services.GetRequiredService<ViewModelDelegateRenavigator<OrganizationViewModel>>(),
+                services.GetRequiredService<ViewModelDelegateRenavigator<LoginViewModel>>(),
                 services.GetRequiredService<IAuthenticator>(),
-                services.GetRequiredService<IRetailTradeViewModelFactory>(),
                 services.GetRequiredService<GlobalMessageViewModel>(),
                 services.GetRequiredService<IMessageStore>());
         }
