@@ -115,6 +115,16 @@ namespace RetailTradeServer.ViewModels.Dialogs
         }
 
         #endregion
+
+        #region Dispose
+
+        public override void Dispose()
+        {
+            LocalPrinters.CollectionChanged -= LocalPrinters_CollectionChanged;
+            base.Dispose();
+        }
+
+        #endregion
     }
 
     public class LocalPrinter : INotifyPropertyChanged

@@ -233,7 +233,7 @@ namespace RetailTradeServer.ViewModels.Dialogs
 
             _supplierService.PropertiesChanged += SupplierService_PropertiesChanged;
             _productCategoryService.OnProductCategoryCreated += ProductCategoryService_OnProductCategoryCreated;
-            _productSubcategoryService.OnProductSubcategoryCreated += ProductSubcategoryService_OnProductSubcategoryCreated; ;
+            _productSubcategoryService.OnProductSubcategoryCreated += ProductSubcategoryService_OnProductSubcategoryCreated;
         }
 
         #endregion
@@ -561,6 +561,18 @@ namespace RetailTradeServer.ViewModels.Dialogs
         private void SupplierService_PropertiesChanged()
         {
             OnPropertyChanged(nameof(Suppliers));
+        }
+
+        #endregion
+
+        #region Dispose
+
+        public override void Dispose()
+        {
+            _supplierService.PropertiesChanged -= SupplierService_PropertiesChanged;
+            _productCategoryService.OnProductCategoryCreated -= ProductCategoryService_OnProductCategoryCreated;
+            _productSubcategoryService.OnProductSubcategoryCreated -= ProductSubcategoryService_OnProductSubcategoryCreated;
+            base.Dispose();
         }
 
         #endregion

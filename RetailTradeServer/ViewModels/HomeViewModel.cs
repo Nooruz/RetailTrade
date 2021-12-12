@@ -106,7 +106,7 @@ namespace RetailTradeServer.ViewModels
             PrinterCommand = new RelayCommand(Printer);
             RevenueForPeriodCommand = new RelayCommand(RevenueForPeriod);
 
-            _menuNavigator.StateChanged += MenuNavigator_StateChanged;            
+            _menuNavigator.StateChanged += MenuNavigator_StateChanged;
         }
 
         #endregion
@@ -186,6 +186,16 @@ namespace RetailTradeServer.ViewModels
         {
             _ = _manager.ShowDialog(new ReportRevenueForPeriodDialogFormModel(_manager, _receiptService, _userStore) { Title = "Выручка за период" },
                 new ReportRevenueForPeriodDialogForm());
+        }
+
+        #endregion
+
+        #region Dispose
+
+        public override void Dispose()
+        {
+            _menuNavigator.StateChanged -= MenuNavigator_StateChanged;
+            base.Dispose();
         }
 
         #endregion

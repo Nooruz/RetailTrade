@@ -282,7 +282,6 @@ namespace RetailTradeServer.ViewModels.Dialogs
             EditProduct.WithoutBarcode = string.IsNullOrEmpty(Barcode);
 
             await _productService.UpdateAsync(EditProduct.Id, EditProduct);
-            _manager.Close();
         }
 
         private async void SelectedProductCategoryChanged()
@@ -340,6 +339,18 @@ namespace RetailTradeServer.ViewModels.Dialogs
             ProductSubCategories.Add(productSubcategory);
             SelectedProductSubcategory = productSubcategory;
             SelectedProductSubcategoryId = productSubcategory.Id;
+        }
+
+        #endregion
+
+        #region Dispose
+
+        public override void Dispose()
+        {
+            _supplierService.OnSupplierCreated -= SupplierService_OnSupplierCreated;
+            _productCategoryService.OnProductCategoryCreated -= ProductCategoryService_OnProductCategoryCreated;
+            _productSubcategoryService.OnProductSubcategoryCreated -= ProductSubcategoryService_OnProductSubcategoryCreated;
+            base.Dispose();
         }
 
         #endregion

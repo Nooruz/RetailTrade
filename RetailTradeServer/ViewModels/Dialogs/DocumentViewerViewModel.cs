@@ -24,14 +24,5 @@ namespace RetailTradeServer.ViewModels.Dialogs
         }
 
         #endregion
-
-        #region Constructor
-
-        public DocumentViewerViewModel()
-        {
-            
-        }
-
-        #endregion
     }
 }
