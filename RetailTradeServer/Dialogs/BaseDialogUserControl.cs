@@ -39,7 +39,7 @@ namespace RetailTradeServer.Dialogs
         {
             Window = new DialogWindow();
             Window.ViewModel = new DialogWindowViewModel(Window);
-            CloseCommand = new RelayCommand(Close);
+            CloseCommand = new RelayCommand(() => Window.Close());
             regex = new Regex("[^0-9]+");
         }
 
@@ -71,15 +71,6 @@ namespace RetailTradeServer.Dialogs
             });
 
             return tcs.Task;
-        }
-
-        #endregion
-
-        #region Private Voids
-
-        private void Close()
-        {
-            Window.Close();
         }
 
         #endregion

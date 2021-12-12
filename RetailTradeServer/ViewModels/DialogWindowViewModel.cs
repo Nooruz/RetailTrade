@@ -13,7 +13,6 @@ namespace RetailTradeServer.ViewModels
         private WindowState _windowState = WindowState.Normal;
         private ResizeMode _resizeMode = ResizeMode.NoResize;
         private SizeToContent _sizeToContent = SizeToContent.WidthAndHeight;
-        private Window _window;
 
         #endregion
 

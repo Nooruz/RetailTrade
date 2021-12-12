@@ -250,5 +250,15 @@ namespace RetailTradeServer.ViewModels.Dialogs
         }
 
         #endregion
+
+        #region Dispose
+
+        public override void Dispose()
+        {
+            OrderProducts.CollectionChanged -= ProductRefunds_CollectionChanged;
+            base.Dispose();
+        }
+
+        #endregion
     }
 }

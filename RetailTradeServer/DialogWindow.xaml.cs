@@ -13,7 +13,7 @@ namespace RetailTradeServer
         /// <summary>
         /// The view model for this window
         /// </summary>
-        private DialogWindowViewModel mViewModel;
+        private DialogWindowViewModel _viewModel;
 
         #endregion
 
@@ -24,14 +24,14 @@ namespace RetailTradeServer
         /// </summary>
         public DialogWindowViewModel ViewModel
         {
-            get => mViewModel;
+            get => _viewModel;
             set
             {
                 // Set new value
-                mViewModel = value;
+                _viewModel = value;
 
                 // Update data context
-                DataContext = mViewModel;
+                DataContext = _viewModel;
             }
         }
 

@@ -85,5 +85,16 @@ namespace RetailTradeServer.ViewModels
         }
 
         #endregion
+
+        #region Dispose
+
+        public override void Dispose()
+        {
+            _navigator.StateChanged -= Navigator_StateChanged;
+            _authenticator.StateChanged -= AuthenticatorStateChanged;
+            base.Dispose();
+        }
+
+        #endregion
     }
 }

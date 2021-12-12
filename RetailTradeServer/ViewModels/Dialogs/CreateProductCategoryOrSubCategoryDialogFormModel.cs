@@ -172,5 +172,16 @@ namespace RetailTradeServer.ViewModels.Dialogs
         }
 
         #endregion
+
+        #region Dispose
+
+        public override void Dispose()
+        {
+            _productCategoryService.OnProductCategoryCreated -= ProductCategoryService_OnProductCategoryCreated;
+            _productSubcategoryService.OnProductSubcategoryCreated -= ProductSubcategoryService_OnProductSubcategoryCreated;
+            base.Dispose();
+        }
+
+        #endregion
     }
 }

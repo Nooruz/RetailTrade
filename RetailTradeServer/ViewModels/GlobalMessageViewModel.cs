@@ -76,5 +76,17 @@ namespace RetailTradeServer.ViewModels
         }
 
         #endregion
+
+        #region Dispose
+
+        public override void Dispose()
+        {
+            _messageStore.CurrentMessageChanged -= MessageStore_CurrentMessageChanged;
+            _messageStore.CurrentMessageTypeChanged -= MessageStore_CurrentMessageTypeChanged;
+            _messageStore.CloseChanged -= MessageStore_CloseChanged;
+            base.Dispose();
+        }
+
+        #endregion
     }
 }

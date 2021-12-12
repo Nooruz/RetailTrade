@@ -61,5 +61,15 @@ namespace RetailTradeServer.ViewModels.Dialogs
         }
 
         #endregion
+
+        #region Dispose
+
+        public override void Dispose()
+        {
+            _supplierService.PropertiesChanged -= SupplierService_PropertiesChanged;
+            base.Dispose();
+        }
+
+        #endregion
     }
 }
