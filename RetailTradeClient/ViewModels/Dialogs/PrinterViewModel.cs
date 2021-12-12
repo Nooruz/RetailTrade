@@ -1,4 +1,5 @@
-﻿using RetailTradeClient.Commands;
+﻿using RetailTrade.Domain.Models;
+using RetailTradeClient.Commands;
 using RetailTradeClient.State.Messages;
 using System.Collections.ObjectModel;
 using System.Collections.Specialized;
@@ -119,50 +120,6 @@ namespace RetailTradeClient.ViewModels.Dialogs
         private void Item_PropertyChanged(object sender, PropertyChangedEventArgs e)
         {
             OnPropertyChanged(nameof(LocalPrinters));
-        }
-
-        #endregion
-    }
-
-    public class LocalPrinter : INotifyPropertyChanged
-    {
-        #region Private Members
-
-        private int _id;
-        private string _name;
-
-        #endregion
-
-        #region Public Properties
-
-        public int Id
-        {
-            get => _id;
-            set
-            {
-                _id = value;
-                OnPropertyChanged(nameof(Id));
-            }
-        }
-        public string Name
-        {
-            get => _name;
-            set
-            {
-                _name = value;
-                OnPropertyChanged(nameof(Name));
-            }
-        }
-
-        #endregion
-
-        #region NotifyPropertyChanged
-
-        public virtual void Dispose() { }
-        public event PropertyChangedEventHandler PropertyChanged;
-        protected void OnPropertyChanged(string propertyName)
-        {
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
 
         #endregion

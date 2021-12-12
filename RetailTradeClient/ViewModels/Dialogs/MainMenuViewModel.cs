@@ -1,6 +1,7 @@
 ﻿using RetailTradeClient.Commands;
 using RetailTradeClient.State.Dialogs;
 using RetailTradeClient.State.Shifts;
+using RetailTradeClient.Views.Dialogs;
 using System.Runtime.InteropServices;
 using System.Windows.Input;
 
@@ -59,7 +60,7 @@ namespace RetailTradeClient.ViewModels.Dialogs
 
         private void Setting()
         {
-            
+            _manager.ShowDialog(new ApplicationSettingsViewModel() { Title = "Настройки"}, new ApplicationSettingsView());
         }
 
         private void ShiftStore_CurrentShiftChanged()

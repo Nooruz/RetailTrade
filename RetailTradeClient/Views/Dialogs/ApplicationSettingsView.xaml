@@ -1,0 +1,35 @@
+﻿<local:BaseDialogUserControl
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:dxe="http://schemas.devexpress.com/winfx/2008/xaml/editors"
+    xmlns:dxlc="http://schemas.devexpress.com/winfx/2008/xaml/layoutcontrol"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="clr-namespace:RetailTradeClient.Dialogs"
+    x:Class="RetailTradeClient.Views.Dialogs.ApplicationSettingsView" 
+            Width="500">
+
+    <dxlc:LayoutControl Orientation="Vertical">
+        
+        <dxlc:LayoutItem Label="ККМ">
+            <dxe:ComboBoxEdit ItemsSource="{Binding KKMs}"/>
+        </dxlc:LayoutItem>
+        
+        <dxlc:LayoutItem Label="Принтер чеков">
+            <dxe:ComboBoxEdit ItemsSource="{Binding LocalPrinters}"
+                              DisplayMember="Name"
+                              SelectedItem="{Binding SelectedLocalPrinter}"/>
+        </dxlc:LayoutItem>
+
+        <dxlc:LayoutGroup Orientation="Horizontal"
+                          HorizontalAlignment="Right"
+                          VerticalAlignment="Bottom">
+
+            <Button Content="Сохранить" 
+                    Command="{Binding SaveCommand}"/>
+            <Button Content="Отменить" 
+                    Command="{Binding CloseCommand}"/>
+
+        </dxlc:LayoutGroup>
+
+    </dxlc:LayoutControl>
+
+</local:BaseDialogUserControl>
