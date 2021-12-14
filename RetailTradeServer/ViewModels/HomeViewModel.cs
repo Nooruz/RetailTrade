@@ -1,6 +1,5 @@
 ﻿using RetailTrade.Domain.Services;
 using RetailTradeServer.Commands;
-using RetailTradeServer.State.Dialogs;
 using RetailTradeServer.State.Messages;
 using RetailTradeServer.State.Navigators;
 using RetailTradeServer.State.Users;
@@ -8,6 +7,7 @@ using RetailTradeServer.ViewModels.Base;
 using RetailTradeServer.ViewModels.Dialogs;
 using RetailTradeServer.ViewModels.Factories;
 using RetailTradeServer.Views.Dialogs;
+using SalePageServer.State.Dialogs;
 using System.Windows.Input;
 
 namespace RetailTradeServer.ViewModels
@@ -18,7 +18,7 @@ namespace RetailTradeServer.ViewModels
 
         private readonly IMenuNavigator _menuNavigator;
         private readonly IMessageStore _messageStore;
-        private readonly IUIManager _manager;
+        private readonly IDialogService _dialogService;
         private readonly IShiftService _shiftService;
         private readonly IProductSaleService _productSaleService;
         private readonly IReceiptService _receiptService;
@@ -75,7 +75,7 @@ namespace RetailTradeServer.ViewModels
 
         public HomeViewModel(IMenuNavigator menuNavigator,
             IMenuViewModelFactory menuViewModelFactory,
-            IUIManager manager,
+            IDialogService dialogService,
             IShiftService shiftService,
             IMessageStore messageStore,
             IProductSaleService productSaleService,
@@ -83,7 +83,7 @@ namespace RetailTradeServer.ViewModels
             IReceiptService receiptService)
         {
             _menuNavigator = menuNavigator;
-            _manager = manager;
+            _dialogService = dialogService;
             _shiftService = shiftService;
             _messageStore = messageStore;
             _productSaleService = productSaleService;
@@ -120,7 +120,7 @@ namespace RetailTradeServer.ViewModels
 
         private void Printer()
         {
-            _manager.ShowDialog(new PrinterDialogFormModel(_messageStore) { Title = "Настройки принтеров" }, new PrinterDialogForm());
+            _dialogService.ShowDialog(new PrinterDialogFormModel(_messageStore) { Title = "Настройки принтеров" }, new PrinterDialogForm());
         }
 
         private void OpenSupplier()
@@ -178,13 +178,13 @@ namespace RetailTradeServer.ViewModels
 
         private void ReportClosingShifts()
         {
-            _ = _manager.ShowDialog(new ReportClosingShiftsDialogFormModel(_manager, _shiftService) { Title = "Закрытие смены" },
+            _ = _dialogService.ShowDialog(new ReportClosingShiftsDialogFormModel(_dialogService, _shiftService) { Title = "Закрытие смены" },
                 new ReportClosingShiftsDialogForm());
         }
 
         private void RevenueForPeriod()
         {
-            _ = _manager.ShowDialog(new ReportRevenueForPeriodDialogFormModel(_manager, _receiptService, _userStore) { Title = "Выручка за период" },
+            _ = _dialogService.ShowDialog(new ReportRevenueForPeriodDialogFormModel(_dialogService, _receiptService, _userStore) { Title = "Выручка за период" },
                 new ReportRevenueForPeriodDialogForm());
         }
 

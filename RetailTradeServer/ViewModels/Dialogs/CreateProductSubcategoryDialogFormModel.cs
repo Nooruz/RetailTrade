@@ -1,8 +1,8 @@
 ﻿using RetailTrade.Domain.Models;
 using RetailTrade.Domain.Services;
 using RetailTradeServer.Commands;
-using RetailTradeServer.State.Dialogs;
 using RetailTradeServer.ViewModels.Dialogs.Base;
+using SalePageServer.State.Dialogs;
 using System.Collections.Generic;
 using System.Windows.Input;
 
@@ -14,7 +14,7 @@ namespace RetailTradeServer.ViewModels.Dialogs
 
         private readonly IProductCategoryService _productCategoryService;
         private readonly IProductSubcategoryService _productSubcategoryService;
-        private readonly IUIManager _manager;
+        private readonly IDialogService _dialogService;
         private string _name;
 
         #endregion
@@ -46,14 +46,14 @@ namespace RetailTradeServer.ViewModels.Dialogs
 
         public CreateProductSubcategoryDialogFormModel(IProductSubcategoryService productSubcategoryService,
             IProductCategoryService productCategoryService,
-            IUIManager manager)
+            IDialogService dialogService)
         {
             _productSubcategoryService = productSubcategoryService;
             _productCategoryService = productCategoryService;
-            _manager = manager;
+            _dialogService = dialogService;
 
             CreateCommand = new RelayCommand(Create);
-            CloseCommand = new RelayCommand(() => _manager?.Close());
+            CloseCommand = new RelayCommand(() => _dialogService?.Close());
         }
 
         #endregion
@@ -69,7 +69,7 @@ namespace RetailTradeServer.ViewModels.Dialogs
                 Name = Name,
                 ProductCategoryId = SelectedProductCategoryId.Value
             });
-            _manager.Close();
+            _dialogService.Close();
         }
 
         #endregion

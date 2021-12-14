@@ -64,9 +64,17 @@ namespace RetailTrade.CashRegisterMachine
             get => drvFR.Summ1;
             set => drvFR.Summ1 = value;
         }
-
+        public static int Password
+        {
+            get => drvFR.Password;
+            set => drvFR.Password = value;
+        }
+        public static int Department
+        {
+            get => drvFR.Department;
+            set => drvFR.Department = value;
+        }
         public static int ECRMode => drvFR.ECRMode;
-
         public static bool ReceiptRibbonIsPresent => drvFR.ReceiptRibbonIsPresent;
         public static string NameOperationReg => drvFR.NameOperationReg;
         public static int ReceiptNumber => drvFR.ReceiptNumber;
@@ -82,8 +90,7 @@ namespace RetailTrade.CashRegisterMachine
                 ComNumber = Settings.Default.ComNumber,
                 BaudRate = Settings.Default.BaudRate,
                 Timeout = Settings.Default.Timeout
-            };
-
+            };            
             //drvFR.SetExchangeParam();
         }
 

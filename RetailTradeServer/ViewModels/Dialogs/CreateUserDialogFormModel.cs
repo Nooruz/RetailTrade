@@ -3,8 +3,8 @@ using RetailTrade.Domain.Services;
 using RetailTrade.Domain.Services.AuthenticationServices;
 using RetailTradeServer.Commands;
 using RetailTradeServer.State.Authenticators;
-using RetailTradeServer.State.Dialogs;
 using RetailTradeServer.ViewModels.Dialogs.Base;
+using SalePageServer.State.Dialogs;
 using System;
 using System.Collections.Generic;
 using System.Windows;
@@ -18,7 +18,7 @@ namespace RetailTradeServer.ViewModels.Dialogs
 
         private readonly IAuthenticator _authenticator;
         private readonly IRoleService _roleService;
-        private readonly IUIManager _manager;
+        private readonly IDialogService _dialogService;
         private string _username;
         private string _fullName;
         private string _password;
@@ -89,11 +89,11 @@ namespace RetailTradeServer.ViewModels.Dialogs
 
         public CreateUserDialogFormModel(IAuthenticator authenticator,
             IRoleService roleService,
-            IUIManager manager)
+            IDialogService dialogService)
         {
             _authenticator = authenticator;
             _roleService = roleService;
-            _manager = manager;
+            _dialogService = dialogService;
 
             CreateUserCommand = new RelayCommand(CreateUser);
         }
@@ -139,7 +139,7 @@ namespace RetailTradeServer.ViewModels.Dialogs
                 Password, 
                 ConfirmPassword) == RegistrationResult.Success)
             {
-                _manager.Close();
+                _dialogService.Close();
             }
         }
 

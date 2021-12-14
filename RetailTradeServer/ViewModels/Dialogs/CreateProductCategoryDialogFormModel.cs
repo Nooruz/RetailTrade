@@ -1,8 +1,8 @@
 ﻿using RetailTrade.Domain.Models;
 using RetailTrade.Domain.Services;
 using RetailTradeServer.Commands;
-using RetailTradeServer.State.Dialogs;
 using RetailTradeServer.ViewModels.Dialogs.Base;
+using SalePageServer.State.Dialogs;
 using System.Windows.Input;
 
 namespace RetailTradeServer.ViewModels.Dialogs
@@ -12,7 +12,7 @@ namespace RetailTradeServer.ViewModels.Dialogs
         #region Private Members
 
         private readonly IProductCategoryService _productCategoryService;
-        private readonly IUIManager _manager;
+        private readonly IDialogService _dialogService;
         private string _name;
 
         #endregion
@@ -42,10 +42,10 @@ namespace RetailTradeServer.ViewModels.Dialogs
         #region Constructor
 
         public CreateProductCategoryDialogFormModel(IProductCategoryService productCategoryService,
-            IUIManager manager)
+            IDialogService dialogService)
         {
             _productCategoryService = productCategoryService;
-            _manager = manager;
+            _dialogService = dialogService;
 
             CreateCommand = new RelayCommand(Create);
             SaveCommand = new RelayCommand(Save);
@@ -63,7 +63,7 @@ namespace RetailTradeServer.ViewModels.Dialogs
             {
                 Name = Name
             });
-            _manager.Close();
+            _dialogService.Close();
         }
 
         private async void Save()
@@ -72,7 +72,7 @@ namespace RetailTradeServer.ViewModels.Dialogs
                 return;
             EditProductCategory.Name = Name;
             await _productCategoryService.UpdateAsync(EditProductCategory.Id, EditProductCategory);
-            _manager.Close();
+            _dialogService.Close();
         }
 
         #endregion

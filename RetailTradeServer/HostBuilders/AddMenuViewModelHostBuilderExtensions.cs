@@ -3,13 +3,13 @@ using Microsoft.Extensions.Hosting;
 using RetailTrade.Domain.Models;
 using RetailTrade.Domain.Services;
 using RetailTradeServer.State.Authenticators;
-using RetailTradeServer.State.Dialogs;
 using RetailTradeServer.State.Messages;
 using RetailTradeServer.State.Users;
 using RetailTradeServer.ViewModels;
 using RetailTradeServer.ViewModels.Base;
 using RetailTradeServer.ViewModels.Factories;
 using RetailTradeServer.ViewModels.Menus;
+using SalePageServer.State.Dialogs;
 using System;
 
 namespace RetailTradeServer.HostBuilders
@@ -50,7 +50,7 @@ namespace RetailTradeServer.HostBuilders
         private static SupplierViewModel CreateSupplierViewModel(IServiceProvider services)
         {
             return new SupplierViewModel(services.GetRequiredService<ISupplierService>(),
-                services.GetRequiredService<IUIManager>());
+                services.GetRequiredService<IDialogService>());
         }
 
         private static ProductCategoryViewModel CreateProductCategoryViewModel(IServiceProvider services)
@@ -58,7 +58,7 @@ namespace RetailTradeServer.HostBuilders
             return new ProductCategoryViewModel(services.GetRequiredService<IProductSubcategoryService>(),
                 services.GetRequiredService<IProductCategoryService>(),
                 services.GetRequiredService<IProductService>(),
-                services.GetRequiredService<IUIManager>(),
+                services.GetRequiredService<IDialogService>(),
                 services.GetRequiredService<IDataService<Unit>>(),
                 services.GetRequiredService<ISupplierService>(),
                 services.GetRequiredService<GlobalMessageViewModel>(),
@@ -70,7 +70,7 @@ namespace RetailTradeServer.HostBuilders
             return new ArrivalProductViewModel(services.GetRequiredService<IProductService>(),
                 services.GetRequiredService<IArrivalService>(),
                 services.GetRequiredService<ISupplierService>(),
-                services.GetRequiredService<IUIManager>());
+                services.GetRequiredService<IDialogService>());
         }
 
         private static WriteDownProductViewModel CreateWriteDownProductViewModel(IServiceProvider services)
@@ -78,13 +78,13 @@ namespace RetailTradeServer.HostBuilders
             return new WriteDownProductViewModel(services.GetRequiredService<IProductService>(),
                 services.GetRequiredService<IWriteDownService>(),
                 services.GetRequiredService<ISupplierService>(),
-                services.GetRequiredService<IUIManager>());
+                services.GetRequiredService<IDialogService>());
         }
 
         private static OrderProductViewModel CreateOrderProductViewModel(IServiceProvider services)
         {
             return new OrderProductViewModel(services.GetRequiredService<IOrderToSupplierService>(),
-                services.GetRequiredService<IUIManager>(),
+                services.GetRequiredService<IDialogService>(),
                 services.GetRequiredService<IProductService>(),
                 services.GetRequiredService<ISupplierService>(),
                 services.GetRequiredService<IOrderStatusService>(),
@@ -94,7 +94,7 @@ namespace RetailTradeServer.HostBuilders
         private static ProductBarcodeViewModel CreateProductBarcodeViewModel(IServiceProvider services)
         {
             return new ProductBarcodeViewModel(services.GetRequiredService<IProductService>(),
-                services.GetRequiredService<IUIManager>());
+                services.GetRequiredService<IDialogService>());
         }
 
         private static AnalyticalPanelViewModel CreateAnalyticalPanelViewModel(IServiceProvider services)
@@ -105,14 +105,14 @@ namespace RetailTradeServer.HostBuilders
         private static BranchViewModel CreateBranchViewModel(IServiceProvider services)
         {
             return new BranchViewModel(services.GetRequiredService<IDataService<Branch>>(),
-                services.GetRequiredService<IUIManager>(),
+                services.GetRequiredService<IDialogService>(),
                 services.GetRequiredService<IUserService>());
         }
 
         private static UserViewModel CreateUserViewModel(IServiceProvider services)
         {
             return new UserViewModel(services.GetRequiredService<IUserService>(),
-                services.GetRequiredService<IUIManager>(),
+                services.GetRequiredService<IDialogService>(),
                 services.GetRequiredService<IAuthenticator>(),
                 services.GetRequiredService<IRoleService>());
         }
@@ -123,7 +123,7 @@ namespace RetailTradeServer.HostBuilders
                 services.GetRequiredService<IRefundToSupplierService>(),
                 services.GetRequiredService<IRefundToSupplierServiceProduct>(),
                 services.GetRequiredService<ISupplierService>(),
-                services.GetRequiredService<IUIManager>());
+                services.GetRequiredService<IDialogService>());
         }
     }
 }

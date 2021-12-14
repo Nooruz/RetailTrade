@@ -2,10 +2,10 @@
 using RetailTrade.Domain.Services;
 using RetailTradeServer.Commands;
 using RetailTradeServer.Report;
-using RetailTradeServer.State.Dialogs;
 using RetailTradeServer.State.Users;
 using RetailTradeServer.ViewModels.Dialogs.Base;
 using RetailTradeServer.Views.Dialogs;
+using SalePageServer.State.Dialogs;
 using System;
 using System.Linq;
 using System.Windows;
@@ -17,7 +17,7 @@ namespace RetailTradeServer.ViewModels.Dialogs
     {
         #region Private Members
 
-        private readonly IUIManager _manager;
+        private readonly IDialogService _dialogService;
         private readonly IReceiptService _receiptService;
         private readonly IUserStore _userStore;
         private DateTime _selectedStartDate = DateTime.Now.Date.AddDays(-30);
@@ -57,11 +57,11 @@ namespace RetailTradeServer.ViewModels.Dialogs
 
         #region Constructor
 
-        public ReportRevenueForPeriodDialogFormModel(IUIManager manager,
+        public ReportRevenueForPeriodDialogFormModel(IDialogService dialogService,
             IReceiptService receiptService,
             IUserStore userStore)
         {
-            _manager = manager;
+            _dialogService = dialogService;
             _receiptService = receiptService;
             _userStore = userStore;
 
@@ -85,7 +85,7 @@ namespace RetailTradeServer.ViewModels.Dialogs
 
             await revenueForPeriodReport.CreateDocumentAsync();
 
-            await _manager.ShowDialog(new DocumentViewerViewModel()
+            await _dialogService.ShowDialog(new DocumentViewerViewModel()
             {
                 Title = "Закрытие смены",
                 PrintingDocument = revenueForPeriodReport

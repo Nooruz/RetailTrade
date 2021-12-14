@@ -3,11 +3,7 @@
               xmlns:dxc="http://schemas.devexpress.com/winfx/2008/xaml/core"
               xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
               WindowStartupLocation="CenterScreen"
-              Icon="Resources/Images/newlogo.png"
-        SizeToContent="{Binding SizeToContent}"
-        ResizeMode="{Binding ResizeMode}"
-        WindowState="{Binding WindowState}"
-        Title="{Binding Title}">
+              Icon="Resources/Images/newlogo.png">
     
     <Grid>
 

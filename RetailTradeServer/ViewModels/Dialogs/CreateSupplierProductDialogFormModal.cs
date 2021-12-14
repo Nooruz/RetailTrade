@@ -3,6 +3,7 @@ using RetailTrade.Domain.Services;
 using RetailTradeServer.Commands;
 using RetailTradeServer.State.Dialogs;
 using RetailTradeServer.ViewModels.Dialogs.Base;
+using SalePageServer.State.Dialogs;
 using System;
 using System.Windows.Input;
 
@@ -13,7 +14,7 @@ namespace RetailTradeServer.ViewModels.Dialogs
         #region Private Members
 
         private readonly ISupplierService _supplierService;
-        private readonly IUIManager _manager;
+        private readonly IDialogService _dialogService;
         private string _fullName;
         private string _shortName;
         private string _address;
@@ -90,10 +91,10 @@ namespace RetailTradeServer.ViewModels.Dialogs
         #region Constructor
 
         public CreateSupplierProductDialogFormModal(ISupplierService supplierService,
-            IUIManager manager)
+            IDialogService dialogService)
         {
             _supplierService = supplierService;
-            _manager = manager;
+            _dialogService = dialogService;
             CreateCommand = new RelayCommand(Create);
             SaveCommand = new RelayCommand(Save);
         }
@@ -115,7 +116,7 @@ namespace RetailTradeServer.ViewModels.Dialogs
                 Inn = Inn,
                 CreateDate = DateTime.Now
             });
-            _manager.Close();
+            _dialogService.Close();
         }
 
         private async void Save()
@@ -130,7 +131,7 @@ namespace RetailTradeServer.ViewModels.Dialogs
                 Phone = Phone,
                 Inn = Inn
             });
-            _manager.Close();
+            _dialogService.Close();
         }
 
         #endregion

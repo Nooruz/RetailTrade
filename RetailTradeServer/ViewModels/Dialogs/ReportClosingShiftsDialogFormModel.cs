@@ -1,9 +1,9 @@
 ﻿using RetailTrade.Domain.Services;
 using RetailTradeServer.Commands;
 using RetailTradeServer.Report;
-using RetailTradeServer.State.Dialogs;
 using RetailTradeServer.ViewModels.Dialogs.Base;
 using RetailTradeServer.Views.Dialogs;
+using SalePageServer.State.Dialogs;
 using System;
 using System.Windows;
 using System.Windows.Input;
@@ -14,7 +14,7 @@ namespace RetailTradeServer.ViewModels.Dialogs
     {
         #region Private Members
 
-        private readonly IUIManager _manager;
+        private readonly IDialogService _dialogService;
         private readonly IShiftService _shiftService;
         private DateTime _selectedStartDate = DateTime.Now.Date.AddDays(-30);
         private DateTime _selectedEndDate = DateTime.Now.Date;
@@ -53,10 +53,10 @@ namespace RetailTradeServer.ViewModels.Dialogs
 
         #region Constructor
 
-        public ReportClosingShiftsDialogFormModel(IUIManager manager,
+        public ReportClosingShiftsDialogFormModel(IDialogService dialogService,
             IShiftService shiftService)
         {
-            _manager = manager;
+            _dialogService = dialogService;
             _shiftService = shiftService;
 
             PrintClosingShiftsCommand = new RelayCommand(PrintClosingShifts);
@@ -75,7 +75,7 @@ namespace RetailTradeServer.ViewModels.Dialogs
 
             await closingShiftsReport.CreateDocumentAsync();
 
-            await _manager.ShowDialog(new DocumentViewerViewModel()
+            await _dialogService.ShowDialog(new DocumentViewerViewModel()
             { 
                 Title = "Закрытие смены",
                 PrintingDocument = closingShiftsReport

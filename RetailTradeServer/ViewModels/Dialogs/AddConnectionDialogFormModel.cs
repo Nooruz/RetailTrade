@@ -3,7 +3,6 @@ using Microsoft.Win32;
 using Newtonsoft.Json;
 using RetailTrade.EntityFramework;
 using RetailTradeServer.Commands;
-using RetailTradeServer.State.Dialogs;
 using RetailTradeServer.ViewModels.Dialogs.Base;
 using SalePageServer.Properties;
 using System;
@@ -23,7 +22,7 @@ namespace RetailTradeServer.ViewModels.Dialogs
     {
         #region Private Members
 
-        private readonly IUIManager _manager;
+        private readonly IDialogService _dialogService;
         private readonly RetailTradeDbContextFactory _contextFactory;
         private string _serverName;
         private ObservableCollection<string> _dataBases;
@@ -82,10 +81,10 @@ namespace RetailTradeServer.ViewModels.Dialogs
 
         #region Constructor
 
-        public AddConnectionDialogFormModel(IUIManager manager,
+        public AddConnectionDialogFormModel(IDialogService dialogService,
             RetailTradeDbContextFactory contextFactory)
         {
-            _manager = manager;
+            _dialogService = dialogService;
             _contextFactory = contextFactory;
 
             CheckConnectionCommand = new RelayCommand(CheckConnection);
@@ -166,16 +165,16 @@ namespace RetailTradeServer.ViewModels.Dialogs
         {
             if (CheckConnectionString(ConnectionString))
             {
-               _ = _manager.ShowMessage("Проверка подключения выполнена.", "", MessageBoxButton.OK, MessageBoxImage.Information);
+               _ = _dialogService.ShowMessage("Проверка подключения выполнена.", "", MessageBoxButton.OK, MessageBoxImage.Information);
             }
             else if (string.IsNullOrEmpty(ServerName))
             {
-                _ = _manager.ShowMessage("Не удается проверить это подключение, поскольку не указано имя сервера.", 
+                _ = _dialogService.ShowMessage("Не удается проверить это подключение, поскольку не указано имя сервера.", 
                     "", MessageBoxButton.OK, MessageBoxImage.Information);
             }            
             else
             {
-                _ = _manager.ShowMessage(SQLExeption.Message,
+                _ = _dialogService.ShowMessage(SQLExeption.Message,
                     "", MessageBoxButton.OK, MessageBoxImage.Information);
             }
         }
@@ -195,7 +194,7 @@ namespace RetailTradeServer.ViewModels.Dialogs
                 Settings.Default.IsDataBaseConnectionAdded = true;
                 Settings.Default.IsFirstLaunch = false;
                 Settings.Default.Save();
-                _manager.Close();
+                _dialogService.Close();
             }
             catch (Exception)
             {
@@ -227,12 +226,12 @@ namespace RetailTradeServer.ViewModels.Dialogs
                 try
                 {
                     createDBSQLCommand.ExecuteNonQuery();
-                    _ = _manager.ShowMessage("База данных успешно создана.", "", MessageBoxButton.OK, MessageBoxImage.Information);
+                    _ = _dialogService.ShowMessage("База данных успешно создана.", "", MessageBoxButton.OK, MessageBoxImage.Information);
                     CanCreateConnection = true;
                 }
                 catch (SqlException e)
                 {
-                    _ = _manager.ShowMessage(e.Message, "", MessageBoxButton.OK, MessageBoxImage.Information);
+                    _ = _dialogService.ShowMessage(e.Message, "", MessageBoxButton.OK, MessageBoxImage.Information);
                 }
                 finally
                 {

@@ -3,9 +3,9 @@ using RetailTrade.Domain.Models;
 using RetailTrade.Domain.Services;
 using RetailTradeServer.Commands;
 using RetailTradeServer.Report;
-using RetailTradeServer.State.Dialogs;
 using RetailTradeServer.ViewModels.Base;
 using SalePageServer.Properties;
+using SalePageServer.State.Dialogs;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -22,7 +22,7 @@ namespace RetailTradeServer.ViewModels.Menus
         #region Private Members
 
         private readonly IProductService _productService;
-        private readonly IUIManager _manager;
+        private readonly IDialogService _dialogService;
         private Product _selectedProduct;
 
         #endregion
@@ -54,10 +54,10 @@ namespace RetailTradeServer.ViewModels.Menus
         #region Constructor
 
         public ProductBarcodeViewModel(IProductService productService,
-            IUIManager manager)
+            IDialogService dialogService)
         {
             _productService = productService;
-            _manager = manager;
+            _dialogService = dialogService;
 
             ProductBarcodePrintings = new();
 
@@ -91,7 +91,7 @@ namespace RetailTradeServer.ViewModels.Menus
         {
             if (string.IsNullOrEmpty(Settings.Default.DefaultLabelPrinter))
             {
-                _manager.ShowMessage("Принтер для печати этикеток не настроен.", "", MessageBoxButton.OK, MessageBoxImage.Error);
+                _dialogService.ShowMessage("Принтер для печати этикеток не настроен.", "", MessageBoxButton.OK, MessageBoxImage.Error);
             }
             else
             {

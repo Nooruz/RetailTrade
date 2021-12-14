@@ -1,10 +1,10 @@
 ﻿using RetailTrade.Domain.Models;
 using RetailTrade.Domain.Services;
 using RetailTradeServer.Commands;
-using RetailTradeServer.State.Dialogs;
 using RetailTradeServer.ViewModels.Base;
 using RetailTradeServer.ViewModels.Dialogs;
 using RetailTradeServer.Views.Dialogs;
+using SalePageServer.State.Dialogs;
 using System.Collections.Generic;
 
 namespace RetailTradeServer.ViewModels.Menus
@@ -14,7 +14,7 @@ namespace RetailTradeServer.ViewModels.Menus
         #region Private Members
 
         private readonly IDataService<Branch> _branchService;
-        private readonly IUIManager _manager;
+        private readonly IDialogService _dialogService;
         private readonly IUserService _userService;
 
         #endregion
@@ -34,11 +34,11 @@ namespace RetailTradeServer.ViewModels.Menus
         #region Constructor
 
         public BranchViewModel(IDataService<Branch> branchService,
-            IUIManager manager,
+            IDialogService dialogService,
             IUserService userService)
         {
             _branchService = branchService;
-            _manager = manager;
+            _dialogService = dialogService;
             _userService = userService;
 
             CreateCommand = new RelayCommand(CreateBranch);
@@ -51,7 +51,7 @@ namespace RetailTradeServer.ViewModels.Menus
 
         private void CreateBranch()
         {
-            _manager.ShowDialog(new CreateBranchDialogFormModel(_branchService, _userService), 
+            _dialogService.ShowDialog(new CreateBranchDialogFormModel(_branchService, _userService), 
                 new CreateBranchDialogForm());
         }
 

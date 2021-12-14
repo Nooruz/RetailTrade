@@ -14,11 +14,11 @@ namespace RetailTradeServer.ViewModels.Base
         private readonly IAuthenticator _authenticator;
         private bool _isModalOpen;
 
+        public event PropertyChangedEventHandler PropertyChanged;
+
         #endregion
 
         public virtual void Dispose() { }
-
-        public event PropertyChangedEventHandler PropertyChanged;
 
         protected void OnPropertyChanged(string propertyName)
         {

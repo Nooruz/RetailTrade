@@ -3,8 +3,8 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using RetailTrade.EntityFramework;
 using RetailTradeServer.HostBuilders;
-using RetailTradeServer.State.Dialogs;
 using RetailTradeServer.ViewModels;
+using SalePageServer.State.Dialogs;
 using System;
 using System.Data.SqlClient;
 using System.Globalization;
@@ -21,7 +21,7 @@ namespace RetailTradeServer
         #region Private Members
 
         private readonly IHost _host;
-        private IUIManager _manager;
+        private IDialogService _dialogService;
         private static SqlException _sqlException;
 
         #endregion
@@ -29,7 +29,7 @@ namespace RetailTradeServer
         #region Constructor
 
         public App()
-        {            
+        {
             _host = CreateHostBuilder().Build();
         }
 
@@ -49,7 +49,8 @@ namespace RetailTradeServer
         protected override void OnStartup(StartupEventArgs e)
         {
             _host.Start();
-            _manager = _host.Services.GetRequiredService<IUIManager>();
+            _dialogService = _host.Services.GetRequiredService<IDialogService>();
+            //_dialogService.ShowDialog(new StartingViewModel(), new StartingView(), WindowState.Normal, ResizeMode.NoResize, SizeToContent.Manual);
             var contextFactory = _host.Services.GetRequiredService<RetailTradeDbContextFactory>();
 
             //Settings.Default.AdminCreated = false;
@@ -57,7 +58,7 @@ namespace RetailTradeServer
 
             //if (Settings.Default.IsFirstLaunch)
             //{
-            //    _ = _manager.ShowDialog(new AddConnectionDialogFormModel(_manager, contextFactory) { Title = "Добавить подключение" },
+            //    _ = _dialogService.ShowDialog(new AddConnectionDialogFormModel(_dialogService, contextFactory) { Title = "Добавить подключение" },
             //        new AddConnectionDialogForm());
             //}
 
@@ -72,14 +73,14 @@ namespace RetailTradeServer
                 }
                     else
                     {
-                        _ = _manager.ShowMessage(_sqlException.Message, "", MessageBoxButton.OK, MessageBoxImage.Error);
+                        _ = _dialogService.ShowMessage(_sqlException.Message, "", MessageBoxButton.OK, MessageBoxImage.Error);
                         Current.Shutdown();
                         return;
                     }
                 }
                 catch (Exception exception)
                 {
-                    _ = _manager.ShowMessage(exception.Message, "", MessageBoxButton.OK, MessageBoxImage.Error);
+                    _ = _dialogService.ShowMessage(exception.Message, "", MessageBoxButton.OK, MessageBoxImage.Error);
                     Current.Shutdown();
                     return;
                 }
@@ -90,7 +91,7 @@ namespace RetailTradeServer
             //}
             //else
             //{
-            //    _ = _manager.ShowMessage("Ошибка. Обратитесь к программистам.", "", MessageBoxButton.OK, MessageBoxImage.Error);
+            //    _ = _dialogService.ShowMessage("Ошибка. Обратитесь к программистам.", "", MessageBoxButton.OK, MessageBoxImage.Error);
             //}
 
             CultureInfo newCulture = new("ru-RU");

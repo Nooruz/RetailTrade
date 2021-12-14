@@ -1,11 +1,10 @@
 ﻿using RetailTrade.Domain.Models;
 using RetailTrade.Domain.Services;
 using RetailTradeServer.Commands;
-using RetailTradeServer.Report;
-using RetailTradeServer.State.Dialogs;
 using RetailTradeServer.ViewModels.Base;
 using RetailTradeServer.ViewModels.Dialogs;
 using RetailTradeServer.Views.Dialogs;
+using SalePageServer.State.Dialogs;
 using System;
 using System.Collections.Generic;
 using System.Windows;
@@ -20,7 +19,7 @@ namespace RetailTradeServer.ViewModels.Menus
         private readonly IProductService _productService;
         private readonly IWriteDownService _writeDownService;
         private readonly ISupplierService _supplierService;
-        private readonly IUIManager _manager;
+        private readonly IDialogService _dialogService;
         private WriteDown _selectedWriteDown;
         private IEnumerable<WriteDown> _writeDowns;
         private bool _showLoadingPanel;
@@ -72,12 +71,12 @@ namespace RetailTradeServer.ViewModels.Menus
         public WriteDownProductViewModel(IProductService productService,
             IWriteDownService writeDownService,
             ISupplierService supplierService,
-            IUIManager manager)
+            IDialogService dialogService)
         {
             _productService = productService;
             _writeDownService = writeDownService;
             _supplierService = supplierService;
-            _manager = manager;
+            _dialogService = dialogService;
 
             LoadedCommand = new RelayCommand(GetWriteDownsAsync);
             CreateCommand = new RelayCommand(Create);
@@ -102,12 +101,12 @@ namespace RetailTradeServer.ViewModels.Menus
                 //    WriteDownProductReport report = new(SelectedWriteDown.Id, SelectedWriteDown.WriteDownDate);
                 //    report.DataSource = SelectedWriteDown.WriteDownProducts;
                 //    await report.CreateDocumentAsync();
-                //    await _manager.ShowDialog(new DocumentViewerViewModel() { PrintingDocument = report },
+                //    await _dialogService.ShowDialog(new DocumentViewerViewModel() { PrintingDocument = report },
                 //        new DocumentViewerView(), WindowState.Maximized, ResizeMode.CanResize, SizeToContent.Manual);
                 //}
                 //else
                 //{
-                //    _manager.ShowMessage("Выберите элемент.", "", MessageBoxButton.OKCancel, MessageBoxImage.Exclamation);
+                //    _dialogService.ShowMessage("Выберите элемент.", "", MessageBoxButton.OKCancel, MessageBoxImage.Exclamation);
                 //}
             }
             catch (Exception e)
@@ -128,7 +127,7 @@ namespace RetailTradeServer.ViewModels.Menus
 
         private async void Create()
         {
-            await _manager.ShowDialog(new CreateWriteDownProductDialogFormModel(_productService, _supplierService, _writeDownService, _manager) { Title = "Списание товаров (новый)" },
+            await _dialogService.ShowDialog(new CreateWriteDownProductDialogFormModel(_productService, _supplierService, _writeDownService, _dialogService) { Title = "Списание товаров (новый)" },
                 new CreateWriteDownProductDialogForm());
         }
 
@@ -136,14 +135,14 @@ namespace RetailTradeServer.ViewModels.Menus
         {
             if (SelectedWriteDown != null)
             {
-                if (_manager.ShowMessage("Вы точно хотите удалить?", "", MessageBoxButton.YesNo, MessageBoxImage.Question) == MessageBoxResult.Yes)
+                if (_dialogService.ShowMessage("Вы точно хотите удалить?", "", MessageBoxButton.YesNo, MessageBoxImage.Question) == MessageBoxResult.Yes)
                 {
                     await _writeDownService.DeleteAsync(SelectedWriteDown.Id);
                 }
             }
             else
             {
-                _manager.ShowMessage("Выберите элемента!", "", MessageBoxButton.OK, MessageBoxImage.Exclamation);
+                _dialogService.ShowMessage("Выберите элемента!", "", MessageBoxButton.OK, MessageBoxImage.Exclamation);
             }
         }
 

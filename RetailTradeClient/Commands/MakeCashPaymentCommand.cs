@@ -74,13 +74,14 @@ namespace RetailTradeClient.Commands
                     });
 
                     ShtrihM.Connect();
-                    ShtrihM.CheckType = 0;
+                    ShtrihM.CheckType = 0;                    
 
                     if (newReceipt != null)
                     {
                         foreach (Sale sale in _paymentCashViewModel.SaleProducts)
                         {
-
+                            ShtrihM.Password = 30;
+                            ShtrihM.Department = 1;
                             ShtrihM.Quantity = Convert.ToDouble(sale.Quantity);
                             ShtrihM.Price = sale.SalePrice;
                             var sum1NSP = Math.Round(sale.SalePrice * 1 / 113, 2);
@@ -91,12 +92,12 @@ namespace RetailTradeClient.Commands
                             ShtrihM.StringForPrinting =
                                 string.Join(";", new string[] { "", sale.TNVED, "", "", "2", sumNDS, "3", sumNSP + "\n" + sale.Name });
 
-                            ShtrihM.BarCode = "46198488";
+                            //ShtrihM.BarCode = "46198488";
 
-                            ShtrihM.Tax1 = 2;
-                            ShtrihM.Tax2 = 3;
-                            ShtrihM.Tax3 = 1;
-                            ShtrihM.Tax4 = 4;
+                            ShtrihM.Tax1 = 0;
+                            ShtrihM.Tax2 = 2;
+                            ShtrihM.Tax3 = 3;
+                            ShtrihM.Tax4 = 0;
 
                             ShtrihM.Sale();
                         }

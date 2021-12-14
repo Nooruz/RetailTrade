@@ -2,11 +2,10 @@
 using RetailTrade.Domain.Models;
 using RetailTrade.Domain.Services;
 using RetailTradeServer.Commands;
-using RetailTradeServer.State.Dialogs;
 using RetailTradeServer.State.Messages;
 using RetailTradeServer.ViewModels.Dialogs.Base;
 using RetailTradeServer.Views.Dialogs;
-using System;
+using SalePageServer.State.Dialogs;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Windows;
@@ -23,7 +22,7 @@ namespace RetailTradeServer.ViewModels.Dialogs
         private readonly ISupplierService _supplierService;
         private readonly IProductSubcategoryService _productSubcategoryService;
         private readonly IProductService _productService;
-        private readonly IUIManager _manager;
+        private readonly IDialogService _dialogService;
         private readonly IMessageStore _messageStore;
         private int? _selectedProductCategoryId;
         private int? _selectedProductSubCategoryId;
@@ -205,7 +204,6 @@ namespace RetailTradeServer.ViewModels.Dialogs
             IDataService<Unit> unitService,
             IProductService productService,
             ISupplierService supplierService,
-            IUIManager manager,
             GlobalMessageViewModel globalMessageViewModel,
             IMessageStore messageStore)
         {
@@ -214,7 +212,7 @@ namespace RetailTradeServer.ViewModels.Dialogs
             _unitService = unitService;
             _productService = productService;
             _supplierService = supplierService;
-            _manager = manager;
+            _dialogService = new SalePageServer.State.Dialogs.DialogService();
             GlobalMessageViewModel = globalMessageViewModel;
             _messageStore = messageStore;
 
@@ -280,7 +278,7 @@ namespace RetailTradeServer.ViewModels.Dialogs
         {
             if (!CanTabSelect)
             {
-                if (_manager.ShowMessage("Данные не сохранены. Продолжить?", "", MessageBoxButton.YesNo, MessageBoxImage.Question)
+                if (_dialogService.ShowMessage("Данные не сохранены. Продолжить?", "", MessageBoxButton.YesNo, MessageBoxImage.Question)
                     == MessageBoxResult.No)
                 {
                     e.Cancel = false;
@@ -539,23 +537,23 @@ namespace RetailTradeServer.ViewModels.Dialogs
 
         private void CreateSupplier()
         {
-            _manager.ShowDialog(new CreateSupplierProductDialogFormModal(_supplierService, _manager)
+            _dialogService.ShowDialog(new CreateSupplierProductDialogForm(),
+                new CreateSupplierProductDialogFormModal(_supplierService, _dialogService)
                 {
                     Title = "Поставщик (создания)"
-                }, 
-                new CreateSupplierProductDialogForm());
+                });
         }
 
         private void CreateProductCategory()
         {
-            _manager.ShowDialog(new CreateProductCategoryDialogFormModel(_productCategoryService, _manager) { Title = "Категория товара (создания)" }, 
-                new CreateProductCategoryDialogForm());
+            _dialogService.ShowDialog(new CreateProductCategoryDialogForm(),
+                new CreateProductCategoryDialogFormModel(_productCategoryService, _dialogService) { Title = "Категория товара (создания)" });
         }
 
         private void CreateProductSubcategory()
         {
-            _manager.ShowDialog(new CreateProductSubcategoryDialogFormModel(_productSubcategoryService, _productCategoryService, _manager) { Title = "Группа товара (создания)" },
-                new CreateProductSubcategoryDialogForm());
+            _dialogService.ShowDialog(new CreateProductSubcategoryDialogForm(), 
+                new CreateProductSubcategoryDialogFormModel(_productSubcategoryService, _productCategoryService, _dialogService) { Title = "Группа товара (создания)" });
         }
 
         private void SupplierService_PropertiesChanged()

@@ -1,10 +1,10 @@
 ﻿using RetailTrade.Domain.Models;
 using RetailTrade.Domain.Services;
 using RetailTradeServer.Commands;
-using RetailTradeServer.State.Dialogs;
 using RetailTradeServer.ViewModels.Base;
 using RetailTradeServer.ViewModels.Dialogs;
 using RetailTradeServer.Views.Dialogs;
+using SalePageServer.State.Dialogs;
 using System.Collections.Generic;
 using System.Windows;
 using System.Windows.Input;
@@ -19,7 +19,7 @@ namespace RetailTradeServer.ViewModels.Menus
         private readonly IRefundToSupplierService _refundToSupplierService;
         private readonly IRefundToSupplierServiceProduct _refundToSupplierServiceProduct;
         private readonly ISupplierService _supplierService;
-        private readonly IUIManager _manager;
+        private readonly IDialogService _dialogService;
         private RefundToSupplier _selectedRefundToSupplier;
         private IEnumerable<RefundToSupplier> _refundToSuppliers;
 
@@ -60,13 +60,13 @@ namespace RetailTradeServer.ViewModels.Menus
             IRefundToSupplierService refundToSupplierService,
             IRefundToSupplierServiceProduct refundToSupplierServiceProduct,
             ISupplierService supplierService,
-            IUIManager manager)
+            IDialogService dialogService)
         {
             _productService = productService;
             _refundToSupplierService = refundToSupplierService;
             _refundToSupplierServiceProduct = refundToSupplierServiceProduct;
             _supplierService = supplierService;
-            _manager = manager;
+            _dialogService = dialogService;
 
             LoadedCommand = new RelayCommand(GetRefundToSuppliersAsync);
             CreateCommand = new RelayCommand(Create);
@@ -86,7 +86,7 @@ namespace RetailTradeServer.ViewModels.Menus
 
         private async void Create()
         {
-            await _manager.ShowDialog(new CreateRefundToSupplierDialogFormModel(_productService, _supplierService, _refundToSupplierService, _manager) { Title = "Возврат поставщику (новый)" },
+            await _dialogService.ShowDialog(new CreateRefundToSupplierDialogFormModel(_productService, _supplierService, _refundToSupplierService, _dialogService) { Title = "Возврат поставщику (новый)" },
                 new CreateRefundToSupplierDialogForm());
         }
 
@@ -94,14 +94,14 @@ namespace RetailTradeServer.ViewModels.Menus
         {
             if (SelectedRefundToSupplier != null)
             {
-                if (_manager.ShowMessage("Вы точно хотите удалить выбранный элемент?", "", MessageBoxButton.YesNo, MessageBoxImage.Question) == MessageBoxResult.Yes)
+                if (_dialogService.ShowMessage("Вы точно хотите удалить выбранный элемент?", "", MessageBoxButton.YesNo, MessageBoxImage.Question) == MessageBoxResult.Yes)
                 {
                     _ = await _refundToSupplierService.DeleteAsync(SelectedRefundToSupplier.Id);
                 }
             }
             else
             {
-                _manager.ShowMessage("Выберите элемент!", "", MessageBoxButton.OK, MessageBoxImage.Exclamation);
+                _dialogService.ShowMessage("Выберите элемент!", "", MessageBoxButton.OK, MessageBoxImage.Exclamation);
             }
         }
 

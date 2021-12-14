@@ -2,10 +2,10 @@
 using RetailTrade.Domain.Services;
 using RetailTradeServer.Commands;
 using RetailTradeServer.Report;
-using RetailTradeServer.State.Dialogs;
 using RetailTradeServer.ViewModels.Base;
 using RetailTradeServer.ViewModels.Dialogs;
 using RetailTradeServer.Views.Dialogs;
+using SalePageServer.State.Dialogs;
 using System.Collections.Generic;
 using System.Windows;
 using System.Windows.Input;
@@ -19,7 +19,7 @@ namespace RetailTradeServer.ViewModels.Menus
         private readonly IProductService _productService;
         private readonly IArrivalService _arrivalService;
         private readonly ISupplierService _supplierService;
-        private readonly IUIManager _manager;
+        private readonly IDialogService _dialogService;
         private Arrival _selectedArrival;
         private IEnumerable<Arrival> _arrivals;
 
@@ -63,12 +63,12 @@ namespace RetailTradeServer.ViewModels.Menus
         public ArrivalProductViewModel(IProductService productService,
             IArrivalService arrivalService,
             ISupplierService supplierService,
-            IUIManager manager)
+            IDialogService dialogService)
         {
             _productService = productService;
             _arrivalService = arrivalService;
             _supplierService = supplierService;
-            _manager = manager;
+            _dialogService = dialogService;
 
             LoadedCommand = new RelayCommand(GetArrivalsAsync);
             CreateArrivalCommand = new RelayCommand(CreateArrival);
@@ -93,12 +93,12 @@ namespace RetailTradeServer.ViewModels.Menus
 
                 await report.CreateDocumentAsync();
 
-                await _manager.ShowDialog(new DocumentViewerViewModel() { PrintingDocument = report },
+                await _dialogService.ShowDialog(new DocumentViewerViewModel() { PrintingDocument = report },
                     new DocumentViewerView(), WindowState.Maximized, ResizeMode.CanResize, SizeToContent.Manual);
             }
             else
             {
-                _ = _manager.ShowMessage("Выберите приход", "", MessageBoxButton.OK, MessageBoxImage.Exclamation);
+                _ = _dialogService.ShowMessage("Выберите приход", "", MessageBoxButton.OK, MessageBoxImage.Exclamation);
             }
         }
 
@@ -109,7 +109,7 @@ namespace RetailTradeServer.ViewModels.Menus
 
         private async void CreateArrival()
         {
-            await _manager.ShowDialog(new CreateArrivalProductDialogFormModel(_productService, _supplierService, _arrivalService, _manager) { Title = "Приход товаров (новый)" }, 
+            await _dialogService.ShowDialog(new CreateArrivalProductDialogFormModel(_productService, _supplierService, _arrivalService, _dialogService) { Title = "Приход товаров (новый)" }, 
                 new CreateArrivalProductDialogForm());
         }
 
@@ -117,14 +117,14 @@ namespace RetailTradeServer.ViewModels.Menus
         {
             if (SelectedArrival != null)
             {
-                if (_manager.ShowMessage("Вы точно хотите удалить выбранный приход?", "", MessageBoxButton.YesNo, MessageBoxImage.Question) == MessageBoxResult.Yes)
+                if (_dialogService.ShowMessage("Вы точно хотите удалить выбранный приход?", "", MessageBoxButton.YesNo, MessageBoxImage.Question) == MessageBoxResult.Yes)
                 {
                     await _arrivalService.DeleteAsync(SelectedArrival.Id);
                 }
             }
             else
             {
-                _manager.ShowMessage("Выберите приход!", "", MessageBoxButton.OK, MessageBoxImage.Exclamation);
+                _dialogService.ShowMessage("Выберите приход!", "", MessageBoxButton.OK, MessageBoxImage.Exclamation);
             }
         }
 
@@ -132,10 +132,10 @@ namespace RetailTradeServer.ViewModels.Menus
         {
             if (SelectedArrival != null)
             {
-                if (_manager.ShowMessage("Дублировать выбранный приход?", "", MessageBoxButton.YesNo, MessageBoxImage.Question) == MessageBoxResult.Yes)
+                if (_dialogService.ShowMessage("Дублировать выбранный приход?", "", MessageBoxButton.YesNo, MessageBoxImage.Question) == MessageBoxResult.Yes)
                 {
-                    await _manager.ShowDialog(
-                        new CreateArrivalProductDialogFormModel(_productService, _supplierService, _arrivalService, _manager) 
+                    await _dialogService.ShowDialog(
+                        new CreateArrivalProductDialogFormModel(_productService, _supplierService, _arrivalService, _dialogService) 
                         { 
                             Title = "Приход товаров (дублирование)",
                             SelectedSupplier = SelectedArrival.Supplier,
@@ -146,7 +146,7 @@ namespace RetailTradeServer.ViewModels.Menus
             }
             else
             {
-                _manager.ShowMessage("Выберите приход!", "", MessageBoxButton.OK, MessageBoxImage.Exclamation);
+                _dialogService.ShowMessage("Выберите приход!", "", MessageBoxButton.OK, MessageBoxImage.Exclamation);
             }
         }
 

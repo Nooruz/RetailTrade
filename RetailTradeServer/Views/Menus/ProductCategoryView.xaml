@@ -6,10 +6,19 @@
     xmlns:dxlc="http://schemas.devexpress.com/winfx/2008/xaml/layoutcontrol"
     xmlns:dxmvvm="http://schemas.devexpress.com/winfx/2008/xaml/mvvm"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:dx="http://schemas.devexpress.com/winfx/2008/xaml/core"
+    xmlns:dialogs="clr-namespace:RetailTradeServer.Views.Dialogs"
     x:Class="RetailTradeServer.Views.Menus.ProductCategoryView">
 
     <dxmvvm:Interaction.Behaviors>
         <dxmvvm:EventToCommand EventName="Loaded" Command="{Binding GetProductsCommandAsync}"/>
+        <dx:DialogService x:Name="CreateProduct" DialogWindowStartupLocation="CenterOwner">
+            <dx:DialogService.ViewTemplate>
+                <DataTemplate>
+                    <dialogs:CreateProductDialogForm/>
+                </DataTemplate>
+            </dx:DialogService.ViewTemplate>
+        </dx:DialogService>
     </dxmvvm:Interaction.Behaviors>
 
     <dxlc:LayoutControl ItemSpace="10"
@@ -41,19 +50,19 @@
 
             </dxlc:LayoutGroup>
 
-            <dxg:TreeViewControl ItemsSource="{Binding ProductCategories}"
-                                     ChildNodesPath="ProductSubcategories"
-                                     KeyFieldName="Name"
-                                     TreeViewFieldName="Name"
-                                     SelectedItem="{Binding SelectedProductGroup}">
+            <dxg:TreeViewControl ItemsSource="{Binding ProductCategories, UpdateSourceTrigger=PropertyChanged}"
+                                 ChildNodesPath="ProductSubcategories"
+                                 KeyFieldName="Name"
+                                 TreeViewFieldName="Name"
+                                 SelectedItem="{Binding SelectedProductGroup}">
                 <dxg:TreeViewControl.NodeMenuCustomizations>
-                    <dxb:BarButtonItem Name="EditCategory" 
+                    <dxb:BarButtonItem x:Name="EditCategory" 
                                            Content="Изменить"
                                            Command="{Binding EditCategoryCommand}"/>
-                    <dxb:BarButtonItem Name="DeleteCategory" 
+                    <dxb:BarButtonItem x:Name="DeleteCategory" 
                                            Content="Удалить"
                                            Command="{Binding DeleteCategoryCommand}"/>
-                    <dxb:BarButtonItem Name="CreateSubCategory"
+                    <dxb:BarButtonItem x:Name="CreateSubCategory"
                                            Content="Создать категорию"
                                            Command="{Binding CreateSubCategoryCommand}"/>
                 </dxg:TreeViewControl.NodeMenuCustomizations>
@@ -118,6 +127,12 @@
                     <dxg:GridSummaryItem FieldName="Id" SummaryType="Count" DisplayFormat="Кол-во {0:N0}"/>
                 </dxg:GridControl.TotalSummary>
 
+                <dxmvvm:Interaction.Behaviors>
+                    <dxmvvm:EventToCommand EventName="Loaded"
+                                           Command="{Binding GridControlLoadedCommand}"
+                                           PassEventArgsToCommand="True"/>
+                </dxmvvm:Interaction.Behaviors>
+
                 <dxg:GridColumn FieldName="Id"
                                     Header="Код">
                     <dxg:GridColumn.EditSettings>
@@ -145,12 +160,6 @@
                     </dxg:GridColumn.EditSettings>
                 </dxg:GridColumn>
                 <dxg:GridColumn FieldName="TNVED" Header="ТН ВЭД"/>
-
-                <dxmvvm:Interaction.Behaviors>
-                    <dxmvvm:EventToCommand EventName="Loaded"
-                                           Command="{Binding GridControlLoadedCommand}"
-                                           PassEventArgsToCommand="True"/>
-                </dxmvvm:Interaction.Behaviors>
 
             </dxg:GridControl>
 

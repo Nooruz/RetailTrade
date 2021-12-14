@@ -2,7 +2,6 @@
 using Microsoft.Extensions.Hosting;
 using RetailTrade.Domain.Services;
 using RetailTradeServer.State.Authenticators;
-using RetailTradeServer.State.Dialogs;
 using RetailTradeServer.State.Messages;
 using RetailTradeServer.State.Navigators;
 using RetailTradeServer.State.Users;
@@ -20,6 +19,7 @@ namespace RetailTradeServer.HostBuilders
             return host.ConfigureServices(services =>
             {
                 services.AddSingleton(s => new MainWindow());
+                services.AddSingleton(s => new DialogWindow());
 
                 services.AddTransient(CreateMainWindowViewModel);
                 services.AddTransient(CreateHomeViewModel);
@@ -53,7 +53,7 @@ namespace RetailTradeServer.HostBuilders
         {
             return new HomeViewModel(services.GetRequiredService<IMenuNavigator>(),
                 services.GetRequiredService<IMenuViewModelFactory>(),
-                services.GetRequiredService<IUIManager>(),
+                services.GetRequiredService<IDialogService>(),
                 services.GetRequiredService<IShiftService>(),
                 services.GetRequiredService<IMessageStore>(),
                 services.GetRequiredService<IProductSaleService>(),

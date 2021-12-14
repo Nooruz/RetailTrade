@@ -1,11 +1,11 @@
 ﻿using RetailTrade.Domain.Models;
 using RetailTrade.Domain.Services;
 using RetailTradeServer.Commands;
-using RetailTradeServer.State.Dialogs;
 using RetailTradeServer.State.Users;
 using RetailTradeServer.ViewModels.Base;
 using RetailTradeServer.ViewModels.Dialogs;
 using RetailTradeServer.Views.Dialogs;
+using SalePageServer.State.Dialogs;
 using System.Collections.Generic;
 using System.Windows;
 using System.Windows.Input;
@@ -18,7 +18,7 @@ namespace RetailTradeServer.ViewModels.Menus
 
         private readonly IOrderToSupplierService _orderToSupplierService;
         private readonly IOrderStatusService _orderStatusService;
-        private readonly IUIManager _manager;
+        private readonly IDialogService _dialogService;
         private readonly IProductService _productService;
         private readonly ISupplierService _supplierService;
         private readonly IUserStore _userStore;
@@ -64,14 +64,14 @@ namespace RetailTradeServer.ViewModels.Menus
         #region Constructor
 
         public OrderProductViewModel(IOrderToSupplierService orderToSupplierService,
-            IUIManager manager,
+            IDialogService dialogService,
             IProductService productService,
             ISupplierService supplierService,
             IOrderStatusService orderStatusService,
             IUserStore userStore)
         {
             _orderToSupplierService = orderToSupplierService;
-            _manager = manager;
+            _dialogService = dialogService;
             _productService = productService;
             _supplierService = supplierService;
             _orderStatusService = orderStatusService;
@@ -101,7 +101,7 @@ namespace RetailTradeServer.ViewModels.Menus
             }
             else
             {
-                _manager.ShowMessage("Выберите заказ.", "", MessageBoxButton.OK, MessageBoxImage.Exclamation);
+                _dialogService.ShowMessage("Выберите заказ.", "", MessageBoxButton.OK, MessageBoxImage.Exclamation);
             }
         }
 
@@ -113,7 +113,7 @@ namespace RetailTradeServer.ViewModels.Menus
             }
             else
             {
-                _manager.ShowMessage("Выберите заказ.", "", MessageBoxButton.OK, MessageBoxImage.Exclamation);
+                _dialogService.ShowMessage("Выберите заказ.", "", MessageBoxButton.OK, MessageBoxImage.Exclamation);
             }
         }
 
@@ -134,7 +134,7 @@ namespace RetailTradeServer.ViewModels.Menus
 
         private void CreateOrder()
         {
-            _manager.ShowDialog(new CreateOrderToSupplierDialogFormModel(_productService, _supplierService, _orderToSupplierService, _userStore, _manager) { Title = "Заказ поставшику (новый)" }, 
+            _dialogService.ShowDialog(new CreateOrderToSupplierDialogFormModel(_productService, _supplierService, _orderToSupplierService, _userStore, _dialogService) { Title = "Заказ поставшику (новый)" }, 
                 new CreateOrderToSupplierDialogForm());
         }
 
@@ -142,14 +142,14 @@ namespace RetailTradeServer.ViewModels.Menus
         {
             if (SelectedOrderToSupplier != null)
             {
-                if (_manager.ShowMessage("Вы точно хотите удалит выбранный заказ?", "", MessageBoxButton.YesNo, MessageBoxImage.Question) == MessageBoxResult.Yes)
+                if (_dialogService.ShowMessage("Вы точно хотите удалит выбранный заказ?", "", MessageBoxButton.YesNo, MessageBoxImage.Question) == MessageBoxResult.Yes)
                 {
                     await _orderToSupplierService.DeleteAsync(SelectedOrderToSupplier.Id);
                 }                
             }
             else
             {
-                _manager.ShowMessage("Выберите заказ.", "", MessageBoxButton.OK, MessageBoxImage.Exclamation);
+                _dialogService.ShowMessage("Выберите заказ.", "", MessageBoxButton.OK, MessageBoxImage.Exclamation);
             }
         }
 

@@ -2,8 +2,8 @@
 using RetailTrade.Domain.Models;
 using RetailTrade.Domain.Services;
 using RetailTradeServer.Commands;
-using RetailTradeServer.State.Dialogs;
 using RetailTradeServer.ViewModels.Dialogs.Base;
+using SalePageServer.State.Dialogs;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -22,7 +22,7 @@ namespace RetailTradeServer.ViewModels.Dialogs
         private readonly IProductService _productService;
         private readonly ISupplierService _supplierService;
         private readonly IWriteDownService _writeDownService;
-        private readonly IUIManager _manager;
+        private readonly IDialogService _dialogService;
         private Supplier _selectedSupplier;
         private Product _selectedProduct;
         private string _comment;
@@ -100,12 +100,12 @@ namespace RetailTradeServer.ViewModels.Dialogs
         public CreateWriteDownProductDialogFormModel(IProductService productService,
             ISupplierService supplierService,
             IWriteDownService writeDownService,
-            IUIManager manager)
+            IDialogService dialogService)
         {
             _productService = productService;
             _supplierService = supplierService;
             _writeDownService = writeDownService;
-            _manager = manager;
+            _dialogService = dialogService;
 
             WriteDownProducts = new();
 
@@ -180,7 +180,7 @@ namespace RetailTradeServer.ViewModels.Dialogs
                     {
                         e.IsValid = false;
                         e.ErrorContent = "Количество списание товаров не должно превышать количество на складе.";
-                        _manager.ShowMessage("Количество списание товаров не должно превышать количество на складе.", "", MessageBoxButton.OK, MessageBoxImage.Error);
+                        _dialogService.ShowMessage("Количество списание товаров не должно превышать количество на складе.", "", MessageBoxButton.OK, MessageBoxImage.Error);
                     }
                 }
             }
@@ -215,7 +215,7 @@ namespace RetailTradeServer.ViewModels.Dialogs
                     //ignore
                 }
 
-                _manager.Close();
+                _dialogService.Close();
             }
         }
 

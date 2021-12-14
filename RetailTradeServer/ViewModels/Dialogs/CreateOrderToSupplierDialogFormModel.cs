@@ -3,10 +3,10 @@ using RetailTrade.Domain.Models;
 using RetailTrade.Domain.Services;
 using RetailTradeServer.Commands;
 using RetailTradeServer.Report;
-using RetailTradeServer.State.Dialogs;
 using RetailTradeServer.State.Users;
 using RetailTradeServer.ViewModels.Dialogs.Base;
 using RetailTradeServer.Views.Dialogs;
+using SalePageServer.State.Dialogs;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -26,7 +26,7 @@ namespace RetailTradeServer.ViewModels.Dialogs
         private readonly ISupplierService _supplierService;
         private readonly IOrderToSupplierService _orderToSupplierService;
         private readonly IUserStore _userStore;
-        private readonly IUIManager _manager;
+        private readonly IDialogService _dialogService;
         private Supplier _selectedSupplier;
         private Product _selectedProduct;
         private string _comment;
@@ -105,13 +105,13 @@ namespace RetailTradeServer.ViewModels.Dialogs
             ISupplierService supplierService,
             IOrderToSupplierService orderToSupplierService,
             IUserStore userStore,
-            IUIManager manager)
+            IDialogService dialogService)
         {
             _productService = productService;
             _supplierService = supplierService;
             _orderToSupplierService = orderToSupplierService;
             _userStore = userStore;
-            _manager = manager;
+            _dialogService = dialogService;
 
             OrderProducts = new();
 
@@ -186,7 +186,7 @@ namespace RetailTradeServer.ViewModels.Dialogs
                     {
                         e.IsValid = false;
                         e.ErrorContent = "Количество заказа не должно быть 0.";
-                        _manager.ShowMessage("Количество заказа не должно быть 0.", "", MessageBoxButton.OK, MessageBoxImage.Error);
+                        _dialogService.ShowMessage("Количество заказа не должно быть 0.", "", MessageBoxButton.OK, MessageBoxImage.Error);
                     }
                 }
             }
@@ -222,7 +222,7 @@ namespace RetailTradeServer.ViewModels.Dialogs
 
                 await report.CreateDocumentAsync();
 
-                await _manager.ShowDialog(new DocumentViewerViewModel() { PrintingDocument = report }, 
+                await _dialogService.ShowDialog(new DocumentViewerViewModel() { PrintingDocument = report }, 
                     new DocumentViewerView(), 
                     WindowState.Maximized, 
                     ResizeMode.NoResize, 

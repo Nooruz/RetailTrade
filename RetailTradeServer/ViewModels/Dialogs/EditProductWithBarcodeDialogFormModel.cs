@@ -1,12 +1,10 @@
 ﻿using RetailTrade.Domain.Models;
 using RetailTrade.Domain.Services;
 using RetailTradeServer.Commands;
-using RetailTradeServer.State.Dialogs;
 using RetailTradeServer.State.Messages;
 using RetailTradeServer.ViewModels.Dialogs.Base;
-using RetailTradeServer.Views.Dialogs;
+using SalePageServer.State.Dialogs;
 using System.Collections.ObjectModel;
-using System.Linq;
 using System.Windows.Input;
 
 namespace RetailTradeServer.ViewModels.Dialogs
@@ -20,7 +18,7 @@ namespace RetailTradeServer.ViewModels.Dialogs
         private readonly ISupplierService _supplierService;
         private readonly IProductSubcategoryService _productSubcategoryService;
         private readonly IProductService _productService;
-        private readonly IUIManager _manager;
+        private readonly IDialogService _dialogService;
         private readonly IMessageStore _messageStore;
         private int? _selectedProductCategoryId;
         private int? _selectedProductSubCategoryId;
@@ -206,7 +204,7 @@ namespace RetailTradeServer.ViewModels.Dialogs
             IDataService<Unit> unitService,
             IProductService productService,
             ISupplierService supplierService,
-            IUIManager manager,
+            IDialogService dialogService,
             IMessageStore messageStore,
             GlobalMessageViewModel globalMessageViewModel)
         {
@@ -215,7 +213,7 @@ namespace RetailTradeServer.ViewModels.Dialogs
             _unitService = unitService;
             _productService = productService;
             _supplierService = supplierService;
-            _manager = manager;
+            _dialogService = dialogService;
             _messageStore = messageStore;
             GlobalMessageViewModel = globalMessageViewModel;
 
@@ -282,7 +280,7 @@ namespace RetailTradeServer.ViewModels.Dialogs
             EditProduct.WithoutBarcode = string.IsNullOrEmpty(Barcode);
 
             await _productService.UpdateAsync(EditProduct.Id, EditProduct);
-            _manager.Close();
+            _dialogService.Close();
         }
 
         private async void SelectedProductCategoryChanged()
@@ -302,23 +300,23 @@ namespace RetailTradeServer.ViewModels.Dialogs
 
         private void CreateSupplier()
         {
-            _manager.ShowDialog(new CreateSupplierProductDialogFormModal(_supplierService, _manager)
-            {
-                Title = "Поставщик (создания)"
-            },
-                new CreateSupplierProductDialogForm());
+            //_dialogService.ShowDialog(new CreateSupplierProductDialogFormModal(_supplierService, _dialogService)
+            //{
+            //    Title = "Поставщик (создания)"
+            //},
+            //    new CreateSupplierProductDialogForm());
         }
 
         private void CreateProductCategory()
         {
-            _manager.ShowDialog(new CreateProductCategoryDialogFormModel(_productCategoryService, _manager) { Title = "Категория товара (создания)" },
-                new CreateProductCategoryDialogForm());
+            //_dialogService.ShowDialog(new CreateProductCategoryDialogFormModel(_productCategoryService, _dialogService) { Title = "Категория товара (создания)" },
+            //    new CreateProductCategoryDialogForm());
         }
 
         private void CreateProductSubcategory()
         {
-            _manager.ShowDialog(new CreateProductSubcategoryDialogFormModel(_productSubcategoryService, _productCategoryService, _manager) { Title = "Группа товара (создания)" },
-                new CreateProductSubcategoryDialogForm());
+            //_dialogService.ShowDialog(new CreateProductSubcategoryDialogFormModel(_productSubcategoryService, _productCategoryService, _dialogService) { Title = "Группа товара (создания)" },
+            //    new CreateProductSubcategoryDialogForm());
         }
 
         private void SupplierService_OnSupplierCreated(Supplier supplier)

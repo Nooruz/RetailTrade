@@ -15,6 +15,99 @@ namespace RetailTradeServer.ViewModels.Dialogs
         public List<UIButton> Buttons { get; set; }
         public Window DialogWindow { get; set; }
 
+        public MessageBoxDialogViewModel(string message)
+        {
+            Buttons = new List<UIButton>();
+            Message = message;
+
+            Buttons.Add(new UIButton
+            {
+                Content = "Ок",
+                Command = new RelayCommand(Ok)
+            });
+        }
+
+        public MessageBoxDialogViewModel(string message, string title)
+        {
+            Buttons = new List<UIButton>();
+            Message = message;
+            Title = title;
+
+            Buttons.Add(new UIButton
+            {
+                Content = "Ок",
+                Command = new RelayCommand(Ok)
+            });
+        }
+
+        public MessageBoxDialogViewModel(string message,
+            string title, MessageBoxButton messageBoxButton)
+        {
+            Buttons = new List<UIButton>();
+            Message = message;
+            Title = title;
+            switch (messageBoxButton)
+            {
+                case MessageBoxButton.OK:
+                    Buttons.Add(new UIButton
+                    {
+                        Content = "Ок",
+                        Command = new RelayCommand(Ok)
+                    });
+                    break;
+                case MessageBoxButton.OKCancel:
+                    Buttons.AddRange(new List<UIButton>
+                    {
+                        new UIButton
+                        {
+                            Content = "Ок",
+                            Command = new RelayCommand(Ok)
+                        },
+                        new UIButton
+                        {
+                            Content = "Отмена",
+                            Command = new RelayCommand(Cancel)
+                        }
+                    });
+                    break;
+                case MessageBoxButton.YesNo:
+                    Buttons.AddRange(new List<UIButton>
+                    {
+                        new UIButton
+                        {
+                            Content = "Да",
+                            Command = new RelayCommand(Yes)
+                        },
+                        new UIButton
+                        {
+                            Content = "Нет",
+                            Command = new RelayCommand(No)
+                        }
+                    });
+                    break;
+                case MessageBoxButton.YesNoCancel:
+                    Buttons.AddRange(new List<UIButton>
+                    {
+                        new UIButton
+                        {
+                            Content = "Да",
+                            Command = new RelayCommand(Yes)
+                        },
+                        new UIButton
+                        {
+                            Content = "Нет",
+                            Command = new RelayCommand(No)
+                        },
+                        new UIButton
+                        {
+                            Content = "Отмена",
+                            Command = new RelayCommand(Cancel)
+                        }
+                    });
+                    break;
+            }
+        }
+
         public MessageBoxDialogViewModel(string message,
             string title, MessageBoxButton messageBoxButton, MessageBoxImage messageBoxImage)
         {
@@ -97,89 +190,7 @@ namespace RetailTradeServer.ViewModels.Dialogs
                     Icon = "\uf059";
                     break;
             }
-        }
-
-        public MessageBoxDialogViewModel(string message,
-            string title, MessageBoxButton messageBoxButton)
-        {
-            Buttons = new List<UIButton>();
-            Message = message;
-            Title = title;
-            switch (messageBoxButton)
-            {
-                case MessageBoxButton.OK:
-                    Buttons.Add(new UIButton
-                    {
-                        Content = "Ок",
-                        Command = new RelayCommand(Ok)
-                    });
-                    break;
-                case MessageBoxButton.OKCancel:
-                    Buttons.AddRange(new List<UIButton>
-                    {
-                        new UIButton
-                        {
-                            Content = "Ок",
-                            Command = new RelayCommand(Ok)
-                        },
-                        new UIButton
-                        {
-                            Content = "Отмена",
-                            Command = new RelayCommand(Cancel)
-                        }
-                    });
-                    break;
-                case MessageBoxButton.YesNo:
-                    Buttons.AddRange(new List<UIButton>
-                    {
-                        new UIButton
-                        {
-                            Content = "Да",
-                            Command = new RelayCommand(Yes)
-                        },
-                        new UIButton
-                        {
-                            Content = "Нет",
-                            Command = new RelayCommand(No)
-                        }
-                    });
-                    break;
-                case MessageBoxButton.YesNoCancel:
-                    Buttons.AddRange(new List<UIButton>
-                    {
-                        new UIButton
-                        {
-                            Content = "Да",
-                            Command = new RelayCommand(Yes)
-                        },
-                        new UIButton
-                        {
-                            Content = "Нет",
-                            Command = new RelayCommand(No)
-                        },
-                        new UIButton
-                        {
-                            Content = "Отмена",
-                            Command = new RelayCommand(Cancel)
-                        }
-                    });
-                    break;
-            }
-        }
-
-        public MessageBoxDialogViewModel(string message, string title)
-        {
-            Buttons = new List<UIButton>
-            {
-                new UIButton
-                {
-                    Content = "Ок",
-                    Command = new RelayCommand(Ok)
-                }
-            };
-            Message = message;
-            Title = title;
-        }
+        }        
 
         #region Private Voids
 

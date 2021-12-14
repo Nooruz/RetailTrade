@@ -2,10 +2,10 @@
 using RetailTrade.Domain.Services;
 using RetailTradeServer.Commands;
 using RetailTradeServer.State.Authenticators;
-using RetailTradeServer.State.Dialogs;
 using RetailTradeServer.ViewModels.Base;
 using RetailTradeServer.ViewModels.Dialogs;
 using RetailTradeServer.Views.Dialogs;
+using SalePageServer.State.Dialogs;
 using System.Collections.Generic;
 
 namespace RetailTradeServer.ViewModels.Menus
@@ -15,7 +15,7 @@ namespace RetailTradeServer.ViewModels.Menus
         #region Private Members
 
         private readonly IUserService _userService;
-        private readonly IUIManager _manager;
+        private readonly IDialogService _dialogService;
         private readonly IAuthenticator _authenticator;
         private readonly IRoleService _roleService;
 
@@ -30,12 +30,12 @@ namespace RetailTradeServer.ViewModels.Menus
         #region Constructor
 
         public UserViewModel(IUserService userService,
-            IUIManager manager,
+            IDialogService dialogService,
             IAuthenticator authenticator,
             IRoleService roleService)
         {
             _userService = userService;
-            _manager = manager;
+            _dialogService = dialogService;
             _authenticator = authenticator;
             _roleService = roleService;
 
@@ -50,7 +50,7 @@ namespace RetailTradeServer.ViewModels.Menus
 
         private void CreateUser()
         {
-            _manager.ShowDialog(new CreateUserDialogFormModel(_authenticator, _roleService, _manager), 
+            _dialogService.ShowDialog(new CreateUserDialogFormModel(_authenticator, _roleService, _dialogService), 
                 new CreateUserDialogForm());
         }
 

@@ -1,9 +1,8 @@
 ﻿using RetailTrade.Domain.Models;
 using RetailTrade.Domain.Services;
 using RetailTradeServer.Commands;
-using RetailTradeServer.State.Dialogs;
 using RetailTradeServer.ViewModels.Dialogs.Base;
-using RetailTradeServer.Views.Dialogs;
+using SalePageServer.State.Dialogs;
 using System.Collections.Generic;
 using System.Windows.Input;
 
@@ -13,7 +12,7 @@ namespace RetailTradeServer.ViewModels.Dialogs
     {
         #region Private Members
 
-        private readonly IUIManager _manager;
+        private readonly IDialogService _dialogService;
         private readonly ISupplierService _supplierService;
 
         #endregion
@@ -32,10 +31,10 @@ namespace RetailTradeServer.ViewModels.Dialogs
 
         #region Constructor
 
-        public SupplierProductDialogFormModal(IUIManager manager,
+        public SupplierProductDialogFormModal(IDialogService dialogService,
             ISupplierService supplierService)
         {
-            _manager = manager;
+            _dialogService = dialogService;
             _supplierService = supplierService;
 
             CreateSupplierProductCommand = new RelayCommand(CreateSupplier);
@@ -48,11 +47,11 @@ namespace RetailTradeServer.ViewModels.Dialogs
 
         private void CreateSupplier()
         {
-            _manager.ShowDialog(new CreateSupplierProductDialogFormModal(_supplierService, _manager)
-            {
-                Title = "Поставщики (новый)"
-            },
-                new CreateSupplierProductDialogForm());
+            //_dialogService.ShowDialog(new CreateSupplierProductDialogFormModal(_supplierService, _dialogService)
+            //{
+            //    Title = "Поставщики (новый)"
+            //},
+            //    new CreateSupplierProductDialogForm());
         }
 
         private void SupplierService_PropertiesChanged()
