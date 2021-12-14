@@ -1,0 +1,88 @@
+﻿<local:BaseMenuView
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:dxc="http://schemas.devexpress.com/winfx/2008/xaml/charts"
+    xmlns:dxe="http://schemas.devexpress.com/winfx/2008/xaml/editors"
+    xmlns:dxlc="http://schemas.devexpress.com/winfx/2008/xaml/layoutcontrol"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    x:Class="RetailTradeServer.Views.Menus.SaleDashboardView"
+    xmlns:local="clr-namespace:RetailTradeServer.Views.Menus"
+    Title="Панель мониторинга продаж и доходов"
+    ShowDefaultButtons="False">
+
+    <dxlc:LayoutControl>
+
+        <dxlc:LayoutGroup Orientation="Vertical">
+
+            <dxlc:LayoutGroup View="GroupBox"
+                              Header="Ежедневные показатели продаж">
+                <dxlc:LayoutItem Label="Сегодняшний день"
+                                 LabelPosition="Top">
+                    <dxe:TextEdit IsReadOnly="True"
+                                  Width="120"/>
+                </dxlc:LayoutItem>
+                <dxlc:LayoutItem Label="Вчерашний день"
+                                 LabelPosition="Top">
+                    <dxe:TextEdit IsReadOnly="True"
+                                  Width="120"/>
+                </dxlc:LayoutItem>
+                <dxlc:LayoutItem Label="Предыдущая неделя"
+                                 LabelPosition="Top">
+                    <dxe:TextEdit IsReadOnly="True"
+                                  Width="120"/>
+                </dxlc:LayoutItem>
+            </dxlc:LayoutGroup>
+
+            <dxlc:LayoutGroup Orientation="Vertical">
+
+                <dxc:ChartControl />
+
+                <dxlc:LayoutGroup>
+
+                    <Button Content="Вчерашний день"/>
+                    <Button Content="Сегодняшний день"/>
+
+                </dxlc:LayoutGroup>
+
+            </dxlc:LayoutGroup>
+
+        </dxlc:LayoutGroup>
+
+        <dxlc:LayoutGroup Orientation="Vertical">
+
+            <dxlc:LayoutGroup View="GroupBox"
+                              Header="Ежемесячные показатели продаж">
+                <dxlc:LayoutItem Label="Текущий месяц"
+                                 LabelPosition="Top">
+                    <dxe:TextEdit IsReadOnly="True"
+                                  Width="120"/>
+                </dxlc:LayoutItem>
+                <dxlc:LayoutItem Label="Прошлый месяц"
+                                 LabelPosition="Top">
+                    <dxe:TextEdit IsReadOnly="True"
+                                  Width="120"/>
+                </dxlc:LayoutItem>
+                <dxlc:LayoutItem Label="Сначала года"
+                                 LabelPosition="Top">
+                    <dxe:TextEdit IsReadOnly="True"
+                                  Width="120"/>
+                </dxlc:LayoutItem>
+            </dxlc:LayoutGroup>
+            
+            <dxlc:LayoutGroup Orientation="Vertical">
+
+                <dxc:ChartControl />
+
+                <dxlc:LayoutGroup>
+                    
+                    <Button Content="Прошлый месяц"/>
+                    <Button Content="Текущий месяц"/>
+
+                </dxlc:LayoutGroup>
+
+            </dxlc:LayoutGroup>
+
+        </dxlc:LayoutGroup>
+
+    </dxlc:LayoutControl>
+
+</local:BaseMenuView>

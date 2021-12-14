@@ -7,7 +7,7 @@ using System.Windows.Input;
 
 namespace RetailTradeServer.ViewModels.Menus
 {
-    public class AnalyticalPanelViewModel : BaseViewModel
+    public class SaleDashboardView : BaseViewModel
     {
         #region Private Members
 
@@ -41,7 +41,7 @@ namespace RetailTradeServer.ViewModels.Menus
 
         #region Constructor
 
-        public AnalyticalPanelViewModel(IReceiptService receiptService)
+        public SaleDashboardView(IReceiptService receiptService)
         {
             _receiptService = receiptService;
             //RetailTradeDashboard = new RetailTradeDashboard();

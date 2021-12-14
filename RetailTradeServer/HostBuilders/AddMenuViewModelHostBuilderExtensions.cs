@@ -26,7 +26,7 @@ namespace RetailTradeServer.HostBuilders
                 services.AddTransient(CreateWriteDownProductViewModel);
                 services.AddTransient(CreateOrderProductViewModel);
                 services.AddTransient(CreateProductBarcodeViewModel);
-                services.AddTransient(CreateAnalyticalPanelViewModel);
+                services.AddTransient(CreateSaleDashboardView);
                 services.AddTransient(CreateBranchViewModel);
                 services.AddTransient(CreateUserViewModel);
                 services.AddTransient(CreateRefundToSupplierViewModel);
@@ -37,7 +37,7 @@ namespace RetailTradeServer.HostBuilders
                 services.AddSingleton<CreateMenuViewModel<WriteDownProductViewModel>>(servicesProvider => () => CreateWriteDownProductViewModel(servicesProvider));
                 services.AddSingleton<CreateMenuViewModel<OrderProductViewModel>>(servicesProvider => () => CreateOrderProductViewModel(servicesProvider));
                 services.AddSingleton<CreateMenuViewModel<ProductBarcodeViewModel>>(servicesProvider => () => CreateProductBarcodeViewModel(servicesProvider));
-                services.AddSingleton<CreateMenuViewModel<AnalyticalPanelViewModel>>(servicesProvider => () => CreateAnalyticalPanelViewModel(servicesProvider));
+                services.AddSingleton<CreateMenuViewModel<SaleDashboardView>>(servicesProvider => () => CreateSaleDashboardView(servicesProvider));
                 services.AddSingleton<CreateMenuViewModel<BranchViewModel>>(servicesProvider => () => CreateBranchViewModel(servicesProvider));
                 services.AddSingleton<CreateMenuViewModel<UserViewModel>>(servicesProvider => () => CreateUserViewModel(servicesProvider));
                 services.AddSingleton<CreateMenuViewModel<RefundToSupplierViewModel>>(servicesProvider => () => CreateRefundToSupplierViewModel(servicesProvider));
@@ -97,9 +97,9 @@ namespace RetailTradeServer.HostBuilders
                 services.GetRequiredService<IDialogService>());
         }
 
-        private static AnalyticalPanelViewModel CreateAnalyticalPanelViewModel(IServiceProvider services)
+        private static SaleDashboardView CreateSaleDashboardView(IServiceProvider services)
         {
-            return new AnalyticalPanelViewModel(services.GetRequiredService<IReceiptService>());
+            return new SaleDashboardView(services.GetRequiredService<IReceiptService>());
         }
 
         private static BranchViewModel CreateBranchViewModel(IServiceProvider services)

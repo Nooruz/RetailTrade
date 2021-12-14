@@ -94,7 +94,7 @@ namespace RetailTradeServer.ViewModels.Menus
                 await report.CreateDocumentAsync();
 
                 await _dialogService.ShowDialog(new DocumentViewerViewModel() { PrintingDocument = report },
-                    new DocumentViewerView(), WindowState.Maximized, ResizeMode.CanResize, SizeToContent.Manual);
+                    new DocumentViewerView());
             }
             else
             {

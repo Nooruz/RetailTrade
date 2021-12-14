@@ -14,11 +14,12 @@ namespace RetailTradeServer.ViewModels.Factories
         private readonly CreateMenuViewModel<WriteDownProductViewModel> _createWriteDownProductViewModel;
         private readonly CreateMenuViewModel<OrderProductViewModel> _createOrderProductViewModel;
         private readonly CreateMenuViewModel<ProductBarcodeViewModel> _createProductBarcodeViewModel;
-        private readonly CreateMenuViewModel<AnalyticalPanelViewModel> _createAnalyticalPanelViewModel;
+        private readonly CreateMenuViewModel<SaleDashboardView> _createAnalyticalPanelViewModel;
         private readonly CreateMenuViewModel<BranchViewModel> _createBranchViewModel;
         private readonly CreateMenuViewModel<UserViewModel> _createUserViewModel;
         private readonly CreateMenuViewModel<RefundToSupplierViewModel> _createRefundToSupplierViewModel;
         private readonly CreateMenuViewModel<SupplierViewModel> _createSupplierViewModel;
+        private readonly CreateMenuViewModel<SaleDashboardView> _createMenuViewModel;
 
         #endregion
 
@@ -29,11 +30,12 @@ namespace RetailTradeServer.ViewModels.Factories
             CreateMenuViewModel<WriteDownProductViewModel> createWriteDownProductViewModel,
             CreateMenuViewModel<OrderProductViewModel> createOrderProductViewModel,
             CreateMenuViewModel<ProductBarcodeViewModel> createProductBarcodeViewModel,
-            CreateMenuViewModel<AnalyticalPanelViewModel> createAnalyticalPanelViewModel,
+            CreateMenuViewModel<SaleDashboardView> createAnalyticalPanelViewModel,
             CreateMenuViewModel<BranchViewModel> createBranchViewModel,
             CreateMenuViewModel<UserViewModel> createUserViewModel,
             CreateMenuViewModel<RefundToSupplierViewModel> createRefundToSupplierViewModel,
-            CreateMenuViewModel<SupplierViewModel> createSupplierViewModel)
+            CreateMenuViewModel<SupplierViewModel> createSupplierViewModel,
+            CreateMenuViewModel<SaleDashboardView> createMenuViewModel)
         {
             _createProductCategoryViewModel = createProductCategoryViewModel;
             _createArrivalProductViewModel = createArrivalProductViewModel;
@@ -45,6 +47,7 @@ namespace RetailTradeServer.ViewModels.Factories
             _createUserViewModel = createUserViewModel;
             _createRefundToSupplierViewModel = createRefundToSupplierViewModel;
             _createSupplierViewModel = createSupplierViewModel;
+            _createMenuViewModel = createMenuViewModel;
         }
 
         #endregion
@@ -58,7 +61,7 @@ namespace RetailTradeServer.ViewModels.Factories
                 MenuViewType.WriteDownProduct => _createWriteDownProductViewModel(),
                 MenuViewType.OrderProduct => _createOrderProductViewModel(),
                 MenuViewType.ProductBarcode => _createProductBarcodeViewModel(),
-                MenuViewType.AnalyticalPanel => _createAnalyticalPanelViewModel(),
+                MenuViewType.SaleDashboard => _createMenuViewModel(),
                 MenuViewType.Branch => _createBranchViewModel(),
                 MenuViewType.User => _createUserViewModel(),
                 MenuViewType.RefundToSupplier => _createRefundToSupplierViewModel(),

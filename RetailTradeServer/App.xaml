@@ -57,8 +57,8 @@
                 <menuViews:ProductBarcodeView/>
             </DataTemplate>
 
-            <DataTemplate DataType="{x:Type menuViewModels:AnalyticalPanelViewModel}">
-                <menuViews:AnalyticalPanelView/>
+            <DataTemplate DataType="{x:Type menuViewModels:SaleDashboardView}">
+                <menuViews:SaleDashboardView/>
             </DataTemplate>
 
             <DataTemplate DataType="{x:Type menuViewModels:BranchViewModel}">

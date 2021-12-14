@@ -33,9 +33,14 @@ namespace RetailTradeServer.ViewModels
         #endregion
 
         #region Commands
-
+        
         public ICommand UpdateCurrentMenuViewModelCommand { get; }
-        public ICommand AnalyticalPanelCommand { get; }
+
+        #region Информационная панель
+
+        public ICommand SaleDashboardCommand { get; }
+
+        #endregion
 
         #region Товары
 
@@ -93,7 +98,7 @@ namespace RetailTradeServer.ViewModels
             UpdateCurrentMenuViewModelCommand = new UpdateCurrentMenuViewModelCommand(_menuNavigator, menuViewModelFactory);
 
             ProductCategoryCommand = new RelayCommand(ProductCategory);
-            AnalyticalPanelCommand = new RelayCommand(AnalyticalPanel);
+            SaleDashboardCommand = new RelayCommand(SaleDashboard);
             ArrivalProductCommand = new RelayCommand(ArrivalProduct);
             WriteDownProductCommand = new RelayCommand(WriteDownProduct);
             OrderProductCommand = new RelayCommand(OrderProduct);
@@ -107,15 +112,17 @@ namespace RetailTradeServer.ViewModels
             RevenueForPeriodCommand = new RelayCommand(RevenueForPeriod);
 
             _menuNavigator.StateChanged += MenuNavigator_StateChanged;
+
+            UpdateCurrentMenuViewModelCommand.Execute(MenuViewType.SaleDashboard);
         }
 
         #endregion
 
         #region Private Voids
 
-        private void AnalyticalPanel()
+        private void SaleDashboard()
         {
-            UpdateCurrentMenuViewModelCommand.Execute(MenuViewType.AnalyticalPanel);
+            UpdateCurrentMenuViewModelCommand.Execute(MenuViewType.SaleDashboard);
         }
 
         private void Printer()

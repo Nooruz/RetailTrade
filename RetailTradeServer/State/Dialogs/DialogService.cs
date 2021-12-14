@@ -73,7 +73,7 @@ namespace SalePageServer.State.Dialogs
             return tcs.Task; ;
         }
 
-        public Task ShowDialog<TUserControl, TViewModel>(TUserControl userControl, TViewModel viewModel) where TUserControl : BaseDialogUserControl 
+        public Task ShowDialog<TViewModel, TUserControl>(TViewModel viewModel, TUserControl userControl) where TUserControl : BaseDialogUserControl 
             where TViewModel : BaseDialogViewModel
         {
             var tcs = new TaskCompletionSource<bool>();

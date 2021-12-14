@@ -29,5 +29,6 @@
     <system:String x:Key="faPrint">&#xf02f;</system:String>
     <system:String x:Key="faTrashAlt">&#xf2ed;</system:String>
     <system:String x:Key="faEdit">&#xf044;</system:String>
+    <system:String x:Key="faChartLine">&#xf201;</system:String>
 
 </ResourceDictionary>

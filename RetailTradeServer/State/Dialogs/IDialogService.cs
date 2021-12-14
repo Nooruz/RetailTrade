@@ -13,7 +13,7 @@ namespace SalePageServer.State.Dialogs
 
     public interface IDialogService
     {
-        Task ShowDialog<TUserControl, TViewModel>(TUserControl userControl, TViewModel viewModel) where TUserControl : BaseDialogUserControl where TViewModel : BaseDialogViewModel;
+        Task ShowDialog<TViewModel, TUserControl>(TViewModel viewModel, TUserControl userControl) where TViewModel : BaseDialogViewModel where TUserControl : BaseDialogUserControl;
         Task Show<TUserControl>(TUserControl userControl) where TUserControl : BaseDialogUserControl;
         MessageBoxResult ShowMessage(string message);
         MessageBoxResult ShowMessage(string message, string title);

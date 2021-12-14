@@ -31,9 +31,9 @@ namespace RetailTradeServer.State.Navigators
         ProductBarcode,
 
         /// <summary>
-        /// Аналитическая панель
+        /// Панель мониторинга продаж и доходов
         /// </summary>
-        AnalyticalPanel,
+        SaleDashboard,
 
         /// <summary>
         /// Филиалы

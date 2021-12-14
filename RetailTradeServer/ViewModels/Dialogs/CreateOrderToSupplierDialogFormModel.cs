@@ -220,13 +220,10 @@ namespace RetailTradeServer.ViewModels.Dialogs
                     DataSource = OrderProducts
                 };
 
-                await report.CreateDocumentAsync();
+                await report.CreateDocumentAsync();                
 
                 await _dialogService.ShowDialog(new DocumentViewerViewModel() { PrintingDocument = report }, 
-                    new DocumentViewerView(), 
-                    WindowState.Maximized, 
-                    ResizeMode.NoResize, 
-                    SizeToContent.Manual);
+                    new DocumentViewerView());
 
             }
         }

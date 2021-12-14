@@ -537,23 +537,22 @@ namespace RetailTradeServer.ViewModels.Dialogs
 
         private void CreateSupplier()
         {
-            _dialogService.ShowDialog(new CreateSupplierProductDialogForm(),
-                new CreateSupplierProductDialogFormModal(_supplierService, _dialogService)
+            _dialogService.ShowDialog(new CreateSupplierProductDialogFormModal(_supplierService, _dialogService)
                 {
                     Title = "Поставщик (создания)"
-                });
+                }, new CreateSupplierProductDialogForm());
         }
 
         private void CreateProductCategory()
         {
-            _dialogService.ShowDialog(new CreateProductCategoryDialogForm(),
-                new CreateProductCategoryDialogFormModel(_productCategoryService, _dialogService) { Title = "Категория товара (создания)" });
+            _dialogService.ShowDialog(new CreateProductCategoryDialogFormModel(_productCategoryService, _dialogService) { Title = "Категория товара (создания)" },
+                new CreateProductCategoryDialogForm());
         }
 
         private void CreateProductSubcategory()
         {
-            _dialogService.ShowDialog(new CreateProductSubcategoryDialogForm(), 
-                new CreateProductSubcategoryDialogFormModel(_productSubcategoryService, _productCategoryService, _dialogService) { Title = "Группа товара (создания)" });
+            _dialogService.ShowDialog(new CreateProductSubcategoryDialogFormModel(_productSubcategoryService, _productCategoryService, _dialogService) { Title = "Группа товара (создания)" },
+                new CreateProductSubcategoryDialogForm());
         }
 
         private void SupplierService_PropertiesChanged()

@@ -167,7 +167,7 @@ namespace RetailTradeServer.ViewModels.Menus
 
         public void CreateProduct()
         {
-            _dialogService.ShowDialog(new CreateProductDialogForm(), new CreateProductDialogFormModel(_productCategoryService,
+            _dialogService.ShowDialog(new CreateProductDialogFormModel(_productCategoryService,
                 _productSubcategoryService,
                 _unitService,
                 _productService,
@@ -178,22 +178,7 @@ namespace RetailTradeServer.ViewModels.Menus
                     Title = "Товаровы (Создать)",
                     SelectedProductCategoryId = SelectedProductGroup is ProductCategory productCategory ? productCategory.Id : 0,
                     SelectedProductSubcategoryId = SelectedProductGroup is ProductSubcategory productSubcategory ? productSubcategory.Id : 0
-                });
-
-            //_dialogService.ShowDialog(new CreateProductDialogFormModel(_productCategoryService,
-            //    _productSubcategoryService,
-            //    _unitService,
-            //    _productService,
-            //    _supplierService,
-            //    _dialogService,
-            //    GlobalMessageViewModel,
-            //    _messageStore)
-            //{
-            //    Title = "Товаровы (Создать)",
-            //    SelectedProductCategoryId = SelectedProductGroup is ProductCategory productCategory ? productCategory.Id : 0,
-            //    SelectedProductSubcategoryId = SelectedProductGroup is ProductSubcategory productSubcategory ? productSubcategory.Id : 0
-            //},
-            //new CreateProductDialogForm());
+                }, new CreateProductDialogForm());
         }
 
         #endregion

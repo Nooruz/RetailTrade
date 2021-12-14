@@ -61,9 +61,11 @@
 
   <ItemGroup>
     <PackageReference Include="DevExpress.Reporting.Core.ru" Version="21.2.3" />
+    <PackageReference Include="devexpress.wpf.charts" Version="21.2.3" />
     <PackageReference Include="DevExpress.Wpf.Grid.Core.ru" Version="21.2.3" />
     <PackageReference Include="DevExpress.Wpf.LayoutControl.ru" Version="21.2.3" />
     <PackageReference Include="DevExpress.Wpf.NavBar.ru" Version="21.2.3" />
+    <PackageReference Include="devexpress.wpf.pivotgrid" Version="21.2.3" />
     <PackageReference Include="DevExpress.Wpf.Printing.ru" Version="21.2.3" />
     <PackageReference Include="Microsoft.AspNet.Identity.Core" Version="2.2.3" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="6.0.0">

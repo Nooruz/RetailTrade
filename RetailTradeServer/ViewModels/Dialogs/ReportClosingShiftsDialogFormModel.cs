@@ -80,10 +80,7 @@ namespace RetailTradeServer.ViewModels.Dialogs
                 Title = "Закрытие смены",
                 PrintingDocument = closingShiftsReport
             },
-                new DocumentViewerView(),
-                WindowState.Maximized,
-                ResizeMode.CanResize,
-                SizeToContent.Manual);
+                new DocumentViewerView());
         }
 
         #endregion
