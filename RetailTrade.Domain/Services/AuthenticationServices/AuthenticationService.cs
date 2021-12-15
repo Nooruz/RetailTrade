@@ -34,37 +34,38 @@ namespace RetailTrade.Domain.Services.AuthenticationServices
 
         public async Task<User> Login(string username, string password)
         {
-            var storedUser = await _userService.GetByUsername(username);
+            User storedUser = await _userService.GetByUsername(username);
 
             if (storedUser == null)
             {
                 throw new InvalidUsernameOrPasswordException("Неверное имя или пароль.", username, password);
             }
 
-            var passwordResult = _passwordHasher.VerifyHashedPassword(storedUser.PasswordHash, password);
+            PasswordVerificationResult passwordResult = _passwordHasher.VerifyHashedPassword(storedUser.PasswordHash, password);
 
-            if (passwordResult != PasswordVerificationResult.Success)
-            {
-                throw new InvalidUsernameOrPasswordException("Неверное имя или пароль.", username, password);
-            }
-
-            return storedUser;
+            return passwordResult != PasswordVerificationResult.Success
+                ? throw new InvalidUsernameOrPasswordException("Неверное имя или пароль.", username, password)
+                : storedUser;
         }
 
         public async Task<RegistrationResult> Register(User user, string password, string confirmPassword)
         {
             if (password != confirmPassword)
+            {
                 return RegistrationResult.PasswordsDoNotMatch;
+            }
 
             try
             {
-                var editingUser = await _userService.GetByUsername(user.Username);
+                User editingUser = await _userService.GetByUsername(user.Username);
                 if (editingUser != null)
+                {
                     return RegistrationResult.UsernameAlreadyExists;
+                }
 
                 user.PasswordHash = _passwordHasher.HashPassword(password);
 
-                await _userService.CreateAsync(user);
+                _ = await _userService.CreateAsync(user);
                 return RegistrationResult.Success;
             }
             catch
@@ -77,20 +78,25 @@ namespace RetailTrade.Domain.Services.AuthenticationServices
         {
             try
             {
-                var editUser = await _userService.GetAsync(user.Id);
+                if (string.IsNullOrEmpty(password))
+                {
+                    _ = await _userService.UpdateAsync(user.Id, user);
+                }
+                else
+                {
+                    if (_passwordRegex.IsMatch(password))
+                    {
+                        return RegistrationResult.PasswordDoesNotRequirements;
+                    }
 
-                if (_passwordRegex.IsMatch(password))
-                    return RegistrationResult.PasswordDoesNotRequirements;
+                    if (password != confirmPassword)
+                    {
+                        return RegistrationResult.PasswordsDoNotMatch;
+                    }
+                    user.PasswordHash = _passwordHasher.HashPassword(password);
 
-                if (password != confirmPassword)
-                    return RegistrationResult.PasswordsDoNotMatch;
-
-                editUser.PasswordHash = _passwordHasher.HashPassword(password);
-
-                editUser.Username = user.Username;
-                editUser.RoleId = user.RoleId;
-                await _userService.UpdateAsync(editUser.Id, editUser);
-
+                    _ = await _userService.UpdateAsync(user.Id, user);
+                }
                 return RegistrationResult.Success;
             }
             catch

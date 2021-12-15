@@ -1,8 +1,7 @@
 ﻿<ResourceDictionary   xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
                       xmlns:dxlc="http://schemas.devexpress.com/winfx/2008/xaml/layoutcontrol"
                       xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-                      xmlns:menu="clr-namespace:RetailTradeServer.Views.Menus"
-                      xmlns:custom="clr-namespace:RetailTrade.LoadingPanelControl;assembly=RetailTrade.LoadingPanelControl">
+                      xmlns:menu="clr-namespace:RetailTradeServer.Views.Menus">
 
     <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter"/>
 
@@ -40,7 +39,7 @@
                                             Command="{Binding CreateCommand}"/>
 
                                     <Button Content="Редактировать"
-                                            Command="{Binding UpdateCommand}"/>
+                                            Command="{Binding EditCommand}"/>
 
                                     <Button Content="Удалить"
                                             Command="{Binding DeleteCommand}"/>

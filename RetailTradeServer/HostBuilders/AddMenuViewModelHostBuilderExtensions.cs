@@ -114,7 +114,8 @@ namespace RetailTradeServer.HostBuilders
             return new UserViewModel(services.GetRequiredService<IUserService>(),
                 services.GetRequiredService<IDialogService>(),
                 services.GetRequiredService<IAuthenticator>(),
-                services.GetRequiredService<IRoleService>());
+                services.GetRequiredService<IRoleService>(),
+                services.GetRequiredService<IMessageStore>());
         }
 
         private static RefundToSupplierViewModel CreateRefundToSupplierViewModel(IServiceProvider services)

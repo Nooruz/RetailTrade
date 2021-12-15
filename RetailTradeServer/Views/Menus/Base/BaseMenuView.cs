@@ -1,4 +1,5 @@
-﻿using System.Windows;
+﻿using DevExpress.Xpf.LayoutControl;
+using System.Windows;
 using System.Windows.Controls;
 
 namespace RetailTradeServer.Views.Menus
@@ -10,9 +11,11 @@ namespace RetailTradeServer.Views.Menus
         public static readonly DependencyProperty ShowDefaultButtonsProperty =
             DependencyProperty.Register(nameof(ShowDefaultButtons), typeof(bool), typeof(BaseMenuView), new PropertyMetadata(true));
 
-
         public static readonly DependencyProperty TitleProperty =
             DependencyProperty.Register(nameof(Title), typeof(string), typeof(BaseMenuView), new PropertyMetadata("Название"));
+
+        public static readonly DependencyProperty LayoutGroupProperty =
+            DependencyProperty.Register(nameof(Buttons), typeof(LayoutGroup), typeof(BaseMenuView), new PropertyMetadata(new LayoutGroup()));
 
         #endregion
 
@@ -20,14 +23,20 @@ namespace RetailTradeServer.Views.Menus
 
         public bool ShowDefaultButtons
         {
-            get { return (bool)GetValue(ShowDefaultButtonsProperty); }
-            set { SetValue(ShowDefaultButtonsProperty, value); }
+            get => (bool)GetValue(ShowDefaultButtonsProperty);
+            set => SetValue(ShowDefaultButtonsProperty, value);
         }
 
         public string Title
         {
-            get { return (string)GetValue(TitleProperty); }
-            set { SetValue(TitleProperty, value); }
+            get => (string)GetValue(TitleProperty);
+            set => SetValue(TitleProperty, value);
+        }
+
+        public LayoutGroup Buttons
+        {
+            get => (LayoutGroup)GetValue(LayoutGroupProperty);
+            set => SetValue(LayoutGroupProperty, value);
         }
 
         #endregion
