@@ -36,10 +36,13 @@
 
                 <dxc:ChartControl />
 
-                <dxlc:LayoutGroup>
+                <dxlc:LayoutGroup VerticalAlignment="Top">
 
-                    <Button Content="Вчерашний день"/>
-                    <Button Content="Сегодняшний день"/>
+                    <CheckBox Style="{StaticResource CheckBoxButton}"
+                              Content="Вчерашний день"/>
+
+                    <CheckBox Style="{StaticResource CheckBoxButton}"
+                              Content="Сегодняшний день"/>
 
                 </dxlc:LayoutGroup>
 
@@ -72,7 +75,7 @@
 
                 <dxc:ChartControl />
 
-                <dxlc:LayoutGroup>
+                <dxlc:LayoutGroup VerticalAlignment="Top">
                     
                     <Button Content="Прошлый месяц"/>
                     <Button Content="Текущий месяц"/>
