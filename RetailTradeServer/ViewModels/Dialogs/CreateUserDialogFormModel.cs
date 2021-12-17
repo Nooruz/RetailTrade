@@ -3,11 +3,11 @@ using RetailTrade.Domain.Services;
 using RetailTrade.Domain.Services.AuthenticationServices;
 using RetailTradeServer.Commands;
 using RetailTradeServer.State.Authenticators;
+using RetailTradeServer.State.Messages;
 using RetailTradeServer.ViewModels.Dialogs.Base;
 using SalePageServer.State.Dialogs;
 using System;
 using System.Collections.Generic;
-using System.Windows;
 using System.Windows.Input;
 
 namespace RetailTradeServer.ViewModels.Dialogs
@@ -19,18 +19,20 @@ namespace RetailTradeServer.ViewModels.Dialogs
         private readonly IAuthenticator _authenticator;
         private readonly IRoleService _roleService;
         private readonly IDialogService _dialogService;
+        private readonly IMessageStore _messageStore;
         private string _username;
         private string _fullName;
         private string _password;
         private string _confirmPassword;
         private int? _selectedRoleId;
+        private User _editableUser;
 
         #endregion
 
         #region Public Properties
 
         public IEnumerable<Role> Roles => _roleService.GetAll();
-
+        public GlobalMessageViewModel GlobalMessageViewModel { get; set; }
         public string Username
         {
             get => _username;
@@ -76,12 +78,29 @@ namespace RetailTradeServer.ViewModels.Dialogs
                 OnPropertyChanged(nameof(SelectedRoleId));
             }
         }
+        public bool IsEditMode { get; set; }
+        public User EditableUser
+        {
+            get => _editableUser;
+            set
+            {
+                _editableUser = value;
+                if (_editableUser != null)
+                {
+                    Username = _editableUser.Username;
+                    FullName = _editableUser.FullName;
+                    SelectedRoleId = _editableUser.RoleId;
+                }
+                OnPropertyChanged(nameof(EditableUser));
+            }
+        }
 
         #endregion
 
         #region Commands
 
         public ICommand CreateUserCommand { get; }
+        public ICommand SaveUserCommand { get; }
 
         #endregion
 
@@ -89,13 +108,17 @@ namespace RetailTradeServer.ViewModels.Dialogs
 
         public CreateUserDialogFormModel(IAuthenticator authenticator,
             IRoleService roleService,
-            IDialogService dialogService)
+            IDialogService dialogService,
+            IMessageStore messageStore)
         {
             _authenticator = authenticator;
             _roleService = roleService;
             _dialogService = dialogService;
+            _messageStore = messageStore;
+            GlobalMessageViewModel = new(_messageStore);
 
             CreateUserCommand = new RelayCommand(CreateUser);
+            SaveUserCommand = new RelayCommand(SaveUser);
         }
 
         #endregion
@@ -106,40 +129,97 @@ namespace RetailTradeServer.ViewModels.Dialogs
         {
             if (string.IsNullOrEmpty(Username))
             {
-                MessageBox.Show("Username");
+                _messageStore.SetCurrentMessage("Введит логин.", MessageType.Error);
                 return;
             }
             if (string.IsNullOrEmpty(FullName))
             {
-                MessageBox.Show("FullName");
+                _messageStore.SetCurrentMessage("Введит ФИО.", MessageType.Error);
                 return;
             }
             if (string.IsNullOrEmpty(Password))
             {
-                MessageBox.Show("Password");
+                _messageStore.SetCurrentMessage("Введит пароль.", MessageType.Error);
                 return;
             }
             if (string.IsNullOrEmpty(ConfirmPassword))
             {
-                MessageBox.Show("ConfirmPassword");
+                _messageStore.SetCurrentMessage("Введит подтверждение пароля.", MessageType.Error);
                 return;
             }
             if (SelectedRoleId == null)
             {
-                MessageBox.Show("SelectedRoleId");
+                _messageStore.SetCurrentMessage("Выберите роль.", MessageType.Error);
                 return;
             }
-            if (await _authenticator.Register(new User
-                {
-                    Username = Username,
-                    FullName = FullName,
-                    JoinedDate = DateTime.Now,
-                    RoleId = SelectedRoleId.Value
-                }, 
-                Password, 
-                ConfirmPassword) == RegistrationResult.Success)
+
+            switch (await _authenticator.Register(new User { Username = Username, FullName = FullName, JoinedDate = DateTime.Now, RoleId = SelectedRoleId.Value },
+                Password,
+                ConfirmPassword))
             {
-                _dialogService.Close();
+                case RegistrationResult.Success:
+                    _dialogService.Close();
+                    break;
+                case RegistrationResult.PasswordDoesNotRequirements:
+                    break;
+                case RegistrationResult.PasswordsDoNotMatch:
+                    _messageStore.SetCurrentMessage("Пароли не совподают.", MessageType.Error);
+                    break;
+                case RegistrationResult.UsernameAlreadyExists:
+                    _messageStore.SetCurrentMessage("Пользователь с таким логином существует.", MessageType.Error);
+                    break;
+                case RegistrationResult.OtherError:
+                    _messageStore.SetCurrentMessage("Ошибка при создании пользователя.", MessageType.Error);
+                    break;
+                default:
+                    break;
+            }
+        }
+
+        private async void SaveUser()
+        {
+            if (string.IsNullOrEmpty(Username))
+            {
+                _messageStore.SetCurrentMessage("Введит логин.", MessageType.Error);
+                return;
+            }
+            if (string.IsNullOrEmpty(FullName))
+            {
+                _messageStore.SetCurrentMessage("Введит ФИО.", MessageType.Error);
+                return;
+            }
+            if (SelectedRoleId == null)
+            {
+                _messageStore.SetCurrentMessage("Выберите роль.", MessageType.Error);
+                return;
+            }
+
+            EditableUser.Username = Username;
+            EditableUser.FullName = FullName;
+            EditableUser.RoleId = SelectedRoleId.Value;
+
+            RegistrationResult result = string.IsNullOrEmpty(Password)
+                ? await _authenticator.Update(EditableUser, string.Empty, string.Empty)
+                : await _authenticator.Update(EditableUser, Password, ConfirmPassword);
+
+            switch (result)
+            {
+                case RegistrationResult.Success:
+                    _dialogService.Close();
+                    break;
+                case RegistrationResult.PasswordDoesNotRequirements:
+                    break;
+                case RegistrationResult.PasswordsDoNotMatch:
+                    _messageStore.SetCurrentMessage("Пароли не совподают.", MessageType.Error);
+                    break;
+                case RegistrationResult.UsernameAlreadyExists:
+                    _messageStore.SetCurrentMessage("Пользователь с таким логином существует.", MessageType.Error);
+                    break;
+                case RegistrationResult.OtherError:
+                    _messageStore.SetCurrentMessage("Ошибка при создании пользователя.", MessageType.Error);
+                    break;
+                default:
+                    break;
             }
         }
 
