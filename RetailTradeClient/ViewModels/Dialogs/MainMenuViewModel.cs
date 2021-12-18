@@ -4,18 +4,11 @@ using RetailTradeClient.State.Navigators;
 using RetailTradeClient.State.Shifts;
 using RetailTradeClient.State.Users;
 using RetailTradeClient.Views.Dialogs;
-using System.Runtime.InteropServices;
 using System.Windows;
 using System.Windows.Input;
 
 namespace RetailTradeClient.ViewModels.Dialogs
 {
-    public static class OkaPF
-    {
-        [DllImport("drvasOkaMF_KZ", EntryPoint = "Demo")]
-        public static extern void Demo();
-    }
-
     public class MainMenuViewModel : BaseDialogViewModel
     {
         #region Private Members

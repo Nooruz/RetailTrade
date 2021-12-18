@@ -152,5 +152,105 @@ namespace RetailTrade.EntityFramework.Services
             }
             return null;
         }
+
+        public async Task<decimal> GetSaleAmoundToday()
+        {
+            try
+            {
+                await using var context = _contextFactory.CreateDbContext();
+                return await context.Receipts
+                    .Where(r => r.DateOfPurchase.Date == DateTime.Now.Date)
+                    .SumAsync(r => r.Sum);
+            }
+            catch (Exception e)
+            {
+                //ignore
+            }
+            return 0;
+        }
+
+        public async Task<decimal> GetSaleAmoundYesterday()
+        {
+            try
+            {
+                await using var context = _contextFactory.CreateDbContext();
+                return await context.Receipts
+                    .Where(r => r.DateOfPurchase.Date == DateTime.Now.Date.AddDays(-1))
+                    .SumAsync(r => r.Sum);
+            }
+            catch (Exception e)
+            {
+                //ignore
+            }
+            return 0;
+        }
+
+        public async Task<decimal> GetSaleAmoundLastWeek()
+        {
+            try
+            {
+                DateTime mondayOfLastWeek = DateTime.Now.Date.AddDays(-(int)DateTime.Now.DayOfWeek - 6);
+                await using var context = _contextFactory.CreateDbContext();
+                return await context.Receipts
+                    .Where(r => r.DateOfPurchase.Date >= mondayOfLastWeek && r.DateOfPurchase <= mondayOfLastWeek.AddDays(6))
+                    .SumAsync(r => r.Sum);
+            }
+            catch (Exception e)
+            {
+                //ignore
+            }
+            return 0;
+        }
+
+        public async Task<decimal> GetSaleAmoundCurrentMonth()
+        {
+            try
+            {
+                DateTime firstDayOfCurrentMonth = new(DateTime.Now.Year, DateTime.Now.Month, 1);
+                await using var context = _contextFactory.CreateDbContext();
+                return await context.Receipts
+                    .Where(r => r.DateOfPurchase.Date >= firstDayOfCurrentMonth)
+                    .SumAsync(r => r.Sum);
+            }
+            catch (Exception e)
+            {
+                //ignore
+            }
+            return 0;
+        }
+
+        public async Task<decimal> GetSaleAmoundLastMonth()
+        {
+            try
+            {
+                DateTime firstDayOfLastMonth = new(DateTime.Now.Year, DateTime.Now.AddMonths(-1).Month, 1);
+                await using var context = _contextFactory.CreateDbContext();
+                return await context.Receipts
+                    .Where(r => r.DateOfPurchase.Date >= firstDayOfLastMonth && r.DateOfPurchase <= firstDayOfLastMonth.AddMonths(1).AddDays(-1))
+                    .SumAsync(r => r.Sum);
+            }
+            catch (Exception e)
+            {
+                //ignore
+            }
+            return 0;
+        }
+
+        public async Task<decimal> GetSaleAmoundBeginningYear()
+        {
+            try
+            {
+                DateTime beginningYear = new(DateTime.Now.Year, 1, 1);
+                await using var context = _contextFactory.CreateDbContext();
+                return await context.Receipts
+                    .Where(r => r.DateOfPurchase.Date >= beginningYear)
+                    .SumAsync(r => r.Sum);
+            }
+            catch (Exception e)
+            {
+                //ignore
+            }
+            return 0;
+        }
     }
 }

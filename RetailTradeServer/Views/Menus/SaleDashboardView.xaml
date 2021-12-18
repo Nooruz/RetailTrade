@@ -3,11 +3,26 @@
     xmlns:dxc="http://schemas.devexpress.com/winfx/2008/xaml/charts"
     xmlns:dxe="http://schemas.devexpress.com/winfx/2008/xaml/editors"
     xmlns:dxlc="http://schemas.devexpress.com/winfx/2008/xaml/layoutcontrol"
+    xmlns:dxmvvm="http://schemas.devexpress.com/winfx/2008/xaml/mvvm"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    x:Class="RetailTradeServer.Views.Menus.SaleDashboardView"
     xmlns:local="clr-namespace:RetailTradeServer.Views.Menus"
+    x:Class="RetailTradeServer.Views.Menus.SaleDashboardView"
     Title="Панель мониторинга продаж и доходов"
     ShowDefaultButtons="False">
+
+    <dxmvvm:Interaction.Behaviors>
+        <dxmvvm:EventToCommand EventName="Loaded"
+                               Command="{Binding UserControlCommand}"/>
+    </dxmvvm:Interaction.Behaviors>
+
+    <UserControl.Resources>
+        <Style TargetType="{x:Type dxe:TextEdit}">
+            <Setter Property="MaskUseAsDisplayFormat" Value="True"/>
+            <Setter Property="MaskType" Value="Numeric"/>
+            <Setter Property="Mask" Value="n2"/>
+            <Setter Property="FontSize" Value="24"/>
+        </Style>
+    </UserControl.Resources>
 
     <dxlc:LayoutControl>
 
@@ -18,31 +33,87 @@
                 <dxlc:LayoutItem Label="Сегодняшний день"
                                  LabelPosition="Top">
                     <dxe:TextEdit IsReadOnly="True"
-                                  Width="120"/>
+                                  Text="{Binding SaleAmountToday}"/>
                 </dxlc:LayoutItem>
                 <dxlc:LayoutItem Label="Вчерашний день"
                                  LabelPosition="Top">
                     <dxe:TextEdit IsReadOnly="True"
-                                  Width="120"/>
+                                  Text="{Binding SaleAmountYesterday}"/>
                 </dxlc:LayoutItem>
                 <dxlc:LayoutItem Label="Предыдущая неделя"
                                  LabelPosition="Top">
                     <dxe:TextEdit IsReadOnly="True"
-                                  Width="120"/>
+                                  Text="{Binding SaleAmountLastWeek}"/>
                 </dxlc:LayoutItem>
             </dxlc:LayoutGroup>
 
             <dxlc:LayoutGroup Orientation="Vertical">
 
-                <dxc:ChartControl />
+                <dxc:ChartControl>
+                    <dxc:ChartControl.Diagram>
+                        <dxc:XYDiagram2D>
+                            <dxc:XYDiagram2D.Series>
+                                <dxc:LineSeries2D MarkerVisible="True"
+                                                  MarkerSize="8">
+                                    <dxc:LineSeries2D.MarkerModel>
+                                        <dxc:CircleMarker2DModel/>
+                                    </dxc:LineSeries2D.MarkerModel>
+                                    <dxc:LineSeries2D.Points>
+                                        <dxc:SeriesPoint Argument="01.11.2021" Value="1000" />
+                                        <dxc:SeriesPoint Argument="02.11.2021" Value="3547" />
+                                        <dxc:SeriesPoint Argument="03.11.2021" Value="7658" />
+                                        <dxc:SeriesPoint Argument="04.11.2021" Value="4574" />
+                                        <dxc:SeriesPoint Argument="05.11.2021" Value="6548" />
+                                        <dxc:SeriesPoint Argument="06.11.2021" Value="3547" />
+                                        <dxc:SeriesPoint Argument="07.11.2021" Value="9857" />
+                                        <dxc:SeriesPoint Argument="08.11.2021" Value="15404" />
+                                        <dxc:SeriesPoint Argument="09.11.2021" Value="32047" />
+                                        <dxc:SeriesPoint Argument="10.11.2021" Value="85471" />
+                                        <dxc:SeriesPoint Argument="11.11.2021" Value="65474" />
+                                        <dxc:SeriesPoint Argument="12.11.2021" Value="4000" />
+                                        <dxc:SeriesPoint Argument="13.11.2021" Value="98547" />
+                                        <dxc:SeriesPoint Argument="14.11.2021" Value="65474" />
+                                        <dxc:SeriesPoint Argument="15.11.2021" Value="65474" />
+                                        <dxc:SeriesPoint Argument="16.11.2021" Value="0" />
+                                        <dxc:SeriesPoint Argument="17.11.2021" Value="57454" />
+                                        <dxc:SeriesPoint Argument="18.11.2021" Value="45488" />
+                                        <dxc:SeriesPoint Argument="19.11.2021" Value="85475" />
+                                        <dxc:SeriesPoint Argument="20.11.2021" Value="32542" />
+                                        <dxc:SeriesPoint Argument="21.11.2021" Value="40000" />
+                                        <dxc:SeriesPoint Argument="22.11.2021" Value="98657" />
+                                        <dxc:SeriesPoint Argument="23.11.2021" Value="6547" />
+                                        <dxc:SeriesPoint Argument="24.11.2021" Value="9985" />
+                                        <dxc:SeriesPoint Argument="25.11.2021" Value="5648" />
+                                        <dxc:SeriesPoint Argument="26.11.2021" Value="87546" />
+                                        <dxc:SeriesPoint Argument="27.11.2021" Value="32154" />
+                                        <dxc:SeriesPoint Argument="28.11.2021" Value="6547" />
+                                        <dxc:SeriesPoint Argument="29.11.2021" Value="65875" />
+                                        <dxc:SeriesPoint Argument="30.11.2021" Value="85974" />
+                                    </dxc:LineSeries2D.Points>
+                                </dxc:LineSeries2D>
+                            </dxc:XYDiagram2D.Series>
+                            <dxc:XYDiagram2D.AxisX>
+                                <dxc:AxisX2D>
+                                    <dxc:AxisX2D.WholeRange>
+                                        <dxc:Range SideMarginsValue="0.5" 
+                                                   AutoSideMargins="False"/>
+                                    </dxc:AxisX2D.WholeRange>
+                                    <dxc:AxisX2D.DateTimeScaleOptions>
+                                        <dxc:ManualDateTimeScaleOptions MeasureUnit="Day"/>
+                                    </dxc:AxisX2D.DateTimeScaleOptions>
+                                </dxc:AxisX2D>
+                            </dxc:XYDiagram2D.AxisX>
+                        </dxc:XYDiagram2D>
+                    </dxc:ChartControl.Diagram>
+                </dxc:ChartControl>
 
                 <dxlc:LayoutGroup VerticalAlignment="Top">
 
-                    <CheckBox Style="{StaticResource CheckBoxButton}"
-                              Content="Вчерашний день"/>
+                    <RadioButton Style="{StaticResource Button}"
+                                 Content="Вчерашний день"/>
 
-                    <CheckBox Style="{StaticResource CheckBoxButton}"
-                              Content="Сегодняшний день"/>
+                    <RadioButton Style="{StaticResource Button}"
+                                 Content="Сегодняшний день"/>
 
                 </dxlc:LayoutGroup>
 
@@ -57,28 +128,40 @@
                 <dxlc:LayoutItem Label="Текущий месяц"
                                  LabelPosition="Top">
                     <dxe:TextEdit IsReadOnly="True"
-                                  Width="120"/>
+                                  Text="{Binding SaleAmountCurrentMonth}"/>
                 </dxlc:LayoutItem>
                 <dxlc:LayoutItem Label="Прошлый месяц"
                                  LabelPosition="Top">
                     <dxe:TextEdit IsReadOnly="True"
-                                  Width="120"/>
+                                  Text="{Binding SaleAmountLastMonth}"/>
                 </dxlc:LayoutItem>
                 <dxlc:LayoutItem Label="Сначала года"
                                  LabelPosition="Top">
                     <dxe:TextEdit IsReadOnly="True"
-                                  Width="120"/>
+                                  Text="{Binding SaleAmountBeginningYear}"/>
                 </dxlc:LayoutItem>
             </dxlc:LayoutGroup>
-            
+
             <dxlc:LayoutGroup Orientation="Vertical">
 
-                <dxc:ChartControl />
+                <dxc:ChartControl >
+                    <dxc:XYDiagram2D>
+                        <dxc:SplineAreaSeries2D DisplayName="Series 1">
+                            <dxc:SeriesPoint Argument="1" Value="6.5"/>
+                            <dxc:SeriesPoint Argument="2" Value="5.5"/>
+                            <dxc:SeriesPoint Argument="3" Value="12.5"/>
+                            <dxc:SeriesPoint Argument="4" Value="11.5"/>
+                            <dxc:SeriesPoint Argument="5" Value="18.5"/>
+                        </dxc:SplineAreaSeries2D>
+                    </dxc:XYDiagram2D>
+                </dxc:ChartControl>
 
                 <dxlc:LayoutGroup VerticalAlignment="Top">
-                    
-                    <Button Content="Прошлый месяц"/>
-                    <Button Content="Текущий месяц"/>
+
+                    <RadioButton Style="{StaticResource Button}"
+                                 Content="Прошлый месяц"/>
+                    <RadioButton Style="{StaticResource Button}"
+                                 Content="Текущий месяц"/>
 
                 </dxlc:LayoutGroup>
 

@@ -42,14 +42,14 @@ namespace RetailTradeClient
             _host.Start();
 
             try
-            {
+            {                
                 Window window = _host.Services.GetRequiredService<MainWindow>();
                 window.DataContext = _host.Services.GetRequiredService<MainViewModel>();
                 window.Show();
             }
             catch (Exception exception)
             {
-                MessageBox.Show(exception.Message, "", MessageBoxButton.OK, MessageBoxImage.Error);
+                MessageBox.Show(exception.Message, "Ошибка.", MessageBoxButton.OK, MessageBoxImage.Error);
             }
         }
 

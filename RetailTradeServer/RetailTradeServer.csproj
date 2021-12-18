@@ -16,6 +16,7 @@
 	<Product>SP Магазин</Product>
 	<PackageIcon>newlogo.png</PackageIcon>
 	<RootNamespace>SalePageServer</RootNamespace>
+	<BaseOutputPath></BaseOutputPath>
   </PropertyGroup>
 
   <ItemGroup>

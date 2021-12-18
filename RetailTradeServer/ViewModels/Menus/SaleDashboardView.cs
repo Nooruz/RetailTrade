@@ -1,8 +1,8 @@
-﻿using RetailTrade.Domain.Services;
+﻿using RetailTrade.Domain.Models;
+using RetailTrade.Domain.Services;
 using RetailTradeServer.Commands;
 using RetailTradeServer.ViewModels.Base;
-using System;
-using System.Windows;
+using System.Collections.ObjectModel;
 using System.Windows.Input;
 
 namespace RetailTradeServer.ViewModels.Menus
@@ -12,30 +12,79 @@ namespace RetailTradeServer.ViewModels.Menus
         #region Private Members
 
         private readonly IReceiptService _receiptService;
-        private DateTime _selectedDate = DateTime.Now.Date;
+        private decimal _saleAmountToday;
+        private decimal _saleAmountYesterday;
+        private decimal _saleAmountLastWeek;
+        private decimal _saleAmountCurrentMonth;
+        private decimal _saleAmountLastMonth;
+        private decimal _saleAmountBeginningYear;
+        private ObservableCollection<Receipt> _dailySalesChart;
 
         #endregion
 
         #region Public Properties
 
-        public DateTime SelectedDate
+        public decimal SaleAmountToday
         {
-            get => _selectedDate;
+            get => _saleAmountToday;
             set
             {
-                _selectedDate = value;
-                OnPropertyChanged(nameof(SelectedDate));
-                GetAllReceipts(SelectedDate);
+                _saleAmountToday = value;
+                OnPropertyChanged(nameof(SaleAmountToday));
             }
         }
-        //public RetailTradeDashboard RetailTradeDashboard { get; set; }
-        //public DashboardControl RetailTradeDashboardControl { get; set; }
+        public decimal SaleAmountYesterday
+        {
+            get => _saleAmountYesterday;
+            set
+            {
+                _saleAmountYesterday = value;
+                OnPropertyChanged(nameof(SaleAmountYesterday));
+            }
+        }
+        public decimal SaleAmountLastWeek
+        {
+            get => _saleAmountLastWeek;
+            set
+            {
+                _saleAmountLastWeek = value;
+                OnPropertyChanged(nameof(SaleAmountLastWeek));
+            }
+        }
+        public decimal SaleAmountCurrentMonth
+        {
+            get => _saleAmountCurrentMonth;
+            set
+            {
+                _saleAmountCurrentMonth = value;
+                OnPropertyChanged(nameof(SaleAmountCurrentMonth));
+            }
+        }
+        public decimal SaleAmountLastMonth
+        {
+            get => _saleAmountLastMonth;
+            set
+            {
+                _saleAmountLastMonth = value;
+                OnPropertyChanged(nameof(SaleAmountLastMonth));
+            }
+        }
+        public decimal SaleAmountBeginningYear
+        {
+            get => _saleAmountBeginningYear;
+            set
+            {
+                _saleAmountBeginningYear = value;
+                OnPropertyChanged(nameof(SaleAmountBeginningYear));
+            }
+        }
+        public ObservableCollection<Receipt> DailySalesChart => new(_receiptService.GetAll());
 
         #endregion
 
         #region Commands
 
-        public ICommand LoadedDashboardControlCommand { get; }
+        public ICommand UserControlCommand { get; }
 
         #endregion
 
@@ -44,30 +93,22 @@ namespace RetailTradeServer.ViewModels.Menus
         public SaleDashboardView(IReceiptService receiptService)
         {
             _receiptService = receiptService;
-            //RetailTradeDashboard = new RetailTradeDashboard();
-            LoadedDashboardControlCommand = new ParameterCommand(parameter => LoadedDashboardControl(parameter));
-            GetAllReceipts(DateTime.Now.Date);
+            UserControlCommand = new RelayCommand(UserControl);
         }
 
         #endregion
 
         #region Private Vodis
 
-        private async void GetAllReceipts(DateTime dateTime)
+        private async void UserControl()
         {
-            //RetailTradeDashboard.ReceiptDataSource.DataSource = await _receiptService.GetReceiptsByDateAsync(dateTime);
-            //RetailTradeDashboardControl?.ReloadData();
-        }
-
-        private void LoadedDashboardControl(object parameter)
-        {
-            if (parameter is RoutedEventArgs e)
-            {
-                //if (e.Source is DashboardControl sender)
-                //{
-                //    RetailTradeDashboardControl = sender;                    
-                //}
-            }
+            SaleAmountToday = await _receiptService.GetSaleAmoundToday();
+            SaleAmountYesterday = await _receiptService.GetSaleAmoundYesterday();
+            SaleAmountLastWeek = await _receiptService.GetSaleAmoundLastWeek();
+            SaleAmountCurrentMonth = await _receiptService.GetSaleAmoundCurrentMonth();
+            SaleAmountLastMonth = await _receiptService.GetSaleAmoundLastMonth();
+            SaleAmountBeginningYear = await _receiptService.GetSaleAmoundBeginningYear();
+            //DailyData = new(await _receiptService.GetAllAsync());
         }
 
         #endregion

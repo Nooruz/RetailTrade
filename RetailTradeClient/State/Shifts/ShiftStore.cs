@@ -79,31 +79,49 @@ namespace RetailTradeClient.State.Shifts
 
         public async Task<CheckingResult> OpeningShift(int userId)
         {
-            if (ShtrihM.CheckConnection() == 0)
+            var result = await _shiftService.GetOpenShiftByUserIdAsync(userId);
+            if (result == null)
             {
-                ShtrihM.OpenSession();
-                var result = await _shiftService.GetOpenShiftByUserIdAsync(userId);
-                if (result == null)
-                {
-                    var openShift = await _shiftService.OpeningShiftAsync(userId);
-                    CurrentShift = openShift;
-                    IsShiftOpen = true;
-                    CurrentShiftChanged?.Invoke();
-                    return CheckingResult.Open;
-                }
-                if (DateTime.Now.Subtract(result.OpeningDate).Days > 0)
-                {
-                    return CheckingResult.Exceeded;
-                }
-                CurrentShift = result;
+                var openShift = await _shiftService.OpeningShiftAsync(userId);
+                CurrentShift = openShift;
                 IsShiftOpen = true;
-                CurrentShiftChanged?.Invoke();                
-                return CheckingResult.IsAlreadyOpen;                
+                CurrentShiftChanged?.Invoke();
+                return CheckingResult.Open;
             }
-            else
+            if (DateTime.Now.Subtract(result.OpeningDate).Days > 0)
             {
-                return CheckingResult.ErrorOpeningShiftKKM;
+                return CheckingResult.Exceeded;
             }
+            CurrentShift = result;
+            IsShiftOpen = true;
+            CurrentShiftChanged?.Invoke();
+            return CheckingResult.IsAlreadyOpen;
+
+            //if (ShtrihM.CheckConnection() == 0)
+            //{
+            //    ShtrihM.OpenSession();
+            //    var result = await _shiftService.GetOpenShiftByUserIdAsync(userId);
+            //    if (result == null)
+            //    {
+            //        var openShift = await _shiftService.OpeningShiftAsync(userId);
+            //        CurrentShift = openShift;
+            //        IsShiftOpen = true;
+            //        CurrentShiftChanged?.Invoke();
+            //        return CheckingResult.Open;
+            //    }
+            //    if (DateTime.Now.Subtract(result.OpeningDate).Days > 0)
+            //    {
+            //        return CheckingResult.Exceeded;
+            //    }
+            //    CurrentShift = result;
+            //    IsShiftOpen = true;
+            //    CurrentShiftChanged?.Invoke();
+            //    return CheckingResult.IsAlreadyOpen;
+            //}
+            //else
+            //{
+            //    return CheckingResult.ErrorOpeningShiftKKM;
+            //}
         }
     }
 }
