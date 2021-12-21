@@ -7,6 +7,7 @@ namespace RetailTrade.Domain.Models
         #region Private Members
 
         private double _quantity;
+        private decimal _sum;
 
         #endregion
 
@@ -52,7 +53,15 @@ namespace RetailTrade.Domain.Models
         /// <summary>
         /// Сумма покупки
         /// </summary>
-        public decimal Sum { get; set; }
+        public decimal Sum
+        {
+            get => _sum;
+            set
+            {
+                _sum = value;
+                OnPropertyChanged(nameof(Sum));
+            }
+        }
 
         /// <summary>
         /// Количество на складе

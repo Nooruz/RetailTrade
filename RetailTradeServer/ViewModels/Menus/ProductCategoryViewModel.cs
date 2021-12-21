@@ -9,6 +9,8 @@ using RetailTradeServer.ViewModels.Base;
 using RetailTradeServer.ViewModels.Dialogs;
 using RetailTradeServer.Views.Dialogs;
 using SalePageServer.State.Dialogs;
+using SalePageServer.Utilities;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Collections.Specialized;
 using System.ComponentModel;
@@ -30,8 +32,8 @@ namespace RetailTradeServer.ViewModels.Menus
         private readonly ISupplierService _supplierService;
         private readonly IMessageStore _messageStore;
         private object _selectedProductGroup;
-        private ObservableCollection<Product> _getProducts;
-        private ObservableCollection<ProductCategory> _productCategories;
+        private readonly ObservableQueue<Product> _getProducts;
+        private readonly ObservableQueue<ProductCategory> _productCategories;
         private bool _canShowLoadingPanel = true;
         private Product _selectedProduct;
 
@@ -56,33 +58,8 @@ namespace RetailTradeServer.ViewModels.Menus
         #region Public Properties
 
         public GlobalMessageViewModel GlobalMessageViewModel { get; }
-        public ObservableCollection<ProductCategory> ProductCategories
-        {
-            get
-            {
-                if (_productCategories != null)
-                {
-                    return _productCategories;
-                }
-                _productCategories = new();
-                return _productCategories;
-            }
-            set
-            {
-                _productCategories = value;
-                _ = _productCategories.Where(p => p.Id != 0).OrderByDescending(p => p.Name);
-                OnPropertyChanged(nameof(ProductCategories));
-            }
-        }
-        public ObservableCollection<Product> GetProducts
-        {
-            get => _getProducts;
-            set
-            {
-                _getProducts = value;
-                OnPropertyChanged(nameof(GetProducts));
-            }
-        }
+        public IEnumerable<ProductCategory> ProductCategories => _productCategories;
+        public IEnumerable<Product> GetProducts => _getProducts;
         public object SelectedProductGroup
         {
             get => _selectedProductGroup;
@@ -147,18 +124,20 @@ namespace RetailTradeServer.ViewModels.Menus
             CreateProductCommand = new RelayCommand(CreateProduct);
             EditProductCommand = new RelayCommand(EditProduct);
             GetProductsCommandAsync = new RelayCommand(GetProductsAsync);
-            SelectedItemChangedCommand = new RelayCommand(GetProductsAsync);
+            //SelectedItemChangedCommand = new RelayCommand(GetProductsAsync);
             OnShowNodeMenuCommand = new ParameterCommand(sender => OnShowNodeMenu(sender));
             CreateProductCategoryOrSubCategoryCommand = new RelayCommand(CreateProductCategoryOrSubCategory);
             EditProductCategoryOrSubCategoryCommand = new RelayCommand(EditProductCategoryOrSubCategory);
             GridControlLoadedCommand = new ParameterCommand(sender => GridControlLoaded(sender));
+
+            _getProducts = new();
+            _productCategories = new();
 
             GetProductCategories();
 
             _productCategoryService.OnProductCategoryCreated += ProductCategoryService_OnProductCategoryCreated;
             _productSubcategoryService.OnProductSubcategoryCreated += ProductSubcategoryService_OnProductSubcategoryCreated;
             _productService.OnProductCreated += ProductService_OnProductCreated;
-            _productService.OnProductEdited += ProductService_OnProductEdited;
         }
 
         #endregion
@@ -219,100 +198,56 @@ namespace RetailTradeServer.ViewModels.Menus
 
         private void EditProduct()
         {
-            //if (SelectedProduct != null)
-            //{
-            //    _dialogService.ShowDialog(new EditProductWithBarcodeDialogFormModel(_productCategoryService,
-            //    _productSubcategoryService,
-            //    _unitService,
-            //    _productService,
-            //    _supplierService,
-            //    _dialogService,
-            //    _messageStore,
-            //    GlobalMessageViewModel)
-            //    {
-            //        Title = "Товаровы (Редактировать)",
-            //        EditProduct = SelectedProduct
-            //    },
-            //    new EditProductWithBarcodeDialogForm());
-            //}
-            //else
-            //{
-            //    _ = _dialogService.ShowMessage("Выберите товар", "", MessageBoxButton.OK, MessageBoxImage.Exclamation);
-            //}
+            if (SelectedProduct != null)
+            {
+                _dialogService.ShowDialog(new EditProductWithBarcodeDialogFormModel(_productCategoryService,
+                _productSubcategoryService,
+                _unitService,
+                _productService,
+                _supplierService,
+                _dialogService,
+                _messageStore,
+                GlobalMessageViewModel)
+                {
+                    Title = "Товаровы (Редактировать)",
+                    EditProduct = SelectedProduct
+                },
+                new EditProductWithBarcodeDialogForm());
+            }
+            else
+            {
+                _ = _dialogService.ShowMessage("Выберите товар", "", MessageBoxButton.OK, MessageBoxImage.Exclamation);
+            }
         }
 
         private async void GetProductsAsync()
         {
-            GetProducts = new(await _productService.GetAllAsync());
-            GetProducts.CollectionChanged += GetProducts_CollectionChanged;
-        }
-
-        private void GetProducts_CollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
-        {
-            if (e.OldItems != null)
-            {
-                foreach (INotifyPropertyChanged item in e.OldItems)
-                {
-                    if (item != null)
-                    {
-                        item.PropertyChanged -= Item_PropertyChanged;
-                    }
-                }
-            }
-            if (e.NewItems != null)
-            {
-                foreach (INotifyPropertyChanged item in e.NewItems)
-                {
-                    if (item != null)
-                    {
-                        item.PropertyChanged += Item_PropertyChanged;
-                    }
-                }
-            }
-        }
-
-        private void Item_PropertyChanged(object sender, PropertyChangedEventArgs e)
-        {
-            OnPropertyChanged(nameof(GetProducts));
+            _getProducts.AddRange(await _productService.GetAllAsync());
         }
 
         private async void GetProductCategories()
         {
-            ProductCategories = await _productCategoryService.GetAllListAsync();
+            _productCategories.AddRange(await _productCategoryService.GetAllListAsync());
         }
 
         private void ProductCategoryService_OnProductCategoryCreated(ProductCategory productCategory)
         {
-            productCategory.ProductSubcategories = new();
-            ProductCategories.Add(productCategory);
+            _productCategories.Enqueue(productCategory);
         }
 
         private void ProductSubcategoryService_OnProductSubcategoryCreated(ProductSubcategory productSubcategory)
         {
-            if (productSubcategory != null)
+            ProductCategory editProductCategory = ProductCategories.FirstOrDefault(pc => pc.Id == productSubcategory.ProductCategoryId);
+            if (editProductCategory.ProductSubcategories == null)
             {
-                ProductCategory updateProductCategory = ProductCategories.FirstOrDefault(p => p.Id == productSubcategory.ProductCategoryId);
-                updateProductCategory.ProductSubcategories.Add(productSubcategory);
+                editProductCategory.ProductSubcategories = new List<ProductSubcategory>();
             }
+            editProductCategory.ProductSubcategories.Add(productSubcategory);
         }
 
         private void ProductService_OnProductCreated(Product product)
         {
-            GetProducts.Add(product);
-        }
-
-        private void ProductService_OnProductEdited(Product product)
-        {
-            Product editProduct = GetProducts.FirstOrDefault(p => p.Id == product.Id);
-            editProduct.Name = product.Name;
-            editProduct.Barcode = product.Barcode;
-            editProduct.ArrivalPrice = product.ArrivalPrice;
-            editProduct.SalePrice = product.SalePrice;
-            editProduct.WithoutBarcode = product.WithoutBarcode;
-            editProduct.ProductSubcategoryId = product.ProductSubcategoryId;
-            editProduct.ProductSubcategory = product.ProductSubcategory;
-            editProduct.UnitId = product.UnitId;
-            editProduct.SupplierId = product.SupplierId;
+            _getProducts.Enqueue(product);
         }
 
         private void OnShowNodeMenu(object sender)
@@ -334,28 +269,28 @@ namespace RetailTradeServer.ViewModels.Menus
 
         private void CreateProductCategoryOrSubCategory()
         {
-            //_ = _dialogService.ShowDialog(new CreateProductCategoryOrSubCategoryDialogFormModel(_productCategoryService, _productSubcategoryService, _messageStore, GlobalMessageViewModel) { Title = "Создать категорию или группу товаров" },
-            //    new CreateProductCategoryOrSubCategoryDialogForm());
+            _ = _dialogService.ShowDialog(new CreateProductCategoryOrSubCategoryDialogFormModel(_productCategoryService, _productSubcategoryService, _messageStore, GlobalMessageViewModel) { Title = "Создать категорию или группу товаров" },
+                new CreateProductCategoryOrSubCategoryDialogForm());
         }
 
         private void EditProductCategoryOrSubCategory()
         {
-            //if (SelectedProductGroup is ProductCategory productCategory)
-            //{
-            //    var viewModel = new CreateProductCategoryDialogFormModel(_productCategoryService, _dialogService) 
-            //    { 
-            //        Title = $"Категория товаров ({productCategory.Name})",
-            //        EditProductCategory = productCategory,
-            //        Name = productCategory.Name,
-            //        IsEditMode = true
-            //    };
-            //    _ = _dialogService.ShowDialog(viewModel, new CreateProductCategoryDialogForm());
-            //}
+            if (SelectedProductGroup is ProductCategory productCategory)
+            {
+                var viewModel = new CreateProductCategoryDialogFormModel(_productCategoryService, _dialogService)
+                {
+                    Title = $"Категория товаров ({productCategory.Name})",
+                    EditProductCategory = productCategory,
+                    Name = productCategory.Name,
+                    IsEditMode = true
+                };
+                _ = _dialogService.ShowDialog(viewModel, new CreateProductCategoryDialogForm());
+            }
 
-            //if (SelectedProductGroup is ProductSubcategory productSubcategory)
-            //{
+            if (SelectedProductGroup is ProductSubcategory productSubcategory)
+            {
 
-            //}
+            }
         }
 
         #endregion
@@ -365,7 +300,7 @@ namespace RetailTradeServer.ViewModels.Menus
         public override void Dispose()
         {
             GlobalMessageViewModel.Dispose();
-            GetProducts = null;
+            //GetProducts = null;
             SelectedProductGroup = null;
 
             base.Dispose();

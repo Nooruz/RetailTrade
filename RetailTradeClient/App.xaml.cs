@@ -1,4 +1,5 @@
-﻿using Microsoft.Extensions.DependencyInjection;
+﻿using CoreScanner;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using RetailTradeClient.HostBuilders;
 using RetailTradeClient.ViewModels;
@@ -40,6 +41,20 @@ namespace RetailTradeClient
         protected override void OnStartup(StartupEventArgs e)
         {
             _host.Start();
+
+            CCoreScannerClass _scanner = new();
+
+            short[] scannerTypes = new short[1];
+            scannerTypes[0] = 1;
+            short numberOfScannerTypes = 1;
+            int status;
+
+            _scanner.Open(0, scannerTypes, numberOfScannerTypes, out status);
+
+            if (status == 0)
+            {
+
+            }
 
             try
             {                

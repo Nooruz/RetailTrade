@@ -5,6 +5,7 @@ using RetailTradeClient.State.Authenticators;
 using RetailTradeClient.State.Dialogs;
 using RetailTradeClient.State.Messages;
 using RetailTradeClient.State.Navigators;
+using RetailTradeClient.State.ProductSale;
 using RetailTradeClient.State.Shifts;
 using RetailTradeClient.State.Users;
 using RetailTradeClient.ViewModels;
@@ -55,7 +56,8 @@ namespace RetailTradeClient.HostBuilders
                 services.GetRequiredService<IMessageStore>(),
                 services.GetRequiredService<IAuthenticator>(),
                 services.GetRequiredService<IShiftStore>(),
-                services.GetRequiredService<IRefundService>());
+                services.GetRequiredService<IRefundService>(),
+                services.GetRequiredService<IProductSaleStore>());
         }
 
         private static LoginViewModel CreateLoginViewModel(IServiceProvider services)

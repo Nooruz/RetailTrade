@@ -125,7 +125,7 @@ namespace RetailTrade.EntityFramework.Services
             return null;
         }
 
-        public async Task<ObservableCollection<ProductCategory>> GetAllListAsync()
+        public async Task<IEnumerable<ProductCategory>> GetAllListAsync()
         {
             try
             {
@@ -135,7 +135,7 @@ namespace RetailTrade.EntityFramework.Services
                     new ProductCategory { Id = 0, Name = "Все категории" }
                 };
                 productCategories.AddRange(await context.ProductCategories.Include(pc => pc.ProductSubcategories).ToListAsync());
-                return new(productCategories);
+                return productCategories;
             }
             catch (Exception e)
             {

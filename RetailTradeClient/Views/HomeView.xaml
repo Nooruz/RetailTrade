@@ -236,9 +236,6 @@
                             <dxmvvm:EventToCommand EventName="Validate"
                                                    Command="{Binding QuantityValidateCommand}"
                                                    PassEventArgsToCommand="True"/>
-                            <dxmvvm:EventToCommand EventName="MouseUp"
-                                                   Command="{Binding QuantityMouseEnterCommand}"
-                                                   PassEventArgsToCommand="True"/>
                         </dxmvvm:Interaction.Behaviors>
                         <dxg:GridColumn.EditSettings>
                             <dxe:SpinEditSettings SelectAllOnMouseUp="True"

@@ -6,6 +6,7 @@ using RetailTradeClient.Commands;
 using RetailTradeClient.State.Authenticators;
 using RetailTradeClient.State.Dialogs;
 using RetailTradeClient.State.Messages;
+using RetailTradeClient.State.ProductSale;
 using RetailTradeClient.State.Shifts;
 using RetailTradeClient.State.Users;
 using RetailTradeClient.ViewModels.Base;
@@ -36,8 +37,7 @@ namespace RetailTradeClient.ViewModels
         private readonly IAuthenticator _authenticator;
         private readonly IShiftStore _shiftStore;
         private readonly IRefundService _refundService;
-        private readonly PaymentCashViewModel _paymentCashViewModel;
-        private readonly PaymentComplexViewModel _paymentComplexViewModel;
+        private readonly IProductSaleStore _productSaleStore;
         private string _barcode;
         private Sale _selectedProductSale;
         private ObservableCollection<Product> _products;
@@ -222,7 +222,6 @@ namespace RetailTradeClient.ViewModels
 
         public ICommand SaleTableViewLoadedCommand { get; }
         public ICommand MultiplyCommand { get; }
-        public ICommand QuantityMouseEnterCommand { get; }
 
         #endregion
 
@@ -236,7 +235,8 @@ namespace RetailTradeClient.ViewModels
             IMessageStore messageStore,
             IAuthenticator authenticator,
             IShiftStore shiftStore,
-            IRefundService refundService)
+            IRefundService refundService,
+            IProductSaleStore productSaleStore)
         {
             _userStore = userStore;
             _productService = productService;
@@ -247,12 +247,10 @@ namespace RetailTradeClient.ViewModels
             _authenticator = authenticator;
             _shiftStore = shiftStore;
             _refundService = refundService;
+            _productSaleStore = productSaleStore;
 
             SaleProducts = new();
-            PostponeReceipts = new List<PostponeReceipt>();
-
-            _paymentCashViewModel = new(_receiptService, _productSaleService, _userStore, _manager, _shiftStore) { Title = "Оплата наличными" };
-            _paymentComplexViewModel = new(_receiptService, _manager, _shiftStore, _userStore) { Title = "Оплата чека" };
+            PostponeReceipts = new List<PostponeReceipt>();            
 
             LogoutCommand = new RelayCommand(Logout);
             TextInputCommand = new ParameterCommand(parameter => TextInput(parameter));
@@ -271,7 +269,6 @@ namespace RetailTradeClient.ViewModels
             CancelCommand = new RelayCommand(Cancel);
             SaleTableViewLoadedCommand = new ParameterCommand(parameter => SaleTableViewLoaded(parameter));
             MultiplyCommand = new RelayCommand(Multiply);
-            QuantityMouseEnterCommand = new ParameterCommand(parameter => QuantityMouseEnter(parameter));
             ReturnGoodsCommand = new RelayCommand(ReturnGoods);
             PrintReportWithoutCleaningCommand = new RelayCommand(() => ShtrihM.PrintReportWithoutCleaning());
             PrintReportWithCleaningCommand = new RelayCommand(() => ShtrihM.PrintReportWithCleaning());
@@ -283,7 +280,6 @@ namespace RetailTradeClient.ViewModels
 
             SaleProducts.CollectionChanged += SaleProducts_CollectionChanged;
             _productService.PropertiesChanged += ProductService_PropertiesChanged;
-            _paymentCashViewModel.PropertyChanged += PaymentCashViewModel_PropertyChanged;
         }
 
         #endregion
@@ -312,11 +308,6 @@ namespace RetailTradeClient.ViewModels
         {
             _ = _manager.ShowDialog(new RefundViewModel(_receiptService, _shiftStore, _refundService, _manager) { Title = "Возврат товаров" },
                 new RefundView());
-        }
-
-        private void QuantityMouseEnter(object parameter)
-        {
-
         }
 
         private void Multiply()
@@ -459,13 +450,13 @@ namespace RetailTradeClient.ViewModels
                                 QuantityInStock = newProduct.Quantity,
                                 SalePrice = newProduct.SalePrice,
                                 TNVED = newProduct.TNVED,
-                                Sum = newProduct.SalePrice * 1
+                                //Sum = newProduct.SalePrice * 1
                             });
                         }
                         else if (product.Quantity < product.QuantityInStock)
                         {
                             product.Quantity++;
-                            product.Sum = product.SalePrice * (decimal)product.Quantity;
+                            //product.Sum = product.SalePrice * (decimal)product.Quantity;
                         }
                         else
                         {
@@ -543,6 +534,17 @@ namespace RetailTradeClient.ViewModels
                         QuantityInStock = product.Quantity,
                         TNVED = product.TNVED
                     });
+                    _productSaleStore.AddProduct(new Sale
+                    {
+                        Id = product.Id,
+                        Name = product.Name,
+                        Quantity = 1,
+                        SalePrice = product.SalePrice,
+                        ArrivalPrice = product.ArrivalPrice,
+                        Sum = product.SalePrice,
+                        QuantityInStock = product.Quantity,
+                        TNVED = product.TNVED
+                    });
                 }
                 else if (saleProduct.Quantity < saleProduct.QuantityInStock)
                 {
@@ -562,7 +564,11 @@ namespace RetailTradeClient.ViewModels
         {
             if (SaleProducts.Count > 0)
             {
-                _paymentCashViewModel.SaleProducts = SaleProducts.ToList();
+                PaymentCashViewModel _paymentCashViewModel = new(_receiptService, _productSaleService, _userStore, _manager, _shiftStore, _productSaleStore ) 
+                { 
+                    Title = "Оплата наличными",
+                    SaleProducts = SaleProducts.ToList()
+                };
 
                 if (await _manager.ShowDialog(_paymentCashViewModel,
                 new PaymentCashView()))
@@ -576,8 +582,12 @@ namespace RetailTradeClient.ViewModels
         {
             if (SaleProducts.Count > 0)
             {
-                _paymentComplexViewModel.SaleProducts = SaleProducts.ToList();
-
+                PaymentComplexViewModel _paymentComplexViewModel = new(_receiptService, _manager, _shiftStore, _userStore) 
+                { 
+                    Title = "Оплата чека",
+                    SaleProducts = SaleProducts.ToList()
+                };
+                
                 if (await _manager.ShowDialog(_paymentComplexViewModel,
                 new PaymentComplexView()))
                 {

@@ -16,9 +16,13 @@
 
   <ItemGroup>
     <Compile Remove="Behaviors\**" />
+    <Compile Remove="bin\**" />
     <EmbeddedResource Remove="Behaviors\**" />
+    <EmbeddedResource Remove="bin\**" />
     <None Remove="Behaviors\**" />
+    <None Remove="bin\**" />
     <Page Remove="Behaviors\**" />
+    <Page Remove="bin\**" />
   </ItemGroup>
 
   <ItemGroup>
@@ -39,6 +43,15 @@
       <WrapperTool>tlbimp</WrapperTool>
       <Isolated>false</Isolated>
       <EmbedInteropTypes>true</EmbedInteropTypes>
+    </COMReference>
+    <COMReference Include="CoreScanner">
+      <WrapperTool>tlbimp</WrapperTool>
+      <VersionMinor>0</VersionMinor>
+      <VersionMajor>1</VersionMajor>
+      <Guid>db07b9fc-18b0-4b55-9a44-31d2c2f87875</Guid>
+      <Lcid>0</Lcid>
+      <Isolated>false</Isolated>
+      <EmbedInteropTypes>False</EmbedInteropTypes>
     </COMReference>
   </ItemGroup>
 

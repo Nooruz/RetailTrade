@@ -5,6 +5,7 @@ using RetailTrade.Domain.Models;
 using RetailTrade.Domain.Services;
 using RetailTradeClient.Report;
 using RetailTradeClient.State.Dialogs;
+using RetailTradeClient.State.ProductSale;
 using RetailTradeClient.State.Shifts;
 using RetailTradeClient.State.Users;
 using RetailTradeClient.ViewModels.Dialogs;
@@ -23,6 +24,7 @@ namespace RetailTradeClient.Commands
         private readonly IUIManager _manager;
         private readonly IShiftStore _shiftStore;
         private readonly IUserStore _userStore;
+        private readonly IProductSaleStore _productSaleStore;
 
         #endregion
 
@@ -32,13 +34,15 @@ namespace RetailTradeClient.Commands
             IReceiptService receiptService,
             IUIManager manager,
             IShiftStore shiftStore,
-            IUserStore userStore)
+            IUserStore userStore,
+            IProductSaleStore productSaleStore)
         {
             _paymentCashViewModel = paymentCashViewModel;
             _receiptService = receiptService;
             _manager = manager;
             _shiftStore = shiftStore;
             _userStore = userStore;
+            _productSaleStore = productSaleStore;
         }
 
         #endregion
@@ -54,6 +58,7 @@ namespace RetailTradeClient.Commands
             {
                 try
                 {
+                    var r = _productSaleStore.ProductSales;
                     //Создания чека
                     Receipt newReceipt = await _receiptService.CreateAsync(new Receipt
                     {

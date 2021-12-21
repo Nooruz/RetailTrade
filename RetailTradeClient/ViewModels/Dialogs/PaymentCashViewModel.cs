@@ -3,6 +3,7 @@ using RetailTrade.Domain.Models;
 using RetailTrade.Domain.Services;
 using RetailTradeClient.Commands;
 using RetailTradeClient.State.Dialogs;
+using RetailTradeClient.State.ProductSale;
 using RetailTradeClient.State.Shifts;
 using RetailTradeClient.State.Users;
 using System;
@@ -18,6 +19,7 @@ namespace RetailTradeClient.ViewModels.Dialogs
         #region Private Members
 
         private readonly IUserStore _userStore;
+        private readonly IProductSaleStore _productSaleStore;
         private decimal _entered;
         private decimal _amountToBePaid;
         private List<Sale> _saleProducts;
@@ -143,16 +145,18 @@ namespace RetailTradeClient.ViewModels.Dialogs
             IProductSaleService productSaleService,
             IUserStore userStore,
             IUIManager manager,
-            IShiftStore shiftStore)
+            IShiftStore shiftStore,
+            IProductSaleStore productSaleStore)
         {
             _userStore = userStore;
+            _productSaleStore = productSaleStore;
 
             DigitalButtonPressCommand = new ParameterCommand(parameter => EnterNumber(parameter));
             TextInputCommand = new ParameterCommand(parameter => TextInput(parameter));
             ClearCommand = new RelayCommand(Clear);
             BackspaceCommand = new RelayCommand(Baclspace);
             CommaButtonPressCommand = new RelayCommand(CommaButtonPress);
-            MakeCashPaymentCommand = new MakeCashPaymentCommand(this, receiptService, manager, shiftStore, userStore);
+            MakeCashPaymentCommand = new MakeCashPaymentCommand(this, receiptService, manager, shiftStore, userStore, _productSaleStore);
             EnteredLoadedCommand = new ParameterCommand(parameter => EnteredLoaded(parameter));
 
             _userStore.StateChanged += UserStore_StateChanged;
