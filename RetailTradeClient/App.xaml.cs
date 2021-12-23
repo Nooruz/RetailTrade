@@ -51,10 +51,18 @@ namespace RetailTradeClient
 
             _scanner.Open(0, scannerTypes, numberOfScannerTypes, out status);
 
-            if (status == 0)
-            {
+            _scanner.BarcodeEvent += new _ICoreScannerEvents_BarcodeEventEventHandler(OnBarcodeEvent);
 
-            }
+            // Let's subscribe for events
+            int opcode = 1001; // Method for Subscribe events
+            string outXML; // XML Output
+            string inXML = "<inArgs>" +
+            "<cmdArgs>" +
+            "<arg-int>6</arg-int>" + // Number of events you want to subscribe
+            "<arg-int>1,2,4,8,16,32</arg-int>" + // Comma separated event IDs
+            "</cmdArgs>" +
+            "</inArgs>";
+            _scanner.ExecCommand(opcode, ref inXML, out outXML, out status);
 
             try
             {                
@@ -66,6 +74,11 @@ namespace RetailTradeClient
             {
                 MessageBox.Show(exception.Message, "Ошибка.", MessageBoxButton.OK, MessageBoxImage.Error);
             }
+        }
+
+        private void OnBarcodeEvent(short eventType, ref string pscanData)
+        {
+            
         }
 
         protected override async void OnExit(ExitEventArgs e)

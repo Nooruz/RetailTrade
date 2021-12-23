@@ -5,10 +5,13 @@ using RetailTrade.EntityFramework;
 using RetailTradeServer.HostBuilders;
 using RetailTradeServer.ViewModels;
 using SalePageServer.State.Dialogs;
+using SalePageServer.ViewModels.Dialogs;
+using SalePageServer.Views.Dialogs;
 using System;
 using System.Data.SqlClient;
 using System.Globalization;
 using System.Threading;
+using System.Threading.Tasks;
 using System.Windows;
 
 namespace RetailTradeServer
@@ -46,11 +49,11 @@ namespace RetailTradeServer
                 .AddMenuViewModels();
         }
 
-        protected override void OnStartup(StartupEventArgs e)
+        protected override async void OnStartup(StartupEventArgs e)
         {
-            _host.Start();
+            await _host.StartAsync();
             _dialogService = _host.Services.GetRequiredService<IDialogService>();
-            //_dialogService.ShowDialog(new StartingViewModel(), new StartingView(), WindowState.Normal, ResizeMode.NoResize, SizeToContent.Manual);
+            await _dialogService.ShowDialog(new StartingViewModel(), new StartingView());
             var contextFactory = _host.Services.GetRequiredService<RetailTradeDbContextFactory>();
 
             //Settings.Default.AdminCreated = false;
@@ -87,6 +90,11 @@ namespace RetailTradeServer
 
                 Window window = _host.Services.GetRequiredService<MainWindow>();
                 window.DataContext = _host.Services.GetRequiredService<MainViewModel>();
+
+                await Task.Delay(5000);
+
+                _dialogService.Close();
+
                 window.Show();
             //}
             //else
