@@ -128,7 +128,7 @@
                                 <dxc:AreaSeries2D DataSource="{Binding Values}" 
                                                         ArgumentDataMember="DateOfPurchase"
                                                         ValueDataMember="Sum"
-                                                        Transparency="0.5" 
+                                                        Transparency=".5" 
                                                         MarkerVisible="True"
                                                         MarkerSize="10">
                                     <dxc:AreaSeries2D.MarkerModel>
