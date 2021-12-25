@@ -9,6 +9,15 @@
                          Header="Магазин"
                          AllowBuiltInNavigation="True"
                          Content="{Binding CurrentMenuViewModel}">
+        <dxwui:HamburgerMenu.Resources>
+            <Style TargetType="{x:Type dxwui:HamburgerSubMenuNavigationButton}">
+                <Style.Triggers>
+                    <Trigger Property="IsSelected" Value="True">
+                        <Setter Property="IsEnabled" Value="False"/>
+                    </Trigger>
+                </Style.Triggers>
+            </Style>
+        </dxwui:HamburgerMenu.Resources>
 
         <dxwui:HamburgerSubMenu Content="Информационная панель"
                                 Tag="{StaticResource faChartLine}"

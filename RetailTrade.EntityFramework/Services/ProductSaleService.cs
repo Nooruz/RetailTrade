@@ -116,10 +116,29 @@ namespace RetailTrade.EntityFramework.Services
             try
             {
                 await using var context = _contextFactory.CreateDbContext();
-                var result = await context.ProductSales
+                return await context.ProductSales
                     .Include(p => p.Receipt)
                     .Where(p => p.Receipt.DateOfPurchase.Date >= startDate && p.Receipt.DateOfPurchase.Date <= endDate)
                     .Select(p => new ProductSale { ArrivalPrice = p.ArrivalPrice, SalePrice = p.SalePrice, Quantity = p.Quantity })
+                    .ToListAsync();
+            }
+            catch (Exception e)
+            {
+                //ignore
+            }
+            return null;
+        }
+
+        public async Task<IEnumerable<ProductSale>> GetRatingTenProducts()
+        {
+            try
+            {
+                await using var context = _contextFactory.CreateDbContext();
+                var result = await context.ProductSales
+                    .Include(p => p.Product)
+                    .GroupBy(p => new { p.ProductId, p.Product.Name})
+                    .Select(p => new ProductSale { ProductId = p.Key.ProductId, Product = new Product { Name = p.Key.Name }, Quantity = p.Sum(c => c.Quantity) })                    
+                    .Take(10)
                     .ToListAsync();
                 return result;
             }

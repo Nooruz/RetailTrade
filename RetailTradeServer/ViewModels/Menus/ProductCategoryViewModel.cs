@@ -11,9 +11,6 @@ using RetailTradeServer.Views.Dialogs;
 using SalePageServer.State.Dialogs;
 using SalePageServer.Utilities;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.Collections.Specialized;
-using System.ComponentModel;
 using System.Linq;
 using System.Windows;
 using System.Windows.Input;
@@ -142,9 +139,9 @@ namespace RetailTradeServer.ViewModels.Menus
 
         #endregion
 
-        #region Public Voids
+        #region Private Voids
 
-        public void CreateProduct()
+        private void CreateProduct()
         {
             _dialogService.ShowDialog(new CreateProductDialogFormModel(_productCategoryService,
                 _productSubcategoryService,
@@ -153,16 +150,12 @@ namespace RetailTradeServer.ViewModels.Menus
                 _supplierService,
                 GlobalMessageViewModel,
                 _messageStore)
-                {
-                    Title = "Товаровы (Создать)",
-                    SelectedProductCategoryId = SelectedProductGroup is ProductCategory productCategory ? productCategory.Id : 0,
-                    SelectedProductSubcategoryId = SelectedProductGroup is ProductSubcategory productSubcategory ? productSubcategory.Id : 0
-                }, new CreateProductDialogForm());
+            {
+                Title = "Товаровы (Создать)",
+                SelectedProductCategoryId = SelectedProductGroup is ProductCategory productCategory ? productCategory.Id : 0,
+                SelectedProductSubcategoryId = SelectedProductGroup is ProductSubcategory productSubcategory ? productSubcategory.Id : 0
+            }, new CreateProductDialogForm());
         }
-
-        #endregion
-
-        #region Private Voids
 
         private void GridControlLoaded(object sender)
         {

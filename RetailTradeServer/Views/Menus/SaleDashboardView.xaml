@@ -50,7 +50,8 @@
             <dxlc:LayoutGroup Orientation="Vertical"
                               VerticalAlignment="Top">
 
-                <dxc:ChartControl Height="150">
+                <dxc:ChartControl Height="150" 
+                                  AnimationMode="OnDataChanged">
                     <dxc:XYDiagram2D SeriesItemsSource="{Binding DailySalesChart}">
                         <dxc:XYDiagram2D.SeriesItemTemplate>
                             <DataTemplate>
@@ -58,6 +59,8 @@
                                                         ArgumentDataMember="DateOfPurchase"
                                                         ValueDataMember="Sum"
                                                         Transparency=".5"
+                                                        LabelsVisibility="True"
+                                                        ShowInLegend="True"
                                                         MarkerVisible="True"
                                                         MarkerSize="10">
                                     <dxc:SplineAreaSeries2D.MarkerModel>
@@ -69,8 +72,7 @@
                         <dxc:XYDiagram2D.AxisX>
                             <dxc:AxisX2D>
                                 <dxc:AxisX2D.WholeRange>
-                                    <dxc:Range SideMarginsValue=".5" 
-                                               AutoSideMargins="True"/>
+                                    <dxc:Range AutoSideMargins="true" SideMarginsValue="0.5"/>
                                 </dxc:AxisX2D.WholeRange>
                                 <dxc:AxisX2D.DateTimeScaleOptions>
                                     <dxc:ManualDateTimeScaleOptions MeasureUnit="Minute"/>
@@ -126,11 +128,11 @@
                         <dxc:XYDiagram2D.SeriesItemTemplate>
                             <DataTemplate>
                                 <dxc:AreaSeries2D DataSource="{Binding Values}" 
-                                                        ArgumentDataMember="DateOfPurchase"
-                                                        ValueDataMember="Sum"
-                                                        Transparency=".5" 
-                                                        MarkerVisible="True"
-                                                        MarkerSize="10">
+                                                  ArgumentDataMember="DateOfPurchase"
+                                                  ValueDataMember="Sum"
+                                                  Transparency=".5" 
+                                                  MarkerVisible="True"
+                                                  MarkerSize="10">
                                     <dxc:AreaSeries2D.MarkerModel>
                                         <dxc:CircleMarker2DModel/>
                                     </dxc:AreaSeries2D.MarkerModel>
@@ -162,6 +164,38 @@
                                  IsChecked="True"/>
 
                 </dxlc:LayoutGroup>
+
+                <dxc:ChartControl>
+                    <dxc:SimpleDiagram2D>
+                        <dxc:PieSeries2D DisplayName="Name" 
+                                         DataSource="{Binding Path=RatingTenProducts}"
+                                         ArgumentDataMember="Product.Name" 
+                                         ValueDataMember="Quantity"
+                                         LabelsVisibility="True" 
+                                         LegendTextPattern="{}{A}: {V}"
+                                         HoleRadiusPercent="50">
+                            <!--region #Model-->
+                            <dxc:PieSeries2D.Model>
+                                <dxc:GlarePie2DModel/>
+                            </dxc:PieSeries2D.Model>
+                            <!--endregion #Model-->
+                            <dxc:PieSeries2D.TotalLabel>
+                                <dxc:PieTotalLabel TextPattern="Итого:&#x0a;{TV}"/>
+                            </dxc:PieSeries2D.TotalLabel>
+                            <dxc:PieSeries2D.Label>
+                                <dxc:SeriesLabel TextPattern="{}{VP:P}" 
+                                         dxc:PieSeries.LabelPosition="TwoColumns"/>
+                            </dxc:PieSeries2D.Label>
+                        </dxc:PieSeries2D>
+                    </dxc:SimpleDiagram2D>
+                    <dxc:ChartControl.Legends>
+                        <dxc:Legend>
+                            <dxc:Legend.Title>
+                                <dxc:LegendTitle Content="Рейтинг товаров"/>
+                            </dxc:Legend.Title>
+                        </dxc:Legend>
+                    </dxc:ChartControl.Legends>
+                </dxc:ChartControl>
 
             </dxlc:LayoutGroup>
 

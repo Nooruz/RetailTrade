@@ -15,6 +15,7 @@ namespace RetailTradeServer.ViewModels.Menus
         #region Private Members
 
         private readonly IReceiptService _receiptService;
+        private readonly IProductSaleService _productSaleService;
         private decimal _saleAmountToday;
         private decimal _saleAmountYesterday;
         private decimal _saleAmountLastWeek;
@@ -23,6 +24,7 @@ namespace RetailTradeServer.ViewModels.Menus
         private decimal _saleAmountBeginningYear;
         private ObservableQueue<DataSeries> _dailySalesChart;
         private ObservableQueue<DataSeries> _monthlySalesChart;
+        private ObservableQueue<ProductSale> _ratingTenProducts;
 
         #endregion
 
@@ -84,6 +86,7 @@ namespace RetailTradeServer.ViewModels.Menus
         }
         public IEnumerable<DataSeries> DailySalesChart => _dailySalesChart;
         public IEnumerable<DataSeries> MonthlySalesChart => _monthlySalesChart;
+        public IEnumerable<ProductSale> RatingTenProducts => _ratingTenProducts;
 
         #endregion
 
@@ -99,9 +102,12 @@ namespace RetailTradeServer.ViewModels.Menus
 
         #region Constructor
 
-        public SaleDashboardView(IReceiptService receiptService)
+        public SaleDashboardView(IReceiptService receiptService,
+            IProductSaleService productSaleService)
         {
             _receiptService = receiptService;
+            _productSaleService = productSaleService;
+
             UserControlCommand = new RelayCommand(UserControl);
             YesterdayCommand = new RelayCommand(Yesterday);
             TodayCommand = new RelayCommand(Today);
@@ -110,6 +116,7 @@ namespace RetailTradeServer.ViewModels.Menus
 
             _dailySalesChart = new();
             _monthlySalesChart = new();
+            _ratingTenProducts = new();
         }
 
         #endregion
@@ -134,6 +141,7 @@ namespace RetailTradeServer.ViewModels.Menus
                 Name = "New",
                 Values = new(await _receiptService.GetSaleAmoundCurrentMonth())
             });
+            _ratingTenProducts.AddRange(await _productSaleService.GetRatingTenProducts());
         }
 
         private async void Yesterday()
@@ -183,5 +191,11 @@ namespace RetailTradeServer.ViewModels.Menus
     {
         public string Name { get; set; }
         public ObservableCollection<Receipt> Values { get; set; }
+    }
+
+    public class DataRating
+    {
+        public string Name { get; set; }
+        public ObservableCollection<ProductSale> Value { get; set; }
     }
 }

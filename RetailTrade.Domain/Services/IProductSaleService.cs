@@ -14,5 +14,7 @@ namespace RetailTrade.Domain.Services
         /// <param name="endDate">Дата окончание</param>
         /// <returns></returns>
         Task<IEnumerable<ProductSale>> GetProductSalesByDateRange(DateTime startDate, DateTime endDate);
+
+        Task<IEnumerable<ProductSale>> GetRatingTenProducts();
     }
 }

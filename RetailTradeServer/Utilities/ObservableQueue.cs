@@ -37,9 +37,12 @@ namespace SalePageServer.Utilities
         }
         public void AddRange(IEnumerable<T> collection)
         {
-            foreach (var item in collection)
+            if (collection != null)
             {
-                Enqueue(item);
+                foreach (var item in collection)
+                {
+                    Enqueue(item);
+                }
             }
         }
     }

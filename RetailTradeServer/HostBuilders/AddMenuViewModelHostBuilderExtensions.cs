@@ -99,7 +99,8 @@ namespace RetailTradeServer.HostBuilders
 
         private static SaleDashboardView CreateSaleDashboardView(IServiceProvider services)
         {
-            return new SaleDashboardView(services.GetRequiredService<IReceiptService>());
+            return new SaleDashboardView(services.GetRequiredService<IReceiptService>(),
+                services.GetRequiredService<IProductSaleService>());
         }
 
         private static BranchViewModel CreateBranchViewModel(IServiceProvider services)

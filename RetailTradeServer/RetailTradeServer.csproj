@@ -48,6 +48,7 @@
     <None Remove="Report\WriteDownProductReport.vsrepx" />
     <None Remove="Resources\Icons\newlogo.ico" />
     <None Remove="Resources\Images\sp.png" />
+    <None Remove="SplashScreen.png" />
     <None Remove="Views\HomeView.xaml~RF1dc6ec.TMP" />
   </ItemGroup>
 
@@ -101,6 +102,10 @@
     </Resource>
     <Resource Include="Resources\Images\newlogo.png" />
     <Resource Include="Resources\Images\sp.png" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <SplashScreen Include="SplashScreen.png" />
   </ItemGroup>
 
   <ItemGroup>

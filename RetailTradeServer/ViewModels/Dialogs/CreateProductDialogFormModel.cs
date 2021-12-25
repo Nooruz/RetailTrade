@@ -10,6 +10,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Windows;
 using System.Windows.Input;
+using DialogService = SalePageServer.State.Dialogs.DialogService;
 
 namespace RetailTradeServer.ViewModels.Dialogs
 {
@@ -212,7 +213,7 @@ namespace RetailTradeServer.ViewModels.Dialogs
             _unitService = unitService;
             _productService = productService;
             _supplierService = supplierService;
-            _dialogService = new SalePageServer.State.Dialogs.DialogService();
+            _dialogService = new DialogService();
             GlobalMessageViewModel = globalMessageViewModel;
             _messageStore = messageStore;
 

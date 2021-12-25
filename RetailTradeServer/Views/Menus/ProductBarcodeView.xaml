@@ -12,7 +12,7 @@
         <dxg:GridControl ItemsSource="{Binding Products}"
                          SelectedItem="{Binding SelectedProduct}">
             <dxg:GridControl.View>
-                <dxg:TableView ShowTotalSummary="True" 
+                <dxg:TableView ShowGroupPanel="False"
                                AutoWidth="True" 
                                AllowEditing="False">
                     <dxmvvm:Interaction.Behaviors>
@@ -26,7 +26,8 @@
 
         <dxg:GridControl ItemsSource="{Binding ProductBarcodePrintings}">
             <dxg:GridControl.View>
-                <dxg:TableView ShowTotalSummary="True" AutoWidth="True"/>
+                <dxg:TableView AutoWidth="True"
+                               ShowGroupPanel="False"/>
             </dxg:GridControl.View>
             <dxg:GridColumn Header="Наименование товара"
                             FieldName="Name"
@@ -39,7 +40,26 @@
             </dxg:GridColumn>
             <dxg:GridColumn Header="Штрих-код"
                             FieldName="Barcode"
-                            AllowEditing="False"/>
+                            AllowEditing="True">
+                <dxg:GridColumn.EditSettings>
+                    <dxe:ButtonEditSettings AllowDefaultButton="False">
+                        <dxe:ButtonEditSettings.Buttons>
+                            <dxe:ButtonInfo GlyphKind="Plus"
+                                            Visibility="Collapsed">
+                                <dxe:ButtonInfo.Style>
+                                    <Style TargetType="{x:Type dxe:ButtonInfo}">
+                                        <Style.Triggers>
+                                            <DataTrigger Binding="{Binding Barcode}" Value="{x:Null}">
+                                                <Setter Property="Visibility" Value="Visible"/>
+                                            </DataTrigger>
+                                        </Style.Triggers>
+                                    </Style>
+                                </dxe:ButtonInfo.Style>    
+                            </dxe:ButtonInfo>
+                        </dxe:ButtonEditSettings.Buttons>
+                    </dxe:ButtonEditSettings>
+                </dxg:GridColumn.EditSettings>
+            </dxg:GridColumn>
         </dxg:GridControl>
 
         <dxlc:LayoutGroup HorizontalAlignment="Right"

@@ -51,8 +51,10 @@ namespace RetailTradeServer
         protected override async void OnStartup(StartupEventArgs e)
         {
             await _host.StartAsync();
-            _dialogService = _host.Services.GetRequiredService<IDialogService>();
-            await _dialogService.Show(new StartingView());
+            //_dialogService = _host.Services.GetRequiredService<IDialogService>();
+            //await _dialogService.Show(new StartingView());
+            SplashScreen splashScreen = new("SplashScreen.png");
+            splashScreen.Show(true);
             var contextFactory = _host.Services.GetRequiredService<RetailTradeDbContextFactory>();
 
             //Settings.Default.AdminCreated = false;
@@ -90,9 +92,7 @@ namespace RetailTradeServer
                 Window window = _host.Services.GetRequiredService<MainWindow>();
                 window.DataContext = _host.Services.GetRequiredService<MainViewModel>();
 
-                await Task.Delay(100);
-
-                _dialogService.Close();
+                //await Task.Delay(100);
 
                 window.Show();
                 window.Loaded += Window_Loaded;
@@ -111,7 +111,7 @@ namespace RetailTradeServer
 
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
-            _dialogService.Close();
+            //_dialogService.Close();
         }
 
         protected override async void OnExit(ExitEventArgs e)
