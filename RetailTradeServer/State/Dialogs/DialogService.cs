@@ -48,7 +48,7 @@ namespace SalePageServer.State.Dialogs
 
         public Task Show<TUserControl>(TUserControl userControl) where TUserControl : BaseDialogUserControl
         {
-            var tcs = new TaskCompletionSource<bool>();
+            TaskCompletionSource<bool> tcs = new();
 
             Application.Current.Dispatcher.Invoke(() =>
             {
@@ -59,7 +59,7 @@ namespace SalePageServer.State.Dialogs
                         MinHeight = WindowMinimumHeight,
                         MinWidth = WindowMinimumWidth,
                         SizeToContent = SizeToContent,
-                        WindowStyle = WindowStyle,
+                        WindowStyle = WindowStyle.None,
                         ResizeMode = ResizeMode
                     };
                     _window.Content = userControl;

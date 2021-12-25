@@ -5,7 +5,6 @@ using RetailTrade.EntityFramework;
 using RetailTradeServer.HostBuilders;
 using RetailTradeServer.ViewModels;
 using SalePageServer.State.Dialogs;
-using SalePageServer.ViewModels.Dialogs;
 using SalePageServer.Views.Dialogs;
 using System;
 using System.Data.SqlClient;
@@ -53,7 +52,7 @@ namespace RetailTradeServer
         {
             await _host.StartAsync();
             _dialogService = _host.Services.GetRequiredService<IDialogService>();
-            await _dialogService.ShowDialog(new StartingViewModel(), new StartingView());
+            await _dialogService.Show(new StartingView());
             var contextFactory = _host.Services.GetRequiredService<RetailTradeDbContextFactory>();
 
             //Settings.Default.AdminCreated = false;
@@ -91,11 +90,12 @@ namespace RetailTradeServer
                 Window window = _host.Services.GetRequiredService<MainWindow>();
                 window.DataContext = _host.Services.GetRequiredService<MainViewModel>();
 
-                await Task.Delay(5000);
+                await Task.Delay(100);
 
                 _dialogService.Close();
 
                 window.Show();
+                window.Loaded += Window_Loaded;
             //}
             //else
             //{
@@ -107,6 +107,11 @@ namespace RetailTradeServer
             Thread.CurrentThread.CurrentUICulture = newCulture;
 
             base.OnStartup(e);
+        }
+
+        private void Window_Loaded(object sender, RoutedEventArgs e)
+        {
+            _dialogService.Close();
         }
 
         protected override async void OnExit(ExitEventArgs e)

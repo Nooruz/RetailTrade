@@ -2,6 +2,9 @@
 using RetailTrade.Domain.Services;
 using RetailTradeServer.Commands;
 using RetailTradeServer.ViewModels.Base;
+using SalePageServer.Utilities;
+using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Windows.Input;
 
@@ -18,7 +21,7 @@ namespace RetailTradeServer.ViewModels.Menus
         private decimal _saleAmountCurrentMonth;
         private decimal _saleAmountLastMonth;
         private decimal _saleAmountBeginningYear;
-        private ObservableCollection<Receipt> _dailySalesChart;
+        private ObservableQueue<DataSeries> _dailySalesChart;
 
         #endregion
 
@@ -78,7 +81,7 @@ namespace RetailTradeServer.ViewModels.Menus
                 OnPropertyChanged(nameof(SaleAmountBeginningYear));
             }
         }
-        public ObservableCollection<Receipt> DailySalesChart => new(_receiptService.GetAll());
+        public IEnumerable<DataSeries> DailySalesChart => _dailySalesChart;
 
         #endregion
 
@@ -94,6 +97,8 @@ namespace RetailTradeServer.ViewModels.Menus
         {
             _receiptService = receiptService;
             UserControlCommand = new RelayCommand(UserControl);
+
+            _dailySalesChart = new();
         }
 
         #endregion
@@ -108,9 +113,19 @@ namespace RetailTradeServer.ViewModels.Menus
             SaleAmountCurrentMonth = await _receiptService.GetSaleAmoundCurrentMonth();
             SaleAmountLastMonth = await _receiptService.GetSaleAmoundLastMonth();
             SaleAmountBeginningYear = await _receiptService.GetSaleAmoundBeginningYear();
-            //DailyData = new(await _receiptService.GetAllAsync());
+            _dailySalesChart.Enqueue(new DataSeries
+            {
+                Name = "New",
+                Values = new(await _receiptService.GetAllAsync())
+            });
         }
 
         #endregion
+    }
+
+    public class DataSeries
+    {
+        public string Name { get; set; }
+        public ObservableCollection<Receipt> Values { get; set; }
     }
 }

@@ -47,64 +47,30 @@
                 </dxlc:LayoutItem>
             </dxlc:LayoutGroup>
 
-            <dxlc:LayoutGroup Orientation="Vertical">
+            <dxlc:LayoutGroup Orientation="Vertical"
+                              VerticalAlignment="Top">
 
-                <dxc:ChartControl>
-                    <dxc:ChartControl.Diagram>
-                        <dxc:XYDiagram2D>
-                            <dxc:XYDiagram2D.Series>
-                                <dxc:LineSeries2D MarkerVisible="True"
-                                                  MarkerSize="8">
-                                    <dxc:LineSeries2D.MarkerModel>
-                                        <dxc:CircleMarker2DModel/>
-                                    </dxc:LineSeries2D.MarkerModel>
-                                    <dxc:LineSeries2D.Points>
-                                        <dxc:SeriesPoint Argument="01.11.2021" Value="1000" />
-                                        <dxc:SeriesPoint Argument="02.11.2021" Value="3547" />
-                                        <dxc:SeriesPoint Argument="03.11.2021" Value="7658" />
-                                        <dxc:SeriesPoint Argument="04.11.2021" Value="4574" />
-                                        <dxc:SeriesPoint Argument="05.11.2021" Value="6548" />
-                                        <dxc:SeriesPoint Argument="06.11.2021" Value="3547" />
-                                        <dxc:SeriesPoint Argument="07.11.2021" Value="9857" />
-                                        <dxc:SeriesPoint Argument="08.11.2021" Value="15404" />
-                                        <dxc:SeriesPoint Argument="09.11.2021" Value="32047" />
-                                        <dxc:SeriesPoint Argument="10.11.2021" Value="85471" />
-                                        <dxc:SeriesPoint Argument="11.11.2021" Value="65474" />
-                                        <dxc:SeriesPoint Argument="12.11.2021" Value="4000" />
-                                        <dxc:SeriesPoint Argument="13.11.2021" Value="98547" />
-                                        <dxc:SeriesPoint Argument="14.11.2021" Value="65474" />
-                                        <dxc:SeriesPoint Argument="15.11.2021" Value="65474" />
-                                        <dxc:SeriesPoint Argument="16.11.2021" Value="0" />
-                                        <dxc:SeriesPoint Argument="17.11.2021" Value="57454" />
-                                        <dxc:SeriesPoint Argument="18.11.2021" Value="45488" />
-                                        <dxc:SeriesPoint Argument="19.11.2021" Value="85475" />
-                                        <dxc:SeriesPoint Argument="20.11.2021" Value="32542" />
-                                        <dxc:SeriesPoint Argument="21.11.2021" Value="40000" />
-                                        <dxc:SeriesPoint Argument="22.11.2021" Value="98657" />
-                                        <dxc:SeriesPoint Argument="23.11.2021" Value="6547" />
-                                        <dxc:SeriesPoint Argument="24.11.2021" Value="9985" />
-                                        <dxc:SeriesPoint Argument="25.11.2021" Value="5648" />
-                                        <dxc:SeriesPoint Argument="26.11.2021" Value="87546" />
-                                        <dxc:SeriesPoint Argument="27.11.2021" Value="32154" />
-                                        <dxc:SeriesPoint Argument="28.11.2021" Value="6547" />
-                                        <dxc:SeriesPoint Argument="29.11.2021" Value="65875" />
-                                        <dxc:SeriesPoint Argument="30.11.2021" Value="85974" />
-                                    </dxc:LineSeries2D.Points>
-                                </dxc:LineSeries2D>
-                            </dxc:XYDiagram2D.Series>
-                            <dxc:XYDiagram2D.AxisX>
-                                <dxc:AxisX2D>
-                                    <dxc:AxisX2D.WholeRange>
-                                        <dxc:Range SideMarginsValue="0.5" 
-                                                   AutoSideMargins="False"/>
-                                    </dxc:AxisX2D.WholeRange>
-                                    <dxc:AxisX2D.DateTimeScaleOptions>
-                                        <dxc:ManualDateTimeScaleOptions MeasureUnit="Day"/>
-                                    </dxc:AxisX2D.DateTimeScaleOptions>
-                                </dxc:AxisX2D>
-                            </dxc:XYDiagram2D.AxisX>
-                        </dxc:XYDiagram2D>
-                    </dxc:ChartControl.Diagram>
+                <dxc:ChartControl Height="150">
+                    <dxc:XYDiagram2D SeriesItemsSource="{Binding DailySalesChart}">
+                        <dxc:XYDiagram2D.SeriesItemTemplate>
+                            <DataTemplate>
+                                <dxc:SplineAreaSeries2D DataSource="{Binding Values}" 
+                                                        ArgumentDataMember="DateOfPurchase"
+                                                        ValueDataMember="Sum"/>
+                            </DataTemplate>
+                        </dxc:XYDiagram2D.SeriesItemTemplate>
+                        <dxc:XYDiagram2D.AxisX>
+                            <dxc:AxisX2D>
+                                <dxc:AxisX2D.WholeRange>
+                                    <dxc:Range SideMarginsValue="0.5" 
+                                               AutoSideMargins="False"/>
+                                </dxc:AxisX2D.WholeRange>
+                                <dxc:AxisX2D.DateTimeScaleOptions>
+                                    <dxc:ManualDateTimeScaleOptions MeasureUnit="Day"/>
+                                </dxc:AxisX2D.DateTimeScaleOptions>
+                            </dxc:AxisX2D>
+                        </dxc:XYDiagram2D.AxisX>
+                    </dxc:XYDiagram2D>
                 </dxc:ChartControl>
 
                 <dxlc:LayoutGroup VerticalAlignment="Top">
@@ -142,17 +108,18 @@
                 </dxlc:LayoutItem>
             </dxlc:LayoutGroup>
 
-            <dxlc:LayoutGroup Orientation="Vertical">
+            <dxlc:LayoutGroup Orientation="Vertical"
+                              VerticalAlignment="Top">
 
-                <dxc:ChartControl >
-                    <dxc:XYDiagram2D>
-                        <dxc:SplineAreaSeries2D DisplayName="Series 1">
-                            <dxc:SeriesPoint Argument="1" Value="6.5"/>
-                            <dxc:SeriesPoint Argument="2" Value="5.5"/>
-                            <dxc:SeriesPoint Argument="3" Value="12.5"/>
-                            <dxc:SeriesPoint Argument="4" Value="11.5"/>
-                            <dxc:SeriesPoint Argument="5" Value="18.5"/>
-                        </dxc:SplineAreaSeries2D>
+                <dxc:ChartControl Height="150">
+                    <dxc:XYDiagram2D SeriesItemsSource="{Binding DailySalesChart}">
+                        <dxc:XYDiagram2D.SeriesItemTemplate>
+                            <DataTemplate>
+                                <dxc:SplineAreaSeries2D DataSource="{Binding Values}" 
+                                                        ArgumentDataMember="Argument"
+                                                        ValueDataMember="Value"/>
+                            </DataTemplate>
+                        </dxc:XYDiagram2D.SeriesItemTemplate>
                     </dxc:XYDiagram2D>
                 </dxc:ChartControl>
 
