@@ -153,39 +153,39 @@ namespace RetailTrade.EntityFramework.Services
             return null;
         }
 
-        public async Task<decimal> GetSaleAmoundToday()
+        public async Task<IEnumerable<Receipt>> GetSaleAmoundToday()
         {
             try
             {
                 await using var context = _contextFactory.CreateDbContext();
                 return await context.Receipts
                     .Where(r => r.DateOfPurchase.Date == DateTime.Now.Date)
-                    .SumAsync(r => r.Sum);
+                    .ToListAsync();
             }
             catch (Exception e)
             {
                 //ignore
             }
-            return 0;
+            return null;
         }
 
-        public async Task<decimal> GetSaleAmoundYesterday()
+        public async Task<IEnumerable<Receipt>> GetSaleAmoundYesterday()
         {
             try
             {
                 await using var context = _contextFactory.CreateDbContext();
                 return await context.Receipts
                     .Where(r => r.DateOfPurchase.Date == DateTime.Now.Date.AddDays(-1))
-                    .SumAsync(r => r.Sum);
+                    .ToListAsync();
             }
             catch (Exception e)
             {
                 //ignore
             }
-            return 0;
+            return null;
         }
 
-        public async Task<decimal> GetSaleAmoundLastWeek()
+        public async Task<IEnumerable<Receipt>> GetSaleAmoundLastWeek()
         {
             try
             {
@@ -193,16 +193,16 @@ namespace RetailTrade.EntityFramework.Services
                 await using var context = _contextFactory.CreateDbContext();
                 return await context.Receipts
                     .Where(r => r.DateOfPurchase.Date >= mondayOfLastWeek && r.DateOfPurchase <= mondayOfLastWeek.AddDays(6))
-                    .SumAsync(r => r.Sum);
+                    .ToListAsync();
             }
             catch (Exception e)
             {
                 //ignore
             }
-            return 0;
+            return null;
         }
 
-        public async Task<decimal> GetSaleAmoundCurrentMonth()
+        public async Task<IEnumerable<Receipt>> GetSaleAmoundCurrentMonth()
         {
             try
             {
@@ -210,16 +210,16 @@ namespace RetailTrade.EntityFramework.Services
                 await using var context = _contextFactory.CreateDbContext();
                 return await context.Receipts
                     .Where(r => r.DateOfPurchase.Date >= firstDayOfCurrentMonth)
-                    .SumAsync(r => r.Sum);
+                    .ToListAsync();
             }
             catch (Exception e)
             {
                 //ignore
             }
-            return 0;
+            return null;
         }
 
-        public async Task<decimal> GetSaleAmoundLastMonth()
+        public async Task<IEnumerable<Receipt>> GetSaleAmoundLastMonth()
         {
             try
             {
@@ -227,16 +227,16 @@ namespace RetailTrade.EntityFramework.Services
                 await using var context = _contextFactory.CreateDbContext();
                 return await context.Receipts
                     .Where(r => r.DateOfPurchase.Date >= firstDayOfLastMonth && r.DateOfPurchase <= firstDayOfLastMonth.AddMonths(1).AddDays(-1))
-                    .SumAsync(r => r.Sum);
+                    .ToListAsync();
             }
             catch (Exception e)
             {
                 //ignore
             }
-            return 0;
+            return null;
         }
 
-        public async Task<decimal> GetSaleAmoundBeginningYear()
+        public async Task<IEnumerable<Receipt>> GetSaleAmoundBeginningYear()
         {
             try
             {
@@ -244,13 +244,13 @@ namespace RetailTrade.EntityFramework.Services
                 await using var context = _contextFactory.CreateDbContext();
                 return await context.Receipts
                     .Where(r => r.DateOfPurchase.Date >= beginningYear)
-                    .SumAsync(r => r.Sum);
+                    .ToListAsync();
             }
             catch (Exception e)
             {
                 //ignore
             }
-            return 0;
+            return null;
         }
     }
 }

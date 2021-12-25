@@ -56,17 +56,24 @@
                             <DataTemplate>
                                 <dxc:SplineAreaSeries2D DataSource="{Binding Values}" 
                                                         ArgumentDataMember="DateOfPurchase"
-                                                        ValueDataMember="Sum"/>
+                                                        ValueDataMember="Sum"
+                                                        Transparency=".5"
+                                                        MarkerVisible="True"
+                                                        MarkerSize="10">
+                                    <dxc:SplineAreaSeries2D.MarkerModel>
+                                        <dxc:CircleMarker2DModel/>
+                                    </dxc:SplineAreaSeries2D.MarkerModel>
+                                </dxc:SplineAreaSeries2D>
                             </DataTemplate>
                         </dxc:XYDiagram2D.SeriesItemTemplate>
                         <dxc:XYDiagram2D.AxisX>
                             <dxc:AxisX2D>
                                 <dxc:AxisX2D.WholeRange>
-                                    <dxc:Range SideMarginsValue="0.5" 
-                                               AutoSideMargins="False"/>
+                                    <dxc:Range SideMarginsValue=".5" 
+                                               AutoSideMargins="True"/>
                                 </dxc:AxisX2D.WholeRange>
                                 <dxc:AxisX2D.DateTimeScaleOptions>
-                                    <dxc:ManualDateTimeScaleOptions MeasureUnit="Day"/>
+                                    <dxc:ManualDateTimeScaleOptions MeasureUnit="Minute"/>
                                 </dxc:AxisX2D.DateTimeScaleOptions>
                             </dxc:AxisX2D>
                         </dxc:XYDiagram2D.AxisX>
@@ -76,10 +83,13 @@
                 <dxlc:LayoutGroup VerticalAlignment="Top">
 
                     <RadioButton Style="{StaticResource Button}"
-                                 Content="Вчерашний день"/>
+                                 Content="Вчерашний день"
+                                 Command="{Binding YesterdayCommand}"/>
 
                     <RadioButton Style="{StaticResource Button}"
-                                 Content="Сегодняшний день"/>
+                                 Content="Сегодняшний день"
+                                 Command="{Binding TodayCommand}"
+                                 IsChecked="True"/>
 
                 </dxlc:LayoutGroup>
 
@@ -112,23 +122,44 @@
                               VerticalAlignment="Top">
 
                 <dxc:ChartControl Height="150">
-                    <dxc:XYDiagram2D SeriesItemsSource="{Binding DailySalesChart}">
+                    <dxc:XYDiagram2D SeriesItemsSource="{Binding MonthlySalesChart}">
                         <dxc:XYDiagram2D.SeriesItemTemplate>
                             <DataTemplate>
-                                <dxc:SplineAreaSeries2D DataSource="{Binding Values}" 
-                                                        ArgumentDataMember="Argument"
-                                                        ValueDataMember="Value"/>
+                                <dxc:AreaSeries2D DataSource="{Binding Values}" 
+                                                        ArgumentDataMember="DateOfPurchase"
+                                                        ValueDataMember="Sum"
+                                                        Transparency="0.5" 
+                                                        MarkerVisible="True"
+                                                        MarkerSize="10">
+                                    <dxc:AreaSeries2D.MarkerModel>
+                                        <dxc:CircleMarker2DModel/>
+                                    </dxc:AreaSeries2D.MarkerModel>
+                                </dxc:AreaSeries2D>
                             </DataTemplate>
                         </dxc:XYDiagram2D.SeriesItemTemplate>
+                        <dxc:XYDiagram2D.AxisX>
+                            <dxc:AxisX2D>
+                                <dxc:AxisX2D.WholeRange>
+                                    <dxc:Range SideMarginsValue=".5" 
+                                               AutoSideMargins="False"/>
+                                </dxc:AxisX2D.WholeRange>
+                                <dxc:AxisX2D.DateTimeScaleOptions>
+                                    <dxc:ManualDateTimeScaleOptions MeasureUnit="Day"/>
+                                </dxc:AxisX2D.DateTimeScaleOptions>
+                            </dxc:AxisX2D>
+                        </dxc:XYDiagram2D.AxisX>
                     </dxc:XYDiagram2D>
                 </dxc:ChartControl>
 
                 <dxlc:LayoutGroup VerticalAlignment="Top">
 
                     <RadioButton Style="{StaticResource Button}"
-                                 Content="Прошлый месяц"/>
+                                 Content="Прошлый месяц"
+                                 Command="{Binding LastMonthCommand}"/>
                     <RadioButton Style="{StaticResource Button}"
-                                 Content="Текущий месяц"/>
+                                 Content="Текущий месяц"
+                                 Command="{Binding CurrentMonthCommand}"
+                                 IsChecked="True"/>
 
                 </dxlc:LayoutGroup>
 

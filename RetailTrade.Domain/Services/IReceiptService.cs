@@ -22,36 +22,36 @@ namespace RetailTrade.Domain.Services
         /// Сумма продажи за сегодяшний день
         /// </summary>
         /// <returns></returns>
-        Task<decimal> GetSaleAmoundToday();
+        Task<IEnumerable<Receipt>> GetSaleAmoundToday();
 
         /// <summary>
         /// Сумма продажи за вчерашний день
         /// </summary>
         /// <returns></returns>
-        Task<decimal> GetSaleAmoundYesterday();
+        Task<IEnumerable<Receipt>> GetSaleAmoundYesterday();
 
         /// <summary>
         /// Сумма продажи за предыдущую неделю
         /// </summary>
         /// <returns></returns>
-        Task<decimal> GetSaleAmoundLastWeek();
+        Task<IEnumerable<Receipt>> GetSaleAmoundLastWeek();
 
         /// <summary>
         /// Сумма продажи за текущий месяц
         /// </summary>
         /// <returns></returns>
-        Task<decimal> GetSaleAmoundCurrentMonth();
+        Task<IEnumerable<Receipt>> GetSaleAmoundCurrentMonth();
 
         /// <summary>
         /// Сумма продажи за прошлый месяц
         /// </summary>
         /// <returns></returns>
-        Task<decimal> GetSaleAmoundLastMonth();
+        Task<IEnumerable<Receipt>> GetSaleAmoundLastMonth();
 
         /// <summary>
         /// Сумма продажи с начала года
         /// </summary>
         /// <returns></returns>
-        Task<decimal> GetSaleAmoundBeginningYear();
+        Task<IEnumerable<Receipt>> GetSaleAmoundBeginningYear();
     }
 }
