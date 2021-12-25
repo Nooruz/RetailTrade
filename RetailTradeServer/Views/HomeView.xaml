@@ -14,7 +14,7 @@
                                 Tag="{StaticResource faChartLine}"
                                 Style="{StaticResource DefaultHamburgerSubMenu}">
 
-            <dxwui:HamburgerSubMenuNavigationButton Content="Панель продажи"
+            <dxwui:HamburgerSubMenuNavigationButton Content="Панель продаж"
                                                     Command="{Binding SaleDashboardCommand}"/>
 
         </dxwui:HamburgerSubMenu>
@@ -30,7 +30,7 @@
                                                     Command="{Binding ArrivalProductCommand}"
                                                     Focusable="False"/>
 
-            <dxwui:HamburgerSubMenuNavigationButton Content="Списание товаров"
+            <dxwui:HamburgerSubMenuNavigationButton Content="Списание товара"
                                                     Command="{Binding WriteDownProductCommand}"/>
 
             <dxwui:HamburgerSubMenuNavigationButton Content="Возвраты поставщикам"
