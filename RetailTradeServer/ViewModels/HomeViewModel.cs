@@ -29,11 +29,12 @@ namespace RetailTradeServer.ViewModels
         #region Public Properties
 
         public BaseViewModel CurrentMenuViewModel => _menuNavigator.CurrentViewModel;
+        public string OrganizationName => _userStore.CurrentOrganization.Name;
 
         #endregion
 
         #region Commands
-        
+
         public ICommand UpdateCurrentMenuViewModelCommand { get; }
 
         #region Информационная панель

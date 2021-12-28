@@ -233,7 +233,7 @@ namespace RetailTradeServer.ViewModels.Menus
             ProductCategory editProductCategory = ProductCategories.FirstOrDefault(pc => pc.Id == productSubcategory.ProductCategoryId);
             if (editProductCategory.ProductSubcategories == null)
             {
-                editProductCategory.ProductSubcategories = new List<ProductSubcategory>();
+                editProductCategory.ProductSubcategories = new();
             }
             editProductCategory.ProductSubcategories.Add(productSubcategory);
         }

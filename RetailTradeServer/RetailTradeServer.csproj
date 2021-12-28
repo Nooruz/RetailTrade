@@ -47,6 +47,7 @@
     <None Remove="Report\RevenueForPeriodReport.vsrepx" />
     <None Remove="Report\WriteDownProductReport.vsrepx" />
     <None Remove="Resources\Icons\newlogo.ico" />
+    <None Remove="Resources\Images\newlogo.png" />
     <None Remove="Resources\Images\sp.png" />
     <None Remove="SplashScreen.png" />
     <None Remove="Views\HomeView.xaml~RF1dc6ec.TMP" />
@@ -162,10 +163,6 @@
     <None Update="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
-    </None>
-    <None Update="Resources\Images\newlogo.png">
-      <Pack>True</Pack>
-      <PackagePath>\</PackagePath>
     </None>
   </ItemGroup>
 
