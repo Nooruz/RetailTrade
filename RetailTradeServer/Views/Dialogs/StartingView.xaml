@@ -24,16 +24,15 @@
                     Background="#fdfdfd"
                     VerticalAlignment="Bottom">
 
-                <dxlc:LayoutGroup>
+                <dxlc:LayoutGroup Padding="20 10 20 10">
 
-                    <dxlc:LayoutGroup Orientation="Vertical"
-                                      Padding="5">
+                    <dxlc:LayoutGroup Orientation="Vertical">
 
-                        <TextBlock VerticalAlignment="Bottom"
+                        <TextBlock VerticalAlignment="Top"
                                    FontSize="24"
                                    Foreground="#303030"
                                    Text="{Binding ApplicationName, FallbackValue=SP МАГАЗИН 1.0.2-betta1}"/>
-                        <TextBlock VerticalAlignment="Bottom"
+                        <TextBlock VerticalAlignment="Top"
                                    Foreground="#ababab"
                                    FontSize="18"
                                    Text="© ОсОО &quot;Sale Page&quot;"/>
@@ -41,7 +40,6 @@
                     </dxlc:LayoutGroup>
 
                     <Image Width="70"
-                           Margin="10"
                            HorizontalAlignment="Right"
                            Source="../../Resources/Images/newlogo.png"/>
 
