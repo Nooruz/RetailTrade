@@ -9,7 +9,7 @@
     VerticalAlignment="Center"
     HorizontalAlignment="Center">
 
-    <dxlc:LayoutControl ItemSpace="15">
+        <dxlc:LayoutControl ItemSpace="15">
 
         <dxlc:LayoutGroup View="GroupBox"
                           Header="Войти в систему">
