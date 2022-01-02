@@ -1,16 +1,16 @@
 ﻿<UserControl
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:dxe="http://schemas.devexpress.com/winfx/2008/xaml/editors"
     xmlns:dxg="http://schemas.devexpress.com/winfx/2008/xaml/grid"
     xmlns:dxlc="http://schemas.devexpress.com/winfx/2008/xaml/layoutcontrol"
     xmlns:dxmvvm="http://schemas.devexpress.com/winfx/2008/xaml/mvvm"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    xmlns:dxe="http://schemas.devexpress.com/winfx/2008/xaml/editors"
-    xmlns:converters="clr-namespace:RetailTradeServer.Converters"
     x:Class="RetailTradeServer.Views.Menus.ProductBarcodeView">
 
-    <UserControl.Resources>
-        <converters:StringIsNullOrEmptyBooleanConverter x:Key="StringIsNullOrEmptyBooleanConverter"/>
-    </UserControl.Resources>
+    <dxmvvm:Interaction.Behaviors>
+        <dxmvvm:EventToCommand EventName="Loaded"
+                               Command="{Binding UserControlLoadedCommand}"/>
+    </dxmvvm:Interaction.Behaviors>
 
     <dxlc:LayoutControl Orientation="Vertical">
 
@@ -29,7 +29,8 @@
                             FieldName="Name"/>
         </dxg:GridControl>
 
-        <dxg:GridControl ItemsSource="{Binding ProductBarcodePrintings}">
+        <dxg:GridControl ItemsSource="{Binding ProductBarcodePrintings}"
+                         SelectedItem="{Binding SelectedProductBarcodePrinting}">
             <dxg:GridControl.View>
                 <dxg:TableView AutoWidth="True"
                                ShowGroupPanel="False"/>
@@ -45,14 +46,18 @@
             </dxg:GridColumn>
             <dxg:GridColumn Header="Штрих-код"
                             FieldName="Barcode"
-                            AllowEditing="{Binding Path=Data.Barcode, Converter={StaticResource StringIsNullOrEmptyBooleanConverter}}">
-                <dxg:GridColumn.EditSettings>
-                    <dxe:ButtonEditSettings AllowDefaultButton="False">
-                        <dxe:ButtonEditSettings.Buttons>
-                            <dxe:ButtonInfo GlyphKind="Plus"/>
-                        </dxe:ButtonEditSettings.Buttons>
-                    </dxe:ButtonEditSettings>
-                </dxg:GridColumn.EditSettings>
+                            AllowEditing="False"/>
+            <dxg:GridColumn Width="30">
+                <dxg:GridColumn.CellTemplate>
+                    <DataTemplate>
+                        <Button x:Name="PART_Editor" 
+                                Content="{StaticResource faSyncAlt}"
+                                FontFamily="{StaticResource FontAwesomeBold}"
+                                ToolTip="Генерировать штрих-код"
+                                Visibility="{Binding RowData.Row.Barcode, Converter={StaticResource StringIsNullOrEmptyVisibilityConverter}}"
+                                Command="{Binding Path=DataContext.GenerateBarcodeCommand, RelativeSource={RelativeSource AncestorType={x:Type UserControl}, Mode=FindAncestor}}"/>
+                    </DataTemplate>
+                </dxg:GridColumn.CellTemplate>
             </dxg:GridColumn>
         </dxg:GridControl>
 

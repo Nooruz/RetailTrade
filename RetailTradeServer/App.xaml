@@ -14,7 +14,7 @@
         <ResourceDictionary>
 
             <converters:PasswordMultiBindingConverter x:Key="PasswordMultiBindingConverter"/>
-            <converters:StringIsNullOrEmptyBooleanConverter x:Key="StringIsNullOrEmptyBooleanConverter"/>
+            <converters:StringIsNullOrEmptyVisibilityConverter x:Key="StringIsNullOrEmptyVisibilityConverter"/>
 
             <DataTemplate DataType="{x:Type viewModels:LoginViewModel}">
                 <views:LoginView/>

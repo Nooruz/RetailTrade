@@ -30,5 +30,6 @@
     <system:String x:Key="faTrashAlt">&#xf2ed;</system:String>
     <system:String x:Key="faEdit">&#xf044;</system:String>
     <system:String x:Key="faChartLine">&#xf201;</system:String>
+    <system:String x:Key="faSyncAlt">&#xf2f1;</system:String>
 
 </ResourceDictionary>

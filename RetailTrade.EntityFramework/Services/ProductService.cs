@@ -246,5 +246,20 @@ namespace RetailTrade.EntityFramework.Services
             }
             return 0;
         }
+
+        public async Task<string> GenerateBarcode(Product product)
+        {
+            try
+            {
+                await using var context = _contextFactory.CreateDbContext();
+
+                return "";
+            }
+            catch (Exception e)
+            {
+                //ignore
+            }
+            return "";
+        }
     }
 }

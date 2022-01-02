@@ -22,6 +22,7 @@ namespace RetailTrade.Domain.Services
         Task<Product> Predicate(Expression<Func<Product, bool>> predicate, Expression<Func<Product, Product>> select);
         Task<double> GetQuantity(int id);
         Task<double> Refund(int id, double quantity);
+        Task<string> GenerateBarcode(Product product);
 
         event Action<Product> OnProductCreated;
         event Action<Product> OnProductEdited;
