@@ -23,7 +23,7 @@ namespace RetailTradeServer
         #region Private Members
 
         private readonly IHost _host;
-        private IDialogService _dialogService;
+        private Window startingWindow;
         private static SqlException _sqlException;
 
         #endregion
@@ -51,10 +51,17 @@ namespace RetailTradeServer
         protected override async void OnStartup(StartupEventArgs e)
         {
             await _host.StartAsync();
-            //_dialogService = _host.Services.GetRequiredService<IDialogService>();
-            //await _dialogService.Show(new StartingView());
-            SplashScreen splashScreen = new("SplashScreen.png");
-            splashScreen.Show(true);
+            startingWindow = new()
+            {
+                WindowStyle = WindowStyle.None,
+                SizeToContent = SizeToContent.WidthAndHeight,
+                ResizeMode = ResizeMode.NoResize,
+                WindowStartupLocation = WindowStartupLocation.CenterScreen,
+                Content = new StartingView()
+            };
+            startingWindow.Show();
+            //SplashScreen splashScreen = new("SplashScreen.png");
+            //splashScreen.Show(true);
             var contextFactory = _host.Services.GetRequiredService<RetailTradeDbContextFactory>();
 
             //Settings.Default.AdminCreated = false;
@@ -77,25 +84,25 @@ namespace RetailTradeServer
                 }
                     else
                     {
-                        _ = _dialogService.ShowMessage(_sqlException.Message, "", MessageBoxButton.OK, MessageBoxImage.Error);
+                        //_ = _dialogService.ShowMessage(_sqlException.Message, "", MessageBoxButton.OK, MessageBoxImage.Error);
                         Current.Shutdown();
                         return;
                     }
                 }
                 catch (Exception exception)
                 {
-                    _ = _dialogService.ShowMessage(exception.Message, "", MessageBoxButton.OK, MessageBoxImage.Error);
+                    //_ = _dialogService.ShowMessage(exception.Message, "", MessageBoxButton.OK, MessageBoxImage.Error);
                     Current.Shutdown();
                     return;
                 }
 
                 Window window = _host.Services.GetRequiredService<MainWindow>();
                 window.DataContext = _host.Services.GetRequiredService<MainViewModel>();
-
-                //await Task.Delay(100);
-
-                window.Show();
                 window.Loaded += Window_Loaded;
+                //await Task.Delay(5000);
+                
+                
+                window.Show();
             //}
             //else
             //{
@@ -111,7 +118,7 @@ namespace RetailTradeServer
 
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
-            //_dialogService.Close();
+            startingWindow.Close();
         }
 
         protected override async void OnExit(ExitEventArgs e)

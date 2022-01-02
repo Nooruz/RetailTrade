@@ -6,7 +6,7 @@
 
     <dxwui:HamburgerMenu OpenPaneWidth="220" 
                          ViewState="Opened"
-                         Header="Магазин"
+                         Header="{Binding OrganizationName}"
                          AllowBuiltInNavigation="True"
                          Content="{Binding CurrentMenuViewModel}">
         <dxwui:HamburgerMenu.Resources>

@@ -47,8 +47,14 @@
     <None Remove="Report\RevenueForPeriodReport.vsrepx" />
     <None Remove="Report\WriteDownProductReport.vsrepx" />
     <None Remove="Resources\Icons\newlogo.ico" />
-    <None Remove="Resources\Images\sp.png" />
-    <None Remove="SplashScreen.png" />
+    <None Remove="Resources\Images\background1.png" />
+    <None Remove="Resources\Images\background2.png" />
+    <None Remove="Resources\Images\background3.png" />
+    <None Remove="Resources\Images\background4.png" />
+    <None Remove="Resources\Images\background5.png" />
+    <None Remove="Resources\Images\background6.png" />
+    <None Remove="Resources\Images\background7.png" />
+    <None Remove="Resources\Images\newlogo.png" />
     <None Remove="Views\HomeView.xaml~RF1dc6ec.TMP" />
   </ItemGroup>
 
@@ -100,12 +106,14 @@
     <Resource Include="Fonts\fa-solid-900.ttf">
       <CopyToOutputDirectory>Never</CopyToOutputDirectory>
     </Resource>
+    <Resource Include="Resources\Images\background1.png" />
+    <Resource Include="Resources\Images\background2.png" />
+    <Resource Include="Resources\Images\background3.png" />
+    <Resource Include="Resources\Images\background4.png" />
+    <Resource Include="Resources\Images\background5.png" />
+    <Resource Include="Resources\Images\background6.png" />
+    <Resource Include="Resources\Images\background7.png" />
     <Resource Include="Resources\Images\newlogo.png" />
-    <Resource Include="Resources\Images\sp.png" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <SplashScreen Include="SplashScreen.png" />
   </ItemGroup>
 
   <ItemGroup>
@@ -162,10 +170,6 @@
     <None Update="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
-    </None>
-    <None Update="Resources\Images\newlogo.png">
-      <Pack>True</Pack>
-      <PackagePath>\</PackagePath>
     </None>
   </ItemGroup>
 

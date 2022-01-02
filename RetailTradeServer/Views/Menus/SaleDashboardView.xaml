@@ -50,8 +50,7 @@
             <dxlc:LayoutGroup Orientation="Vertical"
                               VerticalAlignment="Top">
 
-                <dxc:ChartControl Height="150" 
-                                  AnimationMode="OnDataChanged">
+                <dxc:ChartControl AnimationMode="OnDataChanged">
                     <dxc:XYDiagram2D SeriesItemsSource="{Binding DailySalesChart}">
                         <dxc:XYDiagram2D.SeriesItemTemplate>
                             <DataTemplate>
@@ -95,6 +94,38 @@
 
                 </dxlc:LayoutGroup>
 
+                <dxc:ChartControl AnimationMode="OnLoad">
+                    <dxc:SimpleDiagram2D>
+                        <dxc:PieSeries2D DisplayName="Name" 
+                                         DataSource="{Binding Path=RatingTenProducts}"
+                                         ArgumentDataMember="Product.Name" 
+                                         ValueDataMember="Quantity"
+                                         LabelsVisibility="True" 
+                                         LegendTextPattern="{}{A}: {V}"
+                                         HoleRadiusPercent="50">
+                            <!--region #Model-->
+                            <dxc:PieSeries2D.Model>
+                                <dxc:GlarePie2DModel/>
+                            </dxc:PieSeries2D.Model>
+                            <!--endregion #Model-->
+                            <dxc:PieSeries2D.TotalLabel>
+                                <dxc:PieTotalLabel TextPattern="Итого:&#x0a;{TV}"/>
+                            </dxc:PieSeries2D.TotalLabel>
+                            <dxc:PieSeries2D.Label>
+                                <dxc:SeriesLabel TextPattern="{}{VP:P}" 
+                                         dxc:PieSeries.LabelPosition="TwoColumns"/>
+                            </dxc:PieSeries2D.Label>
+                        </dxc:PieSeries2D>
+                    </dxc:SimpleDiagram2D>
+                    <dxc:ChartControl.Legends>
+                        <dxc:Legend>
+                            <dxc:Legend.Title>
+                                <dxc:LegendTitle Content="Рейтинг товаров"/>
+                            </dxc:Legend.Title>
+                        </dxc:Legend>
+                    </dxc:ChartControl.Legends>
+                </dxc:ChartControl>
+
             </dxlc:LayoutGroup>
 
         </dxlc:LayoutGroup>
@@ -123,7 +154,7 @@
             <dxlc:LayoutGroup Orientation="Vertical"
                               VerticalAlignment="Top">
 
-                <dxc:ChartControl Height="150">
+                <dxc:ChartControl>
                     <dxc:XYDiagram2D SeriesItemsSource="{Binding MonthlySalesChart}">
                         <dxc:XYDiagram2D.SeriesItemTemplate>
                             <DataTemplate>
@@ -165,7 +196,7 @@
 
                 </dxlc:LayoutGroup>
 
-                <dxc:ChartControl>
+                <dxc:ChartControl AnimationMode="OnLoad">
                     <dxc:SimpleDiagram2D>
                         <dxc:PieSeries2D DisplayName="Name" 
                                          DataSource="{Binding Path=RatingTenProducts}"

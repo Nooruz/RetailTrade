@@ -56,11 +56,11 @@ namespace SalePageServer.State.Dialogs
                 {
                     _window = new()
                     {
-                        MinHeight = WindowMinimumHeight,
-                        MinWidth = WindowMinimumWidth,
-                        SizeToContent = SizeToContent,
+                        SizeToContent = SizeToContent.WidthAndHeight,
                         WindowStyle = WindowStyle.None,
-                        ResizeMode = ResizeMode
+                        ResizeMode = ResizeMode.NoResize,
+                        Padding = new Thickness(0),
+                        BorderThickness = new Thickness(0),
                     };
                     _window.Content = userControl;
                     _window.Show();
