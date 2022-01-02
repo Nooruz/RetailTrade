@@ -5,7 +5,12 @@
     xmlns:dxmvvm="http://schemas.devexpress.com/winfx/2008/xaml/mvvm"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:dxe="http://schemas.devexpress.com/winfx/2008/xaml/editors"
+    xmlns:converters="clr-namespace:RetailTradeServer.Converters"
     x:Class="RetailTradeServer.Views.Menus.ProductBarcodeView">
+
+    <UserControl.Resources>
+        <converters:StringIsNullOrEmptyBooleanConverter x:Key="StringIsNullOrEmptyBooleanConverter"/>
+    </UserControl.Resources>
 
     <dxlc:LayoutControl Orientation="Vertical">
 
@@ -40,22 +45,11 @@
             </dxg:GridColumn>
             <dxg:GridColumn Header="Штрих-код"
                             FieldName="Barcode"
-                            AllowEditing="True">
+                            AllowEditing="{Binding Path=Data.Barcode, Converter={StaticResource StringIsNullOrEmptyBooleanConverter}}">
                 <dxg:GridColumn.EditSettings>
                     <dxe:ButtonEditSettings AllowDefaultButton="False">
                         <dxe:ButtonEditSettings.Buttons>
-                            <dxe:ButtonInfo GlyphKind="Plus"
-                                            Visibility="Collapsed">
-                                <dxe:ButtonInfo.Style>
-                                    <Style TargetType="{x:Type dxe:ButtonInfo}">
-                                        <Style.Triggers>
-                                            <DataTrigger Binding="{Binding Barcode}" Value="{x:Null}">
-                                                <Setter Property="Visibility" Value="Visible"/>
-                                            </DataTrigger>
-                                        </Style.Triggers>
-                                    </Style>
-                                </dxe:ButtonInfo.Style>    
-                            </dxe:ButtonInfo>
+                            <dxe:ButtonInfo GlyphKind="Plus"/>
                         </dxe:ButtonEditSettings.Buttons>
                     </dxe:ButtonEditSettings>
                 </dxg:GridColumn.EditSettings>
