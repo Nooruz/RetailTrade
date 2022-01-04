@@ -15,6 +15,7 @@ namespace RetailTrade.EntityFramework.Services
         private readonly NonQueryDataService<User> _nonQueryDataService;
 
         public event Action PropertiesChanged;
+        public event Action<User> OnUserCreated;
 
         public UserService(RetailTradeDbContextFactory contextFactory)
         {
@@ -26,7 +27,7 @@ namespace RetailTrade.EntityFramework.Services
         {
             var result = await _nonQueryDataService.Create(entity);
             if (result != null)
-                PropertiesChanged?.Invoke();
+                OnUserCreated?.Invoke(await GetAsync(result.Id));
             return result;
         }
 

@@ -15,6 +15,10 @@
                             BorderBrush="{TemplateBinding BorderBrush}">
 
                         <Grid>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="*"/>
+                            </Grid.RowDefinitions>
 
                             <!--<custom:LoadingPanel IsLoading="{Binding ShowLoadingPanel, UpdateSourceTrigger=PropertyChanged}"
                                                  Title="{Binding LoadingPanelTitle}"
@@ -23,11 +27,12 @@
 
                             <dxlc:LayoutControl Orientation="Vertical"
                                                 ItemSpace="15"
-                                                Padding="0">
+                                                Grid.Row="0"
+                                                Padding="10 10 10 0">
 
                                 <TextBlock Text="{TemplateBinding Title}"
                                            FontSize="24"
-                                           HorizontalAlignment="Center"
+                                           HorizontalAlignment="Left"
                                            VerticalAlignment="Top"/>
 
                                 <dxlc:LayoutGroup Orientation="Horizontal"
@@ -46,9 +51,9 @@
 
                                 </dxlc:LayoutGroup>
 
-                                <ContentPresenter/>
-
                             </dxlc:LayoutControl>
+
+                            <ContentPresenter Grid.Row="1"/>
 
                         </Grid>
 

@@ -3,33 +3,35 @@
                       xmlns:dxg="http://schemas.devexpress.com/winfx/2008/xaml/grid"
                       xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
                       xmlns:local="clr-namespace:RetailTradeServer.Views.Menus"
-                      xmlns:dxmvvm="http://schemas.devexpress.com/winfx/2008/xaml/mvvm"
+                      xmlns:dxmvvm="http://schemas.devexpress.com/winfx/2008/xaml/mvvm" xmlns:dxlc="http://schemas.devexpress.com/winfx/2008/xaml/layoutcontrol"
                       Title="Пользователи">
 
     <dxmvvm:Interaction.Behaviors>
         <dxmvvm:EventToCommand EventName="Loaded"
                                Command="{Binding UserControlLoadedCommand}"/>
     </dxmvvm:Interaction.Behaviors>
-    
-    <dxg:GridControl ItemsSource="{Binding Users}"
-                     SelectedItem="{Binding SelectedUser}">
-        <dxg:GridControl.View>
-            <dxg:TableView ShowTotalSummary="True" AllowEditing="False" AutoWidth="True"/>
-        </dxg:GridControl.View>
-        
-        <dxg:GridColumn Header="Имя" 
-                        FieldName="Username"/>
-        
-        <dxg:GridColumn Header="Дата создания" 
-                        FieldName="JoinedDate" 
-                        UnboundType="DateTime"/>
 
-        <dxg:GridColumn Header="Роль" 
-                        FieldName="Role.Name"/>
+    <dxlc:LayoutControl>
+        <dxg:GridControl ItemsSource="{Binding Users}"
+                         SelectedItem="{Binding SelectedUser}">
+            <dxg:GridControl.View>
+                <dxg:TableView ShowTotalSummary="True" AllowEditing="False" AutoWidth="True"/>
+            </dxg:GridControl.View>
 
-        <dxg:GridColumn Header="Филиал" 
-                        FieldName="Branch.Name"/>
-        
-    </dxg:GridControl>
+            <dxg:GridColumn Header="Имя" 
+                            FieldName="Username"/>
+
+            <dxg:GridColumn Header="Дата создания" 
+                            FieldName="JoinedDate" 
+                            UnboundType="DateTime"/>
+
+            <dxg:GridColumn Header="Роль" 
+                            FieldName="Role.Name"/>
+
+            <dxg:GridColumn Header="Филиал" 
+                            FieldName="Branch.Name"/>
+
+        </dxg:GridControl>
+    </dxlc:LayoutControl>
 
 </local:BaseMenuView>

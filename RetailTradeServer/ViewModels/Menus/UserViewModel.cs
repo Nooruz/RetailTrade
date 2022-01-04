@@ -7,6 +7,8 @@ using RetailTradeServer.ViewModels.Base;
 using RetailTradeServer.ViewModels.Dialogs;
 using RetailTradeServer.Views.Dialogs;
 using SalePageServer.State.Dialogs;
+using SalePageServer.Utilities;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Windows;
 using System.Windows.Input;
@@ -22,21 +24,13 @@ namespace RetailTradeServer.ViewModels.Menus
         private readonly IAuthenticator _authenticator;
         private readonly IRoleService _roleService;
         private readonly IMessageStore _messageStore;
-        private ObservableCollection<User> _users;
+        private ObservableQueue<User> _users;
 
         #endregion
 
         #region Public Members
 
-        public ObservableCollection<User> Users
-        {
-            get => _users ?? (new());
-            set
-            {
-                _users = value;
-                OnPropertyChanged(nameof(Users));
-            }
-        }
+        public IEnumerable<User> Users => _users;
         public User SelectedUser { get; set; }
 
         #endregion
@@ -61,12 +55,15 @@ namespace RetailTradeServer.ViewModels.Menus
             _roleService = roleService;
             _messageStore = messageStore;
 
+            _users = new();
+
             CreateCommand = new RelayCommand(CreateUser);
             DeleteCommand = new RelayCommand(DeleteUser);
             EditCommand = new RelayCommand(EditUser);
             UserControlLoadedCommand = new RelayCommand(UserControlLoaded);
 
             _userService.PropertiesChanged += UserService_PropertiesChanged;
+            _userService.OnUserCreated += UserService_OnUserCreated;
         }
 
         #endregion
@@ -105,12 +102,17 @@ namespace RetailTradeServer.ViewModels.Menus
 
         private async void UserControlLoaded()
         {
-            Users = new(await _userService.GetAllAsync());
+            _users.AddRange(await _userService.GetAllAsync());
         }
 
         private void UserService_PropertiesChanged()
         {
             OnPropertyChanged(nameof(Users));
+        }
+
+        private void UserService_OnUserCreated(User user)
+        {
+            _users.Enqueue(user);
         }
 
         #endregion
