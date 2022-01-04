@@ -6,8 +6,8 @@ using RetailTradeServer.State.Messages;
 using RetailTradeServer.ViewModels.Dialogs.Base;
 using RetailTradeServer.Views.Dialogs;
 using SalePageServer.State.Dialogs;
+using SalePageServer.Utilities;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.Windows;
 using System.Windows.Input;
 using DialogService = SalePageServer.State.Dialogs.DialogService;
@@ -34,41 +34,27 @@ namespace RetailTradeServer.ViewModels.Dialogs
         private decimal _arrivalPrice;
         private decimal _salePrice;
         private string _tnved;
-        private ObservableCollection<ProductCategory> _productCategories;
-        private ObservableCollection<ProductSubcategory> _productSubcategory;
+        private ObservableQueue<ProductCategory> _productCategories;
+        private ObservableQueue<ProductSubcategory> _productSubcategory;
+        private ObservableQueue<Unit> _units;
+        private ObservableQueue<Supplier> _suppliers;
 
         #endregion
 
         #region Public Properties
 
         public GlobalMessageViewModel GlobalMessageViewModel { get; }
-        public ObservableCollection<ProductCategory> ProductCategories
-        {
-            get => _productCategories ?? (new());
-            set
-            {
-                _productCategories = value;
-                OnPropertyChanged(nameof(ProductCategories));
-            }
-        }
-        public ObservableCollection<ProductSubcategory> ProductSubCategories
-        {
-            get => _productSubcategory ?? (new());
-            set
-            {
-                _productSubcategory = value;
-                OnPropertyChanged(nameof(ProductSubCategories));
-            }
-        }
-        public IEnumerable<Unit> Units => _unitService.GetAll();
-        public IEnumerable<Supplier> Suppliers => _supplierService.GetAll();
+        public IEnumerable<ProductCategory> ProductCategories => _productCategories;
+        public IEnumerable<ProductSubcategory> ProductSubCategories => _productSubcategory;
+        public IEnumerable<Unit> Units => _units;
+        public IEnumerable<Supplier> Suppliers => _suppliers;
         public int? SelectedProductCategoryId
         {
             get => _selectedProductCategoryId;
             set
             {
                 _selectedProductCategoryId = value;
-                SelectedProductSubcategoryId = 0;
+                SelectedProductSubcategoryId = null;
                 OnPropertyChanged(nameof(SelectedProductCategoryId));
                 OnPropertyChanged(nameof(ProductSubCategories));
                 OnPropertyChanged(nameof(CanTabSelect));
@@ -217,6 +203,11 @@ namespace RetailTradeServer.ViewModels.Dialogs
             GlobalMessageViewModel = globalMessageViewModel;
             _messageStore = messageStore;
 
+            _productCategories = new();
+            _productSubcategory = new();
+            _units = new();
+            _suppliers = new();
+
             _messageStore.Close();
 
             SavePieceProductCommand = new RelayCommand(SavePieceProduct);
@@ -230,7 +221,7 @@ namespace RetailTradeServer.ViewModels.Dialogs
             UserControlLoadedCommand = new RelayCommand(UserControlLoaded);
             SelectedProductCategoryChangedCommand = new RelayCommand(SelectedProductCategoryChanged);
 
-            _supplierService.PropertiesChanged += SupplierService_PropertiesChanged;
+            _supplierService.OnSupplierCreated += SupplierService_OnSupplierCreated;
             _productCategoryService.OnProductCategoryCreated += ProductCategoryService_OnProductCategoryCreated;
             _productSubcategoryService.OnProductSubcategoryCreated += ProductSubcategoryService_OnProductSubcategoryCreated;
         }
@@ -239,28 +230,37 @@ namespace RetailTradeServer.ViewModels.Dialogs
 
         #region Private Voids
 
+        private void SupplierService_OnSupplierCreated(Supplier supplier)
+        {
+            _suppliers.Enqueue(supplier);
+            SelectedSupplierId = supplier.Id;
+        }
+
         private async void SelectedProductCategoryChanged()
         {
             if (SelectedProductCategoryId != null)
             {
-                ProductSubCategories = new(await _productSubcategoryService.GetAllByProductCategoryIdAsync(SelectedProductCategoryId.Value));
+                _productSubcategory.Dequeue();
+                _productSubcategory.AddRange(await _productSubcategoryService.GetAllByProductCategoryIdAsync(SelectedProductCategoryId.Value));
             }
         }
 
         private async void UserControlLoaded()
         {
-            ProductCategories = new(await _productCategoryService.GetAllAsync());
+            _productCategories.AddRange(await _productCategoryService.GetAllAsync());
+            _suppliers.AddRange(await _supplierService.GetAllAsync());
+            _units.AddRange(await _unitService.GetAllAsync());
         }
 
         private void ProductCategoryService_OnProductCategoryCreated(ProductCategory productCategory)
         {
-            ProductCategories.Add(productCategory);
+            _productCategories.Enqueue(productCategory);
             SelectedProductCategoryId = productCategory.Id;
         }
 
         private void ProductSubcategoryService_OnProductSubcategoryCreated(ProductSubcategory productSubcategory)
         {
-            ProductSubCategories.Add(productSubcategory);
+            _productSubcategory.Enqueue(productSubcategory);
             SelectedProductSubcategoryId = productSubcategory.Id;
         }
 
@@ -277,7 +277,11 @@ namespace RetailTradeServer.ViewModels.Dialogs
 
         private void TabControl_SelectionChanging(object sender, TabControlSelectionChangingEventArgs e)
         {
-            if (!CanTabSelect)
+            if (CanTabSelect)
+            {
+                _messageStore.Close();
+            }
+            else
             {
                 if (_dialogService.ShowMessage("Данные не сохранены. Продолжить?", "", MessageBoxButton.YesNo, MessageBoxImage.Question)
                     == MessageBoxResult.No)
@@ -290,10 +294,6 @@ namespace RetailTradeServer.ViewModels.Dialogs
                     e.Cancel = true;
                     _messageStore.Close();
                 }
-            }
-            else
-            {
-                _messageStore.Close();
             }
         }
 
@@ -315,6 +315,11 @@ namespace RetailTradeServer.ViewModels.Dialogs
         /// </summary>
         private async void SavePieceProduct()
         {
+            if (SelectedSupplierId == null || SelectedSupplierId == 0)
+            {
+                _messageStore.SetCurrentMessage("Выберите поставщика.", MessageType.Error);
+                return;
+            }
             if (string.IsNullOrEmpty(Barcode))
             {
                 _messageStore.SetCurrentMessage("Введите штрих-код товара.", MessageType.Error);
@@ -327,12 +332,12 @@ namespace RetailTradeServer.ViewModels.Dialogs
             }
             if (SelectedProductCategoryId == null || SelectedProductCategoryId == 0)
             {
-                _messageStore.SetCurrentMessage("Выберите категории товара.", MessageType.Error);
+                _messageStore.SetCurrentMessage("Выберите группу товара.", MessageType.Error);
                 return;
             }
             if (SelectedProductSubcategoryId == null || SelectedProductSubcategoryId == 0)
             {
-                _messageStore.SetCurrentMessage("Выберите группу товара.", MessageType.Error);
+                _messageStore.SetCurrentMessage("Выберите категории товара.", MessageType.Error);
                 return;
             }
             if (SelectedUnitId == null || SelectedUnitId == 0)
@@ -355,6 +360,7 @@ namespace RetailTradeServer.ViewModels.Dialogs
             {
                 Barcode = Barcode,
                 Name = Name,
+                ProductCategoryId = SelectedProductCategoryId.Value,
                 ProductSubcategoryId = SelectedProductSubcategoryId.Value,
                 UnitId = SelectedUnitId.Value,
                 SupplierId = SelectedSupplierId.Value,
@@ -409,6 +415,7 @@ namespace RetailTradeServer.ViewModels.Dialogs
             var product = await _productService.CreateAsync(new Product
             {
                 Name = Name,
+                ProductCategoryId = SelectedProductCategoryId.Value,
                 ProductSubcategoryId = SelectedProductSubcategoryId.Value,
                 UnitId = SelectedUnitId.Value,
                 TNVED = TNVED,
@@ -462,6 +469,7 @@ namespace RetailTradeServer.ViewModels.Dialogs
             var product = await _productService.CreateAsync(new Product
             {
                 Name = Name,
+                ProductCategoryId = SelectedProductCategoryId.Value,
                 ProductSubcategoryId = SelectedProductSubcategoryId.Value,
                 UnitId = SelectedUnitId.Value,
                 TNVED = TNVED,
@@ -520,6 +528,7 @@ namespace RetailTradeServer.ViewModels.Dialogs
             var product = await _productService.CreateAsync(new Product
             {
                 Name = Name,
+                ProductCategoryId = SelectedProductCategoryId.Value,
                 ProductSubcategoryId = SelectedProductSubcategoryId.Value,
                 UnitId = SelectedUnitId.Value,
                 SupplierId = SelectedSupplierId.Value,
@@ -556,18 +565,12 @@ namespace RetailTradeServer.ViewModels.Dialogs
                 new CreateProductSubcategoryDialogForm());
         }
 
-        private void SupplierService_PropertiesChanged()
-        {
-            OnPropertyChanged(nameof(Suppliers));
-        }
-
         #endregion
 
         #region Dispose
 
         public override void Dispose()
         {
-            _supplierService.PropertiesChanged -= SupplierService_PropertiesChanged;
             _productCategoryService.OnProductCategoryCreated -= ProductCategoryService_OnProductCategoryCreated;
             _productSubcategoryService.OnProductSubcategoryCreated -= ProductSubcategoryService_OnProductSubcategoryCreated;
             base.Dispose();

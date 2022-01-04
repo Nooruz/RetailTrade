@@ -272,10 +272,8 @@ namespace RetailTradeServer.ViewModels.Dialogs
             EditProduct.TNVED = TNVED;
             EditProduct.Barcode = Barcode;
             EditProduct.SupplierId = SelectedSupplierId.Value;
-            EditProduct.Supplier = SelectedSupplier;
             EditProduct.UnitId = SelectedUnitId.Value;
-            EditProduct.Unit = SelectedUnit;
-            EditProduct.ProductSubcategory = SelectedProductSubcategory;
+            EditProduct.ProductCategoryId = SelectedProductCategoryId.Value;
             EditProduct.ProductSubcategoryId = SelectedProductSubcategoryId.Value;
             EditProduct.WithoutBarcode = string.IsNullOrEmpty(Barcode);
 

@@ -14,6 +14,9 @@ namespace RetailTradeServer.Views.Menus
         public static readonly DependencyProperty TitleProperty =
             DependencyProperty.Register(nameof(Title), typeof(string), typeof(BaseMenuView), new PropertyMetadata("Название"));
 
+        public static readonly DependencyProperty ButtonsProperty =
+            DependencyProperty.Register(nameof(Buttons), typeof(UIElementCollection), typeof(BaseMenuView), new PropertyMetadata(null));
+
         #endregion
 
         #region Public Properties
@@ -28,6 +31,12 @@ namespace RetailTradeServer.Views.Menus
         {
             get => (string)GetValue(TitleProperty);
             set => SetValue(TitleProperty, value);
+        }
+
+        public UIElementCollection Buttons
+        {
+            get { return (UIElementCollection)GetValue(ButtonsProperty); }
+            set { SetValue(ButtonsProperty, value); }
         }
 
         #endregion

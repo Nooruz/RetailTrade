@@ -121,8 +121,9 @@
                         </dxlc:LayoutItem>
 
                         <dxlc:LayoutItem Label="ТН ВЭД">
-                            <dxe:TextEdit Text="{Binding TNVED, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" 
-                                      MaskType="Numeric"/>
+                            <dxe:TextEdit Text="{Binding TNVED, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                          MaskType="Numeric"
+                                          Mask="d"/>
                         </dxlc:LayoutItem>
 
                         <dxlc:LayoutGroup Orientation="Horizontal"
@@ -143,7 +144,7 @@
                 </dxlc:LayoutControl>
             </dx:DXTabItem>
 
-            <dx:DXTabItem Header="Фасованные товары">
+            <!--<dx:DXTabItem Header="Фасованные товары">
                 <dxlc:LayoutControl ItemSpace="15"
                                 Orientation="Vertical">
 
@@ -338,7 +339,7 @@
                     </dxlc:LayoutGroup>
 
                 </dxlc:LayoutControl>
-            </dx:DXTabItem>
+            </dx:DXTabItem>-->
 
             <dx:DXTabItem Header="Товары без штрихкода">
                 <dxlc:LayoutControl ItemSpace="15"

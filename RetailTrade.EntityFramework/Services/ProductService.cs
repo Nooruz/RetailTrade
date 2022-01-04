@@ -56,10 +56,7 @@ namespace RetailTrade.EntityFramework.Services
             try
             {
                 await using var context = _contextFactory.CreateDbContext();
-                return await context.Products                    
-                    .Include(p => p.Supplier)
-                    .Include(p => p.ProductSubcategory)
-                    .ThenInclude(p => p.ProductCategory)
+                return await context.Products
                     .FirstOrDefaultAsync((e) => e.Id == id);
             }
             catch (Exception e)
@@ -90,9 +87,6 @@ namespace RetailTrade.EntityFramework.Services
             {
                 await using var context = _contextFactory.CreateDbContext();
                 return await context.Products
-                    .Include(p => p.Unit)
-                    .Include(p => p.ProductSubcategory)
-                    .ThenInclude(p => p.ProductCategory)
                     .ToListAsync();
             }
             catch (Exception e)
@@ -109,9 +103,6 @@ namespace RetailTrade.EntityFramework.Services
                 await using var context = _contextFactory.CreateDbContext();
                 return await context.Products
                     .Where(p => p.ProductSubcategoryId == productSubcategoryId)
-                    .Include(p => p.Unit)
-                    .Include(p => p.ProductSubcategory)
-                    .ThenInclude(p => p.ProductCategory)
                     .ToListAsync();
             }
             catch (Exception e)
@@ -128,9 +119,6 @@ namespace RetailTrade.EntityFramework.Services
                 await using var context = _contextFactory.CreateDbContext();
                 return await context.Products
                     .Where(p => p.ProductSubcategory.ProductCategoryId == productCategoryId)
-                    .Include(p => p.Unit)
-                    .Include(p => p.ProductSubcategory)
-                    .ThenInclude(p => p.ProductCategory)                 
                     .ToListAsync();
             }
             catch (Exception e)
@@ -260,6 +248,26 @@ namespace RetailTrade.EntityFramework.Services
                 //ignore
             }
             return "";
+        }
+
+        public async Task<bool> MarkingForDeletion(Product product)
+        {
+            try
+            {
+                await using var context = _contextFactory.CreateDbContext();
+                product.DeleteMark = !product.DeleteMark;
+                Product result = await UpdateAsync(product.Id, product);
+                if (result != null)
+                {
+                    OnProductEdited?.Invoke(result);
+                    return true;
+                }
+            }
+            catch (Exception e)
+            {
+                //ignore
+            }
+            return false;
         }
     }
 }

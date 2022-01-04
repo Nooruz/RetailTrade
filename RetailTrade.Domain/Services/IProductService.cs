@@ -23,6 +23,7 @@ namespace RetailTrade.Domain.Services
         Task<double> GetQuantity(int id);
         Task<double> Refund(int id, double quantity);
         Task<string> GenerateBarcode(Product product);
+        Task<bool> MarkingForDeletion(Product product);
 
         event Action<Product> OnProductCreated;
         event Action<Product> OnProductEdited;

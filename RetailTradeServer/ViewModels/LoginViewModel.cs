@@ -82,16 +82,16 @@ namespace RetailTradeServer.ViewModels
 
             LoginCommand = new LoginCommand(this, authenticator, homeRenavigator, messageStore);
             RegistrationCommand = new RenavigateCommand(registrationRenavigator);
-            GetAllUsers();
+            GetAdmin();
         }
 
         #endregion
 
         #region Private Voids
 
-        private async void GetAllUsers()
+        private async void GetAdmin()
         {
-            Users = await _userService.GetAllAsync();
+            Users = await _userService.GetAdminAsync();
         }
 
         #endregion

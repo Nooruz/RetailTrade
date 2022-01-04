@@ -85,17 +85,20 @@
         </dxlc:LayoutGroup>
 
         <dxlc:LayoutGroup Orientation="Vertical"
-                              Grid.Column="2">
+                          Grid.Column="2">
 
             <dxlc:LayoutGroup Orientation="Horizontal"
-                                  VerticalAlignment="Top"
-                                  HorizontalAlignment="Left">
+                              VerticalAlignment="Top"
+                              HorizontalAlignment="Left">
 
                 <Button Content="Создать новый товар"
-                            Command="{Binding CreateProductCommand}"/>
+                        Command="{Binding CreateProductCommand}"/>
 
                 <Button Content="Редактировать товар"
-                            Command="{Binding EditProductCommand}"/>
+                        Command="{Binding EditProductCommand}"/>
+
+                <Button Content="Пометить на удаление / Снять пометку"
+                        Command="{Binding DeleteMarkingProductCommand}"/>
 
             </dxlc:LayoutGroup>
 
@@ -133,16 +136,37 @@
                                            PassEventArgsToCommand="True"/>
                 </dxmvvm:Interaction.Behaviors>
 
+                <dxg:GridColumn Style="{StaticResource BooleanColumn}"/>
+
                 <dxg:GridColumn FieldName="Id"
-                                    Header="Код">
+                                Header="Код">
                     <dxg:GridColumn.EditSettings>
                         <dxe:TextEditSettings DisplayFormat="D6"/>
                     </dxg:GridColumn.EditSettings>
                 </dxg:GridColumn>
                 <dxg:GridColumn FieldName="Name" Header="Наименование"/>
-                <dxg:GridColumn FieldName="ProductSubcategory.ProductCategory.Name" Header="Категория товара"/>
-                <dxg:GridColumn FieldName="ProductSubcategory.Name" Header="Группа товара"/>
-                <dxg:GridColumn FieldName="Unit.ShortName" Header="Ед. изм."/>
+                <dxg:GridColumn FieldName="ProductSubcategory.ProductCategoryId" Header="Категория товара">
+                    <dxg:GridColumn.EditSettings>
+                        <dxe:ComboBoxEditSettings ItemsSource="{Binding ProductCategories}"
+                                                  DisplayMember="Name"
+                                                  ValueMember="Id"/>
+                    </dxg:GridColumn.EditSettings>
+                </dxg:GridColumn>
+                <dxg:GridColumn FieldName="ProductSubcategoryId" 
+                                Header="Группа товара">
+                    <dxg:GridColumn.EditSettings>
+                        <dxe:ComboBoxEditSettings ItemsSource="{Binding ProductSubcategories}"
+                                                  DisplayMember="Name"
+                                                  ValueMember="Id"/>
+                    </dxg:GridColumn.EditSettings>
+                </dxg:GridColumn>
+                <dxg:GridColumn FieldName="UnitId" Header="Ед. изм.">
+                    <dxg:GridColumn.EditSettings>
+                        <dxe:ComboBoxEditSettings ItemsSource="{Binding Units}"
+                                                  DisplayMember="ShortName"
+                                                  ValueMember="Id"/>
+                    </dxg:GridColumn.EditSettings>
+                </dxg:GridColumn>
                 <dxg:GridColumn FieldName="Barcode" Header="Штрих код"/>
                 <dxg:GridColumn FieldName="ArrivalPrice" Header="Цена приход">
                     <dxg:GridColumn.EditSettings>

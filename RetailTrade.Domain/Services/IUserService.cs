@@ -10,7 +10,16 @@ namespace RetailTrade.Domain.Services
         Task<User> GetByUsername(string username);
         Task<bool> AnyAsync();
         IEnumerable<User> GetCashiers();
+        Task<IEnumerable<User>> GetAdminAsync();
+
+        /// <summary>
+        /// Поментка на удаление
+        /// </summary>
+        /// <param name="user">Пользователь</param>
+        /// <returns></returns>
+        Task<bool> MarkingForDeletion(User user);
 
         event Action<User> OnUserCreated;
+        event Action<User> OnUserUpdated;
     }
 }

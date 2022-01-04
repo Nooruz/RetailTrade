@@ -78,7 +78,6 @@ namespace RetailTradeServer.ViewModels.Dialogs
                 OnPropertyChanged(nameof(SelectedRoleId));
             }
         }
-        public bool IsEditMode { get; set; }
         public User EditableUser
         {
             get => _editableUser;
@@ -196,6 +195,7 @@ namespace RetailTradeServer.ViewModels.Dialogs
 
             EditableUser.Username = Username;
             EditableUser.FullName = FullName;
+            EditableUser.Role = null;
             EditableUser.RoleId = SelectedRoleId.Value;
 
             RegistrationResult result = string.IsNullOrEmpty(Password)

@@ -16,6 +16,7 @@ namespace RetailTrade.EntityFramework.Services
 
         public event Action PropertiesChanged;
         public event Action<User> OnUserCreated;
+        public event Action<User> OnUserUpdated;
 
         public UserService(RetailTradeDbContextFactory contextFactory)
         {
@@ -43,7 +44,7 @@ namespace RetailTrade.EntityFramework.Services
         {
             var result = await _nonQueryDataService.Update(id, entity);
             if (result != null)
-                PropertiesChanged?.Invoke();
+                OnUserUpdated?.Invoke(result);
             return result;
         }
 
@@ -138,6 +139,42 @@ namespace RetailTrade.EntityFramework.Services
                 //ignore
             }
             return null;
+        }
+
+        public async Task<IEnumerable<User>> GetAdminAsync()
+        {
+            try
+            {
+                using var context = _contextFactory.CreateDbContext();
+                return await context.Users
+                    .Where(u => u.Role.Name == "Администратор")
+                    .ToListAsync();
+            }
+            catch (Exception e)
+            {
+                //ignore
+            }
+            return null;
+        }
+
+        public async Task<bool> MarkingForDeletion(User user)
+        {
+            try
+            {
+                using var context = _contextFactory.CreateDbContext();
+                user.DeleteMark = !user.DeleteMark;
+                User result = await UpdateAsync(user.Id, user);
+                if (result != null)
+                {
+                    OnUserUpdated?.Invoke(result);
+                    return true;
+                }
+            }
+            catch (Exception e)
+            {
+                //ignore
+            }
+            return false;
         }
     }
 }

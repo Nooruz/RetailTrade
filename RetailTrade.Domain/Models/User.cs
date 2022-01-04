@@ -13,6 +13,7 @@ namespace RetailTrade.Domain.Models
         private string _passwordHash;
         private DateTime? _joinedDate;
         private int _roleId;
+        private bool _deleteMark;
 
         #endregion
 
@@ -80,6 +81,19 @@ namespace RetailTrade.Domain.Models
             {
                 _roleId = value;
                 OnPropertyChanged(nameof(RoleId));
+            }
+        }
+
+        /// <summary>
+        /// Пометка на удаление, по умолчанию false
+        /// </summary>
+        public bool DeleteMark
+        {
+            get => _deleteMark;
+            set
+            {
+                _deleteMark = value;
+                OnPropertyChanged(nameof(DeleteMark));
             }
         }
 

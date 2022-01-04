@@ -31,6 +31,8 @@ namespace RetailTradeServer.ViewModels.Menus
         private object _selectedProductGroup;
         private readonly ObservableQueue<Product> _getProducts;
         private readonly ObservableQueue<ProductCategory> _productCategories;
+        private IEnumerable<ProductSubcategory> _productSubcategories;
+        private IEnumerable<Unit> _units;
         private bool _canShowLoadingPanel = true;
         private Product _selectedProduct;
 
@@ -49,6 +51,7 @@ namespace RetailTradeServer.ViewModels.Menus
         public ICommand EditProductCategoryOrSubCategoryCommand { get; }
         public ICommand DeleteProductCategoryOrSubCategoryCommand { get; }
         public ICommand GridControlLoadedCommand { get; }
+        public ICommand DeleteMarkingProductCommand { get; }
 
         #endregion
 
@@ -56,6 +59,24 @@ namespace RetailTradeServer.ViewModels.Menus
 
         public GlobalMessageViewModel GlobalMessageViewModel { get; }
         public IEnumerable<ProductCategory> ProductCategories => _productCategories;
+        public IEnumerable<ProductSubcategory> ProductSubcategories
+        {
+            get => _productSubcategories;
+            set
+            {
+                _productSubcategories = value;
+                OnPropertyChanged(nameof(ProductCategories));
+            }
+        }
+        public IEnumerable<Unit> Units
+        {
+            get => _units;
+            set
+            {
+                _units = value;
+                OnPropertyChanged(nameof(Units));
+            }
+        }
         public IEnumerable<Product> GetProducts => _getProducts;
         public object SelectedProductGroup
         {
@@ -126,11 +147,10 @@ namespace RetailTradeServer.ViewModels.Menus
             CreateProductCategoryOrSubCategoryCommand = new RelayCommand(CreateProductCategoryOrSubCategory);
             EditProductCategoryOrSubCategoryCommand = new RelayCommand(EditProductCategoryOrSubCategory);
             GridControlLoadedCommand = new ParameterCommand(sender => GridControlLoaded(sender));
+            DeleteMarkingProductCommand = new RelayCommand(DeleteMarkingProduct);
 
             _getProducts = new();
             _productCategories = new();
-
-            GetProductCategories();
 
             _productCategoryService.OnProductCategoryCreated += ProductCategoryService_OnProductCategoryCreated;
             _productSubcategoryService.OnProductSubcategoryCreated += ProductSubcategoryService_OnProductSubcategoryCreated;
@@ -140,6 +160,21 @@ namespace RetailTradeServer.ViewModels.Menus
         #endregion
 
         #region Private Voids
+
+        private async void DeleteMarkingProduct()
+        {
+            if (SelectedProduct != null)
+            {
+                if (_dialogService.ShowMessage(SelectedProduct.DeleteMark ? $"Снять пометку \"{SelectedProduct.Name}\"?" : $"Пометить \"{SelectedProduct.Name}\" на удаление?", "", MessageBoxButton.YesNo, MessageBoxImage.Question) == MessageBoxResult.Yes)
+                {
+                    await _productService.MarkingForDeletion(SelectedProduct);
+                }
+            }
+            else
+            {
+                _ = _dialogService.ShowMessage("Выберите товар", "", MessageBoxButton.OK, MessageBoxImage.Exclamation);
+            }
+        }
 
         private void CreateProduct()
         {
@@ -216,10 +251,8 @@ namespace RetailTradeServer.ViewModels.Menus
         private async void GetProductsAsync()
         {
             _getProducts.AddRange(await _productService.GetAllAsync());
-        }
-
-        private async void GetProductCategories()
-        {
+            ProductSubcategories = await _productSubcategoryService.GetAllAsync();
+            Units = await _unitService.GetAllAsync();
             _productCategories.AddRange(await _productCategoryService.GetAllListAsync());
         }
 

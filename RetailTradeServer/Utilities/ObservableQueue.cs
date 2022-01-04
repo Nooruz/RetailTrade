@@ -14,11 +14,15 @@ namespace SalePageServer.Utilities
         }
         public new T Dequeue()
         {
-            T item = base.Dequeue();
+            if (Count != 0)
+            {
+                T item = base.Dequeue();
 
-            CollectionChanged?.Invoke(this, new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Remove, item, 0));
+                CollectionChanged?.Invoke(this, new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Remove, item, 0));
 
-            return item;
+                return item;
+            }
+            return default;
         }
         public new void Clear()
         {
@@ -38,7 +42,7 @@ namespace SalePageServer.Utilities
         }
         public void AddRange(IEnumerable<T> collection)
         {
-            if (collection.Any())
+            if (collection != null && collection.Any())
             {
                 foreach (var item in collection)
                 {

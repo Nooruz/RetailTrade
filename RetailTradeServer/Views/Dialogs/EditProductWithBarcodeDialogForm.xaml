@@ -84,7 +84,7 @@
                                   EditValue="{Binding SelectedUnitId, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
             </dxlc:LayoutItem>
 
-            <dxlc:LayoutItem Label="Цена приход">
+            <!--<dxlc:LayoutItem Label="Цена приход">
                 <dxe:TextEdit Text="{Binding ArrivalPrice, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" 
                                       MaskType="Numeric"
                                       MaskUseAsDisplayFormat="True"
@@ -96,11 +96,12 @@
                                       MaskType="Numeric"
                                       MaskUseAsDisplayFormat="True"
                                       SelectAllOnMouseUp="True"/>
-            </dxlc:LayoutItem>
+            </dxlc:LayoutItem>-->
 
             <dxlc:LayoutItem Label="ТН ВЭД">
-                <dxe:TextEdit Text="{Binding TNVED, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" 
-                                      MaskType="Numeric"/>
+                <dxe:TextEdit Text="{Binding TNVED, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                              MaskType="Numeric"
+                              Mask="d"/>
             </dxlc:LayoutItem>
 
             <dxlc:LayoutGroup Orientation="Horizontal"

@@ -11,6 +11,7 @@ namespace RetailTrade.Domain.Models
         #region Private Members
 
         private string _name;
+        private int _productCategoryId;
         private int _productSubcategoryId;
         private int? _supplierId;
         private int _unitId;
@@ -20,8 +21,10 @@ namespace RetailTrade.Domain.Models
         private bool _withoutBarcode;
         private decimal _arrivalPrice;
         private decimal _salePrice;
+        private ProductCategory _productCategory;
         private ProductSubcategory _productSubcategory;
         private Unit _unit;
+        private bool _deleteMark;
 
         #endregion
 
@@ -42,6 +45,19 @@ namespace RetailTrade.Domain.Models
 
         /// <summary>
         /// Категория товара
+        /// </summary>
+        public int ProductCategoryId
+        {
+            get => _productCategoryId;
+            set
+            {
+                _productCategoryId = value;
+                OnPropertyChanged(nameof(ProductCategoryId));
+            }
+        }
+
+        /// <summary>
+        /// Группа товара
         /// </summary>
         public int ProductSubcategoryId
         {
@@ -157,6 +173,19 @@ namespace RetailTrade.Domain.Models
             }
         }
 
+        /// <summary>
+        /// Пометка на удаление по умолчанию false
+        /// </summary>
+        public bool DeleteMark
+        {
+            get => _deleteMark;
+            set
+            {
+                _deleteMark = value;
+                OnPropertyChanged(nameof(DeleteMark));
+            }
+        }
+
         public ProductSubcategory ProductSubcategory
         {
             get => _productSubcategory;
@@ -164,6 +193,15 @@ namespace RetailTrade.Domain.Models
             {
                 _productSubcategory = value;
                 OnPropertyChanged(nameof(ProductSubcategory));
+            }
+        }
+        public ProductCategory ProductCategory
+        {
+            get => _productCategory;
+            set
+            {
+                _productCategory = value;
+                OnPropertyChanged(nameof(ProductCategory));
             }
         }
         public Supplier Supplier { get; set; }

@@ -1,11 +1,14 @@
-﻿<UserControl
+﻿<local:BaseMenuView
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:dxe="http://schemas.devexpress.com/winfx/2008/xaml/editors"
     xmlns:dxg="http://schemas.devexpress.com/winfx/2008/xaml/grid"
     xmlns:dxlc="http://schemas.devexpress.com/winfx/2008/xaml/layoutcontrol"
     xmlns:dxmvvm="http://schemas.devexpress.com/winfx/2008/xaml/mvvm"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    x:Class="RetailTradeServer.Views.Menus.ProductBarcodeView">
+    xmlns:local="clr-namespace:RetailTradeServer.Views.Menus"
+    x:Class="RetailTradeServer.Views.Menus.ProductBarcodeView"
+    Title="Ценники и этикетки (Штрих-код)"
+    ShowDefaultButtons="False">
 
     <dxmvvm:Interaction.Behaviors>
         <dxmvvm:EventToCommand EventName="Loaded"
@@ -73,4 +76,4 @@
 
     </dxlc:LayoutControl>
 
-</UserControl>
+</local:BaseMenuView>

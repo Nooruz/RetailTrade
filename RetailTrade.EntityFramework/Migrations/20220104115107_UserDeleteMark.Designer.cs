@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using RetailTrade.EntityFramework;
 
@@ -11,9 +12,10 @@ using RetailTrade.EntityFramework;
 namespace RetailTrade.EntityFramework.Migrations
 {
     [DbContext(typeof(RetailTradeDbContext))]
-    partial class RetailTradeDbContextModelSnapshot : ModelSnapshot
+    [Migration("20220104115107_UserDeleteMark")]
+    partial class UserDeleteMark
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -238,9 +240,6 @@ namespace RetailTrade.EntityFramework.Migrations
 
                     b.Property<string>("Barcode")
                         .HasColumnType("nvarchar(max)");
-
-                    b.Property<bool>("DeleteMark")
-                        .HasColumnType("bit");
 
                     b.Property<string>("Name")
                         .HasColumnType("nvarchar(max)");

@@ -8,8 +8,10 @@ using RetailTradeServer.ViewModels.Dialogs;
 using RetailTradeServer.Views.Dialogs;
 using SalePageServer.State.Dialogs;
 using SalePageServer.Utilities;
+using SalePageServer.Views.Dialogs;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Linq;
 using System.Windows;
 using System.Windows.Input;
 
@@ -25,12 +27,22 @@ namespace RetailTradeServer.ViewModels.Menus
         private readonly IRoleService _roleService;
         private readonly IMessageStore _messageStore;
         private ObservableQueue<User> _users;
+        private IEnumerable<Role> _roles;
 
         #endregion
 
         #region Public Members
 
         public IEnumerable<User> Users => _users;
+        public IEnumerable<Role> Roles
+        {
+            get => _roles;
+            set
+            {
+                _roles = value;
+                OnPropertyChanged(nameof(Roles));
+            }
+        }
         public User SelectedUser { get; set; }
 
         #endregion
@@ -76,23 +88,39 @@ namespace RetailTradeServer.ViewModels.Menus
                 new CreateUserDialogForm());
         }
 
-        private void DeleteUser()
+        private async void DeleteUser()
         {
-            
+            if (SelectedUser != null)
+            {
+                if (_dialogService.ShowMessage(SelectedUser.DeleteMark ? $"Снять пометку \"{SelectedUser.Username}\"?" : $"Пометить \"{SelectedUser.Username}\" на удаление?", "", MessageBoxButton.YesNo, MessageBoxImage.Question) == MessageBoxResult.Yes)
+                {
+                    await _userService.MarkingForDeletion(SelectedUser);
+                }
+            }
+            else
+            {
+                _ = _dialogService.ShowMessage("Выберите пользователя!", "", MessageBoxButton.OK, MessageBoxImage.Exclamation);
+            }
         }
 
         private void EditUser()
         {
             if (SelectedUser != null)
             {
-                CreateUserDialogFormModel viewModel = new(_authenticator, _roleService, _dialogService, _messageStore)
+                if (SelectedUser.DeleteMark)
                 {
-                    IsEditMode = true,
-                    EditableUser = SelectedUser,
-                    Title = "Пользователи (редактирование)"
-                };
-                _ = _dialogService.ShowDialog(viewModel,
-                new CreateUserDialogForm());
+                    _ = _dialogService.ShowMessage("Помечено на удаление!", "", MessageBoxButton.OK, MessageBoxImage.Exclamation);
+                }
+                else
+                {
+                    CreateUserDialogFormModel viewModel = new(_authenticator, _roleService, _dialogService, _messageStore)
+                    {
+                        EditableUser = SelectedUser,
+                        Title = $"Пользователи ({SelectedUser.Username})"
+                    };
+                    _ = _dialogService.ShowDialog(viewModel,
+                    new EditUserDialogForm());
+                }
             }
             else
             {
@@ -103,6 +131,7 @@ namespace RetailTradeServer.ViewModels.Menus
         private async void UserControlLoaded()
         {
             _users.AddRange(await _userService.GetAllAsync());
+            Roles = await _roleService.GetAllAsync();
         }
 
         private void UserService_PropertiesChanged()

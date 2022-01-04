@@ -91,6 +91,7 @@
                 <ResourceDictionary Source="/Styles/HamburgerSubMenuStyle.xaml"/>
                 <ResourceDictionary Source="/Styles/UserControlStyle.xaml"/>
                 <ResourceDictionary Source="/Styles/LookUpEditSettingsStyle.xaml"/>
+                <ResourceDictionary Source="/Styles/GridColumnStyle.xaml"/>
             </ResourceDictionary.MergedDictionaries>
 
         </ResourceDictionary>

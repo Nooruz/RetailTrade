@@ -1,4 +1,4 @@
-﻿using System.Collections.ObjectModel;
+﻿using System.Collections.Generic;
 using System.ComponentModel;
 
 namespace RetailTrade.Domain.Models
@@ -25,11 +25,10 @@ namespace RetailTrade.Domain.Models
                 OnPropertyChanged(nameof(Name));
             }
         }
+        public ICollection<Product> Products { get; set; }
+        public ICollection<ProductSubcategory> ProductSubcategories { get; set; }
 
         #endregion
-
-
-        public ObservableCollection<ProductSubcategory> ProductSubcategories { get; set; }
 
         public event PropertyChangedEventHandler PropertyChanged;
 
