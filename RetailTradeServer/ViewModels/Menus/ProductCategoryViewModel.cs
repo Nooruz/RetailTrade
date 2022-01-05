@@ -65,7 +65,7 @@ namespace RetailTradeServer.ViewModels.Menus
             set
             {
                 _productSubcategories = value;
-                OnPropertyChanged(nameof(ProductCategories));
+                OnPropertyChanged(nameof(ProductSubcategories));
             }
         }
         public IEnumerable<Unit> Units
@@ -86,7 +86,7 @@ namespace RetailTradeServer.ViewModels.Menus
                 _selectedProductGroup = value;
                 if (_selectedProductGroup is ProductCategory productCategory)
                 {
-                    ProductGridControl.FilterString = productCategory.Id == 0 ? string.Empty : $"[ProductSubcategory.ProductCategoryId] = {productCategory.Id}";
+                    ProductGridControl.FilterString = productCategory.Id == 0 ? string.Empty : $"[ProductCategoryId] = {productCategory.Id}";
                 }
                 if (_selectedProductGroup is ProductSubcategory productSubcategory)
                 {
@@ -266,7 +266,7 @@ namespace RetailTradeServer.ViewModels.Menus
             ProductCategory editProductCategory = ProductCategories.FirstOrDefault(pc => pc.Id == productSubcategory.ProductCategoryId);
             if (editProductCategory.ProductSubcategories == null)
             {
-                editProductCategory.ProductSubcategories = new();
+                //editProductCategory.ProductSubcategories = new();
             }
             editProductCategory.ProductSubcategories.Add(productSubcategory);
         }

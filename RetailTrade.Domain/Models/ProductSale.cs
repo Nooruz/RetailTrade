@@ -1,4 +1,6 @@
-﻿namespace RetailTrade.Domain.Models
+﻿using System.ComponentModel.DataAnnotations.Schema;
+
+namespace RetailTrade.Domain.Models
 {
     public class ProductSale : DomainObject
     {
@@ -10,16 +12,19 @@
         /// <summary>
         /// Сумма
         /// </summary>
+        [Column(TypeName = "decimal(18,2)")]
         public decimal Sum { get; set; }
 
         /// <summary>
         /// Цена продажи
         /// </summary>
+        [Column(TypeName = "decimal(18,2)")]
         public decimal SalePrice { get; set; }
 
         /// <summary>
         /// Цена прихода
         /// </summary>
+        [Column(TypeName = "decimal(18,2)")]
         public decimal ArrivalPrice { get; set; }
 
         /// <summary>

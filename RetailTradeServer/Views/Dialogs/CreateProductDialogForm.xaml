@@ -123,7 +123,8 @@
                         <dxlc:LayoutItem Label="ТН ВЭД">
                             <dxe:TextEdit Text="{Binding TNVED, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                                           MaskType="Numeric"
-                                          Mask="d"/>
+                                          Mask="d" 
+                                          AllowNullInput="True"/>
                         </dxlc:LayoutItem>
 
                         <dxlc:LayoutGroup Orientation="Horizontal"
@@ -417,7 +418,9 @@
 
                         <dxlc:LayoutItem Label="ТН ВЭД">
                             <dxe:TextEdit Text="{Binding TNVED, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" 
-                                  MaskType="Numeric"/>
+                                          MaskType="Numeric"
+                                          Mask="d" 
+                                          AllowNullInput="True"/>
                         </dxlc:LayoutItem>
 
                         <dxlc:LayoutGroup Orientation="Horizontal"

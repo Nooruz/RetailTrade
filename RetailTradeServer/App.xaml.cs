@@ -1,6 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using RetailTrade.Domain.Services;
 using RetailTrade.EntityFramework;
 using RetailTradeServer.HostBuilders;
 using RetailTradeServer.ViewModels;
@@ -9,6 +10,7 @@ using SalePageServer.Views.Dialogs;
 using System;
 using System.Data.SqlClient;
 using System.Globalization;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
@@ -25,6 +27,9 @@ namespace RetailTradeServer
         private readonly IHost _host;
         private Window startingWindow;
         private static SqlException _sqlException;
+
+        //потом удалить
+        private RetailTradeDbContext _dbContext;
 
         #endregion
 
@@ -63,7 +68,8 @@ namespace RetailTradeServer
             //SplashScreen splashScreen = new("SplashScreen.png");
             //splashScreen.Show(true);
             var contextFactory = _host.Services.GetRequiredService<RetailTradeDbContextFactory>();
-
+            _dbContext = contextFactory.CreateDbContext();
+            PotomUdalit();
             //Settings.Default.AdminCreated = false;
             //Settings.Default.Save();
 
@@ -75,7 +81,7 @@ namespace RetailTradeServer
 
             //if (Settings.Default.IsDataBaseConnectionAdded)
             //{
-                try
+            try
                 {
                     using var context = contextFactory.CreateDbContext();
                     if (CheckConnectionString(context.Database.GetConnectionString()))
@@ -101,7 +107,6 @@ namespace RetailTradeServer
                 window.Loaded += Window_Loaded;
                 //await Task.Delay(5000);
                 
-                
                 window.Show();
             //}
             //else
@@ -112,6 +117,8 @@ namespace RetailTradeServer
             CultureInfo newCulture = new("ru-RU");
             Thread.CurrentThread.CurrentCulture = newCulture;
             Thread.CurrentThread.CurrentUICulture = newCulture;
+
+            
 
             base.OnStartup(e);
         }
@@ -146,6 +153,19 @@ namespace RetailTradeServer
             {
                 connection.Close();
             }
+        }
+
+        private async void PotomUdalit()
+        {
+            foreach (var item in await _dbContext.Products
+                    .Where(p => p.ProductCategoryId == 0)
+                    .Include(p => p.ProductSubcategory)
+                    .ToListAsync())
+            {
+                item.ProductCategoryId = item.ProductSubcategory.ProductCategoryId;
+                _dbContext.Products.Update(item);
+            }
+            await _dbContext.SaveChangesAsync();
         }
     }
 }

@@ -25,7 +25,7 @@ namespace RetailTrade.Domain.Models
                 OnPropertyChanged(nameof(Name));
             }
         }
-        public ICollection<Product> Products { get; set; }
+        //public ICollection<Product> Products { get; set; }
         public ICollection<ProductSubcategory> ProductSubcategories { get; set; }
 
         #endregion

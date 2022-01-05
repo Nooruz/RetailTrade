@@ -4,6 +4,7 @@ using RetailTrade.Domain.Services;
 using RetailTradeServer.Commands;
 using RetailTradeServer.ViewModels.Dialogs.Base;
 using SalePageServer.State.Dialogs;
+using SalePageServer.Utilities;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -28,6 +29,7 @@ namespace RetailTradeServer.ViewModels.Dialogs
         private string _comment;
         private IEnumerable<Supplier> _suppliers;
         private IEnumerable<Product> _products;
+        private ObservableQueue<ArrivalProduct> _arrivalProducts;
 
         #endregion
 
@@ -72,7 +74,7 @@ namespace RetailTradeServer.ViewModels.Dialogs
                 OnPropertyChanged(nameof(Products));
             }
         }
-        public ObservableCollection<ArrivalProduct> ArrivalProducts { get; set; }
+        public IEnumerable<ArrivalProduct> ArrivalProducts => _arrivalProducts;
         public Product SelectedProduct
         {
             get => _selectedProduct;
@@ -82,7 +84,7 @@ namespace RetailTradeServer.ViewModels.Dialogs
                 OnPropertyChanged(nameof(SelectedProduct));
             }
         }
-        public bool CanArrivalProduct => ArrivalProducts.Count == 0 ? false : ArrivalProducts.FirstOrDefault(p => p.Quantity == 0) == null;
+        public bool CanArrivalProduct => ArrivalProducts.Any() && !ArrivalProducts.Any(p => p.Quantity == 0);
 
         #endregion
 
@@ -92,6 +94,7 @@ namespace RetailTradeServer.ViewModels.Dialogs
         public ICommand ValidateCellCommand { get; }
         public ICommand ArrivalProductCommand { get; }
         public ICommand ClearCommand { get; }
+        public ICommand CellValueChangedCommand { get; }
 
         #endregion
 
@@ -107,7 +110,7 @@ namespace RetailTradeServer.ViewModels.Dialogs
             _arrivalService = arrivalService;
             _dialogService = dialogService;
 
-            ArrivalProducts = new();
+            _arrivalProducts = new();
 
             GetSupplier();
 
@@ -115,43 +118,15 @@ namespace RetailTradeServer.ViewModels.Dialogs
             ValidateCellCommand = new ParameterCommand(parameter => ValidateCell(parameter));
             ArrivalProductCommand = new RelayCommand(CreateArrival);
             ClearCommand = new RelayCommand(Cleare);
-
-            ArrivalProducts.CollectionChanged += ProductRefunds_CollectionChanged;
+            CellValueChangedCommand = new RelayCommand(CellValueChanged);
         }
 
         #endregion
 
         #region Private Voids
 
-        private void ProductRefunds_CollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
+        private void CellValueChanged()
         {
-            if (e.OldItems != null)
-            {
-                foreach (INotifyPropertyChanged item in e.OldItems)
-                {
-                    if (item != null)
-                    {
-                        item.PropertyChanged -= Item_PropertyChanged;
-                    }
-                }
-            }
-            if (e.NewItems != null)
-            {
-                foreach (INotifyPropertyChanged item in e.NewItems)
-                {
-                    if (item != null)
-                    {
-                        item.PropertyChanged += Item_PropertyChanged;
-                    }
-                }
-            }
-            OnPropertyChanged(nameof(ArrivalProducts));
-            OnPropertyChanged(nameof(CanArrivalProduct));
-        }
-
-        private void Item_PropertyChanged(object sender, PropertyChangedEventArgs e)
-        {
-            OnPropertyChanged(nameof(ArrivalProducts));
             OnPropertyChanged(nameof(CanArrivalProduct));
         }
 
@@ -161,7 +136,7 @@ namespace RetailTradeServer.ViewModels.Dialogs
             {
                 if (ArrivalProducts.FirstOrDefault(pr => pr.ProductId == SelectedProduct.Id) == null)
                 {
-                    ArrivalProducts.Add(new ArrivalProduct
+                    _arrivalProducts.Enqueue(new ArrivalProduct
                     {
                         Product = SelectedProduct,
                         ProductId = SelectedProduct.Id
@@ -174,17 +149,13 @@ namespace RetailTradeServer.ViewModels.Dialogs
         {
             if (parameter is GridCellValidationEventArgs e)
             {
-                if (((ArrivalProduct)e.Row).Product != null)
+                if ((decimal)e.Value < 0)
                 {
-                    if (((ArrivalProduct)e.Row).Product.Quantity < 0)
-                    {
-                        e.IsValid = false;
-                        e.ErrorContent = "Количество не должно быть 0.";
-                        _dialogService.ShowMessage("Количество не должно быть 0.", "", MessageBoxButton.OK, MessageBoxImage.Error);
-                    }
+                    e.IsValid = false;
+                    e.ErrorContent = "Количество не должно быть 0.";
+                    _dialogService.ShowMessage("Количество не должно быть 0.", "", MessageBoxButton.OK, MessageBoxImage.Error);
                 }
             }
-            OnPropertyChanged(nameof(CanArrivalProduct));
         }
 
         private async void CreateArrival()
@@ -221,7 +192,7 @@ namespace RetailTradeServer.ViewModels.Dialogs
 
         private void Cleare()
         {
-            ArrivalProducts.Clear();
+            _arrivalProducts.Dequeue();
         }
 
         private async void GetProducts()
@@ -243,7 +214,6 @@ namespace RetailTradeServer.ViewModels.Dialogs
 
         public override void Dispose()
         {
-            ArrivalProducts.CollectionChanged -= ProductRefunds_CollectionChanged;
             base.Dispose();
         }
 

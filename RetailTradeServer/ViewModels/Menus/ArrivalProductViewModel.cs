@@ -93,8 +93,7 @@ namespace RetailTradeServer.ViewModels.Menus
 
                 await report.CreateDocumentAsync();
 
-                await _dialogService.ShowDialog(new DocumentViewerViewModel() { PrintingDocument = report },
-                    new DocumentViewerView());
+                await _dialogService.ShowPrintDialog(report);
             }
             else
             {
@@ -139,7 +138,7 @@ namespace RetailTradeServer.ViewModels.Menus
                         { 
                             Title = "Приход товаров (дублирование)",
                             SelectedSupplier = SelectedArrival.Supplier,
-                            ArrivalProducts = new(SelectedArrival.ArrivalProducts)
+                            //ArrivalProducts = new(SelectedArrival.ArrivalProducts)
                         },
                         new CreateArrivalProductDialogForm());
                 }

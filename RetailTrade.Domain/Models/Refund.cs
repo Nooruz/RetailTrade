@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace RetailTrade.Domain.Models
 {
@@ -18,6 +19,7 @@ namespace RetailTrade.Domain.Models
         /// <summary>
         /// Сумма квитанции
         /// </summary>
+        [Column(TypeName = "decimal(18,2)")]
         public decimal Sum { get; set; }
 
         /// <summary>

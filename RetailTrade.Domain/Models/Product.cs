@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.ComponentModel;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace RetailTrade.Domain.Models
 {
@@ -21,7 +22,7 @@ namespace RetailTrade.Domain.Models
         private bool _withoutBarcode;
         private decimal _arrivalPrice;
         private decimal _salePrice;
-        private ProductCategory _productCategory;
+        //private ProductCategory _productCategory;
         private ProductSubcategory _productSubcategory;
         private Unit _unit;
         private bool _deleteMark;
@@ -137,6 +138,7 @@ namespace RetailTrade.Domain.Models
         /// <summary>
         /// Цена приход
         /// </summary>
+        [Column(TypeName = "decimal(18,2)")]
         public decimal ArrivalPrice
         {
             get => _arrivalPrice;
@@ -163,6 +165,7 @@ namespace RetailTrade.Domain.Models
         /// <summary>
         /// Цена продажа
         /// </summary>
+        [Column(TypeName = "decimal(18,2)")]
         public decimal SalePrice
         {
             get => _salePrice;
@@ -195,15 +198,15 @@ namespace RetailTrade.Domain.Models
                 OnPropertyChanged(nameof(ProductSubcategory));
             }
         }
-        public ProductCategory ProductCategory
-        {
-            get => _productCategory;
-            set
-            {
-                _productCategory = value;
-                OnPropertyChanged(nameof(ProductCategory));
-            }
-        }
+        //public ProductCategory ProductCategory
+        //{
+        //    get => _productCategory;
+        //    set
+        //    {
+        //        _productCategory = value;
+        //        OnPropertyChanged(nameof(ProductCategory));
+        //    }
+        //}
         public Supplier Supplier { get; set; }
         public Unit Unit
         {

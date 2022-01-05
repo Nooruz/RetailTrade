@@ -145,7 +145,8 @@
                     </dxg:GridColumn.EditSettings>
                 </dxg:GridColumn>
                 <dxg:GridColumn FieldName="Name" Header="Наименование"/>
-                <dxg:GridColumn FieldName="ProductSubcategory.ProductCategoryId" Header="Категория товара">
+                <dxg:GridColumn FieldName="ProductCategoryId" 
+                                Header="Категория товара">
                     <dxg:GridColumn.EditSettings>
                         <dxe:ComboBoxEditSettings ItemsSource="{Binding ProductCategories}"
                                                   DisplayMember="Name"

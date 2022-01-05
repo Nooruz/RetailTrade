@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace RetailTrade.Domain.Models
 {
@@ -22,21 +23,25 @@ namespace RetailTrade.Domain.Models
         /// <summary>
         /// Сумма квитанции
         /// </summary>
+        [Column(TypeName = "decimal(18,2)")]
         public decimal Sum { get; set; }
 
         /// <summary>
         /// Оплачено наличными
         /// </summary>
+        [Column(TypeName = "decimal(18,2)")]
         public decimal PaidInCash { get; set; }
 
         /// <summary>
         /// Оплачено безналичными
         /// </summary>
+        [Column(TypeName = "decimal(18,2)")]
         public decimal PaidInCashless { get; set; }
 
         /// <summary>
         /// Сдача
         /// </summary>
+        [Column(TypeName = "decimal(18,2)")]
         public decimal Change { get; set; }        
 
         /// <summary>

@@ -55,7 +55,7 @@ namespace RetailTradeServer.ViewModels.Dialogs
                     Barcode = _editProduct.Barcode;
                     SelectedSupplierId = _editProduct.SupplierId;
                     SelectedUnitId = _editProduct.UnitId;
-                    SelectedProductCategoryId = _editProduct.ProductSubcategory.ProductCategoryId;
+                    SelectedProductCategoryId = _editProduct.ProductCategoryId;
                     SelectedProductSubcategoryId = _editProduct.ProductSubcategoryId;
                 }
                 OnPropertyChanged(nameof(EditProduct));

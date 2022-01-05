@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace RetailTrade.Domain.Models
 {
@@ -48,11 +49,13 @@ namespace RetailTrade.Domain.Models
         /// <summary>
         /// Цена прихода
         /// </summary>
+        [Column(TypeName = "decimal(18,2)")]
         public decimal ArrivalPrice { get; set; }
 
         /// <summary>
         /// Цена продажи
         /// </summary>
+        [Column(TypeName = "decimal(18,2)")]
         public decimal SalePrice { get; set; }
 
         /// <summary>
