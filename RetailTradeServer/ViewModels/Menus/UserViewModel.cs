@@ -130,7 +130,7 @@ namespace RetailTradeServer.ViewModels.Menus
 
         private async void UserControlLoaded()
         {
-            _users.AddRange(await _userService.GetAllAsync());
+            //_users = new(await _userService.GetAllAsync());
             Roles = await _roleService.GetAllAsync();
         }
 

@@ -11,5 +11,6 @@ namespace RetailTrade.Domain.Services
         IEnumerable<ProductSubcategory> GetAllIncludeProductCategory();
 
         event Action<ProductSubcategory> OnProductSubcategoryCreated;
+        event Action<ProductSubcategory> OnProductSubcategoryUpdated;
     }
 }

@@ -68,8 +68,7 @@ namespace RetailTradeServer
             //SplashScreen splashScreen = new("SplashScreen.png");
             //splashScreen.Show(true);
             var contextFactory = _host.Services.GetRequiredService<RetailTradeDbContextFactory>();
-            _dbContext = contextFactory.CreateDbContext();
-            PotomUdalit();
+            _dbContext = contextFactory.CreateDbContext();            
             //Settings.Default.AdminCreated = false;
             //Settings.Default.Save();
 
@@ -106,7 +105,7 @@ namespace RetailTradeServer
                 window.DataContext = _host.Services.GetRequiredService<MainViewModel>();
                 window.Loaded += Window_Loaded;
                 //await Task.Delay(5000);
-                
+                PotomUdalit();
                 window.Show();
             //}
             //else

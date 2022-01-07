@@ -6,8 +6,8 @@ using RetailTradeServer.State.Messages;
 using RetailTradeServer.ViewModels.Dialogs.Base;
 using RetailTradeServer.Views.Dialogs;
 using SalePageServer.State.Dialogs;
-using SalePageServer.Utilities;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Windows;
 using System.Windows.Input;
 using DialogService = SalePageServer.State.Dialogs.DialogService;
@@ -34,20 +34,52 @@ namespace RetailTradeServer.ViewModels.Dialogs
         private decimal _arrivalPrice;
         private decimal _salePrice;
         private string _tnved;
-        private ObservableQueue<ProductCategory> _productCategories;
-        private ObservableQueue<ProductSubcategory> _productSubcategory;
-        private ObservableQueue<Unit> _units;
-        private ObservableQueue<Supplier> _suppliers;
+        private ObservableCollection<ProductCategory> _productCategories;
+        private ObservableCollection<ProductSubcategory> productSubcategories;
+        private IEnumerable<Unit> _units;
+        private ObservableCollection<Supplier> _suppliers;
 
         #endregion
 
         #region Public Properties
 
         public GlobalMessageViewModel GlobalMessageViewModel { get; }
-        public IEnumerable<ProductCategory> ProductCategories => _productCategories;
-        public IEnumerable<ProductSubcategory> ProductSubCategories => _productSubcategory;
-        public IEnumerable<Unit> Units => _units;
-        public IEnumerable<Supplier> Suppliers => _suppliers;
+        public ObservableCollection<ProductCategory> ProductCategories
+        {
+            get => _productCategories ?? new();
+            set
+            {
+                _productCategories = value;
+                OnPropertyChanged(nameof(ProductCategories));
+            }
+        }
+        public ObservableCollection<ProductSubcategory> ProductSubCategories
+        {
+            get => productSubcategories ?? new();
+            set
+            {
+                productSubcategories = value;
+                OnPropertyChanged(nameof(ProductSubCategories));
+            }
+        }
+        public IEnumerable<Unit> Units
+        {
+            get => _units;
+            set
+            {
+                _units = value;
+                OnPropertyChanged(nameof(Units));
+            }
+        }
+        public ObservableCollection<Supplier> Suppliers
+        {
+            get => _suppliers ?? new();
+            set
+            {
+                _suppliers = value;
+                OnPropertyChanged(nameof(Suppliers));
+            }
+        }
         public int? SelectedProductCategoryId
         {
             get => _selectedProductCategoryId;
@@ -203,11 +235,6 @@ namespace RetailTradeServer.ViewModels.Dialogs
             GlobalMessageViewModel = globalMessageViewModel;
             _messageStore = messageStore;
 
-            _productCategories = new();
-            _productSubcategory = new();
-            _units = new();
-            _suppliers = new();
-
             _messageStore.Close();
 
             SavePieceProductCommand = new RelayCommand(SavePieceProduct);
@@ -232,7 +259,7 @@ namespace RetailTradeServer.ViewModels.Dialogs
 
         private void SupplierService_OnSupplierCreated(Supplier supplier)
         {
-            _suppliers.Enqueue(supplier);
+            Suppliers.Add(supplier);
             SelectedSupplierId = supplier.Id;
         }
 
@@ -240,27 +267,27 @@ namespace RetailTradeServer.ViewModels.Dialogs
         {
             if (SelectedProductCategoryId != null)
             {
-                _productSubcategory.Dequeue();
-                _productSubcategory.AddRange(await _productSubcategoryService.GetAllByProductCategoryIdAsync(SelectedProductCategoryId.Value));
+                ProductSubCategories.Clear();
+                ProductSubCategories = new(await _productSubcategoryService.GetAllByProductCategoryIdAsync(SelectedProductCategoryId.Value));
             }
         }
 
         private async void UserControlLoaded()
         {
-            _productCategories.AddRange(await _productCategoryService.GetAllAsync());
-            _suppliers.AddRange(await _supplierService.GetAllAsync());
-            _units.AddRange(await _unitService.GetAllAsync());
+            ProductCategories = new(await _productCategoryService.GetAllAsync());
+            Suppliers = new(await _supplierService.GetAllAsync());
+            Units = await _unitService.GetAllAsync();
         }
 
         private void ProductCategoryService_OnProductCategoryCreated(ProductCategory productCategory)
         {
-            _productCategories.Enqueue(productCategory);
+            ProductCategories.Add(productCategory);
             SelectedProductCategoryId = productCategory.Id;
         }
 
         private void ProductSubcategoryService_OnProductSubcategoryCreated(ProductSubcategory productSubcategory)
         {
-            _productSubcategory.Enqueue(productSubcategory);
+            ProductSubCategories.Add(productSubcategory);
             SelectedProductSubcategoryId = productSubcategory.Id;
         }
 

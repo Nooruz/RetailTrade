@@ -7,9 +7,6 @@ using SalePageServer.State.Dialogs;
 using SalePageServer.Utilities;
 using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.Collections.Specialized;
-using System.ComponentModel;
 using System.Linq;
 using System.Windows;
 using System.Windows.Input;
@@ -25,7 +22,7 @@ namespace RetailTradeServer.ViewModels.Dialogs
         private readonly IArrivalService _arrivalService;
         private readonly IDialogService _dialogService;
         private Supplier _selectedSupplier;
-        private Product _selectedProduct;
+        private ArrivalProduct _selectedArrivalProduct;
         private string _comment;
         private IEnumerable<Supplier> _suppliers;
         private IEnumerable<Product> _products;
@@ -75,13 +72,13 @@ namespace RetailTradeServer.ViewModels.Dialogs
             }
         }
         public IEnumerable<ArrivalProduct> ArrivalProducts => _arrivalProducts;
-        public Product SelectedProduct
+        public ArrivalProduct SelectedArrivalProduct
         {
-            get => _selectedProduct;
+            get => _selectedArrivalProduct;
             set
             {
-                _selectedProduct = value;
-                OnPropertyChanged(nameof(SelectedProduct));
+                _selectedArrivalProduct = value;
+                OnPropertyChanged(nameof(SelectedArrivalProduct));
             }
         }
         public bool CanArrivalProduct => ArrivalProducts.Any() && !ArrivalProducts.Any(p => p.Quantity == 0);
@@ -90,11 +87,11 @@ namespace RetailTradeServer.ViewModels.Dialogs
 
         #region Commands
 
-        public ICommand RowDoubleClickCommand { get; }
         public ICommand ValidateCellCommand { get; }
         public ICommand ArrivalProductCommand { get; }
         public ICommand ClearCommand { get; }
         public ICommand CellValueChangedCommand { get; }
+        public ICommand AddProductToArrivalCommand { get; }
 
         #endregion
 
@@ -114,35 +111,42 @@ namespace RetailTradeServer.ViewModels.Dialogs
 
             GetSupplier();
 
-            RowDoubleClickCommand = new RelayCommand(RowDoubleClick);
             ValidateCellCommand = new ParameterCommand(parameter => ValidateCell(parameter));
             ArrivalProductCommand = new RelayCommand(CreateArrival);
             ClearCommand = new RelayCommand(Cleare);
-            CellValueChangedCommand = new RelayCommand(CellValueChanged);
+            CellValueChangedCommand = new ParameterCommand(p => CellValueChanged(p));
+            AddProductToArrivalCommand = new RelayCommand(AddProductToArrival);
         }
 
         #endregion
 
         #region Private Voids
 
-        private void CellValueChanged()
+        private void AddProductToArrival()
         {
-            OnPropertyChanged(nameof(CanArrivalProduct));
+            if (SelectedSupplier != null)
+            {
+                _arrivalProducts.Enqueue(new ArrivalProduct());
+            }
+            else
+            {
+                _dialogService.ShowMessage("Выберите поставщика!", "", MessageBoxButton.OK, MessageBoxImage.Exclamation);
+            }
         }
 
-        private void RowDoubleClick()
+        private void CellValueChanged(object parameter)
         {
-            if (SelectedProduct != null)
+            if (parameter is CellValueChangedEventArgs e)
             {
-                if (ArrivalProducts.FirstOrDefault(pr => pr.ProductId == SelectedProduct.Id) == null)
+                if (e.Cell.Property == "Id")
                 {
-                    _arrivalProducts.Enqueue(new ArrivalProduct
+                    if (SelectedArrivalProduct != null)
                     {
-                        Product = SelectedProduct,
-                        ProductId = SelectedProduct.Id
-                    });
-                }
-            }
+                        SelectedArrivalProduct.ArrivalPrice = Products.FirstOrDefault(p => p.Id == (int)e.Value).ArrivalPrice;
+                    }
+                }                
+            }            
+            OnPropertyChanged(nameof(CanArrivalProduct));
         }
 
         private void ValidateCell(object parameter)
@@ -199,7 +203,7 @@ namespace RetailTradeServer.ViewModels.Dialogs
         {
             if (SelectedSupplier != null)
             {
-                Products = await _productService.PredicateSelect(p => p.SupplierId == SelectedSupplier.Id, p => new Product { Id = p.Id, Name = p.Name, Quantity = p.Quantity, Unit = p.Unit });
+                Products = await _productService.PredicateSelect(p => p.SupplierId == SelectedSupplier.Id, p => new Product { Id = p.Id, Name = p.Name, ArrivalPrice = p.ArrivalPrice });
             }
         }
 

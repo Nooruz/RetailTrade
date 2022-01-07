@@ -11,6 +11,8 @@ namespace RetailTrade.Domain.Models
         #region Private Members
 
         private double _quantity;
+        private decimal _arrivalPrice;
+        private decimal _arrivalSum;
         private int _productId;
         private Product _product;
 
@@ -42,7 +44,9 @@ namespace RetailTrade.Domain.Models
             set
             {
                 _quantity = value;
+                ArrivalSum = ArrivalPrice * (decimal)Quantity;
                 OnPropertyChanged(nameof(Quantity));
+                OnPropertyChanged(nameof(ArrivalSum));
             }
         }
 
@@ -50,7 +54,28 @@ namespace RetailTrade.Domain.Models
         /// Цена прихода
         /// </summary>
         [Column(TypeName = "decimal(18,2)")]
-        public decimal ArrivalPrice { get; set; }
+        public decimal ArrivalPrice
+        {
+            get => _arrivalPrice;
+            set
+            {
+                _arrivalPrice = value;
+                ArrivalSum = ArrivalPrice * (decimal)Quantity;
+                OnPropertyChanged(nameof(ArrivalPrice));
+                OnPropertyChanged(nameof(ArrivalSum));
+            }
+        }
+
+        [Column(TypeName = "decimal(18,2)")]
+        public decimal ArrivalSum
+        {
+            get => _arrivalSum;
+            set
+            {
+                _arrivalSum = value;
+                OnPropertyChanged(nameof(ArrivalSum));
+            }
+        }
 
         /// <summary>
         /// Цена продажи

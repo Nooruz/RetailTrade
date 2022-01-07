@@ -12,6 +12,7 @@ namespace RetailTradeServer.ViewModels.Dialogs
         #region Private Members
 
         private readonly IProductCategoryService _productCategoryService;
+        private readonly IProductSubcategoryService _productSubcategoryService;
         private readonly IDialogService _dialogService;
         private string _name;
 
@@ -30,6 +31,7 @@ namespace RetailTradeServer.ViewModels.Dialogs
         }
         public bool IsEditMode { get; set; }
         public ProductCategory EditProductCategory { get; set; }
+        public ProductSubcategory EditProductSubcategory { get; set; }
 
         #endregion
 
@@ -45,6 +47,16 @@ namespace RetailTradeServer.ViewModels.Dialogs
             IDialogService dialogService)
         {
             _productCategoryService = productCategoryService;
+            _dialogService = dialogService;
+
+            CreateCommand = new RelayCommand(Create);
+            SaveCommand = new RelayCommand(Save);
+        }
+
+        public CreateProductCategoryDialogFormModel(IProductSubcategoryService productSubcategoryService,
+            IDialogService dialogService)
+        {
+            _productSubcategoryService = productSubcategoryService;
             _dialogService = dialogService;
 
             CreateCommand = new RelayCommand(Create);
@@ -69,10 +81,24 @@ namespace RetailTradeServer.ViewModels.Dialogs
         private async void Save()
         {
             if (string.IsNullOrEmpty(Name))
-                return;
-            EditProductCategory.Name = Name;
-            await _productCategoryService.UpdateAsync(EditProductCategory.Id, EditProductCategory);
-            _dialogService.Close();
+            {
+                _dialogService.ShowMessage("Введите имя!", "", System.Windows.MessageBoxButton.OK, System.Windows.MessageBoxImage.Exclamation);
+            }
+            else
+            {
+                if (EditProductCategory != null)
+                {
+                    EditProductCategory.Name = Name;
+                    await _productCategoryService.UpdateAsync(EditProductCategory.Id, EditProductCategory);
+                    _dialogService.Close();
+                }
+                if (EditProductSubcategory != null)
+                {
+                    EditProductSubcategory.Name = Name;
+                    await _productSubcategoryService.UpdateAsync(EditProductSubcategory.Id, EditProductSubcategory);
+                    _dialogService.Close();
+                }
+            }            
         }
 
         #endregion

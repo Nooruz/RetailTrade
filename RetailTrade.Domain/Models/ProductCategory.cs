@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+﻿using System.Collections.ObjectModel;
 using System.ComponentModel;
 
 namespace RetailTrade.Domain.Models
@@ -26,7 +26,7 @@ namespace RetailTrade.Domain.Models
             }
         }
         //public ICollection<Product> Products { get; set; }
-        public ICollection<ProductSubcategory> ProductSubcategories { get; set; }
+        public ObservableCollection<ProductSubcategory> ProductSubcategories { get; set; }
 
         #endregion
 
