@@ -82,6 +82,8 @@ namespace RetailTradeServer.ViewModels.Dialogs
             }
         }
         public bool CanArrivalProduct => ArrivalProducts.Any() && !ArrivalProducts.Any(p => p.Quantity == 0);
+        public string InvoiceNumber { get; set; }
+        public DateTime? InvoiceDate { get; set; }
 
         #endregion
 
@@ -144,7 +146,10 @@ namespace RetailTradeServer.ViewModels.Dialogs
                     {
                         SelectedArrivalProduct.ArrivalPrice = Products.FirstOrDefault(p => p.Id == (int)e.Value).ArrivalPrice;
                     }
-                }                
+                }
+                TableView tableView = e.Source as TableView;
+                tableView.PostEditor();
+                tableView.Grid.UpdateTotalSummary();
             }            
             OnPropertyChanged(nameof(CanArrivalProduct));
         }
@@ -172,14 +177,18 @@ namespace RetailTradeServer.ViewModels.Dialogs
                     arrivals.Add(new ArrivalProduct
                     {
                         ProductId = item.ProductId,
-                        Quantity = item.Quantity
+                        Quantity = item.Quantity,
+                        ArrivalPrice = item.ArrivalPrice,
+                        ArrivalSum = item.ArrivalSum
                     });
                 }
                 try
                 {
-                    Arrival arrival = await _arrivalService.CreateAsync(new Arrival
+                    _ = await _arrivalService.CreateAsync(new Arrival
                     {
                         ArrivalDate = DateTime.Now,
+                        InvoiceNumber = InvoiceNumber,
+                        InvoiceDate = InvoiceDate,
                         SupplierId = SelectedSupplier.Id,
                         Comment = Comment,
                         ArrivalProducts = arrivals

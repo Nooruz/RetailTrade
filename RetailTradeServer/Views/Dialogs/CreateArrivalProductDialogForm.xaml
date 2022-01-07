@@ -16,11 +16,11 @@
         <dxlc:LayoutGroup ItemSpace="10">
 
             <dxlc:LayoutItem Label="Наклядная №:">
-                <dxe:TextEdit/>
+                <dxe:TextEdit Text="{Binding InvoiceNumber}"/>
             </dxlc:LayoutItem>
 
             <dxlc:LayoutItem Label="от:">
-                <dxe:DateEdit/>
+                <dxe:DateEdit EditValue="{Binding InvoiceDate}"/>
             </dxlc:LayoutItem>
 
         </dxlc:LayoutGroup>
@@ -44,7 +44,8 @@
             
         </dxlc:LayoutGroup>
 
-        <dxg:GridControl SelectionMode="Row"
+        <dxg:GridControl SelectionMode="Row" 
+                         AllowLiveDataShaping="True"
                          ItemsSource="{Binding ArrivalProducts}"
                          SelectedItem="{Binding SelectedArrivalProduct}">
 
@@ -96,12 +97,14 @@
                 <dxg:GridColumn.EditSettings>
                     <dxe:TextEditSettings MaskUseAsDisplayFormat="True" 
                                           MaskType="Numeric" 
+                                          SelectAllOnMouseUp="True"
                                           Mask="n"/>
                 </dxg:GridColumn.EditSettings>
             </dxg:GridColumn>
 
             <dxg:GridColumn Header="Сумма"
                             FieldName="ArrivalSum"
+                            AllowEditing="False"
                             AllowedTotalSummaries="Sum">
                 <dxg:GridColumn.EditSettings>
                     <dxe:TextEditSettings MaskUseAsDisplayFormat="True" 
@@ -109,6 +112,15 @@
                                           Mask="n"/>
                 </dxg:GridColumn.EditSettings>
             </dxg:GridColumn>
+
+            <dxg:GridControl.TotalSummary>
+                <dxg:GridSummaryItem SummaryType="Count" 
+                                     Alignment="Right"
+                                     DisplayFormat="{}{0:n}"/>
+                <dxg:GridSummaryItem FieldName="ArrivalSum"
+                                     SummaryType="Sum"
+                                     DisplayFormat="{}Всего: {0:n} сомов"/>
+            </dxg:GridControl.TotalSummary>
 
         </dxg:GridControl>
 
