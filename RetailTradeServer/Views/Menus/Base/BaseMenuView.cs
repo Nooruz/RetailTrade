@@ -1,5 +1,4 @@
-﻿using DevExpress.Xpf.LayoutControl;
-using System.Windows;
+﻿using System.Windows;
 using System.Windows.Controls;
 
 namespace RetailTradeServer.Views.Menus
@@ -16,6 +15,15 @@ namespace RetailTradeServer.Views.Menus
 
         public static readonly DependencyProperty ButtonsProperty =
             DependencyProperty.Register(nameof(Buttons), typeof(UIElementCollection), typeof(BaseMenuView), new PropertyMetadata(null));
+
+        public static readonly DependencyProperty ShowLoadingPanelProperty =
+            DependencyProperty.Register(nameof(ShowLoadingPanel), typeof(bool), typeof(BaseMenuView), new PropertyMetadata(true));
+
+        public static readonly DependencyProperty LoadingPanelTitleProperty =
+            DependencyProperty.Register(nameof(LoadingPanelTitle), typeof(string), typeof(BaseMenuView), new PropertyMetadata("Пожалуйста подаждите"));
+
+        public static readonly DependencyProperty LoadingPanelTextProperty =
+            DependencyProperty.Register(nameof(LoadingPanelText), typeof(string), typeof(BaseMenuView), new PropertyMetadata("Загрузка..."));
 
         #endregion
 
@@ -37,6 +45,24 @@ namespace RetailTradeServer.Views.Menus
         {
             get { return (UIElementCollection)GetValue(ButtonsProperty); }
             set { SetValue(ButtonsProperty, value); }
+        }
+
+        public bool ShowLoadingPanel
+        {
+            get => (bool)GetValue(ShowLoadingPanelProperty);
+            set => SetValue(ShowLoadingPanelProperty, value);
+        }
+
+        public bool LoadingPanelTitle
+        {
+            get => (bool)GetValue(LoadingPanelTitleProperty);
+            set => SetValue(LoadingPanelTitleProperty, value);
+        }
+
+        public bool LoadingPanelText
+        {
+            get => (bool)GetValue(LoadingPanelTextProperty);
+            set => SetValue(LoadingPanelTextProperty, value);
         }
 
         #endregion

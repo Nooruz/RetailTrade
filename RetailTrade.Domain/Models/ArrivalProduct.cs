@@ -1,12 +1,11 @@
-﻿using System.ComponentModel;
-using System.ComponentModel.DataAnnotations.Schema;
+﻿using System.ComponentModel.DataAnnotations.Schema;
 
 namespace RetailTrade.Domain.Models
 {
     /// <summary>
     /// Приход товара
     /// </summary>
-    public class ArrivalProduct : DomainObject, INotifyPropertyChanged
+    public class ArrivalProduct : DomainObject
     {
         #region Private Members
 
@@ -99,12 +98,5 @@ namespace RetailTrade.Domain.Models
         public Arrival Arrival { get; set; }
 
         #endregion
-
-        public event PropertyChangedEventHandler PropertyChanged;
-
-        protected void OnPropertyChanged(string propertyName)
-        {
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
-        }
     }
 }

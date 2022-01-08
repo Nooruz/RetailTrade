@@ -4,7 +4,6 @@
                     xmlns:dxlc="http://schemas.devexpress.com/winfx/2008/xaml/layoutcontrol"
                     xmlns:dxmvvm="http://schemas.devexpress.com/winfx/2008/xaml/mvvm"
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-                    xmlns:custom="clr-namespace:RetailTrade.LoadingPanelControl;assembly=RetailTrade.LoadingPanelControl"
                     xmlns:local="clr-namespace:RetailTradeServer.Views.Menus"
                     ShowDefaultButtons="False"
                     Title="Списание товара">
@@ -14,87 +13,83 @@
                                Command="{Binding LoadedCommand}"/>
     </dxmvvm:Interaction.Behaviors>
 
-    <Grid>
+    <dxlc:LayoutControl Grid.Row="1"
+                        ItemSpace="10"
+                        Orientation="Vertical">
 
-        <custom:LoadingPanel IsLoading="{Binding ShowLoadingPanel, UpdateSourceTrigger=PropertyChanged, FallbackValue=True}"
-                                                 Panel.ZIndex="1"/>
-
-        <dxlc:LayoutControl Grid.Row="1"
-                            ItemSpace="10"
-                            Orientation="Vertical">
-
-            <dxlc:LayoutGroup Orientation="Horizontal"
+        <dxlc:LayoutGroup Orientation="Horizontal"
                           VerticalAlignment="Top"
                           HorizontalAlignment="Left">
 
-                <Button Content="Создать"
+            <Button Content="Создать"
                     Command="{Binding CreateCommand}"/>
-                <Button ToolTip="Удалить"
+            <Button ToolTip="Удалить"
                     Style="{StaticResource FAButton}"
                     Command="{Binding DeleteCommand}"
                     Content="{StaticResource faTrashAlt}"/>
-                <!--<Button Command="{Binding DuplicateArrivalCommand}"
+            <!--<Button Command="{Binding DuplicateArrivalCommand}"
                     ToolTip="Дублировать приход"
                     Style="{StaticResource FAButton}"
                     Content="{StaticResource faCopy}"/>-->
-                <Button Command="{Binding PrintCommand}"
+            <Button Command="{Binding PrintCommand}"
                     ToolTip="Печатать"
                     Style="{StaticResource FAButton}"
                     Content="{StaticResource faPrint}"/>
 
-            </dxlc:LayoutGroup>
+        </dxlc:LayoutGroup>
 
-            <dxg:GridControl SelectionMode="Row"
+        <dxg:GridControl SelectionMode="Row"
                          ItemsSource="{Binding WriteDowns}"
                          SelectedItem="{Binding SelectedWriteDown}">
 
-                <dxg:GridControl.View>
-                    <dxg:TableView AutoWidth="True"/>
-                </dxg:GridControl.View>
+            <dxg:GridControl.View>
+                <dxg:TableView AutoWidth="True"/>
+            </dxg:GridControl.View>
 
-                <dxg:GridControl.DetailDescriptor>
-                    <dxg:TabViewDetailDescriptor>
-                        <dxg:TabViewDetailDescriptor.DetailDescriptors>
-                            <dxg:DataControlDetailDescriptor ItemsSourcePath="WriteDownProducts">
-                                <dxg:DataControlDetailDescriptor.DataControl>
-                                    <dxg:GridControl AutoGenerateColumns="None">
-                                        <dxg:GridControl.View>
-                                            <dxg:TableView DetailHeaderContent="Товары" AutoWidth="True" ShowGroupPanel="False"/>
-                                        </dxg:GridControl.View>
-                                        <dxg:GridColumn Header="Наименование" FieldName="Product.Name"/>
-                                        <dxg:GridColumn Header="Количество" FieldName="Quantity"/>
-                                    </dxg:GridControl>
-                                </dxg:DataControlDetailDescriptor.DataControl>
-                            </dxg:DataControlDetailDescriptor>
-                        </dxg:TabViewDetailDescriptor.DetailDescriptors>
-                    </dxg:TabViewDetailDescriptor>
-                </dxg:GridControl.DetailDescriptor>
+            <dxg:GridControl.DetailDescriptor>
+                <dxg:TabViewDetailDescriptor>
+                    <dxg:TabViewDetailDescriptor.DetailDescriptors>
+                        <dxg:DataControlDetailDescriptor ItemsSourcePath="WriteDownProducts">
+                            <dxg:DataControlDetailDescriptor.DataControl>
+                                <dxg:GridControl AutoGenerateColumns="None">
+                                    <dxg:GridControl.View>
+                                        <dxg:TableView DetailHeaderContent="Товары" 
+                                                       ShowGroupPanel="False"/>
+                                    </dxg:GridControl.View>
+                                    <dxg:GridColumn Header="Наименование" 
+                                                    FieldName="Product.Name"/>
+                                    <dxg:GridColumn Header="Количество" 
+                                                    FieldName="Quantity"/>
+                                </dxg:GridControl>
+                            </dxg:DataControlDetailDescriptor.DataControl>
+                        </dxg:DataControlDetailDescriptor>
+                    </dxg:TabViewDetailDescriptor.DetailDescriptors>
+                </dxg:TabViewDetailDescriptor>
+            </dxg:GridControl.DetailDescriptor>
 
-                <dxg:GridColumn Header="Номер" 
+            <dxg:GridColumn Header="Дата" 
+                            FieldName="WriteDownDate"
+                            Width="60"
+                            AllowEditing="False"/>
+            
+            <dxg:GridColumn Header="Номер" 
                             FieldName="Id"
                             Width="50"
                             AllowEditing="False"/>
 
-                <dxg:GridColumn Header="Поставщик" 
-                            Binding="{Binding Supplier.ShortName}"
+            <dxg:GridColumn Header="Поставщик" 
+                            FieldName="Supplier.ShortName"
                             AllowEditing="False"/>
 
-                <dxg:GridColumn Header="Дата" 
-                            Binding="{Binding WriteDownDate}"
-                            Width="60"
-                            AllowEditing="False"/>
-
-                <dxg:GridColumn Header="Комментарий" 
+            <dxg:GridColumn Header="Комментарий" 
                             Width="50"
-                            Binding="{Binding Comment, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"
+                            FieldName="Comment"
                             AllowEditing="True"
                             IsSmart="True"/>
 
-            </dxg:GridControl>
+        </dxg:GridControl>
 
-        </dxlc:LayoutControl>
+    </dxlc:LayoutControl>
 
-    </Grid>
-    
 
 </local:BaseMenuView>

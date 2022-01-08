@@ -8,10 +8,6 @@
                 MinWidth="800"
                 WindowState="Maximized">
 
-    <Grid>
-
-        <ContentControl Content="{Binding CurrentViewModel, UpdateSourceTrigger=PropertyChanged}"/>
-
-    </Grid>
+    <ContentControl Content="{Binding CurrentViewModel, UpdateSourceTrigger=PropertyChanged}"/>
 
 </dxc:DXWindow>

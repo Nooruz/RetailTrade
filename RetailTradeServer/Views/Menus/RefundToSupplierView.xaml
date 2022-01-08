@@ -9,7 +9,7 @@
                     ShowDefaultButtons="False">
 
     <dxmvvm:Interaction.Behaviors>
-        <dxmvvm:EventToCommand EventName="Loaded" 
+        <dxmvvm:EventToCommand EventName="Loaded"
                                Command="{Binding LoadedCommand}"/>
     </dxmvvm:Interaction.Behaviors>
 
@@ -22,10 +22,12 @@
 
             <Button Content="Создать"
                     Command="{Binding CreateCommand}"/>
+
             <Button ToolTip="Удалить"
                     Style="{StaticResource FAButton}"
                     Command="{Binding DeleteCommand}"
                     Content="{StaticResource faTrashAlt}"/>
+
             <!--<Button Command="{Binding DuplicateArrivalCommand}"
                     ToolTip="Дублировать приход"
                     Style="{StaticResource FAButton}"
@@ -52,10 +54,14 @@
                             <dxg:DataControlDetailDescriptor.DataControl>
                                 <dxg:GridControl AutoGenerateColumns="None">
                                     <dxg:GridControl.View>
-                                        <dxg:TableView DetailHeaderContent="Товары" AutoWidth="True" ShowGroupPanel="False"/>
+                                        <dxg:TableView DetailHeaderContent="Товары" 
+                                                       AutoWidth="True" 
+                                                       ShowGroupPanel="False"/>
                                     </dxg:GridControl.View>
-                                    <dxg:GridColumn Header="Наименование" FieldName="Product.Name"/>
-                                    <dxg:GridColumn Header="Количество" FieldName="Quantity"/>
+                                    <dxg:GridColumn Header="Наименование" 
+                                                    FieldName="Product.Name"/>
+                                    <dxg:GridColumn Header="Количество" 
+                                                    FieldName="Quantity"/>
                                 </dxg:GridControl>
                             </dxg:DataControlDetailDescriptor.DataControl>
                         </dxg:DataControlDetailDescriptor>
@@ -63,23 +69,23 @@
                 </dxg:TabViewDetailDescriptor>
             </dxg:GridControl.DetailDescriptor>
 
-            <dxg:GridColumn Header="Номер" 
+            <dxg:GridColumn Header="Номер"
                             FieldName="Id"
                             Width="50"
                             AllowEditing="False"/>
 
             <dxg:GridColumn Header="Поставщик" 
-                            Binding="{Binding Supplier.ShortName}"
+                            FieldName="Supplier.ShortName"
                             AllowEditing="False"/>
 
-            <dxg:GridColumn Header="Дата" 
-                            Binding="{Binding RefundToSupplierDate}"
+            <dxg:GridColumn Header="Дата"
+                            FieldName="RefundToSupplierDate"
                             Width="60"
                             AllowEditing="False"/>
 
             <dxg:GridColumn Header="Комментарий" 
                             Width="50"
-                            Binding="{Binding Comment, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"
+                            FieldName="Comment"
                             AllowEditing="True"
                             IsSmart="True"/>
 

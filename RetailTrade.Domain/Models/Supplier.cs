@@ -4,7 +4,7 @@ using System.ComponentModel;
 
 namespace RetailTrade.Domain.Models
 {
-    public class Supplier : DomainObject, INotifyPropertyChanged
+    public class Supplier : DomainObject
     {
         #region Private Members
 
@@ -47,17 +47,6 @@ namespace RetailTrade.Domain.Models
 
         public ICollection<Product> Products { get; set; }
         public ICollection<OrderToSupplier> Orders { get; set; }
-
-        #endregion
-
-        #region INotifyPropertyChanged
-
-        public event PropertyChangedEventHandler PropertyChanged;
-
-        protected void OnPropertyChanged(string propertyName)
-        {
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
-        }
 
         #endregion
     }

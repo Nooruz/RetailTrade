@@ -61,7 +61,7 @@ namespace RetailTradeServer.ViewModels
             _authenticator.StateChanged += AuthenticatorStateChanged;
 
             UpdateCurrentViewModelCommand = new UpdateCurrentViewModelCommand(navigator, retailTradeViewModelFactory);
-            UpdateCurrentViewModelCommand.Execute(ViewType.Home);
+            UpdateCurrentViewModelCommand.Execute(ViewType.Login);
         }
 
         #endregion

@@ -19,59 +19,45 @@
                               SelectedItem="{Binding SelectedSupplier}"/>
         </dxlc:LayoutItem>
 
-        <dxg:GridControl SelectionMode="Row"
-                         ItemsSource="{Binding Products}"
-                         SelectedItem="{Binding SelectedProduct, UpdateSourceTrigger=PropertyChanged}">
-            <dxg:GridControl.View>
-                <dxg:TableView AutoWidth="True"
-                               ShowGroupPanel="False">
-                    <dxmvvm:Interaction.Behaviors>
-                        <dxmvvm:EventToCommand EventName="RowDoubleClick" 
-                                               Command="{Binding RowDoubleClickCommand}"/>
-                    </dxmvvm:Interaction.Behaviors>
-
-                </dxg:TableView>
-            </dxg:GridControl.View>
-
-            <dxg:GridColumn Header="Наименование"                            
-                            Binding="{Binding Name}"/>
-
-            <dxg:GridColumn Header="Количество на складе" 
-                            Width="50"
-                            Binding="{Binding Quantity}"
-                            AllowEditing="True"
-                            IsSmart="True"/>
-
-        </dxg:GridControl>
+        <dxlc:LayoutGroup HorizontalAlignment="Left"
+                          VerticalAlignment="Top">
+            <Button Content="Добавить"
+                    Command="{Binding AddProductToWriteDownCommand}"/>
+            <Button Content="Добавить по штрих-коду"
+                    Tag="{StaticResource faBarcode}"
+                    Style="{StaticResource ButtonWithHorizontalIcon}"/>
+        </dxlc:LayoutGroup>
 
         <dxg:GridControl SelectionMode="Row"
-                         ItemsSource="{Binding WriteDownProducts}">
+                         ItemsSource="{Binding WriteDownProducts}"
+                         SelectedItem="{Binding SelectedWriteDownProduct}">
 
             <dxg:GridControl.View>
                 <dxg:TableView AutoWidth="True"
                                InvalidRowException="TableView_InvalidRowException"
-                               ShowGroupPanel="False"/>
+                               ShowGroupPanel="False">
+                    <dxmvvm:Interaction.Behaviors>
+                        <dxmvvm:EventToCommand EventName="CellValueChanged"
+                                               Command="{Binding CellValueChangedCommand}"
+                                               PassEventArgsToCommand="True"/>
+                    </dxmvvm:Interaction.Behaviors>
+                </dxg:TableView>
             </dxg:GridControl.View>
 
             <dxg:GridColumn Header="Наименование"                            
-                            Binding="{Binding Product.Name}"/>
-
-            <dxg:GridColumn Header="Кол-во на складе"                            
-                            Binding="{Binding Product.Quantity}">
+                            FieldName="ProductId">
                 <dxg:GridColumn.EditSettings>
-                    <dxe:SpinEditSettings AllowRoundOutOfRangeValue="True"
-                                          SelectAllOnMouseUp="True"
-                                          MaskUseAsDisplayFormat="True"
-                                          DisplayFormat="N2"/>
+                    <dxe:ComboBoxEditSettings ItemsSource="{Binding Products}" 
+                                              DisplayMember="Name"
+                                              ValueMember="Id"
+                                              IncrementalFiltering="True" 
+                                              AutoComplete="True"/>
                 </dxg:GridColumn.EditSettings>
             </dxg:GridColumn>
 
-            <dxg:GridColumn Header="Количество списания" 
-                            Width="50"   
+            <dxg:GridColumn Header="Количество списания"
                             ShowValidationAttributeErrors="True"
-                            Binding="{Binding Quantity, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-                            AllowEditing="True"
-                            IsSmart="True">
+                            FieldName="Quantity">
                 <dxmvvm:Interaction.Behaviors>
                     <dxmvvm:EventToCommand EventName="Validate" 
                                            Command="{Binding ValidateCellCommand}"
@@ -81,18 +67,29 @@
                     <dxe:SpinEditSettings AllowRoundOutOfRangeValue="True"
                                           SelectAllOnMouseUp="True"
                                           MaskUseAsDisplayFormat="True"
-                                          DisplayFormat="N2"/>
+                                          DisplayFormat="N2" 
+                                          Mask="n"/>
+                </dxg:GridColumn.EditSettings>
+            </dxg:GridColumn>
+
+            <dxg:GridColumn Header="Кол-во на складе"                            
+                            FieldName="Product.Quantity"
+                            AllowEditing="False">
+                <dxg:GridColumn.EditSettings>
+                    <dxe:SpinEditSettings AllowRoundOutOfRangeValue="True"
+                                          SelectAllOnMouseUp="True"
+                                          MaskUseAsDisplayFormat="True"
+                                          DisplayFormat="N2" 
+                                          Increment="1" 
+                                          Mask="n"/>
                 </dxg:GridColumn.EditSettings>
             </dxg:GridColumn>
 
         </dxg:GridControl>
 
-        <dxlc:LayoutItem LabelPosition="Top"
-                         Label="Комментарий">
-            <dxe:TextEdit Text="{Binding Comment, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-                          TextWrapping="Wrap"
-                          VerticalContentAlignment="Top"
-                          Height="70"/>
+        <dxlc:LayoutItem Label="Комментарий:"
+                         VerticalAlignment="Top">
+            <dxe:TextEdit Text="{Binding Comment}"/>
         </dxlc:LayoutItem>
 
         <dxlc:LayoutGroup HorizontalAlignment="Right"

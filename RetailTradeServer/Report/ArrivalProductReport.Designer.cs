@@ -12,7 +12,7 @@ namespace RetailTradeServer.Report {
     
     public partial class ArrivalProductReport : DevExpress.XtraReports.UI.XtraReport {
         private void InitializeComponent() {
-            DevExpress.XtraReports.ReportInitializer reportInitializer = new DevExpress.XtraReports.ReportInitializer(this, "RetailTradeServer.Report.ArrivalProductReport.vsrepx");
+            DevExpress.XtraReports.ReportInitializer reportInitializer = new DevExpress.XtraReports.ReportInitializer(this, "SalePageServer.Report.ArrivalProductReport.vsrepx");
 
             // Controls
             this.topMarginBand1 = reportInitializer.GetControl<DevExpress.XtraReports.UI.TopMarginBand>("topMarginBand1");
@@ -37,6 +37,10 @@ namespace RetailTradeServer.Report {
             this.label5 = reportInitializer.GetControl<DevExpress.XtraReports.UI.XRLabel>("label5");
             this.label2 = reportInitializer.GetControl<DevExpress.XtraReports.UI.XRLabel>("label2");
             this.line1 = reportInitializer.GetControl<DevExpress.XtraReports.UI.XRLine>("line1");
+            this.tableCell9 = reportInitializer.GetControl<DevExpress.XtraReports.UI.XRTableCell>("tableCell9");
+            this.tableCell10 = reportInitializer.GetControl<DevExpress.XtraReports.UI.XRTableCell>("tableCell10");
+            this.tableCell11 = reportInitializer.GetControl<DevExpress.XtraReports.UI.XRTableCell>("tableCell11");
+            this.tableCell12 = reportInitializer.GetControl<DevExpress.XtraReports.UI.XRTableCell>("tableCell12");
 
             // Data Sources
             this.ArrivalProducts = reportInitializer.GetDataSource<DevExpress.DataAccess.ObjectBinding.ObjectDataSource>("ArrivalProducts");
@@ -69,5 +73,9 @@ namespace RetailTradeServer.Report {
         private DevExpress.XtraReports.UI.XRLine line1;
         private DevExpress.DataAccess.ObjectBinding.ObjectDataSource ArrivalProducts;
         private DevExpress.XtraReports.UI.XRControlStyle Style1;
+        private DevExpress.XtraReports.UI.XRTableCell tableCell9;
+        private DevExpress.XtraReports.UI.XRTableCell tableCell10;
+        private DevExpress.XtraReports.UI.XRTableCell tableCell11;
+        private DevExpress.XtraReports.UI.XRTableCell tableCell12;
     }
 }

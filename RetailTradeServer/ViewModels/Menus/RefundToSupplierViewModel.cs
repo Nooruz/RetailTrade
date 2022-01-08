@@ -82,6 +82,7 @@ namespace RetailTradeServer.ViewModels.Menus
         private async void GetRefundToSuppliersAsync()
         {
             RefundsToSuppliers = await _refundToSupplierService.GetAllAsync();
+            ShowLoadingPanel = false;
         }
 
         private async void Create()

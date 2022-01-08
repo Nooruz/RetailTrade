@@ -1,10 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel;
 
 namespace RetailTrade.Domain.Models
 {
-    public class OrderToSupplier : DomainObject, INotifyPropertyChanged
+    public class OrderToSupplier : DomainObject
     {
         #region Private Members
 
@@ -31,12 +30,5 @@ namespace RetailTrade.Domain.Models
         public ICollection<OrderProduct> OrderProducts { get; set; }
 
         #endregion
-
-        public event PropertyChangedEventHandler PropertyChanged;
-
-        protected void OnPropertyChanged(string propertyName)
-        {
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
-        }
     }
 }

@@ -140,7 +140,7 @@ namespace RetailTradeServer.ViewModels.Dialogs
         {
             if (parameter is CellValueChangedEventArgs e)
             {
-                if (e.Cell.Property == "Id")
+                if (e.Cell.Property == "ProductId")
                 {
                     if (SelectedArrivalProduct != null)
                     {
@@ -171,17 +171,6 @@ namespace RetailTradeServer.ViewModels.Dialogs
         {
             if (CanArrivalProduct)
             {
-                List<ArrivalProduct> arrivals = new();
-                foreach (var item in ArrivalProducts)
-                {
-                    arrivals.Add(new ArrivalProduct
-                    {
-                        ProductId = item.ProductId,
-                        Quantity = item.Quantity,
-                        ArrivalPrice = item.ArrivalPrice,
-                        ArrivalSum = item.ArrivalSum
-                    });
-                }
                 try
                 {
                     _ = await _arrivalService.CreateAsync(new Arrival
@@ -191,7 +180,8 @@ namespace RetailTradeServer.ViewModels.Dialogs
                         InvoiceDate = InvoiceDate,
                         SupplierId = SelectedSupplier.Id,
                         Comment = Comment,
-                        ArrivalProducts = arrivals
+                        Sum = ArrivalProducts.Sum(ap => ap.ArrivalSum),
+                        ArrivalProducts = ArrivalProducts.ToList()
                     });
                 }
                 catch (Exception e)
@@ -205,7 +195,7 @@ namespace RetailTradeServer.ViewModels.Dialogs
 
         private void Cleare()
         {
-            _arrivalProducts.Dequeue();
+            _arrivalProducts.Clear();
         }
 
         private async void GetProducts()

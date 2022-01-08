@@ -4,11 +4,9 @@ using RetailTrade.Domain.Services;
 using RetailTradeServer.Commands;
 using RetailTradeServer.ViewModels.Dialogs.Base;
 using SalePageServer.State.Dialogs;
+using SalePageServer.Utilities;
 using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.Collections.Specialized;
-using System.ComponentModel;
 using System.Linq;
 using System.Windows;
 using System.Windows.Input;
@@ -24,10 +22,11 @@ namespace RetailTradeServer.ViewModels.Dialogs
         private readonly IWriteDownService _writeDownService;
         private readonly IDialogService _dialogService;
         private Supplier _selectedSupplier;
-        private Product _selectedProduct;
+        private WriteDownProduct _selectedWriteDownProduct;
         private string _comment;
         private IEnumerable<Supplier> _suppliers;
         private IEnumerable<Product> _products;
+        private ObservableQueue<WriteDownProduct> _writeDownProducts;
 
         #endregion
 
@@ -72,26 +71,27 @@ namespace RetailTradeServer.ViewModels.Dialogs
                 OnPropertyChanged(nameof(Products));
             }
         }
-        public ObservableCollection<WriteDownProduct> WriteDownProducts { get; set; }
-        public Product SelectedProduct
+        public IEnumerable<WriteDownProduct> WriteDownProducts => _writeDownProducts;
+        public WriteDownProduct SelectedWriteDownProduct
         {
-            get => _selectedProduct;
+            get => _selectedWriteDownProduct;
             set
             {
-                _selectedProduct = value;
-                OnPropertyChanged(nameof(SelectedProduct));
+                _selectedWriteDownProduct = value;
+                OnPropertyChanged(nameof(SelectedWriteDownProduct));
             }
         }
-        public bool CanWriteDownProduct => WriteDownProducts.Count == 0 ? false : WriteDownProducts.FirstOrDefault(p => p.Quantity == 0) == null;
+        public bool CanWriteDownProduct => WriteDownProducts.Any() && !WriteDownProducts.Any(p => p.Quantity == 0);
 
         #endregion
 
         #region Commands
 
-        public ICommand RowDoubleClickCommand { get; }
+        public ICommand AddProductToWriteDownCommand { get; }
         public ICommand ValidateCellCommand { get; }
         public ICommand WriteDownProductCommand { get; }
         public ICommand ClearCommand { get; }
+        public ICommand CellValueChangedCommand { get; }
 
         #endregion
 
@@ -107,66 +107,43 @@ namespace RetailTradeServer.ViewModels.Dialogs
             _writeDownService = writeDownService;
             _dialogService = dialogService;
 
-            WriteDownProducts = new();
-
             GetSupplier();
 
-            RowDoubleClickCommand = new RelayCommand(RowDoubleClick);
             ValidateCellCommand = new ParameterCommand(parameter => ValidateCell(parameter));
             WriteDownProductCommand = new RelayCommand(CreateArrival);
             ClearCommand = new RelayCommand(Cleare);
+            AddProductToWriteDownCommand = new RelayCommand(AddProductToWriteDown);
+            CellValueChangedCommand = new ParameterCommand(p => CellValueChanged(p));
 
-            WriteDownProducts.CollectionChanged += ProductRefunds_CollectionChanged;
+            _writeDownProducts = new();
         }
 
         #endregion
 
         #region Private Voids
 
-        private void ProductRefunds_CollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
+        private void CellValueChanged(object parameter)
         {
-            if (e.OldItems != null)
+            if (parameter is CellValueChangedEventArgs e)
             {
-                foreach (INotifyPropertyChanged item in e.OldItems)
+                if (e.Cell.Property == "ProductId")
                 {
-                    if (item != null)
-                    {
-                        item.PropertyChanged -= Item_PropertyChanged;
-                    }
+                    SelectedWriteDownProduct.Product = new() { Quantity = Products.FirstOrDefault(wp => wp.Id == (int)e.Cell.Value).Quantity };
                 }
             }
-            if (e.NewItems != null)
-            {
-                foreach (INotifyPropertyChanged item in e.NewItems)
-                {
-                    if (item != null)
-                    {
-                        item.PropertyChanged += Item_PropertyChanged;
-                    }
-                }
-            }
-            OnPropertyChanged(nameof(WriteDownProducts));
             OnPropertyChanged(nameof(CanWriteDownProduct));
         }
 
-        private void Item_PropertyChanged(object sender, PropertyChangedEventArgs e)
+        private void AddProductToWriteDown()
         {
-            OnPropertyChanged(nameof(WriteDownProducts));
-            OnPropertyChanged(nameof(CanWriteDownProduct));
-        }
-
-        private void RowDoubleClick()
-        {
-            if (SelectedProduct != null)
+            if (SelectedSupplier != null)
             {
-                if (WriteDownProducts.FirstOrDefault(pr => pr.ProductId == SelectedProduct.Id) == null)
-                {
-                    WriteDownProducts.Add(new WriteDownProduct
-                    {
-                        Product = SelectedProduct,
-                        ProductId = SelectedProduct.Id
-                    });
-                }
+                _writeDownProducts.Enqueue(new WriteDownProduct());
+                OnPropertyChanged(nameof(CanWriteDownProduct));
+            }
+            else
+            {
+                _dialogService.ShowMessage("Выберите поставщика!", "", MessageBoxButton.OK, MessageBoxImage.Exclamation);
             }
         }
 
@@ -176,7 +153,7 @@ namespace RetailTradeServer.ViewModels.Dialogs
             {
                 if (((WriteDownProduct)e.Row).Product != null)
                 {
-                    if ((double)e.Value > ((WriteDownProduct)e.Row).Product.Quantity)
+                    if (Convert.ToDouble(e.Value) > ((WriteDownProduct)e.Row).Product.Quantity)
                     {
                         e.IsValid = false;
                         e.ErrorContent = "Количество списание товаров не должно превышать количество на складе.";
@@ -191,15 +168,6 @@ namespace RetailTradeServer.ViewModels.Dialogs
         {
             if (CanWriteDownProduct)
             {
-                List<WriteDownProduct> writeDownProducts = new();
-                foreach (WriteDownProduct item in WriteDownProducts)
-                {
-                    writeDownProducts.Add(new WriteDownProduct
-                    {
-                        ProductId = item.ProductId,
-                        Quantity = item.Quantity
-                    });
-                }
                 try
                 {
                     _ = await _writeDownService.CreateAsync(new WriteDown
@@ -207,7 +175,7 @@ namespace RetailTradeServer.ViewModels.Dialogs
                         WriteDownDate = DateTime.Now,
                         SupplierId = SelectedSupplier.Id,
                         Comment = Comment,
-                        WriteDownProducts = writeDownProducts
+                        WriteDownProducts = WriteDownProducts.Select(p => new WriteDownProduct { Quantity = p.Quantity, ProductId = p.ProductId }).ToList()
                     });
                 }
                 catch (Exception e)
@@ -221,14 +189,14 @@ namespace RetailTradeServer.ViewModels.Dialogs
 
         private void Cleare()
         {
-            WriteDownProducts.Clear();
+            _writeDownProducts.Clear();
         }
 
         private async void GetProducts()
         {
             if (SelectedSupplier != null)
             {
-                Products = await _productService.PredicateSelect(p => p.SupplierId == SelectedSupplier.Id && p.Quantity > 0, p => new Product { Id = p.Id, Name = p.Name, Quantity = p.Quantity, Unit = p.Unit });
+                Products = await _productService.PredicateSelect(p => p.SupplierId == SelectedSupplier.Id && p.Quantity > 0, p => new Product { Id = p.Id, Name = p.Name, Quantity = p.Quantity });
             }
         }
 
@@ -243,7 +211,6 @@ namespace RetailTradeServer.ViewModels.Dialogs
 
         public override void Dispose()
         {
-            WriteDownProducts.CollectionChanged -= ProductRefunds_CollectionChanged;
             base.Dispose();
         }
 

@@ -114,7 +114,7 @@ namespace RetailTradeServer.ViewModels
 
             _menuNavigator.StateChanged += MenuNavigator_StateChanged;
 
-            UpdateCurrentMenuViewModelCommand.Execute(MenuViewType.ArrivalProduct);
+            UpdateCurrentMenuViewModelCommand.Execute(MenuViewType.WriteDownProduct);
         }
 
         #endregion

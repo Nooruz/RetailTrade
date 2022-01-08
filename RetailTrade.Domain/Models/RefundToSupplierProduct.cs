@@ -2,7 +2,7 @@
 
 namespace RetailTrade.Domain.Models
 {
-    public class RefundToSupplierProduct : DomainObject, INotifyPropertyChanged
+    public class RefundToSupplierProduct : DomainObject
     {
         #region Private Members
 
@@ -35,13 +35,6 @@ namespace RetailTrade.Domain.Models
         }
         public RefundToSupplier RefundToSupplier { get; set; }
 
-        #endregion        
-
-        public event PropertyChangedEventHandler PropertyChanged;
-
-        protected void OnPropertyChanged(string propertyName)
-        {
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
-        }
+        #endregion
     }
 }

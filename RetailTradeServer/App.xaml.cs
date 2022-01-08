@@ -1,18 +1,15 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using RetailTrade.Domain.Services;
 using RetailTrade.EntityFramework;
 using RetailTradeServer.HostBuilders;
 using RetailTradeServer.ViewModels;
-using SalePageServer.State.Dialogs;
 using SalePageServer.Views.Dialogs;
 using System;
 using System.Data.SqlClient;
 using System.Globalization;
 using System.Linq;
 using System.Threading;
-using System.Threading.Tasks;
 using System.Windows;
 
 namespace RetailTradeServer
@@ -80,7 +77,7 @@ namespace RetailTradeServer
 
             //if (Settings.Default.IsDataBaseConnectionAdded)
             //{
-            try
+                try
                 {
                     using var context = contextFactory.CreateDbContext();
                     if (CheckConnectionString(context.Database.GetConnectionString()))

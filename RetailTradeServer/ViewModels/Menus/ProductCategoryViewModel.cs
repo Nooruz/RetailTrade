@@ -268,6 +268,7 @@ namespace RetailTradeServer.ViewModels.Menus
             ProductSubcategories = new(await _productSubcategoryService.GetAllAsync());
             Units = await _unitService.GetAllAsync();
             ProductCategories = new(await _productCategoryService.GetAllListAsync());
+            ShowLoadingPanel = false;
         }
 
         private void ProductCategoryService_OnProductCategoryCreated(ProductCategory productCategory)

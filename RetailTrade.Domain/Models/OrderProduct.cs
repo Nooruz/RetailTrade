@@ -1,9 +1,8 @@
-﻿using System.ComponentModel;
-using System.ComponentModel.DataAnnotations.Schema;
+﻿using System.ComponentModel.DataAnnotations.Schema;
 
 namespace RetailTrade.Domain.Models
 {
-    public class OrderProduct : DomainObject, INotifyPropertyChanged
+    public class OrderProduct : DomainObject
     {
         #region Private Members
 
@@ -77,12 +76,5 @@ namespace RetailTrade.Domain.Models
         public OrderToSupplier OrderToSupplier { get; set; }
 
         #endregion        
-
-        public event PropertyChangedEventHandler PropertyChanged;
-
-        protected void OnPropertyChanged(string propertyName)
-        {
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
-        }
     }
 }

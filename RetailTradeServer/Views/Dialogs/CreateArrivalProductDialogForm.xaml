@@ -63,7 +63,7 @@
             </dxg:GridControl.View>
 
             <dxg:GridColumn Header="Наименование"                            
-                            FieldName="Id">
+                            FieldName="ProductId">
                 <dxg:GridColumn.EditSettings>
                     <dxe:ComboBoxEditSettings ItemsSource="{Binding Products}"
                                               DisplayMember="Name"
