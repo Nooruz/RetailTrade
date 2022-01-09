@@ -44,8 +44,7 @@
             
         </dxlc:LayoutGroup>
 
-        <dxg:GridControl SelectionMode="Row" 
-                         AllowLiveDataShaping="True"
+        <dxg:GridControl SelectionMode="Row"
                          ItemsSource="{Binding ArrivalProducts}"
                          SelectedItem="{Binding SelectedArrivalProduct}">
 

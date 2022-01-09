@@ -7,6 +7,7 @@ using RetailTradeServer.ViewModels.Dialogs;
 using RetailTradeServer.Views.Dialogs;
 using SalePageServer.State.Dialogs;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Windows;
 using System.Windows.Input;
 
@@ -22,16 +23,17 @@ namespace RetailTradeServer.ViewModels.Menus
         private readonly IProductService _productService;
         private readonly ISupplierService _supplierService;
         private readonly IUserStore _userStore;
+        private readonly IDataService<Unit> _unitService;
         private IEnumerable<OrderStatus> _orderStatuses;
-        private IEnumerable<OrderToSupplier> _ordersToSuppliers;
+        private ObservableCollection<OrderToSupplier> _ordersToSuppliers;
 
         #endregion
 
         #region Public Properties
 
-        public IEnumerable<OrderToSupplier> OrdersToSuppliers
+        public ObservableCollection<OrderToSupplier> OrdersToSuppliers
         {
-            get => _ordersToSuppliers;
+            get => _ordersToSuppliers ?? new();
             set
             {
                 _ordersToSuppliers = value;
@@ -58,6 +60,7 @@ namespace RetailTradeServer.ViewModels.Menus
         public ICommand ValidateCommand { get; }
         public ICommand DuplicateOrderCommand { get; }
         public ICommand PrintOrderCommand { get; }
+        public ICommand UserControlLoadedCommand { get; }
 
         #endregion
 
@@ -68,7 +71,8 @@ namespace RetailTradeServer.ViewModels.Menus
             IProductService productService,
             ISupplierService supplierService,
             IOrderStatusService orderStatusService,
-            IUserStore userStore)
+            IUserStore userStore,
+            IDataService<Unit> unitService)
         {
             _orderToSupplierService = orderToSupplierService;
             _dialogService = dialogService;
@@ -76,22 +80,33 @@ namespace RetailTradeServer.ViewModels.Menus
             _supplierService = supplierService;
             _orderStatusService = orderStatusService;
             _userStore = userStore;
+            _unitService = unitService;
 
             CreateOrderCommand = new RelayCommand(CreateOrder);
             DeleteOrderCommand = new RelayCommand(DeleteOrder);
             ValidateCommand = new ParameterCommand(parameter => Validate(parameter));
             DuplicateOrderCommand = new RelayCommand(DuplicateOrder);
             PrintOrderCommand = new RelayCommand(PrintOrder);
+            UserControlLoadedCommand = new RelayCommand(UserControlLoaded);
 
-            GetOrdersToSuppliers();
-            GetOrderStatuses();
-
-            _orderToSupplierService.PropertiesChanged += GetOrdersToSuppliers;
+            _orderToSupplierService.OnOrderToSupplierCreated += OrderToSupplierService_OnOrderToSupplierCreated;
         }
 
         #endregion
 
         #region Private Voids
+
+        private async void UserControlLoaded()
+        {
+            OrdersToSuppliers = new(await _orderToSupplierService.GetAllAsync());
+            OrderStatuses = await _orderStatusService.GetAllAsync();
+            ShowLoadingPanel = false;
+        }
+
+        private void OrderToSupplierService_OnOrderToSupplierCreated(OrderToSupplier orderToSupplier)
+        {
+            OrdersToSuppliers.Add(orderToSupplier);
+        }
 
         private async void PrintOrder()
         {
@@ -122,19 +137,9 @@ namespace RetailTradeServer.ViewModels.Menus
 
         }
 
-        private async void GetOrdersToSuppliers()
-        {
-            OrdersToSuppliers = await _orderToSupplierService.GetAllAsync();
-        }
-
-        private async void GetOrderStatuses()
-        {
-            OrderStatuses = await _orderStatusService.GetAllAsync();
-        }
-
         private void CreateOrder()
         {
-            _dialogService.ShowDialog(new CreateOrderToSupplierDialogFormModel(_productService, _supplierService, _orderToSupplierService, _userStore, _dialogService) { Title = "Заказ поставшику (новый)" }, 
+            _dialogService.ShowDialog(new CreateOrderToSupplierDialogFormModel(_productService, _supplierService, _orderToSupplierService, _orderStatusService, _unitService, _userStore, _dialogService) { Title = "Заказ поставшику (новый)" }, 
                 new CreateOrderToSupplierDialogForm());
         }
 

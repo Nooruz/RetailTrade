@@ -1,6 +1,4 @@
-﻿using System.ComponentModel;
-
-namespace RetailTrade.Domain.Models
+﻿namespace RetailTrade.Domain.Models
 {
     public class RefundToSupplierProduct : DomainObject
     {
@@ -8,13 +6,22 @@ namespace RetailTrade.Domain.Models
 
         private double _quantity;
         private Product _product;
+        private int _productId;
 
         #endregion
 
         #region Public Properties
 
         public int RefundToSupplierId { get; set; }
-        public int ProductId { get; set; }
+        public int ProductId
+        {
+            get => _productId;
+            set
+            {
+                _productId = value;
+                OnPropertyChanged(nameof(ProductId));
+            }
+        }
         public double Quantity
         {
             get => _quantity;

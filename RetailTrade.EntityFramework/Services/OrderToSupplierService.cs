@@ -21,12 +21,13 @@ namespace RetailTrade.EntityFramework.Services
         }
 
         public event Action PropertiesChanged;
+        public event Action<OrderToSupplier> OnOrderToSupplierCreated;
 
         public async Task<OrderToSupplier> CreateAsync(OrderToSupplier entity)
         {
             var result = await _nonQueryDataService.Create(entity);
             if (result != null)
-                PropertiesChanged?.Invoke();
+                OnOrderToSupplierCreated?.Invoke(result);
             return result;
         }
 

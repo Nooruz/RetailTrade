@@ -54,8 +54,7 @@
                             <dxg:DataControlDetailDescriptor.DataControl>
                                 <dxg:GridControl AutoGenerateColumns="None">
                                     <dxg:GridControl.View>
-                                        <dxg:TableView DetailHeaderContent="Товары" 
-                                                       AutoWidth="True" 
+                                        <dxg:TableView DetailHeaderContent="Товары"
                                                        ShowGroupPanel="False"/>
                                     </dxg:GridControl.View>
                                     <dxg:GridColumn Header="Наименование" 
@@ -69,6 +68,11 @@
                 </dxg:TabViewDetailDescriptor>
             </dxg:GridControl.DetailDescriptor>
 
+            <dxg:GridColumn Header="Дата"
+                            FieldName="RefundToSupplierDate"
+                            Width="60"
+                            AllowEditing="False"/>
+
             <dxg:GridColumn Header="Номер"
                             FieldName="Id"
                             Width="50"
@@ -76,11 +80,6 @@
 
             <dxg:GridColumn Header="Поставщик" 
                             FieldName="Supplier.ShortName"
-                            AllowEditing="False"/>
-
-            <dxg:GridColumn Header="Дата"
-                            FieldName="RefundToSupplierDate"
-                            Width="60"
                             AllowEditing="False"/>
 
             <dxg:GridColumn Header="Комментарий" 

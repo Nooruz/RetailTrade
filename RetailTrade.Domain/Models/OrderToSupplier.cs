@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace RetailTrade.Domain.Models
 {
@@ -25,6 +26,8 @@ namespace RetailTrade.Domain.Models
             }
         }
         public string Comment { get; set; }
+        [Column(TypeName = "decimal(18,2)")]
+        public decimal Sum { get; set; }
         public Supplier Supplier { get; set; }
         public OrderStatus OrderStatus { get; set; }
         public ICollection<OrderProduct> OrderProducts { get; set; }
