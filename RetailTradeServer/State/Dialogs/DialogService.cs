@@ -222,5 +222,34 @@ namespace SalePageServer.State.Dialogs
             });
             return tcs.Task;
         }
+
+        public Task Udalit<TViewModel>(TViewModel viewModel) where TViewModel : BaseDialogViewModel
+        {
+            var tcs = new TaskCompletionSource<bool>();
+
+            Application.Current.Dispatcher.Invoke(() =>
+            {
+                try
+                {
+                    viewModel.CloseCommand = new RelayCommand(() => _window.Close());
+                    _window = new()
+                    {
+                        MinHeight = WindowMinimumHeight,
+                        MinWidth = WindowMinimumWidth,
+                        SizeToContent = SizeToContent,
+                        WindowStyle = WindowStyle,
+                        ResizeMode = ResizeMode,
+                        Content = viewModel,
+                        Title = viewModel.Title ?? FileVersionInfo.GetVersionInfo(Assembly.GetExecutingAssembly().Location).ProductName
+                    };
+                    _window.ShowDialog();
+                }
+                finally
+                {
+                    tcs.TrySetResult(true);
+                }
+            });
+            return tcs.Task;
+        }
     }
 }

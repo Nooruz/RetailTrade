@@ -2,7 +2,7 @@
 using System.Diagnostics;
 using System.Reflection;
 
-namespace SalePageServer.ViewModels.Dialogs
+namespace RetailTradeServer.ViewModels.Dialogs
 {
     public class StartingViewModel : BaseDialogViewModel
     {

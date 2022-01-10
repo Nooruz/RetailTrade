@@ -1,6 +1,6 @@
 ﻿using RetailTradeServer.Dialogs;
 
-namespace SalePageServer.Views.Dialogs
+namespace RetailTradeServer.Views.Dialogs
 {
     /// <summary>
     /// Логика взаимодействия для StartingView.xaml

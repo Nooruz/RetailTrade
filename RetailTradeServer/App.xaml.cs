@@ -4,7 +4,7 @@ using Microsoft.Extensions.Hosting;
 using RetailTrade.EntityFramework;
 using RetailTradeServer.HostBuilders;
 using RetailTradeServer.ViewModels;
-using SalePageServer.Views.Dialogs;
+using RetailTradeServer.ViewModels.Dialogs;
 using System;
 using System.Data.SqlClient;
 using System.Globalization;
@@ -59,7 +59,7 @@ namespace RetailTradeServer
                 SizeToContent = SizeToContent.WidthAndHeight,
                 ResizeMode = ResizeMode.NoResize,
                 WindowStartupLocation = WindowStartupLocation.CenterScreen,
-                Content = new StartingView()
+                Content = new StartingViewModel()
             };
             startingWindow.Show();
             //SplashScreen splashScreen = new("SplashScreen.png");

@@ -5,8 +5,9 @@
              xmlns:viewModels="clr-namespace:RetailTradeServer.ViewModels"
              xmlns:menuViewModels="clr-namespace:RetailTradeServer.ViewModels.Menus"
              xmlns:views="clr-namespace:RetailTradeServer.Views"
-             xmlns:dialogs="clr-namespace:RetailTradeServer.Dialogs"
+             xmlns:dialogs="clr-namespace:RetailTradeServer.Views.Dialogs"
              xmlns:dialogViewModels="clr-namespace:RetailTradeServer.ViewModels.Dialogs"
+             xmlns:messageBox="clr-namespace:RetailTradeServer.Dialogs"
              xmlns:menuViews="clr-namespace:RetailTradeServer.Views.Menus">
     
     <Application.Resources>
@@ -16,6 +17,8 @@
             <converters:PasswordMultiBindingConverter x:Key="PasswordMultiBindingConverter"/>
             <converters:StringIsNullOrEmptyVisibilityConverter x:Key="StringIsNullOrEmptyVisibilityConverter"/>
 
+            <!--#region Основной меню-->
+            
             <DataTemplate DataType="{x:Type viewModels:LoginViewModel}">
                 <views:LoginView/>
             </DataTemplate>
@@ -33,10 +36,12 @@
             </DataTemplate>
 
             <DataTemplate DataType="{x:Type dialogViewModels:MessageBoxDialogViewModel}">
-                <dialogs:DialogMessageBox/>
+                <messageBox:DialogMessageBox/>
             </DataTemplate>
+            
+            <!--#endregion-->
 
-
+            <!--#region Меню-->
 
             <DataTemplate DataType="{x:Type menuViewModels:ProductCategoryViewModel}">
                 <menuViews:ProductCategoryView/>
@@ -77,6 +82,20 @@
             <DataTemplate DataType="{x:Type menuViewModels:SupplierViewModel}">
                 <menuViews:SupplierView/>
             </DataTemplate>
+            
+            <!--#endregion-->
+            
+            <!--#region Диалоги-->
+
+            <DataTemplate DataType="{x:Type dialogViewModels:StartingViewModel}">
+                <dialogs:StartingView/>
+            </DataTemplate>
+
+            <DataTemplate DataType="{x:Type dialogViewModels:CreateOrderToSupplierDialogFormModel}">
+                <dialogs:CreateOrderToSupplierDialogForm/>
+            </DataTemplate>
+
+            <!--#endregion-->
 
             <ResourceDictionary.MergedDictionaries>
                 <ResourceDictionary Source="/Styles/Fonts.xaml"/>

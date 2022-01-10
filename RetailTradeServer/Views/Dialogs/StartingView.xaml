@@ -3,7 +3,7 @@
     xmlns:dxlc="http://schemas.devexpress.com/winfx/2008/xaml/layoutcontrol"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:local="clr-namespace:RetailTradeServer.Dialogs"
-    x:Class="SalePageServer.Views.Dialogs.StartingView"
+    x:Class="RetailTradeServer.Views.Dialogs.StartingView"
     Background="Transparent"
     Width="600"
     Height="350"

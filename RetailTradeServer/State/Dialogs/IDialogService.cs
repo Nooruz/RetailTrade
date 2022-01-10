@@ -16,6 +16,7 @@ namespace SalePageServer.State.Dialogs
     {
         Task ShowDialog<TViewModel, TUserControl>(TViewModel viewModel, TUserControl userControl) where TViewModel : BaseDialogViewModel where TUserControl : BaseDialogUserControl;
         Task ShowPrintDialog(XtraReport report);
+        Task Udalit<TViewModel>(TViewModel viewModel) where TViewModel : BaseDialogViewModel;
         Task Show<TUserControl>(TUserControl userControl) where TUserControl : BaseDialogUserControl;
         MessageBoxResult ShowMessage(string message);
         MessageBoxResult ShowMessage(string message, string title);
