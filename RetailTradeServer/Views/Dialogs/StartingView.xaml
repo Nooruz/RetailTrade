@@ -31,7 +31,7 @@
                         <TextBlock VerticalAlignment="Top"
                                    FontSize="24"
                                    Foreground="#303030"
-                                   Text="{Binding ApplicationName, FallbackValue=SP МАГАЗИН 1.0.2-betta1}"/>
+                                   Text="{Binding ApplicationName}"/>
                         <TextBlock VerticalAlignment="Top"
                                    Foreground="#ababab"
                                    FontSize="18"
