@@ -1,18 +1,15 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using RetailTrade.Domain.Services;
 using RetailTrade.EntityFramework;
 using RetailTradeServer.HostBuilders;
 using RetailTradeServer.ViewModels;
-using SalePageServer.State.Dialogs;
 using SalePageServer.Views.Dialogs;
 using System;
 using System.Data.SqlClient;
 using System.Globalization;
 using System.Linq;
 using System.Threading;
-using System.Threading.Tasks;
 using System.Windows;
 
 namespace RetailTradeServer
@@ -68,8 +65,7 @@ namespace RetailTradeServer
             //SplashScreen splashScreen = new("SplashScreen.png");
             //splashScreen.Show(true);
             var contextFactory = _host.Services.GetRequiredService<RetailTradeDbContextFactory>();
-            _dbContext = contextFactory.CreateDbContext();
-            PotomUdalit();
+            _dbContext = contextFactory.CreateDbContext();            
             //Settings.Default.AdminCreated = false;
             //Settings.Default.Save();
 
@@ -81,7 +77,7 @@ namespace RetailTradeServer
 
             //if (Settings.Default.IsDataBaseConnectionAdded)
             //{
-            try
+                try
                 {
                     using var context = contextFactory.CreateDbContext();
                     if (CheckConnectionString(context.Database.GetConnectionString()))
@@ -106,7 +102,7 @@ namespace RetailTradeServer
                 window.DataContext = _host.Services.GetRequiredService<MainViewModel>();
                 window.Loaded += Window_Loaded;
                 //await Task.Delay(5000);
-                
+                PotomUdalit();
                 window.Show();
             //}
             //else

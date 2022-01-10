@@ -4,6 +4,14 @@
 
     <UserControl.Resources>
         <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter"/>
+        <BeginStoryboard x:Key="LoadingPanelStory">
+            <Storyboard RepeatBehavior="Forever">
+                <DoubleAnimation Storyboard.TargetName="Rotation" 
+                                 Storyboard.TargetProperty="Angle"
+                                 From="0"
+                                 To="360"/>
+            </Storyboard>
+        </BeginStoryboard>
     </UserControl.Resources>
 
     <UserControl.Style>
@@ -48,24 +56,12 @@
                      RenderTransformOrigin=".5 .5"
                      StrokeThickness="5"
                      Stroke="#0172C5"
-                     StrokeDashArray="22">
+                     StrokeDashArray="22"
+                     x:Name="LoadingIcon">
 
                 <Ellipse.RenderTransform>
                     <RotateTransform x:Name="Rotation" Angle="0"/>
                 </Ellipse.RenderTransform>
-
-                <Ellipse.Triggers>
-                    <EventTrigger RoutedEvent="Loaded">
-                        <BeginStoryboard>
-                            <Storyboard RepeatBehavior="Forever">
-                                <DoubleAnimation Storyboard.TargetName="Rotation" 
-                                                 Storyboard.TargetProperty="Angle"
-                                                 From="0" 
-                                                 To="360"/>
-                            </Storyboard>
-                        </BeginStoryboard>
-                    </EventTrigger>
-                </Ellipse.Triggers>
 
             </Ellipse>
 

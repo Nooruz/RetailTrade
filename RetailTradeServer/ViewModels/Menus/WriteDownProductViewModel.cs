@@ -46,15 +46,6 @@ namespace RetailTradeServer.ViewModels.Menus
                 OnPropertyChanged(nameof(SelectedWriteDown));
             }
         }
-        public bool ShowLoadingPanel
-        {
-            get => _showLoadingPanel;
-            set
-            {
-                _showLoadingPanel = value;
-                OnPropertyChanged(nameof(ShowLoadingPanel));
-            }
-        }
 
         #endregion
 
@@ -116,13 +107,14 @@ namespace RetailTradeServer.ViewModels.Menus
             }
             finally
             {
-                //ShowLoadingPanel = false;
+                ShowLoadingPanel = false;
             }
         }
 
         private async void GetWriteDownsAsync()
         {
             WriteDowns = await _writeDownService.GetAllAsync();
+            ShowLoadingPanel = false;
         }
 
         private async void Create()

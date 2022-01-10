@@ -9,8 +9,8 @@ using RetailTradeServer.ViewModels.Base;
 using RetailTradeServer.ViewModels.Dialogs;
 using RetailTradeServer.Views.Dialogs;
 using SalePageServer.State.Dialogs;
-using SalePageServer.Utilities;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Windows;
 using System.Windows.Input;
@@ -29,9 +29,9 @@ namespace RetailTradeServer.ViewModels.Menus
         private readonly ISupplierService _supplierService;
         private readonly IMessageStore _messageStore;
         private object _selectedProductGroup;
-        private readonly ObservableQueue<Product> _getProducts;
-        private readonly ObservableQueue<ProductCategory> _productCategories;
-        private IEnumerable<ProductSubcategory> _productSubcategories;
+        private ObservableCollection<Product> _getProducts;
+        private ObservableCollection<ProductCategory> _productCategories;
+        private ObservableCollection<ProductSubcategory> _productSubcategories;
         private IEnumerable<Unit> _units;
         private bool _canShowLoadingPanel = true;
         private Product _selectedProduct;
@@ -58,10 +58,18 @@ namespace RetailTradeServer.ViewModels.Menus
         #region Public Properties
 
         public GlobalMessageViewModel GlobalMessageViewModel { get; }
-        public IEnumerable<ProductCategory> ProductCategories => _productCategories;
-        public IEnumerable<ProductSubcategory> ProductSubcategories
+        public ObservableCollection<ProductCategory> ProductCategories
         {
-            get => _productSubcategories;
+            get => _productCategories ?? new();
+            set
+            {
+                _productCategories = value;
+                OnPropertyChanged(nameof(ProductCategories));
+            }
+        }
+        public ObservableCollection<ProductSubcategory> ProductSubcategories
+        {
+            get => _productSubcategories ?? new();
             set
             {
                 _productSubcategories = value;
@@ -77,7 +85,15 @@ namespace RetailTradeServer.ViewModels.Menus
                 OnPropertyChanged(nameof(Units));
             }
         }
-        public IEnumerable<Product> GetProducts => _getProducts;
+        public ObservableCollection<Product> GetProducts
+        {
+            get => _getProducts ?? new();
+            set
+            {
+                _getProducts = value;
+                OnPropertyChanged(nameof(GetProducts));
+            }
+        }
         public object SelectedProductGroup
         {
             get => _selectedProductGroup;
@@ -149,11 +165,9 @@ namespace RetailTradeServer.ViewModels.Menus
             GridControlLoadedCommand = new ParameterCommand(sender => GridControlLoaded(sender));
             DeleteMarkingProductCommand = new RelayCommand(DeleteMarkingProduct);
 
-            _getProducts = new();
-            _productCategories = new();
-
             _productCategoryService.OnProductCategoryCreated += ProductCategoryService_OnProductCategoryCreated;
             _productSubcategoryService.OnProductSubcategoryCreated += ProductSubcategoryService_OnProductSubcategoryCreated;
+            _productSubcategoryService.OnProductSubcategoryUpdated += ProductSubcategoryService_OnProductSubcategoryUpdated;
             _productService.OnProductCreated += ProductService_OnProductCreated;
         }
 
@@ -250,15 +264,26 @@ namespace RetailTradeServer.ViewModels.Menus
 
         private async void GetProductsAsync()
         {
-            _getProducts.AddRange(await _productService.GetAllAsync());
-            ProductSubcategories = await _productSubcategoryService.GetAllAsync();
+            GetProducts = new(await _productService.GetAllAsync());
+            ProductSubcategories = new(await _productSubcategoryService.GetAllAsync());
             Units = await _unitService.GetAllAsync();
-            _productCategories.AddRange(await _productCategoryService.GetAllListAsync());
+            ProductCategories = new(await _productCategoryService.GetAllListAsync());
+            ShowLoadingPanel = false;
         }
 
         private void ProductCategoryService_OnProductCategoryCreated(ProductCategory productCategory)
         {
-            _productCategories.Enqueue(productCategory);
+            productCategory.ProductSubcategories = new();
+            ProductCategories.Add(productCategory);
+        }
+
+        private void ProductSubcategoryService_OnProductSubcategoryUpdated(ProductSubcategory productSubcategory)
+        {
+            ProductSubcategory editProductSubcategory = ProductSubcategories.FirstOrDefault(pc => pc.Id == productSubcategory.Id);
+            if (editProductSubcategory != null)
+            {
+                editProductSubcategory.Name = productSubcategory.Name;
+            }
         }
 
         private void ProductSubcategoryService_OnProductSubcategoryCreated(ProductSubcategory productSubcategory)
@@ -266,14 +291,17 @@ namespace RetailTradeServer.ViewModels.Menus
             ProductCategory editProductCategory = ProductCategories.FirstOrDefault(pc => pc.Id == productSubcategory.ProductCategoryId);
             if (editProductCategory.ProductSubcategories == null)
             {
-                //editProductCategory.ProductSubcategories = new();
+                editProductCategory.ProductSubcategories = new() { productSubcategory };
             }
-            editProductCategory.ProductSubcategories.Add(productSubcategory);
+            else
+            {
+                editProductCategory.ProductSubcategories.Add(productSubcategory);
+            }            
         }
 
         private void ProductService_OnProductCreated(Product product)
         {
-            _getProducts.Enqueue(product);
+            GetProducts.Add(product);
         }
 
         private void OnShowNodeMenu(object sender)
@@ -303,19 +331,28 @@ namespace RetailTradeServer.ViewModels.Menus
         {
             if (SelectedProductGroup is ProductCategory productCategory)
             {
-                var viewModel = new CreateProductCategoryDialogFormModel(_productCategoryService, _dialogService)
+                if (productCategory.Id != 0)
                 {
-                    Title = $"Категория товаров ({productCategory.Name})",
-                    EditProductCategory = productCategory,
-                    Name = productCategory.Name,
+                    var viewModel = new CreateProductCategoryDialogFormModel(_productCategoryService, _dialogService)
+                    {
+                        Title = $"Категория товаров ({productCategory.Name})",
+                        EditProductCategory = productCategory,
+                        Name = productCategory.Name,
+                        IsEditMode = true
+                    };
+                    _ = _dialogService.ShowDialog(viewModel, new CreateProductCategoryDialogForm());
+                }                
+            }
+            if (SelectedProductGroup is ProductSubcategory productSubcategory)
+            {
+                var viewModel = new CreateProductCategoryDialogFormModel(_productSubcategoryService, _dialogService)
+                {
+                    Title = $"Группа товаров ({productSubcategory.Name})",
+                    EditProductSubcategory = productSubcategory,
+                    Name = productSubcategory.Name,
                     IsEditMode = true
                 };
                 _ = _dialogService.ShowDialog(viewModel, new CreateProductCategoryDialogForm());
-            }
-
-            if (SelectedProductGroup is ProductSubcategory productSubcategory)
-            {
-
             }
         }
 

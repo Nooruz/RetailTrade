@@ -6,12 +6,24 @@
                                xmlns:dxmvvm="http://schemas.devexpress.com/winfx/2008/xaml/mvvm"
                                xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
                                xmlns:dialogs="clr-namespace:RetailTradeServer.Dialogs"
-                               Width="600"
-                               Height="400">
+                               Width="700"
+                               Height="500">
 
     <dxlc:LayoutControl Grid.Row="0"
                         ItemSpace="10"
                         Orientation="Vertical">
+
+        <dxlc:LayoutGroup ItemSpace="10">
+
+            <dxlc:LayoutItem Label="Наклядная №:">
+                <dxe:TextEdit Text="{Binding InvoiceNumber}"/>
+            </dxlc:LayoutItem>
+
+            <dxlc:LayoutItem Label="от:">
+                <dxe:DateEdit EditValue="{Binding InvoiceDate}"/>
+            </dxlc:LayoutItem>
+
+        </dxlc:LayoutGroup>
 
         <dxlc:LayoutItem Label="Поставщик:">
             <dxe:ComboBoxEdit ItemsSource="{Binding Suppliers}"
@@ -19,53 +31,50 @@
                               SelectedItem="{Binding SelectedSupplier}"/>
         </dxlc:LayoutItem>
 
-        <dxg:GridControl SelectionMode="Row"
-                         ItemsSource="{Binding Products}"
-                         SelectedItem="{Binding SelectedProduct, UpdateSourceTrigger=PropertyChanged}">
-            <dxg:GridControl.View>
-                <dxg:TableView AutoWidth="True"
-                               AllowEditing="False"
-                               ShowGroupPanel="False">
-                    <dxmvvm:Interaction.Behaviors>
-                        <dxmvvm:EventToCommand EventName="RowDoubleClick" 
-                                               Command="{Binding RowDoubleClickCommand}"/>
-                    </dxmvvm:Interaction.Behaviors>
-
-                </dxg:TableView>
-            </dxg:GridControl.View>
-
-            <dxg:GridColumn Header="Наименование"                            
-                            Binding="{Binding Name}"/>
-
-            <dxg:GridColumn Header="Количество на складе" 
-                            Width="50"
-                            Binding="{Binding Quantity}"
-                            AllowEditing="True"
-                            IsSmart="True"/>
-
-        </dxg:GridControl>
+        <dxlc:LayoutGroup Orientation="Horizontal"
+                          HorizontalAlignment="Left"
+                          VerticalAlignment="Top">
+            
+            <Button Content="Добавить"
+                    Command="{Binding AddProductToArrivalCommand}"/>
+            
+            <Button Content="Добавить по штрих коду"
+                    Style="{StaticResource ButtonWithHorizontalIcon}"
+                    Tag="{StaticResource faBarcode}"/>
+            
+        </dxlc:LayoutGroup>
 
         <dxg:GridControl SelectionMode="Row"
-                         ItemsSource="{Binding ArrivalProducts}">
+                         ItemsSource="{Binding ArrivalProducts}"
+                         SelectedItem="{Binding SelectedArrivalProduct}">
 
             <dxg:GridControl.View>
                 <dxg:TableView AutoWidth="True"
+                               ShowTotalSummary="True"
                                InvalidRowException="TableView_InvalidRowException"
                                ShowGroupPanel="False">
                     <dxmvvm:Interaction.Behaviors>
                         <dxmvvm:EventToCommand EventName="CellValueChanged"
-                                               Command="{Binding CellValueChangedCommand}"/>
+                                               Command="{Binding CellValueChangedCommand}"
+                                               PassEventArgsToCommand="True"/>
                     </dxmvvm:Interaction.Behaviors>
                 </dxg:TableView>
             </dxg:GridControl.View>
 
             <dxg:GridColumn Header="Наименование"                            
-                            Binding="{Binding Product.Name}"/>
+                            FieldName="ProductId">
+                <dxg:GridColumn.EditSettings>
+                    <dxe:ComboBoxEditSettings ItemsSource="{Binding Products}"
+                                              DisplayMember="Name"
+                                              ValueMember="Id"
+                                              AutoComplete="True" 
+                                              IncrementalFiltering="True"/>
+                </dxg:GridColumn.EditSettings>
+            </dxg:GridColumn>
 
-            <dxg:GridColumn Header="Количество заказа" 
-                            Width="50"   
+            <dxg:GridColumn Header="Количество"
                             ShowValidationAttributeErrors="True"
-                            Binding="{Binding Quantity, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                            FieldName="Quantity"
                             AllowEditing="True"
                             IsSmart="True">
                 <dxmvvm:Interaction.Behaviors>
@@ -82,14 +91,41 @@
                 </dxg:GridColumn.EditSettings>
             </dxg:GridColumn>
 
+            <dxg:GridColumn Header="Цена"
+                            FieldName="ArrivalPrice">
+                <dxg:GridColumn.EditSettings>
+                    <dxe:TextEditSettings MaskUseAsDisplayFormat="True" 
+                                          MaskType="Numeric" 
+                                          SelectAllOnMouseUp="True"
+                                          Mask="n"/>
+                </dxg:GridColumn.EditSettings>
+            </dxg:GridColumn>
+
+            <dxg:GridColumn Header="Сумма"
+                            FieldName="ArrivalSum"
+                            AllowEditing="False"
+                            AllowedTotalSummaries="Sum">
+                <dxg:GridColumn.EditSettings>
+                    <dxe:TextEditSettings MaskUseAsDisplayFormat="True" 
+                                          MaskType="Numeric" 
+                                          Mask="n"/>
+                </dxg:GridColumn.EditSettings>
+            </dxg:GridColumn>
+
+            <dxg:GridControl.TotalSummary>
+                <dxg:GridSummaryItem SummaryType="Count" 
+                                     Alignment="Right"
+                                     DisplayFormat="{}{0:n}"/>
+                <dxg:GridSummaryItem FieldName="ArrivalSum"
+                                     SummaryType="Sum"
+                                     DisplayFormat="{}Всего: {0:n} сомов"/>
+            </dxg:GridControl.TotalSummary>
+
         </dxg:GridControl>
 
-        <dxlc:LayoutItem LabelPosition="Top"
-                         Label="Комментарий">
-            <dxe:TextEdit Text="{Binding Comment, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-                          TextWrapping="Wrap"
-                          VerticalContentAlignment="Top"
-                          Height="70"/>
+        <dxlc:LayoutItem Label="Комментарий"
+                         VerticalAlignment="Top">
+            <dxe:TextEdit Text="{Binding Comment, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
         </dxlc:LayoutItem>
 
         <dxlc:LayoutGroup HorizontalAlignment="Right"

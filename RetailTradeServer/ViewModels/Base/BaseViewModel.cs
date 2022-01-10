@@ -13,17 +13,13 @@ namespace RetailTradeServer.ViewModels.Base
 
         private readonly IAuthenticator _authenticator;
         private bool _isModalOpen;
+        private string _loadingPanelTitle = "Пожалуйста подаждите";
+        private string _loadingPanelText = "Загрузка...";
+        private bool _showLoadingPanel = true;
 
         public event PropertyChangedEventHandler PropertyChanged;
 
         #endregion
-
-        public virtual void Dispose() { }
-
-        protected void OnPropertyChanged(string propertyName)
-        {
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
-        }
 
         #region Commands
 
@@ -44,6 +40,33 @@ namespace RetailTradeServer.ViewModels.Base
             {
                 _isModalOpen = value;
                 OnPropertyChanged(nameof(IsModalOpen));
+            }
+        }
+        public string LoadingPanelTitle
+        {
+            get => _loadingPanelTitle;
+            set
+            {
+                _loadingPanelTitle = value;
+                OnPropertyChanged(nameof(LoadingPanelTitle));
+            }
+        }
+        public string LoadingPanelText
+        {
+            get => _loadingPanelText;
+            set
+            {
+                _loadingPanelText = value;
+                OnPropertyChanged(nameof(LoadingPanelText));
+            }
+        }
+        public bool ShowLoadingPanel
+        {
+            get => _showLoadingPanel;
+            set
+            {
+                _showLoadingPanel = value;
+                OnPropertyChanged(nameof(ShowLoadingPanel));
             }
         }
 
@@ -74,5 +97,12 @@ namespace RetailTradeServer.ViewModels.Base
         }
 
         #endregion
+
+        public virtual void Dispose() { }
+
+        protected void OnPropertyChanged(string propertyName)
+        {
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+        }
     }
 }

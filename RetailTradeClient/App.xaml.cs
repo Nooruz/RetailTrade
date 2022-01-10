@@ -1,5 +1,4 @@
-﻿using CoreScanner;
-using Microsoft.Extensions.DependencyInjection;
+﻿using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using RetailTradeClient.HostBuilders;
 using RetailTradeClient.ViewModels;
@@ -42,27 +41,27 @@ namespace RetailTradeClient
         {
             _host.Start();
 
-            CCoreScannerClass _scanner = new();
+            //CCoreScannerClass _scanner = new();
 
-            short[] scannerTypes = new short[1];
-            scannerTypes[0] = 1;
-            short numberOfScannerTypes = 1;
-            int status;
+            //short[] scannerTypes = new short[1];
+            //scannerTypes[0] = 1;
+            //short numberOfScannerTypes = 1;
+            //int status;
 
-            _scanner.Open(0, scannerTypes, numberOfScannerTypes, out status);
+            //_scanner.Open(0, scannerTypes, numberOfScannerTypes, out status);
 
-            _scanner.BarcodeEvent += new _ICoreScannerEvents_BarcodeEventEventHandler(OnBarcodeEvent);
+            //_scanner.BarcodeEvent += new _ICoreScannerEvents_BarcodeEventEventHandler(OnBarcodeEvent);
 
-            // Let's subscribe for events
-            int opcode = 1001; // Method for Subscribe events
-            string outXML; // XML Output
-            string inXML = "<inArgs>" +
-            "<cmdArgs>" +
-            "<arg-int>6</arg-int>" + // Number of events you want to subscribe
-            "<arg-int>1,2,4,8,16,32</arg-int>" + // Comma separated event IDs
-            "</cmdArgs>" +
-            "</inArgs>";
-            _scanner.ExecCommand(opcode, ref inXML, out outXML, out status);
+            //// Let's subscribe for events
+            //int opcode = 1001; // Method for Subscribe events
+            //string outXML; // XML Output
+            //string inXML = "<inArgs>" +
+            //"<cmdArgs>" +
+            //"<arg-int>6</arg-int>" + // Number of events you want to subscribe
+            //"<arg-int>1,2,4,8,16,32</arg-int>" + // Comma separated event IDs
+            //"</cmdArgs>" +
+            //"</inArgs>";
+            //_scanner.ExecCommand(opcode, ref inXML, out outXML, out status);
 
             try
             {                

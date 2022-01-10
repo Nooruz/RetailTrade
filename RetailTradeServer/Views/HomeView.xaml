@@ -35,11 +35,11 @@
             <dxwui:HamburgerSubMenuNavigationButton Content="Каталог товаров"
                                                     Command="{Binding ProductCategoryCommand}"/>
 
-            <dxwui:HamburgerSubMenuNavigationButton Content="Приход товара"
+            <dxwui:HamburgerSubMenuNavigationButton Content="Приход товаров"
                                                     Command="{Binding ArrivalProductCommand}"
                                                     Focusable="False"/>
 
-            <dxwui:HamburgerSubMenuNavigationButton Content="Списание товара"
+            <dxwui:HamburgerSubMenuNavigationButton Content="Списание товаров"
                                                     Command="{Binding WriteDownProductCommand}"/>
 
             <dxwui:HamburgerSubMenuNavigationButton Content="Возвраты поставщикам"

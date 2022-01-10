@@ -10,57 +10,112 @@ namespace RetailTrade.LoadingPanelControl
     /// </summary>
     public partial class LoadingPanel : UserControl
     {
+        #region Private Members
 
+        private static BeginStoryboard _beginStoryboard;
 
-        public bool IsLoading
-        {
-            get { return (bool)GetValue(IsLoadingProperty); }
-            set { SetValue(IsLoadingProperty, value); }
-        }
+        #endregion
 
-        // Using a DependencyProperty as the backing store for IsLoading.  This enables animation, styling, binding, etc...
+        #region Dependency Properties
+
         public static readonly DependencyProperty IsLoadingProperty =
-            DependencyProperty.Register(nameof(IsLoading), typeof(bool), typeof(LoadingPanel), new PropertyMetadata(false));
+            DependencyProperty.Register(nameof(IsLoading), typeof(bool), typeof(LoadingPanel), new PropertyMetadata(false, new PropertyChangedCallback(IsLoadingPropertyChanged)));
 
-
-
-        public string Title
-        {
-            get { return (string)GetValue(TitleProperty); }
-            set { SetValue(TitleProperty, value); }
-        }
-
-        // Using a DependencyProperty as the backing store for Title.  This enables animation, styling, binding, etc...
         public static readonly DependencyProperty TitleProperty =
             DependencyProperty.Register(nameof(Title), typeof(string), typeof(LoadingPanel), new PropertyMetadata("Пожалуйста подождите"));
 
-
-
-        public string Text
-        {
-            get { return (string)GetValue(TextProperty); }
-            set { SetValue(TextProperty, value); }
-        }
-
-        // Using a DependencyProperty as the backing store for Text.  This enables animation, styling, binding, etc...
         public static readonly DependencyProperty TextProperty =
             DependencyProperty.Register(nameof(Text), typeof(string), typeof(LoadingPanel), new PropertyMetadata("Загузка..."));
 
+        #endregion
+
+        #region Public Properties
+
+        public bool IsLoading
+        {
+            get => (bool)GetValue(IsLoadingProperty);
+            set => SetValue(IsLoadingProperty, value);
+        }
+
+        public string Title
+        {
+            get => (string)GetValue(TitleProperty);
+            set => SetValue(TitleProperty, value);
+        }
+
+        public string Text
+        {
+            get => (string)GetValue(TextProperty);
+            set => SetValue(TextProperty, value);
+        }
+
+        #endregion
+
+        #region Constructor
 
         public LoadingPanel()
         {
             InitializeComponent();
 
             DataContext = this;
+
+            _beginStoryboard = FindResource("LoadingPanelStory") as BeginStoryboard;
         }
 
-        private async Task RunStoryboard(Storyboard story, FrameworkElement item)
+        #endregion
+
+        #region Private Voids
+
+        private static Task RunStoryboard(BeginStoryboard story)
         {
-            story.Begin(item);
-            while (story.GetCurrentState() == ClockState.Active && story.GetCurrentTime() == story.Duration)
+            var tcs = new TaskCompletionSource<bool>();
+
+            Application.Current.Dispatcher.Invoke(() =>
             {
-                await Task.Delay(100);
+                try
+                {
+                    story.Storyboard.Begin();
+                }
+                finally
+                {
+                    tcs.TrySetResult(true);
+                }
+            });
+
+            return tcs.Task;
+        }
+
+        private static Task StopStoryboard(BeginStoryboard story)
+        {
+            var tcs = new TaskCompletionSource<bool>();
+
+            Application.Current.Dispatcher.Invoke(() =>
+            {
+                try
+                {
+                    story.Storyboard.Stop();
+                }
+                finally
+                {
+                    tcs.TrySetResult(true);
+                }
+            });
+
+            return tcs.Task;
+        }
+
+        private static void IsLoadingPropertyChanged(DependencyObject obj, DependencyPropertyChangedEventArgs e)
+        {
+            if ((bool)e.NewValue)
+            {
+                RunStoryboard(_beginStoryboard);
+            }
+            else
+            {
+                StopStoryboard(_beginStoryboard);
             }
         }
+
+        #endregion        
     }
 }

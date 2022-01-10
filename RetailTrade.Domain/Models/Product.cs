@@ -7,7 +7,7 @@ namespace RetailTrade.Domain.Models
     /// <summary>
     /// Товары
     /// </summary>
-    public class Product : DomainObject, INotifyPropertyChanged
+    public class Product : DomainObject
     {
         #region Private Members
 
@@ -224,13 +224,6 @@ namespace RetailTrade.Domain.Models
         public ICollection<RefundToSupplierProduct> ProductRefundToSuppliers { get; set; }
         public ICollection<OrderProduct> Orders { get; set; }
 
-        #endregion        
-
-        public event PropertyChangedEventHandler PropertyChanged;
-
-        protected void OnPropertyChanged(string propertyName)
-        {
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
-        }
+        #endregion
     }
 }

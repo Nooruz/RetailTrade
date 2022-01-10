@@ -1,10 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel;
 
 namespace RetailTrade.Domain.Models
 {
-    public class User : DomainObject, INotifyPropertyChanged
+    public class User : DomainObject
     {
         #region Private Members
 
@@ -113,12 +112,5 @@ namespace RetailTrade.Domain.Models
         public ICollection<Shift> Shifts { get; set; }
 
         #endregion
-
-        public event PropertyChangedEventHandler PropertyChanged;
-
-        protected void OnPropertyChanged(string propertyName)
-        {
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
-        }
     }
 }

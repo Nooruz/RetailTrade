@@ -33,5 +33,6 @@
     <system:String x:Key="faSyncAlt">&#xf2f1;</system:String>
     <system:String x:Key="faTimes">&#xf00d;</system:String>
     <system:String x:Key="faMinus">&#xf068;</system:String>
+    <system:String x:Key="faBarcode">&#xf02a;</system:String>
 
 </ResourceDictionary>

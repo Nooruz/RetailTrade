@@ -4,11 +4,9 @@ using RetailTrade.Domain.Services;
 using RetailTradeServer.Commands;
 using RetailTradeServer.ViewModels.Dialogs.Base;
 using SalePageServer.State.Dialogs;
+using SalePageServer.Utilities;
 using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.Collections.Specialized;
-using System.ComponentModel;
 using System.Linq;
 using System.Windows;
 using System.Windows.Input;
@@ -24,10 +22,11 @@ namespace RetailTradeServer.ViewModels.Dialogs
         private readonly IRefundToSupplierService _refundToSupplierService;
         private readonly IDialogService _dialogService;
         private Supplier _selectedSupplier;
-        private Product _selectedProduct;
+        private RefundToSupplierProduct _refundToSupplierProduct;
         private string _comment;
         private IEnumerable<Supplier> _suppliers;
         private IEnumerable<Product> _products;
+        private ObservableQueue<RefundToSupplierProduct> _refundToSupplierProducts;
 
         #endregion
 
@@ -72,26 +71,27 @@ namespace RetailTradeServer.ViewModels.Dialogs
                 OnPropertyChanged(nameof(Products));
             }
         }
-        public ObservableCollection<RefundToSupplierProduct> RefundToSupplierProducts { get; set; }
-        public Product SelectedProduct
+        public IEnumerable<RefundToSupplierProduct> RefundToSupplierProducts => _refundToSupplierProducts;
+        public RefundToSupplierProduct SelectedRefundToSupplierProduct
         {
-            get => _selectedProduct;
+            get => _refundToSupplierProduct;
             set
             {
-                _selectedProduct = value;
-                OnPropertyChanged(nameof(SelectedProduct));
+                _refundToSupplierProduct = value;
+                OnPropertyChanged(nameof(SelectedRefundToSupplierProduct));
             }
         }
-        public bool CanRefundToSupplierProduct => RefundToSupplierProducts.Count == 0 ? false : RefundToSupplierProducts.FirstOrDefault(p => p.Quantity == 0) == null;
+        public bool CanRefundToSupplierProduct => RefundToSupplierProducts.Any() && !RefundToSupplierProducts.Any(p => p.Quantity == 0);
 
         #endregion
 
         #region Commands
 
-        public ICommand RowDoubleClickCommand { get; }
         public ICommand ValidateCellCommand { get; }
         public ICommand RefundToSupplierProductCommand { get; }
         public ICommand ClearCommand { get; }
+        public ICommand AddProductToRefundCommand { get; }
+        public ICommand CellValueChangedCommand { get; }
 
         #endregion
 
@@ -107,67 +107,44 @@ namespace RetailTradeServer.ViewModels.Dialogs
             _refundToSupplierService = refundToSupplierService;
             _dialogService = dialogService;
 
-            RefundToSupplierProducts = new();
+            _refundToSupplierProducts = new();
 
             GetSupplier();
 
-            RowDoubleClickCommand = new RelayCommand(RowDoubleClick);
             ValidateCellCommand = new ParameterCommand(parameter => ValidateCell(parameter));
             RefundToSupplierProductCommand = new RelayCommand(CreateRefundToSupplierProduct);
             ClearCommand = new RelayCommand(Cleare);
-
-            RefundToSupplierProducts.CollectionChanged += ProductRefunds_CollectionChanged;
+            AddProductToRefundCommand = new RelayCommand(AddProductToRefund);
+            CellValueChangedCommand = new ParameterCommand(p => CellValueChanged(p));
         }
 
         #endregion
 
         #region Private Voids
 
-        private void ProductRefunds_CollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
+        private void CellValueChanged(object parameter)
         {
-            if (e.OldItems != null)
+            if (parameter is CellValueChangedEventArgs e)
             {
-                foreach (INotifyPropertyChanged item in e.OldItems)
+                if (e.Cell.Property == nameof(WriteDownProduct.ProductId))
                 {
-                    if (item != null)
-                    {
-                        item.PropertyChanged -= Item_PropertyChanged;
-                    }
+                    SelectedRefundToSupplierProduct.Product = new() { Quantity = Products.FirstOrDefault(p => p.Id == (int)e.Value).Quantity };
                 }
             }
-            if (e.NewItems != null)
-            {
-                foreach (INotifyPropertyChanged item in e.NewItems)
-                {
-                    if (item != null)
-                    {
-                        item.PropertyChanged += Item_PropertyChanged;
-                    }
-                }
-            }
-            OnPropertyChanged(nameof(RefundToSupplierProducts));
             OnPropertyChanged(nameof(CanRefundToSupplierProduct));
         }
 
-        private void Item_PropertyChanged(object sender, PropertyChangedEventArgs e)
+        private void AddProductToRefund()
         {
-            OnPropertyChanged(nameof(RefundToSupplierProducts));
-            OnPropertyChanged(nameof(CanRefundToSupplierProduct));
-        }
-
-        private void RowDoubleClick()
-        {
-            if (SelectedProduct != null)
+            if (SelectedSupplier != null)
             {
-                if (RefundToSupplierProducts.FirstOrDefault(pr => pr.ProductId == SelectedProduct.Id) == null)
-                {
-                    RefundToSupplierProducts.Add(new RefundToSupplierProduct
-                    {
-                        Product = SelectedProduct,
-                        ProductId = SelectedProduct.Id
-                    });
-                }
+                _refundToSupplierProducts.Enqueue(new RefundToSupplierProduct());
             }
+            else
+            {
+                _dialogService.ShowMessage("Выберите поставщика!", "", MessageBoxButton.OK, MessageBoxImage.Exclamation);
+            }
+            OnPropertyChanged(nameof(CanRefundToSupplierProduct));
         }
 
         private void ValidateCell(object parameter)
@@ -176,7 +153,7 @@ namespace RetailTradeServer.ViewModels.Dialogs
             {
                 if (((RefundToSupplierProduct)e.Row).Product != null)
                 {
-                    if (((RefundToSupplierProduct)e.Row).Product.Quantity < (double)e.Value)
+                    if (((RefundToSupplierProduct)e.Row).Product.Quantity < Convert.ToDouble(e.Value))
                     {
                         e.IsValid = false;
                         e.ErrorContent = "Количество не должно превышать количество товаров на складе.";
@@ -191,15 +168,6 @@ namespace RetailTradeServer.ViewModels.Dialogs
         {
             if (CanRefundToSupplierProduct)
             {
-                List<RefundToSupplierProduct> refundToSupplierProducts = new();
-                foreach (var item in RefundToSupplierProducts)
-                {
-                    refundToSupplierProducts.Add(new RefundToSupplierProduct
-                    {
-                        ProductId = item.ProductId,
-                        Quantity = item.Quantity
-                    });
-                }
                 try
                 {
                     _ = await _refundToSupplierService.CreateAsync(new RefundToSupplier
@@ -207,7 +175,7 @@ namespace RetailTradeServer.ViewModels.Dialogs
                         RefundToSupplierDate = DateTime.Now,
                         SupplierId = SelectedSupplier.Id,
                         Comment = Comment,
-                        RefundToSupplierProducts = refundToSupplierProducts
+                        RefundToSupplierProducts = RefundToSupplierProducts.Select(p => new RefundToSupplierProduct { ProductId = p.ProductId, Quantity = p.Quantity }).ToList()
                     });
                 }
                 catch (Exception e)
@@ -221,7 +189,7 @@ namespace RetailTradeServer.ViewModels.Dialogs
 
         private void Cleare()
         {
-            RefundToSupplierProducts.Clear();
+            _refundToSupplierProducts.Clear();
         }
 
         private async void GetProducts()
@@ -243,7 +211,6 @@ namespace RetailTradeServer.ViewModels.Dialogs
 
         public override void Dispose()
         {
-            RefundToSupplierProducts.CollectionChanged -= ProductRefunds_CollectionChanged;
             base.Dispose();
         }
 

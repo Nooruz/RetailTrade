@@ -1,6 +1,5 @@
 ﻿using System.Collections.Generic;
 using System.Collections.Specialized;
-using System.Linq;
 
 namespace SalePageServer.Utilities
 {
@@ -39,16 +38,6 @@ namespace SalePageServer.Utilities
             }
 
             return success;
-        }
-        public void AddRange(IEnumerable<T> collection)
-        {
-            if (collection != null && collection.Any())
-            {
-                foreach (var item in collection)
-                {
-                    Enqueue(item);
-                }
-            }
         }
     }
 }

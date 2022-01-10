@@ -1,10 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace RetailTrade.Domain.Models
 {
-    public class OrderToSupplier : DomainObject, INotifyPropertyChanged
+    public class OrderToSupplier : DomainObject
     {
         #region Private Members
 
@@ -26,17 +26,12 @@ namespace RetailTrade.Domain.Models
             }
         }
         public string Comment { get; set; }
+        [Column(TypeName = "decimal(18,2)")]
+        public decimal Sum { get; set; }
         public Supplier Supplier { get; set; }
         public OrderStatus OrderStatus { get; set; }
         public ICollection<OrderProduct> OrderProducts { get; set; }
 
         #endregion
-
-        public event PropertyChangedEventHandler PropertyChanged;
-
-        protected void OnPropertyChanged(string propertyName)
-        {
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
-        }
     }
 }

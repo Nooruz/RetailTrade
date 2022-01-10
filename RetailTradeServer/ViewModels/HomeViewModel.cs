@@ -29,7 +29,7 @@ namespace RetailTradeServer.ViewModels
         #region Public Properties
 
         public BaseViewModel CurrentMenuViewModel => _menuNavigator.CurrentViewModel;
-        public string OrganizationName => _userStore.CurrentOrganization.Name;
+        public string OrganizationName => _userStore.CurrentOrganization != null ? _userStore.CurrentOrganization.Name : "";
 
         #endregion
 
@@ -114,7 +114,7 @@ namespace RetailTradeServer.ViewModels
 
             _menuNavigator.StateChanged += MenuNavigator_StateChanged;
 
-            UpdateCurrentMenuViewModelCommand.Execute(MenuViewType.SaleDashboard);
+            UpdateCurrentMenuViewModelCommand.Execute(MenuViewType.WriteDownProduct);
         }
 
         #endregion

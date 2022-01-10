@@ -104,6 +104,7 @@ namespace RetailTradeServer.ViewModels.Menus
         private async void GetArrivalsAsync()
         {
             Arrivals = await _arrivalService.GetAllAsync();
+            ShowLoadingPanel = false;
         }
 
         private async void CreateArrival()

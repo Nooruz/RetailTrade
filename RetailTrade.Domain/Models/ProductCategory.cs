@@ -1,9 +1,9 @@
-﻿using System.Collections.Generic;
+﻿using System.Collections.ObjectModel;
 using System.ComponentModel;
 
 namespace RetailTrade.Domain.Models
 {
-    public class ProductCategory : DomainObject, INotifyPropertyChanged
+    public class ProductCategory : DomainObject
     {
         #region Private Members
 
@@ -26,15 +26,8 @@ namespace RetailTrade.Domain.Models
             }
         }
         //public ICollection<Product> Products { get; set; }
-        public ICollection<ProductSubcategory> ProductSubcategories { get; set; }
+        public ObservableCollection<ProductSubcategory> ProductSubcategories { get; set; }
 
         #endregion
-
-        public event PropertyChangedEventHandler PropertyChanged;
-
-        protected void OnPropertyChanged(string propertyName)
-        {
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
-        }
     }
 }

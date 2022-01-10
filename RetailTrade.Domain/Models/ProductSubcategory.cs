@@ -3,7 +3,7 @@ using System.ComponentModel;
 
 namespace RetailTrade.Domain.Models
 {
-    public class ProductSubcategory : DomainObject, INotifyPropertyChanged
+    public class ProductSubcategory : DomainObject
     {
         #region Private Members
 
@@ -45,12 +45,5 @@ namespace RetailTrade.Domain.Models
         public ICollection<Product> Products { get; set; }
 
         #endregion
-
-        public event PropertyChangedEventHandler PropertyChanged;
-
-        protected void OnPropertyChanged(string propertyName)
-        {
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
-        }
     }
 }

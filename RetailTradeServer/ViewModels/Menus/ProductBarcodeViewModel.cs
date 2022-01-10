@@ -188,7 +188,7 @@ namespace RetailTradeServer.ViewModels.Menus
 
         private async void UserControlLoaded()
         {
-            _products.AddRange(await _productService.GetAllAsync());
+            //_products = new(await _productService.GetAllAsync());
         }
 
         #endregion

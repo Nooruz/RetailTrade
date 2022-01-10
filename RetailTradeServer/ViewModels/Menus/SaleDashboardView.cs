@@ -3,7 +3,6 @@ using RetailTrade.Domain.Services;
 using RetailTradeServer.Commands;
 using RetailTradeServer.ViewModels.Base;
 using SalePageServer.Utilities;
-using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Windows.Input;
@@ -22,8 +21,8 @@ namespace RetailTradeServer.ViewModels.Menus
         private decimal _saleAmountCurrentMonth;
         private decimal _saleAmountLastMonth;
         private decimal _saleAmountBeginningYear;
-        private ObservableQueue<DataSeries> _dailySalesChart;
-        private ObservableQueue<DataSeries> _monthlySalesChart;
+        private ObservableQueue<Receipt> _dailySalesChart;
+        private ObservableQueue<Receipt> _monthlySalesChart;
         private ObservableQueue<ProductSale> _ratingTenProducts;
 
         #endregion
@@ -84,8 +83,8 @@ namespace RetailTradeServer.ViewModels.Menus
                 OnPropertyChanged(nameof(SaleAmountBeginningYear));
             }
         }
-        public IEnumerable<DataSeries> DailySalesChart => _dailySalesChart;
-        public IEnumerable<DataSeries> MonthlySalesChart => _monthlySalesChart;
+        public IEnumerable<Receipt> DailySalesChart => _dailySalesChart;
+        public IEnumerable<Receipt> MonthlySalesChart => _monthlySalesChart;
         public IEnumerable<ProductSale> RatingTenProducts => _ratingTenProducts;
 
         #endregion
@@ -113,10 +112,6 @@ namespace RetailTradeServer.ViewModels.Menus
             TodayCommand = new RelayCommand(Today);
             LastMonthCommand = new RelayCommand(LastMonth);
             CurrentMonthCommand = new RelayCommand(CurrentMonth);
-
-            _dailySalesChart = new();
-            _monthlySalesChart = new();
-            _ratingTenProducts = new();
         }
 
         #endregion
@@ -131,57 +126,32 @@ namespace RetailTradeServer.ViewModels.Menus
             //SaleAmountCurrentMonth = await _receiptService.GetSaleAmoundCurrentMonth();
             //SaleAmountLastMonth = await _receiptService.GetSaleAmoundLastMonth();
             //SaleAmountBeginningYear = await _receiptService.GetSaleAmoundBeginningYear();
-            _dailySalesChart.Enqueue(new DataSeries
-            {
-                Name = "New",
-                Values = new(await _receiptService.GetSaleAmoundToday())
-            });
-            _monthlySalesChart.Enqueue(new DataSeries
-            {
-                Name = "New",
-                Values = new(await _receiptService.GetSaleAmoundCurrentMonth())
-            });
-            _ratingTenProducts.AddRange(await _productSaleService.GetRatingTenProducts());
+            //_dailySalesChart = new(await _receiptService.GetSaleAmoundToday());
+            //_monthlySalesChart = new(await _receiptService.GetSaleAmoundCurrentMonth());
+            //_ratingTenProducts = new(await _productSaleService.GetRatingTenProducts());
         }
 
         private async void Yesterday()
         {
             _dailySalesChart.Dequeue();
-            _dailySalesChart.Enqueue(new DataSeries
-            {
-                Name = "New",
-                Values = new(await _receiptService.GetSaleAmoundYesterday())
-            });
+            //_dailySalesChart = new(await _receiptService.GetSaleAmoundYesterday());
         }
-
         private async void Today()
         {
             _dailySalesChart.Dequeue();
-            _dailySalesChart.Enqueue(new DataSeries
-            {
-                Name = "New",
-                Values = new(await _receiptService.GetSaleAmoundToday())
-            });
+            //_dailySalesChart = new(await _receiptService.GetSaleAmoundToday());
         }
 
         private async void LastMonth()
         {
             _monthlySalesChart.Dequeue();
-            _monthlySalesChart.Enqueue(new DataSeries
-            {
-                Name = "New",
-                Values = new(await _receiptService.GetSaleAmoundLastMonth())
-            });
+            //_monthlySalesChart = new(await _receiptService.GetSaleAmoundLastMonth());
         }
 
         private async void CurrentMonth()
         {
             _monthlySalesChart.Dequeue();
-            _monthlySalesChart.Enqueue(new DataSeries
-            {
-                Name = "New",
-                Values = new(await _receiptService.GetSaleAmoundCurrentMonth())
-            });
+            //_monthlySalesChart = new(await _receiptService.GetSaleAmoundCurrentMonth());
         }
 
         #endregion

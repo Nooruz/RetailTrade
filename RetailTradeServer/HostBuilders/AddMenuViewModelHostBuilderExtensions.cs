@@ -88,7 +88,8 @@ namespace RetailTradeServer.HostBuilders
                 services.GetRequiredService<IProductService>(),
                 services.GetRequiredService<ISupplierService>(),
                 services.GetRequiredService<IOrderStatusService>(),
-                services.GetRequiredService<IUserStore>());
+                services.GetRequiredService<IUserStore>(),
+                services.GetRequiredService<IDataService<Unit>>());
         }
 
         private static ProductBarcodeViewModel CreateProductBarcodeViewModel(IServiceProvider services)

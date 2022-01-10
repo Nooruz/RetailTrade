@@ -5,7 +5,7 @@ namespace RetailTrade.Domain.Models
     /// <summary>
     /// Списание товаров
     /// </summary>
-    public class WriteDownProduct : DomainObject, INotifyPropertyChanged
+    public class WriteDownProduct : DomainObject
     {
         #region Private Members
 
@@ -60,14 +60,6 @@ namespace RetailTrade.Domain.Models
 
         public WriteDown WriteDown { get; set; }
 
-        #endregion        
-
-        public event PropertyChangedEventHandler PropertyChanged;
-
-        protected void OnPropertyChanged(string propertyName)
-        {
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
-        }
-
+        #endregion
     }
 }

@@ -1,14 +1,15 @@
-﻿using System.ComponentModel;
-using System.ComponentModel.DataAnnotations.Schema;
+﻿using System.ComponentModel.DataAnnotations.Schema;
 
 namespace RetailTrade.Domain.Models
 {
-    public class OrderProduct : DomainObject, INotifyPropertyChanged
+    public class OrderProduct : DomainObject
     {
         #region Private Members
 
         private int _productId;
         private double _quantity;
+        private decimal _arrivalPrice;
+        private decimal _sum;
         private Product _product;
 
         #endregion
@@ -42,6 +43,7 @@ namespace RetailTrade.Domain.Models
             set
             {
                 _quantity = value;
+                Sum = ArrivalPrice * (decimal)Quantity;
                 OnPropertyChanged(nameof(Quantity));
             }
         }
@@ -50,13 +52,36 @@ namespace RetailTrade.Domain.Models
         /// Цена прихода
         /// </summary>
         [Column(TypeName = "decimal(18,2)")]
-        public decimal ArrivalPrice { get; set; }
+        public decimal ArrivalPrice
+        {
+            get => _arrivalPrice;
+            set
+            {
+                _arrivalPrice = value;
+                Sum = ArrivalPrice * (decimal)Quantity;
+                OnPropertyChanged(nameof(ArrivalPrice));
+            }
+        }
 
         /// <summary>
         /// Цена продажи
         /// </summary>
         [Column(TypeName = "decimal(18,2)")]
         public decimal SalePrice { get; set; }
+
+        /// <summary>
+        /// Сумма
+        /// </summary>
+        [Column(TypeName = "decimal(18,2)")]
+        public decimal Sum
+        {
+            get => _sum;
+            set
+            {
+                _sum = value;
+                OnPropertyChanged(nameof(Sum));
+            }
+        }
 
         /// <summary>
         /// Товар
@@ -77,12 +102,5 @@ namespace RetailTrade.Domain.Models
         public OrderToSupplier OrderToSupplier { get; set; }
 
         #endregion        
-
-        public event PropertyChangedEventHandler PropertyChanged;
-
-        protected void OnPropertyChanged(string propertyName)
-        {
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
-        }
     }
 }

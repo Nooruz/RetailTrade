@@ -1,4 +1,4 @@
-﻿<UserControl
+﻿<local:BaseMenuView
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:dxb="http://schemas.devexpress.com/winfx/2008/xaml/bars"
     xmlns:dxe="http://schemas.devexpress.com/winfx/2008/xaml/editors"
@@ -8,7 +8,10 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:dx="http://schemas.devexpress.com/winfx/2008/xaml/core"
     xmlns:dialogs="clr-namespace:RetailTradeServer.Views.Dialogs"
-    x:Class="RetailTradeServer.Views.Menus.ProductCategoryView">
+    xmlns:local="clr-namespace:RetailTradeServer.Views.Menus"
+    x:Class="RetailTradeServer.Views.Menus.ProductCategoryView"
+    ShowDefaultButtons="False"
+    Title="Каталог товаров">
 
     <dxmvvm:Interaction.Behaviors>
         <dxmvvm:EventToCommand EventName="Loaded" Command="{Binding GetProductsCommandAsync}"/>
@@ -30,41 +33,41 @@
                           MinWidth="200">
 
             <dxlc:LayoutGroup Orientation="Horizontal"
-                                  VerticalAlignment="Top"
-                                  HorizontalAlignment="Left">
+                              VerticalAlignment="Top"
+                              HorizontalAlignment="Left">
 
                 <Button Content="{StaticResource faPlus}"
-                            ToolTip="Создать"
-                            Command="{Binding CreateProductCategoryOrSubCategoryCommand}"
-                            Style="{StaticResource FAButton}"/>
+                        ToolTip="Создать"
+                        Command="{Binding CreateProductCategoryOrSubCategoryCommand}"
+                        Style="{StaticResource FAButton}"/>
 
                 <Button Content="{StaticResource faEdit}"
-                            ToolTip="Изменить выбранный элемент"
-                            Command="{Binding EditProductCategoryOrSubCategoryCommand}"
-                            Style="{StaticResource FAButton}"/>
+                        ToolTip="Изменить выбранный элемент"
+                        Command="{Binding EditProductCategoryOrSubCategoryCommand}"
+                        Style="{StaticResource FAButton}"/>
 
                 <Button Content="{StaticResource faTrashAlt}"
-                            ToolTip="Удалить выбранный элемент"
-                            Command="{Binding DeleteProductCategoryOrSubCategoryCommand}"
-                            Style="{StaticResource FAButton}"/>
+                        ToolTip="Удалить выбранный элемент"
+                        Command="{Binding DeleteProductCategoryOrSubCategoryCommand}"
+                        Style="{StaticResource FAButton}"/>
 
             </dxlc:LayoutGroup>
 
-            <dxg:TreeViewControl ItemsSource="{Binding ProductCategories, UpdateSourceTrigger=PropertyChanged}"
+            <dxg:TreeViewControl ItemsSource="{Binding ProductCategories}"
                                  ChildNodesPath="ProductSubcategories"
                                  KeyFieldName="Name"
                                  TreeViewFieldName="Name"
                                  SelectedItem="{Binding SelectedProductGroup}">
                 <dxg:TreeViewControl.NodeMenuCustomizations>
                     <dxb:BarButtonItem x:Name="EditCategory" 
-                                           Content="Изменить"
-                                           Command="{Binding EditCategoryCommand}"/>
+                                       Content="Изменить"
+                                       Command="{Binding EditCategoryCommand}"/>
                     <dxb:BarButtonItem x:Name="DeleteCategory" 
-                                           Content="Удалить"
-                                           Command="{Binding DeleteCategoryCommand}"/>
+                                       Content="Удалить"
+                                       Command="{Binding DeleteCategoryCommand}"/>
                     <dxb:BarButtonItem x:Name="CreateSubCategory"
-                                           Content="Создать категорию"
-                                           Command="{Binding CreateSubCategoryCommand}"/>
+                                       Content="Создать категорию"
+                                       Command="{Binding CreateSubCategoryCommand}"/>
                 </dxg:TreeViewControl.NodeMenuCustomizations>
                 <dxg:TreeViewControl.ContextMenu>
                     <ContextMenu>
@@ -74,10 +77,10 @@
                 </dxg:TreeViewControl.ContextMenu>
                 <dxmvvm:Interaction.Behaviors>
                     <dxmvvm:EventToCommand EventName="SelectedItemChanged" 
-                                               Command="{Binding SelectedItemChangedCommand}"/>
+                                           Command="{Binding SelectedItemChangedCommand}"/>
                     <dxmvvm:EventToCommand EventName="ShowNodeMenu"
-                                               Command="{Binding OnShowNodeMenuCommand}"
-                                               PassEventArgsToCommand="True"/>
+                                           Command="{Binding OnShowNodeMenuCommand}"
+                                           PassEventArgsToCommand="True"/>
                 </dxmvvm:Interaction.Behaviors>
             </dxg:TreeViewControl>
 
@@ -193,4 +196,4 @@
 
     </dxlc:LayoutControl>
 
-</UserControl>
+</local:BaseMenuView>
