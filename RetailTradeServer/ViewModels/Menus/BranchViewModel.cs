@@ -3,7 +3,6 @@ using RetailTrade.Domain.Services;
 using RetailTradeServer.Commands;
 using RetailTradeServer.ViewModels.Base;
 using RetailTradeServer.ViewModels.Dialogs;
-using RetailTradeServer.Views.Dialogs;
 using SalePageServer.State.Dialogs;
 using System.Collections.Generic;
 
@@ -49,10 +48,9 @@ namespace RetailTradeServer.ViewModels.Menus
 
         #region Private Members
 
-        private void CreateBranch()
+        private async void CreateBranch()
         {
-            _dialogService.ShowDialog(new CreateBranchDialogFormModel(_branchService, _userService), 
-                new CreateBranchDialogForm());
+            await _dialogService.ShowDialog(new CreateBranchDialogFormModel(_branchService, _userService));
         }
 
         private void DeleteBranch()

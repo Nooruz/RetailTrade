@@ -572,24 +572,22 @@ namespace RetailTradeServer.ViewModels.Dialogs
             }
         }
 
-        private void CreateSupplier()
+        private async void CreateSupplier()
         {
-            _dialogService.ShowDialog(new CreateSupplierProductDialogFormModal(_supplierService, _dialogService)
-                {
-                    Title = "Поставщик (создания)"
-                }, new CreateSupplierProductDialogForm());
+            await _dialogService.ShowDialog(new CreateSupplierProductDialogFormModal(_supplierService, _dialogService)
+            {
+                Title = "Поставщик (создания)"
+            });
         }
 
-        private void CreateProductCategory()
+        private async void CreateProductCategory()
         {
-            _dialogService.ShowDialog(new CreateProductCategoryDialogFormModel(_productCategoryService, _dialogService) { Title = "Категория товара (создания)" },
-                new CreateProductCategoryDialogForm());
+            await _dialogService.ShowDialog(new CreateProductCategoryDialogFormModel(_productCategoryService, _dialogService) { Title = "Категория товара (создания)" });
         }
 
-        private void CreateProductSubcategory()
+        private async void CreateProductSubcategory()
         {
-            _dialogService.ShowDialog(new CreateProductSubcategoryDialogFormModel(_productSubcategoryService, _productCategoryService, _dialogService) { Title = "Группа товара (создания)" },
-                new CreateProductSubcategoryDialogForm());
+            await _dialogService.ShowDialog(new CreateProductSubcategoryDialogFormModel(_productSubcategoryService, _productCategoryService, _dialogService) { Title = "Группа товара (создания)" });
         }
 
         #endregion

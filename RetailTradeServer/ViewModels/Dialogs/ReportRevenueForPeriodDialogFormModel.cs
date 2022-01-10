@@ -4,11 +4,9 @@ using RetailTradeServer.Commands;
 using RetailTradeServer.Report;
 using RetailTradeServer.State.Users;
 using RetailTradeServer.ViewModels.Dialogs.Base;
-using RetailTradeServer.Views.Dialogs;
 using SalePageServer.State.Dialogs;
 using System;
 using System.Linq;
-using System.Windows;
 using System.Windows.Input;
 
 namespace RetailTradeServer.ViewModels.Dialogs
@@ -85,12 +83,7 @@ namespace RetailTradeServer.ViewModels.Dialogs
 
             await revenueForPeriodReport.CreateDocumentAsync();
 
-            await _dialogService.ShowDialog(new DocumentViewerViewModel()
-            {
-                Title = "Закрытие смены",
-                PrintingDocument = revenueForPeriodReport
-            },
-                new DocumentViewerView());
+            await _dialogService.ShowPrintDialog(revenueForPeriodReport);
         }
 
         #endregion

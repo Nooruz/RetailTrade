@@ -233,8 +233,7 @@ namespace RetailTradeServer.ViewModels.Dialogs
 
             await report.CreateDocumentAsync();
 
-            await _dialogService.ShowDialog(new DocumentViewerViewModel() { PrintingDocument = report },
-                new DocumentViewerView());
+            await _dialogService.ShowPrintDialog(report);
         }
 
         private void Cleare()

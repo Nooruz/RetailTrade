@@ -126,9 +126,9 @@ namespace RetailTradeServer.ViewModels
             UpdateCurrentMenuViewModelCommand.Execute(MenuViewType.SaleDashboard);
         }
 
-        private void Printer()
+        private async void Printer()
         {
-            _dialogService.ShowDialog(new PrinterDialogFormModel(_messageStore) { Title = "Настройки принтеров" }, new PrinterDialogForm());
+            await _dialogService.ShowDialog(new PrinterDialogFormModel(_messageStore) { Title = "Настройки принтеров" });
         }
 
         private void OpenSupplier()
@@ -184,16 +184,14 @@ namespace RetailTradeServer.ViewModels
             UpdateCurrentMenuViewModelCommand.Execute(MenuViewType.ProductBarcode);
         }
 
-        private void ReportClosingShifts()
+        private async void ReportClosingShifts()
         {
-            _ = _dialogService.ShowDialog(new ReportClosingShiftsDialogFormModel(_dialogService, _shiftService) { Title = "Закрытие смены" },
-                new ReportClosingShiftsDialogForm());
+            await _dialogService.ShowDialog(new ReportClosingShiftsDialogFormModel(_dialogService, _shiftService) { Title = "Закрытие смены" });
         }
 
-        private void RevenueForPeriod()
+        private async void RevenueForPeriod()
         {
-            _ = _dialogService.ShowDialog(new ReportRevenueForPeriodDialogFormModel(_dialogService, _receiptService, _userStore) { Title = "Выручка за период" },
-                new ReportRevenueForPeriodDialogForm());
+            await _dialogService.ShowDialog(new ReportRevenueForPeriodDialogFormModel(_dialogService, _receiptService, _userStore) { Title = "Выручка за период" });
         }
 
         #endregion

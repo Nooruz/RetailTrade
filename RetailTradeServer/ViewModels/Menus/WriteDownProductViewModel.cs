@@ -119,8 +119,7 @@ namespace RetailTradeServer.ViewModels.Menus
 
         private async void Create()
         {
-            await _dialogService.ShowDialog(new CreateWriteDownProductDialogFormModel(_productService, _supplierService, _writeDownService, _dialogService) { Title = "Списание товаров (новый)" },
-                new CreateWriteDownProductDialogForm());
+            await _dialogService.ShowDialog(new CreateWriteDownProductDialogFormModel(_productService, _supplierService, _writeDownService, _dialogService) { Title = "Списание товаров (новый)" });
         }
 
         private async void Delete()

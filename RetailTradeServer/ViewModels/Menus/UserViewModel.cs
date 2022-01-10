@@ -5,13 +5,9 @@ using RetailTradeServer.State.Authenticators;
 using RetailTradeServer.State.Messages;
 using RetailTradeServer.ViewModels.Base;
 using RetailTradeServer.ViewModels.Dialogs;
-using RetailTradeServer.Views.Dialogs;
 using SalePageServer.State.Dialogs;
 using SalePageServer.Utilities;
-using SalePageServer.Views.Dialogs;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.Linq;
 using System.Windows;
 using System.Windows.Input;
 
@@ -82,10 +78,9 @@ namespace RetailTradeServer.ViewModels.Menus
 
         #region Private Voids
 
-        private void CreateUser()
+        private async void CreateUser()
         {
-            _ = _dialogService.ShowDialog(new CreateUserDialogFormModel(_authenticator, _roleService, _dialogService, _messageStore) { Title = "Пользователи (создание)" },
-                new CreateUserDialogForm());
+            await _dialogService.ShowDialog(new CreateUserDialogFormModel(_authenticator, _roleService, _dialogService, _messageStore) { Title = "Пользователи (создание)" });
         }
 
         private async void DeleteUser()
@@ -103,7 +98,7 @@ namespace RetailTradeServer.ViewModels.Menus
             }
         }
 
-        private void EditUser()
+        private async void EditUser()
         {
             if (SelectedUser != null)
             {
@@ -113,13 +108,11 @@ namespace RetailTradeServer.ViewModels.Menus
                 }
                 else
                 {
-                    CreateUserDialogFormModel viewModel = new(_authenticator, _roleService, _dialogService, _messageStore)
+                    await _dialogService.ShowDialog(new CreateUserDialogFormModel(_authenticator, _roleService, _dialogService, _messageStore)
                     {
                         EditableUser = SelectedUser,
                         Title = $"Пользователи ({SelectedUser.Username})"
-                    };
-                    _ = _dialogService.ShowDialog(viewModel,
-                    new EditUserDialogForm());
+                    });
                 }
             }
             else

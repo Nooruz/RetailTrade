@@ -91,8 +91,48 @@
                 <dialogs:StartingView/>
             </DataTemplate>
 
+            <DataTemplate DataType="{x:Type dialogViewModels:CreateArrivalProductDialogFormModel}">
+                <dialogs:CreateArrivalProductDialogForm/>
+            </DataTemplate>
+
+            <DataTemplate DataType="{x:Type dialogViewModels:CreateBranchDialogFormModel}">
+                <dialogs:CreateBranchDialogForm/>
+            </DataTemplate>
+
             <DataTemplate DataType="{x:Type dialogViewModels:CreateOrderToSupplierDialogFormModel}">
                 <dialogs:CreateOrderToSupplierDialogForm/>
+            </DataTemplate>
+
+            <DataTemplate DataType="{x:Type dialogViewModels:CreateProductCategoryDialogFormModel}">
+                <dialogs:CreateProductCategoryDialogForm/>
+            </DataTemplate>
+
+            <DataTemplate DataType="{x:Type dialogViewModels:CreateProductCategoryOrSubCategoryDialogFormModel}">
+                <dialogs:CreateProductCategoryOrSubCategoryDialogForm/>
+            </DataTemplate>
+
+            <DataTemplate DataType="{x:Type dialogViewModels:CreateProductDialogFormModel}">
+                <dialogs:CreateProductDialogForm/>
+            </DataTemplate>
+
+            <DataTemplate DataType="{x:Type dialogViewModels:CreateProductSubcategoryDialogFormModel}">
+                <dialogs:CreateProductSubcategoryDialogForm/>
+            </DataTemplate>
+
+            <DataTemplate DataType="{x:Type dialogViewModels:CreateRefundToSupplierDialogFormModel}">
+                <dialogs:CreateRefundToSupplierDialogForm/>
+            </DataTemplate>
+
+            <DataTemplate DataType="{x:Type dialogViewModels:CreateSupplierProductDialogFormModal}">
+                <dialogs:CreateSupplierProductDialogForm/>
+            </DataTemplate>
+
+            <DataTemplate DataType="{x:Type dialogViewModels:CreateUserDialogFormModel}">
+                <dialogs:CreateUserDialogForm/>
+            </DataTemplate>
+
+            <DataTemplate DataType="{x:Type dialogViewModels:CreateWriteDownProductDialogFormModel}">
+                <dialogs:CreateWriteDownProductDialogForm/>
             </DataTemplate>
 
             <!--#endregion-->

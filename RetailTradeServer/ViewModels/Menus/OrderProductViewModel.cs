@@ -137,9 +137,9 @@ namespace RetailTradeServer.ViewModels.Menus
 
         }
 
-        private void CreateOrder()
+        private async void CreateOrder()
         {
-            _dialogService.Udalit(new CreateOrderToSupplierDialogFormModel(_productService, _supplierService, _orderToSupplierService, _orderStatusService, _unitService, _userStore, _dialogService) { Title = "Заказ поставшику (новый)" });
+            await _dialogService.ShowDialog(new CreateOrderToSupplierDialogFormModel(_productService, _supplierService, _orderToSupplierService, _orderStatusService, _unitService, _userStore, _dialogService) { Title = "Заказ поставшику (новый)" });
         }
 
         private async void DeleteOrder()

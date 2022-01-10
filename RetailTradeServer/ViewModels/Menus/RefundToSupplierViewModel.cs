@@ -87,8 +87,7 @@ namespace RetailTradeServer.ViewModels.Menus
 
         private async void Create()
         {
-            await _dialogService.ShowDialog(new CreateRefundToSupplierDialogFormModel(_productService, _supplierService, _refundToSupplierService, _dialogService) { Title = "Возврат поставщику (новый)" },
-                new CreateRefundToSupplierDialogForm());
+            await _dialogService.ShowDialog(new CreateRefundToSupplierDialogFormModel(_productService, _supplierService, _refundToSupplierService, _dialogService) { Title = "Возврат поставщику (новый)" });
         }
 
         private async void Delete()

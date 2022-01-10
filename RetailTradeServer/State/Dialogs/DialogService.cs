@@ -89,8 +89,7 @@ namespace SalePageServer.State.Dialogs
             return tcs.Task;
         }
 
-        public Task ShowDialog<TViewModel, TUserControl>(TViewModel viewModel, TUserControl userControl) where TUserControl : BaseDialogUserControl 
-            where TViewModel : BaseDialogViewModel
+        public Task ShowDialog<TViewModel>(TViewModel viewModel) where TViewModel : BaseDialogViewModel
         {
             var tcs = new TaskCompletionSource<bool>();
 
@@ -99,7 +98,6 @@ namespace SalePageServer.State.Dialogs
                 try
                 {
                     viewModel.CloseCommand = new RelayCommand(() => _window.Close());
-                    userControl.DataContext = viewModel;
                     _window = new()
                     {
                         MinHeight = WindowMinimumHeight,
@@ -107,9 +105,9 @@ namespace SalePageServer.State.Dialogs
                         SizeToContent = SizeToContent,
                         WindowStyle = WindowStyle,
                         ResizeMode = ResizeMode,
-                        Content = userControl,
+                        Content = viewModel,
                         Title = viewModel.Title ?? FileVersionInfo.GetVersionInfo(Assembly.GetExecutingAssembly().Location).ProductName
-                    };
+                    };                    
                     _window.ShowDialog();
                 }
                 finally
@@ -212,35 +210,6 @@ namespace SalePageServer.State.Dialogs
                         WindowState = WindowState.Maximized,
                         Content = _documentViewerView,
                         Title = "Предварительный просмотр"
-                    };
-                    _window.ShowDialog();
-                }
-                finally
-                {
-                    tcs.TrySetResult(true);
-                }
-            });
-            return tcs.Task;
-        }
-
-        public Task Udalit<TViewModel>(TViewModel viewModel) where TViewModel : BaseDialogViewModel
-        {
-            var tcs = new TaskCompletionSource<bool>();
-
-            Application.Current.Dispatcher.Invoke(() =>
-            {
-                try
-                {
-                    viewModel.CloseCommand = new RelayCommand(() => _window.Close());
-                    _window = new()
-                    {
-                        MinHeight = WindowMinimumHeight,
-                        MinWidth = WindowMinimumWidth,
-                        SizeToContent = SizeToContent,
-                        WindowStyle = WindowStyle,
-                        ResizeMode = ResizeMode,
-                        Content = viewModel,
-                        Title = viewModel.Title ?? FileVersionInfo.GetVersionInfo(Assembly.GetExecutingAssembly().Location).ProductName
                     };
                     _window.ShowDialog();
                 }

@@ -109,8 +109,7 @@ namespace RetailTradeServer.ViewModels.Menus
 
         private async void CreateArrival()
         {
-            await _dialogService.ShowDialog(new CreateArrivalProductDialogFormModel(_productService, _supplierService, _arrivalService, _dialogService) { Title = "Приход товаров (новый)" }, 
-                new CreateArrivalProductDialogForm());
+            await _dialogService.ShowDialog(new CreateArrivalProductDialogFormModel(_productService, _supplierService, _arrivalService, _dialogService) { Title = "Приход товаров (новый)" });
         }
 
         private async void DeleteArrival()
@@ -135,13 +134,12 @@ namespace RetailTradeServer.ViewModels.Menus
                 if (_dialogService.ShowMessage("Дублировать выбранный приход?", "", MessageBoxButton.YesNo, MessageBoxImage.Question) == MessageBoxResult.Yes)
                 {
                     await _dialogService.ShowDialog(
-                        new CreateArrivalProductDialogFormModel(_productService, _supplierService, _arrivalService, _dialogService) 
-                        { 
-                            Title = "Приход товаров (дублирование)",
-                            SelectedSupplier = SelectedArrival.Supplier,
-                            //ArrivalProducts = new(SelectedArrival.ArrivalProducts)
-                        },
-                        new CreateArrivalProductDialogForm());
+                    new CreateArrivalProductDialogFormModel(_productService, _supplierService, _arrivalService, _dialogService) 
+                    { 
+                        Title = "Приход товаров (дублирование)",
+                        SelectedSupplier = SelectedArrival.Supplier,
+                        //ArrivalProducts = new(SelectedArrival.ArrivalProducts)
+                    });
                 }
             }
             else
