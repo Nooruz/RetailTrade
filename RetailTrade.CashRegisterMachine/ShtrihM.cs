@@ -19,6 +19,11 @@ namespace RetailTrade.CashRegisterMachine
             get => drvFR.CheckType;
             set => drvFR.CheckType = value;
         }
+        public static int OperationType
+        {
+            get => drvFR.OperationType;
+            set => drvFR.OperationType = value;
+        }
         public static double Quantity
         {
             get => drvFR.Quantity;
@@ -90,8 +95,7 @@ namespace RetailTrade.CashRegisterMachine
                 ComNumber = Settings.Default.ComNumber,
                 BaudRate = Settings.Default.BaudRate,
                 Timeout = Settings.Default.Timeout
-            };            
-            //drvFR.SetExchangeParam();
+            };
         }
 
         #endregion
@@ -111,6 +115,8 @@ namespace RetailTrade.CashRegisterMachine
             Settings.Default.BaudRate = drvFR.BaudRate;
             Settings.Default.Timeout = drvFR.Timeout;
             Settings.Default.Save();
+
+            drvFR.StringQuantity = 24;
 
             drvFR.SetExchangeParam();
         }
@@ -158,6 +164,15 @@ namespace RetailTrade.CashRegisterMachine
         public static void CloseCheck()
         {
             drvFR.CloseCheck();
+        }
+
+        /// <summary>
+        /// Закрытие чек с резултатом
+        /// </summary>
+        /// <returns></returns>
+        public static object CloseCheckWithResult()
+        {
+            return drvFR.CloseCheckWithResult();
         }
 
         /// <summary>

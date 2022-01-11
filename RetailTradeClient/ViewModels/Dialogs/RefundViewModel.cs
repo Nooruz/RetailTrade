@@ -83,6 +83,7 @@ namespace RetailTradeClient.ViewModels.Dialogs
 
                     ShtrihM.Connect();
                     ShtrihM.CheckType = 2;
+                    ShtrihM.OperationType = 2;
 
                     foreach (ProductSale productSale in SelectedReceipt.ProductSales)
                     {
@@ -93,20 +94,22 @@ namespace RetailTradeClient.ViewModels.Dialogs
 
                         ShtrihM.Quantity = productSale.Quantity;
                         ShtrihM.Price = productSale.SalePrice;
-                        ShtrihM.StringForPrinting = string.Join(";", new string[] { "", productSale.Product.TNVED, "", "", "2", sumNDS, "3", sumNSP + "\n" + productSale.Product.Name });
+                        ShtrihM.StringForPrinting = string.Join(";", new string[] { "", productSale.Product.TNVED, "", "", "0", "", "0", "" + "\n" + productSale.Product.Name });
 
-                        ShtrihM.Tax1 = 2;
-                        ShtrihM.Tax2 = 3;
-                        ShtrihM.Tax3 = 1;
-                        ShtrihM.Tax4 = 4;
+                        //ShtrihM.Tax1 = 2;
+                        //ShtrihM.Tax2 = 3;
+                        //ShtrihM.Tax3 = 1;
+                        //ShtrihM.Tax4 = 4;
 
                         ShtrihM.ReturnSale();
                     }
 
-                    
 
-                    ShtrihM.StringForPrinting = "";
+                    ShtrihM.Summ1 = SelectedReceipt.ProductSales.Sum(ps => ps.Sum);
+                    ShtrihM.StringForPrinting = "11";
                     ShtrihM.CloseCheck();
+
+                    //var result = ShtrihM.CloseCheckWithResult();
                     ShtrihM.CutCheck();
 
                     _manager.Close();
