@@ -82,7 +82,11 @@
             <DataTemplate DataType="{x:Type menuViewModels:SupplierViewModel}">
                 <menuViews:SupplierView/>
             </DataTemplate>
-            
+
+            <DataTemplate DataType="{x:Type menuViewModels:CashShiftsViewModel}">
+                <menuViews:CashShiftsView/>
+            </DataTemplate>
+
             <!--#endregion-->
             
             <!--#region Диалоги-->
@@ -133,6 +137,10 @@
 
             <DataTemplate DataType="{x:Type dialogViewModels:CreateWriteDownProductDialogFormModel}">
                 <dialogs:CreateWriteDownProductDialogForm/>
+            </DataTemplate>
+
+            <DataTemplate DataType="{x:Type dialogViewModels:EditProductWithBarcodeDialogFormModel}">
+                <dialogs:EditProductWithBarcodeDialogForm/>
             </DataTemplate>
 
             <!--#endregion-->

@@ -103,7 +103,7 @@
                     Command="{Binding ClearCommand}"/>
 
             <Button Content="Закрыть"
-                    Command="{Binding CancelCommand}"/>
+                    Command="{Binding CloseCommand}"/>
 
         </dxlc:LayoutGroup>
 

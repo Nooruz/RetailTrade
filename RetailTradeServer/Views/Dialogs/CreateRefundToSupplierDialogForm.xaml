@@ -93,6 +93,9 @@
             <Button Content="Очистить"
                     Command="{Binding ClearCommand}"/>
 
+            <Button Content="Закрыть"
+                    Command="{Binding CloseCommand}"/>
+
         </dxlc:LayoutGroup>
 
     </dxlc:LayoutControl>

@@ -6,7 +6,6 @@ using RetailTradeServer.State.Users;
 using RetailTradeServer.ViewModels.Base;
 using RetailTradeServer.ViewModels.Dialogs;
 using RetailTradeServer.ViewModels.Factories;
-using RetailTradeServer.Views.Dialogs;
 using SalePageServer.State.Dialogs;
 using System.Windows.Input;
 
@@ -64,7 +63,7 @@ namespace RetailTradeServer.ViewModels
 
         #region Отчеты
 
-        public ICommand ReportClosingShiftsCommand { get; }
+        public ICommand CashShiftsCommand { get; }
         public ICommand RevenueForPeriodCommand { get; }
 
         #endregion
@@ -106,7 +105,7 @@ namespace RetailTradeServer.ViewModels
             BarcodeCommand = new RelayCommand(Barcode);
             UserCommand = new RelayCommand(User);
             BranchCommand = new RelayCommand(Branch);
-            ReportClosingShiftsCommand = new RelayCommand(ReportClosingShifts);
+            CashShiftsCommand = new RelayCommand(CashShifts);
             RefundToSupplierCommand = new RelayCommand(RefundToSupplier);
             SupplierCommand = new RelayCommand(OpenSupplier);
             PrinterCommand = new RelayCommand(Printer);
@@ -184,7 +183,7 @@ namespace RetailTradeServer.ViewModels
             UpdateCurrentMenuViewModelCommand.Execute(MenuViewType.ProductBarcode);
         }
 
-        private async void ReportClosingShifts()
+        private async void CashShifts()
         {
             await _dialogService.ShowDialog(new ReportClosingShiftsDialogFormModel(_dialogService, _shiftService) { Title = "Закрытие смены" });
         }
