@@ -1,4 +1,5 @@
-﻿using DevExpress.Xpf.Grid;
+﻿using CoreScanner;
+using DevExpress.Xpf.Grid;
 using RetailTrade.CashRegisterMachine;
 using RetailTrade.Domain.Models;
 using RetailTrade.Domain.Services;
@@ -19,8 +20,10 @@ using System.Collections.ObjectModel;
 using System.Collections.Specialized;
 using System.ComponentModel;
 using System.Linq;
+using System.Text;
 using System.Windows;
 using System.Windows.Input;
+using System.Xml.Linq;
 
 namespace RetailTradeClient.ViewModels
 {
@@ -42,6 +45,7 @@ namespace RetailTradeClient.ViewModels
         private Sale _selectedProductSale;
         private ObservableCollection<Product> _products;
         private decimal _change;
+        private CCoreScannerClass _barcodeScanner;
 
         #endregion
 
@@ -278,6 +282,8 @@ namespace RetailTradeClient.ViewModels
             CutCheckCommand = new RelayCommand(() => ShtrihM.CutCheck());
             GetShortECRStatusCommand = new RelayCommand(GetShortECRStatus);
 
+            OpenBarcodeScanner();
+
             SaleProducts.CollectionChanged += SaleProducts_CollectionChanged;
             _productService.PropertiesChanged += ProductService_PropertiesChanged;
         }
@@ -285,6 +291,101 @@ namespace RetailTradeClient.ViewModels
         #endregion
 
         #region Private Voids
+
+        private void OpenBarcodeScanner()
+        {
+            try
+            {
+                _manager.ShowMessage("Начало", "", MessageBoxButton.OK, MessageBoxImage.Error);
+                _barcodeScanner = new();
+                _manager.ShowMessage("_barcodeScanner = new();", "", MessageBoxButton.OK, MessageBoxImage.Error);
+
+                short[] scannerTypes = new short[1];
+                scannerTypes[0] = 1;
+                short numberOfScannerTypes = 1;
+                int status;
+
+                _manager.ShowMessage("Start _barcodeScanner.Open(0, scannerTypes, numberOfScannerTypes, out status);", "", MessageBoxButton.OK, MessageBoxImage.Error);
+                _barcodeScanner.Open(0, scannerTypes, numberOfScannerTypes, out status);
+                _manager.ShowMessage("End _barcodeScanner.Open(0, scannerTypes, numberOfScannerTypes, out status);", "", MessageBoxButton.OK, MessageBoxImage.Error);
+
+                _barcodeScanner.BarcodeEvent += new _ICoreScannerEvents_BarcodeEventEventHandler(OnBarcodeEvent);
+
+                // Let's subscribe for events
+                int opcode = 1001; // Method for Subscribe events
+                string outXML; // XML Output
+                string inXML = "<inArgs>" +
+                                   "<cmdArgs>" +
+                                       "<arg-int>6</arg-int>" + // Number of events you want to subscribe
+                                       "<arg-int>1,2,4,8,16,32</arg-int>" + // Comma separated event IDs
+                                   "</cmdArgs>" +
+                               "</inArgs>";
+                _manager.ShowMessage("Start _barcodeScanner.ExecCommand(opcode, ref inXML, out outXML, out status);", "", MessageBoxButton.OK, MessageBoxImage.Error);
+                _barcodeScanner.ExecCommand(opcode, ref inXML, out outXML, out status);
+                _manager.ShowMessage("End _barcodeScanner.ExecCommand(opcode, ref inXML, out outXML, out status);", "", MessageBoxButton.OK, MessageBoxImage.Error);
+
+                opcode = 2011;
+                inXML = "<inArgs>" +
+                            "<scannerID>1</scannerID>" +
+                        "</inArgs>";
+                _manager.ShowMessage("Start _barcodeScanner.ExecCommand(opcode, ref inXML, out outXML, out status);", "", MessageBoxButton.OK, MessageBoxImage.Error);
+                _barcodeScanner.ExecCommand(opcode, ref inXML, out outXML, out status);
+                _manager.ShowMessage("End _barcodeScanner.ExecCommand(opcode, ref inXML, out outXML, out status);", "", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
+            catch (Exception ex)
+            {
+                _manager.ShowMessage(ex.Message, "", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
+            _manager.ShowMessage("Конец", "", MessageBoxButton.OK, MessageBoxImage.Error);
+        }
+
+        private void OnBarcodeEvent(short eventType, ref string pscanData)
+        {
+            AddProductToSale(Encoding.ASCII.GetString(FromHex(XElement.Parse(pscanData).Descendants("datalabel").Single().Value.Replace(" ", string.Empty))));
+        }
+
+        private async void AddProductToSale(string barcode)
+        {
+            var newProduct = await _productService.Predicate(p => p.Barcode == barcode && p.Quantity > 0, p => new Product { Id = p.Id, Name = p.Name, Quantity = p.Quantity, SalePrice = p.SalePrice, TNVED = p.TNVED });
+            if (newProduct != null)
+            {
+                var product = SaleProducts.FirstOrDefault(sp => sp.Id == newProduct.Id);
+                if (product == null)
+                {
+                    SaleProducts.Add(new Sale
+                    {
+                        Id = newProduct.Id,
+                        Name = newProduct.Name,
+                        Quantity = 1,
+                        QuantityInStock = newProduct.Quantity,
+                        SalePrice = newProduct.SalePrice,
+                        TNVED = newProduct.TNVED,
+                        //Sum = newProduct.SalePrice * 1
+                    });
+                }
+                else if (product.Quantity < product.QuantityInStock)
+                {
+                    product.Quantity++;
+                    //product.Sum = product.SalePrice * (decimal)product.Quantity;
+                }
+                else
+                {
+                    _ = _manager.ShowMessage("Количество превышает остаток.", "", MessageBoxButton.OK, MessageBoxImage.Information);
+                }
+                OnPropertyChanged(nameof(Sum));
+                OnPropertyChanged(nameof(ToBePaid));
+            }            
+        }
+
+        private byte[] FromHex(string hex)
+        {
+            byte[] raw = new byte[hex.Length / 4];
+            for (int i = 0; i < raw.Length; i++)
+            {
+                raw[i] = Convert.ToByte(hex.Substring(i * 4, 4), 16);
+            }
+            return raw;
+        }
 
         private void GetShortECRStatus()
         {
@@ -647,7 +748,7 @@ namespace RetailTradeClient.ViewModels
         /// </summary>
         private void Cancel()
         {
-            SaleProducts.Clear();
+            SaleProducts.Clear();            
         }
 
         #endregion
@@ -656,7 +757,7 @@ namespace RetailTradeClient.ViewModels
 
         public override void Dispose()
         {
-
+            _barcodeScanner.Close(0, out int status);
             base.Dispose();
         }
 

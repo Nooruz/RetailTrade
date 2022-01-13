@@ -4,6 +4,7 @@ using RetailTradeClient.HostBuilders;
 using RetailTradeClient.ViewModels;
 using System;
 using System.Windows;
+using System.Xml.Serialization;
 
 namespace RetailTradeClient
 {
@@ -41,28 +42,6 @@ namespace RetailTradeClient
         {
             _host.Start();
 
-            //CCoreScannerClass _scanner = new();
-
-            //short[] scannerTypes = new short[1];
-            //scannerTypes[0] = 1;
-            //short numberOfScannerTypes = 1;
-            //int status;
-
-            //_scanner.Open(0, scannerTypes, numberOfScannerTypes, out status);
-
-            //_scanner.BarcodeEvent += new _ICoreScannerEvents_BarcodeEventEventHandler(OnBarcodeEvent);
-
-            //// Let's subscribe for events
-            //int opcode = 1001; // Method for Subscribe events
-            //string outXML; // XML Output
-            //string inXML = "<inArgs>" +
-            //"<cmdArgs>" +
-            //"<arg-int>6</arg-int>" + // Number of events you want to subscribe
-            //"<arg-int>1,2,4,8,16,32</arg-int>" + // Comma separated event IDs
-            //"</cmdArgs>" +
-            //"</inArgs>";
-            //_scanner.ExecCommand(opcode, ref inXML, out outXML, out status);
-
             try
             {                
                 Window window = _host.Services.GetRequiredService<MainWindow>();
@@ -75,11 +54,6 @@ namespace RetailTradeClient
             }
         }
 
-        private void OnBarcodeEvent(short eventType, ref string pscanData)
-        {
-            
-        }
-
         protected override async void OnExit(ExitEventArgs e)
         {
             await _host.StopAsync();
@@ -88,4 +62,15 @@ namespace RetailTradeClient
             base.OnExit(e);
         }
     }
+
+    [XmlRoot("arg-xml"), XmlType("arg-xml")]
+    public class ScanData
+    {
+        public string ModelNumber { get; set; }
+        public string SerialNumber { get; set; }
+        public Guid Guid { get; set; }
+        public int DataType { get; set; }
+        public byte[] DataLabel { get; set; }
+    }
+
 }

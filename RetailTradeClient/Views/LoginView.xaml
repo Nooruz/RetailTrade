@@ -34,11 +34,6 @@
 
             <components:GlobalMessageBaner DataContext="{Binding GlobalMessageViewModel}"/>
 
-            <ComboBox x:Name="Combo"/>
-
-            <Button Content="Тест"
-                    Click="Button_Click"/>
-
             <Button Content="Войти"
                     Command="{Binding LoginCommand}"
                     VerticalAlignment="Top"

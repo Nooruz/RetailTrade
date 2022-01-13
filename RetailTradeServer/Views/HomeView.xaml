@@ -8,7 +8,8 @@
     <dxwui:HamburgerMenu OpenPaneWidth="220" 
                          ViewState="Opened"
                          Header="{Binding OrganizationName}"
-                         AllowBuiltInNavigation="True">
+                         AllowBuiltInNavigation="True"
+                         Content="{Binding CurrentMenuViewModel}">
         <dxwui:HamburgerMenu.Resources>
             <Style TargetType="{x:Type dxwui:HamburgerSubMenuNavigationButton}">
                 <Style.Triggers>
