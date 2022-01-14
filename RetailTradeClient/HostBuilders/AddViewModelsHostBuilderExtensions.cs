@@ -2,6 +2,7 @@
 using Microsoft.Extensions.Hosting;
 using RetailTrade.Domain.Services;
 using RetailTradeClient.State.Authenticators;
+using RetailTradeClient.State.Barcode;
 using RetailTradeClient.State.Dialogs;
 using RetailTradeClient.State.Messages;
 using RetailTradeClient.State.Navigators;
@@ -57,7 +58,8 @@ namespace RetailTradeClient.HostBuilders
                 services.GetRequiredService<IAuthenticator>(),
                 services.GetRequiredService<IShiftStore>(),
                 services.GetRequiredService<IRefundService>(),
-                services.GetRequiredService<IProductSaleStore>());
+                services.GetRequiredService<IProductSaleStore>(),
+                services.GetRequiredService<IZebraBarcodeScanner>());
         }
 
         private static LoginViewModel CreateLoginViewModel(IServiceProvider services)

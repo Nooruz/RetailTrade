@@ -188,7 +188,7 @@
 
                 </dxlc:LayoutGroup>
 
-                <dxg:GridControl ItemsSource="{Binding SaleProducts}"                                 
+                <dxg:GridControl ItemsSource="{Binding SaleProductsCollectionView}"                                 
                                  SelectedItem="{Binding SelectedProductSale}"
                                  SelectionMode="Cell"
                                  Focusable="False">
@@ -202,7 +202,8 @@
                                        FocusedRowHandle="{Binding FocusedRowHandle}"
                                        InvalidRowException="TableView_InvalidRowException"
                                        AllowDragDrop="False"
-                                       AllowGrouping="False">
+                                       AllowGrouping="False"
+                                       IsSynchronizedWithCurrentItem="True">
                             <dxg:TableView.FormatConditions>
                                 <dxg:FormatCondition FieldName="QuantityInStock" ValueRule="Less" Value1="10">
                                     <dx:Format Foreground="#FFFF0000"/>

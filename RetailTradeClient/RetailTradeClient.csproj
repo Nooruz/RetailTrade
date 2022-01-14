@@ -80,6 +80,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\RetailTrade.Barcode\RetailTrade.Barcode.csproj" />
     <ProjectReference Include="..\RetailTrade.CashRegisterMachine\RetailTrade.CashRegisterMachine.csproj" />
     <ProjectReference Include="..\RetailTrade.Domain\RetailTrade.Domain.csproj" />
     <ProjectReference Include="..\RetailTrade.EntityFramework\RetailTrade.EntityFramework.csproj" />
