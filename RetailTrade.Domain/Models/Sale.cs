@@ -6,8 +6,14 @@ namespace RetailTrade.Domain.Models
     {
         #region Private Members
 
+        private int _id;
+        private string _name;
         private double _quantity;
+        private decimal _salePrice;
+        private decimal _arrivalPrice;
+        private double _quantityInStock;
         private decimal _sum;
+        private string _tnved;
 
         #endregion
 
@@ -16,12 +22,28 @@ namespace RetailTrade.Domain.Models
         /// <summary>
         /// Код товара
         /// </summary>
-        public int Id { get; set; }
+        public int Id
+        {
+            get => _id;
+            set
+            {
+                _id = value;
+                OnPropertyChanged(nameof(Id));
+            }
+        }
 
         /// <summary>
         /// Наименование товара
         /// </summary>
-        public string Name { get; set; }
+        public string Name
+        {
+            get => _name;
+            set
+            {
+                _name = value;
+                OnPropertyChanged(nameof(Name));
+            }
+        }
 
         /// <summary>
         /// Количество покупки
@@ -43,12 +65,28 @@ namespace RetailTrade.Domain.Models
         /// <summary>
         /// Цена продажи
         /// </summary>
-        public decimal SalePrice { get; set; }
+        public decimal SalePrice
+        {
+            get => _salePrice;
+            set
+            {
+                _salePrice = value;
+                OnPropertyChanged(nameof(SalePrice));
+            }
+        }
 
         /// <summary>
         /// Цена прихода
         /// </summary>
-        public decimal ArrivalPrice { get; set; }
+        public decimal ArrivalPrice
+        {
+            get => _arrivalPrice;
+            set
+            {
+                _arrivalPrice = value;
+                OnPropertyChanged(nameof(ArrivalPrice));
+            }
+        }
 
         /// <summary>
         /// Сумма покупки
@@ -66,9 +104,25 @@ namespace RetailTrade.Domain.Models
         /// <summary>
         /// Количество на складе
         /// </summary>
-        public double QuantityInStock { get; set; }
+        public double QuantityInStock
+        {
+            get => _quantityInStock;
+            set
+            {
+                _quantityInStock = value;
+                OnPropertyChanged(nameof(QuantityInStock));
+            }
+        }
 
-        public string TNVED { get; set; }
+        public string TNVED
+        {
+            get => _tnved;
+            set
+            {
+                _tnved = value;
+                OnPropertyChanged(nameof(TNVED));
+            }
+        }
 
         #endregion        
 

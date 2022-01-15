@@ -3,6 +3,7 @@ using Microsoft.Extensions.Hosting;
 using RetailTrade.Domain.Services;
 using RetailTrade.EntityFramework.Services;
 using RetailTradeClient.State.Authenticators;
+using RetailTradeClient.State.Barcode;
 using RetailTradeClient.State.Dialogs;
 using RetailTradeClient.State.Messages;
 using RetailTradeClient.State.Navigators;
@@ -26,6 +27,7 @@ namespace RetailTradeClient.HostBuilders
                 services.AddSingleton<IReceiptService, ReceiptService>();
                 services.AddSingleton<IShiftStore, ShiftStore>();
                 services.AddSingleton<IProductSaleStore, ProductSaleStore>();
+                services.AddSingleton<IZebraBarcodeScanner, ZebraBarcodeScanner>();
             });
         }
     }
