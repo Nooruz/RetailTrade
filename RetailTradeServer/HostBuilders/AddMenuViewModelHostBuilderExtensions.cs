@@ -3,6 +3,7 @@ using Microsoft.Extensions.Hosting;
 using RetailTrade.Domain.Models;
 using RetailTrade.Domain.Services;
 using RetailTradeServer.State.Authenticators;
+using RetailTradeServer.State.Barcode;
 using RetailTradeServer.State.Messages;
 using RetailTradeServer.State.Users;
 using RetailTradeServer.ViewModels;
@@ -62,7 +63,9 @@ namespace RetailTradeServer.HostBuilders
                 services.GetRequiredService<IDataService<Unit>>(),
                 services.GetRequiredService<ISupplierService>(),
                 services.GetRequiredService<GlobalMessageViewModel>(),
-                services.GetRequiredService<IMessageStore>());
+                services.GetRequiredService<IMessageStore>(),
+                services.GetRequiredService<IZebraBarcodeScanner>(),
+                services.GetRequiredService<IComBarcodeService>());
         }
 
         private static ArrivalProductViewModel CreateArrivalProductViewModel(IServiceProvider services)

@@ -1,7 +1,7 @@
 ﻿using RetailTrade.Barcode;
 using System;
 
-namespace RetailTradeClient.State.Barcode
+namespace RetailTradeServer.State.Barcode
 {
     public class ZebraBarcodeScanner : IZebraBarcodeScanner
     {

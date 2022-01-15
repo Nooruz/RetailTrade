@@ -3,6 +3,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using RetailTrade.EntityFramework;
 using RetailTradeServer.HostBuilders;
+using RetailTradeServer.State.Barcode;
 using RetailTradeServer.ViewModels;
 using RetailTradeServer.ViewModels.Dialogs;
 using System;
@@ -23,7 +24,9 @@ namespace RetailTradeServer
 
         private readonly IHost _host;
         private Window startingWindow;
-        private static SqlException _sqlException;
+        private IZebraBarcodeScanner _zebraBarcodeScanner;
+        private IComBarcodeService _comBarcodeService;
+        private static SqlException _sqlException;      
 
         //потом удалить
         private RetailTradeDbContext _dbContext;
@@ -53,6 +56,10 @@ namespace RetailTradeServer
         protected override async void OnStartup(StartupEventArgs e)
         {
             await _host.StartAsync();
+
+            _zebraBarcodeScanner = _host.Services.GetRequiredService<IZebraBarcodeScanner>();
+            _comBarcodeService = _host.Services.GetRequiredService<IComBarcodeService>();
+
             startingWindow = new()
             {
                 WindowStyle = WindowStyle.None,
@@ -128,6 +135,16 @@ namespace RetailTradeServer
         {
             await _host.StopAsync();
             _host.Dispose();
+
+            try
+            {
+                _zebraBarcodeScanner.Close();
+                _comBarcodeService.Close();
+            }
+            catch (Exception)
+            {
+                //ignore
+            }
 
             base.OnExit(e);
         }

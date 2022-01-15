@@ -28,6 +28,7 @@ namespace RetailTradeClient.HostBuilders
                 services.AddSingleton<IShiftStore, ShiftStore>();
                 services.AddSingleton<IProductSaleStore, ProductSaleStore>();
                 services.AddSingleton<IZebraBarcodeScanner, ZebraBarcodeScanner>();
+                services.AddSingleton<IComBarcodeService, ComBarcodeService>();
             });
         }
     }

@@ -86,6 +86,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\RetailTrade.Barcode\RetailTrade.Barcode.csproj" />
     <ProjectReference Include="..\RetailTrade.Domain\RetailTrade.Domain.csproj" />
     <ProjectReference Include="..\RetailTrade.EntityFramework\RetailTrade.EntityFramework.csproj" />
     <ProjectReference Include="..\RetailTrade.LoadingPanelControl\RetailTrade.LoadingPanelControl.csproj" />

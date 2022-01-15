@@ -21,12 +21,9 @@ using System.Collections.ObjectModel;
 using System.Collections.Specialized;
 using System.ComponentModel;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Data;
 using System.Windows.Input;
-using System.Xml.Linq;
 
 namespace RetailTradeClient.ViewModels
 {
@@ -45,6 +42,7 @@ namespace RetailTradeClient.ViewModels
         private readonly IRefundService _refundService;
         private readonly IProductSaleStore _productSaleStore;
         private readonly IZebraBarcodeScanner _zebraBarcodeScanner;
+        private readonly IComBarcodeService _comBarcodeService;
         private string _barcode;
         private Sale _selectedProductSale;
         private ObservableCollection<Product> _products;
@@ -247,7 +245,8 @@ namespace RetailTradeClient.ViewModels
             IShiftStore shiftStore,
             IRefundService refundService,
             IProductSaleStore productSaleStore,
-            IZebraBarcodeScanner zebraBarcodeScanner)
+            IZebraBarcodeScanner zebraBarcodeScanner,
+            IComBarcodeService comBarcodeService)
         {
             _userStore = userStore;
             _productService = productService;
@@ -260,6 +259,7 @@ namespace RetailTradeClient.ViewModels
             _refundService = refundService;
             _productSaleStore = productSaleStore;
             _zebraBarcodeScanner = zebraBarcodeScanner;
+            _comBarcodeService = comBarcodeService;
 
             SaleProducts = new();
             PostponeReceipts = new List<PostponeReceipt>();
@@ -409,35 +409,45 @@ namespace RetailTradeClient.ViewModels
             }
             _zebraBarcodeScanner.Open();
             _zebraBarcodeScanner.OnBarcodeEvent += ZebraBarcodeScanner_OnBarcodeEvent;
+
+            _comBarcodeService.Open();
+            _comBarcodeService.OnBarcodeEvent += ComBarcodeService_OnBarcodeEvent;
+        }
+
+        private async void ComBarcodeService_OnBarcodeEvent(string barcode)
+        {
+            BarcodeProductAddToSale(await _productService.Predicate(p => p.Barcode == barcode && p.Quantity > 0, p => new Product { Id = p.Id, Name = p.Name, Quantity = p.Quantity, SalePrice = p.SalePrice, TNVED = p.TNVED }));
         }
 
         private async void ZebraBarcodeScanner_OnBarcodeEvent(string barcode)
         {
-            Product newProduct = await _productService.Predicate(p => p.Barcode == barcode && p.Quantity > 0, p => new Product { Id = p.Id, Name = p.Name, Quantity = p.Quantity, SalePrice = p.SalePrice, TNVED = p.TNVED });
+            BarcodeProductAddToSale(await _productService.Predicate(p => p.Barcode == barcode && p.Quantity > 0, p => new Product { Id = p.Id, Name = p.Name, Quantity = p.Quantity, SalePrice = p.SalePrice, TNVED = p.TNVED }));
+        }
 
-            if (newProduct != null)
+        private void BarcodeProductAddToSale(Product product)
+        {
+            if (product != null)
             {
-                var product = SaleProducts.FirstOrDefault(sp => sp.Id == newProduct.Id);
-                if (product == null)
+                var sale = SaleProducts.FirstOrDefault(sp => sp.Id == product.Id);
+                if (sale == null)
                 {
                     lock (_syncLock)
                     {
                         SaleProducts.Add(new Sale
                         {
-                            Id = newProduct.Id,
-                            Name = newProduct.Name,
+                            Id = product.Id,
+                            Name = product.Name,
                             Quantity = 1,
-                            QuantityInStock = newProduct.Quantity,
-                            SalePrice = newProduct.SalePrice,
-                            TNVED = newProduct.TNVED,
-                            Sum = newProduct.SalePrice * 1
+                            QuantityInStock = product.Quantity,
+                            SalePrice = product.SalePrice,
+                            TNVED = product.TNVED,
+                            Sum = product.SalePrice * 1
                         });
                     }
                 }
-                else if (product.Quantity < product.QuantityInStock)
+                else if (sale.Quantity < sale.QuantityInStock)
                 {
-                    product.Quantity++;
-                    //product.Sum = product.SalePrice * (decimal)product.Quantity;
+                    sale.Quantity++;
                 }
                 else
                 {
@@ -446,7 +456,7 @@ namespace RetailTradeClient.ViewModels
                 OnPropertyChanged(nameof(Sum));
                 OnPropertyChanged(nameof(ToBePaid));
             }
-        }
+        }        
 
         private async void ProductService_PropertiesChanged()
         {

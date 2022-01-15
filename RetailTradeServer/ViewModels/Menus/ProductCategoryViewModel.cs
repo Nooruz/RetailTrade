@@ -4,10 +4,10 @@ using DevExpress.Xpf.Grid.TreeList;
 using RetailTrade.Domain.Models;
 using RetailTrade.Domain.Services;
 using RetailTradeServer.Commands;
+using RetailTradeServer.State.Barcode;
 using RetailTradeServer.State.Messages;
 using RetailTradeServer.ViewModels.Base;
 using RetailTradeServer.ViewModels.Dialogs;
-using RetailTradeServer.Views.Dialogs;
 using SalePageServer.State.Dialogs;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -28,6 +28,8 @@ namespace RetailTradeServer.ViewModels.Menus
         private readonly IDataService<Unit> _unitService;
         private readonly ISupplierService _supplierService;
         private readonly IMessageStore _messageStore;
+        private readonly IZebraBarcodeScanner _zebraBarcodeScanner;
+        private readonly IComBarcodeService _comBarcodeService;
         private object _selectedProductGroup;
         private ObservableCollection<Product> _getProducts;
         private ObservableCollection<ProductCategory> _productCategories;
@@ -142,7 +144,9 @@ namespace RetailTradeServer.ViewModels.Menus
             IDataService<Unit> unitService,
             ISupplierService supplierService,
             GlobalMessageViewModel globalMessageViewModel,
-            IMessageStore messageStore)
+            IMessageStore messageStore,
+            IZebraBarcodeScanner zebraBarcodeScanner,
+            IComBarcodeService comBarcodeService)
         {
             _productSubcategoryService = productSubcategoryService;
             _productCategoryService = productCategoryService;
@@ -152,6 +156,8 @@ namespace RetailTradeServer.ViewModels.Menus
             GlobalMessageViewModel = globalMessageViewModel;
             _messageStore = messageStore;
             _dialogService = dialogService;
+            _zebraBarcodeScanner = zebraBarcodeScanner;
+            _comBarcodeService = comBarcodeService;
 
             CreateProductCategoryCommand = new RelayCommand(CreateProductCategory);
             CreateProductSubcategoryCommand = new RelayCommand(CreateProductSubcategory);
@@ -198,7 +204,9 @@ namespace RetailTradeServer.ViewModels.Menus
                 _productService,
                 _supplierService,
                 GlobalMessageViewModel,
-                _messageStore)
+                _messageStore,
+                _zebraBarcodeScanner,
+                _comBarcodeService)
             {
                 Title = "Товаровы (Создать)",
                 SelectedProductCategoryId = SelectedProductGroup is ProductCategory productCategory ? productCategory.Id : 0,

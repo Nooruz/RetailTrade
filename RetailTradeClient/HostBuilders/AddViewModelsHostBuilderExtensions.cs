@@ -59,7 +59,8 @@ namespace RetailTradeClient.HostBuilders
                 services.GetRequiredService<IShiftStore>(),
                 services.GetRequiredService<IRefundService>(),
                 services.GetRequiredService<IProductSaleStore>(),
-                services.GetRequiredService<IZebraBarcodeScanner>());
+                services.GetRequiredService<IZebraBarcodeScanner>(),
+                services.GetRequiredService<IComBarcodeService>());
         }
 
         private static LoginViewModel CreateLoginViewModel(IServiceProvider services)

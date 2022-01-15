@@ -2,9 +2,9 @@
 using RetailTrade.Domain.Models;
 using RetailTrade.Domain.Services;
 using RetailTradeServer.Commands;
+using RetailTradeServer.State.Barcode;
 using RetailTradeServer.State.Messages;
 using RetailTradeServer.ViewModels.Dialogs.Base;
-using RetailTradeServer.Views.Dialogs;
 using SalePageServer.State.Dialogs;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -25,6 +25,8 @@ namespace RetailTradeServer.ViewModels.Dialogs
         private readonly IProductService _productService;
         private readonly IDialogService _dialogService;
         private readonly IMessageStore _messageStore;
+        private readonly IZebraBarcodeScanner _zebraBarcodeScanner;
+        private readonly IComBarcodeService _comBarcodeService;
         private int? _selectedProductCategoryId;
         private int? _selectedProductSubCategoryId;
         private int? _selectedUnitId;
@@ -224,7 +226,9 @@ namespace RetailTradeServer.ViewModels.Dialogs
             IProductService productService,
             ISupplierService supplierService,
             GlobalMessageViewModel globalMessageViewModel,
-            IMessageStore messageStore)
+            IMessageStore messageStore,
+            IZebraBarcodeScanner zebraBarcodeScanner,
+            IComBarcodeService comBarcodeService)
         {
             _productCategoryService = productCategoryService;
             _productSubcategoryService = productSubcategoryService;
@@ -234,6 +238,8 @@ namespace RetailTradeServer.ViewModels.Dialogs
             _dialogService = new DialogService();
             GlobalMessageViewModel = globalMessageViewModel;
             _messageStore = messageStore;
+            _zebraBarcodeScanner = zebraBarcodeScanner;
+            _comBarcodeService = comBarcodeService;
 
             _messageStore.Close();
 
@@ -277,6 +283,21 @@ namespace RetailTradeServer.ViewModels.Dialogs
             ProductCategories = new(await _productCategoryService.GetAllAsync());
             Suppliers = new(await _supplierService.GetAllAsync());
             Units = await _unitService.GetAllAsync();
+
+            _zebraBarcodeScanner.Open();
+            _zebraBarcodeScanner.OnBarcodeEvent += ZebraBarcodeScanner_OnBarcodeEvent;
+            _comBarcodeService.Open();
+            _comBarcodeService.OnBarcodeEvent += ComBarcodeService_OnBarcodeEvent;
+        }
+
+        private void ComBarcodeService_OnBarcodeEvent(string obj)
+        {
+            Barcode = obj;
+        }
+
+        private void ZebraBarcodeScanner_OnBarcodeEvent(string obj)
+        {
+            Barcode = obj;
         }
 
         private void ProductCategoryService_OnProductCategoryCreated(ProductCategory productCategory)
