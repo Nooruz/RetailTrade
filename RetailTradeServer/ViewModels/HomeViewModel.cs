@@ -36,6 +36,12 @@ namespace RetailTradeServer.ViewModels
 
         public ICommand UpdateCurrentMenuViewModelCommand { get; }
 
+        #region Моя организация
+
+        public ICommand EmployeeCommand { get; set; }
+
+        #endregion
+
         #region Информационная панель
 
         public ICommand SaleDashboardCommand { get; }
@@ -110,6 +116,7 @@ namespace RetailTradeServer.ViewModels
             SupplierCommand = new RelayCommand(OpenSupplier);
             PrinterCommand = new RelayCommand(Printer);
             RevenueForPeriodCommand = new RelayCommand(RevenueForPeriod);
+            EmployeeCommand = new RelayCommand(() => UpdateCurrentMenuViewModelCommand.Execute(MenuViewType.Employee));
 
             _menuNavigator.StateChanged += MenuNavigator_StateChanged;
 

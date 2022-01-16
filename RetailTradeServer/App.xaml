@@ -31,9 +31,9 @@
                 <views:RegistrationView/>
             </DataTemplate>
 
-            <DataTemplate DataType="{x:Type viewModels:OrganizationViewModel}">
+            <!--<DataTemplate DataType="{x:Type viewModels:OrganizationViewModel}">
                 <views:OrganizationView/>
-            </DataTemplate>
+            </DataTemplate>-->
 
             <DataTemplate DataType="{x:Type dialogViewModels:MessageBoxDialogViewModel}">
                 <messageBox:DialogMessageBox/>
@@ -85,6 +85,10 @@
 
             <DataTemplate DataType="{x:Type menuViewModels:CashShiftsViewModel}">
                 <menuViews:CashShiftsView/>
+            </DataTemplate>
+
+            <DataTemplate DataType="{x:Type menuViewModels:EmployeesViewModel}">
+                <menuViews:EmployeesView/>
             </DataTemplate>
 
             <!--#endregion-->
@@ -159,6 +163,7 @@
                 <ResourceDictionary Source="/Styles/UserControlStyle.xaml"/>
                 <ResourceDictionary Source="/Styles/LookUpEditSettingsStyle.xaml"/>
                 <ResourceDictionary Source="/Styles/GridColumnStyle.xaml"/>
+                <ResourceDictionary Source="/Styles/TreeListColumnStyle.xaml"/>
             </ResourceDictionary.MergedDictionaries>
 
         </ResourceDictionary>

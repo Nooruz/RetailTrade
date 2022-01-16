@@ -205,8 +205,7 @@ namespace RetailTradeServer.ViewModels.Dialogs
             IProductService productService,
             ISupplierService supplierService,
             IDialogService dialogService,
-            IMessageStore messageStore,
-            GlobalMessageViewModel globalMessageViewModel)
+            IMessageStore messageStore)
         {
             _productCategoryService = productCategoryService;
             _productSubcategoryService = productSubcategoryService;
@@ -215,7 +214,7 @@ namespace RetailTradeServer.ViewModels.Dialogs
             _supplierService = supplierService;
             _dialogService = dialogService;
             _messageStore = messageStore;
-            GlobalMessageViewModel = globalMessageViewModel;
+            GlobalMessageViewModel = new(_messageStore);
 
             UserControlLoadedCommand = new RelayCommand(UserControlLoaded);
             SaveCommand = new RelayCommand(Save);

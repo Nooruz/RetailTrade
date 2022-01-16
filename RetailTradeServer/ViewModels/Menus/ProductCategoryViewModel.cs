@@ -59,7 +59,6 @@ namespace RetailTradeServer.ViewModels.Menus
 
         #region Public Properties
 
-        public GlobalMessageViewModel GlobalMessageViewModel { get; }
         public ObservableCollection<ProductCategory> ProductCategories
         {
             get => _productCategories ?? new();
@@ -143,7 +142,6 @@ namespace RetailTradeServer.ViewModels.Menus
             IDialogService dialogService,
             IDataService<Unit> unitService,
             ISupplierService supplierService,
-            GlobalMessageViewModel globalMessageViewModel,
             IMessageStore messageStore,
             IZebraBarcodeScanner zebraBarcodeScanner,
             IComBarcodeService comBarcodeService)
@@ -152,8 +150,7 @@ namespace RetailTradeServer.ViewModels.Menus
             _productCategoryService = productCategoryService;
             _productService = productService;
             _unitService = unitService;
-            _supplierService = supplierService;
-            GlobalMessageViewModel = globalMessageViewModel;
+            _supplierService = supplierService;            
             _messageStore = messageStore;
             _dialogService = dialogService;
             _zebraBarcodeScanner = zebraBarcodeScanner;
@@ -198,20 +195,28 @@ namespace RetailTradeServer.ViewModels.Menus
 
         private async void CreateProduct()
         {
-            await _dialogService.ShowDialog(new CreateProductDialogFormModel(_productCategoryService,
+            CreateProductDialogFormModel viewModel = new(_productCategoryService,
                 _productSubcategoryService,
                 _unitService,
                 _productService,
                 _supplierService,
-                GlobalMessageViewModel,
                 _messageStore,
                 _zebraBarcodeScanner,
                 _comBarcodeService)
             {
-                Title = "Товаровы (Создать)",
-                SelectedProductCategoryId = SelectedProductGroup is ProductCategory productCategory ? productCategory.Id : 0,
-                SelectedProductSubcategoryId = SelectedProductGroup is ProductSubcategory productSubcategory ? productSubcategory.Id : 0
-            });
+                Title = "Товаровы (Создать)"
+            };
+
+            if (SelectedProductGroup is ProductCategory productCategory)
+            {
+                viewModel.SelectedProductCategoryId = productCategory.Id;
+            }
+            if (SelectedProductGroup is ProductSubcategory productSubcategory)
+            {
+                viewModel.SelectedProductCategoryId = productSubcategory.ProductCategoryId;
+                viewModel.SelectedProductSubcategoryId = productSubcategory.Id;
+            }
+            await _dialogService.ShowDialog(viewModel);
         }
 
         private void GridControlLoaded(object sender)
@@ -256,8 +261,7 @@ namespace RetailTradeServer.ViewModels.Menus
                 _productService,
                 _supplierService,
                 _dialogService,
-                _messageStore,
-                GlobalMessageViewModel)
+                _messageStore)
                 {
                     Title = "Товаровы (Редактировать)",
                     EditProduct = SelectedProduct
@@ -295,6 +299,7 @@ namespace RetailTradeServer.ViewModels.Menus
 
         private void ProductSubcategoryService_OnProductSubcategoryCreated(ProductSubcategory productSubcategory)
         {
+            ProductSubcategories.Add(productSubcategory);
             ProductCategory editProductCategory = ProductCategories.FirstOrDefault(pc => pc.Id == productSubcategory.ProductCategoryId);
             if (editProductCategory.ProductSubcategories == null)
             {
@@ -330,7 +335,7 @@ namespace RetailTradeServer.ViewModels.Menus
 
         private async void CreateProductCategoryOrSubCategory()
         {
-            await _dialogService.ShowDialog(new CreateProductCategoryOrSubCategoryDialogFormModel(_productCategoryService, _productSubcategoryService, _messageStore, GlobalMessageViewModel) { Title = "Создать категорию или группу товаров" });
+            await _dialogService.ShowDialog(new CreateProductCategoryOrSubCategoryDialogFormModel(_productCategoryService, _productSubcategoryService, _messageStore) { Title = "Создать категорию или группу товаров" });
         }
 
         private async void EditProductCategoryOrSubCategory()
@@ -366,7 +371,6 @@ namespace RetailTradeServer.ViewModels.Menus
 
         public override void Dispose()
         {
-            GlobalMessageViewModel.Dispose();
             //GetProducts = null;
             SelectedProductGroup = null;
 
