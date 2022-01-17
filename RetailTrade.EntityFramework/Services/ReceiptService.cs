@@ -219,7 +219,7 @@ namespace RetailTrade.EntityFramework.Services
             return null;
         }
 
-        public async Task<IEnumerable<Receipt>> GetSaleAmoundLastMonth()
+        public async Task<decimal> GetSaleAmoundLastMonth()
         {
             try
             {
@@ -227,16 +227,16 @@ namespace RetailTrade.EntityFramework.Services
                 await using var context = _contextFactory.CreateDbContext();
                 return await context.Receipts
                     .Where(r => r.DateOfPurchase.Date >= firstDayOfLastMonth && r.DateOfPurchase <= firstDayOfLastMonth.AddMonths(1).AddDays(-1))
-                    .ToListAsync();
+                    .SumAsync(s => s.Sum);
             }
             catch (Exception e)
             {
                 //ignore
             }
-            return null;
+            return 0;
         }
 
-        public async Task<IEnumerable<Receipt>> GetSaleAmoundBeginningYear()
+        public async Task<decimal> GetSaleAmoundBeginningYear()
         {
             try
             {
@@ -244,13 +244,13 @@ namespace RetailTrade.EntityFramework.Services
                 await using var context = _contextFactory.CreateDbContext();
                 return await context.Receipts
                     .Where(r => r.DateOfPurchase.Date >= beginningYear)
-                    .ToListAsync();
+                    .SumAsync(s => s.Sum);
             }
             catch (Exception e)
             {
                 //ignore
             }
-            return null;
+            return 0;
         }
     }
 }

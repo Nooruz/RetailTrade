@@ -46,12 +46,12 @@ namespace RetailTrade.Domain.Services
         /// Сумма продажи за прошлый месяц
         /// </summary>
         /// <returns></returns>
-        Task<IEnumerable<Receipt>> GetSaleAmoundLastMonth();
+        Task<decimal> GetSaleAmoundLastMonth();
 
         /// <summary>
         /// Сумма продажи с начала года
         /// </summary>
         /// <returns></returns>
-        Task<IEnumerable<Receipt>> GetSaleAmoundBeginningYear();
+        Task<decimal> GetSaleAmoundBeginningYear();
     }
 }

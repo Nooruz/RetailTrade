@@ -2,9 +2,9 @@
 using RetailTrade.Domain.Services;
 using RetailTradeServer.Commands;
 using RetailTradeServer.ViewModels.Base;
-using SalePageServer.Utilities;
-using System.Collections.Generic;
+using System;
 using System.Collections.ObjectModel;
+using System.Linq;
 using System.Windows.Input;
 
 namespace RetailTradeServer.ViewModels.Menus
@@ -21,9 +21,9 @@ namespace RetailTradeServer.ViewModels.Menus
         private decimal _saleAmountCurrentMonth;
         private decimal _saleAmountLastMonth;
         private decimal _saleAmountBeginningYear;
-        private ObservableQueue<Receipt> _dailySalesChart;
-        private ObservableQueue<Receipt> _monthlySalesChart;
-        private ObservableQueue<ProductSale> _ratingTenProducts;
+        private ObservableCollection<Receipt> _dailySalesChart;
+        private ObservableCollection<Receipt> _monthlySalesChart;
+        private ObservableCollection<ProductSale> _ratingTenProducts;
 
         #endregion
 
@@ -83,9 +83,33 @@ namespace RetailTradeServer.ViewModels.Menus
                 OnPropertyChanged(nameof(SaleAmountBeginningYear));
             }
         }
-        public IEnumerable<Receipt> DailySalesChart => _dailySalesChart;
-        public IEnumerable<Receipt> MonthlySalesChart => _monthlySalesChart;
-        public IEnumerable<ProductSale> RatingTenProducts => _ratingTenProducts;
+        public ObservableCollection<Receipt> DailySalesChart
+        {
+            get => _dailySalesChart ?? new();
+            set
+            {
+                _dailySalesChart = value;
+                OnPropertyChanged(nameof(DailySalesChart));
+            }
+        }
+        public ObservableCollection<Receipt> MonthlySalesChart
+        {
+            get => _monthlySalesChart ?? new();
+            set
+            {
+                _monthlySalesChart = value;
+                OnPropertyChanged(nameof(MonthlySalesChart));
+            }
+        }
+        public ObservableCollection<ProductSale> RatingTenProducts
+        {
+            get => _ratingTenProducts ?? new();
+            set
+            {
+                _ratingTenProducts = value;
+                OnPropertyChanged(nameof(RatingTenProducts));
+            }
+        }
 
         #endregion
 
@@ -120,52 +144,36 @@ namespace RetailTradeServer.ViewModels.Menus
 
         private async void UserControl()
         {
-            //SaleAmountToday = await _receiptService.GetSaleAmoundToday();
-            //SaleAmountYesterday = await _receiptService.GetSaleAmoundYesterday();
-            //SaleAmountLastWeek = await _receiptService.GetSaleAmoundLastWeek();
-            //SaleAmountCurrentMonth = await _receiptService.GetSaleAmoundCurrentMonth();
-            //SaleAmountLastMonth = await _receiptService.GetSaleAmoundLastMonth();
-            //SaleAmountBeginningYear = await _receiptService.GetSaleAmoundBeginningYear();
-            //_dailySalesChart = new(await _receiptService.GetSaleAmoundToday());
-            //_monthlySalesChart = new(await _receiptService.GetSaleAmoundCurrentMonth());
-            //_ratingTenProducts = new(await _productSaleService.GetRatingTenProducts());
+            DateTime mondayOfLastWeek = DateTime.Now.Date.AddDays(-(int)DateTime.Now.DayOfWeek - 6);
+
+            DailySalesChart = new(await _receiptService.GetSaleAmoundToday());
+            MonthlySalesChart = new(await _receiptService.GetSaleAmoundCurrentMonth());
+            RatingTenProducts = new(await _productSaleService.GetRatingTenProducts());
+            SaleAmountToday = DailySalesChart.Sum(s => s.Sum);
+            SaleAmountYesterday = MonthlySalesChart.Where(s => s.DateOfPurchase.Date == DateTime.Now.AddDays(-1)).Sum(s => s.Sum);
+            SaleAmountLastWeek = MonthlySalesChart.Where(r => r.DateOfPurchase.Date >= mondayOfLastWeek && r.DateOfPurchase <= mondayOfLastWeek.AddDays(6)).Sum(s => s.Sum);
+            SaleAmountCurrentMonth = MonthlySalesChart.Sum(s => s.Sum);
+            SaleAmountLastMonth = await _receiptService.GetSaleAmoundLastMonth();
+            SaleAmountBeginningYear = await _receiptService.GetSaleAmoundBeginningYear();
+            ShowLoadingPanel = false;
         }
 
         private async void Yesterday()
         {
-            _dailySalesChart.Dequeue();
-            //_dailySalesChart = new(await _receiptService.GetSaleAmoundYesterday());
+
         }
         private async void Today()
         {
-            _dailySalesChart.Dequeue();
-            //_dailySalesChart = new(await _receiptService.GetSaleAmoundToday());
         }
 
         private async void LastMonth()
         {
-            _monthlySalesChart.Dequeue();
-            //_monthlySalesChart = new(await _receiptService.GetSaleAmoundLastMonth());
         }
 
         private async void CurrentMonth()
         {
-            _monthlySalesChart.Dequeue();
-            //_monthlySalesChart = new(await _receiptService.GetSaleAmoundCurrentMonth());
         }
 
         #endregion
-    }
-
-    public class DataSeries
-    {
-        public string Name { get; set; }
-        public ObservableCollection<Receipt> Values { get; set; }
-    }
-
-    public class DataRating
-    {
-        public string Name { get; set; }
-        public ObservableCollection<ProductSale> Value { get; set; }
     }
 }
