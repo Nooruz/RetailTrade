@@ -15,11 +15,11 @@
                     <TextBlock x:Name="Mark"
                                Style="{StaticResource IconicTextBlock}"
                                Text="{StaticResource faMinus}"
-                               Foreground="Green"/>
+                               Foreground="{StaticResource GreenColorBrush}"/>
                     <DataTemplate.Triggers>
                         <DataTrigger Binding="{Binding RowData.Row.DeleteMark}" Value="True">
                             <Setter TargetName="Mark" Property="Text" Value="{StaticResource faTimes}"/>
-                            <Setter TargetName="Mark" Property="Foreground" Value="Red"/>
+                            <Setter TargetName="Mark" Property="Foreground" Value="{StaticResource RedColorBrush}"/>
                         </DataTrigger>
                     </DataTemplate.Triggers>
                 </DataTemplate>

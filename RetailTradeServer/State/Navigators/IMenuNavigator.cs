@@ -53,7 +53,12 @@ namespace RetailTradeServer.State.Navigators
         /// <summary>
         /// Поставщики
         /// </summary>
-        Supplier
+        Supplier,
+
+        /// <summary>
+        /// Сотрудники
+        /// </summary>
+        Employee
     }
     public interface IMenuNavigator
     {

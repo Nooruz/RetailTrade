@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using RetailTrade.EntityFramework;
 
@@ -11,9 +12,10 @@ using RetailTrade.EntityFramework;
 namespace RetailTrade.EntityFramework.Migrations
 {
     [DbContext(typeof(RetailTradeDbContext))]
-    partial class RetailTradeDbContextModelSnapshot : ModelSnapshot
+    [Migration("20220116173829_Employee")]
+    partial class Employee
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -126,13 +128,14 @@ namespace RetailTrade.EntityFramework.Migrations
                     b.Property<DateTime>("BirthDate")
                         .HasColumnType("datetime2");
 
+                    b.Property<string>("Discriminator")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<string>("FullName")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<int>("GenderId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("GroupEmployeeId")
                         .HasColumnType("int");
 
                     b.Property<string>("Inn")
@@ -142,9 +145,9 @@ namespace RetailTrade.EntityFramework.Migrations
 
                     b.HasIndex("GenderId");
 
-                    b.HasIndex("GroupEmployeeId");
-
                     b.ToTable("Employees");
+
+                    b.HasDiscriminator<string>("Discriminator").HasValue("Employee");
                 });
 
             modelBuilder.Entity("RetailTrade.Domain.Models.Gender", b =>
@@ -172,34 +175,6 @@ namespace RetailTrade.EntityFramework.Migrations
                         {
                             Id = 2,
                             Name = "Женский"
-                        });
-                });
-
-            modelBuilder.Entity("RetailTrade.Domain.Models.GroupEmployee", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
-
-                    b.Property<string>("Name")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int?>("SubGroupId")
-                        .HasColumnType("int");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("SubGroupId");
-
-                    b.ToTable("GroupsEmployees");
-
-                    b.HasData(
-                        new
-                        {
-                            Id = 1,
-                            Name = "Сотрудники"
                         });
                 });
 
@@ -823,6 +798,16 @@ namespace RetailTrade.EntityFramework.Migrations
                     b.ToTable("WriteDownProducts");
                 });
 
+            modelBuilder.Entity("RetailTrade.Domain.Models.GroupEmployee", b =>
+                {
+                    b.HasBaseType("RetailTrade.Domain.Models.Employee");
+
+                    b.Property<string>("Name")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasDiscriminator().HasValue("GroupEmployee");
+                });
+
             modelBuilder.Entity("RetailTrade.Domain.Models.Arrival", b =>
                 {
                     b.HasOne("RetailTrade.Domain.Models.Supplier", "Supplier")
@@ -872,25 +857,7 @@ namespace RetailTrade.EntityFramework.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("RetailTrade.Domain.Models.GroupEmployee", "GroupEmployee")
-                        .WithMany("Employees")
-                        .HasForeignKey("GroupEmployeeId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
                     b.Navigation("Gender");
-
-                    b.Navigation("GroupEmployee");
-                });
-
-            modelBuilder.Entity("RetailTrade.Domain.Models.GroupEmployee", b =>
-                {
-                    b.HasOne("RetailTrade.Domain.Models.GroupEmployee", "SubGroup")
-                        .WithMany("SubGroups")
-                        .HasForeignKey("SubGroupId")
-                        .OnDelete(DeleteBehavior.Restrict);
-
-                    b.Navigation("SubGroup");
                 });
 
             modelBuilder.Entity("RetailTrade.Domain.Models.OrderProduct", b =>
@@ -1116,13 +1083,6 @@ namespace RetailTrade.EntityFramework.Migrations
             modelBuilder.Entity("RetailTrade.Domain.Models.Gender", b =>
                 {
                     b.Navigation("Employees");
-                });
-
-            modelBuilder.Entity("RetailTrade.Domain.Models.GroupEmployee", b =>
-                {
-                    b.Navigation("Employees");
-
-                    b.Navigation("SubGroups");
                 });
 
             modelBuilder.Entity("RetailTrade.Domain.Models.OrderStatus", b =>

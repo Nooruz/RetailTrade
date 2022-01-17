@@ -112,6 +112,25 @@ namespace RetailTrade.EntityFramework
         /// </summary>
         public DbSet<ProductRefund> ProductRefunds { get; set; }
 
+        #region Employee
+
+        /// <summary>
+        /// Гендеры
+        /// </summary>
+        public DbSet<Gender> Genders { get; set; }
+
+        /// <summary>
+        /// Сотрудники
+        /// </summary>
+        public DbSet<Employee> Employees { get; set; }
+
+        /// <summary>
+        /// Группа сотрудников
+        /// </summary>
+        public DbSet<GroupEmployee> GroupsEmployees { get; set; }
+
+        #endregion
+
         public RetailTradeDbContext(DbContextOptions<RetailTradeDbContext> options) : base(options) { }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -141,19 +160,35 @@ namespace RetailTrade.EntityFramework
                 .WithOne(o => o.Refund)
                 .OnDelete(DeleteBehavior.Cascade);
 
+            modelBuilder.Entity<GroupEmployee>(entity =>
+            {
+                entity.HasKey(g => g.Id);
+                entity.Property(g => g.Name);
+                entity.HasOne(g => g.SubGroup)
+                    .WithMany(g => g.SubGroups)
+                    .HasForeignKey(g => g.SubGroupId)
+                    .IsRequired(false)
+                    .OnDelete(DeleteBehavior.Restrict);
+            });
+
             modelBuilder.Entity<Unit>().HasData(
                 new Unit { Id = 1, LongName = "Килограмм", ShortName = "кг" },
                 new Unit { Id = 2, LongName = "Грамм", ShortName = "г" },
                 new Unit { Id = 3, LongName = "Литр", ShortName = "л" },
                 new Unit { Id = 4, LongName = "Метр", ShortName = "м" },
-                new Unit { Id = 5, LongName = "Штука", ShortName = "шт" }
-                );
+                new Unit { Id = 5, LongName = "Штука", ShortName = "шт" });
 
             modelBuilder.Entity<OrderStatus>().HasData(
                 new OrderStatus { Id = 1, Name = "Ожидание" },
                 new OrderStatus { Id = 2, Name = "Выполнено" },
-                new OrderStatus { Id = 3, Name = "Не выполнено" }
-                );
+                new OrderStatus { Id = 3, Name = "Не выполнено" });
+
+            modelBuilder.Entity<Gender>().HasData(
+                new Gender { Id = 1, Name = "Мужской" },
+                new Gender { Id = 2, Name = "Женский" });
+
+            modelBuilder.Entity<GroupEmployee>().HasData(
+                new GroupEmployee { Id = 1, Name = "Сотрудники" });
 
             //modelBuilder.Entity<ProductCategory>().HasData(
             //    new ProductCategory { Id = 1, Name = "Алкоголь" },

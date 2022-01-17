@@ -87,8 +87,8 @@ namespace RetailTradeServer.ViewModels.Dialogs
             get => _selectedProductCategoryId;
             set
             {
-                _selectedProductCategoryId = value;
-                SelectedProductSubcategoryId = null;
+                _selectedProductCategoryId = value;                
+                SelectedProductCategoryChanged();
                 OnPropertyChanged(nameof(SelectedProductCategoryId));
                 OnPropertyChanged(nameof(ProductSubCategories));
                 OnPropertyChanged(nameof(CanTabSelect));
@@ -225,7 +225,6 @@ namespace RetailTradeServer.ViewModels.Dialogs
             IDataService<Unit> unitService,
             IProductService productService,
             ISupplierService supplierService,
-            GlobalMessageViewModel globalMessageViewModel,
             IMessageStore messageStore,
             IZebraBarcodeScanner zebraBarcodeScanner,
             IComBarcodeService comBarcodeService)
@@ -235,11 +234,11 @@ namespace RetailTradeServer.ViewModels.Dialogs
             _unitService = unitService;
             _productService = productService;
             _supplierService = supplierService;
-            _dialogService = new DialogService();
-            GlobalMessageViewModel = globalMessageViewModel;
+            _dialogService = new DialogService();            
             _messageStore = messageStore;
             _zebraBarcodeScanner = zebraBarcodeScanner;
             _comBarcodeService = comBarcodeService;
+            GlobalMessageViewModel = new(_messageStore);
 
             _messageStore.Close();
 
@@ -273,6 +272,7 @@ namespace RetailTradeServer.ViewModels.Dialogs
         {
             if (SelectedProductCategoryId != null)
             {
+                SelectedProductSubcategoryId = null;
                 ProductSubCategories.Clear();
                 ProductSubCategories = new(await _productSubcategoryService.GetAllByProductCategoryIdAsync(SelectedProductCategoryId.Value));
             }
@@ -284,8 +284,8 @@ namespace RetailTradeServer.ViewModels.Dialogs
             Suppliers = new(await _supplierService.GetAllAsync());
             Units = await _unitService.GetAllAsync();
 
-            _zebraBarcodeScanner.Open();
-            _zebraBarcodeScanner.OnBarcodeEvent += ZebraBarcodeScanner_OnBarcodeEvent;
+            //_zebraBarcodeScanner.Open();
+            //_zebraBarcodeScanner.OnBarcodeEvent += ZebraBarcodeScanner_OnBarcodeEvent;
             _comBarcodeService.Open();
             _comBarcodeService.OnBarcodeEvent += ComBarcodeService_OnBarcodeEvent;
         }

@@ -4,7 +4,6 @@ using RetailTradeServer.Commands;
 using RetailTradeServer.Report;
 using RetailTradeServer.ViewModels.Base;
 using RetailTradeServer.ViewModels.Dialogs;
-using RetailTradeServer.Views.Dialogs;
 using SalePageServer.State.Dialogs;
 using System.Collections.Generic;
 using System.Windows;

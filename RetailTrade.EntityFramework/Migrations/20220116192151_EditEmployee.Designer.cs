@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using RetailTrade.EntityFramework;
 
@@ -11,9 +12,10 @@ using RetailTrade.EntityFramework;
 namespace RetailTrade.EntityFramework.Migrations
 {
     [DbContext(typeof(RetailTradeDbContext))]
-    partial class RetailTradeDbContextModelSnapshot : ModelSnapshot
+    [Migration("20220116192151_EditEmployee")]
+    partial class EditEmployee
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -194,13 +196,6 @@ namespace RetailTrade.EntityFramework.Migrations
                     b.HasIndex("SubGroupId");
 
                     b.ToTable("GroupsEmployees");
-
-                    b.HasData(
-                        new
-                        {
-                            Id = 1,
-                            Name = "Сотрудники"
-                        });
                 });
 
             modelBuilder.Entity("RetailTrade.Domain.Models.OrderProduct", b =>
@@ -887,8 +882,7 @@ namespace RetailTrade.EntityFramework.Migrations
                 {
                     b.HasOne("RetailTrade.Domain.Models.GroupEmployee", "SubGroup")
                         .WithMany("SubGroups")
-                        .HasForeignKey("SubGroupId")
-                        .OnDelete(DeleteBehavior.Restrict);
+                        .HasForeignKey("SubGroupId");
 
                     b.Navigation("SubGroup");
                 });

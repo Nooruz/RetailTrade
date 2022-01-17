@@ -32,6 +32,7 @@ namespace RetailTradeServer.HostBuilders
                 services.AddTransient(CreateUserViewModel);
                 services.AddTransient(CreateRefundToSupplierViewModel);
                 services.AddTransient(CreateSupplierViewModel);
+                services.AddTransient(CreateEmployeesViewModel);
 
                 services.AddSingleton<CreateMenuViewModel<ProductCategoryViewModel>>(servicesProvider => () => CreateProductCategoryViewModel(servicesProvider));
                 services.AddSingleton<CreateMenuViewModel<ArrivalProductViewModel>>(servicesProvider => () => CreateArrivalProductViewModel(servicesProvider));
@@ -43,6 +44,7 @@ namespace RetailTradeServer.HostBuilders
                 services.AddSingleton<CreateMenuViewModel<UserViewModel>>(servicesProvider => () => CreateUserViewModel(servicesProvider));
                 services.AddSingleton<CreateMenuViewModel<RefundToSupplierViewModel>>(servicesProvider => () => CreateRefundToSupplierViewModel(servicesProvider));
                 services.AddSingleton<CreateMenuViewModel<SupplierViewModel>>(servicesProvider => () => CreateSupplierViewModel(servicesProvider));
+                services.AddSingleton<CreateMenuViewModel<EmployeesViewModel>>(servicesProvider => () => CreateEmployeesViewModel(servicesProvider));
 
                 services.AddSingleton<IMenuViewModelFactory, MenuViewModelFactory>();
             });
@@ -62,7 +64,6 @@ namespace RetailTradeServer.HostBuilders
                 services.GetRequiredService<IDialogService>(),
                 services.GetRequiredService<IDataService<Unit>>(),
                 services.GetRequiredService<ISupplierService>(),
-                services.GetRequiredService<GlobalMessageViewModel>(),
                 services.GetRequiredService<IMessageStore>(),
                 services.GetRequiredService<IZebraBarcodeScanner>(),
                 services.GetRequiredService<IComBarcodeService>());
@@ -130,6 +131,14 @@ namespace RetailTradeServer.HostBuilders
                 services.GetRequiredService<IRefundToSupplierServiceProduct>(),
                 services.GetRequiredService<ISupplierService>(),
                 services.GetRequiredService<IDialogService>());
+        }
+
+        private static EmployeesViewModel CreateEmployeesViewModel(IServiceProvider services)
+        {
+            return new EmployeesViewModel(services.GetRequiredService<IEmployeeService>(),
+                services.GetRequiredService<IGroupEmployeeService>(),
+                services.GetRequiredService<IDialogService>(),
+                services.GetRequiredService<IDataService<Gender>>());
         }
     }
 }

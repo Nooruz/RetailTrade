@@ -7,8 +7,7 @@
         <Setter Property="BorderThickness" Value="0"/>
     </Style>
     
-    <Style TargetType="{x:Type Button}" 
-           x:Key="IconicButton"
+    <Style TargetType="{x:Type Button}" x:Key="IconicButton"
            BasedOn="{StaticResource Hoverless}">
         <Setter Property="MinHeight" Value="23"/>
         <Setter Property="Cursor" Value="Hand"/>
@@ -36,8 +35,7 @@
         </Setter>
     </Style>
 
-    <Style TargetType="{x:Type Button}" 
-           x:Key="FAButton">
+    <Style TargetType="{x:Type Button}" x:Key="FAButton">
         <Setter Property="MinHeight" Value="23"/>
         <Setter Property="Cursor" Value="Hand"/>
         <Setter Property="Width" Value="{Binding ActualHeight, RelativeSource={RelativeSource Self}}"/>
@@ -64,8 +62,7 @@
         </Setter>
     </Style>
 
-    <Style TargetType="{x:Type Button}" 
-           x:Key="IconicCircleButton"
+    <Style TargetType="{x:Type Button}" x:Key="IconicCircleButton"
            BasedOn="{StaticResource Hoverless}">
         <Setter Property="MinHeight" Value="23"/>
         <Setter Property="Cursor" Value="Hand"/>

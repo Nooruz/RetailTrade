@@ -22,7 +22,7 @@ namespace RetailTrade.Barcode
         {
             _serialPort = new()
             {
-                PortName = "COM8",
+                PortName = "COM4",
                 BaudRate = 9600,
                 ReadTimeout = 1000,
             };
@@ -35,7 +35,13 @@ namespace RetailTrade.Barcode
 
         private static void SerialPort_DataReceived(object sender, SerialDataReceivedEventArgs e)
         {
+            if (!_serialPort.IsOpen)
+            {
+                Open();
+            }
+            Thread.Sleep(1000);
             OnBarcodeEvent?.Invoke(Replace(_serialPort.ReadExisting()));
+            _serialPort.DiscardInBuffer();
         }
 
         private static string Replace(string text)
@@ -53,7 +59,10 @@ namespace RetailTrade.Barcode
 
         public static void Open()
         {
-            _serialPort.Open();
+            if (_serialPort != null && !_serialPort.IsOpen)
+            {
+                _serialPort.Open();
+            }            
         }
 
         public static void Close()

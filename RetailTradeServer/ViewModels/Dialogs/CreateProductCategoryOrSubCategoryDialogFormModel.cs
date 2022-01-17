@@ -77,8 +77,7 @@ namespace RetailTradeServer.ViewModels.Dialogs
 
         public CreateProductCategoryOrSubCategoryDialogFormModel(IProductCategoryService productCategoryService,
             IProductSubcategoryService productSubcategoryService,
-            IMessageStore messageStore,
-            GlobalMessageViewModel globalMessageViewModel)
+            IMessageStore messageStore)
         {
             CreateProductCategoryCommand = new RelayCommand(CreateProductCategory);
             CreateProductSubCategoryCommand = new RelayCommand(CreateProductSubCategory);
@@ -88,7 +87,7 @@ namespace RetailTradeServer.ViewModels.Dialogs
             _productCategoryService = productCategoryService;
             _productSubcategoryService = productSubcategoryService;
             _messageStore = messageStore;
-            GlobalMessageViewModel = globalMessageViewModel;
+            GlobalMessageViewModel = new(_messageStore);
 
             _productCategoryService.OnProductCategoryCreated += ProductCategoryService_OnProductCategoryCreated;
             _productSubcategoryService.OnProductSubcategoryCreated += ProductSubcategoryService_OnProductSubcategoryCreated;
