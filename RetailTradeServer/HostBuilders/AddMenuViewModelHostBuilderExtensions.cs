@@ -136,7 +136,9 @@ namespace RetailTradeServer.HostBuilders
         private static EmployeesViewModel CreateEmployeesViewModel(IServiceProvider services)
         {
             return new EmployeesViewModel(services.GetRequiredService<IEmployeeService>(),
-                services.GetRequiredService<IGroupEmployeeService>());
+                services.GetRequiredService<IGroupEmployeeService>(),
+                services.GetRequiredService<IDialogService>(),
+                services.GetRequiredService<IDataService<Gender>>());
         }
     }
 }

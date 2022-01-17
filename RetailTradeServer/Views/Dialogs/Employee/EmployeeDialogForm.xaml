@@ -1,0 +1,66 @@
+﻿<local:BaseDialogUserControl
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:dxe="http://schemas.devexpress.com/winfx/2008/xaml/editors"
+    xmlns:dxlc="http://schemas.devexpress.com/winfx/2008/xaml/layoutcontrol"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="clr-namespace:RetailTradeServer.Dialogs"
+    x:Class="RetailTradeServer.Views.Dialogs.EmployeeDialogForm"
+    Width="400">
+
+    <dxlc:LayoutControl Orientation="Vertical">
+
+        <dxlc:LayoutItem Label="ФИО:">
+            <dxe:TextEdit Text="{Binding FullName}"/>
+        </dxlc:LayoutItem>
+
+        <dxlc:LayoutItem Label="Пол:">
+            <dxe:ComboBoxEdit ItemsSource="{Binding Genders}"
+                              SelectedItem="{Binding SelectedGender}"
+                              DisplayMember="Name"/>
+        </dxlc:LayoutItem>
+
+        <dxlc:LayoutItem Label="Дата рождения:">
+            <dxe:DateEdit EditValue="{Binding BirthDate}"/>
+        </dxlc:LayoutItem>
+
+        <dxlc:LayoutItem Label="ИНН:">
+            <dxe:TextEdit Text="{Binding Inn}"/>
+        </dxlc:LayoutItem>
+
+        <dxlc:LayoutItem Label="Группа:">
+            <dxe:ComboBoxEdit ItemsSource="{Binding GroupEmployees}"
+                              EditValue="{Binding SelectedGroupEmployeeDTOId}"
+                              DisplayMember="Name">
+                <dxe:ComboBoxEdit.PopupBottomAreaTemplate>
+                    <ControlTemplate>
+                        <Border BorderThickness="0 1 0 0"
+                                BorderBrush="#AAAAAA">
+                            <dxlc:LayoutGroup Padding="4 5">
+                                <Button Style="{StaticResource LinkButton}"
+                                        Content="Показать все"
+                                        VerticalAlignment="Center"
+                                        HorizontalAlignment="Left"/>
+
+                                <Button Style="{StaticResource FAButton}"
+                                        Content="{StaticResource faPlus}"
+                                        HorizontalAlignment="Right"
+                                        Width="30"
+                                        Height="30"/>
+                            </dxlc:LayoutGroup>
+                        </Border>
+                    </ControlTemplate>
+                </dxe:ComboBoxEdit.PopupBottomAreaTemplate>
+            </dxe:ComboBoxEdit>
+        </dxlc:LayoutItem>
+
+        <dxlc:LayoutGroup HorizontalAlignment="Right"
+                          VerticalAlignment="Top">
+            <Button Content="Создать"
+                    Command="{Binding CreateEmployeeCommand}"/>
+            <Button Content="Отменить"
+                    Command="{Binding CloseCommand}"/>
+        </dxlc:LayoutGroup>
+
+    </dxlc:LayoutControl>
+
+</local:BaseDialogUserControl>

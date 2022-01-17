@@ -13,17 +13,24 @@
                             <ColumnDefinition Width="*"/>
                         </Grid.ColumnDefinitions>
 
-                        <TextBlock Grid.Column="0"
+                        <TextBlock x:Name="Icon"
+                                   Grid.Column="0"
                                    HorizontalAlignment="Center"
                                    VerticalAlignment="Center"
-                                   Style="{StaticResource IconicTextBlock}"
-                                   Foreground="#F6D775"
-                                   Text="{StaticResource faFolder}"/>
+                                   Foreground="{StaticResource FolderColorBrush}"
+                                   Text="{StaticResource faFolder}"
+                                   Style="{StaticResource IconicTextBlock}"/>
 
                         <dxe:TextEdit Name="PART_Editor"
                                       Grid.Column="1"/>
 
                     </Grid>
+                    <DataTemplate.Triggers>
+                        <DataTrigger Binding="{Binding RowData.Row.NotFolder}" Value="True">
+                            <Setter TargetName="Icon" Property="Foreground" Value="{StaticResource GreenColorBrush}"/>
+                            <Setter TargetName="Icon" Property="Text" Value="{StaticResource faMinus}"/>
+                        </DataTrigger>
+                    </DataTemplate.Triggers>
                 </DataTemplate>
             </Setter.Value>
         </Setter>

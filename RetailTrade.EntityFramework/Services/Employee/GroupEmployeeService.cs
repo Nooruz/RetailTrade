@@ -90,5 +90,22 @@ namespace RetailTrade.EntityFramework.Services
             }
             return null;
         }
+
+        public async Task<IEnumerable<GroupEmployeeDTO>> GetDTOAllAsync()
+        {
+            try
+            {
+                await using var context = _contextFactory.CreateDbContext();
+                return await context.GroupsEmployees
+                    .Include(gp => gp.Employees)
+                    .Select(gp => new GroupEmployeeDTO { Id = gp.Id, SubGroupId = gp.SubGroupId, Name = gp.Name })
+                    .ToListAsync();
+            }
+            catch (Exception e)
+            {
+                //ignore
+            }
+            return null;
+        }
     }
 }

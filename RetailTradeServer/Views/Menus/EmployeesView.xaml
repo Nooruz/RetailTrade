@@ -25,15 +25,18 @@
         <dxlc:LayoutGroup HorizontalAlignment="Left"
                           VerticalAlignment="Top">
 
-            <Button Content="Создать"/>
-            <Button Content="Создать группу"/>
+            <Button Content="Создать"
+                    Command="{Binding CreateEmployeeCommand}"/>
+            <Button Content="Создать группу"
+                    Command="{Binding CreateGroupEmployeeCommand}"/>
             <Button Style="{StaticResource FAButton}"
                     Content="{StaticResource faCopy}"
                     ToolTip="Создать копированием выбранного"/>
 
         </dxlc:LayoutGroup>
 
-        <dxg:TreeListControl ItemsSource="{Binding GroupEmployees}">
+        <dxg:TreeListControl ItemsSource="{Binding GroupEmployees}"
+                             SelectedItem="{Binding SelectedGroupEmployeeDTO}">
             <dxg:TreeListControl.View>
                 <dxg:TreeListView AutoWidth="True"
                                   KeyFieldName="Id" 
