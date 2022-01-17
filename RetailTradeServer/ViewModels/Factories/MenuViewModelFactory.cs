@@ -20,6 +20,7 @@ namespace RetailTradeServer.ViewModels.Factories
         private readonly CreateMenuViewModel<SupplierViewModel> _createSupplierViewModel;
         private readonly CreateMenuViewModel<SaleDashboardView> _createMenuViewModel;
         private readonly CreateMenuViewModel<EmployeesViewModel> _createEmployeesViewModel;
+        private readonly CreateMenuViewModel<ConnectingAndConfiguringEquipmentViewModel> _createConnectingAndConfiguringEquipmentViewModel;
 
         #endregion
 
@@ -35,7 +36,8 @@ namespace RetailTradeServer.ViewModels.Factories
             CreateMenuViewModel<RefundToSupplierViewModel> createRefundToSupplierViewModel,
             CreateMenuViewModel<SupplierViewModel> createSupplierViewModel,
             CreateMenuViewModel<SaleDashboardView> createMenuViewModel,
-            CreateMenuViewModel<EmployeesViewModel> createEmployeesViewModel)
+            CreateMenuViewModel<EmployeesViewModel> createEmployeesViewModel,
+            CreateMenuViewModel<ConnectingAndConfiguringEquipmentViewModel> createConnectingAndConfiguringEquipmentViewModel)
         {
             _createProductCategoryViewModel = createProductCategoryViewModel;
             _createArrivalProductViewModel = createArrivalProductViewModel;
@@ -48,6 +50,7 @@ namespace RetailTradeServer.ViewModels.Factories
             _createSupplierViewModel = createSupplierViewModel;
             _createMenuViewModel = createMenuViewModel;
             _createEmployeesViewModel = createEmployeesViewModel;
+            _createConnectingAndConfiguringEquipmentViewModel = createConnectingAndConfiguringEquipmentViewModel;
         }
 
         #endregion
@@ -67,6 +70,7 @@ namespace RetailTradeServer.ViewModels.Factories
                 MenuViewType.RefundToSupplier => _createRefundToSupplierViewModel(),
                 MenuViewType.Supplier => _createSupplierViewModel(),
                 MenuViewType.Employee => _createEmployeesViewModel(),
+                MenuViewType.ConnectingAndConfiguringEquipment => _createConnectingAndConfiguringEquipmentViewModel(),
                 _ => throw new ArgumentException("The ViewType does not have a ViewModel.", "viewType"),
             };
         }

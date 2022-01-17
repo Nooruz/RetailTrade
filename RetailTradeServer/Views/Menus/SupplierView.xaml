@@ -3,9 +3,14 @@
                     xmlns:dxlc="http://schemas.devexpress.com/winfx/2008/xaml/layoutcontrol"
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
                     x:Class="RetailTradeServer.Views.Menus.SupplierView"
-                    xmlns:local="clr-namespace:RetailTradeServer.Views.Menus"
+                    xmlns:local="clr-namespace:RetailTradeServer.Views.Menus" xmlns:dxmvvm="http://schemas.devexpress.com/winfx/2008/xaml/mvvm"
                     Title="Поставщики"
                     ShowDefaultButtons="False">
+
+    <dxmvvm:Interaction.Behaviors>
+        <dxmvvm:EventToCommand EventName="Loaded"
+                               Command="{Binding UserControlLoadedCommand}"/>
+    </dxmvvm:Interaction.Behaviors>
 
     <dxlc:LayoutControl Orientation="Vertical">
 

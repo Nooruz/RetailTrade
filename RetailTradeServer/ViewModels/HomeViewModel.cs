@@ -77,6 +77,7 @@ namespace RetailTradeServer.ViewModels
         #region Настройки
 
         public ICommand PrinterCommand { get; }
+        public ICommand ConnectingAndConfiguringEquipmentCommand { get; }
 
         #endregion
 
@@ -103,20 +104,21 @@ namespace RetailTradeServer.ViewModels
 
             UpdateCurrentMenuViewModelCommand = new UpdateCurrentMenuViewModelCommand(_menuNavigator, menuViewModelFactory);
 
-            ProductCategoryCommand = new RelayCommand(ProductCategory);
-            SaleDashboardCommand = new RelayCommand(SaleDashboard);
-            ArrivalProductCommand = new RelayCommand(ArrivalProduct);
-            WriteDownProductCommand = new RelayCommand(WriteDownProduct);
-            OrderProductCommand = new RelayCommand(OrderProduct);
-            BarcodeCommand = new RelayCommand(Barcode);
-            UserCommand = new RelayCommand(User);
-            BranchCommand = new RelayCommand(Branch);
-            CashShiftsCommand = new RelayCommand(CashShifts);
-            RefundToSupplierCommand = new RelayCommand(RefundToSupplier);
-            SupplierCommand = new RelayCommand(OpenSupplier);
+            ProductCategoryCommand = new RelayCommand(() => UpdateCurrentMenuViewModelCommand.Execute(MenuViewType.ProductCategory));
+            SaleDashboardCommand = new RelayCommand(() => UpdateCurrentMenuViewModelCommand.Execute(MenuViewType.SaleDashboard));
+            ArrivalProductCommand = new RelayCommand(() => UpdateCurrentMenuViewModelCommand.Execute(MenuViewType.ArrivalProduct));
+            WriteDownProductCommand = new RelayCommand(() => UpdateCurrentMenuViewModelCommand.Execute(MenuViewType.WriteDownProduct));
+            OrderProductCommand = new RelayCommand(() => UpdateCurrentMenuViewModelCommand.Execute(MenuViewType.OrderProduct));
+            BarcodeCommand = new RelayCommand(() => UpdateCurrentMenuViewModelCommand.Execute(MenuViewType.ProductBarcode));
+            UserCommand = new RelayCommand(() => UpdateCurrentMenuViewModelCommand.Execute(MenuViewType.User));
+            BranchCommand = new RelayCommand(() => UpdateCurrentMenuViewModelCommand.Execute(MenuViewType.Branch));            
+            RefundToSupplierCommand = new RelayCommand(() => UpdateCurrentMenuViewModelCommand.Execute(MenuViewType.RefundToSupplier));
+            SupplierCommand = new RelayCommand(() => UpdateCurrentMenuViewModelCommand.Execute(MenuViewType.Supplier));            
+            EmployeeCommand = new RelayCommand(() => UpdateCurrentMenuViewModelCommand.Execute(MenuViewType.Employee));
+            ConnectingAndConfiguringEquipmentCommand = new RelayCommand(() => UpdateCurrentMenuViewModelCommand.Execute(MenuViewType.ConnectingAndConfiguringEquipment));
             PrinterCommand = new RelayCommand(Printer);
             RevenueForPeriodCommand = new RelayCommand(RevenueForPeriod);
-            EmployeeCommand = new RelayCommand(() => UpdateCurrentMenuViewModelCommand.Execute(MenuViewType.Employee));
+            CashShiftsCommand = new RelayCommand(CashShifts);
 
             _menuNavigator.StateChanged += MenuNavigator_StateChanged;
 
@@ -126,68 +128,13 @@ namespace RetailTradeServer.ViewModels
         #endregion
 
         #region Private Voids
-
-        private void SaleDashboard()
-        {
-            UpdateCurrentMenuViewModelCommand.Execute(MenuViewType.SaleDashboard);
-        }
-
         private async void Printer()
         {
             await _dialogService.ShowDialog(new PrinterDialogFormModel(_messageStore) { Title = "Настройки принтеров" });
         }
-
-        private void OpenSupplier()
-        {
-            UpdateCurrentMenuViewModelCommand.Execute(MenuViewType.Supplier);
-        }
-
-        private void ProductCategory()
-        {
-            UpdateCurrentMenuViewModelCommand.Execute(MenuViewType.ProductCategory);
-        }
-
-        private void RefundToSupplier()
-        {
-            UpdateCurrentMenuViewModelCommand.Execute(MenuViewType.RefundToSupplier);
-        }
-
-        private void ArrivalProduct()
-        {
-            UpdateCurrentMenuViewModelCommand.Execute(MenuViewType.ArrivalProduct);
-        }
-
-        private void WriteDownProduct()
-        {
-            UpdateCurrentMenuViewModelCommand.Execute(MenuViewType.WriteDownProduct);
-        }
-
-        private void OrderProduct()
-        {
-            UpdateCurrentMenuViewModelCommand.Execute(MenuViewType.OrderProduct);
-        }
-
-        private void User()
-        {
-            UpdateCurrentMenuViewModelCommand.Execute(MenuViewType.User);
-        }
-
-        private void Branch()
-        {
-            UpdateCurrentMenuViewModelCommand.Execute(MenuViewType.Branch);
-        }
-
         private void MenuNavigator_StateChanged()
         {
             OnPropertyChanged(nameof(CurrentMenuViewModel));
-        }
-
-        /// <summary>
-        /// Ценники и этикетки (Штрих-код)
-        /// </summary>
-        private void Barcode()
-        {
-            UpdateCurrentMenuViewModelCommand.Execute(MenuViewType.ProductBarcode);
         }
 
         private async void CashShifts()

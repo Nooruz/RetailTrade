@@ -58,7 +58,12 @@ namespace RetailTradeServer.State.Navigators
         /// <summary>
         /// Сотрудники
         /// </summary>
-        Employee
+        Employee,
+
+        /// <summary>
+        /// Подключение и настройка оборудования
+        /// </summary>
+        ConnectingAndConfiguringEquipment
     }
     public interface IMenuNavigator
     {

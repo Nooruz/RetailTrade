@@ -26,14 +26,23 @@ namespace RetailTradeServer.ViewModels.Menus
         private readonly IDialogService _dialogService;
         private Product _selectedProduct;
         private ProductBarcodePrinting _selectedProductBarcodePrinting;
-        private ObservableQueue<Product> _products;
+        private IEnumerable<Product> _products;
+        private ObservableQueue<ProductBarcodePrinting> _productBarcodePrintings;
 
         #endregion
 
         #region Public Properties
 
-        public IEnumerable<Product> Products => _products;
-        public ObservableCollection<ProductBarcodePrinting> ProductBarcodePrintings { get; set; }
+        public IEnumerable<Product> Products
+        {
+            get => _products;
+            set
+            {
+                _products = value;
+                OnPropertyChanged(nameof(Products));
+            }
+        }
+        public IEnumerable<ProductBarcodePrinting> ProductBarcodePrintings => _productBarcodePrintings;
         public Product SelectedProduct
         {
             get => _selectedProduct;
@@ -73,16 +82,11 @@ namespace RetailTradeServer.ViewModels.Menus
             _productService = productService;
             _dialogService = dialogService;
 
-            ProductBarcodePrintings = new();
-            _products = new();
-
             AddProductToPrintCommand = new RelayCommand(AddProductToPrint);
             PrintProductBarcodeCommand = new RelayCommand(PrintProductBarcode);
             ClearCommand = new RelayCommand(Clear);
             GenerateBarcodeCommand = new RelayCommand(GenerateBarcode);
             UserControlLoadedCommand = new RelayCommand(UserControlLoaded);
-
-            ProductBarcodePrintings.CollectionChanged += ProductBarcodePrintings_CollectionChanged;
         }        
 
         #endregion
@@ -93,7 +97,7 @@ namespace RetailTradeServer.ViewModels.Menus
         {
             if (ProductBarcodePrintings.FirstOrDefault(p => p.Id == SelectedProduct.Id) == null)
             {
-                ProductBarcodePrintings.Add(new ProductBarcodePrinting
+                _productBarcodePrintings.Enqueue(new ProductBarcodePrinting
                 {
                     Id = SelectedProduct.Id,
                     Name = SelectedProduct.Name,
@@ -101,6 +105,7 @@ namespace RetailTradeServer.ViewModels.Menus
                     Quantity = 1,
                     Price = SelectedProduct.SalePrice
                 });
+                OnPropertyChanged(nameof(ProductBarcodePrintings));
             }
         }
 
@@ -139,56 +144,29 @@ namespace RetailTradeServer.ViewModels.Menus
             }
         }
 
-        private void ProductBarcodePrintings_CollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
-        {
-            if (e.OldItems != null)
-            {
-                foreach (INotifyPropertyChanged item in e.OldItems)
-                {
-                    if (item != null)
-                    {
-                        item.PropertyChanged -= Item_PropertyChanged;
-                    }
-                }
-            }
-            if (e.NewItems != null)
-            {
-                foreach (INotifyPropertyChanged item in e.NewItems)
-                {
-                    if (item != null)
-                    {
-                        item.PropertyChanged += Item_PropertyChanged;
-                    }
-                }
-            }
-        }
-
-        private void Item_PropertyChanged(object sender, PropertyChangedEventArgs e)
-        {
-            OnPropertyChanged(nameof(ProductBarcodePrinting));
-        }
-
         private void Clear()
         {
-            ProductBarcodePrintings.Clear();
+            _productBarcodePrintings.Clear();
         }
 
         private void PrintingSystem_EndPrint(object sender, EventArgs e)
         {
-            ProductBarcodePrintings.Clear();
+            _productBarcodePrintings.Clear();
         }
 
         private async void GenerateBarcode()
         {
             if (SelectedProductBarcodePrinting != null)
             {
-                await _productService.GenerateBarcode(Products.FirstOrDefault(p => p.Id == SelectedProductBarcodePrinting.Id));
+                SelectedProductBarcodePrinting.Barcode = await _productService.GenerateBarcode(SelectedProductBarcodePrinting.Id);                
             }
         }
 
         private async void UserControlLoaded()
         {
-            //_products = new(await _productService.GetAllAsync());
+            Products = await _productService.GetAllAsync();
+            _productBarcodePrintings = new();
+            ShowLoadingPanel = false;
         }
 
         #endregion
@@ -197,7 +175,7 @@ namespace RetailTradeServer.ViewModels.Menus
 
         public override void Dispose()
         {
-            ProductBarcodePrintings.Clear();
+            //ProductBarcodePrintings.Clear();
             SelectedProduct = null;
             base.Dispose();
         }

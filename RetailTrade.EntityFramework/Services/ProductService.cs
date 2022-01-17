@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using System.Data;
 using System.Linq;
 using System.Linq.Expressions;
+using System.Text;
 using System.Threading.Tasks;
 
 namespace RetailTrade.EntityFramework.Services
@@ -235,13 +236,15 @@ namespace RetailTrade.EntityFramework.Services
             return 0;
         }
 
-        public async Task<string> GenerateBarcode(Product product)
+        public async Task<string> GenerateBarcode(int productId)
         {
             try
             {
                 await using var context = _contextFactory.CreateDbContext();
-
-                return "";
+                Product product = await GetAsync(productId);
+                product.Barcode = $"2{new('0', 12 - product.Id.ToString().Length)}{product.Id}";
+                Product updateProduct = await UpdateAsync(productId, product);
+                return updateProduct.Barcode;
             }
             catch (Exception e)
             {

@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel;
 
 namespace RetailTrade.Domain.Models
 {
@@ -10,6 +9,10 @@ namespace RetailTrade.Domain.Models
 
         private string _fullName;
         private string _shortName;
+        private string _address;
+        private string _phone;
+        private string _inn;
+        private DateTime _createDate;
 
         #endregion
 
@@ -40,10 +43,42 @@ namespace RetailTrade.Domain.Models
                 OnPropertyChanged(nameof(ShortName));
             }
         }
-        public string Address { get; set; }
-        public string Phone { get; set; }
-        public string Inn { get; set; }
-        public DateTime CreateDate { get; set; }
+        public string Address
+        {
+            get => _address;
+            set
+            {
+                _address = value;
+                OnPropertyChanged(nameof(Address));
+            }
+        }
+        public string Phone
+        {
+            get => _phone;
+            set
+            {
+                _phone = value;
+                OnPropertyChanged(nameof(Phone));
+            }
+        }
+        public string Inn
+        {
+            get => _inn;
+            set
+            {
+                _inn = value;
+                OnPropertyChanged(nameof(Inn));
+            }
+        }
+        public DateTime CreateDate
+        {
+            get => _createDate;
+            set
+            {
+                _createDate = value;
+                OnPropertyChanged(nameof(CreateDate));
+            }
+        }
 
         public ICollection<Product> Products { get; set; }
         public ICollection<OrderToSupplier> Orders { get; set; }

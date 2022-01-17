@@ -131,6 +131,12 @@ namespace RetailTrade.EntityFramework
 
         #endregion
 
+        #region Equipment
+
+        public DbSet<TypeEquipment> TypeEquipments { get; set; }
+
+        #endregion
+
         public RetailTradeDbContext(DbContextOptions<RetailTradeDbContext> options) : base(options) { }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -188,7 +194,15 @@ namespace RetailTrade.EntityFramework
                 new Gender { Id = 2, Name = "Женский" });
 
             modelBuilder.Entity<GroupEmployee>().HasData(
-                new GroupEmployee { Id = 1, Name = "Сотрудники" });
+                new GroupEmployee { Id = 1, Name = "Сотрудники" },
+                new GroupEmployee { Id = 2, Name = "Руководство", SubGroupId = 1 },
+                new GroupEmployee { Id = 3, Name = "Кассиры", SubGroupId = 1 });
+
+            modelBuilder.Entity<TypeEquipment>().HasData(
+                new TypeEquipment { Id = 1, Name = "Сканеры штрихкода" },
+                new TypeEquipment { Id = 2, Name = "Контрольно-кассовая машина (ККМ)" },
+                new TypeEquipment { Id = 3, Name = "Принтеры чеков" },
+                new TypeEquipment { Id = 4, Name = "Принтеры этикеток" });
 
             //modelBuilder.Entity<ProductCategory>().HasData(
             //    new ProductCategory { Id = 1, Name = "Алкоголь" },

@@ -1,15 +1,14 @@
-﻿using RetailTrade.Domain.Services;
-using RetailTradeServer.Commands;
+﻿using RetailTradeServer.Commands;
 using RetailTradeServer.ViewModels.Base;
 using System.Windows.Input;
 
 namespace RetailTradeServer.ViewModels.Menus
 {
-    public class CashShiftsViewModel : BaseViewModel
+    public class ConnectingAndConfiguringEquipmentViewModel : BaseViewModel
     {
         #region Private Members
 
-        private readonly IShiftService _shiftService;
+
 
         #endregion
 
@@ -27,10 +26,8 @@ namespace RetailTradeServer.ViewModels.Menus
 
         #region Constructor
 
-        public CashShiftsViewModel(object ds)
+        public ConnectingAndConfiguringEquipmentViewModel()
         {
-            //_shiftService = shiftService;
-
             UserControlLoadedCommand = new RelayCommand(UserControlLoaded);
         }
 

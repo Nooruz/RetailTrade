@@ -94,9 +94,8 @@
         <dxwui:HamburgerSubMenu Content="Настройки"
                                 Style="{StaticResource DefaultHamburgerSubMenu}"
                                 Tag="{StaticResource faSlidersH}">
-            <dxwui:HamburgerSubMenuNavigationButton Content="Другие настройки"/>
-            <dxwui:HamburgerSubMenuNavigationButton Content="Принтеры"
-                                                    Command="{Binding PrinterCommand}"/>
+            <dxwui:HamburgerSubMenuNavigationButton Content="Подключение и настройка оборудования"
+                                                    Command="{Binding ConnectingAndConfiguringEquipmentCommand}"/>
         </dxwui:HamburgerSubMenu>
 
     </dxwui:HamburgerMenu>

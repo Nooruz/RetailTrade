@@ -8,6 +8,7 @@ using RetailTradeServer.ViewModels.Dialogs;
 using SalePageServer.State.Dialogs;
 using SalePageServer.Utilities;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Windows;
 using System.Windows.Input;
 
@@ -22,14 +23,22 @@ namespace RetailTradeServer.ViewModels.Menus
         private readonly IAuthenticator _authenticator;
         private readonly IRoleService _roleService;
         private readonly IMessageStore _messageStore;
-        private ObservableQueue<User> _users;
+        private ObservableCollection<User> _users;
         private IEnumerable<Role> _roles;
 
         #endregion
 
         #region Public Members
 
-        public IEnumerable<User> Users => _users;
+        public ObservableCollection<User> Users
+        {
+            get => _users ?? new();
+            set
+            {
+                _users = value;
+                OnPropertyChanged(nameof(Users));
+            }
+        }
         public IEnumerable<Role> Roles
         {
             get => _roles;
@@ -123,8 +132,9 @@ namespace RetailTradeServer.ViewModels.Menus
 
         private async void UserControlLoaded()
         {
-            //_users = new(await _userService.GetAllAsync());
+            Users = new(await _userService.GetAllAsync());
             Roles = await _roleService.GetAllAsync();
+            ShowLoadingPanel = false;
         }
 
         private void UserService_PropertiesChanged()
@@ -134,7 +144,7 @@ namespace RetailTradeServer.ViewModels.Menus
 
         private void UserService_OnUserCreated(User user)
         {
-            _users.Enqueue(user);
+            Users.Add(user);
         }
 
         #endregion

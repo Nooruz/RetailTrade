@@ -3,7 +3,8 @@ using RetailTrade.Domain.Services;
 using RetailTradeServer.Commands;
 using RetailTradeServer.ViewModels.Base;
 using SalePageServer.State.Dialogs;
-using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System.Windows.Input;
 
 namespace RetailTradeServer.ViewModels.Menus
 {
@@ -13,15 +14,15 @@ namespace RetailTradeServer.ViewModels.Menus
 
         private readonly ISupplierService _supplierService;
         private readonly IDialogService _dialogService;
-        private IEnumerable<Supplier> _suppliers;
+        private ObservableCollection<Supplier> _suppliers;
 
         #endregion
 
         #region Public Properties
 
-        public IEnumerable<Supplier> Suppliers
+        public ObservableCollection<Supplier> Suppliers
         {
-            get => _suppliers;
+            get => _suppliers ?? new();
             set
             {
                 _suppliers = value;
@@ -36,7 +37,7 @@ namespace RetailTradeServer.ViewModels.Menus
 
         #region Commands
 
-
+        public ICommand UserControlLoadedCommand { get; }
 
         #endregion
 
@@ -50,19 +51,24 @@ namespace RetailTradeServer.ViewModels.Menus
 
             CreateCommand = new RelayCommand(Create);
             EditCommand = new RelayCommand(Edit);
+            UserControlLoadedCommand = new RelayCommand(UserControlLoaded);
 
-            GetSuppliers();
-
-            _supplierService.PropertiesChanged += GetSuppliers;
+            _supplierService.OnSupplierCreated += SupplierService_OnSupplierCreated;
         }
 
         #endregion
 
         #region Private Voids
 
-        private async void GetSuppliers()
+        private async void UserControlLoaded()
         {
-            Suppliers = await _supplierService.GetAllAsync();
+            Suppliers = new(await _supplierService.GetAllAsync());
+            ShowLoadingPanel = false;
+        }
+
+        private void SupplierService_OnSupplierCreated(Supplier obj)
+        {
+            Suppliers.Add(obj);
         }
 
         private void Create()

@@ -42,6 +42,7 @@ namespace RetailTradeServer.ViewModels.Menus
 
         #region Command
 
+        public ICommand UserControlLoadedCommand { get; }
         public ICommand CreateProductCategoryCommand { get; }
         public ICommand CreateProductSubcategoryCommand { get; }
         public ICommand CreateProductCommand { get; }
@@ -167,6 +168,7 @@ namespace RetailTradeServer.ViewModels.Menus
             EditProductCategoryOrSubCategoryCommand = new RelayCommand(EditProductCategoryOrSubCategory);
             GridControlLoadedCommand = new ParameterCommand(sender => GridControlLoaded(sender));
             DeleteMarkingProductCommand = new RelayCommand(DeleteMarkingProduct);
+            UserControlLoadedCommand = new RelayCommand(UserControlLoaded);
 
             _productCategoryService.OnProductCategoryCreated += ProductCategoryService_OnProductCategoryCreated;
             _productSubcategoryService.OnProductSubcategoryCreated += ProductSubcategoryService_OnProductSubcategoryCreated;
@@ -177,6 +179,11 @@ namespace RetailTradeServer.ViewModels.Menus
         #endregion
 
         #region Private Voids
+
+        private void UserControlLoaded()
+        {
+            ShowLoadingPanel = false;
+        }
 
         private async void DeleteMarkingProduct()
         {

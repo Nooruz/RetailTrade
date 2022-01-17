@@ -8,7 +8,7 @@
     <AssemblyVersion>1.0.0.190</AssemblyVersion>
     <FileVersion>1.0.0.190</FileVersion>
     <BaseOutputPath>C:\Publish</BaseOutputPath>
-	  <!--<RuntimeIdentifier>win-x86</RuntimeIdentifier>-->
+	<RuntimeIdentifier>win-x86</RuntimeIdentifier>
   </PropertyGroup>
 
 	<PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">

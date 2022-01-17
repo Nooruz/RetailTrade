@@ -4,11 +4,6 @@ namespace RetailTrade.Domain.Models
 {
     public class ProductBarcodePrinting : INotifyPropertyChanged
     {
-        public ProductBarcodePrinting()
-        {
-
-        }
-
         private int _id;
         private string _name;
         private double _quantity;

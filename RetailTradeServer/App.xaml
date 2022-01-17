@@ -91,6 +91,10 @@
                 <menuViews:EmployeesView/>
             </DataTemplate>
 
+            <DataTemplate DataType="{x:Type menuViewModels:ConnectingAndConfiguringEquipmentViewModel}">
+                <menuViews:ConnectingAndConfiguringEquipmentView/>
+            </DataTemplate>
+
             <!--#endregion-->
             
             <!--#region Диалоги-->

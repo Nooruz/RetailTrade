@@ -33,6 +33,7 @@ namespace RetailTradeServer.HostBuilders
                 services.AddTransient(CreateRefundToSupplierViewModel);
                 services.AddTransient(CreateSupplierViewModel);
                 services.AddTransient(CreateEmployeesViewModel);
+                services.AddTransient(CreateConnectingAndConfiguringEquipmentViewModel);
 
                 services.AddSingleton<CreateMenuViewModel<ProductCategoryViewModel>>(servicesProvider => () => CreateProductCategoryViewModel(servicesProvider));
                 services.AddSingleton<CreateMenuViewModel<ArrivalProductViewModel>>(servicesProvider => () => CreateArrivalProductViewModel(servicesProvider));
@@ -45,6 +46,7 @@ namespace RetailTradeServer.HostBuilders
                 services.AddSingleton<CreateMenuViewModel<RefundToSupplierViewModel>>(servicesProvider => () => CreateRefundToSupplierViewModel(servicesProvider));
                 services.AddSingleton<CreateMenuViewModel<SupplierViewModel>>(servicesProvider => () => CreateSupplierViewModel(servicesProvider));
                 services.AddSingleton<CreateMenuViewModel<EmployeesViewModel>>(servicesProvider => () => CreateEmployeesViewModel(servicesProvider));
+                services.AddSingleton<CreateMenuViewModel<ConnectingAndConfiguringEquipmentViewModel>>(servicesProvider => () => CreateConnectingAndConfiguringEquipmentViewModel(servicesProvider));
 
                 services.AddSingleton<IMenuViewModelFactory, MenuViewModelFactory>();
             });
@@ -139,6 +141,11 @@ namespace RetailTradeServer.HostBuilders
                 services.GetRequiredService<IGroupEmployeeService>(),
                 services.GetRequiredService<IDialogService>(),
                 services.GetRequiredService<IDataService<Gender>>());
+        }
+
+        private static ConnectingAndConfiguringEquipmentViewModel CreateConnectingAndConfiguringEquipmentViewModel(IServiceProvider services)
+        {
+            return new ConnectingAndConfiguringEquipmentViewModel();
         }
     }
 }

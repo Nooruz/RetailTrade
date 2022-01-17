@@ -139,9 +139,8 @@
                                            PassEventArgsToCommand="True"/>
                 </dxmvvm:Interaction.Behaviors>
 
-                <dxg:GridColumn Style="{StaticResource BooleanColumn}"/>
-
-                <dxg:GridColumn FieldName="Id"
+                <dxg:GridColumn Style="{StaticResource GridColumnWithMark}" 
+                                FieldName="Id"
                                 Header="Код">
                     <dxg:GridColumn.EditSettings>
                         <dxe:TextEditSettings DisplayFormat="D6"/>

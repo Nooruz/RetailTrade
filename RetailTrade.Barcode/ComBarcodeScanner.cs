@@ -42,6 +42,7 @@ namespace RetailTrade.Barcode
             Thread.Sleep(1000);
             OnBarcodeEvent?.Invoke(Replace(_serialPort.ReadExisting()));
             _serialPort.DiscardInBuffer();
+            Close();
         }
 
         private static string Replace(string text)
@@ -61,13 +62,27 @@ namespace RetailTrade.Barcode
         {
             if (_serialPort != null && !_serialPort.IsOpen)
             {
-                _serialPort.Open();
+                try
+                {
+                    _serialPort.Open();
+                }
+                catch (Exception)
+                {
+                    //ignore
+                }                
             }            
         }
 
         public static void Close()
         {
-            _serialPort.Close();
+            try
+            {
+                _serialPort.Close();
+            }
+            catch (Exception)
+            {
+                //ignore
+            }            
         }
 
         #endregion
