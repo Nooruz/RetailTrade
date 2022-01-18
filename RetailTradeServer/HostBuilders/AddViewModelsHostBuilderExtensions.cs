@@ -8,6 +8,7 @@ using RetailTradeServer.State.Users;
 using RetailTradeServer.ViewModels;
 using RetailTradeServer.ViewModels.Base;
 using RetailTradeServer.ViewModels.Factories;
+using RetailTradeServer.ViewModels.Menus;
 using SalePageServer.State.Dialogs;
 using System;
 

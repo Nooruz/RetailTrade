@@ -17,73 +17,33 @@
     <dxlc:LayoutControl Orientation="Vertical">
 
         <dx:DXTabControl>
-            
+
             <dx:DXTabItem Header="Общая информация">
 
                 <dxlc:LayoutControl>
                     <dxlc:LayoutGroup Orientation="Vertical">
 
-                        <dxlc:LayoutItem Label="Вид:">
-                            <dxe:ComboBoxEdit/>
-                        </dxlc:LayoutItem>
-
-                        <dxlc:GroupSeparator VerticalAlignment="Top"/>
-
                         <dxlc:LayoutItem Label="Полное наименование:">
-                            <dxe:TextEdit/>
+                            <dxe:TextEdit Text="{Binding FullName}"/>
                         </dxlc:LayoutItem>
 
                         <dxlc:LayoutItem Label="Сокращенное наименование:">
-                            <dxe:TextEdit/>
-                        </dxlc:LayoutItem>
-
-                        <dxlc:LayoutItem Label="Рабочее:">
-                            <dxe:TextEdit/>
+                            <dxe:TextEdit Text="{Binding ShortName}"/>
                         </dxlc:LayoutItem>
 
                         <dxlc:LayoutItem Label="ИНН:">
-                            <dxe:TextEdit/>
+                            <dxe:TextEdit Text="{Binding Inn}"/>
                         </dxlc:LayoutItem>
 
-                        <dxlc:LayoutItem Label="ОКПО:">
-                            <dxe:TextEdit/>
-                        </dxlc:LayoutItem>
-
-                        <dxlc:LayoutItem Label="Дата регистрации:">
-                            <dxe:DateEdit/>
-                        </dxlc:LayoutItem>
-
-                    </dxlc:LayoutGroup>
-                </dxlc:LayoutControl>
-                
-            </dx:DXTabItem>
-
-            <dx:DXTabItem Header="Адреса, телефоны">
-
-                <dxlc:LayoutControl>
-                    <dxlc:LayoutGroup Orientation="Vertical">
-
-                        <dxlc:LayoutItem Label="Юридический адрес:">
-                            <dxe:TextEdit/>
-                        </dxlc:LayoutItem>
-
-                        <dxlc:LayoutItem Label="Фактический адрес:">
-                            <dxe:TextEdit/>
-                        </dxlc:LayoutItem>
-
-                        <dxlc:LayoutItem Label="Телефон:">
-                            <dxe:TextEdit/>
-                        </dxlc:LayoutItem>
-
-                        <dxlc:LayoutItem Label="Электронная почта:">
-                            <dxe:TextEdit/>
+                        <dxlc:LayoutItem Label="Адресс:">
+                            <dxe:TextEdit Text="{Binding Inn}"/>
                         </dxlc:LayoutItem>
 
                     </dxlc:LayoutGroup>
                 </dxlc:LayoutControl>
 
             </dx:DXTabItem>
-            
+
         </dx:DXTabControl>
 
         <dxlc:LayoutGroup HorizontalAlignment="Right"

@@ -5,7 +5,7 @@ using RetailTradeServer.ViewModels.Base;
 using RetailTradeServer.ViewModels.Factories;
 using System.Windows.Input;
 
-namespace RetailTradeServer.ViewModels
+namespace RetailTradeServer.ViewModels.Menus
 {
     public class OrganizationViewModel : BaseViewModel
     {

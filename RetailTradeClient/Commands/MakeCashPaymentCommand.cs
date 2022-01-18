@@ -78,39 +78,47 @@ namespace RetailTradeClient.Commands
                             }).ToList()
                     });
 
-                    //ShtrihM.Connect();
-                    //ShtrihM.CheckType = 0;                    
+                    ShtrihM.Connect();
+                    ShtrihM.CheckType = 0;                    
 
-                    //if (newReceipt != null)
-                    //{
-                    //    foreach (Sale sale in _paymentCashViewModel.SaleProducts)
-                    //    {
-                    //        ShtrihM.Password = 30;
-                    //        ShtrihM.Department = 1;
-                    //        ShtrihM.Quantity = Convert.ToDouble(sale.Quantity);
-                    //        ShtrihM.Price = sale.SalePrice;
-                    //        var sum1NSP = Math.Round(sale.SalePrice * 1 / 113, 2);
-                    //        var sum1NDS = Math.Round(sale.SalePrice * 12 / 113, 2);
-                    //        string sumNSP = Math.Round(sum1NSP * 100, 0).ToString();
-                    //        string sumNDS = Math.Round(sum1NDS * 100, 0).ToString();
+                    if (newReceipt != null)
+                    {
+                        foreach (Sale sale in _paymentCashViewModel.SaleProducts)
+                        {
+                            ShtrihM.Password = 30;
+                            ShtrihM.Department = 1;
+                            ShtrihM.Quantity = Convert.ToDouble(sale.Quantity);
+                            ShtrihM.Price = sale.SalePrice;
+                            var sum1NSP = Math.Round(sale.SalePrice * 1 / 102, 2);
+                            //var sum1NDS = Math.Round(sale.SalePrice * 12 / 113, 2);
+                            string sumNSP = Math.Round(sum1NSP * 100, 0).ToString();
+                            //string sumNDS = Math.Round(sum1NDS * 100, 0).ToString();
 
-                    //        ShtrihM.StringForPrinting =
-                    //            string.Join(";", new string[] { "", sale.TNVED, "", "", "0", "", "0", "" + "\n" + sale.Name });
+                            ShtrihM.StringForPrinting =
+                                string.Join(";", new string[] { "", sale.TNVED, "", "", "0", "", "4", sumNSP + "\n" + sale.Name });
 
-                    //        //ShtrihM.BarCode = "46198488";
+                            //ShtrihM.BarCode = "46198488";
 
-                    //        //ShtrihM.Tax1 = 0;
-                    //        //ShtrihM.Tax2 = 2;
-                    //        //ShtrihM.Tax3 = 3;
-                    //        //ShtrihM.Tax4 = 0;
+                            ShtrihM.Tax1 = 0;
+                            ShtrihM.Tax2 = 4;
+                            ShtrihM.Tax3 = 0;
+                            ShtrihM.Tax4 = 0;
 
-                    //        ShtrihM.Sale();
-                    //    }
-                    //    ShtrihM.Summ1 = newReceipt.Sum;
-                    //    ShtrihM.StringForPrinting = "";
-                    //    ShtrihM.CloseCheck();
-                    //    ShtrihM.CutCheck();
-                    //}
+                            ShtrihM.Sale();
+                        }
+                        ShtrihM.Summ1 = newReceipt.Sum;
+                        ShtrihM.StringForPrinting = "";
+                        int dkj = ShtrihM.OpenDocumentNumber;
+                        ShtrihM.RegisterNumber = 148;
+                        string v = ShtrihM.GetOperationReg();
+                        int ddkj = ShtrihM.OpenDocumentNumber;
+
+                        ShtrihM.CloseCheck();
+                        ShtrihM.CutCheck();                                                
+                        
+
+                        //await _receiptService.SetKKMCheckNumber(newReceipt.Id, checkNumber);
+                    }
 
                     //Подготовка документа для печати чека
                     ProductSaleReport report = new(_userStore, newReceipt)

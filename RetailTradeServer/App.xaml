@@ -155,6 +155,10 @@
                 <dialogs:EmployeeDialogForm/>
             </DataTemplate>
 
+            <DataTemplate DataType="{x:Type dialogViewModels:AddConnectionDialogFormModel}">
+                <dialogs:AddConnectionDialogForm/>
+            </DataTemplate>
+
             <!--#endregion-->
 
             <ResourceDictionary.MergedDictionaries>

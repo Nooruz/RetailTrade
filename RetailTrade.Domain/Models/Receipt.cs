@@ -13,7 +13,7 @@ namespace RetailTrade.Domain.Models
         /// <summary>
         /// Дата и время покупки
         /// </summary>
-        public DateTime DateOfPurchase { get; set; }        
+        public DateTime DateOfPurchase { get; set; }
 
         /// <summary>
         /// Код смены
@@ -48,6 +48,10 @@ namespace RetailTrade.Domain.Models
         /// Смена
         /// </summary>
         public Shift Shift { get; set; }
+
+        public string KKMCheckNumber { get; set; }
+
+        public bool IsRefund { get; set; }
 
         /// <summary>
         /// Товары

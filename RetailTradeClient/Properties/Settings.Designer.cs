@@ -49,7 +49,7 @@ namespace RetailTradeClient.Properties {
         
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("0")]
+        [global::System.Configuration.DefaultSettingValueAttribute("1")]
         public int ComNumber {
             get {
                 return ((int)(this["ComNumber"]));
@@ -58,7 +58,7 @@ namespace RetailTradeClient.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("0")]
+        [global::System.Configuration.DefaultSettingValueAttribute("6")]
         public int BaudRate {
             get {
                 return ((int)(this["BaudRate"]));
@@ -70,7 +70,7 @@ namespace RetailTradeClient.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("0")]
+        [global::System.Configuration.DefaultSettingValueAttribute("2100")]
         public int Timeout {
             get {
                 return ((int)(this["Timeout"]));

@@ -31,7 +31,7 @@
                     Command="{Binding ClosingShiftCommand}"
                     Visibility="{Binding Visibility}"/>
 
-            <Button Content="Настройки"
+            <Button Content="Настройки ККМ"
                     Tag="{StaticResource faCheckCircle}"
                     Style="{StaticResource btnWithHorizontalIcon}"
                     Command="{Binding SettingCommand}"

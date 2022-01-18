@@ -1,8 +1,8 @@
 ﻿using RetailTrade.Domain.Models;
 using RetailTrade.Domain.Services;
 using RetailTradeServer.State.Navigators;
-using RetailTradeServer.ViewModels;
 using RetailTradeServer.ViewModels.Factories;
+using RetailTradeServer.ViewModels.Menus;
 using System;
 using System.ComponentModel;
 using System.Threading.Tasks;
@@ -53,7 +53,6 @@ namespace RetailTradeServer.Commands
             {
                 Organization organization = new()
                 {
-                    Name = _viewModel.Name,
                     Address = _viewModel.Address,
                     FullName = _viewModel.FullName,
                     Phone = _viewModel.Phone,

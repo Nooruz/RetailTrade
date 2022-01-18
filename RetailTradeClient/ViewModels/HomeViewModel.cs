@@ -418,7 +418,7 @@ namespace RetailTradeClient.ViewModels
 
         private void ReturnGoods()
         {
-            _ = _manager.ShowDialog(new RefundViewModel(_receiptService, _shiftStore, _refundService, _manager) { Title = "Возврат товаров" },
+            _ = _manager.ShowDialog(new RefundViewModel(_receiptService, _shiftStore, _manager) { Title = "Возврат товаров" },
                 new RefundView());
         }
 
@@ -817,7 +817,14 @@ namespace RetailTradeClient.ViewModels
 
         public override void Dispose()
         {
-            _barcodeScanner.Close(0, out int status);
+            try
+            {
+                //_barcodeScanner.Close(0, out int status);
+            }
+            catch (Exception)
+            {
+                //ignore
+            }            
             base.Dispose();
         }
 

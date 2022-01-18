@@ -1,5 +1,6 @@
 ﻿using RetailTradeServer.State.Navigators;
 using RetailTradeServer.ViewModels.Base;
+using RetailTradeServer.ViewModels.Menus;
 using System;
 
 namespace RetailTradeServer.ViewModels.Factories

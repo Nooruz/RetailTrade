@@ -1,5 +1,4 @@
-﻿using CoreScanner;
-using System.Text;
+﻿using System.Text;
 using System.Xml.Linq;
 
 namespace RetailTrade.Barcode
@@ -793,7 +792,7 @@ namespace RetailTrade.Barcode
     {
         #region Public Static Properties
 
-        public static CCoreScanner _scanner;
+        //public static CCoreScanner _scanner;
 
         #endregion
 
@@ -807,7 +806,7 @@ namespace RetailTrade.Barcode
 
         static ZebraScanner()
         {
-            _scanner = new();
+            //_scanner = new();
         }
 
         #endregion
@@ -823,7 +822,7 @@ namespace RetailTrade.Barcode
                 scannerTypes[0] = 1;
                 short numberOfScannerTypes = 1;
 
-                _scanner.Open(appHandle, scannerTypes, numberOfScannerTypes, out int status);
+                //_scanner.Open(appHandle, scannerTypes, numberOfScannerTypes, out int status);
 
                 string inXML = "<inArgs>" +
                                    "<cmdArgs>" +
@@ -832,14 +831,14 @@ namespace RetailTrade.Barcode
                                    "</cmdArgs>" +
                                "</inArgs>";
 
-                _scanner.ExecCommand((int)Opcode.RegisterForEvents, ref inXML, out string outXML, out status);
+                //_scanner.ExecCommand((int)Opcode.RegisterForEvents, ref inXML, out string outXML, out status);
 
-                if (status == (int)Status.Success)
-                {
-                    _scanner.BarcodeEvent += new _ICoreScannerEvents_BarcodeEventEventHandler(OnBarcodeEvent);
-                }
+                //if (status == (int)Status.Success)
+                //{
+                //    _scanner.BarcodeEvent += new _ICoreScannerEvents_BarcodeEventEventHandler(OnBarcodeEvent);
+                //}
 
-                return (Status)status;
+                return Status.Locked;
             }
             catch (Exception e)
             {
@@ -849,9 +848,9 @@ namespace RetailTrade.Barcode
 
         public static Status Close()
         {
-            _scanner.Close(0, out int status);
+            //_scanner.Close(0, out int status);
 
-            return (Status)status;
+            return Status.Locked;
         }
 
         #endregion

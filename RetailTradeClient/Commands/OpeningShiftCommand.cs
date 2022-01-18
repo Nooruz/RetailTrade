@@ -35,12 +35,13 @@ namespace RetailTradeClient.Commands
 
         public override async Task ExecuteAsync(object parameter)
         {
-            var result = await _shiftStore.OpeningShift(_userId);
-            switch (result)
+            switch (await _shiftStore.OpeningShift(_userId))
             {
                 case CheckingResult.Open:
+                    _manager.ShowMessage("Смена успешно отркыта.", "", MessageBoxButton.OK, MessageBoxImage.Information);
                     break;
                 case CheckingResult.Close:
+                    _manager.ShowMessage("Смена успешно заккыта.", "", MessageBoxButton.OK, MessageBoxImage.Information);
                     break;
                 case CheckingResult.IsAlreadyOpen:
                     _manager.ShowMessage("Смена уже отркыта.", "", MessageBoxButton.OK, MessageBoxImage.Exclamation);
@@ -49,7 +50,7 @@ namespace RetailTradeClient.Commands
                     _manager.ShowMessage("Смена превысила 24 часа. Закройте смену!", "", MessageBoxButton.OK, MessageBoxImage.Exclamation);
                     break;
                 case CheckingResult.ErrorOpeningShiftKKM:
-                    _manager.ShowMessage("Не удалось открыт смену фискального регистратора (ФР)", "", MessageBoxButton.OK, MessageBoxImage.Error);
+                    _manager.ShowMessage("Не удалось открыть смену фискального регистратора (ФР)", "", MessageBoxButton.OK, MessageBoxImage.Error);
                     break;
                 default:
                     break;

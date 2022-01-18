@@ -124,7 +124,9 @@ namespace RetailTrade.EntityFramework.Services
                     }).ToList()
                 });
 
-                await DeleteAsync(receipt.Id);
+                receipt.IsRefund = true;
+
+                await UpdateAsync(receipt.Id, receipt);
             }
             catch (Exception e)
             {
@@ -251,6 +253,21 @@ namespace RetailTrade.EntityFramework.Services
                 //ignore
             }
             return 0;
+        }
+
+        public async Task SetKKMCheckNumber(int id, string checkNumber)
+        {
+            try
+            {
+                await using var context = _contextFactory.CreateDbContext();
+                Receipt receipt = await GetAsync(id);
+                receipt.KKMCheckNumber = checkNumber;
+                await UpdateAsync(id, receipt);
+            }
+            catch (Exception e)
+            {
+                //ignore
+            }
         }
     }
 }

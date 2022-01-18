@@ -39,8 +39,7 @@ namespace RetailTradeClient.Commands
 
         public override async Task ExecuteAsync(object parameter)
         {
-            var checkinResult = await _shiftStore.CheckingShift(_userId);
-            switch (checkinResult)
+            switch (await _shiftStore.CheckingShift(_userId))
             {
                 case CheckingResult.Open:
                     _manager.Close();
@@ -51,6 +50,12 @@ namespace RetailTradeClient.Commands
                     break;
                 case CheckingResult.Exceeded:
                     MessageBox.Show("Смена превысила 24 часа. Закройте смену!");
+                    break;
+                case CheckingResult.IsAlreadyOpen:
+                    break;
+                case CheckingResult.ErrorOpeningShiftKKM:
+                    break;
+                default:
                     break;
             }
         }

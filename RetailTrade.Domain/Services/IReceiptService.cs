@@ -53,5 +53,7 @@ namespace RetailTrade.Domain.Services
         /// </summary>
         /// <returns></returns>
         Task<decimal> GetSaleAmoundBeginningYear();
+
+        Task SetKKMCheckNumber(int id, string checkNumber);
     }
 }

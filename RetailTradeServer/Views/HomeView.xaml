@@ -19,7 +19,7 @@
             </Style>
         </dxwui:HamburgerMenu.Resources>
 
-        <dxwui:HamburgerSubMenu Content="Моя организация"
+        <!--<dxwui:HamburgerSubMenu Content="Моя организация"
                                 Tag="{StaticResource faSitemap}"
                                 Style="{StaticResource DefaultHamburgerSubMenu}">
 
@@ -30,7 +30,7 @@
             <dxwui:HamburgerSubMenuNavigationButton Content="Розничные точки (ККМ)"/>
             <dxwui:HamburgerSubMenuNavigationButton Content="Склады"/>
 
-        </dxwui:HamburgerSubMenu>
+        </dxwui:HamburgerSubMenu>-->
 
         <dxwui:HamburgerSubMenu Content="Информационная панель"
                                 Tag="{StaticResource faChartLine}"

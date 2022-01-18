@@ -1,0 +1,22 @@
+﻿<local:BaseDialogUserControl
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:dxe="http://schemas.devexpress.com/winfx/2008/xaml/editors"
+    xmlns:dxlc="http://schemas.devexpress.com/winfx/2008/xaml/layoutcontrol"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="clr-namespace:RetailTradeClient.Dialogs"
+    x:Class="RetailTradeClient.Views.Dialogs.ReceiptNumberView"
+    Width="300">
+
+    <dxlc:LayoutControl Orientation="Vertical">
+        <dxlc:LayoutItem Label="Введит номер чека ККМ:">
+            <dxe:TextEdit MaskType="Numeric" 
+                          Mask="n0"
+                          Text="{Binding ReceiptNumber}"/>
+        </dxlc:LayoutItem>
+        <dxlc:LayoutGroup>
+            <Button Content="Возврат"
+                    Command="{Binding RefundCommand}"/>
+        </dxlc:LayoutGroup>
+    </dxlc:LayoutControl>
+
+</local:BaseDialogUserControl>

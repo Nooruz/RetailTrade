@@ -1,8 +1,10 @@
 ﻿using RetailTrade.CashRegisterMachine;
 using RetailTrade.Domain.Models;
 using RetailTrade.Domain.Services;
+using RetailTradeClient.State.Dialogs;
 using System;
 using System.Threading.Tasks;
+using System.Windows;
 
 namespace RetailTradeClient.State.Shifts
 {
@@ -11,6 +13,7 @@ namespace RetailTradeClient.State.Shifts
         #region Private Members
 
         private readonly IShiftService _shiftService;
+        private readonly IUIManager _manager;
         private bool _isShiftOpen;
         private Shift _currentShift;
 
@@ -21,6 +24,7 @@ namespace RetailTradeClient.State.Shifts
         public ShiftStore(IShiftService shiftService)
         {
             _shiftService = shiftService;
+            _manager = new UIManager();
         }        
 
         #endregion
@@ -49,6 +53,25 @@ namespace RetailTradeClient.State.Shifts
 
         public async Task<CheckingResult> CheckingShift(int userId)
         {
+            if (ShtrihM.CheckConnection() == 0)
+            {
+                return await Check(userId);
+            }
+            else
+            {
+                if (_manager.ShowMessage("Устройство фискального регистратора (ФР) не обноружено. Продолжить?", "", MessageBoxButton.YesNo, MessageBoxImage.Question) == MessageBoxResult.Yes)
+                {
+                    return await Check(userId);
+                }
+                else
+                {
+                    return CheckingResult.IsAlreadyOpen;
+                }
+            }            
+        }
+
+        private async Task<CheckingResult> Check(int userId)
+        {
             var shift = await _shiftService.GetOpenShiftByUserIdAsync(userId);
             if (shift != null)
             {
@@ -67,14 +90,27 @@ namespace RetailTradeClient.State.Shifts
             return CheckingResult.Close;
         }
 
-        public async Task ClosingShift(int userId)
+        public async Task<CheckingResult> ClosingShift(int userId)
         {
-            if (await _shiftService.ClosingShiftAsync(userId))
+            if (ShtrihM.CheckConnection() == 0)
             {
-                IsShiftOpen = false;
-                CurrentShift = null;
-                CurrentShiftChanged?.Invoke();
-            }            
+                ShtrihM.PrintReportWithCleaning();
+                if (await _shiftService.ClosingShiftAsync(userId))
+                {
+                    IsShiftOpen = false;
+                    CurrentShift = null;
+                    CurrentShiftChanged?.Invoke();
+                    return CheckingResult.Close;
+                }
+                else
+                {
+                    return CheckingResult.UnknownErrorWhenClosing;
+                }
+            }
+            else
+            {
+                return CheckingResult.ErrorOpeningShiftKKM;
+            }           
         }
 
         public async Task<CheckingResult> OpeningShift(int userId)
@@ -82,11 +118,19 @@ namespace RetailTradeClient.State.Shifts
             var result = await _shiftService.GetOpenShiftByUserIdAsync(userId);
             if (result == null)
             {
-                var openShift = await _shiftService.OpeningShiftAsync(userId);
-                CurrentShift = openShift;
-                IsShiftOpen = true;
-                CurrentShiftChanged?.Invoke();
-                return CheckingResult.Open;
+                if (ShtrihM.CheckConnection() == 0)
+                {
+                    ShtrihM.OpenSession();
+                    var openShift = await _shiftService.OpeningShiftAsync(userId);
+                    CurrentShift = openShift;
+                    IsShiftOpen = true;
+                    CurrentShiftChanged?.Invoke();
+                    return CheckingResult.Open;
+                }
+                else
+                {
+                    return CheckingResult.ErrorOpeningShiftKKM;
+                }                
             }
             if (DateTime.Now.Subtract(result.OpeningDate).Days > 0)
             {
@@ -96,32 +140,6 @@ namespace RetailTradeClient.State.Shifts
             IsShiftOpen = true;
             CurrentShiftChanged?.Invoke();
             return CheckingResult.IsAlreadyOpen;
-
-            //if (ShtrihM.CheckConnection() == 0)
-            //{
-            //    ShtrihM.OpenSession();
-            //    var result = await _shiftService.GetOpenShiftByUserIdAsync(userId);
-            //    if (result == null)
-            //    {
-            //        var openShift = await _shiftService.OpeningShiftAsync(userId);
-            //        CurrentShift = openShift;
-            //        IsShiftOpen = true;
-            //        CurrentShiftChanged?.Invoke();
-            //        return CheckingResult.Open;
-            //    }
-            //    if (DateTime.Now.Subtract(result.OpeningDate).Days > 0)
-            //    {
-            //        return CheckingResult.Exceeded;
-            //    }
-            //    CurrentShift = result;
-            //    IsShiftOpen = true;
-            //    CurrentShiftChanged?.Invoke();
-            //    return CheckingResult.IsAlreadyOpen;
-            //}
-            //else
-            //{
-            //    return CheckingResult.ErrorOpeningShiftKKM;
-            //}
         }
     }
 }

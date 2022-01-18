@@ -6,11 +6,11 @@ using RetailTradeServer.HostBuilders;
 using RetailTradeServer.State.Barcode;
 using RetailTradeServer.ViewModels;
 using RetailTradeServer.ViewModels.Dialogs;
+using SalePageServer.Properties;
+using SalePageServer.State.Dialogs;
 using System;
 using System.Data.SqlClient;
-using System.Globalization;
-using System.Linq;
-using System.Threading;
+using System.Threading.Tasks;
 using System.Windows;
 
 namespace RetailTradeServer
@@ -26,10 +26,8 @@ namespace RetailTradeServer
         private Window startingWindow;
         private IZebraBarcodeScanner _zebraBarcodeScanner;
         private IComBarcodeService _comBarcodeService;
-        private static SqlException _sqlException;      
-
-        //потом удалить
-        private RetailTradeDbContext _dbContext;
+        private IDialogService _dialogService;
+        private static SqlException _sqlException;
 
         #endregion
 
@@ -59,6 +57,7 @@ namespace RetailTradeServer
 
             _zebraBarcodeScanner = _host.Services.GetRequiredService<IZebraBarcodeScanner>();
             _comBarcodeService = _host.Services.GetRequiredService<IComBarcodeService>();
+            _dialogService = _host.Services.GetRequiredService<IDialogService>();
 
             startingWindow = new()
             {
@@ -69,59 +68,36 @@ namespace RetailTradeServer
                 Content = new StartingViewModel()
             };
             startingWindow.Show();
-            //SplashScreen splashScreen = new("SplashScreen.png");
-            //splashScreen.Show(true);
+
             var contextFactory = _host.Services.GetRequiredService<RetailTradeDbContextFactory>();
-            _dbContext = contextFactory.CreateDbContext();            
-            //Settings.Default.AdminCreated = false;
-            //Settings.Default.Save();
 
-            //if (Settings.Default.IsFirstLaunch)
-            //{
-            //    _ = _dialogService.ShowDialog(new AddConnectionDialogFormModel(_dialogService, contextFactory) { Title = "Добавить подключение" },
-            //        new AddConnectionDialogForm());
-            //}
+            try
+            {
+                using var context = contextFactory.CreateDbContext();
 
-            //if (Settings.Default.IsDataBaseConnectionAdded)
-            //{
-                try
+                if (CheckConnectionString(context.Database.GetConnectionString()))
                 {
-                    using var context = contextFactory.CreateDbContext();
-                    if (CheckConnectionString(context.Database.GetConnectionString()))
-                    {
-                        context.Database.Migrate();
+                    await context.Database.MigrateAsync();
+
+                    Window window = _host.Services.GetRequiredService<MainWindow>();
+                    window.DataContext = _host.Services.GetRequiredService<MainViewModel>();
+                    window.Loaded += Window_Loaded;
+                    await Task.Delay(5000);
+                    window.Show();
                 }
-                    else
-                    {
-                        //_ = _dialogService.ShowMessage(_sqlException.Message, "", MessageBoxButton.OK, MessageBoxImage.Error);
-                        Current.Shutdown();
-                        return;
-                    }
-                }
-                catch (Exception exception)
+                else
                 {
-                    //_ = _dialogService.ShowMessage(exception.Message, "", MessageBoxButton.OK, MessageBoxImage.Error);
+                    _ = _dialogService.ShowMessage(_sqlException.Message, "", MessageBoxButton.OK, MessageBoxImage.Error);
                     Current.Shutdown();
                     return;
                 }
-
-                Window window = _host.Services.GetRequiredService<MainWindow>();
-                window.DataContext = _host.Services.GetRequiredService<MainViewModel>();
-                window.Loaded += Window_Loaded;
-                //await Task.Delay(5000);
-                PotomUdalit();
-                window.Show();
-            //}
-            //else
-            //{
-            //    _ = _dialogService.ShowMessage("Ошибка. Обратитесь к программистам.", "", MessageBoxButton.OK, MessageBoxImage.Error);
-            //}
-
-            CultureInfo newCulture = new("ru-RU");
-            Thread.CurrentThread.CurrentCulture = newCulture;
-            Thread.CurrentThread.CurrentUICulture = newCulture;
-
-            
+            }
+            catch (Exception exception)
+            {
+                _dialogService.ShowMessage(exception.Message, "", MessageBoxButton.OK, MessageBoxImage.Error);
+                Current.Shutdown();
+                return;
+            }
 
             base.OnStartup(e);
         }
@@ -168,17 +144,26 @@ namespace RetailTradeServer
             }
         }
 
-        private async void PotomUdalit()
+        private static async Task<bool> CreateDataBase(string connectionString)
         {
-            foreach (var item in await _dbContext.Products
-                    .Where(p => p.ProductCategoryId == 0)
-                    .Include(p => p.ProductSubcategory)
-                    .ToListAsync())
+            using SqlConnection connection = new(connectionString.Replace("Database=RetailTradeDb;", string.Empty));
+            string str = "CREATE DATABASE RetailTradeDb";
+            SqlCommand command = new(str, connection);
+            try
             {
-                item.ProductCategoryId = item.ProductSubcategory.ProductCategoryId;
-                _dbContext.Products.Update(item);
+                await connection.OpenAsync();
+                await command.ExecuteNonQueryAsync();
+                return true;
             }
-            await _dbContext.SaveChangesAsync();
+            catch (SqlException sqlException)
+            {
+                _sqlException = sqlException;
+                return false;
+            }
+            finally
+            {
+                await connection.CloseAsync();
+            }
         }
     }
 }

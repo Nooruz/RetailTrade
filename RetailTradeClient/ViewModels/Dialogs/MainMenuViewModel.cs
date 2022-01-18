@@ -1,4 +1,5 @@
-﻿using RetailTradeClient.Commands;
+﻿using RetailTrade.CashRegisterMachine;
+using RetailTradeClient.Commands;
 using RetailTradeClient.State.Dialogs;
 using RetailTradeClient.State.Navigators;
 using RetailTradeClient.State.Shifts;
@@ -49,7 +50,7 @@ namespace RetailTradeClient.ViewModels.Dialogs
             _userStore = userStore;
 
             OpeningShiftCommand = new OpeningShiftCommand(shiftStore, userId, manager);
-            ClosingShiftCommand = new ClosingShiftCommand(shiftStore, userId);
+            ClosingShiftCommand = new ClosingShiftCommand(shiftStore, userId, manager);
             SaleRegistrationCommand = new SaleRegistrationCommand(shiftStore, userId, manager, homeRenavigator);
             SettingCommand = new RelayCommand(Setting);
 
@@ -62,7 +63,8 @@ namespace RetailTradeClient.ViewModels.Dialogs
 
         private void Setting()
         {
-            _manager.ShowDialog(new ApplicationSettingsViewModel() { Title = "Настройки"}, new ApplicationSettingsView());
+            ShtrihM.ShowProperties();
+            //_manager.ShowDialog(new ApplicationSettingsViewModel() { Title = "Настройки"}, new ApplicationSettingsView());
         }
 
         private void ShiftStore_CurrentShiftChanged()

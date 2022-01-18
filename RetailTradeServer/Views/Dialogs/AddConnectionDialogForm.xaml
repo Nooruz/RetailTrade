@@ -30,9 +30,9 @@
 
             </dxlc:LayoutItem>
 
-            <Button Content="Обновить"
+            <!--<Button Content="Обновить"
                     HorizontalAlignment="Right"
-                    VerticalAlignment="Bottom"/>
+                    VerticalAlignment="Bottom"/>-->
 
         </dxlc:LayoutGroup>
 
@@ -48,7 +48,7 @@
                     Command="{Binding CreateDataBaseCommand}"
                     IsEnabled="{Binding CanCreateDataBase, UpdateSourceTrigger=PropertyChanged}"/>
 
-            <Button Content="Ок"
+            <Button Content="Сохранить"
                     HorizontalAlignment="Right"
                     Width="100"
                     Command="{Binding OkCommand}"

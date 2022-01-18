@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using RetailTrade.EntityFramework;
 
@@ -11,9 +12,10 @@ using RetailTrade.EntityFramework;
 namespace RetailTrade.EntityFramework.Migrations
 {
     [DbContext(typeof(RetailTradeDbContext))]
-    partial class RetailTradeDbContextModelSnapshot : ModelSnapshot
+    [Migration("20220118112837_ReceiptCheckNumber")]
+    partial class ReceiptCheckNumber
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -521,9 +523,6 @@ namespace RetailTrade.EntityFramework.Migrations
 
                     b.Property<DateTime>("DateOfPurchase")
                         .HasColumnType("datetime2");
-
-                    b.Property<bool>("IsRefund")
-                        .HasColumnType("bit");
 
                     b.Property<string>("KKMCheckNumber")
                         .HasColumnType("nvarchar(max)");

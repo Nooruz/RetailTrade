@@ -29,7 +29,12 @@ namespace RetailTradeClient.State.Shifts
         /// <summary>
         /// Ошибка открытия смены ККМ
         /// </summary>
-        ErrorOpeningShiftKKM
+        ErrorOpeningShiftKKM,
+
+        /// <summary>
+        /// Неизвестная ошибка при закрытии
+        /// </summary>
+        UnknownErrorWhenClosing
     }
 
     /// <summary>
@@ -58,7 +63,7 @@ namespace RetailTradeClient.State.Shifts
         /// Закрытие смены
         /// </summary>
         /// <param name="userId">Код кассира</param>
-        Task ClosingShift(int userId);
+        Task<CheckingResult> ClosingShift(int userId);
 
         /// <summary>
         /// Проверка смены

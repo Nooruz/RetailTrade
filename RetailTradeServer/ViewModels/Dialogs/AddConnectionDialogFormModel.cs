@@ -24,7 +24,6 @@ namespace RetailTradeServer.ViewModels.Dialogs
         #region Private Members
 
         private readonly IDialogService _dialogService;
-        private readonly RetailTradeDbContextFactory _contextFactory;
         private string _serverName;
         private ObservableCollection<string> _dataBases;
         private bool _canCreateConnection;
@@ -82,11 +81,9 @@ namespace RetailTradeServer.ViewModels.Dialogs
 
         #region Constructor
 
-        public AddConnectionDialogFormModel(IDialogService dialogService,
-            RetailTradeDbContextFactory contextFactory)
+        public AddConnectionDialogFormModel()
         {
-            _dialogService = dialogService;
-            _contextFactory = contextFactory;
+            _dialogService = new DialogService();
 
             CheckConnectionCommand = new RelayCommand(CheckConnection);
             OkCommand = new RelayCommand(Ok);

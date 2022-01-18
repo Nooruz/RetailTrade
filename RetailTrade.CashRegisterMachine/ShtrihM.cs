@@ -18,6 +18,12 @@ namespace RetailTrade.CashRegisterMachine
         {
             get => drvFR.CheckType;
             set => drvFR.CheckType = value;
+        }        
+
+        public static int RegisterNumber
+        {
+            get => drvFR.RegisterNumber;
+            set => drvFR.RegisterNumber = value;
         }
         public static int OperationType
         {
@@ -79,10 +85,18 @@ namespace RetailTrade.CashRegisterMachine
             get => drvFR.Department;
             set => drvFR.Department = value;
         }
+        public static int OperationNumber => drvFR.OperatorNumber;
+        public static int OpenDocumentNumber => drvFR.OpenDocumentNumber;
         public static int ECRMode => drvFR.ECRMode;
         public static bool ReceiptRibbonIsPresent => drvFR.ReceiptRibbonIsPresent;
         public static string NameOperationReg => drvFR.NameOperationReg;
         public static int ReceiptNumber => drvFR.ReceiptNumber;
+        public static string ResultCodeDescription => drvFR.ResultCodeDescription;
+
+        /// <summary>
+        /// Сменадагы количество чека
+        /// </summary>
+        public static int ContentsOfOperationRegister => drvFR.ContentsOfOperationRegister;
 
         #endregion
 
@@ -103,8 +117,13 @@ namespace RetailTrade.CashRegisterMachine
         #region Public Static Voids
 
         public static void Connect()
-        {
+        {            
             drvFR.Connect();
+        }
+
+        public static int FNGetCurrentSessionParams()
+        {
+            return drvFR.FNGetCurrentSessionParams();
         }
 
         public static void ShowProperties()
@@ -125,7 +144,7 @@ namespace RetailTrade.CashRegisterMachine
         /// Краткий запрос
         /// </summary>
         public static void GetShortECRStatus()
-        {
+        {            
             drvFR.GetShortECRStatus();
         }
 
@@ -164,6 +183,17 @@ namespace RetailTrade.CashRegisterMachine
         public static void CloseCheck()
         {
             drvFR.CloseCheck();
+        }
+
+        public static int ReadLastReceipt()
+        {
+            return drvFR.ReadLastReceipt();
+        }
+
+        public static string GetOperationReg()
+        {
+            int checkNumber = drvFR.GetOperationReg();
+            return checkNumber.ToString();
         }
 
         /// <summary>
