@@ -20,7 +20,8 @@
 
         <dxg:GridControl AutoGenerateColumns="None"
                          ItemsSource="{Binding Receipts}"
-                         SelectedItem="{Binding SelectedReceipt}">
+                         SelectedItem="{Binding SelectedReceipt}" 
+                         FilterString="[IsRefund] = 'False'">
             <dxg:GridControl.Style>
                 <Style TargetType="{x:Type dxg:GridControl}">
                     <Style.Triggers>
@@ -35,7 +36,7 @@
             </dxg:GridControl.Style>
             <dxg:GridControl.View>
                 <dxg:TableView AllowEditing="False"
-                               AutoWidth="True"/>
+                               AutoWidth="True" ShowFilterPanelMode="Never"/>
             </dxg:GridControl.View>
             <dxg:GridControl.DetailDescriptor>
                 <dxg:TabViewDetailDescriptor>

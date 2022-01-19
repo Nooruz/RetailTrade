@@ -7,7 +7,6 @@ using System.Collections.Generic;
 using System.Data;
 using System.Linq;
 using System.Linq.Expressions;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace RetailTrade.EntityFramework.Services
@@ -21,6 +20,7 @@ namespace RetailTrade.EntityFramework.Services
         public event Action<Product> OnProductCreated;
         public event Action<double> OnProductRefunded;
         public event Action<Product> OnProductEdited;
+        public event Action<int, double> OnProductSaleOrRefund;
 
         public ProductService(RetailTradeDbContextFactory contextFactory)
         {
@@ -46,10 +46,7 @@ namespace RetailTrade.EntityFramework.Services
 
         public async Task<Product> UpdateAsync(int id, Product entity)
         {
-            var result = await _nonQueryDataService.Update(id, entity);
-            if (result != null)
-                OnProductEdited?.Invoke(result);
-            return result;
+            return await _nonQueryDataService.Update(id, entity); ;
         }
 
         public async Task<Product> GetAsync(int id)
@@ -203,7 +200,7 @@ namespace RetailTrade.EntityFramework.Services
                 await using var context = _contextFactory.CreateDbContext();
                 Product product = await context.Products
                                                .Where(p => p.Id == id)
-                                               .Select(p => new Product { Quantity = p.Quantity })
+                                               .Select(p => new Product { Id = p.Id, Quantity = p.Quantity })
                                                .FirstOrDefaultAsync();
                 return product.Quantity;
             }
@@ -221,11 +218,12 @@ namespace RetailTrade.EntityFramework.Services
                 await using var context = _contextFactory.CreateDbContext();
                 Product editProduct = await context.Products
                                                .Where(p => p.Id == id)
-                                               .Select(p => new Product { Quantity = p.Quantity })
                                                .FirstOrDefaultAsync();
                 editProduct.Quantity += quantity;
 
-                await UpdateAsync(editProduct.Id, editProduct);
+                Product result = await UpdateAsync(id, editProduct);
+
+                OnProductSaleOrRefund?.Invoke(result.Id, result.Quantity);
 
                 return quantity;
             }
@@ -265,6 +263,55 @@ namespace RetailTrade.EntityFramework.Services
                     OnProductEdited?.Invoke(result);
                     return true;
                 }
+            }
+            catch (Exception e)
+            {
+                //ignore
+            }
+            return false;
+        }
+
+        public async Task<double> Sale(int id, double quantity)
+        {
+            try
+            {
+                await using var context = _contextFactory.CreateDbContext();
+                Product editProduct = await context.Products
+                                               .Where(p => p.Id == id)
+                                               .FirstOrDefaultAsync();
+                editProduct.Quantity -= quantity;
+
+                Product result = await UpdateAsync(id, editProduct);
+
+                OnProductSaleOrRefund?.Invoke(result.Id, result.Quantity);
+
+                return quantity;
+            }
+            catch (Exception e)
+            {
+                //ignore
+            }
+            return 0;
+        }
+
+        public async Task<bool> Refunds(IEnumerable<ProductRefund> productRefunds)
+        {
+            try
+            {
+                await using var context = _contextFactory.CreateDbContext();
+
+                foreach (ProductRefund item in productRefunds)
+                {
+                    Product editProduct = await context.Products
+                                               .Where(p => p.Id == item.ProductId)
+                                               .FirstOrDefaultAsync();
+                    editProduct.Quantity += item.Quantity;
+
+                    Product result = await UpdateAsync(editProduct.Id, editProduct);
+
+                    OnProductSaleOrRefund?.Invoke(result.Id, result.Quantity);
+                }
+                return true;
             }
             catch (Exception e)
             {

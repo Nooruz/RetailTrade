@@ -22,11 +22,14 @@ namespace RetailTrade.Domain.Services
         Task<Product> Predicate(Expression<Func<Product, bool>> predicate, Expression<Func<Product, Product>> select);
         Task<double> GetQuantity(int id);
         Task<double> Refund(int id, double quantity);
+        Task<bool> Refunds(IEnumerable<ProductRefund> productRefunds);
+        Task<double> Sale(int id, double quantity);
         Task<string> GenerateBarcode(int productId);
         Task<bool> MarkingForDeletion(Product product);
 
         event Action<Product> OnProductCreated;
         event Action<Product> OnProductEdited;
         event Action<double> OnProductRefunded;
+        event Action<int, double> OnProductSaleOrRefund;
     }
 }

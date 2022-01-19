@@ -82,7 +82,7 @@ namespace RetailTradeServer
                     Window window = _host.Services.GetRequiredService<MainWindow>();
                     window.DataContext = _host.Services.GetRequiredService<MainViewModel>();
                     window.Loaded += Window_Loaded;
-                    await Task.Delay(5000);
+                    //await Task.Delay(5000);
                     window.Show();
                 }
                 else

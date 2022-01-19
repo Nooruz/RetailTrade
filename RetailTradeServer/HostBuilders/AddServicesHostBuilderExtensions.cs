@@ -42,6 +42,7 @@ namespace RetailTradeServer.HostBuilders
                 services.AddSingleton<IEmployeeService, EmployeeService>();
                 services.AddSingleton<IGroupEmployeeService, GroupEmployeeService>();
                 services.AddSingleton<IDataService<Gender>, GenericService<Gender>>();
+                services.AddSingleton<ITypeProductService, TypeProductService>();
             });
         }
     }

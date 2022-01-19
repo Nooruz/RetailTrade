@@ -135,6 +135,8 @@ namespace RetailTrade.EntityFramework.Services
                 await using var context = _contextFactory.CreateDbContext();
                 var result = await context.ProductSales
                     .Include(p => p.Product)
+                    .Include(p => p.Receipt)
+                    .Where(p => p.Receipt.IsRefund == false)
                     .GroupBy(p => new { p.ProductId, p.Product.Name})
                     .Select(p => new ProductSale { ProductId = p.Key.ProductId, Product = new Product { Name = p.Key.Name }, Quantity = p.Sum(c => c.Quantity) })                    
                     .Take(10)

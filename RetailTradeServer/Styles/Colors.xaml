@@ -10,7 +10,7 @@
     <Color x:Key="DarkSilver">#747474</Color>
     <SolidColorBrush x:Key="DarkSilverBrush" Color="{StaticResource DarkSilver}"/>
 
-    <Color x:Key="ThinSilver">#FAFAFA</Color>
+    <Color x:Key="ThinSilver">#B3B3B3</Color>
     <SolidColorBrush x:Key="ThinSilverBrush" Color="{StaticResource ThinSilver}"/>
 
     <Color x:Key="LightSilver">#E5E5E5</Color>

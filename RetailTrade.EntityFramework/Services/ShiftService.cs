@@ -41,20 +41,14 @@ namespace RetailTrade.EntityFramework.Services
 
         public async Task<Shift> GetAsync(int id)
         {
-            await using (RetailTradeDbContext context = _contextFactory.CreateDbContext())
-            {
-                Shift entity = await context.Shifts.FirstOrDefaultAsync((e) => e.Id == id);
-                return entity;
-            }
+            await using RetailTradeDbContext context = _contextFactory.CreateDbContext();
+            return await context.Shifts.FirstOrDefaultAsync((e) => e.Id == id);
         }
 
         public async Task<IEnumerable<Shift>> GetAllAsync()
         {
-            await using (RetailTradeDbContext context = _contextFactory.CreateDbContext())
-            {
-                IEnumerable<Shift> entities = await context.Shifts.ToListAsync();
-                return entities;
-            }
+            await using RetailTradeDbContext context = _contextFactory.CreateDbContext();
+            return await context.Shifts.ToListAsync(); ;
         }
 
         public async Task<Shift> UpdateAsync(int id, Shift entity)
@@ -68,8 +62,7 @@ namespace RetailTrade.EntityFramework.Services
         public IEnumerable<Shift> GetAll()
         {
             using RetailTradeDbContext context = _contextFactory.CreateDbContext();
-            IEnumerable<Shift> entities = context.Shifts.ToList();
-            return entities;
+            return context.Shifts.ToList();
         }
 
         public async Task<Shift> OpeningShiftAsync(int userId)

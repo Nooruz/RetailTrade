@@ -52,6 +52,15 @@ namespace RetailTradeClient.Commands
                 case CheckingResult.ErrorOpeningShiftKKM:
                     _manager.ShowMessage("Не удалось открыть смену фискального регистратора (ФР)", "", MessageBoxButton.OK, MessageBoxImage.Error);
                     break;
+                case CheckingResult.ErrorOpening:
+                    _manager.ShowMessage("Ошибка при открытии смены.", "", MessageBoxButton.OK, MessageBoxImage.Exclamation);
+                    break;
+                case CheckingResult.ErrorClosing:
+                    break;
+                case CheckingResult.UnknownErrorWhenClosing:
+                    break;
+                case CheckingResult.Nothing:
+                    break;
                 default:
                     break;
             }

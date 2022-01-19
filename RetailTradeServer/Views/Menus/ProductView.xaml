@@ -1,88 +1,78 @@
-﻿<local:BaseMenuView
+﻿<local:BaseMenuView xmlns:dx="http://schemas.devexpress.com/winfx/2008/xaml/core" 
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-    xmlns:dxb="http://schemas.devexpress.com/winfx/2008/xaml/bars"
     xmlns:dxe="http://schemas.devexpress.com/winfx/2008/xaml/editors"
     xmlns:dxg="http://schemas.devexpress.com/winfx/2008/xaml/grid"
     xmlns:dxlc="http://schemas.devexpress.com/winfx/2008/xaml/layoutcontrol"
     xmlns:dxmvvm="http://schemas.devexpress.com/winfx/2008/xaml/mvvm"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    xmlns:dx="http://schemas.devexpress.com/winfx/2008/xaml/core"
-    xmlns:dialogs="clr-namespace:RetailTradeServer.Views.Dialogs"
     xmlns:local="clr-namespace:RetailTradeServer.Views.Menus"
-    x:Class="RetailTradeServer.Views.Menus.ProductCategoryView"
+    x:Class="RetailTradeServer.Views.Menus.ProductView"
+    xmlns:components="clr-namespace:RetailTradeServer.Components"
     ShowDefaultButtons="False"
-    Title="Каталог товаров">
+    Title="Товары">
 
     <dxmvvm:Interaction.Behaviors>
-        <dxmvvm:EventToCommand EventName="Loaded" Command="{Binding GetProductsCommandAsync}"/>
-        <dx:DialogService x:Name="CreateProduct" DialogWindowStartupLocation="CenterOwner">
-            <dx:DialogService.ViewTemplate>
-                <DataTemplate>
-                    <dialogs:CreateProductDialogForm/>
-                </DataTemplate>
-            </dx:DialogService.ViewTemplate>
-        </dx:DialogService>
+        <dxmvvm:EventToCommand EventName="Loaded" Command="{Binding UserControlLoadedCommand}"/>
     </dxmvvm:Interaction.Behaviors>
 
     <dxlc:LayoutControl ItemSpace="10"
                         AllowItemSizing="True">
 
         <dxlc:LayoutGroup Orientation="Vertical"
-                          Grid.Column="0"
                           HorizontalAlignment="Left"
-                          MinWidth="200">
+                          MinWidth="200"
+                          Width="200"
+                          MaxWidth="400"
+                          dxlc:LayoutControl.AllowHorizontalSizing="True">
 
             <dxlc:LayoutGroup Orientation="Horizontal"
                               VerticalAlignment="Top"
                               HorizontalAlignment="Left">
 
+                <dx:DropDownButton Content="{StaticResource faPlus}"
+                                   Foreground="{StaticResource GreenColorBrush}"
+                                   Style="{StaticResource Iconic}">
+                    <StackPanel Orientation="Vertical">
+                        <components:CustomButton Icon="{StaticResource faPlus}" 
+                                                 Style="{StaticResource InPopupButton}"
+                                                 Content="Вид товара"
+                                                 HotKey="Ins"
+                                                 IconColor="{StaticResource GreenColorBrush}"/>
+                        
+                        <components:CustomButton Content="Группу видов товара"
+                                                 Icon="{StaticResource faFolderPlus}" 
+                                                 Style="{StaticResource InPopupButton}"
+                                                 IconColor="{StaticResource FolderColorBrush}"
+                                                 HotKey="Ctrl+F9"/>
+                    </StackPanel>
+                </dx:DropDownButton>
+
                 <Button Content="{StaticResource faPlus}"
                         ToolTip="Создать"
-                        Command="{Binding CreateProductCategoryOrSubCategoryCommand}"
                         Style="{StaticResource FAButton}"/>
+
 
                 <Button Content="{StaticResource faEdit}"
                         ToolTip="Изменить выбранный элемент"
-                        Command="{Binding EditProductCategoryOrSubCategoryCommand}"
                         Style="{StaticResource FAButton}"/>
 
                 <Button Content="{StaticResource faTrashAlt}"
                         ToolTip="Удалить выбранный элемент"
-                        Command="{Binding DeleteProductCategoryOrSubCategoryCommand}"
                         Style="{StaticResource FAButton}"/>
 
             </dxlc:LayoutGroup>
 
-            <dxg:TreeViewControl ItemsSource="{Binding ProductCategories}"
-                                 ChildNodesPath="ProductSubcategories"
-                                 KeyFieldName="Name"
-                                 TreeViewFieldName="Name"
-                                 SelectedItem="{Binding SelectedProductGroup}">
-                <dxg:TreeViewControl.NodeMenuCustomizations>
-                    <dxb:BarButtonItem x:Name="EditCategory" 
-                                       Content="Изменить"
-                                       Command="{Binding EditCategoryCommand}"/>
-                    <dxb:BarButtonItem x:Name="DeleteCategory" 
-                                       Content="Удалить"
-                                       Command="{Binding DeleteCategoryCommand}"/>
-                    <dxb:BarButtonItem x:Name="CreateSubCategory"
-                                       Content="Создать категорию"
-                                       Command="{Binding CreateSubCategoryCommand}"/>
-                </dxg:TreeViewControl.NodeMenuCustomizations>
-                <dxg:TreeViewControl.ContextMenu>
-                    <ContextMenu>
-                        <MenuItem Header="Создать группу"/>
-                        <MenuItem Header="Создать категорию"/>
-                    </ContextMenu>
-                </dxg:TreeViewControl.ContextMenu>
-                <dxmvvm:Interaction.Behaviors>
-                    <dxmvvm:EventToCommand EventName="SelectedItemChanged" 
-                                           Command="{Binding SelectedItemChangedCommand}"/>
-                    <dxmvvm:EventToCommand EventName="ShowNodeMenu"
-                                           Command="{Binding OnShowNodeMenuCommand}"
-                                           PassEventArgsToCommand="True"/>
-                </dxmvvm:Interaction.Behaviors>
-            </dxg:TreeViewControl>
+            <dxg:TreeListControl ItemsSource="{Binding TypeProducts}"
+                                 SelectedItem="{Binding SelectedTypeProducts}">
+                <dxg:TreeListControl.View>
+                    <dxg:TreeListView AutoWidth="True"
+                                      KeyFieldName="Id"
+                                      ParentFieldName="SubGroupId" />
+                </dxg:TreeListControl.View>
+                <dxg:TreeListColumn FieldName="Name"
+                                    Header=""
+                                    Style="{StaticResource GroupTreeListColumnWithIcon}"/>
+            </dxg:TreeListControl>
 
 
         </dxlc:LayoutGroup>
@@ -128,41 +118,25 @@
                                    PageSize="500"
                                    ShowFilterPanelMode="Never"/>
                 </dxg:GridControl.View>
-
                 <dxg:GridControl.TotalSummary>
-                    <dxg:GridSummaryItem FieldName="Id" SummaryType="Count" DisplayFormat="Кол-во {0:N0}"/>
+                    <dxg:GridSummaryItem FieldName="Id" 
+                                         SummaryType="Count" 
+                                         DisplayFormat="Кол-во {0:N0}"/>
                 </dxg:GridControl.TotalSummary>
-
                 <dxmvvm:Interaction.Behaviors>
                     <dxmvvm:EventToCommand EventName="Loaded"
                                            Command="{Binding GridControlLoadedCommand}"
                                            PassEventArgsToCommand="True"/>
                 </dxmvvm:Interaction.Behaviors>
 
-                <dxg:GridColumn Style="{StaticResource GridColumnWithMark}" 
-                                FieldName="Id"
-                                Header="Код">
+                <dxg:GridColumn Header="Код товара"
+                                Style="{StaticResource GridColumnWithMark}" 
+                                FieldName="Id">
                     <dxg:GridColumn.EditSettings>
                         <dxe:TextEditSettings DisplayFormat="D6"/>
                     </dxg:GridColumn.EditSettings>
                 </dxg:GridColumn>
                 <dxg:GridColumn FieldName="Name" Header="Наименование"/>
-                <dxg:GridColumn FieldName="ProductCategoryId" 
-                                Header="Категория товара">
-                    <dxg:GridColumn.EditSettings>
-                        <dxe:ComboBoxEditSettings ItemsSource="{Binding ProductCategories}"
-                                                  DisplayMember="Name"
-                                                  ValueMember="Id"/>
-                    </dxg:GridColumn.EditSettings>
-                </dxg:GridColumn>
-                <dxg:GridColumn FieldName="ProductSubcategoryId" 
-                                Header="Группа товара">
-                    <dxg:GridColumn.EditSettings>
-                        <dxe:ComboBoxEditSettings ItemsSource="{Binding ProductSubcategories}"
-                                                  DisplayMember="Name"
-                                                  ValueMember="Id"/>
-                    </dxg:GridColumn.EditSettings>
-                </dxg:GridColumn>
                 <dxg:GridColumn FieldName="UnitId" Header="Ед. изм.">
                     <dxg:GridColumn.EditSettings>
                         <dxe:ComboBoxEditSettings ItemsSource="{Binding Units}"
@@ -189,7 +163,6 @@
                 <dxg:GridColumn FieldName="TNVED" Header="ТН ВЭД"/>
 
             </dxg:GridControl>
-
 
         </dxlc:LayoutGroup>
 

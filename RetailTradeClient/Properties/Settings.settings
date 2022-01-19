@@ -17,5 +17,8 @@
     <Setting Name="Timeout" Type="System.Int32" Scope="User">
       <Value Profile="(Default)">2100</Value>
     </Setting>
+    <Setting Name="ShtrihMConnected" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">False</Value>
+    </Setting>
   </Settings>
 </SettingsFile>

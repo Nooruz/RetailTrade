@@ -64,8 +64,6 @@ namespace RetailTradeClient.ViewModels.Dialogs
         {
             if (ReceiptNumber != null && ReceiptNumber > 0)
             {
-                _ = await _receiptService.Refund(SelectedReceipt);
-
                 ShtrihM.Connect();
                 ShtrihM.CheckType = 2;
                 ShtrihM.OperationType = 2;
@@ -88,12 +86,11 @@ namespace RetailTradeClient.ViewModels.Dialogs
 
                     ShtrihM.ReturnSale();
                 }
-
-
                 ShtrihM.Summ1 = SelectedReceipt.ProductSales.Sum(ps => ps.Sum);
                 ShtrihM.StringForPrinting = ReceiptNumber.ToString();
                 ShtrihM.CloseCheck();
                 ShtrihM.CutCheck();
+                _ = await _receiptService.Refund(SelectedReceipt);
                 _manager.Close();
             }
             else

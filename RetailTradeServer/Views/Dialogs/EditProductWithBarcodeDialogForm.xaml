@@ -34,7 +34,8 @@
                 </dxe:ComboBoxEdit>
             </dxlc:LayoutItem>
 
-            <dxlc:LayoutItem Label="Штрих код">
+            <dxlc:LayoutItem Label="Штрих код"
+                             Visibility="{Binding BarcodeVisibility}">
                 <dxe:TextEdit Text="{Binding Barcode, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
             </dxlc:LayoutItem>
 

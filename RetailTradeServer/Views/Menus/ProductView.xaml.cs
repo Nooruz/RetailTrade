@@ -3,9 +3,9 @@
     /// <summary>
     /// Логика взаимодействия для ProductCategoryDialogForm.xaml
     /// </summary>
-    public partial class ProductCategoryView : BaseMenuView
+    public partial class ProductView : BaseMenuView
     {
-        public ProductCategoryView()
+        public ProductView()
         {
             InitializeComponent();
         }

@@ -1,6 +1,11 @@
-﻿using RetailTrade.Domain.Services;
+﻿using DevExpress.Xpf.Grid;
+using RetailTrade.Domain.Models;
+using RetailTrade.Domain.Services;
 using RetailTradeServer.Commands;
 using RetailTradeServer.ViewModels.Base;
+using System;
+using System.Collections.Generic;
+using System.Windows;
 using System.Windows.Input;
 
 namespace RetailTradeServer.ViewModels.Menus
@@ -10,37 +15,123 @@ namespace RetailTradeServer.ViewModels.Menus
         #region Private Members
 
         private readonly IShiftService _shiftService;
+        private readonly IUserService _userService;
+        private IEnumerable<Shift> _shifts;
+        private IEnumerable<User> _users;
+        private int? _selectedUserId;
+        private DateTime? _startDateTime;
+        private DateTime? _endDateTime;
 
         #endregion
 
         #region Public Properties
 
-
+        public IEnumerable<Shift> Shifts
+        {
+            get => _shifts;
+            set
+            {
+                _shifts = value;
+                OnPropertyChanged(nameof(Shifts));
+            }
+        }
+        public IEnumerable<User> Users
+        {
+            get => _users;
+            set
+            {
+                _users = value;
+                OnPropertyChanged(nameof(Users));
+            }
+        }
+        public int? SelectedUserId
+        {
+            get => _selectedUserId;
+            set
+            {
+                _selectedUserId = value;
+                OnPropertyChanged(nameof(SelectedUserId));
+            }
+        }
+        public DateTime? StartDateTime
+        {
+            get => _startDateTime;
+            set
+            {
+                _startDateTime = value;
+                OnPropertyChanged(nameof(StartDateTime));
+            }
+        }
+        public DateTime? EndDateTime
+        {
+            get => _endDateTime;
+            set
+            {
+                _endDateTime = value;
+                OnPropertyChanged(nameof(EndDateTime));
+            }
+        }
+        public GridControl ShiftGridControl { get; set; }
 
         #endregion
 
         #region Commands
 
         public ICommand UserControlLoadedCommand { get; }
+        public ICommand GridControlLoadedCommand { get; }
+        public ICommand SearchCommand { get; }
+        public ICommand CleareSelectedUserIdCommand { get; }
+        public ICommand CleareStartDateCommand { get; }
+        public ICommand CleareEndDateCommand { get; }
 
         #endregion
 
         #region Constructor
 
-        public CashShiftsViewModel(object ds)
+        public CashShiftsViewModel(IShiftService shiftService,
+            IUserService userService)
         {
-            //_shiftService = shiftService;
+            _shiftService = shiftService;
+            _userService = userService;
 
             UserControlLoadedCommand = new RelayCommand(UserControlLoaded);
+            GridControlLoadedCommand = new ParameterCommand((p) => GridControlLoaded(p));
+            SearchCommand = new RelayCommand(Search);
+            CleareSelectedUserIdCommand = new RelayCommand(() => SelectedUserId = null);
+            CleareStartDateCommand = new RelayCommand(() => StartDateTime = null);
+            CleareEndDateCommand = new RelayCommand(() => EndDateTime = null);
         }
 
         #endregion
 
         #region Private Voids
 
-        private void UserControlLoaded()
+        private void Search()
         {
+            string filter;
+            filter = SelectedUserId != null ? $"[UserId] = {SelectedUserId}" : string.Empty;
+            filter = string.IsNullOrEmpty(filter) ? StartDateTime != null ? $"[OpeningDate] >= '{StartDateTime}'" : string.Empty : StartDateTime != null ? filter + $" AND [OpeningDate] >= '{StartDateTime}'" : filter;
+            filter = string.IsNullOrEmpty(filter) ? EndDateTime != null ? $"[OpeningDate] <= '{EndDateTime}'" : string.Empty : EndDateTime != null ? filter + $" AND [OpeningDate] <= '{EndDateTime}'" : filter;
+            ShiftGridControl.FilterString = filter;
+        }
+
+        private async void UserControlLoaded()
+        {
+            Shifts = await _shiftService.GetAllAsync();
+            Users = await _userService.GetCashiersAsync();
             ShowLoadingPanel = false;
+        }
+
+        private void GridControlLoaded(object parameter)
+        {
+            if (parameter is RoutedEventArgs e)
+            {
+                if (e.Source is GridControl gridControl)
+                {
+                    ShiftGridControl = gridControl;
+                    ShiftGridControl.View.MoveLastRow();
+                }
+            }
         }
 
         #endregion

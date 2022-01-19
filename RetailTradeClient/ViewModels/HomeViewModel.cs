@@ -296,64 +296,12 @@ namespace RetailTradeClient.ViewModels
             GetShortECRStatusCommand = new RelayCommand(GetShortECRStatus);
 
             SaleProducts.CollectionChanged += SaleProducts_CollectionChanged;
-            _productService.PropertiesChanged += ProductService_PropertiesChanged;
+            _productService.OnProductSaleOrRefund += ProductService_OnProductSaleOrRefund;
         }
 
         #endregion
 
         #region Private Voids
-
-        private void OpenBarcodeScanner()
-        {
-            try
-            {
-                _manager.ShowMessage("Начало", "", MessageBoxButton.OK, MessageBoxImage.Error);
-                _barcodeScanner = new();
-                _manager.ShowMessage("_barcodeScanner = new();", "", MessageBoxButton.OK, MessageBoxImage.Error);
-
-                short[] scannerTypes = new short[1];
-                scannerTypes[0] = 1;
-                short numberOfScannerTypes = 1;
-                int status;
-
-                _manager.ShowMessage("Start _barcodeScanner.Open(0, scannerTypes, numberOfScannerTypes, out status);", "", MessageBoxButton.OK, MessageBoxImage.Error);
-                _barcodeScanner.Open(0, scannerTypes, numberOfScannerTypes, out status);
-                _manager.ShowMessage("End _barcodeScanner.Open(0, scannerTypes, numberOfScannerTypes, out status);", "", MessageBoxButton.OK, MessageBoxImage.Error);
-
-                _barcodeScanner.BarcodeEvent += new _ICoreScannerEvents_BarcodeEventEventHandler(OnBarcodeEvent);
-
-                // Let's subscribe for events
-                int opcode = 1001; // Method for Subscribe events
-                string outXML; // XML Output
-                string inXML = "<inArgs>" +
-                                   "<cmdArgs>" +
-                                       "<arg-int>6</arg-int>" + // Number of events you want to subscribe
-                                       "<arg-int>1,2,4,8,16,32</arg-int>" + // Comma separated event IDs
-                                   "</cmdArgs>" +
-                               "</inArgs>";
-                _manager.ShowMessage("Start _barcodeScanner.ExecCommand(opcode, ref inXML, out outXML, out status);", "", MessageBoxButton.OK, MessageBoxImage.Error);
-                _barcodeScanner.ExecCommand(opcode, ref inXML, out outXML, out status);
-                _manager.ShowMessage("End _barcodeScanner.ExecCommand(opcode, ref inXML, out outXML, out status);", "", MessageBoxButton.OK, MessageBoxImage.Error);
-
-                opcode = 2011;
-                inXML = "<inArgs>" +
-                            "<scannerID>1</scannerID>" +
-                        "</inArgs>";
-                _manager.ShowMessage("Start _barcodeScanner.ExecCommand(opcode, ref inXML, out outXML, out status);", "", MessageBoxButton.OK, MessageBoxImage.Error);
-                _barcodeScanner.ExecCommand(opcode, ref inXML, out outXML, out status);
-                _manager.ShowMessage("End _barcodeScanner.ExecCommand(opcode, ref inXML, out outXML, out status);", "", MessageBoxButton.OK, MessageBoxImage.Error);
-            }
-            catch (Exception ex)
-            {
-                _manager.ShowMessage(ex.Message, "", MessageBoxButton.OK, MessageBoxImage.Error);
-            }
-            _manager.ShowMessage("Конец", "", MessageBoxButton.OK, MessageBoxImage.Error);
-        }
-
-        private void OnBarcodeEvent(short eventType, ref string pscanData)
-        {
-            AddProductToSale(Encoding.ASCII.GetString(FromHex(XElement.Parse(pscanData).Descendants("datalabel").Single().Value.Replace(" ", string.Empty))));
-        }
 
         private async void AddProductToSale(string barcode)
         {
@@ -494,9 +442,9 @@ namespace RetailTradeClient.ViewModels
             OnPropertyChanged(nameof(FocusedRowHandle));
         }
 
-        private void LoadedHomeView(object parameter)
+        private async void LoadedHomeView(object parameter)
         {
-            ProductService_PropertiesChanged();
+            ProductsWithoutBarcode = new(await _productService.PredicateSelect(p => p.Quantity > 0 && p.WithoutBarcode == true, p => new Product { Id = p.Id, Name = p.Name, SalePrice = p.SalePrice, ArrivalPrice = p.ArrivalPrice, Quantity = p.Quantity }));
             if (parameter is RoutedEventArgs e)
             {
                 if (e.Source is HomeView homeView)
@@ -553,12 +501,18 @@ namespace RetailTradeClient.ViewModels
                 OnPropertyChanged(nameof(Sum));
                 OnPropertyChanged(nameof(ToBePaid));
             }
-        }        
+        }
 
-        private async void ProductService_PropertiesChanged()
+        private void ProductService_OnProductSaleOrRefund(int id, double quantity)
         {
-            ProductsWithoutBarcode = new(await _productService.PredicateSelect(p => p.Quantity > 0 && p.WithoutBarcode == true,
-                p => new Product { Id = p.Id, Name = p.Name, SalePrice = p.SalePrice, ArrivalPrice = p.ArrivalPrice, Quantity = p.Quantity }));
+            Product editProduct = ProductsWithoutBarcode.FirstOrDefault(p => p.Id == id);
+            editProduct.Quantity = quantity;
+        }
+
+        private void ProductService_OnProductRefund(int id, double quantity)
+        {
+            Product editProduct = ProductsWithoutBarcode.FirstOrDefault(p => p.Id == id);
+            editProduct.Quantity = quantity;
         }
 
         private void QuantityValidate(object parameter)

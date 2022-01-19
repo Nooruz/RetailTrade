@@ -5,6 +5,7 @@ using RetailTradeServer.State.Messages;
 using RetailTradeServer.ViewModels.Dialogs.Base;
 using SalePageServer.State.Dialogs;
 using System.Collections.ObjectModel;
+using System.Windows;
 using System.Windows.Input;
 
 namespace RetailTradeServer.ViewModels.Dialogs
@@ -59,6 +60,7 @@ namespace RetailTradeServer.ViewModels.Dialogs
                     SelectedProductSubcategoryId = _editProduct.ProductSubcategoryId;
                 }
                 OnPropertyChanged(nameof(EditProduct));
+                OnPropertyChanged(nameof(BarcodeVisibility));
             }
         }
         public ObservableCollection<ProductCategory> ProductCategories
@@ -70,6 +72,7 @@ namespace RetailTradeServer.ViewModels.Dialogs
                 OnPropertyChanged(nameof(ProductCategories));
             }
         }
+        public Visibility BarcodeVisibility => EditProduct.WithoutBarcode ? Visibility.Collapsed : Visibility.Visible;
         public ObservableCollection<ProductSubcategory> ProductSubCategories
         {
             get => _productSubcategory ?? (new());

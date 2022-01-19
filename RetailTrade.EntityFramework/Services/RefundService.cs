@@ -68,14 +68,11 @@ namespace RetailTrade.EntityFramework.Services
             {
                 if (entity.ProductRefunds.Count > 0)
                 {
-                    foreach (var item in entity.ProductRefunds)
+                    if (await _productService.Refunds(entity.ProductRefunds))
                     {
-                        Product product = await _productService.GetByIdAsync(item.ProductId);
-                        product.Quantity += item.Quantity;
-                        _ = await _productService.UpdateAsync(product.Id, product);
+                        PropertiesChanged?.Invoke();
                     }
-                }
-                PropertiesChanged?.Invoke();
+                }                
             }
             return result;
         }

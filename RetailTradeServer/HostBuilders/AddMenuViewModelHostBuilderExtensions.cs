@@ -22,7 +22,7 @@ namespace RetailTradeServer.HostBuilders
             return host.ConfigureServices(services =>
             {
 
-                services.AddTransient(CreateProductCategoryViewModel);
+                services.AddTransient(CreateProductViewModel);
                 services.AddTransient(CreateArrivalProductViewModel);
                 services.AddTransient(CreateWriteDownProductViewModel);
                 services.AddTransient(CreateOrderProductViewModel);
@@ -34,8 +34,9 @@ namespace RetailTradeServer.HostBuilders
                 services.AddTransient(CreateSupplierViewModel);
                 services.AddTransient(CreateEmployeesViewModel);
                 services.AddTransient(CreateConnectingAndConfiguringEquipmentViewModel);
+                services.AddTransient(CreateCashShiftsViewModel);
 
-                services.AddSingleton<CreateMenuViewModel<ProductCategoryViewModel>>(servicesProvider => () => CreateProductCategoryViewModel(servicesProvider));
+                services.AddSingleton<CreateMenuViewModel<ProductViewModel>>(servicesProvider => () => CreateProductViewModel(servicesProvider));
                 services.AddSingleton<CreateMenuViewModel<ArrivalProductViewModel>>(servicesProvider => () => CreateArrivalProductViewModel(servicesProvider));
                 services.AddSingleton<CreateMenuViewModel<WriteDownProductViewModel>>(servicesProvider => () => CreateWriteDownProductViewModel(servicesProvider));
                 services.AddSingleton<CreateMenuViewModel<OrderProductViewModel>>(servicesProvider => () => CreateOrderProductViewModel(servicesProvider));
@@ -47,6 +48,7 @@ namespace RetailTradeServer.HostBuilders
                 services.AddSingleton<CreateMenuViewModel<SupplierViewModel>>(servicesProvider => () => CreateSupplierViewModel(servicesProvider));
                 services.AddSingleton<CreateMenuViewModel<EmployeesViewModel>>(servicesProvider => () => CreateEmployeesViewModel(servicesProvider));
                 services.AddSingleton<CreateMenuViewModel<ConnectingAndConfiguringEquipmentViewModel>>(servicesProvider => () => CreateConnectingAndConfiguringEquipmentViewModel(servicesProvider));
+                services.AddSingleton<CreateMenuViewModel<CashShiftsViewModel>>(servicesProvider => () => CreateCashShiftsViewModel(servicesProvider));
 
                 services.AddSingleton<IMenuViewModelFactory, MenuViewModelFactory>();
             });
@@ -58,10 +60,9 @@ namespace RetailTradeServer.HostBuilders
                 services.GetRequiredService<IDialogService>());
         }
 
-        private static ProductCategoryViewModel CreateProductCategoryViewModel(IServiceProvider services)
+        private static ProductViewModel CreateProductViewModel(IServiceProvider services)
         {
-            return new ProductCategoryViewModel(services.GetRequiredService<IProductSubcategoryService>(),
-                services.GetRequiredService<IProductCategoryService>(),
+            return new ProductViewModel(services.GetRequiredService<ITypeProductService>(),
                 services.GetRequiredService<IProductService>(),
                 services.GetRequiredService<IDialogService>(),
                 services.GetRequiredService<IDataService<Unit>>(),
@@ -146,6 +147,12 @@ namespace RetailTradeServer.HostBuilders
         private static ConnectingAndConfiguringEquipmentViewModel CreateConnectingAndConfiguringEquipmentViewModel(IServiceProvider services)
         {
             return new ConnectingAndConfiguringEquipmentViewModel();
+        }
+
+        private static CashShiftsViewModel CreateCashShiftsViewModel(IServiceProvider services)
+        {
+            return new CashShiftsViewModel(services.GetRequiredService<IShiftService>(),
+                services.GetRequiredService<IUserService>());
         }
     }
 }

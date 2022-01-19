@@ -52,6 +52,16 @@ namespace RetailTradeClient.Commands
                 case CheckingResult.UnknownErrorWhenClosing:
                     _manager.ShowMessage("Неизветсная ошибка при соединение с сервером.", "", MessageBoxButton.OK, MessageBoxImage.Error);
                     break;
+                case CheckingResult.ErrorOpening:
+                    break;
+                case CheckingResult.ErrorClosing:
+                    _manager.ShowMessage("Ошибка при закрытии смены.", "", MessageBoxButton.OK, MessageBoxImage.Error);
+                    break;
+                case CheckingResult.Nothing:
+                    break;
+                case CheckingResult.NoOpenShift:
+                    _manager.ShowMessage("Смена не открыта.", "", MessageBoxButton.OK, MessageBoxImage.Error);
+                    break;
                 default:
                     break;
             }

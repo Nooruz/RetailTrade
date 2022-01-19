@@ -46,14 +46,22 @@ namespace RetailTradeClient.Commands
                     _homeRenavigator.Renavigate();
                     break;
                 case CheckingResult.Close:
-                    MessageBox.Show("Откройте новую смену");
+                    _manager.ShowMessage("Откройте новую смену", "", MessageBoxButton.OK, MessageBoxImage.Exclamation);
                     break;
                 case CheckingResult.Exceeded:
-                    MessageBox.Show("Смена превысила 24 часа. Закройте смену!");
+                    _manager.ShowMessage("Смена превысила 24 часа. Закройте смену!", "", MessageBoxButton.OK, MessageBoxImage.Exclamation);
                     break;
                 case CheckingResult.IsAlreadyOpen:
                     break;
                 case CheckingResult.ErrorOpeningShiftKKM:
+                    break;
+                case CheckingResult.ErrorOpening:
+                    break;
+                case CheckingResult.ErrorClosing:
+                    break;
+                case CheckingResult.UnknownErrorWhenClosing:
+                    break;
+                case CheckingResult.Nothing:
                     break;
                 default:
                     break;

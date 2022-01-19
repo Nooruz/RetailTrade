@@ -1,6 +1,7 @@
 ﻿using RetailTrade.CashRegisterMachine;
 using RetailTrade.Domain.Models;
 using RetailTrade.Domain.Services;
+using RetailTradeClient.Properties;
 using RetailTradeClient.State.Dialogs;
 using System;
 using System.Threading.Tasks;
@@ -55,19 +56,76 @@ namespace RetailTradeClient.State.Shifts
         {
             if (ShtrihM.CheckConnection() == 0)
             {
+                ShtrihMConnected(true);
                 return await Check(userId);
             }
-            else
+            if (_manager.ShowMessage("Устройство фискального регистратора (ФР) не обноружено. Продолжить?", "", MessageBoxButton.YesNo, MessageBoxImage.Question) == MessageBoxResult.Yes)
             {
+                ShtrihMConnected(false);
+                return await Check(userId);
+            }
+            return CheckingResult.Nothing;
+        }        
+
+        public async Task<CheckingResult> ClosingShift(int userId)
+        {
+            var result = await _shiftService.GetOpenShiftByUserIdAsync(userId);
+            if (result != null)
+            {
+                if (ShtrihM.CheckConnection() == 0)
+                {
+                    ShtrihM.PrintReportWithCleaning();
+                    ShtrihMConnected(true);
+                    return await Closing(userId);
+                }
                 if (_manager.ShowMessage("Устройство фискального регистратора (ФР) не обноружено. Продолжить?", "", MessageBoxButton.YesNo, MessageBoxImage.Question) == MessageBoxResult.Yes)
                 {
-                    return await Check(userId);
+                    ShtrihMConnected(false);
+                    return await Closing(userId);
                 }
                 else
                 {
-                    return CheckingResult.IsAlreadyOpen;
+                    return CheckingResult.Nothing;
                 }
-            }            
+            }
+            return CheckingResult.NoOpenShift;
+        }
+
+        public async Task<CheckingResult> OpeningShift(int userId)
+        {
+            var result = await _shiftService.GetOpenShiftByUserIdAsync(userId);
+            if (result == null)
+            {
+                if (ShtrihM.CheckConnection() == 0)
+                {
+                    ShtrihM.OpenSession();
+                    ShtrihMConnected(true);
+                    return await Opening(userId);
+                }
+                if (_manager.ShowMessage("Устройство фискального регистратора (ФР) не обноружено. Продолжить?", "", MessageBoxButton.YesNo, MessageBoxImage.Question) == MessageBoxResult.Yes)
+                {
+                    ShtrihMConnected(false);
+                    return await Opening(userId);
+                }
+                else
+                {
+                    return CheckingResult.Nothing;
+                }
+            }
+            if (DateTime.Now.Subtract(result.OpeningDate).Days > 0)
+            {
+                return CheckingResult.Exceeded;
+            }
+            CurrentShift = result;
+            IsShiftOpen = true;
+            CurrentShiftChanged?.Invoke();
+            return CheckingResult.IsAlreadyOpen;
+        }
+
+        private void ShtrihMConnected(bool isConnected)
+        {
+            Settings.Default.ShtrihMConnected = isConnected;
+            Settings.Default.Save();
         }
 
         private async Task<CheckingResult> Check(int userId)
@@ -90,56 +148,25 @@ namespace RetailTradeClient.State.Shifts
             return CheckingResult.Close;
         }
 
-        public async Task<CheckingResult> ClosingShift(int userId)
+        private async Task<CheckingResult> Closing(int userId)
         {
-            if (ShtrihM.CheckConnection() == 0)
+            if (await _shiftService.ClosingShiftAsync(userId))
             {
-                ShtrihM.PrintReportWithCleaning();
-                if (await _shiftService.ClosingShiftAsync(userId))
-                {
-                    IsShiftOpen = false;
-                    CurrentShift = null;
-                    CurrentShiftChanged?.Invoke();
-                    return CheckingResult.Close;
-                }
-                else
-                {
-                    return CheckingResult.UnknownErrorWhenClosing;
-                }
+                IsShiftOpen = false;
+                CurrentShift = null;
+                CurrentShiftChanged?.Invoke();
+                return CheckingResult.Close;
             }
-            else
-            {
-                return CheckingResult.ErrorOpeningShiftKKM;
-            }           
+            return CheckingResult.ErrorClosing;
         }
 
-        public async Task<CheckingResult> OpeningShift(int userId)
+        private async Task<CheckingResult> Opening(int userId)
         {
-            var result = await _shiftService.GetOpenShiftByUserIdAsync(userId);
-            if (result == null)
-            {
-                if (ShtrihM.CheckConnection() == 0)
-                {
-                    ShtrihM.OpenSession();
-                    var openShift = await _shiftService.OpeningShiftAsync(userId);
-                    CurrentShift = openShift;
-                    IsShiftOpen = true;
-                    CurrentShiftChanged?.Invoke();
-                    return CheckingResult.Open;
-                }
-                else
-                {
-                    return CheckingResult.ErrorOpeningShiftKKM;
-                }                
-            }
-            if (DateTime.Now.Subtract(result.OpeningDate).Days > 0)
-            {
-                return CheckingResult.Exceeded;
-            }
-            CurrentShift = result;
+            var openShift = await _shiftService.OpeningShiftAsync(userId);
+            CurrentShift = openShift;
             IsShiftOpen = true;
             CurrentShiftChanged?.Invoke();
-            return CheckingResult.IsAlreadyOpen;
+            return CheckingResult.Open;
         }
     }
 }

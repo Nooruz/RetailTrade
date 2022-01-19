@@ -50,7 +50,7 @@ namespace RetailTradeServer.ViewModels
 
         #region Товары
 
-        public ICommand ProductCategoryCommand { get; }
+        public ICommand ProductsCommand { get; }
         public ICommand ArrivalProductCommand { get; }
         public ICommand WriteDownProductCommand { get; }
         public ICommand OrderProductCommand { get; }
@@ -71,6 +71,7 @@ namespace RetailTradeServer.ViewModels
 
         public ICommand CashShiftsCommand { get; }
         public ICommand RevenueForPeriodCommand { get; }
+        public ICommand CashiersViewCommand { get; }
 
         #endregion
 
@@ -104,7 +105,7 @@ namespace RetailTradeServer.ViewModels
 
             UpdateCurrentMenuViewModelCommand = new UpdateCurrentMenuViewModelCommand(_menuNavigator, menuViewModelFactory);
 
-            ProductCategoryCommand = new RelayCommand(() => UpdateCurrentMenuViewModelCommand.Execute(MenuViewType.ProductCategory));
+            ProductsCommand = new RelayCommand(() => UpdateCurrentMenuViewModelCommand.Execute(MenuViewType.Products));
             SaleDashboardCommand = new RelayCommand(() => UpdateCurrentMenuViewModelCommand.Execute(MenuViewType.SaleDashboard));
             ArrivalProductCommand = new RelayCommand(() => UpdateCurrentMenuViewModelCommand.Execute(MenuViewType.ArrivalProduct));
             WriteDownProductCommand = new RelayCommand(() => UpdateCurrentMenuViewModelCommand.Execute(MenuViewType.WriteDownProduct));
@@ -116,6 +117,7 @@ namespace RetailTradeServer.ViewModels
             SupplierCommand = new RelayCommand(() => UpdateCurrentMenuViewModelCommand.Execute(MenuViewType.Supplier));            
             EmployeeCommand = new RelayCommand(() => UpdateCurrentMenuViewModelCommand.Execute(MenuViewType.Employee));
             ConnectingAndConfiguringEquipmentCommand = new RelayCommand(() => UpdateCurrentMenuViewModelCommand.Execute(MenuViewType.ConnectingAndConfiguringEquipment));
+            CashiersViewCommand = new RelayCommand(() => UpdateCurrentMenuViewModelCommand.Execute(MenuViewType.CashierView));
             PrinterCommand = new RelayCommand(Printer);
             RevenueForPeriodCommand = new RelayCommand(RevenueForPeriod);
             CashShiftsCommand = new RelayCommand(CashShifts);

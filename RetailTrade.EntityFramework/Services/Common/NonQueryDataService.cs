@@ -37,8 +37,12 @@ namespace RetailTrade.EntityFramework.Services.Common
                 await using var context = _contextFactory.CreateDbContext();
                 entity.Id = id;
                 context.Set<T>().Update(entity);
-                await context.SaveChangesAsync();
-                return entity;
+                var result = await context.SaveChangesAsync();
+                if (result != 0)
+                {
+                    return entity;
+                }
+                return null;
             }
             catch (Exception e)
             {

@@ -1,10 +1,11 @@
-﻿<local:BaseMenuView x:Class="RetailTradeServer.Views.Menus.CashShiftsView"
+﻿<local:BaseMenuView xmlns:dxg="http://schemas.devexpress.com/winfx/2008/xaml/grid"  xmlns:dxlc="http://schemas.devexpress.com/winfx/2008/xaml/layoutcontrol"
                     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
                     xmlns:dxmvvm="http://schemas.devexpress.com/winfx/2008/xaml/mvvm"
                     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
                     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
                     xmlns:local="clr-namespace:RetailTradeServer.Views.Menus"
+                    xmlns:dxe="http://schemas.devexpress.com/winfx/2008/xaml/editors"  x:Class="RetailTradeServer.Views.Menus.CashShiftsView"
                     mc:Ignorable="d" 
                     d:DesignHeight="450" d:DesignWidth="800"
                     ShowDefaultButtons="False"
@@ -14,7 +15,89 @@
         <dxmvvm:EventToCommand EventName="Loaded"
                                Command="{Binding UserControlLoadedCommand}"/>
     </dxmvvm:Interaction.Behaviors>
-    
-    
-    
+
+    <dxlc:LayoutControl Orientation="Vertical">
+
+        <dxlc:LayoutGroup>
+
+            <dxlc:LayoutItem Label="Кассиры:"
+                             MinWidth="310"
+                             HorizontalAlignment="Left">
+                <dxe:ComboBoxEdit ItemsSource="{Binding Users}"
+                                  DisplayMember="FullName"
+                                  ValueMember="Id"
+                                  EditValue="{Binding SelectedUserId}">
+                    <dxe:ComboBoxEdit.Buttons>
+                        <dxe:ButtonInfo GlyphKind="Cancel"
+                                        Command="{Binding CleareSelectedUserIdCommand}"/>
+                    </dxe:ComboBoxEdit.Buttons>
+                </dxe:ComboBoxEdit>
+            </dxlc:LayoutItem>
+
+            <dxlc:LayoutItem Label="Дата с:"
+                             HorizontalAlignment="Left"
+                             MinWidth="180">
+                <dxe:DateEdit EditValue="{Binding StartDateTime}">
+                    <dxe:DateEdit.Buttons>
+                        <dxe:ButtonInfo GlyphKind="Cancel"
+                                        Command="{Binding CleareStartDateCommand}"/>
+                    </dxe:DateEdit.Buttons>
+                </dxe:DateEdit>
+            </dxlc:LayoutItem>
+
+            <dxlc:LayoutItem Label="по:"
+                             HorizontalAlignment="Left"
+                             MinWidth="180">
+                <dxe:DateEdit EditValue="{Binding EndDateTime}">
+                    <dxe:DateEdit.Buttons>
+                        <dxe:ButtonInfo GlyphKind="Cancel"
+                                        Command="{Binding CleareEndDateCommand}"/>
+                    </dxe:DateEdit.Buttons>
+                </dxe:DateEdit>
+            </dxlc:LayoutItem>
+
+            <Button Content="Поиск" 
+                    HorizontalAlignment="Left"
+                    VerticalAlignment="Top"
+                    Command="{Binding SearchCommand}"/>
+
+        </dxlc:LayoutGroup>
+
+        <dxg:GridControl ItemsSource="{Binding Shifts}">
+            <dxg:GridControl.View>
+                <dxg:TableView ShowTotalSummary="True" 
+                               AutoWidth="True" 
+                               AllowEditing="False"/>
+            </dxg:GridControl.View>
+
+            <dxg:GridColumn Header="Дата"
+                            FieldName="OpeningDate"/>
+            <dxg:GridColumn Header="Номер"
+                            FieldName="Id"/>
+            <dxg:GridColumn Header="Статус"
+                            FieldName="ClosingDate">
+                <dxg:GridColumn.EditSettings>
+                    <dxe:TextEditSettings DisplayTextConverter="{StaticResource ClosingDateValueConverter}"/>
+                </dxg:GridColumn.EditSettings>
+            </dxg:GridColumn>
+            <dxg:GridColumn Header="Кассир"
+                            FieldName="UserId">
+                <dxg:GridColumn.EditSettings>
+                    <dxe:ComboBoxEditSettings ItemsSource="{Binding Users}"
+                                              DisplayMember="FullName"
+                                              ValueMember="Id"/>
+                </dxg:GridColumn.EditSettings>
+            </dxg:GridColumn>
+            <dxg:GridColumn Header="Сумма"
+                            FieldName="Sum"
+                            Style="{StaticResource SumTextEditSettings}"/>
+            <dxmvvm:Interaction.Behaviors>
+                <dxmvvm:EventToCommand EventName="Loaded"
+                                       Command="{Binding GridControlLoadedCommand}"
+                                       PassEventArgsToCommand="True"/>
+            </dxmvvm:Interaction.Behaviors>
+        </dxg:GridControl>
+
+    </dxlc:LayoutControl>
+
 </local:BaseMenuView>

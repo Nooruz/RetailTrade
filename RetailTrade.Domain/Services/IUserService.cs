@@ -11,6 +11,7 @@ namespace RetailTrade.Domain.Services
         Task<bool> AnyAsync();
         IEnumerable<User> GetCashiers();
         Task<IEnumerable<User>> GetAdminAsync();
+        Task<IEnumerable<User>> GetCashiersAsync();
 
         /// <summary>
         /// Поментка на удаление

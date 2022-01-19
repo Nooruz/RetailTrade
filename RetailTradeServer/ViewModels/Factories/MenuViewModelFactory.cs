@@ -9,7 +9,7 @@ namespace RetailTradeServer.ViewModels.Factories
     {
         #region Private Members
 
-        private readonly CreateMenuViewModel<ProductCategoryViewModel> _createProductCategoryViewModel;
+        private readonly CreateMenuViewModel<ProductViewModel> _createProductViewModel;
         private readonly CreateMenuViewModel<ArrivalProductViewModel> _createArrivalProductViewModel;
         private readonly CreateMenuViewModel<WriteDownProductViewModel> _createWriteDownProductViewModel;
         private readonly CreateMenuViewModel<OrderProductViewModel> _createOrderProductViewModel;
@@ -21,12 +21,13 @@ namespace RetailTradeServer.ViewModels.Factories
         private readonly CreateMenuViewModel<SaleDashboardView> _createMenuViewModel;
         private readonly CreateMenuViewModel<EmployeesViewModel> _createEmployeesViewModel;
         private readonly CreateMenuViewModel<ConnectingAndConfiguringEquipmentViewModel> _createConnectingAndConfiguringEquipmentViewModel;
+        private readonly CreateMenuViewModel<CashShiftsViewModel> _createCashShiftsViewModel;
 
         #endregion
 
         #region Constructor
 
-        public MenuViewModelFactory(CreateMenuViewModel<ProductCategoryViewModel> createProductCategoryViewModel,
+        public MenuViewModelFactory(CreateMenuViewModel<ProductViewModel> createProductViewModel,
             CreateMenuViewModel<ArrivalProductViewModel> createArrivalProductViewModel,
             CreateMenuViewModel<WriteDownProductViewModel> createWriteDownProductViewModel,
             CreateMenuViewModel<OrderProductViewModel> createOrderProductViewModel,
@@ -37,9 +38,10 @@ namespace RetailTradeServer.ViewModels.Factories
             CreateMenuViewModel<SupplierViewModel> createSupplierViewModel,
             CreateMenuViewModel<SaleDashboardView> createMenuViewModel,
             CreateMenuViewModel<EmployeesViewModel> createEmployeesViewModel,
-            CreateMenuViewModel<ConnectingAndConfiguringEquipmentViewModel> createConnectingAndConfiguringEquipmentViewModel)
+            CreateMenuViewModel<ConnectingAndConfiguringEquipmentViewModel> createConnectingAndConfiguringEquipmentViewModel,
+            CreateMenuViewModel<CashShiftsViewModel> createCashShiftsViewModel)
         {
-            _createProductCategoryViewModel = createProductCategoryViewModel;
+            _createProductViewModel = createProductViewModel;
             _createArrivalProductViewModel = createArrivalProductViewModel;
             _createWriteDownProductViewModel = createWriteDownProductViewModel;
             _createOrderProductViewModel = createOrderProductViewModel;
@@ -51,6 +53,7 @@ namespace RetailTradeServer.ViewModels.Factories
             _createMenuViewModel = createMenuViewModel;
             _createEmployeesViewModel = createEmployeesViewModel;
             _createConnectingAndConfiguringEquipmentViewModel = createConnectingAndConfiguringEquipmentViewModel;
+            _createCashShiftsViewModel = createCashShiftsViewModel;
         }
 
         #endregion
@@ -59,7 +62,7 @@ namespace RetailTradeServer.ViewModels.Factories
         {
             return viewType switch
             {
-                MenuViewType.ProductCategory => _createProductCategoryViewModel(),
+                MenuViewType.Products => _createProductViewModel(),
                 MenuViewType.ArrivalProduct => _createArrivalProductViewModel(),
                 MenuViewType.WriteDownProduct => _createWriteDownProductViewModel(),
                 MenuViewType.OrderProduct => _createOrderProductViewModel(),
@@ -71,6 +74,7 @@ namespace RetailTradeServer.ViewModels.Factories
                 MenuViewType.Supplier => _createSupplierViewModel(),
                 MenuViewType.Employee => _createEmployeesViewModel(),
                 MenuViewType.ConnectingAndConfiguringEquipment => _createConnectingAndConfiguringEquipmentViewModel(),
+                MenuViewType.CashierView => _createCashShiftsViewModel(),
                 _ => throw new ArgumentException("The ViewType does not have a ViewModel.", "viewType"),
             };
         }

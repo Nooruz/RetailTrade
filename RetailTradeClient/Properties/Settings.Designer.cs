@@ -79,5 +79,17 @@ namespace RetailTradeClient.Properties {
                 this["Timeout"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        public bool ShtrihMConnected {
+            get {
+                return ((bool)(this["ShtrihMConnected"]));
+            }
+            set {
+                this["ShtrihMConnected"] = value;
+            }
+        }
     }
 }

@@ -37,5 +37,10 @@
     <system:String x:Key="faStore">&#xf54e;</system:String>
     <system:String x:Key="faSitemap">&#xf0e8;</system:String>
     <system:String x:Key="faFolder">&#xf07b;</system:String>
+    <system:String x:Key="faShoppingCart">&#xf07a;</system:String>
+    <system:String x:Key="faWarehouse">&#xf494;</system:String>
+    <system:String x:Key="faCartArrowDown">&#xf218;</system:String>
+    <system:String x:Key="faClipboardList">&#xf46d;</system:String>
+    <system:String x:Key="faFolderPlus">&#xf65e;</system:String>
 
 </ResourceDictionary>

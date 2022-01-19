@@ -36,9 +36,7 @@ namespace RetailTrade.EntityFramework.Services
                 var result = await _nonQueryDataService.Create(entity);
                 foreach (var productSale in entity.ProductSales)
                 {
-                    var product = await _productService.GetAsync(productSale.ProductId);
-                    product.Quantity -= productSale.Quantity;
-                    await _productService.UpdateAsync(product.Id, product);
+                    _ = await _productService.Sale(productSale.ProductId, productSale.Quantity);
                 }
                 if (result != null)
                     PropertiesChanged?.Invoke();
@@ -110,7 +108,7 @@ namespace RetailTrade.EntityFramework.Services
         {
             try
             {
-                _ = await _refundService.CreateAsync(new Refund
+                Refund result = await _refundService.CreateAsync(new Refund
                 {
                     DateOfRefund = DateTime.Now,
                     ShiftId = receipt.ShiftId,
@@ -123,10 +121,13 @@ namespace RetailTrade.EntityFramework.Services
                         ProductId = p.ProductId
                     }).ToList()
                 });
-
-                receipt.IsRefund = true;
-
-                await UpdateAsync(receipt.Id, receipt);
+                if (result != null)
+                {
+                    receipt.IsRefund = true;
+                    receipt.ProductSales = null;
+                    await UpdateAsync(receipt.Id, receipt);
+                    return true;
+                }                
             }
             catch (Exception e)
             {
@@ -161,7 +162,7 @@ namespace RetailTrade.EntityFramework.Services
             {
                 await using var context = _contextFactory.CreateDbContext();
                 return await context.Receipts
-                    .Where(r => r.DateOfPurchase.Date == DateTime.Now.Date)
+                    .Where(r => r.IsRefund == false && r.DateOfPurchase.Date == DateTime.Now.Date)
                     .ToListAsync();
             }
             catch (Exception e)
@@ -177,7 +178,7 @@ namespace RetailTrade.EntityFramework.Services
             {
                 await using var context = _contextFactory.CreateDbContext();
                 return await context.Receipts
-                    .Where(r => r.DateOfPurchase.Date == DateTime.Now.Date.AddDays(-1))
+                    .Where(r => r.IsRefund == false && r.DateOfPurchase.Date == DateTime.Now.Date.AddDays(-1))
                     .ToListAsync();
             }
             catch (Exception e)
@@ -194,7 +195,7 @@ namespace RetailTrade.EntityFramework.Services
                 DateTime mondayOfLastWeek = DateTime.Now.Date.AddDays(-(int)DateTime.Now.DayOfWeek - 6);
                 await using var context = _contextFactory.CreateDbContext();
                 return await context.Receipts
-                    .Where(r => r.DateOfPurchase.Date >= mondayOfLastWeek && r.DateOfPurchase <= mondayOfLastWeek.AddDays(6))
+                    .Where(r => r.IsRefund == false && r.DateOfPurchase.Date >= mondayOfLastWeek && r.DateOfPurchase <= mondayOfLastWeek.AddDays(6))
                     .ToListAsync();
             }
             catch (Exception e)
@@ -211,7 +212,7 @@ namespace RetailTrade.EntityFramework.Services
                 DateTime firstDayOfCurrentMonth = new(DateTime.Now.Year, DateTime.Now.Month, 1);
                 await using var context = _contextFactory.CreateDbContext();
                 return await context.Receipts
-                    .Where(r => r.DateOfPurchase.Date >= firstDayOfCurrentMonth)
+                    .Where(r => r.IsRefund == false && r.DateOfPurchase.Date >= firstDayOfCurrentMonth)
                     .ToListAsync();
             }
             catch (Exception e)
@@ -228,7 +229,7 @@ namespace RetailTrade.EntityFramework.Services
                 DateTime firstDayOfLastMonth = new(DateTime.Now.Year, DateTime.Now.AddMonths(-1).Month, 1);
                 await using var context = _contextFactory.CreateDbContext();
                 return await context.Receipts
-                    .Where(r => r.DateOfPurchase.Date >= firstDayOfLastMonth && r.DateOfPurchase <= firstDayOfLastMonth.AddMonths(1).AddDays(-1))
+                    .Where(r => r.IsRefund == false && r.DateOfPurchase.Date >= firstDayOfLastMonth && r.DateOfPurchase <= firstDayOfLastMonth.AddMonths(1).AddDays(-1))
                     .SumAsync(s => s.Sum);
             }
             catch (Exception e)
@@ -245,7 +246,7 @@ namespace RetailTrade.EntityFramework.Services
                 DateTime beginningYear = new(DateTime.Now.Year, 1, 1);
                 await using var context = _contextFactory.CreateDbContext();
                 return await context.Receipts
-                    .Where(r => r.DateOfPurchase.Date >= beginningYear)
+                    .Where(r => r.IsRefund == false && r.DateOfPurchase.Date >= beginningYear)
                     .SumAsync(s => s.Sum);
             }
             catch (Exception e)

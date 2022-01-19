@@ -30,7 +30,16 @@
                 </DataTemplate>
             </Setter.Value>
         </Setter>
-        
+    </Style>
+
+    <Style TargetType="{x:Type dxg:GridColumn}" x:Key="SumTextEditSettings">
+        <Setter Property="EditSettings">
+            <Setter.Value>
+                <dxe:TextEditSettings MaskUseAsDisplayFormat="True" 
+                                      MaskType="Numeric" 
+                                      Mask="n"/>
+            </Setter.Value>
+        </Setter>
     </Style>
     
 </ResourceDictionary>

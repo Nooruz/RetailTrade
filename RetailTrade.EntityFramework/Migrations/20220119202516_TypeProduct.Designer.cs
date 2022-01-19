@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using RetailTrade.EntityFramework;
 
@@ -11,9 +12,10 @@ using RetailTrade.EntityFramework;
 namespace RetailTrade.EntityFramework.Migrations
 {
     [DbContext(typeof(RetailTradeDbContext))]
-    partial class RetailTradeDbContextModelSnapshot : ModelSnapshot
+    [Migration("20220119202516_TypeProduct")]
+    partial class TypeProduct
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -213,6 +215,27 @@ namespace RetailTrade.EntityFramework.Migrations
                             Name = "Кассиры",
                             SubGroupId = 1
                         });
+                });
+
+            modelBuilder.Entity("RetailTrade.Domain.Models.GroupTypeProduct", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+
+                    b.Property<string>("Name")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int?>("SubGroupId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("SubGroupId");
+
+                    b.ToTable("GroupTypeProducts");
                 });
 
             modelBuilder.Entity("RetailTrade.Domain.Models.OrderProduct", b =>
@@ -753,28 +776,17 @@ namespace RetailTrade.EntityFramework.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
 
-                    b.Property<bool>("IsGroup")
-                        .HasColumnType("bit");
+                    b.Property<int>("GroupTypeProductId")
+                        .HasColumnType("int");
 
                     b.Property<string>("Name")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int?>("SubGroupId")
-                        .HasColumnType("int");
-
                     b.HasKey("Id");
 
-                    b.HasIndex("SubGroupId");
+                    b.HasIndex("GroupTypeProductId");
 
                     b.ToTable("TypeProducts");
-
-                    b.HasData(
-                        new
-                        {
-                            Id = 1,
-                            IsGroup = true,
-                            Name = "Виды товаров"
-                        });
                 });
 
             modelBuilder.Entity("RetailTrade.Domain.Models.Unit", b =>
@@ -981,6 +993,16 @@ namespace RetailTrade.EntityFramework.Migrations
                     b.Navigation("SubGroup");
                 });
 
+            modelBuilder.Entity("RetailTrade.Domain.Models.GroupTypeProduct", b =>
+                {
+                    b.HasOne("RetailTrade.Domain.Models.GroupTypeProduct", "SubGroup")
+                        .WithMany("SubGroups")
+                        .HasForeignKey("SubGroupId")
+                        .OnDelete(DeleteBehavior.Restrict);
+
+                    b.Navigation("SubGroup");
+                });
+
             modelBuilder.Entity("RetailTrade.Domain.Models.OrderProduct", b =>
                 {
                     b.HasOne("RetailTrade.Domain.Models.OrderToSupplier", "OrderToSupplier")
@@ -1157,12 +1179,13 @@ namespace RetailTrade.EntityFramework.Migrations
 
             modelBuilder.Entity("RetailTrade.Domain.Models.TypeProduct", b =>
                 {
-                    b.HasOne("RetailTrade.Domain.Models.TypeProduct", "SubGroup")
-                        .WithMany("SubGroups")
-                        .HasForeignKey("SubGroupId")
-                        .OnDelete(DeleteBehavior.Restrict);
+                    b.HasOne("RetailTrade.Domain.Models.GroupTypeProduct", "GroupTypeProduct")
+                        .WithMany("TypeProducts")
+                        .HasForeignKey("GroupTypeProductId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
-                    b.Navigation("SubGroup");
+                    b.Navigation("GroupTypeProduct");
                 });
 
             modelBuilder.Entity("RetailTrade.Domain.Models.User", b =>
@@ -1221,6 +1244,13 @@ namespace RetailTrade.EntityFramework.Migrations
                     b.Navigation("Employees");
 
                     b.Navigation("SubGroups");
+                });
+
+            modelBuilder.Entity("RetailTrade.Domain.Models.GroupTypeProduct", b =>
+                {
+                    b.Navigation("SubGroups");
+
+                    b.Navigation("TypeProducts");
                 });
 
             modelBuilder.Entity("RetailTrade.Domain.Models.OrderStatus", b =>
@@ -1290,11 +1320,6 @@ namespace RetailTrade.EntityFramework.Migrations
                     b.Navigation("Orders");
 
                     b.Navigation("Products");
-                });
-
-            modelBuilder.Entity("RetailTrade.Domain.Models.TypeProduct", b =>
-                {
-                    b.Navigation("SubGroups");
                 });
 
             modelBuilder.Entity("RetailTrade.Domain.Models.User", b =>

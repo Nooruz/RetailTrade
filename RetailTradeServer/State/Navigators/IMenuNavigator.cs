@@ -8,7 +8,7 @@ namespace RetailTradeServer.State.Navigators
         /// <summary>
         /// Товары
         /// </summary>
-        ProductCategory,
+        Products,
 
         /// <summary>
         /// Приход товара
@@ -63,7 +63,12 @@ namespace RetailTradeServer.State.Navigators
         /// <summary>
         /// Подключение и настройка оборудования
         /// </summary>
-        ConnectingAndConfiguringEquipment
+        ConnectingAndConfiguringEquipment,
+
+        /// <summary>
+        /// Кассовые смены
+        /// </summary>
+        CashierView
     }
     public interface IMenuNavigator
     {

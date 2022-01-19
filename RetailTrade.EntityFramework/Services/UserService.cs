@@ -147,7 +147,23 @@ namespace RetailTrade.EntityFramework.Services
             {
                 using var context = _contextFactory.CreateDbContext();
                 return await context.Users
-                    .Where(u => u.Role.Name == "Администратор")
+                    .Where(u => u.RoleId == 1)
+                    .ToListAsync();
+            }
+            catch (Exception e)
+            {
+                //ignore
+            }
+            return null;
+        }
+
+        public async Task<IEnumerable<User>> GetCashiersAsync()
+        {
+            try
+            {
+                using var context = _contextFactory.CreateDbContext();
+                return await context.Users
+                    .Where(u => u.RoleId == 2)
                     .ToListAsync();
             }
             catch (Exception e)

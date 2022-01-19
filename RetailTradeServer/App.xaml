@@ -16,6 +16,7 @@
 
             <converters:PasswordMultiBindingConverter x:Key="PasswordMultiBindingConverter"/>
             <converters:StringIsNullOrEmptyVisibilityConverter x:Key="StringIsNullOrEmptyVisibilityConverter"/>
+            <converters:ClosingDateValueConverter x:Key="ClosingDateValueConverter"/>
 
             <!--#region Основной меню-->
             
@@ -43,8 +44,8 @@
 
             <!--#region Меню-->
 
-            <DataTemplate DataType="{x:Type menuViewModels:ProductCategoryViewModel}">
-                <menuViews:ProductCategoryView/>
+            <DataTemplate DataType="{x:Type menuViewModels:ProductViewModel}">
+                <menuViews:ProductView/>
             </DataTemplate>
 
             <DataTemplate DataType="{x:Type menuViewModels:ArrivalProductViewModel}">

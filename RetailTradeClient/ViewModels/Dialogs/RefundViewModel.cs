@@ -1,12 +1,14 @@
-﻿using RetailTrade.CashRegisterMachine;
-using RetailTrade.Domain.Models;
+﻿using RetailTrade.Domain.Models;
 using RetailTrade.Domain.Services;
 using RetailTradeClient.Commands;
+using RetailTradeClient.Properties;
 using RetailTradeClient.State.Dialogs;
 using RetailTradeClient.State.Shifts;
 using RetailTradeClient.Views.Dialogs;
-using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System.Collections.Specialized;
+using System.ComponentModel;
 using System.Linq;
 using System.Windows;
 using System.Windows.Input;
@@ -20,15 +22,15 @@ namespace RetailTradeClient.ViewModels.Dialogs
         private readonly IReceiptService _receiptService;
         private readonly IShiftStore _shiftStore;
         private readonly IUIManager _manager;
-        private IEnumerable<Receipt> _receipts; 
+        private ObservableCollection<Receipt> _receipts; 
 
         #endregion
 
         #region Public Properties
 
-        public IEnumerable<Receipt> Receipts
+        public ObservableCollection<Receipt> Receipts
         {
-            get => _receipts;
+            get => _receipts ?? new();
             set
             {
                 _receipts = value;
@@ -60,6 +62,8 @@ namespace RetailTradeClient.ViewModels.Dialogs
 
             LoadedCommand = new RelayCommand(Loaded);
             ReturnCommand = new RelayCommand(Return);
+
+            Receipts.CollectionChanged += Receipts_CollectionChanged;
         }
 
         #endregion
@@ -68,19 +72,56 @@ namespace RetailTradeClient.ViewModels.Dialogs
 
         private async void Loaded()
         {
-            Receipts = await _receiptService.GetReceiptsFromCurrentShift(_shiftStore.CurrentShift.Id);
+            Receipts = new(await _receiptService.GetReceiptsFromCurrentShift(_shiftStore.CurrentShift.Id));
         }
 
-        private void Return()
-        {
+        private async void Return()
+        {            
             if (SelectedReceipt != null)
             {
-                _ = _manager.ShowDialog(new ReceiptNumberViewModel(_receiptService, new UIManager()) { SelectedReceipt = SelectedReceipt }, new ReceiptNumberView());
+                IUIManager uIManager = new UIManager();
+                if (Settings.Default.ShtrihMConnected)
+                {
+                    _ = uIManager.ShowDialog(new ReceiptNumberViewModel(_receiptService, uIManager) { SelectedReceipt = SelectedReceipt }, new ReceiptNumberView());
+                    _manager.Close();
+                }
+                else if (_manager.ShowMessage("Устройство фискального регистратора (ФР) не обноружено. Продолжить?", "", MessageBoxButton.YesNo, MessageBoxImage.Question) == MessageBoxResult.Yes)
+                {
+                    if (await _receiptService.Refund(SelectedReceipt))
+                    {
+                        Receipt editReceipt = Receipts.FirstOrDefault(r => r.Id == SelectedReceipt.Id);
+                        editReceipt.IsRefund = true;
+                    }
+                    _manager.Close();
+                }
             }
             else
             {
                 _manager.ShowMessage("Выберите квитанцию.", "", MessageBoxButton.OK, MessageBoxImage.Exclamation);
             }
+        }
+
+        private void Receipts_CollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
+        {
+            if (e.OldItems != null)
+            {
+                foreach (INotifyPropertyChanged item in e.OldItems)
+                {
+                    item.PropertyChanged -= Item_PropertyChanged;
+                }
+            }
+            if (e.NewItems != null)
+            {
+                foreach (INotifyPropertyChanged item in e.NewItems)
+                {
+                    item.PropertyChanged += Item_PropertyChanged;
+                }
+            }
+        }
+
+        private void Item_PropertyChanged(object sender, PropertyChangedEventArgs e)
+        {
+            OnPropertyChanged(nameof(Receipts));
         }
 
         #endregion

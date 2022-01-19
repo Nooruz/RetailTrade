@@ -32,9 +32,29 @@ namespace RetailTradeClient.State.Shifts
         ErrorOpeningShiftKKM,
 
         /// <summary>
+        /// Ошибка при открытии смены
+        /// </summary>
+        ErrorOpening,
+
+        /// <summary>
+        /// Ошибка при закрытии смены
+        /// </summary>
+        ErrorClosing,
+
+        /// <summary>
         /// Неизвестная ошибка при закрытии
         /// </summary>
-        UnknownErrorWhenClosing
+        UnknownErrorWhenClosing,
+
+        /// <summary>
+        /// 
+        /// </summary>
+        Nothing,
+
+        /// <summary>
+        /// Нет открытого смена
+        /// </summary>
+        NoOpenShift
     }
 
     /// <summary>
