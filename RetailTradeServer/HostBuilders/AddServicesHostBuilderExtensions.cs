@@ -21,11 +21,9 @@ namespace RetailTradeServer.HostBuilders
                 services.AddSingleton<IRoleService, RoleService>();
                 services.AddSingleton<IOrganizationService, OrganizationService>();
                 services.AddSingleton<IProductService, ProductService>();
-                services.AddSingleton<IProductCategoryService, ProductCategoryService>();
                 services.AddSingleton<IDataService<Unit>, GenericService<Unit>>();
                 services.AddSingleton<IDataService<Branch>, GenericService<Branch>>();
                 services.AddSingleton<ISupplierService, SupplierService>();
-                services.AddSingleton<IProductSubcategoryService, ProductSubcategoryService>();
                 services.AddSingleton<IReceiptService, ReceiptService>();
                 services.AddSingleton<IShiftService, ShiftService>();
                 services.AddSingleton<IArrivalProductService, ArrivalProductService>();

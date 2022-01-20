@@ -94,38 +94,6 @@ namespace RetailTrade.EntityFramework.Services
             return null;
         }
 
-        public async Task<IEnumerable<Product>> GetByProductSubcategoryIdAsync(int? productSubcategoryId)
-        {
-            try
-            {
-                await using var context = _contextFactory.CreateDbContext();
-                return await context.Products
-                    .Where(p => p.ProductSubcategoryId == productSubcategoryId)
-                    .ToListAsync();
-            }
-            catch (Exception e)
-            {
-                //ignore
-            }
-            return null;
-        }
-
-        public async Task<IEnumerable<Product>> GetByProductCategoryIdAsync(int? productCategoryId)
-        {
-            try
-            {
-                await using var context = _contextFactory.CreateDbContext();
-                return await context.Products
-                    .Where(p => p.ProductSubcategory.ProductCategoryId == productCategoryId)
-                    .ToListAsync();
-            }
-            catch (Exception e)
-            {
-                //ignore
-            }
-            return null;
-        }
-
         public async Task<Product> GetByIdAsync(int id)
         {
             try

@@ -11,9 +11,8 @@ namespace RetailTrade.Domain.Models
         #region Private Members
 
         private string _name;
-        private int _productCategoryId;
-        private int _productSubcategoryId;
-        private int? _supplierId;
+        private int _typeProductId;
+        private int _supplierId;
         private int _unitId;
         private string _TNVED;
         private string _barcode;
@@ -21,9 +20,6 @@ namespace RetailTrade.Domain.Models
         private bool _withoutBarcode;
         private decimal _arrivalPrice;
         private decimal _salePrice;
-        //private ProductCategory _productCategory;
-        private ProductSubcategory _productSubcategory;
-        private Unit _unit;
         private bool _deleteMark;
 
         #endregion
@@ -44,35 +40,22 @@ namespace RetailTrade.Domain.Models
         }
 
         /// <summary>
-        /// Категория товара
+        /// Вид товара
         /// </summary>
-        public int ProductCategoryId
+        public int TypeProductId
         {
-            get => _productCategoryId;
+            get => _typeProductId;
             set
             {
-                _productCategoryId = value;
-                OnPropertyChanged(nameof(ProductCategoryId));
-            }
-        }
-
-        /// <summary>
-        /// Группа товара
-        /// </summary>
-        public int ProductSubcategoryId
-        {
-            get => _productSubcategoryId;
-            set
-            {
-                _productSubcategoryId = value;
-                OnPropertyChanged(nameof(ProductSubcategoryId));
+                _typeProductId = value;
+                OnPropertyChanged(nameof(TypeProductId));
             }
         }
 
         /// <summary>
         /// Поставщик
         /// </summary>
-        public int? SupplierId
+        public int SupplierId
         {
             get => _supplierId;
             set
@@ -188,34 +171,9 @@ namespace RetailTrade.Domain.Models
             }
         }
 
-        public ProductSubcategory ProductSubcategory
-        {
-            get => _productSubcategory;
-            set
-            {
-                _productSubcategory = value;
-                OnPropertyChanged(nameof(ProductSubcategory));
-            }
-        }
-        //public ProductCategory ProductCategory
-        //{
-        //    get => _productCategory;
-        //    set
-        //    {
-        //        _productCategory = value;
-        //        OnPropertyChanged(nameof(ProductCategory));
-        //    }
-        //}
         public Supplier Supplier { get; set; }
-        public Unit Unit
-        {
-            get => _unit;
-            set
-            {
-                _unit = value;
-                OnPropertyChanged(nameof(Unit));
-            }
-        }
+        public Unit Unit { get; set; }
+        public TypeProduct TypeProduct { get; set; }
         public ICollection<ProductSale> ProductSales { get; set; }
         public ICollection<ProductRefund> ProductRefunds { get; set; }
         public ICollection<ArrivalProduct> ArrivalProducts { get; set; }

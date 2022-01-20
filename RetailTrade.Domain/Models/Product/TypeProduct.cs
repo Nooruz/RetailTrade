@@ -38,16 +38,7 @@ namespace RetailTrade.Domain.Models
         public TypeProduct SubGroup { get; set; }
         public int? SubGroupId { get; set; }
         public ICollection<TypeProduct> SubGroups { get; set; }
-        //public int ProductId
-        //{
-        //    get => _productId;
-        //    set
-        //    {
-        //        _productId = value;
-        //        OnPropertyChanged(nameof(ProductId));
-        //    }
-        //}
-        //public Product Product { get; set; }
+        public ICollection<Product> Products { get; set; }
 
         #endregion        
     }

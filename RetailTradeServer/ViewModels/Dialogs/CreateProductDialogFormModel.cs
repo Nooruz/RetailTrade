@@ -18,17 +18,13 @@ namespace RetailTradeServer.ViewModels.Dialogs
     {
         #region Private Members
 
-        private readonly IProductCategoryService _productCategoryService;
         private readonly IDataService<Unit> _unitService;
         private readonly ISupplierService _supplierService;
-        private readonly IProductSubcategoryService _productSubcategoryService;
         private readonly IProductService _productService;
         private readonly IDialogService _dialogService;
         private readonly IMessageStore _messageStore;
         private readonly IZebraBarcodeScanner _zebraBarcodeScanner;
         private readonly IComBarcodeService _comBarcodeService;
-        private int? _selectedProductCategoryId;
-        private int? _selectedProductSubCategoryId;
         private int? _selectedUnitId;
         private int? _selectedSupplierId;
         private string _barcode;
@@ -36,8 +32,6 @@ namespace RetailTradeServer.ViewModels.Dialogs
         private decimal _arrivalPrice;
         private decimal _salePrice;
         private string _tnved;
-        private ObservableCollection<ProductCategory> _productCategories;
-        private ObservableCollection<ProductSubcategory> productSubcategories;
         private IEnumerable<Unit> _units;
         private ObservableCollection<Supplier> _suppliers;
 
@@ -46,24 +40,6 @@ namespace RetailTradeServer.ViewModels.Dialogs
         #region Public Properties
 
         public GlobalMessageViewModel GlobalMessageViewModel { get; }
-        public ObservableCollection<ProductCategory> ProductCategories
-        {
-            get => _productCategories ?? new();
-            set
-            {
-                _productCategories = value;
-                OnPropertyChanged(nameof(ProductCategories));
-            }
-        }
-        public ObservableCollection<ProductSubcategory> ProductSubCategories
-        {
-            get => productSubcategories ?? new();
-            set
-            {
-                productSubcategories = value;
-                OnPropertyChanged(nameof(ProductSubCategories));
-            }
-        }
         public IEnumerable<Unit> Units
         {
             get => _units;
@@ -80,28 +56,6 @@ namespace RetailTradeServer.ViewModels.Dialogs
             {
                 _suppliers = value;
                 OnPropertyChanged(nameof(Suppliers));
-            }
-        }
-        public int? SelectedProductCategoryId
-        {
-            get => _selectedProductCategoryId;
-            set
-            {
-                _selectedProductCategoryId = value;                
-                SelectedProductCategoryChanged();
-                OnPropertyChanged(nameof(SelectedProductCategoryId));
-                OnPropertyChanged(nameof(ProductSubCategories));
-                OnPropertyChanged(nameof(CanTabSelect));
-            }
-        }
-        public int? SelectedProductSubcategoryId
-        {
-            get => _selectedProductSubCategoryId;
-            set
-            {
-                _selectedProductSubCategoryId = value;
-                OnPropertyChanged(nameof(SelectedProductSubcategoryId));
-                OnPropertyChanged(nameof(CanTabSelect));
             }
         }
         public int? SelectedUnitId
@@ -174,8 +128,6 @@ namespace RetailTradeServer.ViewModels.Dialogs
         }
         public bool CanTabSelect => string.IsNullOrEmpty(Barcode) &&
                                     string.IsNullOrEmpty(Name) &&
-                                    SelectedProductCategoryId == null &&
-                                    SelectedProductSubcategoryId == null &&
                                     SelectedUnitId == null &&
                                     ArrivalPrice == 0 &&
                                     SalePrice == 0;
@@ -210,27 +162,20 @@ namespace RetailTradeServer.ViewModels.Dialogs
         /// </summary>
         public ICommand SaveProductWithoutBarcodeCommand { get; }
         public ICommand CreateSupplierCommand { get; }
-        public ICommand CreateProductCategoryCommand { get; }
-        public ICommand CreateProductSubcategoryCommand { get; }
         public ICommand TabControlLoadedCommand { get; }
         public ICommand UserControlLoadedCommand { get; }
-        public ICommand SelectedProductCategoryChangedCommand { get; }
 
         #endregion
 
         #region Constructor
 
-        public CreateProductDialogFormModel(IProductCategoryService productCategoryService,
-            IProductSubcategoryService productSubcategoryService,
-            IDataService<Unit> unitService,
+        public CreateProductDialogFormModel(IDataService<Unit> unitService,
             IProductService productService,
             ISupplierService supplierService,
             IMessageStore messageStore,
             IZebraBarcodeScanner zebraBarcodeScanner,
             IComBarcodeService comBarcodeService)
         {
-            _productCategoryService = productCategoryService;
-            _productSubcategoryService = productSubcategoryService;
             _unitService = unitService;
             _productService = productService;
             _supplierService = supplierService;
@@ -247,15 +192,10 @@ namespace RetailTradeServer.ViewModels.Dialogs
             SaveWeightProductCommand = new RelayCommand(SaveWeightProduct);
             SaveProductWithoutBarcodeCommand = new RelayCommand(SaveProductWithoutBarcode);
             CreateSupplierCommand = new RelayCommand(CreateSupplier);
-            CreateProductCategoryCommand = new RelayCommand(CreateProductCategory);
-            CreateProductSubcategoryCommand = new RelayCommand(CreateProductSubcategory);
             TabControlLoadedCommand = new ParameterCommand(sender => TabControlLoaded(sender));
             UserControlLoadedCommand = new RelayCommand(UserControlLoaded);
-            SelectedProductCategoryChangedCommand = new RelayCommand(SelectedProductCategoryChanged);
 
             _supplierService.OnSupplierCreated += SupplierService_OnSupplierCreated;
-            _productCategoryService.OnProductCategoryCreated += ProductCategoryService_OnProductCategoryCreated;
-            _productSubcategoryService.OnProductSubcategoryCreated += ProductSubcategoryService_OnProductSubcategoryCreated;
         }
 
         #endregion
@@ -268,19 +208,8 @@ namespace RetailTradeServer.ViewModels.Dialogs
             SelectedSupplierId = supplier.Id;
         }
 
-        private async void SelectedProductCategoryChanged()
-        {
-            if (SelectedProductCategoryId != null)
-            {
-                SelectedProductSubcategoryId = null;
-                ProductSubCategories.Clear();
-                ProductSubCategories = new(await _productSubcategoryService.GetAllByProductCategoryIdAsync(SelectedProductCategoryId.Value));
-            }
-        }
-
         private async void UserControlLoaded()
         {
-            ProductCategories = new(await _productCategoryService.GetAllAsync());
             Suppliers = new(await _supplierService.GetAllAsync());
             Units = await _unitService.GetAllAsync();
 
@@ -298,18 +227,6 @@ namespace RetailTradeServer.ViewModels.Dialogs
         private void ZebraBarcodeScanner_OnBarcodeEvent(string obj)
         {
             Barcode = obj;
-        }
-
-        private void ProductCategoryService_OnProductCategoryCreated(ProductCategory productCategory)
-        {
-            ProductCategories.Add(productCategory);
-            SelectedProductCategoryId = productCategory.Id;
-        }
-
-        private void ProductSubcategoryService_OnProductSubcategoryCreated(ProductSubcategory productSubcategory)
-        {
-            ProductSubCategories.Add(productSubcategory);
-            SelectedProductSubcategoryId = productSubcategory.Id;
         }
 
         private void TabControlLoaded(object sender)
@@ -350,8 +267,6 @@ namespace RetailTradeServer.ViewModels.Dialogs
             SelectedSupplierId = null;
             Barcode = string.Empty;
             Name = string.Empty;
-            SelectedProductCategoryId = null;
-            SelectedProductSubcategoryId = null;
             SelectedUnitId = null;
             SalePrice = 0;
             ArrivalPrice = 0;
@@ -378,16 +293,6 @@ namespace RetailTradeServer.ViewModels.Dialogs
                 _messageStore.SetCurrentMessage("Введите наименование товара.", MessageType.Error);
                 return;
             }
-            if (SelectedProductCategoryId == null || SelectedProductCategoryId == 0)
-            {
-                _messageStore.SetCurrentMessage("Выберите группу товара.", MessageType.Error);
-                return;
-            }
-            if (SelectedProductSubcategoryId == null || SelectedProductSubcategoryId == 0)
-            {
-                _messageStore.SetCurrentMessage("Выберите категории товара.", MessageType.Error);
-                return;
-            }
             if (SelectedUnitId == null || SelectedUnitId == 0)
             {
                 _messageStore.SetCurrentMessage("Выберите единицу измерения.", MessageType.Error);
@@ -408,8 +313,6 @@ namespace RetailTradeServer.ViewModels.Dialogs
             {
                 Barcode = Barcode,
                 Name = Name,
-                ProductCategoryId = SelectedProductCategoryId.Value,
-                ProductSubcategoryId = SelectedProductSubcategoryId.Value,
                 UnitId = SelectedUnitId.Value,
                 SupplierId = SelectedSupplierId.Value,
                 TNVED = TNVED,
@@ -434,16 +337,6 @@ namespace RetailTradeServer.ViewModels.Dialogs
                 _messageStore.SetCurrentMessage("Введите наименование товара.", MessageType.Error);
                 return;
             }
-            if (SelectedProductCategoryId == null || SelectedProductCategoryId == 0)
-            {
-                _messageStore.SetCurrentMessage("Выберите группу товара.", MessageType.Error);
-                return;
-            }
-            if (SelectedProductSubcategoryId == null || SelectedProductSubcategoryId == 0)
-            {
-                _messageStore.SetCurrentMessage("Выберите категори товара.", MessageType.Error);
-                return;
-            }
             if (SelectedUnitId == null || SelectedUnitId == 0)
             {
                 _messageStore.SetCurrentMessage("Выберите единицу измерения.", MessageType.Error);
@@ -463,8 +356,6 @@ namespace RetailTradeServer.ViewModels.Dialogs
             var product = await _productService.CreateAsync(new Product
             {
                 Name = Name,
-                ProductCategoryId = SelectedProductCategoryId.Value,
-                ProductSubcategoryId = SelectedProductSubcategoryId.Value,
                 UnitId = SelectedUnitId.Value,
                 TNVED = TNVED,
                 ArrivalPrice = ArrivalPrice,
@@ -488,16 +379,6 @@ namespace RetailTradeServer.ViewModels.Dialogs
                 _messageStore.SetCurrentMessage("Введите наименование товара.", MessageType.Error);
                 return;
             }
-            if (SelectedProductCategoryId == null || SelectedProductCategoryId == 0)
-            {
-                _messageStore.SetCurrentMessage("Выберите группу товара.", MessageType.Error);
-                return;
-            }
-            if (SelectedProductSubcategoryId == null || SelectedProductSubcategoryId == 0)
-            {
-                _messageStore.SetCurrentMessage("Выберите категори товара.", MessageType.Error);
-                return;
-            }
             if (SelectedUnitId == null || SelectedUnitId == 0)
             {
                 _messageStore.SetCurrentMessage("Выберите единицу измерения.", MessageType.Error);
@@ -517,8 +398,6 @@ namespace RetailTradeServer.ViewModels.Dialogs
             var product = await _productService.CreateAsync(new Product
             {
                 Name = Name,
-                ProductCategoryId = SelectedProductCategoryId.Value,
-                ProductSubcategoryId = SelectedProductSubcategoryId.Value,
                 UnitId = SelectedUnitId.Value,
                 TNVED = TNVED,
                 ArrivalPrice = ArrivalPrice,
@@ -547,16 +426,6 @@ namespace RetailTradeServer.ViewModels.Dialogs
                 _messageStore.SetCurrentMessage("Введите наименование товара.", MessageType.Error);
                 return;
             }
-            if (SelectedProductCategoryId == null || SelectedProductCategoryId == 0)
-            {
-                _messageStore.SetCurrentMessage("Выберите группу товара.", MessageType.Error);
-                return;
-            }
-            if (SelectedProductSubcategoryId == null || SelectedProductSubcategoryId == 0)
-            {
-                _messageStore.SetCurrentMessage("Выберите категори товара.", MessageType.Error);
-                return;
-            }
             if (SelectedUnitId == null || SelectedUnitId == 0)
             {
                 _messageStore.SetCurrentMessage("Выберите единицу измерения.", MessageType.Error);
@@ -576,8 +445,6 @@ namespace RetailTradeServer.ViewModels.Dialogs
             var product = await _productService.CreateAsync(new Product
             {
                 Name = Name,
-                ProductCategoryId = SelectedProductCategoryId.Value,
-                ProductSubcategoryId = SelectedProductSubcategoryId.Value,
                 UnitId = SelectedUnitId.Value,
                 SupplierId = SelectedSupplierId.Value,
                 TNVED = TNVED,
@@ -601,24 +468,12 @@ namespace RetailTradeServer.ViewModels.Dialogs
             });
         }
 
-        private async void CreateProductCategory()
-        {
-            //await _dialogService.ShowDialog(new GroupTypeProductDialogFormModel(_productCategoryService, _dialogService) { Title = "Категория товара (создания)" });
-        }
-
-        private async void CreateProductSubcategory()
-        {
-            //await _dialogService.ShowDialog(new CreateProductSubcategoryDialogFormModel(_productSubcategoryService, _productCategoryService, _dialogService) { Title = "Группа товара (создания)" });
-        }
-
         #endregion
 
         #region Dispose
 
         public override void Dispose()
         {
-            _productCategoryService.OnProductCategoryCreated -= ProductCategoryService_OnProductCategoryCreated;
-            _productSubcategoryService.OnProductSubcategoryCreated -= ProductSubcategoryService_OnProductSubcategoryCreated;
             base.Dispose();
         }
 

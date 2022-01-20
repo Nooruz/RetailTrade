@@ -21,16 +21,6 @@ namespace RetailTrade.EntityFramework
         public DbSet<User> Users { get; set; }
 
         /// <summary>
-        /// Группа товаров
-        /// </summary>
-        public DbSet<ProductCategory> ProductCategories { get; set; }
-
-        /// <summary>
-        /// Категория товаров
-        /// </summary>
-        public DbSet<ProductSubcategory> ProductSubcategories { get; set; }
-
-        /// <summary>
         /// Единица измерения
         /// </summary>
         public DbSet<Unit> Units { get; set; }

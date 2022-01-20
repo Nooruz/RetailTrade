@@ -7,7 +7,6 @@ namespace RetailTrade.EntityFramework
     {
         public DbSet<Role> Roles { get; set; }
         public DbSet<User> Users { get; set; }
-        public DbSet<ProductCategory> ProductCategories { get; set; }
         public DbSet<Unit> Units { get; set; }
         public DbSet<Product> Products { get; set; }
 
