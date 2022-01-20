@@ -2,7 +2,6 @@
 using RetailTradeServer.Commands;
 using RetailTradeServer.State.Navigators;
 using RetailTradeServer.ViewModels.Base;
-using RetailTradeServer.ViewModels.Factories;
 using System.Windows.Input;
 
 namespace RetailTradeServer.ViewModels.Menus
@@ -14,6 +13,7 @@ namespace RetailTradeServer.ViewModels.Menus
         private string _name;
         private string _address;
         private string _fullName;
+        private string _shortName;
         private string _phone;
         private string _inn;
 
@@ -51,6 +51,16 @@ namespace RetailTradeServer.ViewModels.Menus
                 OnPropertyChanged(nameof(CanCreate));
             }
         }
+        public string ShortName
+        {
+            get => _shortName;
+            set
+            {
+                _shortName = value;
+                OnPropertyChanged(nameof(ShortName));
+                OnPropertyChanged(nameof(CanCreate));
+            }
+        }
         public string Phone
         {
             get => _phone;
@@ -74,6 +84,7 @@ namespace RetailTradeServer.ViewModels.Menus
         public bool CanCreate => !string.IsNullOrEmpty(Name) &&
             !string.IsNullOrEmpty(Address) &&
             !string.IsNullOrEmpty(Name) &&
+            !string.IsNullOrEmpty(ShortName) &&
             !string.IsNullOrEmpty(Inn) &&
             !string.IsNullOrEmpty(Phone);
 
@@ -88,10 +99,10 @@ namespace RetailTradeServer.ViewModels.Menus
         #region Constructor
 
         public OrganizationViewModel(IOrganizationService organizationService,
-            IRetailTradeViewModelFactory viewModelFactory,
+            IRenavigator homeViewModel,
             INavigator navigator)
         {
-            CreateOrganizationCommand = new CreateOrganizationCommand(organizationService, viewModelFactory, navigator, this);
+            CreateOrganizationCommand = new CreateOrganizationCommand(organizationService, homeViewModel, this);
         }
 
         #endregion

@@ -5,9 +5,9 @@ namespace RetailTradeServer.Views.Dialogs
     /// <summary>
     /// Interaction logic for CreateProductCategoryDialogForm.xaml
     /// </summary>
-    public partial class CreateProductCategoryDialogForm : BaseDialogUserControl
+    public partial class TypeProductDialogForm : BaseDialogUserControl
     {
-        public CreateProductCategoryDialogForm()
+        public TypeProductDialogForm()
         {
             InitializeComponent();
         }

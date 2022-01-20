@@ -68,7 +68,12 @@ namespace RetailTradeServer.State.Navigators
         /// <summary>
         /// Кассовые смены
         /// </summary>
-        CashierView
+        CashierView,
+
+        /// <summary>
+        /// Организация
+        /// </summary>
+        OrganizationView
     }
     public interface IMenuNavigator
     {

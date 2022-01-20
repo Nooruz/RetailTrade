@@ -86,7 +86,7 @@ namespace RetailTradeServer.HostBuilders
         private static OrganizationViewModel CreateOrganizationViewModel(IServiceProvider services)
         {
             return new OrganizationViewModel(services.GetRequiredService<IOrganizationService>(),
-                services.GetRequiredService<IRetailTradeViewModelFactory>(),
+                services.GetRequiredService<ViewModelDelegateRenavigator<HomeViewModel>>(),
                 services.GetRequiredService<INavigator>());
         }
 

@@ -96,6 +96,10 @@
                 <menuViews:ConnectingAndConfiguringEquipmentView/>
             </DataTemplate>
 
+            <DataTemplate DataType="{x:Type menuViewModels:OrganizationViewModel}">
+                <menuViews:OrganizationView/>
+            </DataTemplate>
+
             <!--#endregion-->
             
             <!--#region Диалоги-->
@@ -116,20 +120,12 @@
                 <dialogs:CreateOrderToSupplierDialogForm/>
             </DataTemplate>
 
-            <DataTemplate DataType="{x:Type dialogViewModels:CreateProductCategoryDialogFormModel}">
-                <dialogs:CreateProductCategoryDialogForm/>
-            </DataTemplate>
-
-            <DataTemplate DataType="{x:Type dialogViewModels:CreateProductCategoryOrSubCategoryDialogFormModel}">
-                <dialogs:CreateProductCategoryOrSubCategoryDialogForm/>
+            <DataTemplate DataType="{x:Type dialogViewModels:TypeProductDialogFormModel}">
+                <dialogs:TypeProductDialogForm/>
             </DataTemplate>
 
             <DataTemplate DataType="{x:Type dialogViewModels:CreateProductDialogFormModel}">
                 <dialogs:CreateProductDialogForm/>
-            </DataTemplate>
-
-            <DataTemplate DataType="{x:Type dialogViewModels:CreateProductSubcategoryDialogFormModel}">
-                <dialogs:CreateProductSubcategoryDialogForm/>
             </DataTemplate>
 
             <DataTemplate DataType="{x:Type dialogViewModels:CreateRefundToSupplierDialogFormModel}">
@@ -178,6 +174,7 @@
                 <ResourceDictionary Source="/Styles/GridColumnStyle.xaml"/>
                 <ResourceDictionary Source="/Styles/TreeListColumnStyle.xaml"/>
                 <ResourceDictionary Source="/Styles/ComboBoxEditStyle.xaml"/>
+                <ResourceDictionary Source="/Styles/BarButtonItemStyle.xaml"/>
             </ResourceDictionary.MergedDictionaries>
 
         </ResourceDictionary>

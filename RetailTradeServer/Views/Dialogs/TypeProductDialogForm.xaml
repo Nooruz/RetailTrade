@@ -2,19 +2,29 @@
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:dxe="http://schemas.devexpress.com/winfx/2008/xaml/editors"
     xmlns:dxlc="http://schemas.devexpress.com/winfx/2008/xaml/layoutcontrol"
+    xmlns:dxmvvm="http://schemas.devexpress.com/winfx/2008/xaml/mvvm"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:dialogs="clr-namespace:RetailTradeServer.Dialogs"
-    x:Class="RetailTradeServer.Views.Dialogs.CreateProductCategoryDialogForm"
-    Width="400">
+    x:Class="RetailTradeServer.Views.Dialogs.TypeProductDialogForm"
+    Width="450">
+
+    <dxmvvm:Interaction.Behaviors>
+        <dxmvvm:EventToCommand EventName="Loaded"
+                               Command="{Binding UserControlLoadedCommand}"/>
+    </dxmvvm:Interaction.Behaviors>
 
     <dxlc:LayoutControl ItemSpace="15"
                         Orientation="Vertical">
-        
-        <dxlc:LayoutGroup ItemSpace="10">
-            <dxlc:LayoutItem Label="Наименование категории:">
-                <dxe:TextEdit Text="{Binding Name, UpdateSourceTrigger=PropertyChanged}"/>
-            </dxlc:LayoutItem>
-        </dxlc:LayoutGroup>
+
+        <dxlc:LayoutItem Label="Наименование:">
+            <dxe:TextEdit Text="{Binding Name, UpdateSourceTrigger=PropertyChanged}"/>
+        </dxlc:LayoutItem>
+        <dxlc:LayoutItem Label="Группа видов товра:">
+            <dxe:ComboBoxEdit ItemsSource="{Binding TypeProducts}"
+                              DisplayMember="Name"
+                              ValueMember="Id"
+                              EditValue="{Binding SelectedTypeProductId}"/>
+        </dxlc:LayoutItem>
 
         <dxlc:LayoutGroup Orientation="Horizontal"
                           VerticalAlignment="Top"

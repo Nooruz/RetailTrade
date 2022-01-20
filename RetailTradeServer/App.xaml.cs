@@ -55,6 +55,9 @@ namespace RetailTradeServer
         {
             await _host.StartAsync();
 
+            Settings.Default.AdminCreated = false;
+            Settings.Default.Save();
+
             _zebraBarcodeScanner = _host.Services.GetRequiredService<IZebraBarcodeScanner>();
             _comBarcodeService = _host.Services.GetRequiredService<IComBarcodeService>();
             _dialogService = _host.Services.GetRequiredService<IDialogService>();
@@ -87,6 +90,7 @@ namespace RetailTradeServer
                 }
                 else
                 {
+                    startingWindow.Hide();
                     _ = _dialogService.ShowMessage(_sqlException.Message, "", MessageBoxButton.OK, MessageBoxImage.Error);
                     Current.Shutdown();
                     return;

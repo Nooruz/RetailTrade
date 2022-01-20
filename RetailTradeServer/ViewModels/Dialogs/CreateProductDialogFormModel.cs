@@ -603,12 +603,12 @@ namespace RetailTradeServer.ViewModels.Dialogs
 
         private async void CreateProductCategory()
         {
-            await _dialogService.ShowDialog(new CreateProductCategoryDialogFormModel(_productCategoryService, _dialogService) { Title = "Категория товара (создания)" });
+            //await _dialogService.ShowDialog(new GroupTypeProductDialogFormModel(_productCategoryService, _dialogService) { Title = "Категория товара (создания)" });
         }
 
         private async void CreateProductSubcategory()
         {
-            await _dialogService.ShowDialog(new CreateProductSubcategoryDialogFormModel(_productSubcategoryService, _productCategoryService, _dialogService) { Title = "Группа товара (создания)" });
+            //await _dialogService.ShowDialog(new CreateProductSubcategoryDialogFormModel(_productSubcategoryService, _productCategoryService, _dialogService) { Title = "Группа товара (создания)" });
         }
 
         #endregion

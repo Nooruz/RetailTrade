@@ -15,27 +15,20 @@ namespace RetailTradeServer.Commands
         #region Private Members
 
         private readonly IOrganizationService _organizationService;
+        private readonly IRenavigator _homeRenavigator;
         private OrganizationViewModel _viewModel;
-
-        #endregion
-
-        #region Commands
-
-        public ICommand UpdateCurrentViewModelCommand { get; }
 
         #endregion
 
         #region Constructor
 
         public CreateOrganizationCommand(IOrganizationService organizationService,
-            IRetailTradeViewModelFactory viewModelFactory,
-            INavigator navigator,
+            IRenavigator homeRenavigator,
             OrganizationViewModel viewModel)
         {
             _organizationService = organizationService;
+            _homeRenavigator = homeRenavigator;
             _viewModel = viewModel;
-
-            UpdateCurrentViewModelCommand = new UpdateCurrentViewModelCommand(navigator, viewModelFactory);
 
             _viewModel.PropertyChanged += ViewModel_PropertyChanged;
         }
@@ -59,7 +52,7 @@ namespace RetailTradeServer.Commands
                     Inn = _viewModel.Inn
                 };
                 _ = await _organizationService.CreateAsync(organization);
-                UpdateCurrentViewModelCommand.Execute(ViewType.Home);
+                _homeRenavigator.Renavigate();
             }
             catch (Exception e)
             {

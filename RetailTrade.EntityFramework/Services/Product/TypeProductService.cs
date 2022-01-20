@@ -21,12 +21,12 @@ namespace RetailTrade.EntityFramework.Services
         }
 
         public event Action PropertiesChanged;
+        public event Action<TypeProduct> OnTypeProductCreated;
 
         public async Task<TypeProduct> CreateAsync(TypeProduct entity)
         {
             var result = await _nonQueryDataService.Create(entity);
-            if (result != null)
-                PropertiesChanged?.Invoke();
+            OnTypeProductCreated?.Invoke(result);
             return result;
         }
 
@@ -75,6 +75,38 @@ namespace RetailTrade.EntityFramework.Services
                 await using var context = _contextFactory.CreateDbContext();
                 return await context.TypeProducts
                     .FirstOrDefaultAsync((e) => e.Id == id);
+            }
+            catch (Exception e)
+            {
+                //ignore
+            }
+            return null;
+        }
+
+        public async Task<IEnumerable<TypeProduct>> GetGroups()
+        {
+            try
+            {
+                await using var context = _contextFactory.CreateDbContext();
+                return await context.TypeProducts
+                    .Where(g => g.IsGroup == true)
+                    .ToListAsync();
+            }
+            catch (Exception e)
+            {
+                //ignore
+            }
+            return null;
+        }
+
+        public async Task<IEnumerable<TypeProduct>> GetTypes()
+        {
+            try
+            {
+                await using var context = _contextFactory.CreateDbContext();
+                return await context.TypeProducts
+                    .Where(g => g.IsGroup == false)
+                    .ToListAsync();
             }
             catch (Exception e)
             {

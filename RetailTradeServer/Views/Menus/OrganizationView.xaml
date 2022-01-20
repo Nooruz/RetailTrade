@@ -12,7 +12,7 @@
     d:DesignHeight="450" d:DesignWidth="800"
     ShowLoadingPanel="False"
     ShowDefaultButtons="False"
-    Title="{Binding Title}">
+    Title="Сведения об организации">
 
     <dxlc:LayoutControl Orientation="Vertical">
 
@@ -23,20 +23,28 @@
                 <dxlc:LayoutControl>
                     <dxlc:LayoutGroup Orientation="Vertical">
 
+                        <dxlc:LayoutItem Label="ФИО:">
+                            <dxe:TextEdit Text="{Binding FullName, UpdateSourceTrigger=PropertyChanged}"/>
+                        </dxlc:LayoutItem>
+                        
                         <dxlc:LayoutItem Label="Полное наименование:">
-                            <dxe:TextEdit Text="{Binding FullName}"/>
+                            <dxe:TextEdit Text="{Binding Name, UpdateSourceTrigger=PropertyChanged}"/>
                         </dxlc:LayoutItem>
 
                         <dxlc:LayoutItem Label="Сокращенное наименование:">
-                            <dxe:TextEdit Text="{Binding ShortName}"/>
+                            <dxe:TextEdit Text="{Binding ShortName, UpdateSourceTrigger=PropertyChanged}"/>
                         </dxlc:LayoutItem>
 
                         <dxlc:LayoutItem Label="ИНН:">
-                            <dxe:TextEdit Text="{Binding Inn}"/>
+                            <dxe:TextEdit Text="{Binding Inn, UpdateSourceTrigger=PropertyChanged}"/>
                         </dxlc:LayoutItem>
 
                         <dxlc:LayoutItem Label="Адресс:">
-                            <dxe:TextEdit Text="{Binding Inn}"/>
+                            <dxe:TextEdit Text="{Binding Address, UpdateSourceTrigger=PropertyChanged}"/>
+                        </dxlc:LayoutItem>
+
+                        <dxlc:LayoutItem Label="Телефон:">
+                            <dxe:TextEdit Text="{Binding Phone, UpdateSourceTrigger=PropertyChanged}"/>
                         </dxlc:LayoutItem>
 
                     </dxlc:LayoutGroup>
@@ -49,7 +57,9 @@
         <dxlc:LayoutGroup HorizontalAlignment="Right"
                           VerticalAlignment="Top">
 
-            <Button Content="Сохранить"/>
+            <Button Content="Сохранить"
+                    Command="{Binding CreateOrganizationCommand}"
+                    IsEnabled="{Binding CanCreate}"/>
 
         </dxlc:LayoutGroup>
 

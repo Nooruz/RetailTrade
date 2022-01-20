@@ -5,6 +5,7 @@ using RetailTradeServer.Commands;
 using RetailTradeServer.State.Barcode;
 using RetailTradeServer.State.Messages;
 using RetailTradeServer.ViewModels.Base;
+using RetailTradeServer.ViewModels.Dialogs;
 using SalePageServer.State.Dialogs;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -39,10 +40,13 @@ namespace RetailTradeServer.ViewModels.Menus
         public ICommand UserControlLoadedCommand { get; }
         public ICommand CreateProductCommand { get; }
         public ICommand EditProductCommand { get; }
+        public ICommand EditTypeProductCommand { get; }
         public ICommand SelectedItemChangedCommand { get; }
         public ICommand OnShowNodeMenuCommand { get; }
         public ICommand GridControlLoadedCommand { get; }
         public ICommand DeleteMarkingProductCommand { get; }
+        public ICommand CreateGroupTypeProductCommand { get; }
+        public ICommand CreateTypeProductCommand { get; }
 
         #endregion
 
@@ -94,6 +98,7 @@ namespace RetailTradeServer.ViewModels.Menus
                 OnPropertyChanged(nameof(CanShowLoadingPanel));
             }
         }
+        public TypeProduct SelectedTypeProduct { get; set; }
 
         #endregion
 
@@ -116,19 +121,42 @@ namespace RetailTradeServer.ViewModels.Menus
             _dialogService = dialogService;
             _zebraBarcodeScanner = zebraBarcodeScanner;
             _comBarcodeService = comBarcodeService;
+            _typeProductService = typeProductService;
 
             CreateProductCommand = new RelayCommand(CreateProduct);
             EditProductCommand = new RelayCommand(EditProduct);
             GridControlLoadedCommand = new ParameterCommand(sender => GridControlLoaded(sender));
             DeleteMarkingProductCommand = new RelayCommand(DeleteMarkingProduct);
             UserControlLoadedCommand = new RelayCommand(UserControlLoaded);
+            CreateGroupTypeProductCommand = new RelayCommand(() => _dialogService.ShowDialog(new TypeProductDialogFormModel(_typeProductService, _dialogService) { Title = "Виды товаров (создание группы)", IsGroup = true }));
+            CreateTypeProductCommand = new RelayCommand(() => _dialogService.ShowDialog(new TypeProductDialogFormModel(_typeProductService, _dialogService) { Title = "Виды товаров (создание)" }));
+            EditTypeProductCommand = new RelayCommand(EditTypeProduct);
 
             _productService.OnProductCreated += ProductService_OnProductCreated;
+            _typeProductService.OnTypeProductCreated += TypeProductService_OnTypeProductCreated;
         }
 
         #endregion
 
         #region Private Voids
+
+        private void EditTypeProduct()
+        {
+            if (SelectedTypeProduct == null)
+            {
+                _dialogService.ShowMessage("Выберите группу видов или вид товара!", "", MessageBoxButton.OK, MessageBoxImage.Exclamation);
+                return;
+            }
+            if (SelectedTypeProduct.Id != 1)
+            {
+                _ = _dialogService.ShowDialog(new TypeProductDialogFormModel(_typeProductService, _dialogService) { Title = $"{SelectedTypeProduct.Name} (Виды товаров)", IsEditMode = true, TypeProduct = SelectedTypeProduct });
+            }            
+        }
+
+        private void TypeProductService_OnTypeProductCreated(TypeProduct obj)
+        {
+            TypeProducts.Add(obj);
+        }
 
         private async void UserControlLoaded()
         {

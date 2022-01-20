@@ -5,6 +5,7 @@ using RetailTrade.Domain.Services;
 using RetailTradeServer.State.Authenticators;
 using RetailTradeServer.State.Barcode;
 using RetailTradeServer.State.Messages;
+using RetailTradeServer.State.Navigators;
 using RetailTradeServer.State.Users;
 using RetailTradeServer.ViewModels;
 using RetailTradeServer.ViewModels.Base;

@@ -6,12 +6,17 @@
     public class Organization : DomainObject
     {
         /// <summary>
-        /// Наименование организации
+        /// Полное наименование организации
         /// </summary>
         public string Name { get; set; }
 
         /// <summary>
-        /// Адрес организации
+        /// Сокращенное наименование организации
+        /// </summary>
+        public string ShortName { get; set; }
+
+        /// <summary>
+        /// Полное наименование организации
         /// </summary>
         public string Address { get; set; }
 

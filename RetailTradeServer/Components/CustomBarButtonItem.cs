@@ -1,21 +1,21 @@
-﻿using System.Windows;
-using System.Windows.Controls;
+﻿using DevExpress.Xpf.Bars;
+using System.Windows;
 using System.Windows.Media;
 
 namespace RetailTradeServer.Components
 {
-    public class CustomButton : Button
+    public class CustomBarButtonItem : BarButtonItem
     {
         #region Dependency Properties
 
         public static readonly DependencyProperty IconProperty =
-            DependencyProperty.Register(nameof(Icon), typeof(string), typeof(CustomButton), new PropertyMetadata(""));
+            DependencyProperty.RegisterAttached(nameof(Icon), typeof(string), typeof(CustomBarButtonItem), new UIPropertyMetadata(string.Empty));
 
         public static readonly DependencyProperty HotKeyProperty =
-            DependencyProperty.Register(nameof(HotKey), typeof(string), typeof(CustomButton), new PropertyMetadata(""));
+            DependencyProperty.RegisterAttached(nameof(HotKey), typeof(string), typeof(CustomBarButtonItem), new UIPropertyMetadata(string.Empty));
 
         public static readonly DependencyProperty IconColorProperty =
-            DependencyProperty.Register(nameof(IconColor), typeof(SolidColorBrush), typeof(CustomButton), new PropertyMetadata(new SolidColorBrush(Colors.Black)));
+            DependencyProperty.RegisterAttached(nameof(IconColor), typeof(SolidColorBrush), typeof(CustomBarButtonItem), new UIPropertyMetadata(new SolidColorBrush(Colors.Black)));
 
         #endregion
 

@@ -1,13 +1,15 @@
-﻿<local:BaseMenuView xmlns:dx="http://schemas.devexpress.com/winfx/2008/xaml/core" 
+﻿<local:BaseMenuView
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:dxb="http://schemas.devexpress.com/winfx/2008/xaml/bars"
+    xmlns:dx="http://schemas.devexpress.com/winfx/2008/xaml/core"
     xmlns:dxe="http://schemas.devexpress.com/winfx/2008/xaml/editors"
     xmlns:dxg="http://schemas.devexpress.com/winfx/2008/xaml/grid"
     xmlns:dxlc="http://schemas.devexpress.com/winfx/2008/xaml/layoutcontrol"
     xmlns:dxmvvm="http://schemas.devexpress.com/winfx/2008/xaml/mvvm"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:components="clr-namespace:RetailTradeServer.Components"
     xmlns:local="clr-namespace:RetailTradeServer.Views.Menus"
     x:Class="RetailTradeServer.Views.Menus.ProductView"
-    xmlns:components="clr-namespace:RetailTradeServer.Components"
     ShowDefaultButtons="False"
     Title="Товары">
 
@@ -20,9 +22,9 @@
 
         <dxlc:LayoutGroup Orientation="Vertical"
                           HorizontalAlignment="Left"
-                          MinWidth="200"
-                          Width="200"
-                          MaxWidth="400"
+                          MinWidth="300"
+                          Width="300"
+                          MaxWidth="500"
                           dxlc:LayoutControl.AllowHorizontalSizing="True">
 
             <dxlc:LayoutGroup Orientation="Horizontal"
@@ -37,37 +39,47 @@
                                                  Style="{StaticResource InPopupButton}"
                                                  Content="Вид товара"
                                                  HotKey="Ins"
-                                                 IconColor="{StaticResource GreenColorBrush}"/>
+                                                 IconColor="{StaticResource GreenColorBrush}"
+                                                 Command="{Binding CreateTypeProductCommand}"/>
                         
                         <components:CustomButton Content="Группу видов товара"
                                                  Icon="{StaticResource faFolderPlus}" 
                                                  Style="{StaticResource InPopupButton}"
                                                  IconColor="{StaticResource FolderColorBrush}"
-                                                 HotKey="Ctrl+F9"/>
+                                                 HotKey="Ctrl+F9"
+                                                 Command="{Binding CreateGroupTypeProductCommand}"/>
                     </StackPanel>
                 </dx:DropDownButton>
 
-                <Button Content="{StaticResource faPlus}"
-                        ToolTip="Создать"
-                        Style="{StaticResource FAButton}"/>
-
-
                 <Button Content="{StaticResource faEdit}"
                         ToolTip="Изменить выбранный элемент"
-                        Style="{StaticResource FAButton}"/>
-
-                <Button Content="{StaticResource faTrashAlt}"
-                        ToolTip="Удалить выбранный элемент"
-                        Style="{StaticResource FAButton}"/>
+                        Style="{StaticResource FAButton}"
+                        Command="{Binding EditTypeProductCommand}"/>
 
             </dxlc:LayoutGroup>
 
             <dxg:TreeListControl ItemsSource="{Binding TypeProducts}"
-                                 SelectedItem="{Binding SelectedTypeProducts}">
+                                 SelectedItem="{Binding SelectedTypeProduct}">
                 <dxg:TreeListControl.View>
                     <dxg:TreeListView AutoWidth="True"
                                       KeyFieldName="Id"
-                                      ParentFieldName="SubGroupId" />
+                                      ParentFieldName="SubGroupId">
+                        <dxg:TreeListView.RowCellMenuCustomizations>
+                            <components:CustomBarButtonItem Style="{StaticResource CustomBarButtonItem}"
+                                                            Icon="{StaticResource faPlus}"
+                                                            IconColor="{StaticResource GreenColorBrush}"
+                                                            Content="Вид товара"
+                                                            HotKey="Ins"/>
+                        </dxg:TreeListView.RowCellMenuCustomizations>
+                        <!--<dxg:TreeListView.ContextMenu>
+                            <ContextMenu>
+                                <MenuItem Header="Виды товаров"/>
+                                <MenuItem Header="Группу видов товара"/>
+                                <MenuItem Header="Изменить"/>
+                                <MenuItem Header="Пометить на удаление / Снять пометку"/>
+                            </ContextMenu>
+                        </dxg:TreeListView.ContextMenu>-->
+                    </dxg:TreeListView>
                 </dxg:TreeListControl.View>
                 <dxg:TreeListColumn FieldName="Name"
                                     Header=""
