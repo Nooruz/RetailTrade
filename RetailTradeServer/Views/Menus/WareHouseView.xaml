@@ -1,0 +1,57 @@
+﻿<local:BaseMenuView
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:dxe="http://schemas.devexpress.com/winfx/2008/xaml/editors"
+    xmlns:dxg="http://schemas.devexpress.com/winfx/2008/xaml/grid"
+    xmlns:dxlc="http://schemas.devexpress.com/winfx/2008/xaml/layoutcontrol"
+    xmlns:dxmvvm="http://schemas.devexpress.com/winfx/2008/xaml/mvvm"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:components="clr-namespace:RetailTradeServer.Components"
+    xmlns:local="clr-namespace:RetailTradeServer.Views.Menus"
+    x:Class="RetailTradeServer.Views.Menus.WareHouseView"
+    Title="Склады и магазины"
+    ShowDefaultButtons="False">
+
+    <dxmvvm:Interaction.Behaviors>
+        <dxmvvm:EventToCommand EventName="Loaded"
+                               Command="{Binding UserControlLoadedCommand}"/>
+    </dxmvvm:Interaction.Behaviors>
+
+    <dxlc:LayoutControl Orientation="Vertical">
+
+        <dxlc:LayoutGroup HorizontalAlignment="Left"
+                          VerticalAlignment="Top">
+
+            <components:CustomDropDownButton Style="{StaticResource DropDownButtonContentIconic}"
+                                             Icon="{StaticResource faPlus}"
+                                             IconColor="{StaticResource GreenColorBrush}"
+                                             Content="Создать">
+                <StackPanel Orientation="Vertical">
+                    <components:CustomButton Content="Оптовый склад"
+                                             Command="{Binding CreateWareHouseCommand}"
+                                             Style="{StaticResource InPopupButton}"/>
+                    <components:CustomButton Content="Розничный магазин"
+                                             Style="{StaticResource InPopupButton}"/>
+                </StackPanel>
+            </components:CustomDropDownButton>
+
+        </dxlc:LayoutGroup>
+
+        <dxg:GridControl ItemsSource="{Binding WareHouses}">
+            <dxg:GridControl.View>
+                <dxg:TableView AutoWidth="True"/>
+            </dxg:GridControl.View>
+            <dxg:GridColumn Header="Наименование"
+                            FieldName="Name"/>
+            <dxg:GridColumn Header="Склад / Магазин"
+                            FieldName="TypeWareHouseId">
+                <dxg:GridColumn.EditSettings>
+                    <dxe:ComboBoxEditSettings ItemsSource="{Binding TypeWareHouses}"
+                                              DisplayMember="Name"
+                                              ValueMember="Id"/>
+                </dxg:GridColumn.EditSettings>
+            </dxg:GridColumn>
+        </dxg:GridControl>
+
+    </dxlc:LayoutControl>
+
+</local:BaseMenuView>

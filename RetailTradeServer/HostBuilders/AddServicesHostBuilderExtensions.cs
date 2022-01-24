@@ -23,6 +23,7 @@ namespace RetailTradeServer.HostBuilders
                 services.AddSingleton<IProductService, ProductService>();
                 services.AddSingleton<IDataService<Unit>, GenericService<Unit>>();
                 services.AddSingleton<IDataService<Branch>, GenericService<Branch>>();
+                services.AddSingleton<IDataService<TypeWareHouse>, GenericService<TypeWareHouse>>();
                 services.AddSingleton<ISupplierService, SupplierService>();
                 services.AddSingleton<IReceiptService, ReceiptService>();
                 services.AddSingleton<IShiftService, ShiftService>();
@@ -41,6 +42,7 @@ namespace RetailTradeServer.HostBuilders
                 services.AddSingleton<IGroupEmployeeService, GroupEmployeeService>();
                 services.AddSingleton<IDataService<Gender>, GenericService<Gender>>();
                 services.AddSingleton<ITypeProductService, TypeProductService>();
+                services.AddSingleton<IWareHouseService, WareHouseService>();
             });
         }
     }

@@ -33,7 +33,7 @@
 
                 <dx:DropDownButton Content="{StaticResource faPlus}"
                                    Foreground="{StaticResource GreenColorBrush}"
-                                   Style="{StaticResource Iconic}">
+                                   Style="{StaticResource DropDownButtonIconic}">
                     <StackPanel Orientation="Vertical">
                         <components:CustomButton Icon="{StaticResource faPlus}" 
                                                  Style="{StaticResource InPopupButton}"

@@ -73,7 +73,12 @@ namespace RetailTradeServer.State.Navigators
         /// <summary>
         /// Организация
         /// </summary>
-        OrganizationView
+        OrganizationView,
+
+        /// <summary>
+        /// Склады
+        /// </summary>
+        WareHouseView
     }
     public interface IMenuNavigator
     {

@@ -36,6 +36,7 @@ namespace RetailTradeServer.HostBuilders
                 services.AddTransient(CreateEmployeesViewModel);
                 services.AddTransient(CreateConnectingAndConfiguringEquipmentViewModel);
                 services.AddTransient(CreateCashShiftsViewModel);
+                services.AddTransient(CreateWareHouseViewModel);
 
                 services.AddSingleton<CreateMenuViewModel<ProductViewModel>>(servicesProvider => () => CreateProductViewModel(servicesProvider));
                 services.AddSingleton<CreateMenuViewModel<ArrivalProductViewModel>>(servicesProvider => () => CreateArrivalProductViewModel(servicesProvider));
@@ -50,6 +51,7 @@ namespace RetailTradeServer.HostBuilders
                 services.AddSingleton<CreateMenuViewModel<EmployeesViewModel>>(servicesProvider => () => CreateEmployeesViewModel(servicesProvider));
                 services.AddSingleton<CreateMenuViewModel<ConnectingAndConfiguringEquipmentViewModel>>(servicesProvider => () => CreateConnectingAndConfiguringEquipmentViewModel(servicesProvider));
                 services.AddSingleton<CreateMenuViewModel<CashShiftsViewModel>>(servicesProvider => () => CreateCashShiftsViewModel(servicesProvider));
+                services.AddSingleton<CreateMenuViewModel<WareHouseViewModel>>(servicesProvider => () => CreateWareHouseViewModel(servicesProvider));
 
                 services.AddSingleton<IMenuViewModelFactory, MenuViewModelFactory>();
             });
@@ -154,6 +156,13 @@ namespace RetailTradeServer.HostBuilders
         {
             return new CashShiftsViewModel(services.GetRequiredService<IShiftService>(),
                 services.GetRequiredService<IUserService>());
+        }
+
+        private static WareHouseViewModel CreateWareHouseViewModel(IServiceProvider services)
+        {
+            return new WareHouseViewModel(services.GetRequiredService<IDialogService>(),
+                services.GetRequiredService<IWareHouseService>(),
+                services.GetRequiredService<IDataService<TypeWareHouse>>());
         }
     }
 }

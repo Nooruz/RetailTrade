@@ -42,7 +42,6 @@ namespace RetailTrade.Barcode
             Thread.Sleep(1000);
             OnBarcodeEvent?.Invoke(Replace(_serialPort.ReadExisting()));
             _serialPort.DiscardInBuffer();
-            Close();
         }
 
         private static string Replace(string text)

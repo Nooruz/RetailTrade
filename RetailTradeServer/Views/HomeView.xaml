@@ -71,12 +71,17 @@
                                 Style="{StaticResource DefaultHamburgerSubMenu}"
                                 Tag="{StaticResource faWarehouse}">
 
+            <dxwui:HamburgerSubMenuNavigationButton Content="Склады"
+                                                    Command="{Binding WareHouseCommand}"
+                                                    Focusable="False"/>
+
             <dxwui:HamburgerSubMenuNavigationButton Content="Приход товаров"
                                                     Command="{Binding ArrivalProductCommand}"
                                                     Focusable="False"/>
 
             <dxwui:HamburgerSubMenuNavigationButton Content="Списание товаров"
-                                                    Command="{Binding WriteDownProductCommand}"/>
+                                                    Command="{Binding WriteDownProductCommand}"
+                                                    Focusable="False"/>
 
         </dxwui:HamburgerSubMenu>
 

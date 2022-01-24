@@ -133,6 +133,13 @@ namespace RetailTrade.EntityFramework
 
         #endregion
 
+        #region WareHouse
+
+        public DbSet<WareHouse> WareHouses { get; set; }
+        public DbSet<TypeWareHouse> TypeWareHouses { get; set; }
+
+        #endregion
+
         public RetailTradeDbContext(DbContextOptions<RetailTradeDbContext> options) : base(options) { }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -217,6 +224,10 @@ namespace RetailTrade.EntityFramework
             modelBuilder.Entity<Role>().HasData(
                 new Role { Id = 1, Name = "Администратор"},
                 new Role { Id = 2, Name = "Кассир" });
+
+            modelBuilder.Entity<TypeWareHouse>().HasData(
+                new TypeWareHouse { Id = 1, Name = "Оптовый склад" },
+                new TypeWareHouse { Id = 2, Name = "Розничный магазин" });
 
             base.OnModelCreating(modelBuilder);
         }

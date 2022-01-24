@@ -17,6 +17,7 @@
             <converters:PasswordMultiBindingConverter x:Key="PasswordMultiBindingConverter"/>
             <converters:StringIsNullOrEmptyVisibilityConverter x:Key="StringIsNullOrEmptyVisibilityConverter"/>
             <converters:ClosingDateValueConverter x:Key="ClosingDateValueConverter"/>
+            <converters:TypeWareHouseIdConverter x:Key="TypeWareHouseIdConverter"/>
 
             <!--#region Основной меню-->
             
@@ -100,6 +101,10 @@
                 <menuViews:OrganizationView/>
             </DataTemplate>
 
+            <DataTemplate DataType="{x:Type menuViewModels:WareHouseViewModel}">
+                <menuViews:WareHouseView/>
+            </DataTemplate>
+
             <!--#endregion-->
             
             <!--#region Диалоги-->
@@ -154,6 +159,10 @@
 
             <DataTemplate DataType="{x:Type dialogViewModels:AddConnectionDialogFormModel}">
                 <dialogs:AddConnectionDialogForm/>
+            </DataTemplate>
+
+            <DataTemplate DataType="{x:Type dialogViewModels:WareHouseDialogFormModel}">
+                <dialogs:WareHouseDialogForm/>
             </DataTemplate>
 
             <!--#endregion-->

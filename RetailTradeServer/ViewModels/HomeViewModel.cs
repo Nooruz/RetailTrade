@@ -58,6 +58,12 @@ namespace RetailTradeServer.ViewModels
 
         #endregion
 
+        #region Склады
+
+        public ICommand WareHouseCommand { get; }
+
+        #endregion
+
         #region Справочники и инструменты
 
         public ICommand BarcodeCommand { get; }
@@ -118,6 +124,7 @@ namespace RetailTradeServer.ViewModels
             EmployeeCommand = new RelayCommand(() => UpdateCurrentMenuViewModelCommand.Execute(MenuViewType.Employee));
             ConnectingAndConfiguringEquipmentCommand = new RelayCommand(() => UpdateCurrentMenuViewModelCommand.Execute(MenuViewType.ConnectingAndConfiguringEquipment));
             CashiersViewCommand = new RelayCommand(() => UpdateCurrentMenuViewModelCommand.Execute(MenuViewType.CashierView));
+            WareHouseCommand = new RelayCommand(() => UpdateCurrentMenuViewModelCommand.Execute(MenuViewType.WareHouseView));
             PrinterCommand = new RelayCommand(Printer);
             RevenueForPeriodCommand = new RelayCommand(RevenueForPeriod);
             CashShiftsCommand = new RelayCommand(CashShifts);

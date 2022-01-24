@@ -48,7 +48,7 @@ namespace RetailTradeServer.ViewModels.Dialogs
                     SalePrice = _editProduct.SalePrice;
                     TNVED = _editProduct.TNVED;
                     Barcode = _editProduct.Barcode;
-                    SelectedSupplierId = _editProduct.SupplierId;
+                    //SelectedSupplierId = _editProduct.SupplierId;
                     SelectedUnitId = _editProduct.UnitId;
                 }
                 OnPropertyChanged(nameof(EditProduct));
@@ -204,7 +204,7 @@ namespace RetailTradeServer.ViewModels.Dialogs
             EditProduct.SalePrice = SalePrice;            
             EditProduct.TNVED = TNVED;
             EditProduct.Barcode = Barcode;
-            EditProduct.SupplierId = SelectedSupplierId.Value;
+            //EditProduct.SupplierId = SelectedSupplierId.Value;
             EditProduct.UnitId = SelectedUnitId.Value;
             EditProduct.WithoutBarcode = string.IsNullOrEmpty(Barcode);
 

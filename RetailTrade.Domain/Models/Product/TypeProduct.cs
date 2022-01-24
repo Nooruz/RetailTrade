@@ -10,8 +10,8 @@ namespace RetailTrade.Domain.Models
         #region Private Members
 
         private string _name;
-        private bool _isGroup = true;
-        private int _productId;
+        private bool _isGroup;
+        private int? _subGroupId;
 
         #endregion
 
@@ -34,9 +34,17 @@ namespace RetailTrade.Domain.Models
                 _isGroup = value;
                 OnPropertyChanged(nameof(IsGroup));
             }
+        }        
+        public int? SubGroupId
+        {
+            get => _subGroupId;
+            set
+            {
+                _subGroupId = value;
+                OnPropertyChanged(nameof(SubGroupId));
+            }
         }
         public TypeProduct SubGroup { get; set; }
-        public int? SubGroupId { get; set; }
         public ICollection<TypeProduct> SubGroups { get; set; }
         public ICollection<Product> Products { get; set; }
 

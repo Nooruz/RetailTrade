@@ -1,7 +1,6 @@
 ﻿using DevExpress.Xpf.Editors;
 using Microsoft.Win32;
 using Newtonsoft.Json;
-using RetailTrade.EntityFramework;
 using RetailTradeServer.Commands;
 using RetailTradeServer.ViewModels.Dialogs.Base;
 using SalePageServer.Properties;

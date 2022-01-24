@@ -115,7 +115,7 @@ namespace RetailTrade.EntityFramework.Services
             {
                 using var context = _contextFactory.CreateDbContext();
                 return context.Products
-                    .Where(p => p.Quantity > 0 && p.SupplierId == supplierId)
+                    //.Where(p => p.Quantity > 0 && p.SupplierId == supplierId)
                     .Select(p => new Product { Id = p.Id, Name = p.Name, Quantity = p.Quantity })
                     .ToList();
             }

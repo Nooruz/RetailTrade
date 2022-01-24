@@ -22,6 +22,7 @@ namespace RetailTradeServer.ViewModels.Factories
         private readonly CreateMenuViewModel<EmployeesViewModel> _createEmployeesViewModel;
         private readonly CreateMenuViewModel<ConnectingAndConfiguringEquipmentViewModel> _createConnectingAndConfiguringEquipmentViewModel;
         private readonly CreateMenuViewModel<CashShiftsViewModel> _createCashShiftsViewModel;
+        private readonly CreateMenuViewModel<WareHouseViewModel> _createWareHouseViewModel;
 
         #endregion
 
@@ -39,7 +40,8 @@ namespace RetailTradeServer.ViewModels.Factories
             CreateMenuViewModel<SaleDashboardView> createMenuViewModel,
             CreateMenuViewModel<EmployeesViewModel> createEmployeesViewModel,
             CreateMenuViewModel<ConnectingAndConfiguringEquipmentViewModel> createConnectingAndConfiguringEquipmentViewModel,
-            CreateMenuViewModel<CashShiftsViewModel> createCashShiftsViewModel)
+            CreateMenuViewModel<CashShiftsViewModel> createCashShiftsViewModel,
+            CreateMenuViewModel<WareHouseViewModel> createWareHouseViewModel)
         {
             _createProductViewModel = createProductViewModel;
             _createArrivalProductViewModel = createArrivalProductViewModel;
@@ -54,6 +56,7 @@ namespace RetailTradeServer.ViewModels.Factories
             _createEmployeesViewModel = createEmployeesViewModel;
             _createConnectingAndConfiguringEquipmentViewModel = createConnectingAndConfiguringEquipmentViewModel;
             _createCashShiftsViewModel = createCashShiftsViewModel;
+            _createWareHouseViewModel = createWareHouseViewModel;
         }
 
         #endregion
@@ -75,6 +78,7 @@ namespace RetailTradeServer.ViewModels.Factories
                 MenuViewType.Employee => _createEmployeesViewModel(),
                 MenuViewType.ConnectingAndConfiguringEquipment => _createConnectingAndConfiguringEquipmentViewModel(),
                 MenuViewType.CashierView => _createCashShiftsViewModel(),
+                MenuViewType.WareHouseView => _createWareHouseViewModel(),
                 _ => throw new ArgumentException("The ViewType does not have a ViewModel.", "viewType"),
             };
         }

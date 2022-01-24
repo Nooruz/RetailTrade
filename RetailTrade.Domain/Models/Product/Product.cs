@@ -12,7 +12,7 @@ namespace RetailTrade.Domain.Models
 
         private string _name;
         private int _typeProductId;
-        private int _supplierId;
+        private int? _supplierId;
         private int _unitId;
         private string _TNVED;
         private string _barcode;
@@ -55,7 +55,7 @@ namespace RetailTrade.Domain.Models
         /// <summary>
         /// Поставщик
         /// </summary>
-        public int SupplierId
+        public int? SupplierId
         {
             get => _supplierId;
             set
@@ -180,6 +180,7 @@ namespace RetailTrade.Domain.Models
         public ICollection<WriteDownProduct> WriteDownProducts { get; set; }
         public ICollection<RefundToSupplierProduct> ProductRefundToSuppliers { get; set; }
         public ICollection<OrderProduct> Orders { get; set; }
+        public ICollection<WareHouse> WareHouses { get; set; }
 
         #endregion
     }

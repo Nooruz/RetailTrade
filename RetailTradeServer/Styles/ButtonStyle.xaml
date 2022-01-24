@@ -156,7 +156,7 @@
         </Setter>
     </Style>
 
-    <Style TargetType="{x:Type dx:DropDownButton}" x:Key="Iconic">
+    <Style TargetType="{x:Type dx:DropDownButton}" x:Key="DropDownButtonIconic">
         <Setter Property="ContentTemplate">
             <Setter.Value>
                 <DataTemplate>
@@ -164,6 +164,36 @@
                                Text="{Binding Path=Content, RelativeSource={RelativeSource AncestorType={x:Type dx:DropDownButton}}}"
                                VerticalAlignment="Center"
                                HorizontalAlignment="Center"/>
+                </DataTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <Style TargetType="{x:Type components:CustomDropDownButton}" x:Key="DropDownButtonContentIconic">
+        <Setter Property="ContentTemplate">
+            <Setter.Value>
+                <DataTemplate>
+
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto"/>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
+
+                        <TextBlock Grid.Column="0"
+                                   Margin="0 0 10 0"
+                                   FontFamily="{StaticResource FontAwesomeBold}"
+                                   Foreground="{Binding Path=IconColor, RelativeSource={RelativeSource AncestorType={x:Type components:CustomDropDownButton}}}"
+                                   Text="{Binding Path=Icon, RelativeSource={RelativeSource AncestorType={x:Type components:CustomDropDownButton}}}"
+                                   VerticalAlignment="Center"
+                                   HorizontalAlignment="Center"/>
+
+                        <TextBlock Grid.Column="1"
+                                   Text="{Binding Path=Content, RelativeSource={RelativeSource AncestorType={x:Type components:CustomDropDownButton}}}"
+                                   VerticalAlignment="Center"
+                                   HorizontalAlignment="Left"/>
+
+                    </Grid>
                 </DataTemplate>
             </Setter.Value>
         </Setter>

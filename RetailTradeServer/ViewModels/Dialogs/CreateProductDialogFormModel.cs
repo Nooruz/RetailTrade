@@ -314,7 +314,7 @@ namespace RetailTradeServer.ViewModels.Dialogs
                 Barcode = Barcode,
                 Name = Name,
                 UnitId = SelectedUnitId.Value,
-                SupplierId = SelectedSupplierId.Value,
+                //SupplierId = SelectedSupplierId.Value,
                 TNVED = TNVED,
                 ArrivalPrice = ArrivalPrice,
                 SalePrice = SalePrice
@@ -446,7 +446,7 @@ namespace RetailTradeServer.ViewModels.Dialogs
             {
                 Name = Name,
                 UnitId = SelectedUnitId.Value,
-                SupplierId = SelectedSupplierId.Value,
+                //SupplierId = SelectedSupplierId.Value,
                 TNVED = TNVED,
                 ArrivalPrice = ArrivalPrice,
                 SalePrice = SalePrice,
