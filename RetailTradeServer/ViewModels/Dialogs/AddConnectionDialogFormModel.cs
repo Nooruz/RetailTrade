@@ -5,9 +5,9 @@ using RetailTradeServer.Commands;
 using RetailTradeServer.ViewModels.Dialogs.Base;
 using SalePageServer.Properties;
 using SalePageServer.State.Dialogs;
+using SalePageServer.Utilities;
 using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.Collections.Specialized;
 using System.Data;
 using System.Data.SqlClient;
@@ -24,7 +24,7 @@ namespace RetailTradeServer.ViewModels.Dialogs
 
         private readonly IDialogService _dialogService;
         private string _serverName;
-        private ObservableCollection<string> _dataBases;
+        private ObservableQueue<string> _dataBases = new();
         private bool _canCreateConnection;
 
         #endregion
@@ -55,15 +55,7 @@ namespace RetailTradeServer.ViewModels.Dialogs
             }
         }
         public string ConnectionString => $"Server={ServerName};Trusted_Connection=True;";
-        public ObservableCollection<string> DataBases
-        {
-            get => _dataBases ?? (new());
-            set
-            {
-                _dataBases = value;
-                OnPropertyChanged(nameof(DataBases));
-            }
-        }
+        public IEnumerable<string> DataBases => _dataBases;
         public SqlConnection SqlConnection { get; set; }
         public ComboBoxEdit ComboBoxEdit { get; set; }
         public Exception SQLExeption { get; set; }
@@ -88,7 +80,7 @@ namespace RetailTradeServer.ViewModels.Dialogs
             OkCommand = new RelayCommand(Ok);
             CreateDataBaseCommand = new RelayCommand(CreateDataBase);
 
-            DataBases.CollectionChanged += DataBases_CollectionChanged;
+            //DataBases.CollectionChanged += DataBases_CollectionChanged;
         }
 
         #endregion

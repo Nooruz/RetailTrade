@@ -1,0 +1,132 @@
+﻿<UserControl
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:dxe="http://schemas.devexpress.com/winfx/2008/xaml/editors"
+    xmlns:dxlc="http://schemas.devexpress.com/winfx/2008/xaml/layoutcontrol"
+    xmlns:dxmvvm="http://schemas.devexpress.com/winfx/2008/xaml/mvvm"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    x:Class="RetailTrade.SQLServerConnectionDialog.Views.ConnectionView"
+    Width="450">
+
+    <UserControl.Resources>
+        <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter"/>
+    </UserControl.Resources>
+
+    <Grid>
+
+        <dxlc:LayoutControl Orientation="Vertical">
+
+            <TextBlock Text="Введите данные для подключения к базе данных."
+                       HorizontalAlignment="Center"
+                       FontSize="14"
+                       FontWeight="Bold"
+                       VerticalAlignment="Top"/>
+
+            <dxlc:LayoutItem LabelPosition="Top"
+                             Label="Источник данных:">
+                <dxe:TextEdit IsReadOnly="True"
+                              Text="Microsoft SQL Server (SqlClient)"/>
+            </dxlc:LayoutItem>
+
+            <dxlc:LayoutGroup>
+                <dxlc:LayoutItem LabelPosition="Top"
+                                 Label="Выберите или введите имя сервера:">
+                    <dxe:ComboBoxEdit ItemsSource="{Binding DataSources}"
+                                      EditValue="{Binding DataSource, UpdateSourceTrigger=PropertyChanged}"/>
+                </dxlc:LayoutItem>
+            </dxlc:LayoutGroup>
+
+            <dxlc:LayoutGroup View="GroupBox"
+                              Header="Вход на сервер"
+                              Orientation="Vertical">
+
+                <dxlc:LayoutItem Label="Проверка подлинности:">
+                    <dxe:ComboBoxEdit ItemsSource="{Binding AuthenticationModes}"
+                                      IsTextEditable="False"
+                                      EditValue="{Binding AuthenticationMode, UpdateSourceTrigger=PropertyChanged}"/>
+                </dxlc:LayoutItem>
+
+                <dxlc:LayoutGroup Orientation="Vertical"
+                                  IsEnabled="{Binding UsernameEnabled}">
+
+                    <dxlc:LayoutItem Label="Имя пользователя:">
+                        <dxe:TextEdit Text="{Binding Username, UpdateSourceTrigger=PropertyChanged}"/>
+                    </dxlc:LayoutItem>
+
+                    <dxlc:LayoutItem Label="Пароль:">
+                        <dxe:PasswordBoxEdit Text="{Binding Password, UpdateSourceTrigger=PropertyChanged}"/>
+                    </dxlc:LayoutItem>
+
+                </dxlc:LayoutGroup>
+
+            </dxlc:LayoutGroup>
+
+            <dxlc:LayoutGroup View="GroupBox"
+                              Header="Подключение к базе данных"
+                              Orientation="Vertical"
+                              IsEnabled="{Binding DataSourceValid}">
+
+                <dxlc:LayoutItem Label="Выберите базу данных:"
+                                 LabelPosition="Top">
+                    <dxe:ComboBoxEdit ItemsSource="{Binding DataBases}"
+                                      IsTextEditable="False"
+                                      EditValue="{Binding InitialCatalog, UpdateSourceTrigger=PropertyChanged}">
+                        <dxmvvm:Interaction.Behaviors>
+                            <dxmvvm:EventToCommand EventName="PopupOpening"
+                                                   Command="{Binding DataBaseNamePopupOpeningCommand}"
+                                                   PassEventArgsToCommand="True"/>
+                        </dxmvvm:Interaction.Behaviors>
+                    </dxe:ComboBoxEdit>
+                </dxlc:LayoutItem>
+
+            </dxlc:LayoutGroup>
+
+            <dxlc:GroupSeparator VerticalAlignment="Top"/>
+
+            <dxlc:LayoutGroup>
+
+                <Button Content="Проверить подключение"
+                        VerticalAlignment="Top"
+                        HorizontalAlignment="Left"
+                        IsEnabled="{Binding TestingEnabled}"
+                        Command="{Binding TestConnectionCommand}"/>
+
+                <Button Content="Ок"
+                        Width="100"
+                        VerticalAlignment="Top"
+                        HorizontalAlignment="Right"
+                        IsEnabled="{Binding IsConnectionValid}"
+                        Command="{Binding OkCommand}"/>
+
+                <Button Content="Отмена"
+                        Width="100"
+                        VerticalAlignment="Top"
+                        HorizontalAlignment="Right"
+                        Command="{Binding CloseCommand}"/>
+
+            </dxlc:LayoutGroup>
+
+        </dxlc:LayoutControl>
+
+        <Border Visibility="{Binding IsTesting, Converter={StaticResource BooleanToVisibilityConverter}}">
+            
+            <Border.Style>
+                <Style TargetType="{x:Type Border}">
+                    <Setter Property="Background">
+                        <Setter.Value>
+                            <SolidColorBrush Color="Black" Opacity=".3"/>
+                        </Setter.Value>
+                    </Setter>
+                </Style>
+            </Border.Style>
+
+            <TextBlock Text="Подождите..."
+                       FontWeight="Bold"
+                       FontSize="18"
+                       VerticalAlignment="Center"
+                       HorizontalAlignment="Center"/>
+
+        </Border>
+
+    </Grid>
+
+</UserControl>

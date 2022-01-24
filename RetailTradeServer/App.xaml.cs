@@ -12,6 +12,7 @@ using System;
 using System.Data.SqlClient;
 using System.Threading.Tasks;
 using System.Windows;
+using RetailTrade.SQLServerConnectionDialog;
 
 namespace RetailTradeServer
 {
@@ -78,6 +79,9 @@ namespace RetailTradeServer
             {
                 using var context = contextFactory.CreateDbContext();
 
+                startingWindow.Hide();
+                ConnectionDialog.Show();
+
                 if (CheckConnectionString(context.Database.GetConnectionString()))
                 {
                     await context.Database.MigrateAsync();
@@ -91,7 +95,8 @@ namespace RetailTradeServer
                 else
                 {
                     startingWindow.Hide();
-                    _ = _dialogService.ShowMessage(_sqlException.Message, "", MessageBoxButton.OK, MessageBoxImage.Error);
+                    ConnectionDialog.Show();
+                    //_ = _dialogService.ShowMessage(_sqlException.Message, "", MessageBoxButton.OK, MessageBoxImage.Error);
                     Current.Shutdown();
                     return;
                 }

@@ -157,10 +157,6 @@
                 <dialogs:EmployeeDialogForm/>
             </DataTemplate>
 
-            <DataTemplate DataType="{x:Type dialogViewModels:AddConnectionDialogFormModel}">
-                <dialogs:AddConnectionDialogForm/>
-            </DataTemplate>
-
             <DataTemplate DataType="{x:Type dialogViewModels:WareHouseDialogFormModel}">
                 <dialogs:WareHouseDialogForm/>
             </DataTemplate>
