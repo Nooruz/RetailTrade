@@ -56,9 +56,6 @@ namespace RetailTradeServer
         {
             await _host.StartAsync();
 
-            Settings.Default.AdminCreated = false;
-            Settings.Default.Save();
-
             _zebraBarcodeScanner = _host.Services.GetRequiredService<IZebraBarcodeScanner>();
             _comBarcodeService = _host.Services.GetRequiredService<IComBarcodeService>();
             _dialogService = _host.Services.GetRequiredService<IDialogService>();
@@ -77,29 +74,29 @@ namespace RetailTradeServer
 
             try
             {
+                //await Task.Delay(5000);
                 using var context = contextFactory.CreateDbContext();
 
-                startingWindow.Hide();
-                ConnectionDialog.Show();
-
-                if (CheckConnectionString(context.Database.GetConnectionString()))
-                {
-                    await context.Database.MigrateAsync();
-
-                    Window window = _host.Services.GetRequiredService<MainWindow>();
-                    window.DataContext = _host.Services.GetRequiredService<MainViewModel>();
-                    window.Loaded += Window_Loaded;
-                    //await Task.Delay(5000);
-                    window.Show();
-                }
-                else
-                {
+                if (!CheckConnectionString(context.Database.GetConnectionString()))
+                {                    
                     startingWindow.Hide();
-                    ConnectionDialog.Show();
-                    //_ = _dialogService.ShowMessage(_sqlException.Message, "", MessageBoxButton.OK, MessageBoxImage.Error);
-                    Current.Shutdown();
-                    return;
+                    if (ConnectionDialog.Show() == MessageBoxResult.OK)
+                    {
+                        Settings.Default.DefaultConnection = ConnectionDialog.ConnectionString;
+                        Settings.Default.Save();
+                    }
+                    else
+                    {
+                        Current.Shutdown();
+                    }
                 }
+
+                startingWindow.Hide();
+                await context.Database.MigrateAsync();
+                Window window = _host.Services.GetRequiredService<MainWindow>();
+                window.DataContext = _host.Services.GetRequiredService<MainViewModel>();
+                window.Loaded += Window_Loaded;
+                window.Show();
             }
             catch (Exception exception)
             {

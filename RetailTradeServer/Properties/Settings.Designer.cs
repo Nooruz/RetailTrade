@@ -82,5 +82,17 @@ namespace SalePageServer.Properties {
                 this["IsDataBaseConnectionAdded"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string DefaultConnection {
+            get {
+                return ((string)(this["DefaultConnection"]));
+            }
+            set {
+                this["DefaultConnection"] = value;
+            }
+        }
     }
 }

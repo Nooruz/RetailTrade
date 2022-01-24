@@ -26,7 +26,7 @@ namespace RetailTrade.SQLServerConnectionDialog.ViewModels
         #region Public Properties
 
         public SqlConnectionStringBuilder ConnectionStringBuilder { get; private set; }
-        public MessageBoxResult Result => IsConnectionValid ? MessageBoxResult.Yes : MessageBoxResult.None;
+        public MessageBoxResult Result => IsConnectionValid ? MessageBoxResult.OK : MessageBoxResult.None;
         public bool IntegratedSecurity
         {
             get => ConnectionStringBuilder.IntegratedSecurity;
@@ -128,13 +128,19 @@ namespace RetailTrade.SQLServerConnectionDialog.ViewModels
 
             TestConnectionCommand = new RelayCommand(TestConnection);
             DataBaseNamePopupOpeningCommand = new ParameterCommand(p => DataBaseNamePopupOpening(p));
-            CloseCommand = new RelayCommand(() => _window?.Close());
+            CloseCommand = new RelayCommand(Close);
             OkCommand = new RelayCommand(Ok);
         }
 
         #endregion
 
         #region Private Voids
+
+        private void Close()
+        {
+            InitialCatalog = string.Empty;
+            _window?.Close();
+        }
 
         private void Ok()
         {
