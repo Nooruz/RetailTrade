@@ -21,12 +21,15 @@ namespace RetailTradeServer.ViewModels.Dialogs
         private readonly IDataService<Unit> _unitService;
         private readonly ISupplierService _supplierService;
         private readonly IProductService _productService;
+        private readonly ITypeProductService _typeProductService;
         private readonly IDialogService _dialogService;
+        private readonly IDialogService _localDialogService;
         private readonly IMessageStore _messageStore;
         private readonly IZebraBarcodeScanner _zebraBarcodeScanner;
         private readonly IComBarcodeService _comBarcodeService;
         private int? _selectedUnitId;
         private int? _selectedSupplierId;
+        private int? _selectedTypeProductId;
         private string _barcode;
         private string _name;
         private decimal _arrivalPrice;
@@ -34,6 +37,7 @@ namespace RetailTradeServer.ViewModels.Dialogs
         private string _tnved;
         private IEnumerable<Unit> _units;
         private ObservableCollection<Supplier> _suppliers;
+        private ObservableCollection<TypeProduct> _typeProducts;
 
         #endregion
 
@@ -58,6 +62,15 @@ namespace RetailTradeServer.ViewModels.Dialogs
                 OnPropertyChanged(nameof(Suppliers));
             }
         }
+        public ObservableCollection<TypeProduct> TypeProducts
+        {
+            get => _typeProducts ?? new();
+            set
+            {
+                _typeProducts = value;
+                OnPropertyChanged(nameof(TypeProducts));
+            }
+        }
         public int? SelectedUnitId
         {
             get => _selectedUnitId;
@@ -65,6 +78,16 @@ namespace RetailTradeServer.ViewModels.Dialogs
             {
                 _selectedUnitId = value;
                 OnPropertyChanged(nameof(SelectedUnitId));
+                OnPropertyChanged(nameof(CanTabSelect));
+            }
+        }
+        public int? SelectedTypeProductId
+        {
+            get => _selectedTypeProductId;
+            set
+            {
+                _selectedTypeProductId = value;
+                OnPropertyChanged(nameof(SelectedTypeProductId));
                 OnPropertyChanged(nameof(CanTabSelect));
             }
         }
@@ -129,14 +152,9 @@ namespace RetailTradeServer.ViewModels.Dialogs
         public bool CanTabSelect => string.IsNullOrEmpty(Barcode) &&
                                     string.IsNullOrEmpty(Name) &&
                                     SelectedUnitId == null &&
+                                    SelectedTypeProductId == null &&
                                     ArrivalPrice == 0 &&
                                     SalePrice == 0;
-
-        #endregion
-
-        #region Piece Product Properties
-
-
 
         #endregion
 
@@ -146,22 +164,12 @@ namespace RetailTradeServer.ViewModels.Dialogs
         /// Команда сохранение штучного товара
         /// </summary>
         public ICommand SavePieceProductCommand { get; }
-
-        /// <summary>
-        /// Команда сохранение фасованного товара
-        /// </summary>
-        public ICommand SavePackagedProductCommand { get; }
-
-        /// <summary>
-        /// Команда сохранение весового товара
-        /// </summary>
-        public ICommand SaveWeightProductCommand { get; }
-
         /// <summary>
         /// Команда сохранение товара без штрих-кода
         /// </summary>
         public ICommand SaveProductWithoutBarcodeCommand { get; }
         public ICommand CreateSupplierCommand { get; }
+        public ICommand CreateTypeProductCommand { get; }
         public ICommand TabControlLoadedCommand { get; }
         public ICommand UserControlLoadedCommand { get; }
 
@@ -169,13 +177,15 @@ namespace RetailTradeServer.ViewModels.Dialogs
 
         #region Constructor
 
-        public CreateProductDialogFormModel(IDataService<Unit> unitService,
+        public CreateProductDialogFormModel(ITypeProductService typeProductService,
+            IDataService<Unit> unitService,
             IProductService productService,
             ISupplierService supplierService,
             IMessageStore messageStore,
             IZebraBarcodeScanner zebraBarcodeScanner,
             IComBarcodeService comBarcodeService)
         {
+            _typeProductService = typeProductService;
             _unitService = unitService;
             _productService = productService;
             _supplierService = supplierService;
@@ -184,23 +194,30 @@ namespace RetailTradeServer.ViewModels.Dialogs
             _zebraBarcodeScanner = zebraBarcodeScanner;
             _comBarcodeService = comBarcodeService;
             GlobalMessageViewModel = new(_messageStore);
+            _localDialogService = new DialogService();
 
             _messageStore.Close();
 
             SavePieceProductCommand = new RelayCommand(SavePieceProduct);
-            SavePackagedProductCommand = new RelayCommand(SavePackagedProduct);
-            SaveWeightProductCommand = new RelayCommand(SaveWeightProduct);
             SaveProductWithoutBarcodeCommand = new RelayCommand(SaveProductWithoutBarcode);
-            CreateSupplierCommand = new RelayCommand(CreateSupplier);
+            CreateSupplierCommand = new RelayCommand(() => _localDialogService.ShowDialog(new CreateSupplierProductDialogFormModal(_supplierService, _dialogService) { Title = "Поставщик (создания)" }));
             TabControlLoadedCommand = new ParameterCommand(sender => TabControlLoaded(sender));
             UserControlLoadedCommand = new RelayCommand(UserControlLoaded);
+            CreateTypeProductCommand = new RelayCommand(() => _localDialogService.ShowDialog(new TypeProductDialogFormModel(_typeProductService, _localDialogService) { Title = "Виды товаров (создание)" }));
 
             _supplierService.OnSupplierCreated += SupplierService_OnSupplierCreated;
+            _typeProductService.OnTypeProductCreated += TypeProductService_OnTypeProductCreated;
         }
 
         #endregion
 
         #region Private Voids
+
+        private void TypeProductService_OnTypeProductCreated(TypeProduct obj)
+        {
+            TypeProducts.Add(obj);
+            SelectedTypeProductId = obj.Id;
+        }
 
         private void SupplierService_OnSupplierCreated(Supplier supplier)
         {
@@ -212,6 +229,7 @@ namespace RetailTradeServer.ViewModels.Dialogs
         {
             Suppliers = new(await _supplierService.GetAllAsync());
             Units = await _unitService.GetAllAsync();
+            TypeProducts = new(await _typeProductService.GetTypes());
 
             //_zebraBarcodeScanner.Open();
             //_zebraBarcodeScanner.OnBarcodeEvent += ZebraBarcodeScanner_OnBarcodeEvent;
@@ -265,6 +283,7 @@ namespace RetailTradeServer.ViewModels.Dialogs
         private void CleareAllItems()
         {
             SelectedSupplierId = null;
+            SelectedTypeProductId = null;
             Barcode = string.Empty;
             Name = string.Empty;
             SelectedUnitId = null;
@@ -278,6 +297,11 @@ namespace RetailTradeServer.ViewModels.Dialogs
         /// </summary>
         private async void SavePieceProduct()
         {
+            if (SelectedTypeProductId == null || SelectedTypeProductId == 0)
+            {
+                _messageStore.SetCurrentMessage("Выберите вид товара.", MessageType.Error);
+                return;
+            }
             if (SelectedSupplierId == null || SelectedSupplierId == 0)
             {
                 _messageStore.SetCurrentMessage("Выберите поставщика.", MessageType.Error);
@@ -309,102 +333,16 @@ namespace RetailTradeServer.ViewModels.Dialogs
                 return;
             }
 
-            var product = await _productService.CreateAsync(new Product
+            if (await _productService.CreateAsync(new Product
             {
                 Barcode = Barcode,
                 Name = Name,
                 UnitId = SelectedUnitId.Value,
-                //SupplierId = SelectedSupplierId.Value,
+                TypeProductId = SelectedTypeProductId.Value,
                 TNVED = TNVED,
                 ArrivalPrice = ArrivalPrice,
                 SalePrice = SalePrice
-            });
-
-            if (product != null)
-            {
-                _messageStore.SetCurrentMessage("Товар успешно добавлено.", MessageType.Success);
-                CleareAllItems();
-            }
-        }
-
-        /// <summary>
-        /// Сохранение фасованного товара
-        /// </summary>
-        private async void SavePackagedProduct()
-        {
-            if (string.IsNullOrEmpty(Name))
-            {
-                _messageStore.SetCurrentMessage("Введите наименование товара.", MessageType.Error);
-                return;
-            }
-            if (SelectedUnitId == null || SelectedUnitId == 0)
-            {
-                _messageStore.SetCurrentMessage("Выберите единицу измерения.", MessageType.Error);
-                return;
-            }
-            if (ArrivalPrice <= 0)
-            {
-                _messageStore.SetCurrentMessage("Введите цену прихода товара.", MessageType.Error);
-                return;
-            }
-            if (SalePrice <= 0)
-            {
-                _messageStore.SetCurrentMessage("Введите цену продажа товара.", MessageType.Error);
-                return;
-            }
-
-            var product = await _productService.CreateAsync(new Product
-            {
-                Name = Name,
-                UnitId = SelectedUnitId.Value,
-                TNVED = TNVED,
-                ArrivalPrice = ArrivalPrice,
-                SalePrice = SalePrice
-            });
-
-            if (product != null)
-            {
-                _messageStore.SetCurrentMessage("Товар успешно добавлено.", MessageType.Success);
-                CleareAllItems();
-            }
-        }
-
-        /// <summary>
-        /// Сохранение весового товара
-        /// </summary>
-        private async void SaveWeightProduct()
-        {
-            if (string.IsNullOrEmpty(Name))
-            {
-                _messageStore.SetCurrentMessage("Введите наименование товара.", MessageType.Error);
-                return;
-            }
-            if (SelectedUnitId == null || SelectedUnitId == 0)
-            {
-                _messageStore.SetCurrentMessage("Выберите единицу измерения.", MessageType.Error);
-                return;
-            }
-            if (ArrivalPrice <= 0)
-            {
-                _messageStore.SetCurrentMessage("Введите цену прихода товара.", MessageType.Error);
-                return;
-            }
-            if (SalePrice <= 0)
-            {
-                _messageStore.SetCurrentMessage("Введите цену продажа товара.", MessageType.Error);
-                return;
-            }
-
-            var product = await _productService.CreateAsync(new Product
-            {
-                Name = Name,
-                UnitId = SelectedUnitId.Value,
-                TNVED = TNVED,
-                ArrivalPrice = ArrivalPrice,
-                SalePrice = SalePrice
-            });
-
-            if (product != null)
+            }) != null)
             {
                 _messageStore.SetCurrentMessage("Товар успешно добавлено.", MessageType.Success);
                 CleareAllItems();
@@ -416,6 +354,11 @@ namespace RetailTradeServer.ViewModels.Dialogs
         /// </summary>
         private async void SaveProductWithoutBarcode()
         {
+            if (SelectedTypeProductId == null || SelectedTypeProductId == 0)
+            {
+                _messageStore.SetCurrentMessage("Выберите вид товара.", MessageType.Error);
+                return;
+            }
             if (SelectedSupplierId == null || SelectedSupplierId == 0)
             {
                 _messageStore.SetCurrentMessage("Выберите поставщика.", MessageType.Error);
@@ -442,30 +385,20 @@ namespace RetailTradeServer.ViewModels.Dialogs
                 return;
             }
 
-            var product = await _productService.CreateAsync(new Product
+            if (await _productService.CreateAsync(new Product
             {
                 Name = Name,
                 UnitId = SelectedUnitId.Value,
-                //SupplierId = SelectedSupplierId.Value,
+                TypeProductId = SelectedTypeProductId.Value,
                 TNVED = TNVED,
                 ArrivalPrice = ArrivalPrice,
                 SalePrice = SalePrice,
                 WithoutBarcode = true
-            });
-
-            if (product != null)
+            }) != null)
             {
                 _messageStore.SetCurrentMessage("Товар успешно добавлено.", MessageType.Success);
                 CleareAllItems();
             }
-        }
-
-        private async void CreateSupplier()
-        {
-            await _dialogService.ShowDialog(new CreateSupplierProductDialogFormModal(_supplierService, _dialogService)
-            {
-                Title = "Поставщик (создания)"
-            });
         }
 
         #endregion

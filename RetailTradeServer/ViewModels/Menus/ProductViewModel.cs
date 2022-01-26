@@ -26,7 +26,7 @@ namespace RetailTradeServer.ViewModels.Menus
         private readonly IMessageStore _messageStore;
         private readonly IZebraBarcodeScanner _zebraBarcodeScanner;
         private readonly IComBarcodeService _comBarcodeService;
-        private object _selectedProductGroup;
+        private TypeProduct _selectedTypeProduct;
         private ObservableCollection<Product> _getProducts;
         private ObservableCollection<TypeProduct> _typeProducts;
         private IEnumerable<Unit> _units;
@@ -98,7 +98,15 @@ namespace RetailTradeServer.ViewModels.Menus
                 OnPropertyChanged(nameof(CanShowLoadingPanel));
             }
         }
-        public TypeProduct SelectedTypeProduct { get; set; }
+        public TypeProduct SelectedTypeProduct
+        {
+            get => _selectedTypeProduct;
+            set
+            {
+                _selectedTypeProduct = value.IsGroup ? null : value;
+                OnPropertyChanged(nameof(SelectedTypeProduct));
+            }
+        }
 
         #endregion
 
@@ -183,28 +191,17 @@ namespace RetailTradeServer.ViewModels.Menus
 
         private async void CreateProduct()
         {
-            //CreateProductDialogFormModel viewModel = new(_productCategoryService,
-            //    _productSubcategoryService,
-            //    _unitService,
-            //    _productService,
-            //    _supplierService,
-            //    _messageStore,
-            //    _zebraBarcodeScanner,
-            //    _comBarcodeService)
-            //{
-            //    Title = "Товаровы (Создать)"
-            //};
-
-            //if (SelectedProductGroup is ProductCategory productCategory)
-            //{
-            //    viewModel.SelectedProductCategoryId = productCategory.Id;
-            //}
-            //if (SelectedProductGroup is ProductSubcategory productSubcategory)
-            //{
-            //    viewModel.SelectedProductCategoryId = productSubcategory.ProductCategoryId;
-            //    viewModel.SelectedProductSubcategoryId = productSubcategory.Id;
-            //}
-            //await _dialogService.ShowDialog(viewModel);
+            await _dialogService.ShowDialog(new CreateProductDialogFormModel(_typeProductService, 
+                _unitService,
+                _productService,
+                _supplierService,
+                _messageStore,
+                _zebraBarcodeScanner,
+                _comBarcodeService)
+                {
+                    Title = "Товаровы (Создать)",
+                    SelectedTypeProductId = SelectedTypeProduct?.Id
+                });
         }
 
         private void GridControlLoaded(object sender)

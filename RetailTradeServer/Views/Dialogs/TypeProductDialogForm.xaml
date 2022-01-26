@@ -17,7 +17,11 @@
                         Orientation="Vertical">
 
         <dxlc:LayoutItem Label="Наименование:">
-            <dxe:TextEdit Text="{Binding Name, UpdateSourceTrigger=PropertyChanged}"/>
+            <dxe:TextEdit Text="{Binding Name, UpdateSourceTrigger=PropertyChanged}">
+                <dxmvvm:Interaction.Behaviors>
+                    <dxmvvm:FocusBehavior/>
+                </dxmvvm:Interaction.Behaviors>
+            </dxe:TextEdit>
         </dxlc:LayoutItem>
         <dxlc:LayoutItem Label="Группа видов товра:">
             <dxe:ComboBoxEdit ItemsSource="{Binding TypeProducts}"
