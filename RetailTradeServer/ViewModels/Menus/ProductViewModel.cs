@@ -103,7 +103,8 @@ namespace RetailTradeServer.ViewModels.Menus
             get => _selectedTypeProduct;
             set
             {
-                _selectedTypeProduct = value.IsGroup ? null : value;
+                _selectedTypeProduct = value;
+                ProductGridControl.FilterString = _selectedTypeProduct.Id == 1 ? string.Empty : $"[TypeProductId] = {_selectedTypeProduct.Id}";
                 OnPropertyChanged(nameof(SelectedTypeProduct));
             }
         }
@@ -131,7 +132,7 @@ namespace RetailTradeServer.ViewModels.Menus
             _comBarcodeService = comBarcodeService;
             _typeProductService = typeProductService;
 
-            CreateProductCommand = new RelayCommand(CreateProduct);
+            CreateProductCommand = new RelayCommand(() => _dialogService.ShowDialog(new CreateProductDialogFormModel(_typeProductService, _unitService, _productService, _supplierService, _messageStore, _zebraBarcodeScanner, _comBarcodeService) { Title = "Товаровы (Создать)", SelectedTypeProductId = SelectedTypeProduct?.Id }));
             EditProductCommand = new RelayCommand(EditProduct);
             GridControlLoadedCommand = new ParameterCommand(sender => GridControlLoaded(sender));
             DeleteMarkingProductCommand = new RelayCommand(DeleteMarkingProduct);
@@ -189,21 +190,6 @@ namespace RetailTradeServer.ViewModels.Menus
             }
         }
 
-        private async void CreateProduct()
-        {
-            await _dialogService.ShowDialog(new CreateProductDialogFormModel(_typeProductService, 
-                _unitService,
-                _productService,
-                _supplierService,
-                _messageStore,
-                _zebraBarcodeScanner,
-                _comBarcodeService)
-                {
-                    Title = "Товаровы (Создать)",
-                    SelectedTypeProductId = SelectedTypeProduct?.Id
-                });
-        }
-
         private void GridControlLoaded(object sender)
         {
             if (sender is RoutedEventArgs e)
@@ -217,24 +203,22 @@ namespace RetailTradeServer.ViewModels.Menus
 
         private async void EditProduct()
         {
-            //if (SelectedProduct != null)
-            //{
-            //    await _dialogService.ShowDialog(new EditProductWithBarcodeDialogFormModel(_productCategoryService,
-            //    _productSubcategoryService,
-            //    _unitService,
-            //    _productService,
-            //    _supplierService,
-            //    _dialogService,
-            //    _messageStore)
-            //    {
-            //        Title = "Товаровы (Редактировать)",
-            //        EditProduct = SelectedProduct
-            //    });
-            //}
-            //else
-            //{
-            //    _ = _dialogService.ShowMessage("Выберите товар", "", MessageBoxButton.OK, MessageBoxImage.Exclamation);
-            //}
+            if (SelectedProduct != null)
+            {
+                await _dialogService.ShowDialog(new EditProductWithBarcodeDialogFormModel(_unitService,
+                _productService,
+                _supplierService,
+                _dialogService,
+                _messageStore)
+                {
+                    Title = $"{SelectedProduct.Name} (Товары)",
+                    EditProduct = SelectedProduct
+                });
+            }
+            else
+            {
+                _ = _dialogService.ShowMessage("Выберите товар", "", MessageBoxButton.OK, MessageBoxImage.Exclamation);
+            }
         }
 
         private void ProductService_OnProductCreated(Product product)

@@ -200,7 +200,7 @@ namespace RetailTradeServer.ViewModels.Dialogs
 
             SavePieceProductCommand = new RelayCommand(SavePieceProduct);
             SaveProductWithoutBarcodeCommand = new RelayCommand(SaveProductWithoutBarcode);
-            CreateSupplierCommand = new RelayCommand(() => _localDialogService.ShowDialog(new CreateSupplierProductDialogFormModal(_supplierService, _dialogService) { Title = "Поставщик (создания)" }));
+            CreateSupplierCommand = new RelayCommand(() => _localDialogService.ShowDialog(new CreateSupplierProductDialogFormModal(_supplierService, _localDialogService) { Title = "Поставщик (создания)" }));
             TabControlLoadedCommand = new ParameterCommand(sender => TabControlLoaded(sender));
             UserControlLoadedCommand = new RelayCommand(UserControlLoaded);
             CreateTypeProductCommand = new RelayCommand(() => _localDialogService.ShowDialog(new TypeProductDialogFormModel(_typeProductService, _localDialogService) { Title = "Виды товаров (создание)" }));

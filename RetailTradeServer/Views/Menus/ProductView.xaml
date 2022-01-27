@@ -70,14 +70,6 @@
                                                             Content="Вид товара"
                                                             HotKey="Ins"/>
                         </dxg:TreeListView.RowCellMenuCustomizations>
-                        <!--<dxg:TreeListView.ContextMenu>
-                            <ContextMenu>
-                                <MenuItem Header="Виды товаров"/>
-                                <MenuItem Header="Группу видов товара"/>
-                                <MenuItem Header="Изменить"/>
-                                <MenuItem Header="Пометить на удаление / Снять пометку"/>
-                            </ContextMenu>
-                        </dxg:TreeListView.ContextMenu>-->
                     </dxg:TreeListView>
                 </dxg:TreeListControl.View>
                 <dxg:TreeListColumn FieldName="Name"

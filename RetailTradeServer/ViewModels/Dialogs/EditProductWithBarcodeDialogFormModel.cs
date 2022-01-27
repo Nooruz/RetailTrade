@@ -21,6 +21,7 @@ namespace RetailTradeServer.ViewModels.Dialogs
         private readonly IMessageStore _messageStore;
         private int? _selectedUnitId;
         private int? _selectedSupplierId;
+        private int? _selectedSupplierId;
         private string _barcode;
         private string _name;
         private decimal _arrivalPrice;
