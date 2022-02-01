@@ -99,6 +99,7 @@ namespace RetailTradeServer.HostBuilders
                 services.GetRequiredService<ISupplierService>(),
                 services.GetRequiredService<IOrderStatusService>(),
                 services.GetRequiredService<IUserStore>(),
+                services.GetRequiredService<IZebraBarcodeScanner>(),
                 services.GetRequiredService<IDataService<Unit>>());
         }
 

@@ -4,6 +4,7 @@ using RetailTradeServer.Commands;
 using RetailTradeServer.State.Messages;
 using RetailTradeServer.ViewModels.Dialogs.Base;
 using SalePageServer.State.Dialogs;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Windows;
 using System.Windows.Input;
@@ -14,6 +15,7 @@ namespace RetailTradeServer.ViewModels.Dialogs
     {
         #region Private Members
 
+        private readonly ITypeProductService _typeProductService;
         private readonly IDataService<Unit> _unitService;
         private readonly ISupplierService _supplierService;
         private readonly IProductService _productService;
@@ -21,14 +23,15 @@ namespace RetailTradeServer.ViewModels.Dialogs
         private readonly IMessageStore _messageStore;
         private int? _selectedUnitId;
         private int? _selectedSupplierId;
-        private int? _selectedSupplierId;
+        private int? _selectedTypeProductId;
         private string _barcode;
         private string _name;
         private decimal _arrivalPrice;
         private decimal _salePrice;
         private string _tnved;
-        private ObservableCollection<Unit> _units;
-        private ObservableCollection<Supplier> _suppliers;
+        private IEnumerable<Unit> _units;
+        private IEnumerable<Supplier> _suppliers;
+        private IEnumerable<TypeProduct> _typeProducts;
         private Product _editProduct;
 
         #endregion
@@ -49,7 +52,8 @@ namespace RetailTradeServer.ViewModels.Dialogs
                     SalePrice = _editProduct.SalePrice;
                     TNVED = _editProduct.TNVED;
                     Barcode = _editProduct.Barcode;
-                    //SelectedSupplierId = _editProduct.SupplierId;
+                    SelectedSupplierId = _editProduct.SupplierId;
+                    SelectedTypeProductId = _editProduct.TypeProductId;
                     SelectedUnitId = _editProduct.UnitId;
                 }
                 OnPropertyChanged(nameof(EditProduct));
@@ -57,22 +61,31 @@ namespace RetailTradeServer.ViewModels.Dialogs
             }
         }
         public Visibility BarcodeVisibility => EditProduct.WithoutBarcode ? Visibility.Collapsed : Visibility.Visible;
-        public ObservableCollection<Unit> Units
+        public IEnumerable<Unit> Units
         {
-            get => _units ?? (new());
+            get => _units;
             set
             {
                 _units = value;
                 OnPropertyChanged(nameof(Units));
             }
         }
-        public ObservableCollection<Supplier> Suppliers
+        public IEnumerable<Supplier> Suppliers
         {
-            get => _suppliers ?? (new());
+            get => _suppliers;
             set
             {
                 _suppliers = value;
                 OnPropertyChanged(nameof(Suppliers));
+            }
+        }
+        public IEnumerable<TypeProduct> TypeProducts
+        {
+            get => _typeProducts;
+            set
+            {
+                _typeProducts = value;
+                OnPropertyChanged(nameof(TypeProducts));
             }
         }
         public int? SelectedUnitId
@@ -91,6 +104,15 @@ namespace RetailTradeServer.ViewModels.Dialogs
             {
                 _selectedSupplierId = value;
                 OnPropertyChanged(nameof(SelectedSupplierId));
+            }
+        }
+        public int? SelectedTypeProductId
+        {
+            get => _selectedTypeProductId;
+            set
+            {
+                _selectedTypeProductId = value;
+                OnPropertyChanged(nameof(SelectedTypeProductId));
             }
         }
         public string Barcode
@@ -138,8 +160,6 @@ namespace RetailTradeServer.ViewModels.Dialogs
                 OnPropertyChanged(nameof(TNVED));
             }
         }
-        public Unit SelectedUnit { get; set; }
-        public Supplier SelectedSupplier { get; set; }
 
         #endregion
 
@@ -147,18 +167,19 @@ namespace RetailTradeServer.ViewModels.Dialogs
 
         public ICommand UserControlLoadedCommand { get; }
         public ICommand SaveCommand { get; }
-        public ICommand CreateSupplierCommand { get; }
 
         #endregion
 
         #region Constructor
 
-        public EditProductWithBarcodeDialogFormModel(IDataService<Unit> unitService,
+        public EditProductWithBarcodeDialogFormModel(ITypeProductService typeProductService,
+            IDataService<Unit> unitService,
             IProductService productService,
             ISupplierService supplierService,
             IDialogService dialogService,
             IMessageStore messageStore)
         {
+            _typeProductService = typeProductService;
             _unitService = unitService;
             _productService = productService;
             _supplierService = supplierService;
@@ -167,10 +188,7 @@ namespace RetailTradeServer.ViewModels.Dialogs
             GlobalMessageViewModel = new(_messageStore);
 
             UserControlLoadedCommand = new RelayCommand(UserControlLoaded);
-            SaveCommand = new RelayCommand(Save);
-            CreateSupplierCommand = new RelayCommand(CreateSupplier);
-
-            _supplierService.OnSupplierCreated += SupplierService_OnSupplierCreated;
+            SaveCommand = new RelayCommand(Save);;
         }
 
         #endregion
@@ -179,24 +197,29 @@ namespace RetailTradeServer.ViewModels.Dialogs
 
         private async void Save()
         {
+            if (SelectedTypeProductId == null || SelectedTypeProductId == 0)
+            {
+                _messageStore.SetCurrentMessage("Виберите вид товара!", MessageType.Error);
+                return;
+            }
             if (string.IsNullOrEmpty(Name))
             {
-                _messageStore.SetCurrentMessage("Введите наименование товара.", MessageType.Error);
+                _messageStore.SetCurrentMessage("Введите наименование товара!", MessageType.Error);
                 return;
             }
             if (SelectedUnitId == null || SelectedUnitId == 0)
             {
-                _messageStore.SetCurrentMessage("Выберите единицу измерения.", MessageType.Error);
+                _messageStore.SetCurrentMessage("Выберите единицу измерения!", MessageType.Error);
                 return;
             }
             if (ArrivalPrice <= 0)
             {
-                _messageStore.SetCurrentMessage("Введите цену прихода товара.", MessageType.Error);
+                _messageStore.SetCurrentMessage("Введите цену прихода товара!", MessageType.Error);
                 return;
             }
             if (SalePrice <= 0)
             {
-                _messageStore.SetCurrentMessage("Введите цену продажа товара.", MessageType.Error);
+                _messageStore.SetCurrentMessage("Введите цену продажа товара!", MessageType.Error);
                 return;
             }
 
@@ -205,9 +228,9 @@ namespace RetailTradeServer.ViewModels.Dialogs
             EditProduct.SalePrice = SalePrice;            
             EditProduct.TNVED = TNVED;
             EditProduct.Barcode = Barcode;
-            //EditProduct.SupplierId = SelectedSupplierId.Value;
+            EditProduct.SupplierId = SelectedSupplierId.Value;
+            EditProduct.TypeProductId = SelectedTypeProductId.Value;
             EditProduct.UnitId = SelectedUnitId.Value;
-            EditProduct.WithoutBarcode = string.IsNullOrEmpty(Barcode);
 
             await _productService.UpdateAsync(EditProduct.Id, EditProduct);
             _dialogService.Close();
@@ -215,24 +238,9 @@ namespace RetailTradeServer.ViewModels.Dialogs
 
         private async void UserControlLoaded()
         {
-            Suppliers = new(await _supplierService.GetAllAsync());
-            Units = new(await _unitService.GetAllAsync());
-        }
-
-        private void CreateSupplier()
-        {
-            //_dialogService.ShowDialog(new CreateSupplierProductDialogFormModal(_supplierService, _dialogService)
-            //{
-            //    Title = "Поставщик (создания)"
-            //},
-            //    new CreateSupplierProductDialogForm());
-        }
-
-        private void SupplierService_OnSupplierCreated(Supplier supplier)
-        {
-            Suppliers.Add(supplier);
-            SelectedSupplier = supplier;
-            SelectedSupplierId = supplier.Id;
+            TypeProducts = await _typeProductService.GetTypesAsync();
+            Suppliers = await _supplierService.GetAllAsync();
+            Units = await _unitService.GetAllAsync();
         }
 
         #endregion
@@ -241,7 +249,6 @@ namespace RetailTradeServer.ViewModels.Dialogs
 
         public override void Dispose()
         {
-            _supplierService.OnSupplierCreated -= SupplierService_OnSupplierCreated;
             base.Dispose();
         }
 

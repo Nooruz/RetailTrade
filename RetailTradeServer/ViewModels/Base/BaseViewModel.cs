@@ -98,7 +98,10 @@ namespace RetailTradeServer.ViewModels.Base
 
         #endregion
 
-        public virtual void Dispose() { }
+        public virtual void Dispose() 
+        {
+            _authenticator.StateChanged -= AuthenticatorStateChanged;
+        }
 
         protected void OnPropertyChanged(string propertyName)
         {

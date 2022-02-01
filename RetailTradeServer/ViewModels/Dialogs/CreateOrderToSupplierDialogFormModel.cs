@@ -3,13 +3,13 @@ using RetailTrade.Domain.Models;
 using RetailTrade.Domain.Services;
 using RetailTradeServer.Commands;
 using RetailTradeServer.Report;
+using RetailTradeServer.State.Barcode;
 using RetailTradeServer.State.Users;
 using RetailTradeServer.ViewModels.Dialogs.Base;
-using RetailTradeServer.Views.Dialogs;
 using SalePageServer.State.Dialogs;
-using SalePageServer.Utilities;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Windows;
 using System.Windows.Input;
@@ -24,6 +24,7 @@ namespace RetailTradeServer.ViewModels.Dialogs
         private readonly ISupplierService _supplierService;
         private readonly IOrderStatusService _orderStatusService;
         private readonly IOrderToSupplierService _orderToSupplierService;
+        private readonly IZebraBarcodeScanner _zebraBarcodeScanner;
         private readonly IDataService<Unit> _unitService;
         private readonly IUserStore _userStore;
         private readonly IDialogService _dialogService;
@@ -35,7 +36,7 @@ namespace RetailTradeServer.ViewModels.Dialogs
         private IEnumerable<Product> _products;
         private IEnumerable<OrderStatus> _orderStatuses;
         private IEnumerable<Unit> _units;
-        private ObservableQueue<OrderProduct> _orderProducts;
+        private ObservableCollection<OrderProduct> _orderProducts;
 
         #endregion
 
@@ -107,7 +108,15 @@ namespace RetailTradeServer.ViewModels.Dialogs
                 OnPropertyChanged(nameof(Products));
             }
         }
-        public IEnumerable<OrderProduct> OrderProducts => _orderProducts;
+        public ObservableCollection<OrderProduct> OrderProducts
+        {
+            get => _orderProducts ?? new();
+            set
+            {
+                _orderProducts = value;
+                OnPropertyChanged(nameof(OrderProducts));
+            }
+        }
         public OrderProduct SelectedOrderProduct
         {
             get => _selectedOrderProduct;
@@ -123,12 +132,13 @@ namespace RetailTradeServer.ViewModels.Dialogs
 
         #region Commands
 
-        public ICommand ValidateCellCommand { get; }
+        public ICommand ValidateCellCommand => new ParameterCommand(parameter => ValidateCell(parameter));
         public ICommand OrderProductCommand { get; }
         public ICommand ClearCommand { get; }
         public ICommand AddProductToOrderCommand { get; }
         public ICommand UserControlLoadedCommand { get; }
         public ICommand CellValueChangedCommand { get; }
+        public ICommand DeleteSelectedOrderProductCommand { get; }
 
         #endregion
 
@@ -138,6 +148,7 @@ namespace RetailTradeServer.ViewModels.Dialogs
             ISupplierService supplierService,
             IOrderToSupplierService orderToSupplierService,
             IOrderStatusService orderStatusService,
+            IZebraBarcodeScanner zebraBarcodeScanner,
             IDataService<Unit> unitService,
             IUserStore userStore,
             IDialogService dialogService)
@@ -149,20 +160,29 @@ namespace RetailTradeServer.ViewModels.Dialogs
             _unitService = unitService;
             _userStore = userStore;
             _dialogService = dialogService;
+            _zebraBarcodeScanner = zebraBarcodeScanner;
 
             _orderProducts = new();
 
-            ValidateCellCommand = new ParameterCommand(parameter => ValidateCell(parameter));
             OrderProductCommand = new RelayCommand(CreateOrder);
             ClearCommand = new RelayCommand(Cleare);
             AddProductToOrderCommand = new RelayCommand(AddProductToOrder);
             UserControlLoadedCommand = new RelayCommand(UserControlLoaded);
             CellValueChangedCommand = new ParameterCommand(p => CellValueChanged(p));
+            DeleteSelectedOrderProductCommand = new RelayCommand(DeleteSelectedOrderProduct);
         }
 
         #endregion
 
         #region Private Voids
+
+        private void DeleteSelectedOrderProduct()
+        {
+            if (SelectedOrderProduct != null)
+            {
+                OrderProducts.Remove(SelectedOrderProduct);
+            }
+        }
 
         private void CellValueChanged(object parameter)
         {
@@ -172,7 +192,7 @@ namespace RetailTradeServer.ViewModels.Dialogs
                 {
                     Product product = Products.FirstOrDefault(p => p.Id == (int)e.Value);
                     SelectedOrderProduct.ArrivalPrice = product.ArrivalPrice;
-                    SelectedOrderProduct.Product = new Product { UnitId = product.UnitId };
+                    SelectedOrderProduct.Product = product;
                 }
                 TableView tableView = e.Source as TableView;
                 tableView.PostEditor();
@@ -186,13 +206,32 @@ namespace RetailTradeServer.ViewModels.Dialogs
             Suppliers = await _supplierService.GetAllAsync();
             OrderStatuses = await _orderStatusService.GetAllAsync();
             Units = await _unitService.GetAllAsync();
+            _zebraBarcodeScanner.Open();
+            _zebraBarcodeScanner.OnBarcodeEvent += ZebraBarcodeScanner_OnBarcodeEvent;
+        }
+
+        private void ZebraBarcodeScanner_OnBarcodeEvent(string obj)
+        {
+            if (!string.IsNullOrEmpty(obj) && Products != null && Products.Any())
+            {
+                Product product = Products.FirstOrDefault(p => p.Barcode == obj);
+                if (product != null && OrderProducts.FirstOrDefault(o => o.ProductId == product.Id) == null)
+                {
+                    OrderProducts.Add(new OrderProduct()
+                    {
+                        ProductId = product.Id,
+                        ArrivalPrice = product.ArrivalPrice,
+                        Product = product
+                    });
+                }
+            }
         }
 
         private void AddProductToOrder()
         {
             if (SelectedSupplier != null)
             {
-                _orderProducts.Enqueue(new OrderProduct());
+                OrderProducts.Add(new OrderProduct());
             }
             else
             {
@@ -245,7 +284,7 @@ namespace RetailTradeServer.ViewModels.Dialogs
         {
             if (SelectedSupplier != null)
             {
-                //Products = await _productService.PredicateSelect(p => p.SupplierId == SelectedSupplier.Id, p => new Product { Id = p.Id, Name = p.Name, UnitId = p.UnitId, ArrivalPrice = p.ArrivalPrice });
+                Products = await _productService.PredicateSelect(p => p.SupplierId == SelectedSupplier.Id && p.DeleteMark == false, p => new Product { Id = p.Id, Name = p.Name, UnitId = p.UnitId, ArrivalPrice = p.ArrivalPrice, Barcode = p.Barcode });
             }
         }
 
@@ -255,6 +294,8 @@ namespace RetailTradeServer.ViewModels.Dialogs
 
         public override void Dispose()
         {
+            _zebraBarcodeScanner.OnBarcodeEvent -= ZebraBarcodeScanner_OnBarcodeEvent;
+            _zebraBarcodeScanner.Close();
             base.Dispose();
         }
 

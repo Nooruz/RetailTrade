@@ -1,6 +1,7 @@
 ﻿using RetailTrade.Domain.Models;
 using RetailTrade.Domain.Services;
 using RetailTradeServer.Commands;
+using RetailTradeServer.State.Barcode;
 using RetailTradeServer.State.Users;
 using RetailTradeServer.ViewModels.Base;
 using RetailTradeServer.ViewModels.Dialogs;
@@ -22,6 +23,7 @@ namespace RetailTradeServer.ViewModels.Menus
         private readonly IProductService _productService;
         private readonly ISupplierService _supplierService;
         private readonly IUserStore _userStore;
+        private readonly IZebraBarcodeScanner _zebraBarcodeScanner;
         private readonly IDataService<Unit> _unitService;
         private IEnumerable<OrderStatus> _orderStatuses;
         private ObservableCollection<OrderToSupplier> _ordersToSuppliers;
@@ -71,6 +73,7 @@ namespace RetailTradeServer.ViewModels.Menus
             ISupplierService supplierService,
             IOrderStatusService orderStatusService,
             IUserStore userStore,
+            IZebraBarcodeScanner zebraBarcodeScanner,
             IDataService<Unit> unitService)
         {
             _orderToSupplierService = orderToSupplierService;
@@ -80,6 +83,7 @@ namespace RetailTradeServer.ViewModels.Menus
             _orderStatusService = orderStatusService;
             _userStore = userStore;
             _unitService = unitService;
+            _zebraBarcodeScanner = zebraBarcodeScanner;
 
             CreateOrderCommand = new RelayCommand(CreateOrder);
             DeleteOrderCommand = new RelayCommand(DeleteOrder);
@@ -138,7 +142,7 @@ namespace RetailTradeServer.ViewModels.Menus
 
         private async void CreateOrder()
         {
-            await _dialogService.ShowDialog(new CreateOrderToSupplierDialogFormModel(_productService, _supplierService, _orderToSupplierService, _orderStatusService, _unitService, _userStore, _dialogService) { Title = "Заказ поставшику (новый)" });
+            await _dialogService.ShowDialog(new CreateOrderToSupplierDialogFormModel(_productService, _supplierService, _orderToSupplierService, _orderStatusService, _zebraBarcodeScanner, _unitService, _userStore, _dialogService) { Title = "Заказ поставшику (новый)" });
         }
 
         private async void DeleteOrder()
@@ -163,6 +167,7 @@ namespace RetailTradeServer.ViewModels.Menus
             OrdersToSuppliers = null;
             OrderStatuses = null;
             SelectedOrderToSupplier = null;
+            _orderToSupplierService.OnOrderToSupplierCreated -= OrderToSupplierService_OnOrderToSupplierCreated;
             base.Dispose();
         }
     }

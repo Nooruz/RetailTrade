@@ -106,7 +106,7 @@ namespace RetailTradeServer.ViewModels.Menus
         {
             Suppliers = null;
             SelectedSupplier = null;
-
+            _supplierService.OnSupplierCreated -= SupplierService_OnSupplierCreated;
             base.Dispose();
         }
     }

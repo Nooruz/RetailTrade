@@ -8,7 +8,7 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:dialogs="clr-namespace:RetailTradeServer.Dialogs"
     x:Class="RetailTradeServer.Views.Dialogs.CreateProductDialogForm"
-                               Width="600"
+    Width="600"
     Height="400"
     KeyUp="BaseDialogUserControl_KeyUp">
 

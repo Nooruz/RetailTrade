@@ -205,7 +205,8 @@ namespace RetailTradeServer.ViewModels.Menus
         {
             if (SelectedProduct != null)
             {
-                await _dialogService.ShowDialog(new EditProductWithBarcodeDialogFormModel(_unitService,
+                await _dialogService.ShowDialog(new EditProductWithBarcodeDialogFormModel(_typeProductService,
+                _unitService,
                 _productService,
                 _supplierService,
                 _dialogService,
@@ -232,6 +233,8 @@ namespace RetailTradeServer.ViewModels.Menus
 
         public override void Dispose()
         {
+            _productService.OnProductCreated -= ProductService_OnProductCreated;
+            _typeProductService.OnTypeProductCreated -= TypeProductService_OnTypeProductCreated;
             base.Dispose();
         }
 

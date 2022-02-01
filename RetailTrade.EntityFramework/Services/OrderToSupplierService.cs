@@ -64,7 +64,7 @@ namespace RetailTrade.EntityFramework.Services
                 return await context.OrdersToSuppliers
                     .Include(o => o.OrderStatus)
                     .Include(o => o.OrderProducts)
-                    .ThenInclude(o => o.Product)
+                    //.ThenInclude(o => o.Product)
                     .Include(o => o.Supplier)
                     .ToListAsync();
             }

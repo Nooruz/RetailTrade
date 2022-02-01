@@ -24,7 +24,7 @@ namespace RetailTradeServer.ViewModels.Dialogs
 
         private readonly IDialogService _dialogService;
         private string _serverName;
-        private ObservableQueue<string> _dataBases = new();
+        private readonly ObservableQueue<string> _dataBases = new();
         private bool _canCreateConnection;
 
         #endregion
@@ -79,8 +79,6 @@ namespace RetailTradeServer.ViewModels.Dialogs
             CheckConnectionCommand = new RelayCommand(CheckConnection);
             OkCommand = new RelayCommand(Ok);
             CreateDataBaseCommand = new RelayCommand(CreateDataBase);
-
-            //DataBases.CollectionChanged += DataBases_CollectionChanged;
         }
 
         #endregion
@@ -230,6 +228,15 @@ namespace RetailTradeServer.ViewModels.Dialogs
                     }
                 }
             }
+        }
+
+        #endregion
+
+        #region Dispose
+
+        public override void Dispose()
+        {
+            base.Dispose();
         }
 
         #endregion

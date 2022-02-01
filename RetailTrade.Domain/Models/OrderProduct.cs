@@ -84,8 +84,10 @@ namespace RetailTrade.Domain.Models
         }
 
         /// <summary>
-        /// Товар
+        /// Заказ
         /// </summary>
+        public OrderToSupplier OrderToSupplier { get; set; }
+
         public Product Product
         {
             get => _product;
@@ -95,11 +97,6 @@ namespace RetailTrade.Domain.Models
                 OnPropertyChanged(nameof(Product));
             }
         }
-
-        /// <summary>
-        /// Заказ
-        /// </summary>
-        public OrderToSupplier OrderToSupplier { get; set; }
 
         #endregion        
     }

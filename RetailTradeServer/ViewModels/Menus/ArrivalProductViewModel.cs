@@ -153,7 +153,7 @@ namespace RetailTradeServer.ViewModels.Menus
         {
             SelectedArrival = null;
             Arrivals = null;
-
+            _arrivalService.PropertiesChanged -= GetArrivalsAsync;
             base.Dispose();
         }
     }

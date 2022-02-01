@@ -12,14 +12,14 @@ using RetailTrade.EntityFramework;
 namespace RetailTrade.EntityFramework.Migrations
 {
     [DbContext(typeof(RetailTradeDbContext))]
-    [Migration("20220122201302_First")]
-    partial class First
+    [Migration("20220201141650_New")]
+    partial class New
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "6.0.0")
+                .HasAnnotation("ProductVersion", "6.0.1")
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder, 1L, 1);
@@ -1036,15 +1036,13 @@ namespace RetailTrade.EntityFramework.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("RetailTrade.Domain.Models.Product", "Product")
+                    b.HasOne("RetailTrade.Domain.Models.Product", null)
                         .WithMany("Orders")
                         .HasForeignKey("ProductId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.Navigation("OrderToSupplier");
-
-                    b.Navigation("Product");
                 });
 
             modelBuilder.Entity("RetailTrade.Domain.Models.OrderToSupplier", b =>
@@ -1079,7 +1077,7 @@ namespace RetailTrade.EntityFramework.Migrations
                         .IsRequired();
 
                     b.HasOne("RetailTrade.Domain.Models.Unit", "Unit")
-                        .WithMany()
+                        .WithMany("Products")
                         .HasForeignKey("UnitId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -1339,6 +1337,11 @@ namespace RetailTrade.EntityFramework.Migrations
             modelBuilder.Entity("RetailTrade.Domain.Models.TypeWareHouse", b =>
                 {
                     b.Navigation("WareHouses");
+                });
+
+            modelBuilder.Entity("RetailTrade.Domain.Models.Unit", b =>
+                {
+                    b.Navigation("Products");
                 });
 
             modelBuilder.Entity("RetailTrade.Domain.Models.User", b =>

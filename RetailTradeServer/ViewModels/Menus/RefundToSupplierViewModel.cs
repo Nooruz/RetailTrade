@@ -111,6 +111,7 @@ namespace RetailTradeServer.ViewModels.Menus
         {
             RefundsToSuppliers = null;
             SelectedRefundToSupplier = null;
+            _refundToSupplierService.PropertiesChanged -= GetRefundToSuppliersAsync;
             base.Dispose();
         }
     }

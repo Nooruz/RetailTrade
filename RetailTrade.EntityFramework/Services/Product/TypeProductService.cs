@@ -83,7 +83,7 @@ namespace RetailTrade.EntityFramework.Services
             return null;
         }
 
-        public async Task<IEnumerable<TypeProduct>> GetGroups()
+        public async Task<IEnumerable<TypeProduct>> GetGroupsAsync()
         {
             try
             {
@@ -99,7 +99,7 @@ namespace RetailTrade.EntityFramework.Services
             return null;
         }
 
-        public async Task<IEnumerable<TypeProduct>> GetTypes()
+        public async Task<IEnumerable<TypeProduct>> GetTypesAsync()
         {
             try
             {

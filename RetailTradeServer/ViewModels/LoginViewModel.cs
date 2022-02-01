@@ -17,7 +17,7 @@ namespace RetailTradeServer.ViewModels
     {
         #region Private Members
 
-        private IUserService _userService;
+        private readonly IUserService _userService;
         private User _selectedUser;
         private string _password;
         private IEnumerable<User> _users;

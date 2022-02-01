@@ -85,5 +85,15 @@ namespace RetailTradeServer.ViewModels.Menus
         }
 
         #endregion
+
+        #region Dispose
+
+        public override void Dispose()
+        {
+            _wareHouseService.OnWareHouseCreated -= WareHouseService_OnWareHouseCreated;
+            base.Dispose();
+        }
+
+        #endregion
     }
 }

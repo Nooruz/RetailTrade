@@ -58,6 +58,10 @@ namespace RetailTradeServer.Commands
             {
                 //ignore
             }
+            finally
+            {
+                _viewModel.PropertyChanged -= ViewModel_PropertyChanged;
+            }
         }
 
         private void ViewModel_PropertyChanged(object sender, PropertyChangedEventArgs e)

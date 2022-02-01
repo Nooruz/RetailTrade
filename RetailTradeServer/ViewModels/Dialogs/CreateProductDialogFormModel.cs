@@ -229,10 +229,10 @@ namespace RetailTradeServer.ViewModels.Dialogs
         {
             Suppliers = new(await _supplierService.GetAllAsync());
             Units = await _unitService.GetAllAsync();
-            TypeProducts = new(await _typeProductService.GetTypes());
+            TypeProducts = new(await _typeProductService.GetTypesAsync());
 
-            //_zebraBarcodeScanner.Open();
-            //_zebraBarcodeScanner.OnBarcodeEvent += ZebraBarcodeScanner_OnBarcodeEvent;
+            _zebraBarcodeScanner.Open();
+            _zebraBarcodeScanner.OnBarcodeEvent += ZebraBarcodeScanner_OnBarcodeEvent;
             _comBarcodeService.Open();
             _comBarcodeService.OnBarcodeEvent += ComBarcodeService_OnBarcodeEvent;
         }
@@ -337,6 +337,7 @@ namespace RetailTradeServer.ViewModels.Dialogs
             {
                 Barcode = Barcode,
                 Name = Name,
+                SupplierId = SelectedSupplierId.Value,
                 UnitId = SelectedUnitId.Value,
                 TypeProductId = SelectedTypeProductId.Value,
                 TNVED = TNVED,
@@ -407,6 +408,11 @@ namespace RetailTradeServer.ViewModels.Dialogs
 
         public override void Dispose()
         {
+            _zebraBarcodeScanner.OnBarcodeEvent -= ZebraBarcodeScanner_OnBarcodeEvent;
+            _comBarcodeService.OnBarcodeEvent -= ComBarcodeService_OnBarcodeEvent;
+            _supplierService.OnSupplierCreated -= SupplierService_OnSupplierCreated;
+            _typeProductService.OnTypeProductCreated -= TypeProductService_OnTypeProductCreated;
+            _zebraBarcodeScanner.Close();
             base.Dispose();
         }
 

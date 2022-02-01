@@ -143,7 +143,7 @@ namespace RetailTradeServer.ViewModels.Menus
         {
             WriteDowns = null;
             SelectedWriteDown = null;
-
+            _writeDownService.PropertiesChanged -= GetWriteDownsAsync;
             base.Dispose();
         }
     }

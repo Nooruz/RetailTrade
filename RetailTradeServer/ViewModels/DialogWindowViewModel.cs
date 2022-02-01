@@ -62,5 +62,15 @@ namespace RetailTradeServer.ViewModels
         }
 
         #endregion
+
+        #region Dispose
+
+        public override void Dispose()
+        {
+
+            base.Dispose();
+        }
+
+        #endregion
     }
 }

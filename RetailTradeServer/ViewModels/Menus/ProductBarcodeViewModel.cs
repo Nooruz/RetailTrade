@@ -151,7 +151,7 @@ namespace RetailTradeServer.ViewModels.Menus
 
         private void PrintingSystem_EndPrint(object sender, EventArgs e)
         {
-            _productBarcodePrintings.Clear();
+            _productBarcodePrintings.Clear();            
         }
 
         private async void GenerateBarcode()

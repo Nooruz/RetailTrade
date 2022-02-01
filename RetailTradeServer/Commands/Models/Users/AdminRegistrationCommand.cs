@@ -102,6 +102,10 @@ namespace RetailTradeServer.Commands
             {
                 _messageStore.SetCurrentMessage(e.Message, MessageType.Error);
             }
+            finally
+            {
+                _viewModel.PropertyChanged -= ViewModel_PropertyChanged;
+            }
         }
 
         private void ViewModel_PropertyChanged(object sender, PropertyChangedEventArgs e)

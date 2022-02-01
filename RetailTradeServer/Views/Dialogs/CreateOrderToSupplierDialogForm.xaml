@@ -44,6 +44,11 @@
                          ItemsSource="{Binding OrderProducts}"
                          SelectedItem="{Binding SelectedOrderProduct}">
 
+            <dxg:GridControl.InputBindings>
+                <KeyBinding Key="Delete"
+                            Command="{Binding DeleteSelectedOrderProductCommand}"/>
+            </dxg:GridControl.InputBindings>
+            
             <dxg:GridControl.View>
                 <dxg:TableView InvalidRowException="TableView_InvalidRowException"
                                ShowGroupPanel="False"

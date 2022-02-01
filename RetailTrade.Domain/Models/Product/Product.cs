@@ -21,6 +21,7 @@ namespace RetailTrade.Domain.Models
         private decimal _arrivalPrice;
         private decimal _salePrice;
         private bool _deleteMark;
+        private Unit _unit;
 
         #endregion
 
@@ -171,8 +172,16 @@ namespace RetailTrade.Domain.Models
             }
         }
 
-        public Supplier Supplier { get; set; }
-        public Unit Unit { get; set; }
+        public Unit Unit
+        {
+            get => _unit;
+            set
+            {
+                _unit = value;
+                OnPropertyChanged(nameof(Unit));
+            }
+        }
+        public Supplier Supplier { get; set; }        
         public TypeProduct TypeProduct { get; set; }
         public ICollection<ProductSale> ProductSales { get; set; }
         public ICollection<ProductRefund> ProductRefunds { get; set; }

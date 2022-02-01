@@ -11,13 +11,13 @@ namespace RetailTrade.Domain.Services
         /// Получить группы видов товара
         /// </summary>
         /// <returns></returns>
-        Task<IEnumerable<TypeProduct>> GetGroups();
+        Task<IEnumerable<TypeProduct>> GetGroupsAsync();
 
         /// <summary>
         /// Получить видов товара
         /// </summary>
         /// <returns></returns>
-        Task<IEnumerable<TypeProduct>> GetTypes();
+        Task<IEnumerable<TypeProduct>> GetTypesAsync();
 
         event Action<TypeProduct> OnTypeProductCreated;
     }

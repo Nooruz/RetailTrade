@@ -93,7 +93,7 @@ namespace RetailTradeServer.ViewModels.Dialogs
 
         private async void UserControlLoaded()
         {
-            TypeProducts = await _typeProductService.GetGroups();
+            TypeProducts = await _typeProductService.GetGroupsAsync();
         }
 
         private async void Create()

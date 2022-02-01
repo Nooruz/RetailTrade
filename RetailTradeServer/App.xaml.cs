@@ -60,6 +60,9 @@ namespace RetailTradeServer
             _comBarcodeService = _host.Services.GetRequiredService<IComBarcodeService>();
             _dialogService = _host.Services.GetRequiredService<IDialogService>();
 
+            Settings.Default.AdminCreated = false;
+            Settings.Default.Save();
+
             startingWindow = new()
             {
                 WindowStyle = WindowStyle.None,
