@@ -60,8 +60,9 @@ namespace RetailTradeServer
             _comBarcodeService = _host.Services.GetRequiredService<IComBarcodeService>();
             _dialogService = _host.Services.GetRequiredService<IDialogService>();
 
-            Settings.Default.AdminCreated = false;
-            Settings.Default.Save();
+            //Settings.Default.AdminCreated = false;
+            //Settings.Default.DefaultConnection = "Server=.ds;Database=RetailTradeDb;Trusted_Connection=True;";
+            //Settings.Default.Save();
 
             startingWindow = new()
             {
@@ -87,14 +88,14 @@ namespace RetailTradeServer
                     {
                         Settings.Default.DefaultConnection = ConnectionDialog.ConnectionString;
                         Settings.Default.Save();
+                        _ = System.Diagnostics.Process.Start(ResourceAssembly.Location);
+                        Current.Shutdown();
                     }
                     else
                     {
                         Current.Shutdown();
                     }
                 }
-
-                startingWindow.Hide();
                 await context.Database.MigrateAsync();
                 Window window = _host.Services.GetRequiredService<MainWindow>();
                 window.DataContext = _host.Services.GetRequiredService<MainViewModel>();

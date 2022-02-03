@@ -1,8 +1,8 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using RetailTrade.EntityFramework;
+using SalePageServer.Properties;
 
 namespace RetailTradeServer.HostBuilders
 {
@@ -12,11 +12,9 @@ namespace RetailTradeServer.HostBuilders
         {
             return host.ConfigureServices((context, services) =>
             {
-                string connectionString = context.Configuration.GetConnectionString("DefaultConnection");
-                void ConfigureDbContext(DbContextOptionsBuilder o) => o.UseSqlServer(connectionString);
-
-                services.AddDbContext<RetailTradeDbContext>(ConfigureDbContext);
-                services.AddSingleton(new RetailTradeDbContextFactory(ConfigureDbContext));
+                static void ConfigureDbContext(DbContextOptionsBuilder o) => o.UseSqlServer(Settings.Default.DefaultConnection);
+                _ = services.AddDbContext<RetailTradeDbContext>(ConfigureDbContext);
+                _ = services.AddSingleton(new RetailTradeDbContextFactory(ConfigureDbContext));
             });
         }
     }

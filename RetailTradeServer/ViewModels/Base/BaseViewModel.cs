@@ -100,7 +100,10 @@ namespace RetailTradeServer.ViewModels.Base
 
         public virtual void Dispose() 
         {
-            _authenticator.StateChanged -= AuthenticatorStateChanged;
+            if (_authenticator != null)
+            {
+                _authenticator.StateChanged -= AuthenticatorStateChanged;
+            }
         }
 
         protected void OnPropertyChanged(string propertyName)

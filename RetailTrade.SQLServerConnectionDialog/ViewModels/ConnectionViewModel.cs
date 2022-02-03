@@ -18,6 +18,7 @@ namespace RetailTrade.SQLServerConnectionDialog.ViewModels
         #region Private Members
 
         private readonly Window _window;
+        private ConnectionState _connectionState;
         private bool _isTesting = false;
         private ObservableQueue<string> _dataBases = new();
 
@@ -26,7 +27,7 @@ namespace RetailTrade.SQLServerConnectionDialog.ViewModels
         #region Public Properties
 
         public SqlConnectionStringBuilder ConnectionStringBuilder { get; private set; }
-        public MessageBoxResult Result => IsConnectionValid ? MessageBoxResult.OK : MessageBoxResult.None;
+        public MessageBoxResult Result => ConnectionState == ConnectionState.Open ? MessageBoxResult.OK : MessageBoxResult.None;
         public bool IntegratedSecurity
         {
             get => ConnectionStringBuilder.IntegratedSecurity;
@@ -106,6 +107,16 @@ namespace RetailTrade.SQLServerConnectionDialog.ViewModels
         public List<string> AuthenticationModes => new() { Tags.WindowsAuthentication, Tags.SQLServerAuthentication };
         public IEnumerable<string> DataSources => ListLocalSqlInstances();
         public IEnumerable<string> DataBases => _dataBases;
+        public ConnectionState ConnectionState
+        {
+            get => _connectionState;
+            set
+            {
+                _connectionState = value;
+                OnPropertyChanged(nameof(ConnectionState));
+                OnPropertyChanged(nameof(Result));
+            }
+        }
 
         #endregion
 
@@ -149,6 +160,8 @@ namespace RetailTrade.SQLServerConnectionDialog.ViewModels
             {
                 IsTesting = true;
                 connection.Open();
+                ConnectionState = connection.State;
+                MessageBox.Show("Чтобы применить параметры, программа перезапустится.", "Настройка подключения", MessageBoxButton.OK, MessageBoxImage.Information);
                 _window.Close();
             }
             catch (Exception e)

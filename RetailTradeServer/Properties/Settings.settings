@@ -18,7 +18,7 @@
       <Value Profile="(Default)">False</Value>
     </Setting>
     <Setting Name="DefaultConnection" Type="System.String" Scope="User">
-      <Value Profile="(Default)" />
+      <Value Profile="(Default)">Server=.445;Database=RetailTradeDb;Trusted_Connection=True;</Value>
     </Setting>
   </Settings>
 </SettingsFile>
