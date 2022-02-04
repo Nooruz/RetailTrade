@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using RetailTrade.EntityFramework;
@@ -12,7 +13,8 @@ namespace RetailTradeServer.HostBuilders
         {
             return host.ConfigureServices((context, services) =>
             {
-                static void ConfigureDbContext(DbContextOptionsBuilder o) => o.UseSqlServer(Settings.Default.DefaultConnection);
+                //static void ConfigureDbContext(DbContextOptionsBuilder o) => o.UseSqlServer(Settings.Default.DefaultConnection);
+                void ConfigureDbContext(DbContextOptionsBuilder o) => o.UseSqlServer(context.Configuration.GetConnectionString("DefaultConnection"));
                 _ = services.AddDbContext<RetailTradeDbContext>(ConfigureDbContext);
                 _ = services.AddSingleton(new RetailTradeDbContextFactory(ConfigureDbContext));
             });

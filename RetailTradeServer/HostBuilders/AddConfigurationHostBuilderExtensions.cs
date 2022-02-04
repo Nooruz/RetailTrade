@@ -9,6 +9,7 @@ namespace RetailTradeServer.HostBuilders
         {
             return host.ConfigureAppConfiguration(c =>
             {
+                c.AddJsonFile("appsettings.json");
                 c.AddEnvironmentVariables();
             });
         }

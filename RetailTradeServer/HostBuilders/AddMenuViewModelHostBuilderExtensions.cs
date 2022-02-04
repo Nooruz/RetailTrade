@@ -37,6 +37,7 @@ namespace RetailTradeServer.HostBuilders
                 services.AddTransient(CreateConnectingAndConfiguringEquipmentViewModel);
                 services.AddTransient(CreateCashShiftsViewModel);
                 services.AddTransient(CreateWareHouseViewModel);
+                services.AddTransient(CreateRevaluationViewModel);
 
                 services.AddSingleton<CreateMenuViewModel<ProductViewModel>>(servicesProvider => () => CreateProductViewModel(servicesProvider));
                 services.AddSingleton<CreateMenuViewModel<ArrivalProductViewModel>>(servicesProvider => () => CreateArrivalProductViewModel(servicesProvider));
@@ -52,9 +53,16 @@ namespace RetailTradeServer.HostBuilders
                 services.AddSingleton<CreateMenuViewModel<ConnectingAndConfiguringEquipmentViewModel>>(servicesProvider => () => CreateConnectingAndConfiguringEquipmentViewModel(servicesProvider));
                 services.AddSingleton<CreateMenuViewModel<CashShiftsViewModel>>(servicesProvider => () => CreateCashShiftsViewModel(servicesProvider));
                 services.AddSingleton<CreateMenuViewModel<WareHouseViewModel>>(servicesProvider => () => CreateWareHouseViewModel(servicesProvider));
+                services.AddSingleton<CreateMenuViewModel<RevaluationViewModel>>(servicesProvider => () => CreateRevaluationViewModel(servicesProvider));
 
                 services.AddSingleton<IMenuViewModelFactory, MenuViewModelFactory>();
             });
+        }
+
+        private static RevaluationViewModel CreateRevaluationViewModel(IServiceProvider services)
+        {
+            return new RevaluationViewModel(services.GetRequiredService<IRevaluationService>(),
+                services.GetRequiredService<IDialogService>());
         }
 
         private static SupplierViewModel CreateSupplierViewModel(IServiceProvider services)

@@ -22,7 +22,7 @@ namespace RetailTrade.Barcode
         {
             _serialPort = new()
             {
-                PortName = "COM6",
+                PortName = "COM17",
                 BaudRate = 9600,
                 ReadTimeout = 1000,
             };
@@ -39,7 +39,7 @@ namespace RetailTrade.Barcode
             {
                 Open();
             }
-            Thread.Sleep(1000);
+            Thread.Sleep(500);
             OnBarcodeEvent?.Invoke(Replace(_serialPort.ReadExisting()));
             _serialPort.DiscardInBuffer();
         }

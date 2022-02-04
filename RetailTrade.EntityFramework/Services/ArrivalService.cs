@@ -135,7 +135,7 @@ namespace RetailTrade.EntityFramework.Services
                     .Include(o => o.Supplier)
                     .ToListAsync();
             }
-            catch (Exception e)
+            catch (Exception)
             {
                 //ignore
             }
@@ -150,7 +150,7 @@ namespace RetailTrade.EntityFramework.Services
                 return await context.Arrivals
                     .FirstOrDefaultAsync((e) => e.Id == id);
             }
-            catch (Exception e)
+            catch (Exception)
             {
                 //ignore
             }

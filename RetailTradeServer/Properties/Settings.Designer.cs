@@ -85,7 +85,7 @@ namespace SalePageServer.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("Server=.445;Database=RetailTradeDb;Trusted_Connection=True;")]
+        [global::System.Configuration.DefaultSettingValueAttribute("Server=.;Database=RetailTradeDb;Trusted_Connection=True;")]
         public string DefaultConnection {
             get {
                 return ((string)(this["DefaultConnection"]));

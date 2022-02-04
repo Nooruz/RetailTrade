@@ -22,6 +22,7 @@ namespace RetailTradeServer.ViewModels
         private readonly IProductSaleService _productSaleService;
         private readonly IReceiptService _receiptService;
         private readonly IUserStore _userStore;
+        private readonly IMenuViewModelFactory _menuViewModelFactory;
 
         #endregion
 
@@ -34,57 +35,60 @@ namespace RetailTradeServer.ViewModels
 
         #region Commands
 
-        public ICommand UpdateCurrentMenuViewModelCommand { get; }
+        public ICommand UpdateCurrentMenuViewModelCommand => new UpdateCurrentMenuViewModelCommand(_menuNavigator, _menuViewModelFactory);
 
         #region Моя организация
 
-        public ICommand EmployeeCommand { get; set; }
+        public ICommand EmployeeCommand => new RelayCommand(() => UpdateCurrentMenuViewModelCommand.Execute(MenuViewType.Employee));
 
         #endregion
 
         #region Информационная панель
 
-        public ICommand SaleDashboardCommand { get; }
+        public ICommand SaleDashboardCommand => new RelayCommand(() => UpdateCurrentMenuViewModelCommand.Execute(MenuViewType.SaleDashboard));
 
         #endregion
 
-        #region Товары
 
-        public ICommand ProductsCommand { get; }
-        public ICommand ArrivalProductCommand { get; }
-        public ICommand WriteDownProductCommand { get; }
-        public ICommand OrderProductCommand { get; }
-        public ICommand RefundToSupplierCommand { get; }
+
+        #region Продажи
+
+        public ICommand ProductsCommand => new RelayCommand(() => UpdateCurrentMenuViewModelCommand.Execute(MenuViewType.Products));
+        public ICommand RevaluationCommand => new RelayCommand(() => UpdateCurrentMenuViewModelCommand.Execute(MenuViewType.RevaluationView));
+        public ICommand ArrivalProductCommand => new RelayCommand(() => UpdateCurrentMenuViewModelCommand.Execute(MenuViewType.ArrivalProduct));
+        public ICommand WriteDownProductCommand => new RelayCommand(() => UpdateCurrentMenuViewModelCommand.Execute(MenuViewType.WriteDownProduct));
+        public ICommand OrderProductCommand => new RelayCommand(() => UpdateCurrentMenuViewModelCommand.Execute(MenuViewType.OrderProduct));
+        public ICommand RefundToSupplierCommand => new RelayCommand(() => UpdateCurrentMenuViewModelCommand.Execute(MenuViewType.RefundToSupplier));
 
         #endregion
 
         #region Склады
 
-        public ICommand WareHouseCommand { get; }
+        public ICommand WareHouseCommand => new RelayCommand(() => UpdateCurrentMenuViewModelCommand.Execute(MenuViewType.WareHouseView));
 
         #endregion
 
         #region Справочники и инструменты
 
-        public ICommand BarcodeCommand { get; }
-        public ICommand UserCommand { get; }
-        public ICommand BranchCommand { get; }
-        public ICommand SupplierCommand { get; }
+        public ICommand BarcodeCommand => new RelayCommand(() => UpdateCurrentMenuViewModelCommand.Execute(MenuViewType.ProductBarcode));
+        public ICommand UserCommand => new RelayCommand(() => UpdateCurrentMenuViewModelCommand.Execute(MenuViewType.User));
+        public ICommand BranchCommand => new RelayCommand(() => UpdateCurrentMenuViewModelCommand.Execute(MenuViewType.Branch));
+        public ICommand SupplierCommand => new RelayCommand(() => UpdateCurrentMenuViewModelCommand.Execute(MenuViewType.Supplier));
 
         #endregion
 
         #region Отчеты
 
-        public ICommand CashShiftsCommand { get; }
-        public ICommand RevenueForPeriodCommand { get; }
-        public ICommand CashiersViewCommand { get; }
+        public ICommand CashShiftsCommand => new RelayCommand(CashShifts);
+        public ICommand RevenueForPeriodCommand => new RelayCommand(RevenueForPeriod);
+        public ICommand CashiersViewCommand => new RelayCommand(() => UpdateCurrentMenuViewModelCommand.Execute(MenuViewType.CashierView));
 
         #endregion
 
         #region Настройки
 
-        public ICommand PrinterCommand { get; }
-        public ICommand ConnectingAndConfiguringEquipmentCommand { get; }
+        public ICommand PrinterCommand => new RelayCommand(Printer);
+        public ICommand ConnectingAndConfiguringEquipmentCommand => new RelayCommand(() => UpdateCurrentMenuViewModelCommand.Execute(MenuViewType.ConnectingAndConfiguringEquipment));
 
         #endregion
 
@@ -108,30 +112,11 @@ namespace RetailTradeServer.ViewModels
             _productSaleService = productSaleService;
             _userStore = userStore;
             _receiptService = receiptService;
-
-            UpdateCurrentMenuViewModelCommand = new UpdateCurrentMenuViewModelCommand(_menuNavigator, menuViewModelFactory);
-
-            ProductsCommand = new RelayCommand(() => UpdateCurrentMenuViewModelCommand.Execute(MenuViewType.Products));
-            SaleDashboardCommand = new RelayCommand(() => UpdateCurrentMenuViewModelCommand.Execute(MenuViewType.SaleDashboard));
-            ArrivalProductCommand = new RelayCommand(() => UpdateCurrentMenuViewModelCommand.Execute(MenuViewType.ArrivalProduct));
-            WriteDownProductCommand = new RelayCommand(() => UpdateCurrentMenuViewModelCommand.Execute(MenuViewType.WriteDownProduct));
-            OrderProductCommand = new RelayCommand(() => UpdateCurrentMenuViewModelCommand.Execute(MenuViewType.OrderProduct));
-            BarcodeCommand = new RelayCommand(() => UpdateCurrentMenuViewModelCommand.Execute(MenuViewType.ProductBarcode));
-            UserCommand = new RelayCommand(() => UpdateCurrentMenuViewModelCommand.Execute(MenuViewType.User));
-            BranchCommand = new RelayCommand(() => UpdateCurrentMenuViewModelCommand.Execute(MenuViewType.Branch));            
-            RefundToSupplierCommand = new RelayCommand(() => UpdateCurrentMenuViewModelCommand.Execute(MenuViewType.RefundToSupplier));
-            SupplierCommand = new RelayCommand(() => UpdateCurrentMenuViewModelCommand.Execute(MenuViewType.Supplier));            
-            EmployeeCommand = new RelayCommand(() => UpdateCurrentMenuViewModelCommand.Execute(MenuViewType.Employee));
-            ConnectingAndConfiguringEquipmentCommand = new RelayCommand(() => UpdateCurrentMenuViewModelCommand.Execute(MenuViewType.ConnectingAndConfiguringEquipment));
-            CashiersViewCommand = new RelayCommand(() => UpdateCurrentMenuViewModelCommand.Execute(MenuViewType.CashierView));
-            WareHouseCommand = new RelayCommand(() => UpdateCurrentMenuViewModelCommand.Execute(MenuViewType.WareHouseView));
-            PrinterCommand = new RelayCommand(Printer);
-            RevenueForPeriodCommand = new RelayCommand(RevenueForPeriod);
-            CashShiftsCommand = new RelayCommand(CashShifts);
+            _menuViewModelFactory = menuViewModelFactory;
 
             _menuNavigator.StateChanged += MenuNavigator_StateChanged;
 
-            UpdateCurrentMenuViewModelCommand.Execute(MenuViewType.OrderProduct);
+            UpdateCurrentMenuViewModelCommand.Execute(MenuViewType.RevaluationView);
         }
 
         #endregion

@@ -23,6 +23,7 @@ namespace RetailTradeServer.ViewModels.Factories
         private readonly CreateMenuViewModel<ConnectingAndConfiguringEquipmentViewModel> _createConnectingAndConfiguringEquipmentViewModel;
         private readonly CreateMenuViewModel<CashShiftsViewModel> _createCashShiftsViewModel;
         private readonly CreateMenuViewModel<WareHouseViewModel> _createWareHouseViewModel;
+        private readonly CreateMenuViewModel<RevaluationViewModel> _createRevaluationViewModel;
 
         #endregion
 
@@ -41,7 +42,8 @@ namespace RetailTradeServer.ViewModels.Factories
             CreateMenuViewModel<EmployeesViewModel> createEmployeesViewModel,
             CreateMenuViewModel<ConnectingAndConfiguringEquipmentViewModel> createConnectingAndConfiguringEquipmentViewModel,
             CreateMenuViewModel<CashShiftsViewModel> createCashShiftsViewModel,
-            CreateMenuViewModel<WareHouseViewModel> createWareHouseViewModel)
+            CreateMenuViewModel<WareHouseViewModel> createWareHouseViewModel,
+            CreateMenuViewModel<RevaluationViewModel> createRevaluationViewModel)
         {
             _createProductViewModel = createProductViewModel;
             _createArrivalProductViewModel = createArrivalProductViewModel;
@@ -57,6 +59,7 @@ namespace RetailTradeServer.ViewModels.Factories
             _createConnectingAndConfiguringEquipmentViewModel = createConnectingAndConfiguringEquipmentViewModel;
             _createCashShiftsViewModel = createCashShiftsViewModel;
             _createWareHouseViewModel = createWareHouseViewModel;
+            _createRevaluationViewModel = createRevaluationViewModel;
         }
 
         #endregion
@@ -79,6 +82,7 @@ namespace RetailTradeServer.ViewModels.Factories
                 MenuViewType.ConnectingAndConfiguringEquipment => _createConnectingAndConfiguringEquipmentViewModel(),
                 MenuViewType.CashierView => _createCashShiftsViewModel(),
                 MenuViewType.WareHouseView => _createWareHouseViewModel(),
+                MenuViewType.RevaluationView => _createRevaluationViewModel(),
                 _ => throw new ArgumentException("The ViewType does not have a ViewModel.", "viewType"),
             };
         }
