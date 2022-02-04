@@ -1,0 +1,42 @@
+﻿<local:BaseMenuView     x:Class="RetailTradeServer.Views.Menus.RevaluationView"
+                        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                        xmlns:dxg="http://schemas.devexpress.com/winfx/2008/xaml/grid"
+                        xmlns:dxlc="http://schemas.devexpress.com/winfx/2008/xaml/layoutcontrol"
+                        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                        xmlns:local="clr-namespace:RetailTradeServer.Views.Menus"
+                        Title="История изменения цен"
+                        ShowDefaultButtons="False">
+
+
+    <dxlc:LayoutControl Orientation="Vertical">
+
+        <dxlc:LayoutGroup VerticalAlignment="Top"
+                          HorizontalAlignment="Left">
+            <Button Content="Создать"
+                    Command="{Binding CreateCommand}"/>
+            <Button Content="Печатать"
+                    Tag="{StaticResource faPrint}"
+                    Style="{StaticResource ButtonWithHorizontalIcon}"
+                    Command="{Binding PrintCommand}"/>
+        </dxlc:LayoutGroup>
+
+        <dxg:GridControl ItemsSource="{Binding Revaluations}"
+                         SelectedItem="{Binding SelectedRevaluation}">
+            
+            <dxg:GridControl.View>
+                <dxg:TableView AllowEditing="False" 
+                               AutoWidth="True"/>
+            </dxg:GridControl.View>
+
+            <dxg:GridColumn Header="Код"
+                            FieldName="Id"/>
+            <dxg:GridColumn Header="Дата"
+                            FieldName="RevaluationDate"/>
+            <dxg:GridColumn Header="Комментарий"
+                            FieldName="Comment"/>
+
+        </dxg:GridControl>
+        
+    </dxlc:LayoutControl>
+    
+</local:BaseMenuView>

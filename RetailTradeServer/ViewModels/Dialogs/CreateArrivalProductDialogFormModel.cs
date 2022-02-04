@@ -202,7 +202,7 @@ namespace RetailTradeServer.ViewModels.Dialogs
         {
             if (SelectedSupplier != null)
             {
-               //Products = await _productService.PredicateSelect(p => p.SupplierId == SelectedSupplier.Id, p => new Product { Id = p.Id, Name = p.Name, ArrivalPrice = p.ArrivalPrice });
+               Products = await _productService.PredicateSelect(p => p.SupplierId == SelectedSupplier.Id, p => new Product { Id = p.Id, Name = p.Name, ArrivalPrice = p.ArrivalPrice });
             }
         }
 

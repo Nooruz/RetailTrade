@@ -133,6 +133,13 @@ namespace RetailTrade.EntityFramework
 
         #endregion
 
+        #region Revaluation
+
+        public DbSet<Revaluation> Revaluations { get; set; }
+        public DbSet<RevaluationProduct> RevaluationProducts { get; set; }
+
+        #endregion
+
         #region WareHouse
 
         public DbSet<WareHouse> WareHouses { get; set; }

@@ -190,6 +190,7 @@ namespace RetailTrade.Domain.Models
         public ICollection<RefundToSupplierProduct> ProductRefundToSuppliers { get; set; }
         public ICollection<OrderProduct> Orders { get; set; }
         public ICollection<WareHouse> WareHouses { get; set; }
+        public ICollection<RevaluationProduct> RevaluationProducts { get; set; }
 
         #endregion
     }

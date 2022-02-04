@@ -143,6 +143,7 @@ namespace RetailTradeServer.ViewModels.Menus
 
             _productService.OnProductCreated += ProductService_OnProductCreated;
             _typeProductService.OnTypeProductCreated += TypeProductService_OnTypeProductCreated;
+            _typeProductService.OnTypeProductEdited += TypeProductService_OnTypeProductEdited;
         }
 
         #endregion
@@ -162,6 +163,14 @@ namespace RetailTradeServer.ViewModels.Menus
             }            
         }
 
+        private void TypeProductService_OnTypeProductEdited(TypeProduct obj)
+        {
+            if (obj != null)
+            {
+                SelectedTypeProduct.Name = obj.Name;
+                SelectedTypeProduct.SubGroupId = obj.SubGroupId;
+            }
+        }
         private void TypeProductService_OnTypeProductCreated(TypeProduct obj)
         {
             TypeProducts.Add(obj);

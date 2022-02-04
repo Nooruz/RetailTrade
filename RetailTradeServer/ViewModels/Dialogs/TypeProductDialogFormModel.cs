@@ -119,9 +119,7 @@ namespace RetailTradeServer.ViewModels.Dialogs
                 _dialogService.ShowMessage("Введите наименование!", "", MessageBoxButton.OK, MessageBoxImage.Exclamation);
                 return;
             }
-            TypeProduct.Name = Name;
-            TypeProduct.SubGroupId = SelectedTypeProductId.Value;
-            await _typeProductService.UpdateAsync(TypeProduct.Id, TypeProduct);
+            _ = await _typeProductService.UpdateAsync(TypeProduct.Id, new TypeProduct { Name = Name, SubGroupId = SelectedTypeProductId.Value });
             _dialogService.Close();
         }
 

@@ -150,7 +150,8 @@ namespace RetailTradeServer.HostBuilders
 
         private static ConnectingAndConfiguringEquipmentViewModel CreateConnectingAndConfiguringEquipmentViewModel(IServiceProvider services)
         {
-            return new ConnectingAndConfiguringEquipmentViewModel();
+            return new ConnectingAndConfiguringEquipmentViewModel(services.GetRequiredService<IDataService<TypeEquipment>>(),
+                services.GetRequiredService<IDialogService>());
         }
 
         private static CashShiftsViewModel CreateCashShiftsViewModel(IServiceProvider services)

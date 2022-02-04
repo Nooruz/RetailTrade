@@ -20,5 +20,6 @@ namespace RetailTrade.Domain.Services
         Task<IEnumerable<TypeProduct>> GetTypesAsync();
 
         event Action<TypeProduct> OnTypeProductCreated;
+        event Action<TypeProduct> OnTypeProductEdited;
     }
 }

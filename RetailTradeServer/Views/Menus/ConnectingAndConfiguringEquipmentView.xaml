@@ -22,9 +22,9 @@
     <dxlc:LayoutControl Orientation="Vertical">
 
         <dxlc:LayoutItem Label="Тип оборудование:">
-            <dxe:ComboBoxEdit ItemsSource="{Binding Equipments}"
+            <dxe:ComboBoxEdit ItemsSource="{Binding TypeEquipments}"
                               DisplayMember="Name"
-                              SelectedItem="{Binding SelectedEquipment}"/>
+                              SelectedItem="{Binding SelectedTypeEquipment}"/>
         </dxlc:LayoutItem>
 
         <dxlc:LayoutGroup HorizontalAlignment="Left"

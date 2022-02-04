@@ -22,6 +22,7 @@ namespace RetailTrade.EntityFramework.Services
 
         public event Action PropertiesChanged;
         public event Action<TypeProduct> OnTypeProductCreated;
+        public event Action<TypeProduct> OnTypeProductEdited;
 
         public async Task<TypeProduct> CreateAsync(TypeProduct entity)
         {
@@ -118,8 +119,7 @@ namespace RetailTrade.EntityFramework.Services
         public async Task<TypeProduct> UpdateAsync(int id, TypeProduct entity)
         {
             var result = await _nonQueryDataService.Update(id, entity);
-            if (result != null)
-                PropertiesChanged?.Invoke();
+            OnTypeProductEdited?.Invoke(result);
             return result;
         }
     }
