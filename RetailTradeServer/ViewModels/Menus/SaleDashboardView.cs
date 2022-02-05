@@ -131,6 +131,9 @@ namespace RetailTradeServer.ViewModels.Menus
             _receiptService = receiptService;
             _productSaleService = productSaleService;
 
+            AllowHide = false;
+            Header = "Панель мониторинга продаж и доходов";
+
             UserControlCommand = new RelayCommand(UserControl);
             YesterdayCommand = new RelayCommand(Yesterday);
             TodayCommand = new RelayCommand(Today);

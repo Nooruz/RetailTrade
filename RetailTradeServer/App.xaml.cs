@@ -13,6 +13,8 @@ using System.Data.SqlClient;
 using System.Threading.Tasks;
 using System.Windows;
 using RetailTrade.SQLServerConnectionDialog;
+using System.IO;
+using Newtonsoft.Json;
 
 namespace RetailTradeServer
 {
@@ -89,6 +91,14 @@ namespace RetailTradeServer
                         Settings.Default.DefaultConnection = ConnectionDialog.ConnectionString;
                         Settings.Default.Save();
                         _ = System.Diagnostics.Process.Start(ResourceAssembly.Location);
+                        string appSettings = File.ReadAllText("appsettings.json");
+                        if (!string.IsNullOrEmpty(appSettings))
+                        {
+                            dynamic jsonObj = JsonConvert.DeserializeObject(appSettings);
+                            jsonObj["ConnectionStrings"]["DefaultConnection"] = ConnectionDialog.ConnectionString;
+                            string outAppSettings = JsonConvert.SerializeObject(jsonObj, Formatting.Indented);
+                            File.WriteAllText("appsettings.json", outAppSettings);
+                        }
                         Current.Shutdown();
                     }
                     else

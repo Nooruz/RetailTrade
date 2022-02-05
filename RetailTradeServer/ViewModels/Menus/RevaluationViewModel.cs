@@ -46,6 +46,7 @@ namespace RetailTradeServer.ViewModels.Menus
         #region Commands
 
         public ICommand PrintCommand => new RelayCommand(Print);
+        public ICommand UserControlLoadedCommand => new RelayCommand(UserControlLoaded);
 
         #endregion
 
@@ -62,6 +63,11 @@ namespace RetailTradeServer.ViewModels.Menus
         #endregion
 
         #region Private Voids
+
+        private async void UserControlLoaded()
+        {
+            ShowLoadingPanel = false;
+        }
 
         private void Create()
         {

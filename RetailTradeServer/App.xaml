@@ -105,6 +105,10 @@
                 <menuViews:WareHouseView/>
             </DataTemplate>
 
+            <DataTemplate DataType="{x:Type menuViewModels:RevaluationViewModel}">
+                <menuViews:RevaluationView/>
+            </DataTemplate>
+
             <!--#endregion-->
             
             <!--#region Диалоги-->
@@ -180,6 +184,7 @@
                 <ResourceDictionary Source="/Styles/TreeListColumnStyle.xaml"/>
                 <ResourceDictionary Source="/Styles/ComboBoxEditStyle.xaml"/>
                 <ResourceDictionary Source="/Styles/BarButtonItemStyle.xaml"/>
+                <ResourceDictionary Source="/Styles/HamburgerMenuStyle.xaml"/>
             </ResourceDictionary.MergedDictionaries>
 
         </ResourceDictionary>

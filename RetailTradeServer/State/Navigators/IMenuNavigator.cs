@@ -1,5 +1,6 @@
 ﻿using RetailTradeServer.ViewModels.Base;
 using System;
+using System.Collections.ObjectModel;
 
 namespace RetailTradeServer.State.Navigators
 {
@@ -87,7 +88,7 @@ namespace RetailTradeServer.State.Navigators
     }
     public interface IMenuNavigator
     {
-        BaseViewModel CurrentViewModel { get; set; }
-        event Action StateChanged;
+        BaseViewModel AddViewModel { get; set; }
+        event Action<BaseViewModel> StateChanged;
     }
 }

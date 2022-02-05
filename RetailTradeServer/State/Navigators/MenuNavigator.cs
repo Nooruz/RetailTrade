@@ -5,19 +5,19 @@ namespace RetailTradeServer.State.Navigators
 {
     public class MenuNavigator : IMenuNavigator
     {
-        private BaseViewModel _currentViewModel;
-        public BaseViewModel CurrentViewModel
+        private BaseViewModel _addViewModel;
+
+        public BaseViewModel AddViewModel
         {
-            get => _currentViewModel;
+            get => _addViewModel;
             set
             {
-                _currentViewModel?.Dispose();
-
-                _currentViewModel = value;
-                StateChanged?.Invoke();
+                _addViewModel?.Dispose();
+                _addViewModel = value;
+                StateChanged?.Invoke(_addViewModel);
             }
         }
 
-        public event Action StateChanged;
+        public event Action<BaseViewModel> StateChanged;
     }
 }

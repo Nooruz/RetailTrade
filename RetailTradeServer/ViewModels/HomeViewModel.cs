@@ -7,6 +7,8 @@ using RetailTradeServer.ViewModels.Base;
 using RetailTradeServer.ViewModels.Dialogs;
 using RetailTradeServer.ViewModels.Factories;
 using SalePageServer.State.Dialogs;
+using System.Collections.ObjectModel;
+using System.Linq;
 using System.Windows.Input;
 
 namespace RetailTradeServer.ViewModels
@@ -23,12 +25,21 @@ namespace RetailTradeServer.ViewModels
         private readonly IReceiptService _receiptService;
         private readonly IUserStore _userStore;
         private readonly IMenuViewModelFactory _menuViewModelFactory;
+        private ObservableCollection<BaseViewModel> _currentMenuViewModels = new();
 
         #endregion
 
         #region Public Properties
 
-        public BaseViewModel CurrentMenuViewModel => _menuNavigator.CurrentViewModel;
+        public ObservableCollection<BaseViewModel> CurrentMenuViewModels
+        {
+            get => _currentMenuViewModels;
+            set
+            {
+                _currentMenuViewModels = value;
+                OnPropertyChanged(nameof(CurrentMenuViewModels));
+            }
+        }
         public string OrganizationName => _userStore.CurrentOrganization != null ? _userStore.CurrentOrganization.Name : "";
 
         #endregion
@@ -48,8 +59,6 @@ namespace RetailTradeServer.ViewModels
         public ICommand SaleDashboardCommand => new RelayCommand(() => UpdateCurrentMenuViewModelCommand.Execute(MenuViewType.SaleDashboard));
 
         #endregion
-
-
 
         #region Продажи
 
@@ -116,26 +125,48 @@ namespace RetailTradeServer.ViewModels
 
             _menuNavigator.StateChanged += MenuNavigator_StateChanged;
 
-            UpdateCurrentMenuViewModelCommand.Execute(MenuViewType.RevaluationView);
+            CloseCommand = new ParameterCommand(Close);
+
+            UpdateCurrentMenuViewModelCommand.Execute(MenuViewType.SaleDashboard);
         }
 
         #endregion
 
         #region Private Voids
+
+        private void MenuNavigator_StateChanged(BaseViewModel obj)
+        {
+            BaseViewModel viewModel = CurrentMenuViewModels.FirstOrDefault(v => v.ToString() == obj.ToString());
+            if (viewModel == null)
+            {
+                obj.IsSelected = true;
+                CurrentMenuViewModels.Add(obj);
+            }
+            else
+            {
+                viewModel.IsSelected = true;
+            }
+        }
+
+        private void Close(object parameter)
+        {
+            BaseViewModel viewModel = CurrentMenuViewModels.FirstOrDefault(v => v.ToString() == (parameter as string));
+            if (viewModel != null)
+            {
+                viewModel.Dispose();
+                _ = CurrentMenuViewModels.Remove(viewModel);
+            }            
+        }
+
         private async void Printer()
         {
             await _dialogService.ShowDialog(new PrinterDialogFormModel(_messageStore) { Title = "Настройки принтеров" });
         }
-        private void MenuNavigator_StateChanged()
-        {
-            OnPropertyChanged(nameof(CurrentMenuViewModel));
-        }
-
+        
         private async void CashShifts()
         {
             await _dialogService.ShowDialog(new ReportClosingShiftsDialogFormModel(_dialogService, _shiftService) { Title = "Закрытие смены" });
         }
-
         private async void RevenueForPeriod()
         {
             await _dialogService.ShowDialog(new ReportRevenueForPeriodDialogFormModel(_dialogService, _receiptService, _userStore) { Title = "Выручка за период" });

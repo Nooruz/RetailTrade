@@ -69,6 +69,8 @@ namespace RetailTradeServer.ViewModels.Menus
             _supplierService = supplierService;
             _dialogService = dialogService;
 
+            Header = "Приход товара";
+
             LoadedCommand = new RelayCommand(GetArrivalsAsync);
             CreateArrivalCommand = new RelayCommand(CreateArrival);
             DeleteArrivalCommand = new RelayCommand(DeleteArrival);
@@ -149,6 +151,8 @@ namespace RetailTradeServer.ViewModels.Menus
 
         #endregion
 
+        #region Dispose
+
         public override void Dispose()
         {
             SelectedArrival = null;
@@ -156,5 +160,7 @@ namespace RetailTradeServer.ViewModels.Menus
             _arrivalService.PropertiesChanged -= GetArrivalsAsync;
             base.Dispose();
         }
+
+        #endregion        
     }
 }

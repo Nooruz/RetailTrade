@@ -7,7 +7,7 @@
                     xmlns:dxe="http://schemas.devexpress.com/winfx/2008/xaml/editors"
                     x:Class="RetailTradeServer.Views.Menus.ArrivalProductView"
                     ShowDefaultButtons="False"
-                    Title="Приход товара">
+                    Title="{Binding Header}">
 
     <dxmvvm:Interaction.Behaviors>
         <dxmvvm:EventToCommand EventName="Loaded" 
