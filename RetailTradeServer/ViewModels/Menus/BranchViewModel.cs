@@ -40,6 +40,8 @@ namespace RetailTradeServer.ViewModels.Menus
             _dialogService = dialogService;
             _userService = userService;
 
+            Header = "Филиалы";
+
             CreateCommand = new RelayCommand(CreateBranch);
             DeleteCommand = new RelayCommand(DeleteBranch);
         }

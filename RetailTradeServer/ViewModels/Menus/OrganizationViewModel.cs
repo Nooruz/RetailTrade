@@ -102,6 +102,8 @@ namespace RetailTradeServer.ViewModels.Menus
             IRenavigator homeViewModel,
             INavigator navigator)
         {
+            Header = "Сведения об организации";
+
             CreateOrganizationCommand = new CreateOrganizationCommand(organizationService, homeViewModel, this);
         }
 

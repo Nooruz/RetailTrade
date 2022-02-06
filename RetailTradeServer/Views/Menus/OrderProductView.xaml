@@ -6,7 +6,7 @@
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
                     xmlns:dxmvvm="http://schemas.devexpress.com/winfx/2008/xaml/mvvm"
                     xmlns:local="clr-namespace:RetailTradeServer.Views.Menus"
-                    Title="Заказы поставщикам"
+                    Title="{Binding Header}"
                     ShowDefaultButtons="False">
 
     <dxmvvm:Interaction.Behaviors>

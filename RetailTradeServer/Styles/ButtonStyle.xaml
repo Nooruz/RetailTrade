@@ -180,7 +180,8 @@
                             <ColumnDefinition Width="*"/>
                         </Grid.ColumnDefinitions>
 
-                        <TextBlock Grid.Column="0"
+                        <TextBlock x:Name="Icon"
+                                   Grid.Column="0"
                                    Margin="0 0 10 0"
                                    FontFamily="{StaticResource FontAwesomeBold}"
                                    Foreground="{Binding Path=IconColor, RelativeSource={RelativeSource AncestorType={x:Type components:CustomDropDownButton}}}"
@@ -194,6 +195,11 @@
                                    HorizontalAlignment="Left"/>
 
                     </Grid>
+                    <DataTemplate.Triggers>
+                        <DataTrigger Binding="{Binding Path=Icon, RelativeSource={RelativeSource AncestorType={x:Type components:CustomDropDownButton}}}" Value="">
+                            <Setter TargetName="Icon" Property="Margin" Value="0"/>
+                        </DataTrigger>
+                    </DataTemplate.Triggers>
                 </DataTemplate>
             </Setter.Value>
         </Setter>

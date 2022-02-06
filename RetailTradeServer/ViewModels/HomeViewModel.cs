@@ -150,7 +150,7 @@ namespace RetailTradeServer.ViewModels
 
         private void Close(object parameter)
         {
-            BaseViewModel viewModel = CurrentMenuViewModels.FirstOrDefault(v => v.ToString() == (parameter as string));
+            BaseViewModel viewModel = CurrentMenuViewModels.FirstOrDefault(v => v.ToString() == parameter.ToString());
             if (viewModel != null)
             {
                 viewModel.Dispose();

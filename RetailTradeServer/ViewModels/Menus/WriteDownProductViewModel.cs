@@ -69,6 +69,8 @@ namespace RetailTradeServer.ViewModels.Menus
             _supplierService = supplierService;
             _dialogService = dialogService;
 
+            Header = "Списание товара";
+
             LoadedCommand = new RelayCommand(GetWriteDownsAsync);
             CreateCommand = new RelayCommand(Create);
             DeleteCommand = new RelayCommand(Delete);

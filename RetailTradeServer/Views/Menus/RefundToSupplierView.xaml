@@ -5,7 +5,7 @@
                     xmlns:dxlc="http://schemas.devexpress.com/winfx/2008/xaml/layoutcontrol"
                     xmlns:dxmvvm="http://schemas.devexpress.com/winfx/2008/xaml/mvvm"
                     xmlns:local="clr-namespace:RetailTradeServer.Views.Menus"
-                    Title="Возврат поставщику"
+                    Title="{Binding Header}"
                     ShowDefaultButtons="False">
 
     <dxmvvm:Interaction.Behaviors>

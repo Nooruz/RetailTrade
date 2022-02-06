@@ -76,6 +76,8 @@ namespace RetailTradeServer.ViewModels.Menus
             _dialogService = dialogService;
             _genderService = genderService;
 
+            Header = "Сотрудники";
+
             UserControlLoadedCommand = new RelayCommand(UserControlLoaded);
             CreateEmployeeCommand = new RelayCommand(CreateEmployee);
         }

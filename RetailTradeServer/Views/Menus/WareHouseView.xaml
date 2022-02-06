@@ -8,7 +8,7 @@
     xmlns:components="clr-namespace:RetailTradeServer.Components"
     xmlns:local="clr-namespace:RetailTradeServer.Views.Menus"
     x:Class="RetailTradeServer.Views.Menus.WareHouseView"
-    Title="Склады и магазины"
+    Title="{Binding Header}"
     ShowDefaultButtons="False">
 
     <dxmvvm:Interaction.Behaviors>

@@ -85,6 +85,8 @@ namespace RetailTradeServer.ViewModels.Menus
             _unitService = unitService;
             _zebraBarcodeScanner = zebraBarcodeScanner;
 
+            Header = "Заказы поставщикам";
+
             CreateOrderCommand = new RelayCommand(CreateOrder);
             DeleteOrderCommand = new RelayCommand(DeleteOrder);
             ValidateCommand = new ParameterCommand(parameter => Validate(parameter));

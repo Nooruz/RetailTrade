@@ -3,7 +3,7 @@
                      xmlns:dxg="http://schemas.devexpress.com/winfx/2008/xaml/grid"
                      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
                      xmlns:local="clr-namespace:RetailTradeServer.Views.Menus"
-                    Title="Филиалы">
+                    Title="{Binding Header}">
 
     <dxg:GridControl ItemsSource="{Binding Branches}">
         <dxg:GridControl.View>

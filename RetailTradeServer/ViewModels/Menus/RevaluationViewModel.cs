@@ -57,6 +57,9 @@ namespace RetailTradeServer.ViewModels.Menus
         {
             _revaluationService = revaluationService;
             _dialogService = dialogService;
+
+            Header = "История изменения цен";
+
             CreateCommand = new RelayCommand(Create);
         }
 

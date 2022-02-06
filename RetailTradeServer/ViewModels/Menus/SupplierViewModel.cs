@@ -49,6 +49,8 @@ namespace RetailTradeServer.ViewModels.Menus
             _supplierService = supplierService;
             _dialogService = dialogService;
 
+            Header = "Поставщики";
+
             CreateCommand = new RelayCommand(Create);
             EditCommand = new RelayCommand(Edit);
             UserControlLoadedCommand = new RelayCommand(UserControlLoaded);

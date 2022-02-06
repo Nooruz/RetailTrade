@@ -94,6 +94,8 @@ namespace RetailTradeServer.ViewModels.Menus
             _shiftService = shiftService;
             _userService = userService;
 
+            Header = "Кассовые смены";
+
             UserControlLoadedCommand = new RelayCommand(UserControlLoaded);
             GridControlLoadedCommand = new ParameterCommand((p) => GridControlLoaded(p));
             SearchCommand = new RelayCommand(Search);

@@ -6,7 +6,6 @@ using RetailTradeServer.State.Messages;
 using RetailTradeServer.ViewModels.Base;
 using RetailTradeServer.ViewModels.Dialogs;
 using SalePageServer.State.Dialogs;
-using SalePageServer.Utilities;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Windows;
@@ -73,6 +72,8 @@ namespace RetailTradeServer.ViewModels.Menus
             _messageStore = messageStore;
 
             _users = new();
+
+            Header = "Пользователи";
 
             CreateCommand = new RelayCommand(CreateUser);
             DeleteCommand = new RelayCommand(DeleteUser);

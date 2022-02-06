@@ -57,6 +57,8 @@ namespace RetailTradeServer.ViewModels.Menus
         {
             _typeEquipmentService = typeEquipmentService;
             _dialogService = dialogService;
+
+            Header = "Подключение и настройка оборудования";
         }
 
         #endregion

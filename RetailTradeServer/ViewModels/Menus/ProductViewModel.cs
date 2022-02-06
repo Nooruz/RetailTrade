@@ -132,6 +132,8 @@ namespace RetailTradeServer.ViewModels.Menus
             _comBarcodeService = comBarcodeService;
             _typeProductService = typeProductService;
 
+            Header = "Товары";
+
             CreateProductCommand = new RelayCommand(() => _dialogService.ShowDialog(new CreateProductDialogFormModel(_typeProductService, _unitService, _productService, _supplierService, _messageStore, _zebraBarcodeScanner, _comBarcodeService) { Title = "Товаровы (Создать)", SelectedTypeProductId = SelectedTypeProduct?.Id }));
             EditProductCommand = new RelayCommand(EditProduct);
             GridControlLoadedCommand = new ParameterCommand(sender => GridControlLoaded(sender));

@@ -9,9 +9,6 @@ using SalePageServer.State.Dialogs;
 using SalePageServer.Utilities;
 using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.Collections.Specialized;
-using System.ComponentModel;
 using System.Linq;
 using System.Windows;
 using System.Windows.Input;
@@ -81,6 +78,8 @@ namespace RetailTradeServer.ViewModels.Menus
         {
             _productService = productService;
             _dialogService = dialogService;
+
+            Header = "Ценники и этикетки (Штрих-код)";
 
             AddProductToPrintCommand = new RelayCommand(AddProductToPrint);
             PrintProductBarcodeCommand = new RelayCommand(PrintProductBarcode);

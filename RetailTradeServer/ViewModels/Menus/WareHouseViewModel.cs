@@ -62,6 +62,8 @@ namespace RetailTradeServer.ViewModels.Menus
             _wareHouseService = wareHouseService;
             _typeWareHouseService = typeWareHouseService;
 
+            Header = "Склады и магазины";
+
             UserControlLoadedCommand = new RelayCommand(UserControlLoaded);
             CreateWareHouseCommand = new RelayCommand(() => _dialogService.ShowDialog(new WareHouseDialogFormModel(wareHouseService) { Title = "Склад (создание)" }));
 

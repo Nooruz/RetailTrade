@@ -68,6 +68,8 @@ namespace RetailTradeServer.ViewModels.Menus
             _supplierService = supplierService;
             _dialogService = dialogService;
 
+            Header = "Возврат поставщику";
+
             LoadedCommand = new RelayCommand(GetRefundToSuppliersAsync);
             CreateCommand = new RelayCommand(Create);
             DeleteCommand = new RelayCommand(Delete);

@@ -6,7 +6,7 @@
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
                     xmlns:local="clr-namespace:RetailTradeServer.Views.Menus"
                     ShowDefaultButtons="False"
-                    Title="Списание товара">
+                    Title="{Binding Header}">
 
     <dxmvvm:Interaction.Behaviors>
         <dxmvvm:EventToCommand EventName="Loaded" 

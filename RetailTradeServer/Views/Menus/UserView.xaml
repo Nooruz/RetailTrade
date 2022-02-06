@@ -7,7 +7,7 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:local="clr-namespace:RetailTradeServer.Views.Menus"
     x:Class="RetailTradeServer.Views.Menus.UserView"
-                      Title="Пользователи"
+                      Title="{Binding Header}"
                       ShowDefaultButtons="False">
 
     <dxmvvm:Interaction.Behaviors>

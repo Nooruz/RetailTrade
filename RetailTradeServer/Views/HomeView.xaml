@@ -1,9 +1,15 @@
 ﻿<UserControl
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:dxwui="http://schemas.devexpress.com/winfx/2008/xaml/windowsui"
-    xmlns:custom="clr-namespace:RetailTradeServer.Components"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:custom="clr-namespace:RetailTradeServer.Components"
     x:Class="RetailTradeServer.Views.HomeView">
+
+    <UserControl.Resources>
+        <Style TargetType="{x:Type dxwui:HamburgerSubMenuNavigationButton}">
+            <Setter Property="SelectOnClick" Value="False"/>
+        </Style>
+    </UserControl.Resources>
 
     <custom:CustomHamburgerMenu OpenPaneWidth="220"
                                 Header="Главное"

@@ -12,7 +12,7 @@
     mc:Ignorable="d"
     d:DesignHeight="450" d:DesignWidth="800"
     ShowDefaultButtons="False"
-    Title="Подключение и настройка оборудования">
+    Title="{Binding Header}">
 
     <dxmvvm:Interaction.Behaviors>
         <dxmvvm:EventToCommand EventName="Loaded"

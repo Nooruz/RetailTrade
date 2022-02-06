@@ -1,14 +1,23 @@
 ﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:dx="http://schemas.devexpress.com/winfx/2008/xaml/core"
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
                     xmlns:customs="clr-namespace:RetailTradeServer.Components"
-                    xmlns:dx="http://schemas.devexpress.com/winfx/2008/xaml/core">
+                    xmlns:views="clr-namespace:RetailTradeServer.Views">
 
     <Style x:Key="TabItemStyle" TargetType="{x:Type dx:DXTabItem}">
-        <Setter Property="Header" Value="{Binding Header}"/>
+        <Setter Property="HeaderTemplate">
+            <Setter.Value>
+                <DataTemplate>
+                    <TextBlock Text="{Binding Header}"
+                               HorizontalAlignment="Left"
+                               VerticalAlignment="Center"/>
+                </DataTemplate>
+            </Setter.Value>
+        </Setter>
         <Setter Property="Content" Value="{Binding}"/>
         <Setter Property="AllowHide" Value="{Binding AllowHide}"/>
         <Setter Property="IsSelected" Value="{Binding IsSelected}"/>
-        <Setter Property="CloseCommand" Value="{Binding CloseCommand}"/>
+        <Setter Property="CloseCommand" Value="{Binding Path=DataContext.CloseCommand, RelativeSource={RelativeSource AncestorType={x:Type views:HomeView}, Mode=FindAncestor}}"/>
         <Setter Property="CloseCommandParameter" Value="{Binding}"/>
     </Style>
 
