@@ -2,6 +2,7 @@
 using RetailTrade.Domain.Services;
 using RetailTradeServer.Commands;
 using RetailTradeServer.ViewModels.Base;
+using SalePageServer.State.Dialogs;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Windows.Input;
@@ -12,8 +13,9 @@ namespace RetailTradeServer.ViewModels.Menus
     {
         #region Private Members
 
+        private readonly IDialogService _dialogService;
         private readonly IDataService<Unit> _unitService;
-        private ObservableCollection<RevaluationProduct> _revaluationProducts;
+        private ObservableCollection<RevaluationProduct> _revaluationProducts = new();
         private IEnumerable<Unit> _units;
 
         #endregion
@@ -22,7 +24,7 @@ namespace RetailTradeServer.ViewModels.Menus
 
         public ObservableCollection<RevaluationProduct> RevaluationProducts
         {
-            get => _revaluationProducts ?? new();
+            get => _revaluationProducts;
             set
             {
                 _revaluationProducts = value;
@@ -44,14 +46,17 @@ namespace RetailTradeServer.ViewModels.Menus
         #region Commands
 
         public ICommand UserControlLoadedCommand => new RelayCommand(UserControlLoaded);
-        public ICommand AddProductCommand => new RelayCommand(() => RevaluationProducts.Add(new RevaluationProduct()));
+        public ICommand AddProductCommand => new RelayCommand(AddProduct);
+        public ICommand ProductCommand => new RelayCommand(Create);
 
         #endregion
 
         #region Constructor
 
-        public SettingProductPriceViewModel(IDataService<Unit> unitService)
+        public SettingProductPriceViewModel(IDialogService dialogService, 
+            IDataService<Unit> unitService)
         {
+            _dialogService = dialogService;
             _unitService = unitService;
         }
 
@@ -59,9 +64,14 @@ namespace RetailTradeServer.ViewModels.Menus
 
         #region Private Voids
 
+        private void Create()
+        {
+            //_dialogService.ShowDialog(new Produc);
+        }
+
         private void AddProduct()
         {
-
+            RevaluationProducts.Add(new RevaluationProduct());
         }
 
         private async void UserControlLoaded()

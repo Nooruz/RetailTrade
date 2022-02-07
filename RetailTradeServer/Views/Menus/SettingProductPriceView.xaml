@@ -44,13 +44,17 @@
 
         <dxg:GridControl ItemsSource="{Binding RevaluationProducts}">
             <dxg:GridControl.View>
-                <dxg:TableView AllowEditing="False" 
-                               AutoWidth="True"/>
+                <dxg:TableView AutoWidth="True"/>
             </dxg:GridControl.View>
             <dxg:GridColumn Header="Наименование товара"
-                            FieldName="ProductId">
+                            FieldName="Product.Name">
                 <dxg:GridColumn.EditSettings>
-                    <dxe:ComboBoxEditSettings/>
+                    <dxe:ButtonEditSettings AllowDefaultButton="False">
+                        <dxe:ButtonEditSettings.Buttons>
+                            <dxe:ButtonInfo GlyphKind="Regular"
+                                            Command="{Binding ProductCommand}"/>
+                        </dxe:ButtonEditSettings.Buttons>
+                    </dxe:ButtonEditSettings>
                 </dxg:GridColumn.EditSettings>
             </dxg:GridColumn>
             <dxg:GridColumn Header="Цена прихода"
