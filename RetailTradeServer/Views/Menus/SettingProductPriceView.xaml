@@ -1,14 +1,20 @@
-﻿<local:BaseDialogUserControl xmlns:dxg="http://schemas.devexpress.com/winfx/2008/xaml/grid"
-                               xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-                               xmlns:dxlc="http://schemas.devexpress.com/winfx/2008/xaml/layoutcontrol"
-                               xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-                               xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-                               xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-                               xmlns:local="clr-namespace:RetailTradeServer.Dialogs"
-                               xmlns:custom="clr-namespace:RetailTradeServer.Components"
-                               xmlns:dxe="http://schemas.devexpress.com/winfx/2008/xaml/editors"    x:Class="RetailTradeServer.Views.Dialogs.SettingProductPriceDialogForm"
-                               mc:Ignorable="d" 
-             d:DesignHeight="450" d:DesignWidth="800">
+﻿<local:BaseMenuView
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:dxe="http://schemas.devexpress.com/winfx/2008/xaml/editors"
+    xmlns:dxg="http://schemas.devexpress.com/winfx/2008/xaml/grid"
+    xmlns:dxlc="http://schemas.devexpress.com/winfx/2008/xaml/layoutcontrol"
+    xmlns:dxmvvm="http://schemas.devexpress.com/winfx/2008/xaml/mvvm"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:custom="clr-namespace:RetailTradeServer.Components"
+    xmlns:local="clr-namespace:RetailTradeServer.Views.Menus"
+    x:Class="RetailTradeServer.Views.Menus.SettingProductPriceView"
+    ShowDefaultButtons="False"
+    Title="{Binding Header}">
+
+    <dxmvvm:Interaction.Behaviors>
+        <dxmvvm:EventToCommand EventName="Loaded"
+                               Command="{Binding UserControlLoadedCommand}"/>
+    </dxmvvm:Interaction.Behaviors>
 
     <dxlc:LayoutControl Orientation="Vertical">
 
@@ -16,6 +22,7 @@
                           VerticalAlignment="Top">
 
             <custom:CustomButton Style="{StaticResource CustomWithIconic}"
+                                 Command="{Binding AddProductCommand}"
                                  Content="Добавить"
                                  Icon="{StaticResource faPlus}"
                                  IconColor="{StaticResource GreenColorBrush}"/>
@@ -35,13 +42,17 @@
 
         </dxlc:LayoutGroup>
 
-        <dxg:GridControl >
+        <dxg:GridControl ItemsSource="{Binding RevaluationProducts}">
             <dxg:GridControl.View>
                 <dxg:TableView AllowEditing="False" 
                                AutoWidth="True"/>
             </dxg:GridControl.View>
             <dxg:GridColumn Header="Наименование товара"
-                            FieldName="Name"/>
+                            FieldName="ProductId">
+                <dxg:GridColumn.EditSettings>
+                    <dxe:ComboBoxEditSettings/>
+                </dxg:GridColumn.EditSettings>
+            </dxg:GridColumn>
             <dxg:GridColumn Header="Цена прихода"
                             FieldName="ArrivalPrice"
                             Style="{StaticResource SumTextEditSettings}"/>
@@ -49,7 +60,7 @@
                             FieldName="SalePrice"
                             Style="{StaticResource SumTextEditSettings}"/>
             <dxg:GridColumn Header="Ед. изм."
-                            FieldName="UnitId">
+                            FieldName="Product.UnitId">
                 <dxg:GridColumn.EditSettings>
                     <dxe:ComboBoxEditSettings ItemsSource="{Binding Units}"
                                               DisplayMember="ShortName"
@@ -60,4 +71,4 @@
 
     </dxlc:LayoutControl>
 
-</local:BaseDialogUserControl>
+</local:BaseMenuView>

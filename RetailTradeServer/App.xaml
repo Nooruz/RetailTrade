@@ -109,6 +109,10 @@
                 <menuViews:RevaluationView/>
             </DataTemplate>
 
+            <DataTemplate DataType="{x:Type menuViewModels:SettingProductPriceViewModel}">
+                <menuViews:SettingProductPriceView/>
+            </DataTemplate>
+
             <!--#endregion-->
             
             <!--#region Диалоги-->

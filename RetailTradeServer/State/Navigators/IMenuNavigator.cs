@@ -86,9 +86,12 @@ namespace RetailTradeServer.State.Navigators
         /// </summary>
         RevaluationView
     }
+
     public interface IMenuNavigator
     {
-        BaseViewModel AddViewModel { get; set; }
+        ObservableCollection<BaseViewModel> CurrentViewModels { get; set; }
+        BaseViewModel CurrentViewModel { get; set; }
         event Action<BaseViewModel> StateChanged;
+        void AddViewModel(BaseViewModel viewModel);
     }
 }

@@ -29,9 +29,8 @@
                     <dx:DXTabControl ItemsSource="{Binding Path=Contents, RelativeSource={RelativeSource AncestorType={x:Type customs:CustomHamburgerMenu}}}"
                                      ItemContainerStyle="{StaticResource TabItemStyle}">
                         <dx:DXTabControl.View>
-                            <dx:TabControlStretchView HideButtonShowMode="InAllTabsAndHeaderArea"
-                                                      
-                                                      SingleTabItemHideMode="HideAndShowNewItem"/>
+                            <dx:TabControlMultiLineView HideButtonShowMode="InAllTabsAndHeaderArea"                                                      
+                                                        SingleTabItemHideMode="HideAndShowNewItem"/>
                         </dx:DXTabControl.View>
                     </dx:DXTabControl>
                 </DataTemplate>

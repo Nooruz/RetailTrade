@@ -31,15 +31,7 @@ namespace RetailTradeServer.ViewModels
 
         #region Public Properties
 
-        public ObservableCollection<BaseViewModel> CurrentMenuViewModels
-        {
-            get => _currentMenuViewModels;
-            set
-            {
-                _currentMenuViewModels = value;
-                OnPropertyChanged(nameof(CurrentMenuViewModels));
-            }
-        }
+        public ObservableCollection<BaseViewModel> CurrentMenuViewModels => _menuNavigator.CurrentViewModels;
         public string OrganizationName => _userStore.CurrentOrganization != null ? _userStore.CurrentOrganization.Name : "";
 
         #endregion
@@ -136,16 +128,17 @@ namespace RetailTradeServer.ViewModels
 
         private void MenuNavigator_StateChanged(BaseViewModel obj)
         {
-            BaseViewModel viewModel = CurrentMenuViewModels.FirstOrDefault(v => v.ToString() == obj.ToString());
-            if (viewModel == null)
-            {
-                obj.IsSelected = true;
-                CurrentMenuViewModels.Add(obj);
-            }
-            else
-            {
-                viewModel.IsSelected = true;
-            }
+            OnPropertyChanged(nameof(CurrentMenuViewModels));
+            //BaseViewModel viewModel = CurrentMenuViewModels.FirstOrDefault(v => v.ToString() == obj.ToString());
+            //if (viewModel == null)
+            //{
+            //    obj.IsSelected = true;
+            //    CurrentMenuViewModels.Add(obj);
+            //}
+            //else
+            //{
+            //    viewModel.IsSelected = true;
+            //}
         }
 
         private void Close(object parameter)

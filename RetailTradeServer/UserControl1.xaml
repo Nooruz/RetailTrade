@@ -14,16 +14,18 @@
             <Setter Property="Content" Value="{Binding Content}"/>
             <Setter Property="AllowHide" Value="{Binding AllowHide}"/>
         </Style>
-        
+
     </UserControl.Resources>
-    
+
     <Grid>
-        <dx:DXTabControl ItemsSource="{Binding TabDataItems}"
-                         ItemContainerStyle="{StaticResource TabItemStyle}">
+        <dx:DXTabControl ItemContainerStyle="{StaticResource TabItemStyle}">
             <dx:DXTabControl.View>
-                <dx:TabControlStretchView HideButtonShowMode="InAllTabs"
-                                          SingleTabItemHideMode="HideAndShowNewItem"/>
+                <dx:TabControlMultiLineView/>
             </dx:DXTabControl.View>
+            <dx:DXTabItem Header="вфыдвдфыодвложфдыловдлофждыловждло">
+                <Grid Background="#00000000"/>
+            </dx:DXTabItem>
+
         </dx:DXTabControl>
     </Grid>
 </UserControl>
