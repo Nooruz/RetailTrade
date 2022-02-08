@@ -169,6 +169,10 @@
                 <dialogs:WareHouseDialogForm/>
             </DataTemplate>
 
+            <DataTemplate DataType="{x:Type dialogViewModels:ProductDialogFormModel}">
+                <dialogs:ProductDialogForm/>
+            </DataTemplate>
+
             <!--#endregion-->
 
             <ResourceDictionary.MergedDictionaries>

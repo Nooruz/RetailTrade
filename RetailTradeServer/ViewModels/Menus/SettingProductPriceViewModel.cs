@@ -2,6 +2,7 @@
 using RetailTrade.Domain.Services;
 using RetailTradeServer.Commands;
 using RetailTradeServer.ViewModels.Base;
+using RetailTradeServer.ViewModels.Dialogs;
 using SalePageServer.State.Dialogs;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -13,6 +14,8 @@ namespace RetailTradeServer.ViewModels.Menus
     {
         #region Private Members
 
+        private readonly IProductService _productService;
+        private readonly ITypeProductService _typeProductService;
         private readonly IDialogService _dialogService;
         private readonly IDataService<Unit> _unitService;
         private ObservableCollection<RevaluationProduct> _revaluationProducts = new();
@@ -53,9 +56,13 @@ namespace RetailTradeServer.ViewModels.Menus
 
         #region Constructor
 
-        public SettingProductPriceViewModel(IDialogService dialogService, 
+        public SettingProductPriceViewModel(IProductService productService,
+            ITypeProductService typeProductService,
+            IDialogService dialogService, 
             IDataService<Unit> unitService)
         {
+            _productService = productService;
+            _typeProductService = typeProductService;
             _dialogService = dialogService;
             _unitService = unitService;
         }
@@ -66,7 +73,7 @@ namespace RetailTradeServer.ViewModels.Menus
 
         private void Create()
         {
-            //_dialogService.ShowDialog(new Produc);
+            _dialogService.ShowDialog(new ProductDialogFormModel(_productService, _typeProductService));
         }
 
         private void AddProduct()

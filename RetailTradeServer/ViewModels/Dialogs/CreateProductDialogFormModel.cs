@@ -420,6 +420,7 @@ namespace RetailTradeServer.ViewModels.Dialogs
             {
                 Name = Name,
                 UnitId = SelectedUnitId.Value,
+                SupplierId = SelectedSupplierId.Value,
                 TypeProductId = SelectedTypeProductId.Value,
                 TNVED = TNVED,
                 ArrivalPrice = ArrivalPrice,

@@ -54,7 +54,9 @@ namespace RetailTradeServer.ViewModels.Menus
 
         #region Constructor
 
-        public RevaluationViewModel(IRevaluationService revaluationService,
+        public RevaluationViewModel(IProductService productService,
+            ITypeProductService typeProductService,
+            IRevaluationService revaluationService,
             IDialogService dialogService,
             IMenuNavigator menuNavigator,
             IDataService<Unit> unitService)
@@ -65,7 +67,7 @@ namespace RetailTradeServer.ViewModels.Menus
 
             Header = "История изменения цен";
 
-            CreateCommand = new RelayCommand(() => _menuNavigator.AddViewModel(new SettingProductPriceViewModel(dialogService, unitService) { Header = "Установка цен товаров (создание) *" }));
+            CreateCommand = new RelayCommand(() => _menuNavigator.AddViewModel(new SettingProductPriceViewModel(productService, typeProductService, dialogService, unitService) { Header = "Установка цен товаров (создание) *" }));
         }
 
         #endregion
