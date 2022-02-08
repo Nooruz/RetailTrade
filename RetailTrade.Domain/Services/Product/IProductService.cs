@@ -18,6 +18,7 @@ namespace RetailTrade.Domain.Services
         Task<double> Sale(int id, double quantity);
         Task<string> GenerateBarcode(int productId);
         Task<bool> MarkingForDeletion(Product product);
+        Task<bool> SearchByBarcode(string barcode);
 
         event Action<Product> OnProductCreated;
         event Action<Product> OnProductEdited;

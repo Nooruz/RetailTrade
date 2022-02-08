@@ -287,5 +287,19 @@ namespace RetailTrade.EntityFramework.Services
             }
             return false;
         }
+
+        public async Task<bool> SearchByBarcode(string barcode)
+        {
+            try
+            {
+                await using var context = _contextFactory.CreateDbContext();
+                return await context.Products.FirstOrDefaultAsync(p => p.Barcode == barcode) != null;
+            }
+            catch (Exception e)
+            {
+                //ignore
+            }
+            return false;
+        }
     }
 }

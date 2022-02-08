@@ -350,22 +350,29 @@ namespace RetailTradeServer.ViewModels.Dialogs
                 return;
             }
 
-            if (await _productService.CreateAsync(new Product
+            if (await _productService.SearchByBarcode(Barcode))
             {
-                Barcode = Barcode,
-                Name = Name,
-                SupplierId = SelectedSupplierId.Value,
-                UnitId = SelectedUnitId.Value,
-                TypeProductId = SelectedTypeProductId.Value,
-                TNVED = TNVED,
-                ArrivalPrice = ArrivalPrice,
-                SalePrice = SalePrice,
-                Quantity = Quantity
-            }) != null)
-            {
-                _messageStore.SetCurrentMessage("Товар успешно добавлено.", MessageType.Success);
-                CleareAllItems();
+                _dialogService.ShowMessage($"Товар со штрих-кодом \"{Barcode}\" существует.", "", MessageBoxButton.OK, MessageBoxImage.Error);
             }
+            else
+            {
+                if (await _productService.CreateAsync(new Product
+                {
+                    Barcode = Barcode,
+                    Name = Name,
+                    SupplierId = SelectedSupplierId.Value,
+                    UnitId = SelectedUnitId.Value,
+                    TypeProductId = SelectedTypeProductId.Value,
+                    TNVED = TNVED,
+                    ArrivalPrice = ArrivalPrice,
+                    SalePrice = SalePrice,
+                    Quantity = Quantity
+                }) != null)
+                {
+                    _messageStore.SetCurrentMessage("Товар успешно добавлено.", MessageType.Success);
+                    CleareAllItems();
+                }
+            }            
         }
 
         /// <summary>
