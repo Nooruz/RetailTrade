@@ -62,7 +62,9 @@ namespace RetailTradeServer.HostBuilders
         private static RevaluationViewModel CreateRevaluationViewModel(IServiceProvider services)
         {
             return new RevaluationViewModel(services.GetRequiredService<IRevaluationService>(),
-                services.GetRequiredService<IDialogService>());
+                services.GetRequiredService<IDialogService>(),
+                services.GetRequiredService<IMenuNavigator>(),
+                services.GetRequiredService<IDataService<Unit>>());
         }
 
         private static SupplierViewModel CreateSupplierViewModel(IServiceProvider services)

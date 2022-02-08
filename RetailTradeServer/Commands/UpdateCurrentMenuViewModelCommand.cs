@@ -28,7 +28,7 @@ namespace RetailTradeServer.Commands
         {
             if (parameter is MenuViewType viewType)
             {
-                _navigator.AddViewModel = _viewModelFactory.CreateViewModel(viewType);
+                _navigator.CurrentViewModel = _viewModelFactory.CreateViewModel(viewType);
             }
         }
     }

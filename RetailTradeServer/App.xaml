@@ -109,6 +109,10 @@
                 <menuViews:RevaluationView/>
             </DataTemplate>
 
+            <DataTemplate DataType="{x:Type menuViewModels:SettingProductPriceViewModel}">
+                <menuViews:SettingProductPriceView/>
+            </DataTemplate>
+
             <!--#endregion-->
             
             <!--#region Диалоги-->
@@ -180,9 +184,9 @@
                 <ResourceDictionary Source="/Styles/HamburgerSubMenuStyle.xaml"/>
                 <ResourceDictionary Source="/Styles/UserControlStyle.xaml"/>
                 <ResourceDictionary Source="/Styles/LookUpEditSettingsStyle.xaml"/>
-                <ResourceDictionary Source="/Styles/GridColumnStyle.xaml"/>
                 <ResourceDictionary Source="/Styles/TreeListColumnStyle.xaml"/>
                 <ResourceDictionary Source="/Styles/ComboBoxEditStyle.xaml"/>
+                <ResourceDictionary Source="/Styles/GridColumnStyle.xaml"/>
                 <ResourceDictionary Source="/Styles/BarButtonItemStyle.xaml"/>
                 <ResourceDictionary Source="/Styles/HamburgerMenuStyle.xaml"/>
             </ResourceDictionary.MergedDictionaries>

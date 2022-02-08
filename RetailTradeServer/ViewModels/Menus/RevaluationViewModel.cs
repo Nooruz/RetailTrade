@@ -1,6 +1,7 @@
 ﻿using RetailTrade.Domain.Models;
 using RetailTrade.Domain.Services;
 using RetailTradeServer.Commands;
+using RetailTradeServer.State.Navigators;
 using RetailTradeServer.ViewModels.Base;
 using SalePageServer.State.Dialogs;
 using System.Collections.Generic;
@@ -15,6 +16,7 @@ namespace RetailTradeServer.ViewModels.Menus
 
         private readonly IRevaluationService _revaluationService;
         private readonly IDialogService _dialogService;
+        private readonly IMenuNavigator _menuNavigator;
         private IEnumerable<Revaluation> _revaluations;
         private Revaluation _selectedRevaluation;
 
@@ -53,14 +55,17 @@ namespace RetailTradeServer.ViewModels.Menus
         #region Constructor
 
         public RevaluationViewModel(IRevaluationService revaluationService,
-            IDialogService dialogService)
+            IDialogService dialogService,
+            IMenuNavigator menuNavigator,
+            IDataService<Unit> unitService)
         {
             _revaluationService = revaluationService;
             _dialogService = dialogService;
+            _menuNavigator = menuNavigator;
 
             Header = "История изменения цен";
 
-            CreateCommand = new RelayCommand(Create);
+            CreateCommand = new RelayCommand(() => _menuNavigator.AddViewModel(new SettingProductPriceViewModel(dialogService, unitService) { Header = "Установка цен товаров (создание) *" }));
         }
 
         #endregion

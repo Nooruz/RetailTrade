@@ -32,6 +32,17 @@
         </Setter>
     </Style>
 
+    <Style TargetType="{x:Type dxg:GridColumn}" x:Key="CustomComboBox">
+        <Setter Property="CellEditTemplate">
+            <Setter.Value>
+                <DataTemplate>
+                    <dxe:ComboBoxEdit Name="PART_Editor"
+                                      Style="{StaticResource CustomPopup}"/>
+                </DataTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
     <Style TargetType="{x:Type dxg:GridColumn}" x:Key="SumTextEditSettings">
         <Setter Property="EditSettings">
             <Setter.Value>

@@ -1,0 +1,109 @@
+﻿<UserControl       x:Class="SalePageServer.Views.Dialogs.ProductDialogForm"
+                   xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                   xmlns:dx="http://schemas.devexpress.com/winfx/2008/xaml/core"
+                   xmlns:dxe="http://schemas.devexpress.com/winfx/2008/xaml/editors"
+                   xmlns:dxg="http://schemas.devexpress.com/winfx/2008/xaml/grid"
+                   xmlns:dxlc="http://schemas.devexpress.com/winfx/2008/xaml/layoutcontrol"
+                   xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                   xmlns:components="clr-namespace:RetailTradeServer.Components"
+                   Width="400">
+
+    <dxlc:LayoutControl AllowItemSizing="True">
+
+        <dxlc:LayoutGroup Orientation="Vertical"
+                          MinWidth="100"
+                          Width="250"
+                          MaxWidth="350">
+
+            <dxlc:LayoutGroup HorizontalAlignment="Left"
+                              VerticalAlignment="Top"
+                              ItemSpace="10">
+
+                <CheckBox Content="Виды и свойства"/>
+
+                <dx:DropDownButton Content="{StaticResource faPlus}"
+                                   Foreground="{StaticResource GreenColorBrush}"
+                                   Style="{StaticResource DropDownButtonIconic}">
+                    <StackPanel Orientation="Vertical">
+                        <components:CustomButton Icon="{StaticResource faPlus}" 
+                                                 Style="{StaticResource InPopupButton}"
+                                                 Content="Вид товара"
+                                                 HotKey="Ins"
+                                                 IconColor="{StaticResource GreenColorBrush}"
+                                                 Command="{Binding CreateTypeProductCommand}"/>
+
+                        <components:CustomButton Content="Группу видов товара"
+                                                 Icon="{StaticResource faFolderPlus}" 
+                                                 Style="{StaticResource InPopupButton}"
+                                                 IconColor="{StaticResource FolderColorBrush}"
+                                                 HotKey="Ctrl+F9"
+                                                 Command="{Binding CreateGroupTypeProductCommand}"/>
+                    </StackPanel>
+                </dx:DropDownButton>
+
+            </dxlc:LayoutGroup>
+
+            <dxg:TreeListControl ItemsSource="{Binding TypeProducts}"
+                                 SelectedItem="{Binding SelectedTypeProduct}">
+                <dxg:TreeListControl.View>
+                    <dxg:TreeListView AutoWidth="True"
+                                      KeyFieldName="Id"
+                                      ParentFieldName="SubGroupId">
+                        <dxg:TreeListView.RowCellMenuCustomizations>
+                            <components:CustomBarButtonItem Style="{StaticResource CustomBarButtonItem}"
+                                                            Icon="{StaticResource faPlus}"
+                                                            IconColor="{StaticResource GreenColorBrush}"
+                                                            Content="Вид товара"
+                                                            HotKey="Ins"/>
+                        </dxg:TreeListView.RowCellMenuCustomizations>
+                    </dxg:TreeListView>
+                </dxg:TreeListControl.View>
+                <dxg:TreeListColumn FieldName="Name"
+                                    Header=""
+                                    Style="{StaticResource GroupTreeListColumnWithIcon}"/>
+            </dxg:TreeListControl>
+
+        </dxlc:LayoutGroup>
+
+        <dxlc:LayoutGroup Orientation="Vertical"
+                          dxlc:LayoutControl.AllowHorizontalSizing="True">
+            
+            <dxlc:LayoutGroup HorizontalAlignment="Left"
+                              VerticalAlignment="Top"
+                              ItemSpace="10">
+
+                <dxe:ButtonEdit Width="350"
+                                AllowDefaultButton="False">
+                    <dxe:ButtonInfo GlyphKind="Cancel"/>
+                </dxe:ButtonEdit>
+
+                <Button Style="{StaticResource FAButton}"
+                    Content="{StaticResource faSearch}"/>
+
+                <CheckBox Content="По точному соответсвтию"/>
+
+            </dxlc:LayoutGroup>
+
+            <dxlc:LayoutGroup HorizontalAlignment="Left"
+                              VerticalAlignment="Top"
+                              ItemSpace="10">
+
+                <Button Content="Выбрать"/>
+                <Button Content="Создать"/>
+
+            </dxlc:LayoutGroup>
+
+            <dxg:GridControl>
+                <dxg:GridControl.View>
+                    <dxg:TableView AllowEditing="False"
+                                   ShowGroupPanel="False"
+                                   AutoWidth="True"/>
+                </dxg:GridControl.View>
+                <dxg:GridColumn Header="Наименование"/>
+            </dxg:GridControl>
+            
+        </dxlc:LayoutGroup>
+        
+    </dxlc:LayoutControl>
+    
+</UserControl>

@@ -15,7 +15,7 @@ namespace RetailTradeServer.State.Navigators
 
         public void Renavigate()
         {
-            _menuNavigator.AddViewModel = _createViewModel();
+            _menuNavigator.CurrentViewModel = _createViewModel();
         }
     }
 }

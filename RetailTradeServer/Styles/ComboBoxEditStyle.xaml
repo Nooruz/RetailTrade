@@ -2,25 +2,22 @@
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
                     xmlns:dxe="http://schemas.devexpress.com/winfx/2008/xaml/editors">
 
-
     <Style TargetType="{x:Type dxe:ComboBoxEdit}">
         <Setter Property="AutoComplete" Value="True"/>
         <Setter Property="IncrementalSearch" Value="True"/>
         <Setter Property="IncrementalFiltering" Value="True"/>
     </Style>
-
+    
     <Style TargetType="{x:Type dxe:ComboBoxEdit}" x:Key="CustomPopup">
         <Setter Property="PopupBottomAreaTemplate">
             <Setter.Value>
                 <ControlTemplate TargetType="{x:Type dxe:ComboBoxEdit}">
-                    <StackPanel Grid.Row="1">
+                    <Popup>
                         <Button Content="Показать все"/>
-                    </StackPanel>
+                    </Popup>
                 </ControlTemplate>
             </Setter.Value>
         </Setter>
     </Style>
-    
-    
     
 </ResourceDictionary>
