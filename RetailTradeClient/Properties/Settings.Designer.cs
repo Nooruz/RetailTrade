@@ -91,5 +91,29 @@ namespace RetailTradeClient.Properties {
                 this["ShtrihMConnected"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("True")]
+        public bool IsKeepRecords {
+            get {
+                return ((bool)(this["IsKeepRecords"]));
+            }
+            set {
+                this["IsKeepRecords"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string DefaultKKMName {
+            get {
+                return ((string)(this["DefaultKKMName"]));
+            }
+            set {
+                this["DefaultKKMName"] = value;
+            }
+        }
     }
 }

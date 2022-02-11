@@ -1,5 +1,4 @@
-﻿using RetailTrade.CashRegisterMachine;
-using RetailTradeClient.Commands;
+﻿using RetailTradeClient.Commands;
 using RetailTradeClient.State.Dialogs;
 using RetailTradeClient.State.Navigators;
 using RetailTradeClient.State.Shifts;
@@ -62,9 +61,8 @@ namespace RetailTradeClient.ViewModels.Dialogs
         #region Private Voids
 
         private void Setting()
-        {
-            ShtrihM.ShowProperties();
-            //_manager.ShowDialog(new ApplicationSettingsViewModel() { Title = "Настройки"}, new ApplicationSettingsView());
+        {            
+            _manager.ShowDialog(new ApplicationSettingsViewModel() { Title = "Настройки"}, new ApplicationSettingsView());
         }
 
         private void ShiftStore_CurrentShiftChanged()

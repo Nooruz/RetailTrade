@@ -10,13 +10,25 @@
     <dxlc:LayoutControl Orientation="Vertical">
         
         <dxlc:LayoutItem Label="ККМ">
-            <dxe:ComboBoxEdit ItemsSource="{Binding KKMs}"/>
+            <dxe:ComboBoxEdit ItemsSource="{Binding KKMs}"
+                              SelectedItem="{Binding SelectedKKM}" 
+                              AutoComplete="True" 
+                              IncrementalFiltering="True">
+                <dxe:ComboBoxEdit.Buttons>
+                    <dxe:ButtonInfo GlyphKind="Regular"
+                                    Command="{Binding SettingKKMCommand}"/>
+                </dxe:ComboBoxEdit.Buttons>
+            </dxe:ComboBoxEdit>
         </dxlc:LayoutItem>
         
         <dxlc:LayoutItem Label="Принтер чеков">
             <dxe:ComboBoxEdit ItemsSource="{Binding LocalPrinters}"
                               DisplayMember="Name"
-                              SelectedItem="{Binding SelectedLocalPrinter}"/>
+                              SelectedItem="{Binding SelectedReceiptPrinter}"/>
+        </dxlc:LayoutItem>
+
+        <dxlc:LayoutItem Label="Вести учет">
+            <dxe:CheckEdit IsChecked="{Binding IsKeepRecords}"/>
         </dxlc:LayoutItem>
 
         <dxlc:LayoutGroup Orientation="Horizontal"

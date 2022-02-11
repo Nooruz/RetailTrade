@@ -1,12 +1,12 @@
-﻿using RetailTrade.Domain.Models;
+﻿using RetailTrade.CashRegisterMachine;
+using RetailTrade.Domain.Models;
 using RetailTradeClient.Commands;
-using System;
+using RetailTradeClient.Properties;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Drawing.Printing;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using System.Windows;
 using System.Windows.Input;
 
 namespace RetailTradeClient.ViewModels.Dialogs
@@ -16,14 +16,27 @@ namespace RetailTradeClient.ViewModels.Dialogs
         #region Private Members
 
         private int? _selectedLocalPrinterId;
-        private LocalPrinter _selectedLocalPrinter;
+        private LocalPrinter _selectedReceiptPrinter;
+        private string _selectedKKM = Settings.Default.DefaultKKMName;
 
         #endregion
 
         #region Public Properties
 
         public List<string> KKMs { get; set; }
-
+        public string SelectedKKM
+        {
+            get => _selectedKKM;
+            set
+            {
+                _selectedKKM = value;
+                if (_selectedKKM == "Штрих-М")
+                {
+                    ShtrihM.ShowProperties();
+                }
+                OnPropertyChanged(nameof(SelectedKKM));
+            }
+        }
         public ObservableCollection<LocalPrinter> LocalPrinters { get; set; }
         public int? SelectedLocalPrinterId
         {
@@ -34,13 +47,22 @@ namespace RetailTradeClient.ViewModels.Dialogs
                 OnPropertyChanged(nameof(SelectedLocalPrinterId));
             }
         }
-        public LocalPrinter SelectedLocalPrinter
+        public LocalPrinter SelectedReceiptPrinter
         {
-            get => _selectedLocalPrinter;
+            get => _selectedReceiptPrinter;
             set
             {
-                _selectedLocalPrinter = value;
-                OnPropertyChanged(nameof(SelectedLocalPrinter));
+                _selectedReceiptPrinter = value;
+                OnPropertyChanged(nameof(SelectedReceiptPrinter));
+            }
+        }
+        public bool IsKeepRecords
+        {
+            get => Settings.Default.IsKeepRecords;
+            set
+            {
+                Settings.Default.IsKeepRecords = value;
+                OnPropertyChanged(nameof(IsKeepRecords));
             }
         }
 
@@ -49,6 +71,7 @@ namespace RetailTradeClient.ViewModels.Dialogs
         #region Commands
 
         public ICommand SaveCommand { get; }
+        public ICommand SettingKKMCommand => new RelayCommand(SettingKKM);
 
         #endregion
 
@@ -64,15 +87,45 @@ namespace RetailTradeClient.ViewModels.Dialogs
                 "ОКА МФ2"
             };
             SaveCommand = new RelayCommand(Save);
+
+            if (LocalPrinters.Count > 0)
+            {
+                SelectedReceiptPrinter = LocalPrinters.FirstOrDefault(lp => lp.Name == Settings.Default.DefaultReceiptPrinter);
+            }
+
         }
 
         #endregion
 
         #region Private Voids
 
+        private void SettingKKM()
+        {
+            if (string.IsNullOrEmpty(SelectedKKM))
+            {
+                MessageBox.Show("Выберите ККМ", "SP Магазин", MessageBoxButton.OK, MessageBoxImage.Exclamation);
+            }
+            else
+            {
+                switch (SelectedKKM)
+                {
+                    case "Штрих-М":
+                        ShtrihM.ShowProperties();
+                        break;
+                    case "ОКА МФ2":
+                        MessageBox.Show("Ошибка. Обратитесь к разработчику.", "SP Магазин", MessageBoxButton.OK, MessageBoxImage.Exclamation);
+                        break;
+                    default:
+                        break;
+                }
+            }
+        }
+
         private void Save()
         {
-
+            Settings.Default.DefaultReceiptPrinter = SelectedReceiptPrinter.Name;
+            Settings.Default.DefaultKKMName = SelectedKKM;
+            Settings.Default.Save();
         }
 
         private void UpdateLocalPrinterList()
