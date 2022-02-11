@@ -31,6 +31,7 @@
                           IsChecked="{Binding IsTypesAndProperties}"/>
 
                 <dx:DropDownButton Content="{StaticResource faPlus}"
+                                   IsEnabled="{Binding IsTypesAndProperties, Converter={StaticResource BooleanReverseConverter}}"
                                    Foreground="{StaticResource GreenColorBrush}"
                                    Style="{StaticResource DropDownButtonIconic}">
                     <StackPanel Orientation="Vertical">
@@ -53,6 +54,7 @@
             </dxlc:LayoutGroup>
 
             <dxg:TreeListControl ItemsSource="{Binding TypeProducts}"
+                                 IsEnabled="{Binding IsTypesAndProperties, Converter={StaticResource BooleanReverseConverter}}"
                                  SelectedItem="{Binding SelectedTypeProduct}">
                 <dxg:TreeListControl.View>
                     <dxg:TreeListView AutoWidth="True"
@@ -82,8 +84,9 @@
 
                 <dxe:ButtonEdit Width="350"
                                 AllowDefaultButton="False"
-                                Text="{Binding SearchText}">
-                    <dxe:ButtonInfo GlyphKind="Cancel"/>
+                                Text="{Binding SearchText, UpdateSourceTrigger=PropertyChanged}">
+                    <dxe:ButtonInfo GlyphKind="Cancel"
+                                    Command="{Binding CleareSearchTextCommand}"/>
                 </dxe:ButtonEdit>
 
                 <Button Style="{StaticResource FAButton}"
@@ -100,20 +103,27 @@
                               ItemSpace="10">
 
                 <Button Content="Выбрать"
-                        Command="{Binding SelectedCommand}"/>
+                        Command="{Binding SelectCommand}"/>
                 <Button Content="Создать"
                         Command="{Binding CreateCommand}"/>
 
             </dxlc:LayoutGroup>
 
-            <dxg:GridControl ItemsSource="{Binding Products}">
+            <dxg:GridControl ItemsSource="{Binding Products}" 
+                             SelectionMode="Row"                             
+                             SelectedItem="{Binding SelectedProduct}">
+                <dxmvvm:Interaction.Behaviors>
+                    <dxmvvm:EventToCommand Event="Loaded"
+                                           Command="{Binding GridControlLoadedCommand}"
+                                           PassEventArgsToCommand="True"/>
+                </dxmvvm:Interaction.Behaviors>
                 <dxg:GridControl.View>
                     <dxg:TableView AllowEditing="False"
                                    ShowGroupPanel="False"
                                    AutoWidth="True"/>
                 </dxg:GridControl.View>
-                <dxg:GridColumn Header="Наименование"
-                                FieldName="Name"/>
+                <dxg:GridColumn FieldName="Name"
+                                Header="Наименование"/>
             </dxg:GridControl>
             
         </dxlc:LayoutGroup>

@@ -18,6 +18,7 @@
             <converters:StringIsNullOrEmptyVisibilityConverter x:Key="StringIsNullOrEmptyVisibilityConverter"/>
             <converters:ClosingDateValueConverter x:Key="ClosingDateValueConverter"/>
             <converters:TypeWareHouseIdConverter x:Key="TypeWareHouseIdConverter"/>
+            <converters:BooleanReverseConverter x:Key="BooleanReverseConverter"/>
 
             <!--#region Основной меню-->
             

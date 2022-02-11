@@ -57,7 +57,7 @@ namespace RetailTrade.EntityFramework.Services
                 return await context.Products
                     .FirstOrDefaultAsync((e) => e.Id == id);
             }
-            catch (Exception e)
+            catch (Exception)
             {
                 //ignore
             }
@@ -72,7 +72,7 @@ namespace RetailTrade.EntityFramework.Services
                 return context.Products
                     .ToList();
             }
-            catch (Exception e)
+            catch (Exception)
             {
                 //ignore
             }
@@ -87,7 +87,7 @@ namespace RetailTrade.EntityFramework.Services
                 return await context.Products
                     .ToListAsync();
             }
-            catch (Exception e)
+            catch (Exception)
             {
                 //ignore
             }
@@ -102,7 +102,7 @@ namespace RetailTrade.EntityFramework.Services
                 return await context.Products
                     .FirstOrDefaultAsync(p => p.Id == id);
             }
-            catch (Exception e)
+            catch (Exception)
             {
                 //ignore
             }
@@ -119,7 +119,7 @@ namespace RetailTrade.EntityFramework.Services
                     .Select(p => new Product { Id = p.Id, Name = p.Name, Quantity = p.Quantity })
                     .ToList();
             }
-            catch (Exception e)
+            catch (Exception)
             {
                 //ignore
             }
@@ -137,7 +137,7 @@ namespace RetailTrade.EntityFramework.Services
                     .ToListAsync();
                 return result;
             }
-            catch (Exception e)
+            catch (Exception)
             {
                 //ignore
             }
@@ -154,7 +154,7 @@ namespace RetailTrade.EntityFramework.Services
                     .Select(select)
                     .FirstOrDefaultAsync();
             }
-            catch (Exception e)
+            catch (Exception)
             {
                 //ignore
             }
@@ -172,7 +172,7 @@ namespace RetailTrade.EntityFramework.Services
                                                .FirstOrDefaultAsync();
                 return product.Quantity;
             }
-            catch (Exception e)
+            catch (Exception)
             {
                 //ignore
             }
@@ -195,7 +195,7 @@ namespace RetailTrade.EntityFramework.Services
 
                 return quantity;
             }
-            catch (Exception e)
+            catch (Exception)
             {
                 //ignore
             }
@@ -212,7 +212,7 @@ namespace RetailTrade.EntityFramework.Services
                 Product updateProduct = await UpdateAsync(productId, product);
                 return updateProduct.Barcode;
             }
-            catch (Exception e)
+            catch (Exception)
             {
                 //ignore
             }
@@ -232,7 +232,7 @@ namespace RetailTrade.EntityFramework.Services
                     return true;
                 }
             }
-            catch (Exception e)
+            catch (Exception)
             {
                 //ignore
             }
@@ -255,7 +255,7 @@ namespace RetailTrade.EntityFramework.Services
 
                 return quantity;
             }
-            catch (Exception e)
+            catch (Exception)
             {
                 //ignore
             }
@@ -281,7 +281,7 @@ namespace RetailTrade.EntityFramework.Services
                 }
                 return true;
             }
-            catch (Exception e)
+            catch (Exception)
             {
                 //ignore
             }
@@ -295,7 +295,7 @@ namespace RetailTrade.EntityFramework.Services
                 await using var context = _contextFactory.CreateDbContext();
                 return await context.Products.FirstOrDefaultAsync(p => p.Barcode == barcode) != null;
             }
-            catch (Exception e)
+            catch (Exception)
             {
                 //ignore
             }
