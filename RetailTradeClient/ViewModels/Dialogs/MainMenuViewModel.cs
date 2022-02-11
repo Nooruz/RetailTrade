@@ -62,7 +62,7 @@ namespace RetailTradeClient.ViewModels.Dialogs
 
         private void Setting()
         {            
-            _manager.ShowDialog(new ApplicationSettingsViewModel() { Title = "Настройки"}, new ApplicationSettingsView());
+            _manager.ShowDialog(new ApplicationSettingsViewModel(_manager) { Title = "Настройки"}, new ApplicationSettingsView());
         }
 
         private void ShiftStore_CurrentShiftChanged()

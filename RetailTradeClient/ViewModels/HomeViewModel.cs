@@ -4,6 +4,7 @@ using RetailTrade.CashRegisterMachine;
 using RetailTrade.Domain.Models;
 using RetailTrade.Domain.Services;
 using RetailTradeClient.Commands;
+using RetailTradeClient.Properties;
 using RetailTradeClient.State.Authenticators;
 using RetailTradeClient.State.Barcode;
 using RetailTradeClient.State.Dialogs;
@@ -21,11 +22,9 @@ using System.Collections.ObjectModel;
 using System.Collections.Specialized;
 using System.ComponentModel;
 using System.Linq;
-using System.Text;
 using System.Windows;
 using System.Windows.Data;
 using System.Windows.Input;
-using System.Xml.Linq;
 
 namespace RetailTradeClient.ViewModels
 {
@@ -65,6 +64,7 @@ namespace RetailTradeClient.ViewModels
                 OnPropertyChanged(nameof(ProductsWithoutBarcode));
             }
         }
+        public bool IsKeepRecorsd => Settings.Default.IsKeepRecords;
         public ObservableCollection<Sale> SaleProducts { get; set; }
         public ICollectionView SaleProductsCollectionView { get; set; }
         public decimal Sum
@@ -444,7 +444,7 @@ namespace RetailTradeClient.ViewModels
 
         private async void LoadedHomeView(object parameter)
         {
-            ProductsWithoutBarcode = new(await _productService.PredicateSelect(p => p.Quantity > 0 && p.WithoutBarcode == true, p => new Product { Id = p.Id, Name = p.Name, SalePrice = p.SalePrice, ArrivalPrice = p.ArrivalPrice, Quantity = p.Quantity }));
+            ProductsWithoutBarcode = IsKeepRecorsd ? new(await _productService.PredicateSelect(p => p.Quantity > 0 && p.WithoutBarcode == true, p => new Product { Id = p.Id, Name = p.Name, SalePrice = p.SalePrice, ArrivalPrice = p.ArrivalPrice, Quantity = p.Quantity })) : new(await _productService.PredicateSelect(p => p.WithoutBarcode == true, p => new Product { Id = p.Id, Name = p.Name, SalePrice = p.SalePrice, ArrivalPrice = p.ArrivalPrice, Quantity = p.Quantity }));
             if (parameter is RoutedEventArgs e)
             {
                 if (e.Source is HomeView homeView)

@@ -2,6 +2,7 @@
 using RetailTrade.Domain.Models;
 using RetailTradeClient.Commands;
 using RetailTradeClient.Properties;
+using RetailTradeClient.State.Dialogs;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Drawing.Printing;
@@ -15,6 +16,8 @@ namespace RetailTradeClient.ViewModels.Dialogs
     {
         #region Private Members
 
+        private readonly IUIManager _manager;
+        private readonly IUIManager _localManager;
         private int? _selectedLocalPrinterId;
         private LocalPrinter _selectedReceiptPrinter;
         private string _selectedKKM = Settings.Default.DefaultKKMName;
@@ -30,10 +33,6 @@ namespace RetailTradeClient.ViewModels.Dialogs
             set
             {
                 _selectedKKM = value;
-                if (_selectedKKM == "Штрих-М")
-                {
-                    ShtrihM.ShowProperties();
-                }
                 OnPropertyChanged(nameof(SelectedKKM));
             }
         }
@@ -77,8 +76,11 @@ namespace RetailTradeClient.ViewModels.Dialogs
 
         #region Constructor
 
-        public ApplicationSettingsViewModel()
+        public ApplicationSettingsViewModel(IUIManager manager)
         {
+            _manager = manager;
+            _localManager = new UIManager();
+
             LocalPrinters = new();
             UpdateLocalPrinterList();
             KKMs = new List<string>()
@@ -103,7 +105,7 @@ namespace RetailTradeClient.ViewModels.Dialogs
         {
             if (string.IsNullOrEmpty(SelectedKKM))
             {
-                MessageBox.Show("Выберите ККМ", "SP Магазин", MessageBoxButton.OK, MessageBoxImage.Exclamation);
+                _localManager.ShowMessage("Выберите ККМ", "SP Магазин", MessageBoxButton.OK, MessageBoxImage.Exclamation);
             }
             else
             {
@@ -113,7 +115,7 @@ namespace RetailTradeClient.ViewModels.Dialogs
                         ShtrihM.ShowProperties();
                         break;
                     case "ОКА МФ2":
-                        MessageBox.Show("Ошибка. Обратитесь к разработчику.", "SP Магазин", MessageBoxButton.OK, MessageBoxImage.Exclamation);
+                        _localManager.ShowMessage("Ошибка. Обратитесь к разработчику.", "SP Магазин", MessageBoxButton.OK, MessageBoxImage.Exclamation);
                         break;
                     default:
                         break;
@@ -126,6 +128,7 @@ namespace RetailTradeClient.ViewModels.Dialogs
             Settings.Default.DefaultReceiptPrinter = SelectedReceiptPrinter.Name;
             Settings.Default.DefaultKKMName = SelectedKKM;
             Settings.Default.Save();
+            _manager.Close();
         }
 
         private void UpdateLocalPrinterList()
