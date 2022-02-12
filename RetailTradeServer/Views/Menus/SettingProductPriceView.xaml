@@ -42,19 +42,20 @@
 
         </dxlc:LayoutGroup>
 
-        <dxg:GridControl ItemsSource="{Binding RevaluationProducts}">
+        <dxg:GridControl ItemsSource="{Binding RevaluationProducts}"
+                         SelectedItem="{Binding SelectedRevaluationProduct}">
             <dxg:GridControl.View>
                 <dxg:TableView AutoWidth="True"/>
             </dxg:GridControl.View>
             <dxg:GridColumn Header="Наименование товара"
-                            FieldName="Product.Name">
+                            FieldName="ProductId">
                 <dxg:GridColumn.EditSettings>
-                    <dxe:ButtonEditSettings AllowDefaultButton="False">
-                        <dxe:ButtonEditSettings.Buttons>
-                            <dxe:ButtonInfo GlyphKind="Regular"
-                                            Command="{Binding ProductCommand}"/>
-                        </dxe:ButtonEditSettings.Buttons>
-                    </dxe:ButtonEditSettings>
+                    <dxg:LookUpEditSettings DisplayMember="Name"
+                                            ValueMember="Id"
+                                            IncrementalFiltering="True"
+                                            AutoComplete="False"
+                                            ImmediatePopup="True"
+                                            IsPopupAutoWidth="True"/>
                 </dxg:GridColumn.EditSettings>
             </dxg:GridColumn>
             <dxg:GridColumn Header="Цена прихода"

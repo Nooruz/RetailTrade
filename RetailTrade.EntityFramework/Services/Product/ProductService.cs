@@ -301,5 +301,21 @@ namespace RetailTrade.EntityFramework.Services
             }
             return false;
         }
+
+        public async Task<IEnumerable<Product>> GetAllUnmarkedAsync()
+        {
+            try
+            {
+                await using var context = _contextFactory.CreateDbContext();
+                return await context.Products
+                    .Where(p => p.DeleteMark == false)
+                    .ToListAsync();
+            }
+            catch (Exception)
+            {
+                //ignore
+            }
+            return null;
+        }
     }
 }

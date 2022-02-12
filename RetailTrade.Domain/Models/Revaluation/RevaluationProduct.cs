@@ -13,6 +13,7 @@ namespace RetailTrade.Domain.Models
         private int _revaluationId;
         private decimal _arrivalPrice;
         private decimal _salePrice;
+        private Product _product;
 
         #endregion
 
@@ -75,7 +76,15 @@ namespace RetailTrade.Domain.Models
         /// <summary>
         /// Товар
         /// </summary>
-        public Product Product { get; set; }
+        public Product Product
+        {
+            get => _product;
+            set
+            {
+                _product = value;
+                OnPropertyChanged(nameof(Product));
+            }
+        }
 
         public Revaluation Revaluation { get; set; }
 

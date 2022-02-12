@@ -1,8 +1,11 @@
-﻿using DevExpress.Xpf.Grid;
+﻿using DevExpress.Data.Filtering;
+using DevExpress.Xpf.Grid;
 using RetailTrade.Domain.Models;
 using RetailTrade.Domain.Services;
 using RetailTradeServer.Commands;
 using RetailTradeServer.ViewModels.Dialogs.Base;
+using SalePageServer.State.Dialogs;
+using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Windows;
@@ -16,6 +19,7 @@ namespace RetailTradeServer.ViewModels.Dialogs
 
         private readonly IProductService _productService;
         private readonly ITypeProductService _typeProductService;
+        private readonly IDialogService _dialogService;
         private ObservableCollection<Product> _products;
         private IEnumerable<TypeProduct> _typeProducts;
         private TypeProduct _selectedTypeProduct;
@@ -28,22 +32,13 @@ namespace RetailTradeServer.ViewModels.Dialogs
 
         #region Public Properties
 
-        public string FilterString
-        {
-            get => ProductGridControl.FilterString;
-            set
-            {
-                ProductGridControl.FilterString = value;
-                OnPropertyChanged(nameof(FilterString));
-            }
-        }
-        public bool IsFilterStringNullOrEmpty => string.IsNullOrEmpty(ProductGridControl.FilterString);
         public bool IsByExactMatch
         {
             get => _isByExactMatch;
             set
             {
                 _isByExactMatch = value;
+                Search();
                 OnPropertyChanged(nameof(IsByExactMatch));
             }
         }
@@ -56,7 +51,6 @@ namespace RetailTradeServer.ViewModels.Dialogs
                 OnPropertyChanged(nameof(SearchText));
             }
         }
-        public string OldSearchText { get; set; }
         public bool IsTypesAndProperties
         {
             get => _isTypesAndProperties;
@@ -65,11 +59,11 @@ namespace RetailTradeServer.ViewModels.Dialogs
                 _isTypesAndProperties = value;
                 if (_isTypesAndProperties)
                 {
-                    ProductGridControl.FilterString = string.Empty;
+                    ClearColumnFilter("TypeProductId");
                 }
                 else
                 {
-                    ProductGridControl.FilterString = SelectedTypeProduct.Id == 1 ? string.Empty : $"[TypeProductId] = {SelectedTypeProduct.Id}";
+                    Search();
                 }
                 OnPropertyChanged(nameof(IsTypesAndProperties));
             }
@@ -108,10 +102,17 @@ namespace RetailTradeServer.ViewModels.Dialogs
             set
             {
                 _selectedTypeProduct = value;
-                ProductGridControl.FilterString = _selectedTypeProduct.Id == 1 ? string.Empty : $"[TypeProductId] = {_selectedTypeProduct.Id}";
+                Search();                
                 OnPropertyChanged(nameof(SelectedTypeProduct));
             }
         }
+        public CriteriaOperator FilterCriteria
+        {
+            get => ProductGridControl.FilterCriteria;
+            set => ProductGridControl.FilterCriteria = value;
+        }
+        public CriteriaOperator NameFilter => ProductGridControl.GetColumnFilterCriteria("Name");
+        public CriteriaOperator TypeProductIdFilter => ProductGridControl.GetColumnFilterCriteria("TypeProductId");
 
         #endregion
 
@@ -121,71 +122,83 @@ namespace RetailTradeServer.ViewModels.Dialogs
         public ICommand GridControlLoadedCommand => new ParameterCommand(GridControlLoaded);
         public ICommand SelectCommand => new RelayCommand(Select);
         public ICommand CleareSearchTextCommand => new RelayCommand(CleareSearchText);
-        public ICommand SearchCommand => new RelayCommand(Filtering);
+        public ICommand SearchCommand => new RelayCommand(Search);
 
         #endregion
 
         #region Constructor
 
         public ProductDialogFormModel(IProductService productService,
-            ITypeProductService typeProductService)
+            ITypeProductService typeProductService,
+            IDialogService dialogService)
         {
             _productService = productService;
             _typeProductService = typeProductService;
+            _dialogService = dialogService;
         }
 
         #endregion
 
         #region Private Voids
 
+        [Obsolete]
+        private void Search()
+        {
+            if (SelectedTypeProduct != null)
+            {
+                ClearColumnFilter("TypeProductId");
+                if (SelectedTypeProduct.Id != 1)
+                {
+                    if (FilterCriteria != null)
+                    {
+                        FilterCriteria &= FilterCriteria & new BinaryOperator("TypeProductId", SelectedTypeProduct.Id, BinaryOperatorType.Equal);
+                    }
+                    else
+                    {
+                        FilterCriteria = new BinaryOperator("TypeProductId", SelectedTypeProduct.Id, BinaryOperatorType.Equal);
+                    }
+                }
+            }            
+            if (!string.IsNullOrEmpty(SearchText))
+            {
+                ClearColumnFilter("Name");
+                if (FilterCriteria != null)
+                {
+                    FilterCriteria &= IsByExactMatch ? new BinaryOperator("Name", SearchText, BinaryOperatorType.Equal) :
+                            new FunctionOperator(FunctionOperatorType.Contains, new OperandProperty("Name"), new OperandValue(SearchText));
+                }
+                else
+                {
+                    FilterCriteria = IsByExactMatch ? new BinaryOperator("Name", SearchText, BinaryOperatorType.Equal) :
+                            new FunctionOperator(FunctionOperatorType.Contains, new OperandProperty("Name"), new OperandValue(SearchText));
+                }
+            }
+            else
+            {
+                ClearColumnFilter("Name");
+            }                        
+        }
+
+        private void ClearColumnFilter(string columName)
+        {
+            ProductGridControl.ClearColumnFilter(columName);
+        }
+
         private void CleareSearchText()
         {
             if (!string.IsNullOrEmpty(SearchText))
             {
                 SearchText = string.Empty;
+                ProductGridControl.ClearColumnFilter("Name");
             }
-            Replace($"[Name] = '{OldSearchText}'", string.Empty);
-            Replace($"Contains([Name], '{OldSearchText}')", string.Empty);
-            OldSearchText = string.Empty;
         }
 
         private void Select()
         {
-            
-        }
-
-        private void Replace(string oldValue, string newValue)
-        {
-            ProductGridControl.FilterString = ProductGridControl.FilterString.Replace(oldValue, newValue);
-        }
-
-        private void Filtering()
-        {
-            if (IsByExactMatch)
+            if (SelectedProduct != null)
             {
-                if (IsFilterStringNullOrEmpty)
-                {
-                    ProductGridControl.FilterString = $"[Name] = '{SearchText}'";
-                }
-                else
-                {
-                    Replace($"And Contains([Name], '{SearchText}')", string.Empty);
-                    ProductGridControl.FilterString += $" And [Name] = '{SearchText}'";
-                }
+                _dialogService.Close();
             }
-            else
-            {
-                if (IsFilterStringNullOrEmpty)
-                {
-                    ProductGridControl.FilterString = $"Contains([Name], '{SearchText}')";
-                }
-                else
-                {
-                    Replace($"And [Name] = '{SearchText}'", string.Empty);
-                    ProductGridControl.FilterString += $" And Contains([Name], '{SearchText}')";
-                }
-            }
-            OldSearchText = SearchText;
         }
 
         private void GridControlLoaded(object parameter)
@@ -202,7 +215,6 @@ namespace RetailTradeServer.ViewModels.Dialogs
         private async void UserControlLoaded()
         {
             TypeProducts = await _typeProductService.GetAllAsync();
-            Products = new(await _productService.GetAllAsync());            
         }
 
         #endregion

@@ -120,7 +120,12 @@
                 <dxg:GridControl.View>
                     <dxg:TableView AllowEditing="False"
                                    ShowGroupPanel="False"
-                                   AutoWidth="True"/>
+                                   AutoWidth="True">
+                        <dxmvvm:Interaction.Behaviors>
+                            <dxmvvm:EventToCommand EventName="RowDoubleClick"
+                                                   Command="{Binding SelectCommand}"/>
+                        </dxmvvm:Interaction.Behaviors>
+                    </dxg:TableView>
                 </dxg:GridControl.View>
                 <dxg:GridColumn FieldName="Name"
                                 Header="Наименование"/>
