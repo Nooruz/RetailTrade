@@ -65,6 +65,7 @@ namespace RetailTradeClient.ViewModels
             }
         }
         public bool IsKeepRecorsd => Settings.Default.IsKeepRecords;
+        public bool ColumnCountVisibility => !IsKeepRecorsd;
         public ObservableCollection<Sale> SaleProducts { get; set; }
         public ICollectionView SaleProductsCollectionView { get; set; }
         public decimal Sum
@@ -444,7 +445,8 @@ namespace RetailTradeClient.ViewModels
 
         private async void LoadedHomeView(object parameter)
         {
-            ProductsWithoutBarcode = IsKeepRecorsd ? new(await _productService.PredicateSelect(p => p.Quantity > 0 && p.WithoutBarcode == true, p => new Product { Id = p.Id, Name = p.Name, SalePrice = p.SalePrice, ArrivalPrice = p.ArrivalPrice, Quantity = p.Quantity })) : new(await _productService.PredicateSelect(p => p.WithoutBarcode == true, p => new Product { Id = p.Id, Name = p.Name, SalePrice = p.SalePrice, ArrivalPrice = p.ArrivalPrice, Quantity = p.Quantity }));
+            ProductsWithoutBarcode = IsKeepRecorsd ? new(await _productService.PredicateSelect(p => p.Quantity > 0 && p.WithoutBarcode == true && p.DeleteMark == false, p => new Product { Id = p.Id, Name = p.Name, SalePrice = p.SalePrice, ArrivalPrice = p.ArrivalPrice, Quantity = p.Quantity })) : 
+                new(await _productService.PredicateSelect(p => p.WithoutBarcode == true && p.DeleteMark == false, p => new Product { Id = p.Id, Name = p.Name, SalePrice = p.SalePrice, ArrivalPrice = p.ArrivalPrice, Quantity = p.Quantity }));
             if (parameter is RoutedEventArgs e)
             {
                 if (e.Source is HomeView homeView)
@@ -461,12 +463,14 @@ namespace RetailTradeClient.ViewModels
 
         private async void ComBarcodeService_OnBarcodeEvent(string barcode)
         {
-            BarcodeProductAddToSale(await _productService.Predicate(p => p.Barcode == barcode && p.Quantity > 0, p => new Product { Id = p.Id, Name = p.Name, Quantity = p.Quantity, SalePrice = p.SalePrice, TNVED = p.TNVED }));
+            BarcodeProductAddToSale(IsKeepRecorsd ? await _productService.Predicate(p => p.Barcode == barcode && p.DeleteMark == false && p.Quantity > 0, p => new Product { Id = p.Id, Name = p.Name, Quantity = p.Quantity, SalePrice = p.SalePrice, TNVED = p.TNVED }) :
+                await _productService.Predicate(p => p.Barcode == barcode && p.DeleteMark == false, p => new Product { Id = p.Id, Name = p.Name, Quantity = p.Quantity, SalePrice = p.SalePrice, TNVED = p.TNVED }));
         }
 
         private async void ZebraBarcodeScanner_OnBarcodeEvent(string barcode)
         {
-            BarcodeProductAddToSale(await _productService.Predicate(p => p.Barcode == barcode && p.Quantity > 0, p => new Product { Id = p.Id, Name = p.Name, Quantity = p.Quantity, SalePrice = p.SalePrice, TNVED = p.TNVED }));
+            BarcodeProductAddToSale(IsKeepRecorsd ? await _productService.Predicate(p => p.Barcode == barcode && p.DeleteMark == false && p.Quantity > 0, p => new Product { Id = p.Id, Name = p.Name, Quantity = p.Quantity, SalePrice = p.SalePrice, TNVED = p.TNVED }) :
+                await _productService.Predicate(p => p.Barcode == barcode && p.DeleteMark == false, p => new Product { Id = p.Id, Name = p.Name, Quantity = p.Quantity, SalePrice = p.SalePrice, TNVED = p.TNVED }));
         }
 
         private void BarcodeProductAddToSale(Product product)

@@ -270,5 +270,18 @@ namespace RetailTrade.EntityFramework.Services
                 //ignore
             }
         }
+
+        public async Task<Receipt> SaleAsync(Receipt receipt)
+        {
+            try
+            {
+                return await _nonQueryDataService.Create(receipt);
+            }
+            catch (Exception)
+            {
+                //ignore
+            }
+            return null;
+        }
     }
 }

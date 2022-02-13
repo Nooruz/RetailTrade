@@ -1,6 +1,7 @@
 ﻿using RetailTradeServer.ViewModels.Base;
 using System;
 using System.Collections.ObjectModel;
+using System.Linq;
 
 namespace RetailTradeServer.State.Navigators
 {
@@ -33,8 +34,28 @@ namespace RetailTradeServer.State.Navigators
         {
             if (CurrentViewModels != null)
             {
-                viewModel.IsSelected = true;
-                CurrentViewModels.Add(viewModel);
+                var v = CurrentViewModels.FirstOrDefault(v => v.ToString() == viewModel.ToString());
+                if (v != null)
+                {
+                    v.IsSelected = true;
+                }
+                else
+                {
+                    viewModel.IsSelected = true;
+                    CurrentViewModels.Add(viewModel);
+                }                
+            }
+        }
+
+        public void DeleteViewModel(BaseViewModel viewModel)
+        {
+            if (CurrentViewModels != null)
+            {
+                var v = CurrentViewModels.FirstOrDefault(v => v.ToString() == viewModel.ToString());
+                if (v != null)
+                {
+                    CurrentViewModels.Remove(v);
+                }                
             }
         }
     }

@@ -16,6 +16,7 @@ namespace RetailTrade.EntityFramework.Services
 
         private readonly RetailTradeDbContextFactory _contextFactory;
         private readonly NonQueryDataService<Revaluation> _nonQueryDataService;
+        private readonly IProductService _productService;
 
         #endregion
 
@@ -25,17 +26,29 @@ namespace RetailTrade.EntityFramework.Services
         {
             _contextFactory = contextFactory;
             _nonQueryDataService = new NonQueryDataService<Revaluation>(_contextFactory);
+            _productService = new ProductService(_contextFactory);
         }
 
         #endregion
 
         public event Action PropertiesChanged;
+        public event Action<Revaluation> OnRevaluationCreated;
 
         public async Task<Revaluation> CreateAsync(Revaluation entity)
         {
-            var result = await _nonQueryDataService.Create(entity);
+            if (entity.RevaluationProducts.Count != 0)
+            {
+                foreach (RevaluationProduct item in entity.RevaluationProducts)
+                {
+                    Product product = await _productService.GetAsync(item.ProductId);
+                    product.ArrivalPrice = item.ArrivalPrice;
+                    product.SalePrice = item.SalePrice;
+                    await _productService.UpdateAsync(product.Id, product);
+                }
+            }
+            var result = await _nonQueryDataService.Create(entity);            
             if (result != null)
-                PropertiesChanged?.Invoke();
+                OnRevaluationCreated?.Invoke(result);
             return result;
         }
 

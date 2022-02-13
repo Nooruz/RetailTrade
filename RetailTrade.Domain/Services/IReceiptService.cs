@@ -15,7 +15,7 @@ namespace RetailTrade.Domain.Services
         Task<IEnumerable<Receipt>> GetReceiptsFromCurrentShift(int shiftId);
 
         Task<bool> Refund(Receipt receipt);
-
+        Task<Receipt> SaleAsync(Receipt receipt);
         Task<IEnumerable<Receipt>> Predicate(Expression<Func<Receipt, bool>> predicate, Expression<Func<Receipt, Receipt>> select);
 
         /// <summary>

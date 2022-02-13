@@ -93,5 +93,6 @@ namespace RetailTradeServer.State.Navigators
         BaseViewModel CurrentViewModel { get; set; }
         event Action<BaseViewModel> StateChanged;
         void AddViewModel(BaseViewModel viewModel);
+        void DeleteViewModel(BaseViewModel viewModel);
     }
 }

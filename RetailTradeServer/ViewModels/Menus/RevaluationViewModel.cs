@@ -5,6 +5,7 @@ using RetailTradeServer.State.Navigators;
 using RetailTradeServer.ViewModels.Base;
 using SalePageServer.State.Dialogs;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Windows;
 using System.Windows.Input;
 
@@ -16,21 +17,21 @@ namespace RetailTradeServer.ViewModels.Menus
 
         private readonly IRevaluationService _revaluationService;
         private readonly IDialogService _dialogService;
-        private readonly IMenuNavigator _menuNavigator;
-        private IEnumerable<Revaluation> _revaluations;
+        private readonly IMenuNavigator _menuNavigator; 
+        private ObservableCollection<Revaluation> _revaluations;
         private Revaluation _selectedRevaluation;
 
         #endregion
 
         #region Public Properties
 
-        public IEnumerable<Revaluation> Revaluations
+        public ObservableCollection<Revaluation> Revaluations
         {
-            get => _revaluations;
+            get => _revaluations ?? new();
             set
             {
                 _revaluations = value;
-                OnPropertyChanged(nameof(Revaluation));
+                OnPropertyChanged(nameof(Revaluations));
             }
         }
         public Revaluation SelectedRevaluation
@@ -67,15 +68,23 @@ namespace RetailTradeServer.ViewModels.Menus
 
             Header = "История изменения цен";
 
-            CreateCommand = new RelayCommand(() => _menuNavigator.AddViewModel(new SettingProductPriceViewModel(productService, typeProductService, dialogService, unitService) { Header = "Установка цен товаров (создание) *" }));
+            CreateCommand = new RelayCommand(() => _menuNavigator.AddViewModel(new SettingProductPriceViewModel(productService, typeProductService, dialogService, revaluationService, unitService, menuNavigator) { Header = "Установка цен товаров (создание) *" }));
+
+            _revaluationService.OnRevaluationCreated += RevaluationService_OnRevaluationCreated;
         }
 
         #endregion
 
         #region Private Voids
 
+        private void RevaluationService_OnRevaluationCreated(Revaluation obj)
+        {
+            Revaluations.Add(obj);
+        }
+
         private async void UserControlLoaded()
         {
+            Revaluations = new(await _revaluationService.GetAllAsync());
             ShowLoadingPanel = false;
         }
 

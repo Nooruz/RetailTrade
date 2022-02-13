@@ -20,6 +20,12 @@
 
         <dxlc:LayoutGroup HorizontalAlignment="Left"
                           VerticalAlignment="Top">
+            <Button Content="Провести и закрыть"
+                    Command="{Binding CreateAndCloseCommand}"/>
+        </dxlc:LayoutGroup>
+        
+        <dxlc:LayoutGroup HorizontalAlignment="Left"
+                          VerticalAlignment="Top">
 
             <custom:CustomButton Style="{StaticResource CustomWithIconic}"
                                  Command="{Binding AddProductCommand}"
@@ -27,7 +33,7 @@
                                  Icon="{StaticResource faPlus}"
                                  IconColor="{StaticResource GreenColorBrush}"/>
 
-            <Button Style="{StaticResource FAButton}"
+            <!--<Button Style="{StaticResource FAButton}"
                     Content="{StaticResource faBarcode}"/>
 
             <custom:CustomDropDownButton Style="{StaticResource DropDownButtonContentIconic}"
@@ -38,41 +44,96 @@
                     <custom:CustomButton Content="Подобрать товары по отбору"
                                          Style="{StaticResource InPopupButton}"/>
                 </StackPanel>
-            </custom:CustomDropDownButton>
+            </custom:CustomDropDownButton>-->
 
         </dxlc:LayoutGroup>
 
         <dxg:GridControl ItemsSource="{Binding RevaluationProducts}"
                          SelectedItem="{Binding SelectedRevaluationProduct}">
             <dxg:GridControl.View>
-                <dxg:TableView AutoWidth="True"/>
+                <dxg:TableView AutoWidth="True">
+                    <dxmvvm:Interaction.Behaviors>
+                        <dxmvvm:EventToCommand EventName="CellValueChanged"
+                                               Command="{Binding CellValueChangedCommand}"
+                                               PassEventArgsToCommand="True"/>
+                        <dxmvvm:EventToCommand EventName="ValidateCell"
+                                               Command="{Binding ValidateCellCommand}"
+                                               PassEventArgsToCommand="True"/>
+                    </dxmvvm:Interaction.Behaviors>
+                </dxg:TableView>
             </dxg:GridControl.View>
-            <dxg:GridColumn Header="Наименование товара"
-                            FieldName="ProductId">
-                <dxg:GridColumn.EditSettings>
-                    <dxg:LookUpEditSettings DisplayMember="Name"
+            <dxg:GridControl.Bands>
+                <dxg:GridControlBand VisibleIndex="0"
+                                     OverlayHeaderByChildren="True">
+                    <dxg:GridColumn Header="Наименование товара"
+                                    FieldName="ProductId"
+                                    VisibleIndex="0">
+                        <dxmvvm:Interaction.Behaviors>
+                            <dxmvvm:EventToCommand EventName=""/>
+                        </dxmvvm:Interaction.Behaviors>
+                        <dxg:GridColumn.EditSettings>
+                            <dxg:LookUpEditSettings DisplayMember="Name"
                                             ValueMember="Id"
                                             IncrementalFiltering="True"
-                                            AutoComplete="False"
+                                            AutoComplete="False"                                            
+                                            AutoPopulateColumns="False"
+                                            ItemsSource="{Binding Products}"
                                             ImmediatePopup="True"
-                                            IsPopupAutoWidth="True"/>
-                </dxg:GridColumn.EditSettings>
-            </dxg:GridColumn>
-            <dxg:GridColumn Header="Цена прихода"
-                            FieldName="ArrivalPrice"
-                            Style="{StaticResource SumTextEditSettings}"/>
-            <dxg:GridColumn Header="Цена продажи"
-                            FieldName="SalePrice"
-                            Style="{StaticResource SumTextEditSettings}"/>
-            <dxg:GridColumn Header="Ед. изм."
-                            FieldName="Product.UnitId">
-                <dxg:GridColumn.EditSettings>
-                    <dxe:ComboBoxEditSettings ItemsSource="{Binding Units}"
+                                            IsPopupAutoWidth="True">
+                                <dxg:LookUpEditSettings.Buttons>
+                                    <dxe:ButtonInfo GlyphKind="Regular"
+                                            Command="{Binding ProductCommand}"/>
+                                </dxg:LookUpEditSettings.Buttons>
+                                <dxg:LookUpEditSettings.PopupContentTemplate>
+                                    <ControlTemplate>
+                                        <dxg:GridControl Name="PART_GridControl"
+                                                 AutoGenerateColumns="None">
+                                            <dxg:GridControl.View>
+                                                <dxg:TableView AutoWidth="True"/>
+                                            </dxg:GridControl.View>
+                                            <dxg:GridColumn Header="Наименование"
+                                                    FieldName="Name"/>
+                                        </dxg:GridControl>
+                                    </ControlTemplate>
+                                </dxg:LookUpEditSettings.PopupContentTemplate>
+                            </dxg:LookUpEditSettings>
+                        </dxg:GridColumn.EditSettings>
+                    </dxg:GridColumn>
+                    <dxg:GridColumn Header="Ед. изм."
+                                    AllowEditing="False"
+                                    FieldName="Product.UnitId">
+                        <dxg:GridColumn.EditSettings>
+                            <dxe:ComboBoxEditSettings ItemsSource="{Binding Units}"
                                               DisplayMember="ShortName"
                                               ValueMember="Id"/>
-                </dxg:GridColumn.EditSettings>
-            </dxg:GridColumn>
+                        </dxg:GridColumn.EditSettings>
+                    </dxg:GridColumn>
+                </dxg:GridControlBand>
+                <dxg:GridControlBand Header="Старая цена" VisibleIndex="1">
+                    <dxg:GridColumn Header="Цена прихода"
+                                    AllowEditing="False"
+                                    FieldName="Product.ArrivalPrice"
+                                    Style="{StaticResource SumTextEditSettings}"/>
+                    <dxg:GridColumn Header="Цена продажи"
+                                    FieldName="Product.SalePrice"
+                                    AllowEditing="False"
+                                    Style="{StaticResource SumTextEditSettings}"/>
+                </dxg:GridControlBand>
+                <dxg:GridControlBand Header="Новая цена"  VisibleIndex="2">
+                    <dxg:GridColumn Header="Цена прихода"
+                            FieldName="ArrivalPrice"
+                            Style="{StaticResource SumTextEditSettings}"/>
+                    <dxg:GridColumn Header="Цена продажи"
+                            FieldName="SalePrice"
+                            Style="{StaticResource SumTextEditSettings}"/>
+                </dxg:GridControlBand>
+            </dxg:GridControl.Bands>
         </dxg:GridControl>
+
+        <dxlc:LayoutItem Label="Комментарий:"
+                         VerticalAlignment="Top">
+            <dxe:TextEdit EditValue="{Binding Comment}"/>
+        </dxlc:LayoutItem>
 
     </dxlc:LayoutControl>
 

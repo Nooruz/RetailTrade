@@ -1,6 +1,7 @@
 ﻿using DevExpress.XtraPrinting;
 using RetailTrade.Domain.Models;
 using RetailTrade.Domain.Services;
+using RetailTradeClient.Properties;
 using RetailTradeClient.Report;
 using RetailTradeClient.State.Dialogs;
 using RetailTradeClient.State.Shifts;
@@ -53,25 +54,50 @@ namespace RetailTradeClient.Commands
             {
                 try
                 {
+                    Receipt newReceipt;
                     //Создания чека
-                    Receipt newReceipt = await _receiptService.CreateAsync(new Receipt
+                    if (Settings.Default.IsKeepRecords)
                     {
-                        DateOfPurchase = DateTime.Now,
-                        Sum = _paymentComplexViewModel.AmountToBePaid,
-                        PaidInCash = _paymentComplexViewModel.PaymentTypes.Where(pt => pt.Id == 1).Sum(pt => pt.Sum),
-                        PaidInCashless = _paymentComplexViewModel.PaymentTypes.Where(pt => pt.Id == 2).Sum(pt => pt.Sum),
-                        ShiftId = _shiftStore.CurrentShift.Id,
-                        Change = 0,
-                        ProductSales = _paymentComplexViewModel.SaleProducts.Select(s =>
-                            new ProductSale
-                            {
-                                ProductId = s.Id,
-                                Quantity = s.Quantity,
-                                Sum = s.Sum,
-                                SalePrice = s.SalePrice,
-                                ArrivalPrice = s.ArrivalPrice
-                            }).ToList()
-                    });
+                        newReceipt = await _receiptService.CreateAsync(new Receipt
+                        {
+                            DateOfPurchase = DateTime.Now,
+                            Sum = _paymentComplexViewModel.AmountToBePaid,
+                            PaidInCash = _paymentComplexViewModel.PaymentTypes.Where(pt => pt.Id == 1).Sum(pt => pt.Sum),
+                            PaidInCashless = _paymentComplexViewModel.PaymentTypes.Where(pt => pt.Id == 2).Sum(pt => pt.Sum),
+                            ShiftId = _shiftStore.CurrentShift.Id,
+                            Change = 0,
+                            ProductSales = _paymentComplexViewModel.SaleProducts.Select(s =>
+                                new ProductSale
+                                {
+                                    ProductId = s.Id,
+                                    Quantity = s.Quantity,
+                                    Sum = s.Sum,
+                                    SalePrice = s.SalePrice,
+                                    ArrivalPrice = s.ArrivalPrice
+                                }).ToList()
+                        });
+                    }
+                    else
+                    {
+                        newReceipt = await _receiptService.SaleAsync(new Receipt
+                        {
+                            DateOfPurchase = DateTime.Now,
+                            Sum = _paymentComplexViewModel.AmountToBePaid,
+                            PaidInCash = _paymentComplexViewModel.PaymentTypes.Where(pt => pt.Id == 1).Sum(pt => pt.Sum),
+                            PaidInCashless = _paymentComplexViewModel.PaymentTypes.Where(pt => pt.Id == 2).Sum(pt => pt.Sum),
+                            ShiftId = _shiftStore.CurrentShift.Id,
+                            Change = 0,
+                            ProductSales = _paymentComplexViewModel.SaleProducts.Select(s =>
+                                new ProductSale
+                                {
+                                    ProductId = s.Id,
+                                    Quantity = s.Quantity,
+                                    Sum = s.Sum,
+                                    SalePrice = s.SalePrice,
+                                    ArrivalPrice = s.ArrivalPrice
+                                }).ToList()
+                        });
+                    }
 
                     //Подготовка документа для печати чека
                     ProductSaleReport report = new(_userStore, newReceipt)
