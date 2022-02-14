@@ -9,6 +9,6 @@
                 MinWidth="800"
                 WindowState="Maximized">
 
-    <ContentControl Content="{Binding CurrentViewModel, UpdateSourceTrigger=PropertyChanged}"/>
-
+    <!--<ContentControl Content="{Binding CurrentViewModel, UpdateSourceTrigger=PropertyChanged}"/>-->
+<SalePageServer:UserControl1 />
 </dxc:DXWindow>
