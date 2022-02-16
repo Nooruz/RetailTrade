@@ -42,5 +42,6 @@
     <system:String x:Key="faCartArrowDown">&#xf218;</system:String>
     <system:String x:Key="faClipboardList">&#xf46d;</system:String>
     <system:String x:Key="faFolderPlus">&#xf65e;</system:String>
+    <system:String x:Key="faExpand">&#xf065;</system:String>
 
 </ResourceDictionary>

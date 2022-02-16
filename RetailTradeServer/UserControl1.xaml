@@ -26,14 +26,29 @@
         <Border.Resources>
             <Style TargetType="{x:Type Button}">
                 <Setter Property="Background" Value="Transparent"/>
-                <Setter Property="BorderThickness" Value="1"/>
+                <Setter Property="BorderThickness" Value="0"/>
+                <Setter Property="Margin" Value="10 0 0 0"/>
+                <Setter Property="Padding" Value="0"/>
                 <Setter Property="ContentTemplate">
                     <Setter.Value>
                         <DataTemplate>
-                            <TextBlock Style="{StaticResource IconicTextBlock}"
-                                       HorizontalAlignment="Center"
-                                       VerticalAlignment="Center"
-                                       Text="{TemplateBinding Content}"/>
+                            <Border x:Name="Border" 
+                                    Width="{Binding Path=ActualHeight, RelativeSource={RelativeSource Mode=Self}}"
+                                    Height="30"
+                                    CornerRadius="15"
+                                    BorderThickness="1">
+                                <TextBlock Style="{StaticResource IconicTextBlock}"
+                                           HorizontalAlignment="Center"
+                                           FontSize="16"
+                                           VerticalAlignment="Center"
+                                           Text="{TemplateBinding Content}"/>
+                            </Border>
+                            <DataTemplate.Triggers>
+                                <Trigger Property="IsMouseOver" Value="True">
+                                    <Setter TargetName="Border" Property="Background" Value="{StaticResource LightSilverBrush}"/>
+                                    <Setter TargetName="Border" Property="Cursor" Value="Hand"/>
+                                </Trigger>
+                            </DataTemplate.Triggers>
                         </DataTemplate>
                     </Setter.Value>
                 </Setter>
@@ -55,15 +70,17 @@
                     <ColumnDefinition Width="Auto"/>
                 </Grid.ColumnDefinitions>
 
-                <TextBlock Grid.Column="0" 
+                <TextBlock Grid.Column="0"
+                           Margin="10 0 0 0"
                            Text="{Binding Header, FallbackValue=Товар}"
-                           FontSize="14"/>
+                           FontSize="18"
+                           FontWeight="DemiBold"/>
 
                 <StackPanel Grid.Column="1"
                             HorizontalAlignment="Right"
                             Orientation="Horizontal">
+                    <Button Content="{StaticResource faExpand}"/>
                     <Button Content="{StaticResource faClose}"/>
-                    <Button Content="{StaticResource faBars}"/>
                 </StackPanel>
 
             </Grid>
