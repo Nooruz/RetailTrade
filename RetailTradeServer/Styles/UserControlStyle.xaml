@@ -2,7 +2,8 @@
                       xmlns:dxlc="http://schemas.devexpress.com/winfx/2008/xaml/layoutcontrol"
                       xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
                       xmlns:menu="clr-namespace:RetailTradeServer.Views.Menus"
-                      xmlns:custom="clr-namespace:RetailTrade.LoadingPanelControl;assembly=RetailTrade.LoadingPanelControl">
+                      xmlns:custom="clr-namespace:RetailTrade.LoadingPanelControl;assembly=RetailTrade.LoadingPanelControl"
+                      xmlns:dialog="clr-namespace:RetailTrade.DialogService;assembly=RetailTrade.DialogService">
 
     <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter"/>
 
@@ -19,48 +20,20 @@
 
                         <Grid>
                             <Grid.RowDefinitions>
-                                <RowDefinition Height="Auto"/>
                                 <RowDefinition Height="*"/>
                             </Grid.RowDefinitions>
 
                             <custom:LoadingPanel IsLoading="{TemplateBinding ShowLoadingPanel}"
                                                  Title="{TemplateBinding LoadingPanelTitle}"
                                                  Text="{TemplateBinding LoadingPanelText}"
-                                                 Panel.ZIndex="1"
-                                                 Grid.Row="0"
-                                                 Grid.RowSpan="2"/>
+                                                 Panel.ZIndex="1"/>
 
-                            <ContentControl Content="{Binding DialogContent}"/>
+                            <dialog:Dialog FontAwesome="{StaticResource FontAwesomeBold}"
+                                           DialogContent="{Binding DialogContent}"
+                                           Visibility="{Binding DialogVisibility}"
+                                           Panel.ZIndex="999"/>
 
-                            <dxlc:LayoutControl Orientation="Vertical"
-                                                ItemSpace="15"
-                                                Grid.Row="0"
-                                                Padding="10 10 10 0">
-
-                                <TextBlock Text="{TemplateBinding Title}"
-                                           FontSize="24"
-                                           HorizontalAlignment="Left"
-                                           VerticalAlignment="Top"/>
-
-                                <dxlc:LayoutGroup Orientation="Horizontal"
-                                                  VerticalAlignment="Top"
-                                                  Visibility="{TemplateBinding ShowDefaultButtons, Converter={StaticResource BooleanToVisibilityConverter}}"
-                                                  HorizontalAlignment="Left">
-
-                                    <Button Content="Создать"
-                                            Command="{Binding CreateCommand}"/>
-
-                                    <Button Content="Редактировать"
-                                            Command="{Binding EditCommand}"/>
-
-                                    <Button Content="Удалить"
-                                            Command="{Binding DeleteCommand}"/>
-
-                                </dxlc:LayoutGroup>
-
-                            </dxlc:LayoutControl>
-
-                            <ContentPresenter Grid.Row="1"/>
+                            <ContentPresenter/>
 
                         </Grid>
 

@@ -3,89 +3,20 @@
                    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
                    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-                   mc:Ignorable="d" 
+                   mc:Ignorable="d"
+                   xmlns:dialog="clr-namespace:RetailTrade.DialogService;assembly=RetailTrade.DialogService"
              d:DesignHeight="600" d:DesignWidth="600">
+    <Border BorderThickness="1"
+            BorderBrush="Black"
+            Padding="10">
 
-    <UserControl.Style>
-        <Style TargetType="{x:Type UserControl}">
-            <Setter Property="Background">
-                <Setter.Value>
-                    <SolidColorBrush Color="Black" Opacity=".3"/>
-                </Setter.Value>
-            </Setter>
-        </Style>
-    </UserControl.Style>
-
-    <Border HorizontalAlignment="Center"
-            VerticalAlignment="Center"
-            Background="White"
-            Width="500"
-            Height="500"
-            BorderThickness="1"
-            BorderBrush="{StaticResource LightSilverBrush}">
-        <Border.Resources>
-            <Style TargetType="{x:Type Button}">
-                <Setter Property="Background" Value="Transparent"/>
-                <Setter Property="BorderThickness" Value="0"/>
-                <Setter Property="Margin" Value="10 0 0 0"/>
-                <Setter Property="Padding" Value="0"/>
-                <Setter Property="ContentTemplate">
-                    <Setter.Value>
-                        <DataTemplate>
-                            <Border x:Name="Border" 
-                                    Width="{Binding Path=ActualHeight, RelativeSource={RelativeSource Mode=Self}}"
-                                    Height="30"
-                                    CornerRadius="15"
-                                    BorderThickness="1">
-                                <TextBlock Style="{StaticResource IconicTextBlock}"
-                                           HorizontalAlignment="Center"
-                                           FontSize="16"
-                                           VerticalAlignment="Center"
-                                           Text="{TemplateBinding Content}"/>
-                            </Border>
-                            <DataTemplate.Triggers>
-                                <Trigger Property="IsMouseOver" Value="True">
-                                    <Setter TargetName="Border" Property="Background" Value="{StaticResource LightSilverBrush}"/>
-                                    <Setter TargetName="Border" Property="Cursor" Value="Hand"/>
-                                </Trigger>
-                            </DataTemplate.Triggers>
-                        </DataTemplate>
-                    </Setter.Value>
-                </Setter>
-            </Style>
-        </Border.Resources>
-
-        <Grid>
-
-            <Grid.RowDefinitions>
-                <RowDefinition Height="Auto"/>
-                <RowDefinition Height="*"/>
-            </Grid.RowDefinitions>
-
-            <Grid Grid.Row="0"
-                  Margin="5">
-
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition/>
-                    <ColumnDefinition Width="Auto"/>
-                </Grid.ColumnDefinitions>
-
-                <TextBlock Grid.Column="0"
-                           Margin="10 0 0 0"
-                           Text="{Binding Header, FallbackValue=Товар}"
-                           FontSize="18"
-                           FontWeight="DemiBold"/>
-
-                <StackPanel Grid.Column="1"
-                            HorizontalAlignment="Right"
-                            Orientation="Horizontal">
-                    <Button Content="{StaticResource faExpand}"/>
-                    <Button Content="{StaticResource faClose}"/>
-                </StackPanel>
-
-            </Grid>
-            
-        </Grid>
+        <StackPanel Orientation="Horizontal"
+                    HorizontalAlignment="Right"
+                    VerticalAlignment="Top"
+                    Margin="0 -10 -10 0">
+            <Button Content="X"/>
+            <Button Content="D"/>
+        </StackPanel>
         
     </Border>
 

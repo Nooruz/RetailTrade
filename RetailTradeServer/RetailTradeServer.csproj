@@ -81,11 +81,13 @@
     </PackageReference>
     <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="6.0.1" />
     <PackageReference Include="Microsoft.Extensions.Hosting" Version="6.0.0" />
+    <PackageReference Include="Microsoft.Xaml.Behaviors.Wpf" Version="1.1.39" />
     <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\RetailTrade.Barcode\RetailTrade.Barcode.csproj" />
+    <ProjectReference Include="..\RetailTrade.DialogService\RetailTrade.DialogService.csproj" />
     <ProjectReference Include="..\RetailTrade.Domain\RetailTrade.Domain.csproj" />
     <ProjectReference Include="..\RetailTrade.EntityFramework\RetailTrade.EntityFramework.csproj" />
     <ProjectReference Include="..\RetailTrade.LoadingPanelControl\RetailTrade.LoadingPanelControl.csproj" />

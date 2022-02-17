@@ -1,65 +1,125 @@
 <ResourceDictionary
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    xmlns:local="clr-namespace:RetailTrade.DialogService">
+    xmlns:local="clr-namespace:RetailTrade.DialogService"
+    xmlns:system="clr-namespace:System;assembly=mscorlib">
 
-    <Style TargetType="{x:Type Button}">
-        
+    <Style TargetType="{x:Type Button}" x:Key="IconButton">
+        <Setter Property="BorderThickness" Value="0"/>
+        <Setter Property="Padding" Value="0"/>
+        <Setter Property="Background" Value="Transparent"/>
+        <Setter Property="ContentTemplate">
+            <Setter.Value>
+                <DataTemplate>
+                    <Border Width="{Binding Path=ActualHeight, RelativeSource={RelativeSource Mode=Self}}"
+                            Height="40"
+                            Background="{Binding Path=Background, RelativeSource={RelativeSource AncestorType={x:Type Button}, Mode=FindAncestor}}"
+                            BorderThickness="1">
+                        <TextBlock x:Name="Text"
+                                   HorizontalAlignment="Center"
+                                   FontFamily="{Binding Path=FontAwesome, RelativeSource={RelativeSource AncestorType={x:Type local:Dialog}}}"
+                                   FontSize="16"
+                                   Foreground="{Binding Path=Foreground, RelativeSource={RelativeSource AncestorType={x:Type Button}, Mode=FindAncestor}}"
+                                   VerticalAlignment="Center"
+                                   Text="{TemplateBinding Content}"/>
+                    </Border>
+                </DataTemplate>
+            </Setter.Value>
+        </Setter>
+        <Style.Triggers>
+            <Trigger Property="IsMouseOver" Value="True">
+                <Setter Property="Background" Value="#2A8AD4"/>
+                <Setter Property="Foreground" Value="White"/>
+            </Trigger>
+        </Style.Triggers>
     </Style>
     
     <Style TargetType="{x:Type local:Dialog}">
-        <Setter Property="Background">
-            <Setter.Value>
-                <SolidColorBrush Color="Black" Opacity=".3"/>
-            </Setter.Value>
-        </Setter>
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="{x:Type local:Dialog}">
-                    <Border Background="{TemplateBinding Background}"
-                            BorderThickness="0">
 
-                        <Border HorizontalAlignment="Center"
-                                VerticalAlignment="Center"
-                                Background="White"
-                                Width="500"
-                                Height="500"
-                                BorderThickness="1"
-                                BorderBrush="{StaticResource LightSilverBrush}">
+                    <Grid>
 
-                            <Grid>
+                        <Border>
+                            <Border.Style>
+                                <Style TargetType="Border">
+                                    <Setter Property="Background">
+                                        <Setter.Value>
+                                            <SolidColorBrush Color="Black" Opacity=".3"/>
+                                        </Setter.Value>
+                                    </Setter>
+                                </Style>
+                            </Border.Style>
+                        </Border>
 
-                                <Grid.RowDefinitions>
-                                    <RowDefinition Height="Auto"/>
-                                    <RowDefinition Height="*"/>
-                                </Grid.RowDefinitions>
+                        <Grid HorizontalAlignment="{Binding DialogHorizontalAlignment}"
+                              VerticalAlignment="{Binding DialogVerticalAlignment}"
+                              Width="{Binding DialogWidth}"
+                              Height="{Binding DialogHeight}">
 
-                                <Grid Grid.Row="0"
-                                      Margin="5">
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="auto"/>
+                                <RowDefinition Height="*"/>
+                            </Grid.RowDefinitions>
 
-                                    <Grid.ColumnDefinitions>
-                                        <ColumnDefinition/>
-                                        <ColumnDefinition Width="Auto"/>
-                                    </Grid.ColumnDefinitions>
+                            <Border Background="White"
+                                    BorderThickness="1"
+                                    BorderBrush="Silver"
+                                    Grid.Row="0"
+                                    Grid.RowSpan="2"/>
 
-                                    <TextBlock Grid.Column="0" 
-                                               Text="{Binding Header, FallbackValue=Товар}"
-                                               FontSize="14"/>
+                            <Grid Margin="10">
 
-                                    <StackPanel Grid.Column="1"
-                                                HorizontalAlignment="Right"
-                                                Orientation="Horizontal">
-                                        <Button Content="[ ]"/>
-                                        <Button Content="X"/>
-                                    </StackPanel>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition/>
+                                    <ColumnDefinition Width="Auto"/>
+                                </Grid.ColumnDefinitions>
 
-                                </Grid>
+                                <TextBlock Grid.Column="0"
+                                           Margin="10 0 0 0"
+                                           Text="{Binding Header}"
+                                           FontSize="18"
+                                           FontWeight="DemiBold"/>
+
+                                <StackPanel Grid.Column="1"
+                                            HorizontalAlignment="Right"
+                                            Orientation="Horizontal"
+                                            Margin="0 -9 -9 0">
+                                    <Button Command="{Binding DialogResizeCommand}">
+                                        <Button.Style>
+                                            <Style TargetType="Button" BasedOn="{StaticResource IconButton}">
+                                                <Setter Property="Content">
+                                                    <Setter.Value>
+                                                        <system:String>&#xf065;</system:String>
+                                                    </Setter.Value>
+                                                </Setter>    
+                                            </Style>
+                                        </Button.Style>
+                                    </Button>
+                                    <Button Command="{Binding DialogCloseCommand}">
+                                        <Button.Style>
+                                            <Style TargetType="Button" BasedOn="{StaticResource IconButton}">
+                                                <Setter Property="Content">
+                                                    <Setter.Value>
+                                                        <system:String>&#xf00d;</system:String>
+                                                    </Setter.Value>
+                                                </Setter>
+                                            </Style>
+                                        </Button.Style>
+                                    </Button>
+                                </StackPanel>
 
                             </Grid>
 
-                        </Border>
+                            <ContentControl Grid.Row="1"
+                                            Content="{TemplateBinding DialogContent}"
+                                            Margin="3 0 3 3"/>
 
-                    </Border>
+                        </Grid>
+
+                    </Grid>
+
                 </ControlTemplate>
             </Setter.Value>
         </Setter>
