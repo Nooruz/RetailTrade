@@ -40,7 +40,7 @@
                                                  HotKey="Ins"
                                                  IconColor="{StaticResource GreenColorBrush}"
                                                  Command="{Binding CreateTypeProductCommand}"/>
-                        
+
                         <components:CustomButton Content="Группу видов товара"
                                                  Icon="{StaticResource faFolderPlus}" 
                                                  Style="{StaticResource InPopupButton}"

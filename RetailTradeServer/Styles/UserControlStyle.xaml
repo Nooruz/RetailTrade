@@ -21,16 +21,18 @@
                             <Grid.RowDefinitions>
                                 <RowDefinition Height="*"/>
                             </Grid.RowDefinitions>
-                            
-                            <ContentPresenter/>
-
-                            <dialog:Dialog FontAwesome="{StaticResource FontAwesomeBold}"
-                                           DialogContent="{Binding DialogContent}"
-                                           Visibility="{Binding DialogVisibility}"/>
 
                             <custom:LoadingPanel IsLoading="{TemplateBinding ShowLoadingPanel}"
                                                  Title="{TemplateBinding LoadingPanelTitle}"
-                                                 Text="{TemplateBinding LoadingPanelText}"/>
+                                                 Text="{TemplateBinding LoadingPanelText}"
+                                                 Panel.ZIndex="1"/>
+
+                            <dialog:Dialog FontAwesome="{StaticResource FontAwesomeBold}"
+                                           DialogContent="{Binding DialogContent}"
+                                           Visibility="{Binding DialogVisibility}"
+                                           Panel.ZIndex="1"/>
+                            
+                            <ContentPresenter/>
 
                         </Grid>
 
