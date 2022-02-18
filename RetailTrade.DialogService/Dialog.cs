@@ -34,7 +34,7 @@ namespace RetailTrade.DialogService
 
         static Dialog()
         {
-            DefaultStyleKeyProperty.OverrideMetadata(typeof(Dialog), new FrameworkPropertyMetadata(typeof(Dialog)));            
+            DefaultStyleKeyProperty.OverrideMetadata(typeof(Dialog), new FrameworkPropertyMetadata(typeof(Dialog)));
         }
     }
 }

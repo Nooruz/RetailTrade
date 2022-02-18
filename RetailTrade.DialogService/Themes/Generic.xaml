@@ -55,8 +55,7 @@
 
                         <Grid HorizontalAlignment="{Binding DialogHorizontalAlignment}"
                               VerticalAlignment="{Binding DialogVerticalAlignment}"
-                              Width="{Binding DialogWidth}"
-                              Height="{Binding DialogHeight}">
+                              x:Name="DialogGrid">
 
                             <Grid.RowDefinitions>
                                 <RowDefinition Height="auto"/>
@@ -91,9 +90,18 @@
                                             <Style TargetType="Button" BasedOn="{StaticResource IconButton}">
                                                 <Setter Property="Content">
                                                     <Setter.Value>
-                                                        <system:String>&#xf065;</system:String>
+                                                        <system:String>&#xf2d0;</system:String>
                                                     </Setter.Value>
-                                                </Setter>    
+                                                </Setter>
+                                                <Style.Triggers>
+                                                    <DataTrigger Binding="{Binding DialogState}" Value="Maximized">
+                                                        <Setter Property="Content">
+                                                            <Setter.Value>
+                                                                <system:String>&#xf2d2;</system:String>
+                                                            </Setter.Value>
+                                                        </Setter>
+                                                    </DataTrigger>
+                                                </Style.Triggers>
                                             </Style>
                                         </Button.Style>
                                     </Button>
@@ -105,6 +113,12 @@
                                                         <system:String>&#xf00d;</system:String>
                                                     </Setter.Value>
                                                 </Setter>
+                                                <Style.Triggers>
+                                                    <Trigger Property="IsMouseOver" Value="True">
+                                                        <Setter Property="Background" Value="#E81123"/>
+                                                        <Setter Property="Foreground" Value="White"/>
+                                                    </Trigger>
+                                                </Style.Triggers>
                                             </Style>
                                         </Button.Style>
                                     </Button>

@@ -125,8 +125,6 @@ namespace RetailTradeServer.ViewModels.Base
         }
         public HorizontalAlignment DialogHorizontalAlignment => DialogState == WindowState.Normal ? HorizontalAlignment.Center : HorizontalAlignment.Stretch;
         public VerticalAlignment DialogVerticalAlignment => DialogState == WindowState.Normal ? VerticalAlignment.Center : VerticalAlignment.Stretch;
-        public double DialogWidth => DialogState == WindowState.Normal ? 700 : double.NaN;
-        public double DialogHeight => DialogState == WindowState.Normal ? 600 : double.NaN;
         public WindowState DialogState
         {
             get => _dialogState;
@@ -136,8 +134,6 @@ namespace RetailTradeServer.ViewModels.Base
                 OnPropertyChanged(nameof(DialogState));
                 OnPropertyChanged(nameof(DialogHorizontalAlignment));
                 OnPropertyChanged(nameof(DialogVerticalAlignment));
-                OnPropertyChanged(nameof(DialogWidth));
-                OnPropertyChanged(nameof(DialogHeight));
             }
         }
 
@@ -155,6 +151,16 @@ namespace RetailTradeServer.ViewModels.Base
         public BaseViewModel()
         {
             CloseCommand = new ParameterCommand(Close);
+        }
+
+        #endregion
+
+        #region Public Voids
+
+        public void ShowDialog(BaseViewModel viewModel)
+        {
+            DialogContent = viewModel;
+            DialogVisibility = Visibility.Visible;
         }
 
         #endregion
