@@ -86,7 +86,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\RetailTrade.Barcode\RetailTrade.Barcode.csproj" />
     <ProjectReference Include="..\RetailTrade.DialogService\RetailTrade.DialogService.csproj" />
     <ProjectReference Include="..\RetailTrade.Domain\RetailTrade.Domain.csproj" />
     <ProjectReference Include="..\RetailTrade.EntityFramework\RetailTrade.EntityFramework.csproj" />
@@ -97,6 +96,9 @@
   <ItemGroup>
     <Content Include="Resources\Icons\lgog.ico" />
     <Content Include="Resources\Icons\newlogo.ico" />
+    <Reference Include="RetailTrade.Barcode">
+      <HintPath>..\RetailTrade.Barcode\bin\Release\net6.0-windows\RetailTrade.Barcode.dll</HintPath>
+    </Reference>
     <Resource Include="Fonts\fa-brands-400.ttf">
       <CopyToOutputDirectory>Never</CopyToOutputDirectory>
     </Resource>
