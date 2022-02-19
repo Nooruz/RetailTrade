@@ -125,7 +125,7 @@ namespace RetailTradeClient.ViewModels.Dialogs
 
         private void Save()
         {
-            Settings.Default.DefaultReceiptPrinter = SelectedReceiptPrinter.Name;
+            Settings.Default.DefaultReceiptPrinter = SelectedReceiptPrinter?.Name;
             Settings.Default.DefaultKKMName = SelectedKKM;
             Settings.Default.Save();
             _manager.Close();

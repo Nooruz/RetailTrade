@@ -38,15 +38,15 @@ namespace RetailTradeServer.ViewModels.Menus
         #region Command
 
         public ICommand UserControlLoadedCommand => new RelayCommand(UserControlLoaded);
-        public ICommand CreateProductCommand => new RelayCommand(() => ShowDialog(new CreateProductDialogFormModel(_typeProductService, _unitService, _productService, _supplierService, _messageStore, _zebraBarcodeScanner, _comBarcodeService) { Title = "Товаровы (Создать)", SelectedTypeProductId = SelectedTypeProduct?.Id }));
+        public ICommand CreateProductCommand => new RelayCommand(() => _dialogService.ShowDialog(new CreateProductDialogFormModel(_typeProductService, _unitService, _productService, _supplierService, _messageStore, _zebraBarcodeScanner, _comBarcodeService) { Title = "Товаровы (Создать)", SelectedTypeProductId = SelectedTypeProduct?.Id }));
         public ICommand EditProductCommand => new RelayCommand(EditProduct);
         public ICommand EditTypeProductCommand => new RelayCommand(EditTypeProduct);
         public ICommand SelectedItemChangedCommand { get; }
         public ICommand OnShowNodeMenuCommand { get; }
         public ICommand GridControlLoadedCommand => new ParameterCommand(sender => GridControlLoaded(sender));
         public ICommand DeleteMarkingProductCommand => new RelayCommand(DeleteMarkingProduct);
-        public ICommand CreateGroupTypeProductCommand => new RelayCommand(() => ShowDialog(new TypeProductDialogFormModel(_typeProductService, _dialogService) { Title = "Виды товаров (создание группы)", IsGroup = true }));
-        public ICommand CreateTypeProductCommand => new RelayCommand(() => ShowDialog(new TypeProductDialogFormModel(_typeProductService, _dialogService) { Title = "Виды товаров (создание)" }));
+        public ICommand CreateGroupTypeProductCommand => new RelayCommand(() => _dialogService.ShowDialog(new TypeProductDialogFormModel(_typeProductService, _dialogService) { Title = "Виды товаров (создание группы)", IsGroup = true }));
+        public ICommand CreateTypeProductCommand => new RelayCommand(() => _dialogService.ShowDialog(new TypeProductDialogFormModel(_typeProductService, _dialogService) { Title = "Виды товаров (создание)" }));
 
         #endregion
 
@@ -152,7 +152,7 @@ namespace RetailTradeServer.ViewModels.Menus
             }
             if (SelectedTypeProduct.Id != 1)
             {
-                ShowDialog(new TypeProductDialogFormModel(_typeProductService, _dialogService) { Title = $"{SelectedTypeProduct.Name} (Виды товаров)", IsEditMode = true, TypeProduct = SelectedTypeProduct });
+                _dialogService.ShowDialog(new TypeProductDialogFormModel(_typeProductService, _dialogService) { Title = $"{SelectedTypeProduct.Name} (Виды товаров)", IsEditMode = true, TypeProduct = SelectedTypeProduct });
             }            
         }
 
@@ -207,7 +207,7 @@ namespace RetailTradeServer.ViewModels.Menus
         {
             if (SelectedProduct != null)
             {
-                ShowDialog(new EditProductWithBarcodeDialogFormModel(_typeProductService,
+                _dialogService.ShowDialog(new EditProductWithBarcodeDialogFormModel(_typeProductService,
                 _unitService,
                 _productService,
                 _supplierService,

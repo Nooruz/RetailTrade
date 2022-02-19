@@ -287,7 +287,7 @@
                         </dxg:GridColumn.EditSettings>
                     </dxg:GridColumn>
                     <dxg:GridColumn Header="Остаток"
-                                    Visible="{Binding ColumnCountVisibility}"
+                                    Visible="{Binding IsKeepRecorsd}"
                                     FieldName="QuantityInStock"
                                     AllowColumnFiltering="False"
                                     AllowEditing="False">

@@ -8,6 +8,7 @@ namespace RetailTrade.Domain.Services
 {
     public interface IReceiptService : IDataService<Receipt>
     {
+        Task<Receipt> CreateAsync(Receipt receipt, bool isKeepRecords);
         /// <summary>
         /// Получить квитанции из текущего смена
         /// </summary>

@@ -36,19 +36,21 @@ namespace RetailTrade.EntityFramework.Services
 
         public async Task<Revaluation> CreateAsync(Revaluation entity)
         {
-            if (entity.RevaluationProducts.Count != 0)
-            {
-                foreach (RevaluationProduct item in entity.RevaluationProducts)
-                {
-                    Product product = await _productService.GetAsync(item.ProductId);
-                    product.ArrivalPrice = item.ArrivalPrice;
-                    product.SalePrice = item.SalePrice;
-                    await _productService.UpdateAsync(product.Id, product);
-                }
-            }
-            var result = await _nonQueryDataService.Create(entity);            
+            var result = await _nonQueryDataService.Create(entity);
             if (result != null)
+            {
+                if (entity.RevaluationProducts.Count != 0)
+                {
+                    foreach (RevaluationProduct item in entity.RevaluationProducts)
+                    {
+                        Product product = await _productService.GetAsync(item.ProductId);
+                        product.ArrivalPrice = item.ArrivalPrice;
+                        product.SalePrice = item.SalePrice;
+                        await _productService.UpdateAsync(product.Id, product);
+                    }
+                }
                 OnRevaluationCreated?.Invoke(result);
+            }                                                   
             return result;
         }
 

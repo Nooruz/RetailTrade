@@ -253,11 +253,6 @@
                 </ControlTemplate>
             </Setter.Value>
         </Setter>
-        <Style.Triggers>
-            <Trigger Property="IsPressed" Value="True">
-                <Setter Property="Background" Value="Red"/>
-            </Trigger>
-        </Style.Triggers>
     </Style>
 
     <Style TargetType="{x:Type components:CustomButton}" x:Key="CustomWithIconic">

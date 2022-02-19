@@ -36,7 +36,7 @@ namespace RetailTrade.EntityFramework.Services
                 var result = await _nonQueryDataService.Create(entity);
                 foreach (var productSale in entity.ProductSales)
                 {
-                    _ = await _productService.Sale(productSale.ProductId, productSale.Quantity);
+                    _ = await _productService.Sale(productSale.ProductId, productSale.Quantity, true);
                 }
                 if (result != null)
                     PropertiesChanged?.Invoke();
@@ -276,6 +276,26 @@ namespace RetailTrade.EntityFramework.Services
             try
             {
                 return await _nonQueryDataService.Create(receipt);
+            }
+            catch (Exception)
+            {
+                //ignore
+            }
+            return null;
+        }
+
+        public async Task<Receipt> CreateAsync(Receipt receipt, bool isKeepRecords)
+        {
+            try
+            {
+                var result = await _nonQueryDataService.Create(receipt);
+                foreach (var productSale in receipt.ProductSales)
+                {
+                    _ = await _productService.Sale(productSale.ProductId, productSale.Quantity, isKeepRecords);
+                }
+                if (result != null)
+                    PropertiesChanged?.Invoke();
+                return result;
             }
             catch (Exception)
             {

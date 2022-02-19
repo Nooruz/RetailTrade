@@ -61,47 +61,24 @@ namespace RetailTradeClient.Commands
                     Receipt newReceipt;
                     var r = _productSaleStore.ProductSales;
                     //Создания чека
-                    if (Settings.Default.IsKeepRecords)
+                    newReceipt = await _receiptService.CreateAsync(new Receipt
                     {
-                        newReceipt = await _receiptService.CreateAsync(new Receipt
-                        {
-                            DateOfPurchase = DateTime.Now,
-                            Sum = _paymentCashViewModel.AmountToBePaid,
-                            PaidInCash = _paymentCashViewModel.Entered,
-                            ShiftId = _shiftStore.CurrentShift.Id,
-                            Change = _paymentCashViewModel.Change,
-                            ProductSales = _paymentCashViewModel.SaleProducts.Select(s =>
-                                new ProductSale
-                                {
-                                    ProductId = s.Id,
-                                    Quantity = s.Quantity,
-                                    Sum = s.Sum,
-                                    SalePrice = s.SalePrice,
-                                    ArrivalPrice = s.ArrivalPrice
-                                }).ToList()
-                        });
-                    }
-                    else
-                    {
-                        newReceipt = await _receiptService.CreateAsync(new Receipt
-                        {
-                            DateOfPurchase = DateTime.Now,
-                            Sum = _paymentCashViewModel.AmountToBePaid,
-                            PaidInCash = _paymentCashViewModel.Entered,
-                            ShiftId = _shiftStore.CurrentShift.Id,
-                            Change = _paymentCashViewModel.Change,
-                            ProductSales = _paymentCashViewModel.SaleProducts.Select(s =>
-                                new ProductSale
-                                {
-                                    ProductId = s.Id,
-                                    Quantity = s.Quantity,
-                                    Sum = s.Sum,
-                                    SalePrice = s.SalePrice,
-                                    ArrivalPrice = s.ArrivalPrice
-                                }).ToList()
-                        });
-                    }
-                    
+                        DateOfPurchase = DateTime.Now,
+                        Sum = _paymentCashViewModel.AmountToBePaid,
+                        PaidInCash = _paymentCashViewModel.Entered,
+                        ShiftId = _shiftStore.CurrentShift.Id,
+                        Change = _paymentCashViewModel.Change,
+                        ProductSales = _paymentCashViewModel.SaleProducts.Select(s =>
+                            new ProductSale
+                            {
+                                ProductId = s.Id,
+                                Quantity = s.Quantity,
+                                Sum = s.Sum,
+                                SalePrice = s.SalePrice,
+                                ArrivalPrice = s.ArrivalPrice
+                            }).ToList()
+                    }, Settings.Default.IsKeepRecords);
+
 
                     if (Settings.Default.ShtrihMConnected)
                     {

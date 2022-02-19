@@ -62,33 +62,6 @@ namespace SalePageServer.State.Dialogs
             _window.Close();
         }
 
-        public Task Show<TUserControl>(TUserControl userControl) where TUserControl : BaseDialogUserControl
-        {
-            TaskCompletionSource<bool> tcs = new();
-
-            Application.Current.Dispatcher.Invoke(() =>
-            {
-                try
-                {
-                    _window = new()
-                    {
-                        SizeToContent = SizeToContent.WidthAndHeight,
-                        WindowStyle = WindowStyle.None,
-                        ResizeMode = ResizeMode.NoResize,
-                        Padding = new Thickness(0),
-                        BorderThickness = new Thickness(0),
-                        Content = userControl
-                    };
-                    _window.Show();
-                }
-                finally
-                {
-                    tcs.TrySetResult(true);
-                }
-            });
-            return tcs.Task;
-        }
-
         public Task ShowDialog<TViewModel>(TViewModel viewModel) where TViewModel : BaseDialogViewModel
         {
             var tcs = new TaskCompletionSource<bool>();
@@ -107,7 +80,7 @@ namespace SalePageServer.State.Dialogs
                         ResizeMode = ResizeMode,
                         Content = viewModel,
                         Title = viewModel.Title ?? FileVersionInfo.GetVersionInfo(Assembly.GetExecutingAssembly().Location).ProductName
-                    };                    
+                    };
                     _window.ShowDialog();
                 }
                 finally

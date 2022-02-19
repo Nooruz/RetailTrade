@@ -144,6 +144,7 @@ namespace RetailTradeServer.ViewModels.Menus
             if (RevaluationProducts.Any())
             {
                 RevaluationProduct revaluationProduct = RevaluationProducts.FirstOrDefault(r => r.ProductId == 0);
+                RevaluationProducts.ToList().ForEach(r => r.Product = null);
                 if (revaluationProduct == null)
                 {
                     _ = await _revaluationService.CreateAsync(new Revaluation

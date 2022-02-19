@@ -15,7 +15,7 @@ namespace RetailTrade.Domain.Services
         Task<double> GetQuantity(int id);
         Task<double> Refund(int id, double quantity);
         Task<bool> Refunds(IEnumerable<ProductRefund> productRefunds);
-        Task<double> Sale(int id, double quantity);
+        Task<double> Sale(int id, double quantity, bool isKeepRecords);
         Task<string> GenerateBarcode(int productId);
         Task<bool> MarkingForDeletion(Product product);
         Task<bool> SearchByBarcode(string barcode);

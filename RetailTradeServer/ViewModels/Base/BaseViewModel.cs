@@ -155,12 +155,18 @@ namespace RetailTradeServer.ViewModels.Base
 
         #endregion
 
-        #region Public Voids
+        #region Public Voids не рабочий
 
         public void ShowDialog(BaseViewModel viewModel)
         {
             DialogContent = viewModel;
             DialogVisibility = Visibility.Visible;
+        }
+
+        public void CloseDialog()
+        {
+            DialogVisibility = Visibility.Collapsed;
+            DialogContent = null;
         }
 
         #endregion

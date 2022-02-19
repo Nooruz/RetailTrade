@@ -18,10 +18,9 @@ namespace RetailTradeServer.State.Navigators
                 _currentViewModel = value;
                 if (CurrentViewModels == null)
                 {
-                    CurrentViewModels = new();
+                    CurrentViewModels = new();                    
                 }
-                _currentViewModel.IsSelected = true;
-                CurrentViewModels.Add(_currentViewModel);
+                AddViewModel(_currentViewModel);
                 StateChanged?.Invoke(_currentViewModel);
             }
         }

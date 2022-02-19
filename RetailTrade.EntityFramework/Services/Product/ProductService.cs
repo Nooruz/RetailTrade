@@ -239,7 +239,7 @@ namespace RetailTrade.EntityFramework.Services
             return false;
         }
 
-        public async Task<double> Sale(int id, double quantity)
+        public async Task<double> Sale(int id, double quantity, bool isKeepRecrods)
         {
             try
             {
@@ -247,7 +247,10 @@ namespace RetailTrade.EntityFramework.Services
                 Product editProduct = await context.Products
                                                .Where(p => p.Id == id)
                                                .FirstOrDefaultAsync();
-                editProduct.Quantity -= quantity;
+                if (isKeepRecrods)
+                {
+                    editProduct.Quantity -= quantity;
+                }
 
                 Product result = await UpdateAsync(id, editProduct);
 

@@ -65,7 +65,6 @@ namespace RetailTradeClient.ViewModels
             }
         }
         public bool IsKeepRecorsd => Settings.Default.IsKeepRecords;
-        public bool ColumnCountVisibility => !IsKeepRecorsd;
         public ObservableCollection<Sale> SaleProducts { get; set; }
         public ICollectionView SaleProductsCollectionView { get; set; }
         public decimal Sum
@@ -122,117 +121,95 @@ namespace RetailTradeClient.ViewModels
         /// <summary>
         /// Выход из аккаунта
         /// </summary>
-        public ICommand LogoutCommand { get; }
-        public ICommand TextInputCommand { get; }
-        public ICommand KeyDownCommand { get; }
-
+        public ICommand LogoutCommand => new RelayCommand(Logout);
+        public ICommand TextInputCommand => new ParameterCommand(parameter => TextInput(parameter));
+        public ICommand KeyDownCommand => new ParameterCommand(parameter => KeyDown(parameter));
         /// <summary>
         /// Настройки принтера
         /// </summary>
-        public ICommand PrinterSettingsCommand { get; }
-
+        public ICommand PrinterSettingsCommand => new RelayCommand(PrinterSettings);
         /// <summary>
         /// Отложить чек
         /// </summary>
-        public ICommand PostponeReceiptCommand { get; }
-
+        public ICommand PostponeReceiptCommand => new RelayCommand(PostponeReceipt);
         /// <summary>
         /// Просмотр отложенных чеков
         /// </summary>
-        public ICommand OpenPostponeReceiptCommand { get; }
-
+        public ICommand OpenPostponeReceiptCommand => new RelayCommand(OpenPostponeReceipt);
         /// <summary>
         /// Добавить товар в корзину
         /// </summary>
-        public ICommand AddProductToSaleCommand { get; }
-
+        public ICommand AddProductToSaleCommand => new ParameterCommand(pc => AddProductToSale(pc));
         /// <summary>
         /// Оплата наличными
         /// </summary>
-        public ICommand PaymentCashCommand { get; }
-
+        public ICommand PaymentCashCommand => new RelayCommand(PaymentCash);
         /// <summary>
         /// Сложаня оплата
         /// </summary>
-        public ICommand PaymentComplexCommand { get; }
-
+        public ICommand PaymentComplexCommand => new RelayCommand(PaymentComplex);
         /// <summary>
         /// Удалить выбранную из корзина товара
         /// </summary>
-        public ICommand DeleteSelectedRowCommand { get; }
-
+        public ICommand DeleteSelectedRowCommand => new RelayCommand(DeleteSelectedRow);
         /// <summary>
         /// Закрыть смену
         /// </summary>
         public ICommand ClosingShiftCommand { get; }
-
         /// <summary>
         /// Распечатать х-отчет
         /// </summary>
         public ICommand PrintXReportCommand { get; }
-
         /// <summary>
         /// Настройки ККМ
         /// </summary>
-        public ICommand CRMSettingsCommand { get; }
-
+        public ICommand CRMSettingsCommand => new RelayCommand(CRMSettings);
         /// <summary>
         /// Снять отчет без гашения
         /// </summary>
-        public ICommand PrintReportWithoutCleaningCommand { get; }
-
+        public ICommand PrintReportWithoutCleaningCommand => new RelayCommand(() => ShtrihM.PrintReportWithoutCleaning());
         /// <summary>
         /// Снять отчет с гашнием
         /// </summary>
-        public ICommand PrintReportWithCleaningCommand { get; }
-
+        public ICommand PrintReportWithCleaningCommand => new RelayCommand(() => ShtrihM.PrintReportWithCleaning());
         /// <summary>
         /// Открыть смену ККМ
         /// </summary>
-        public ICommand OpenSessionCommand { get; }
-
+        public ICommand OpenSessionCommand => new RelayCommand(() => ShtrihM.OpenSession());
         /// <summary>
         /// Краткий запрос
         /// </summary>
-        public ICommand GetShortECRStatusCommand { get; }
-
+        public ICommand GetShortECRStatusCommand => new RelayCommand(GetShortECRStatus);
         /// <summary>
         /// Анулировать чек
         /// </summary>
-        public ICommand CancelCheckCommand { get; }
-
+        public ICommand CancelCheckCommand => new RelayCommand(() => ShtrihM.SysAdminCancelCheck());
         /// <summary>
         /// Установить текущее время ККМ
         /// </summary>
-        public ICommand SetTimeCommand { get; }
-
+        public ICommand SetTimeCommand = new RelayCommand(() => ShtrihM.SetTime());
         /// <summary>
         /// Отрезать чек
         /// </summary>
-        public ICommand CutCheckCommand { get; }
-
+        public ICommand CutCheckCommand => new RelayCommand(() => ShtrihM.CutCheck());
         /// <summary>
         /// 
         /// </summary>
-        public ICommand LoadedHomeViewCommand { get; }
-
+        public ICommand LoadedHomeViewCommand => new ParameterCommand(parameter => LoadedHomeView(parameter));
         /// <summary>
         /// Проверка ввода количестов товаров для продажи
         /// </summary>
-        public ICommand QuantityValidateCommand { get; }
-
+        public ICommand QuantityValidateCommand => new ParameterCommand(parameter => QuantityValidate(parameter));
         /// <summary>
         /// Возврат товаров
         /// </summary>
-        public ICommand ReturnGoodsCommand { get; }
-
+        public ICommand ReturnGoodsCommand => new RelayCommand(ReturnGoods);
         /// <summary>
         /// Отменить
         /// </summary>
-        public ICommand CancelCommand { get; }
-
-        public ICommand SaleTableViewLoadedCommand { get; }
-        public ICommand MultiplyCommand { get; }
+        public ICommand CancelCommand => new RelayCommand(Cancel);
+        public ICommand SaleTableViewLoadedCommand => new ParameterCommand(parameter => SaleTableViewLoaded(parameter));
+        public ICommand MultiplyCommand => new RelayCommand(Multiply);
 
         #endregion
 
@@ -270,31 +247,7 @@ namespace RetailTradeClient.ViewModels
             SaleProductsCollectionView = CollectionViewSource.GetDefaultView(SaleProducts);
             BindingOperations.EnableCollectionSynchronization(SaleProducts, _syncLock);
 
-            LogoutCommand = new RelayCommand(Logout);
-            TextInputCommand = new ParameterCommand(parameter => TextInput(parameter));
-            KeyDownCommand = new ParameterCommand(parameter => KeyDown(parameter));
-            PrinterSettingsCommand = new RelayCommand(PrinterSettings);
-            PostponeReceiptCommand = new RelayCommand(PostponeReceipt);
-            OpenPostponeReceiptCommand = new RelayCommand(OpenPostponeReceipt);
-            AddProductToSaleCommand = new ParameterCommand(pc => AddProductToSale(pc));
-            PaymentCashCommand = new RelayCommand(PaymentCash);
-            PaymentComplexCommand = new RelayCommand(PaymentComplex);
-            DeleteSelectedRowCommand = new RelayCommand(DeleteSelectedRow);
             PrintXReportCommand = new PrintXReportCommand();
-            CRMSettingsCommand = new RelayCommand(CRMSettings);
-            LoadedHomeViewCommand = new ParameterCommand(parameter => LoadedHomeView(parameter));
-            QuantityValidateCommand = new ParameterCommand(parameter => QuantityValidate(parameter));
-            CancelCommand = new RelayCommand(Cancel);
-            SaleTableViewLoadedCommand = new ParameterCommand(parameter => SaleTableViewLoaded(parameter));
-            MultiplyCommand = new RelayCommand(Multiply);
-            ReturnGoodsCommand = new RelayCommand(ReturnGoods);
-            PrintReportWithoutCleaningCommand = new RelayCommand(() => ShtrihM.PrintReportWithoutCleaning());
-            PrintReportWithCleaningCommand = new RelayCommand(() => ShtrihM.PrintReportWithCleaning());
-            CancelCheckCommand = new RelayCommand(() => ShtrihM.SysAdminCancelCheck());
-            OpenSessionCommand = new RelayCommand(() => ShtrihM.OpenSession());
-            SetTimeCommand = new RelayCommand(() => ShtrihM.SetTime());
-            CutCheckCommand = new RelayCommand(() => ShtrihM.CutCheck());
-            GetShortECRStatusCommand = new RelayCommand(GetShortECRStatus);
 
             SaleProducts.CollectionChanged += SaleProducts_CollectionChanged;
             _productService.OnProductSaleOrRefund += ProductService_OnProductSaleOrRefund;
@@ -494,7 +447,7 @@ namespace RetailTradeClient.ViewModels
                         });
                     }
                 }
-                else if (sale.Quantity < sale.QuantityInStock)
+                else if (IsKeepRecorsd && sale.Quantity < sale.QuantityInStock)
                 {
                     sale.Quantity++;
                 }
@@ -510,7 +463,10 @@ namespace RetailTradeClient.ViewModels
         private void ProductService_OnProductSaleOrRefund(int id, double quantity)
         {
             Product editProduct = ProductsWithoutBarcode.FirstOrDefault(p => p.Id == id);
-            editProduct.Quantity = quantity;
+            if (editProduct != null)
+            {
+                editProduct.Quantity = quantity;
+            }            
         }
 
         private void ProductService_OnProductRefund(int id, double quantity)
@@ -634,45 +590,56 @@ namespace RetailTradeClient.ViewModels
         /// Штрих-коду жок товарларды басканда
         /// </summary>
         /// <param name="parameter">Товардын коду</param>
-        private void AddProductToSale(object parameter)
+        private async void AddProductToSale(object parameter)
         {
             if (parameter is int id)
             {
-                var product = ProductsWithoutBarcode.FirstOrDefault(p => p.Id == id);
                 var saleProduct = SaleProducts.FirstOrDefault(sp => sp.Id == id);
                 if (saleProduct == null)
                 {
+                    Product getProduct = IsKeepRecorsd ? await _productService.Predicate(p => p.Id == id && p.DeleteMark == false && p.Quantity > 0, p => new Product { Id = p.Id, Name = p.Name, Quantity = p.Quantity, SalePrice = p.SalePrice, TNVED = p.TNVED }) :
+                            await _productService.Predicate(p => p.Id == id && p.DeleteMark == false, p => new Product { Id = p.Id, Name = p.Name, Quantity = p.Quantity, SalePrice = p.SalePrice, TNVED = p.TNVED });
                     SaleProducts.Add(new Sale
                     {
-                        Id = product.Id,
-                        Name = product.Name,
+                        Id = getProduct.Id,
+                        Name = getProduct.Name,
                         Quantity = 1,
-                        SalePrice = product.SalePrice,
-                        ArrivalPrice = product.ArrivalPrice,
-                        Sum = product.SalePrice,
-                        QuantityInStock = product.Quantity,
-                        TNVED = product.TNVED
+                        SalePrice = getProduct.SalePrice,
+                        ArrivalPrice = getProduct.ArrivalPrice,
+                        Sum = getProduct.SalePrice,
+                        QuantityInStock = getProduct.Quantity,
+                        TNVED = getProduct.TNVED
                     });
                     _productSaleStore.AddProduct(new Sale
                     {
-                        Id = product.Id,
-                        Name = product.Name,
+                        Id = getProduct.Id,
+                        Name = getProduct.Name,
                         Quantity = 1,
-                        SalePrice = product.SalePrice,
-                        ArrivalPrice = product.ArrivalPrice,
-                        Sum = product.SalePrice,
-                        QuantityInStock = product.Quantity,
-                        TNVED = product.TNVED
+                        SalePrice = getProduct.SalePrice,
+                        ArrivalPrice = getProduct.ArrivalPrice,
+                        Sum = getProduct.SalePrice,
+                        QuantityInStock = getProduct.Quantity,
+                        TNVED = getProduct.TNVED
                     });
-                }
-                else if (saleProduct.Quantity < saleProduct.QuantityInStock)
-                {
-                    saleProduct.Quantity++;
                 }
                 else
                 {
-                    _ = _manager.ShowMessage("Количество превышает остаток.", "", MessageBoxButton.OK, MessageBoxImage.Information);
-                }
+                    if (IsKeepRecorsd)
+                    {
+                        if (saleProduct.Quantity < saleProduct.QuantityInStock)
+                        {
+                            saleProduct.Quantity++;
+                        }
+                        else
+                        {
+                            _ = _manager.ShowMessage("Количество превышает остаток.", "", MessageBoxButton.OK, MessageBoxImage.Information);
+                        }
+                    }
+                    else
+                    {
+                        saleProduct.Quantity++;
+                    }
+                }                               
             }
         }
 
