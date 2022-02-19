@@ -114,6 +114,7 @@ namespace RetailTradeServer.ViewModels.Menus
         public ICommand CellValueChangedCommand => new ParameterCommand(CellValueChanged);
         public ICommand ValidateCellCommand => new ParameterCommand(ValidateCell);
         public ICommand CreateAndCloseCommand => new RelayCommand(CreateAndClose);
+        public ICommand DeleteRevaluationProductCommand => new RelayCommand(DeleteRevaluationProduct);
 
         #endregion
 
@@ -138,6 +139,14 @@ namespace RetailTradeServer.ViewModels.Menus
         #endregion
 
         #region Private Voids
+
+        private void DeleteRevaluationProduct()
+        {
+            if (SelectedRevaluationProduct != null)
+            {
+                _ = RevaluationProducts.Remove(SelectedRevaluationProduct);
+            }
+        }
 
         private async void CreateAndClose()
         {
@@ -204,8 +213,6 @@ namespace RetailTradeServer.ViewModels.Menus
                         Product selectedProduct = Products.FirstOrDefault(p => p.Id == (int)e.Cell.Value);
                         if (selectedProduct != null)
                         {
-                            SelectedRevaluationProduct.ArrivalPrice = selectedProduct.ArrivalPrice;
-                            SelectedRevaluationProduct.SalePrice = selectedProduct.SalePrice;
                             SelectedRevaluationProduct.Product = selectedProduct;
                         }
                     }
@@ -228,8 +235,6 @@ namespace RetailTradeServer.ViewModels.Menus
             {
                 if (RevaluationProducts.FirstOrDefault(r => r.ProductId == viewModel.SelectedProduct.Id) == null)
                 {
-                    EmptyRevaluationProduct.ArrivalPrice = viewModel.SelectedProduct.ArrivalPrice;
-                    EmptyRevaluationProduct.SalePrice = viewModel.SelectedProduct.SalePrice;
                     EmptyRevaluationProduct.Product = viewModel.SelectedProduct;
                     EmptyRevaluationProduct.ProductId = viewModel.SelectedProduct.Id;
                 }

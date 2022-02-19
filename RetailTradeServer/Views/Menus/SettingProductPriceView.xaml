@@ -73,13 +73,13 @@
                         </dxmvvm:Interaction.Behaviors>
                         <dxg:GridColumn.EditSettings>
                             <dxg:LookUpEditSettings DisplayMember="Name"
-                                            ValueMember="Id"
-                                            IncrementalFiltering="True"
-                                            AutoComplete="False"                                            
-                                            AutoPopulateColumns="False"
-                                            ItemsSource="{Binding Products}"
-                                            ImmediatePopup="True"
-                                            IsPopupAutoWidth="True">
+                                                    ValueMember="Id"
+                                                    IncrementalFiltering="True"
+                                                    AutoComplete="False"                                            
+                                                    AutoPopulateColumns="False"
+                                                    ItemsSource="{Binding Products}"
+                                                    ImmediatePopup="True"
+                                                    IsPopupAutoWidth="True">
                                 <dxg:LookUpEditSettings.Buttons>
                                     <dxe:ButtonInfo GlyphKind="Regular"
                                             Command="{Binding ProductCommand}"/>
@@ -109,7 +109,9 @@
                         </dxg:GridColumn.EditSettings>
                     </dxg:GridColumn>
                 </dxg:GridControlBand>
-                <dxg:GridControlBand Header="Старая цена" VisibleIndex="1">
+                <dxg:GridControlBand Header="Текущая цена" 
+                                     VisibleIndex="1"
+                                     HorizontalHeaderContentAlignment="Center">
                     <dxg:GridColumn Header="Цена прихода"
                                     AllowEditing="False"
                                     FieldName="Product.ArrivalPrice"
@@ -119,7 +121,9 @@
                                     AllowEditing="False"
                                     Style="{StaticResource SumTextEditSettings}"/>
                 </dxg:GridControlBand>
-                <dxg:GridControlBand Header="Новая цена"  VisibleIndex="2">
+                <dxg:GridControlBand Header="Новая цена"  
+                                     VisibleIndex="2"
+                                     HorizontalHeaderContentAlignment="Center">
                     <dxg:GridColumn Header="Цена прихода"
                             FieldName="ArrivalPrice"
                             Style="{StaticResource SumTextEditSettings}"/>
@@ -128,6 +132,10 @@
                             Style="{StaticResource SumTextEditSettings}"/>
                 </dxg:GridControlBand>
             </dxg:GridControl.Bands>
+            <dxmvvm:Interaction.Behaviors>
+                <dxmvvm:KeyToCommand KeyGesture="Delete"
+                                     Command="{Binding DeleteRevaluationProductCommand}"/>
+            </dxmvvm:Interaction.Behaviors>
         </dxg:GridControl>
 
         <dxlc:LayoutItem Label="Комментарий:"

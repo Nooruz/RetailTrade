@@ -119,7 +119,8 @@
                 </dxmvvm:Interaction.Behaviors>
                 <dxg:GridControl.View>
                     <dxg:TableView AllowEditing="False"
-                                   ShowGroupPanel="False"
+                                   ShowGroupPanel="False" 
+                                   ShowFilterPanelMode="Never"
                                    AutoWidth="True">
                         <dxmvvm:Interaction.Behaviors>
                             <dxmvvm:EventToCommand EventName="RowDoubleClick"
