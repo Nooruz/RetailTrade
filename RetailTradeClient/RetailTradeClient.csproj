@@ -36,27 +36,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <COMReference Include="DrvFRLib">
-      <VersionMinor>3</VersionMinor>
-      <VersionMajor>1</VersionMajor>
-      <Guid>332c8050-469c-4b4d-a192-68cd3cb252ba</Guid>
-      <Lcid>0</Lcid>
-      <WrapperTool>tlbimp</WrapperTool>
-      <Isolated>false</Isolated>
-      <EmbedInteropTypes>true</EmbedInteropTypes>
-    </COMReference>
-    <COMReference Include="CoreScanner">
-      <WrapperTool>tlbimp</WrapperTool>
-      <VersionMinor>0</VersionMinor>
-      <VersionMajor>1</VersionMajor>
-      <Guid>db07b9fc-18b0-4b55-9a44-31d2c2f87875</Guid>
-      <Lcid>0</Lcid>
-      <Isolated>false</Isolated>
-      <EmbedInteropTypes>False</EmbedInteropTypes>
-    </COMReference>
-  </ItemGroup>
-
-  <ItemGroup>
     <EmbeddedResource Include="Report\ProductSaleReport.vsrepx" />
     <EmbeddedResource Include="Report\XReport.vsrepx" />
     <EmbeddedResource Include="Report\ZReport.vsrepx" />

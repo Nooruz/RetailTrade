@@ -1,8 +1,12 @@
 ﻿using CoreScanner;
+using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Text;
+using System.Threading.Tasks;
 using System.Xml.Linq;
 
-namespace RetailTrade.Barcode
+namespace RetailTrade.BarcodeScanner
 {
     /// <summary>
     /// Scanner Types
@@ -806,7 +810,7 @@ namespace RetailTrade.Barcode
 
         static ZebraScanner()
         {
-            _scanner = new();
+            _scanner = new CCoreScanner();
         }
 
         #endregion
@@ -848,7 +852,7 @@ namespace RetailTrade.Barcode
 
         public static Status Close()
         {
-            _scanner.Close(0, out int status);
+            _scanner.Close(0, out _);
 
             return Status.Locked;
         }

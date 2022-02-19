@@ -1,5 +1,4 @@
-﻿using CoreScanner;
-using DevExpress.Xpf.Grid;
+﻿using DevExpress.Xpf.Grid;
 using RetailTrade.CashRegisterMachine;
 using RetailTrade.Domain.Models;
 using RetailTrade.Domain.Services;
@@ -48,7 +47,6 @@ namespace RetailTradeClient.ViewModels
         private Sale _selectedProductSale;
         private ObservableCollection<Product> _products;
         private decimal _change;
-        private CCoreScannerClass _barcodeScanner;
         private object _syncLock = new();
 
         #endregion

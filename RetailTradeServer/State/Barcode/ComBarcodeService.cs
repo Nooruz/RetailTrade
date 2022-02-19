@@ -1,5 +1,5 @@
-﻿using System;
-using RetailTrade.Barcode;
+﻿using RetailTrade.Barcode;
+using System;
 
 namespace RetailTradeServer.State.Barcode
 {
