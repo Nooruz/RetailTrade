@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <TargetFramework>net6.0-windows</TargetFramework>
@@ -10,24 +10,6 @@
   <ProjectExtensions><VisualStudio><UserProperties BuildVersion_StartDate="2000/1/1" /></VisualStudio></ProjectExtensions>
 
   <ItemGroup>
-    <COMReference Include="PaymentDrvLib">
-      <WrapperTool>tlbimp</WrapperTool>
-      <VersionMinor>0</VersionMinor>
-      <VersionMajor>1</VersionMajor>
-      <Guid>5758fcb5-020a-4452-b180-b7638e55bc34</Guid>
-      <Lcid>0</Lcid>
-      <Isolated>false</Isolated>
-      <EmbedInteropTypes>true</EmbedInteropTypes>
-    </COMReference>
-    <COMReference Include="SrvFRLib">
-      <WrapperTool>tlbimp</WrapperTool>
-      <VersionMinor>3</VersionMinor>
-      <VersionMajor>1</VersionMajor>
-      <Guid>8388a0fe-11ba-4077-9fc2-4ea52fe4609c</Guid>
-      <Lcid>0</Lcid>
-      <Isolated>false</Isolated>
-      <EmbedInteropTypes>true</EmbedInteropTypes>
-    </COMReference>
     <COMReference Include="DrvFRLib">
       <VersionMinor>3</VersionMinor>
       <VersionMajor>1</VersionMajor>
