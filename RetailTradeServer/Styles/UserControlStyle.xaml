@@ -1,6 +1,5 @@
 ﻿<ResourceDictionary   xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
                       xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-                      xmlns:dialog="clr-namespace:RetailTrade.DialogService;assembly=RetailTrade.DialogService"
                       xmlns:custom="clr-namespace:RetailTrade.LoadingPanelControl;assembly=RetailTrade.LoadingPanelControl"
                       xmlns:menu="clr-namespace:RetailTradeServer.Views.Menus">
 
@@ -26,11 +25,6 @@
                                                  Title="{TemplateBinding LoadingPanelTitle}"
                                                  Text="{TemplateBinding LoadingPanelText}"
                                                  Panel.ZIndex="1"/>
-
-                            <dialog:Dialog FontAwesome="{StaticResource FontAwesomeBold}"
-                                           DialogContent="{Binding DialogContent}"
-                                           Visibility="{Binding DialogVisibility}"
-                                           Panel.ZIndex="1"/>
                             
                             <ContentPresenter/>
 

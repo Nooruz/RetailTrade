@@ -114,6 +114,10 @@
                 <menuViews:SettingProductPriceView/>
             </DataTemplate>
 
+            <DataTemplate DataType="{x:Type menuViewModels:ReturnProductFromCustomerViewModel}">
+                <menuViews:ReturnProductFromCustomerView/>
+            </DataTemplate>
+
             <!--#endregion-->
             
             <!--#region Диалоги-->

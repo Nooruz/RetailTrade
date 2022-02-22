@@ -84,7 +84,12 @@ namespace RetailTradeServer.State.Navigators
         /// <summary>
         /// Переоценка
         /// </summary>
-        RevaluationView
+        RevaluationView,
+
+        /// <summary>
+        /// Возвраты товаров от клиентов
+        /// </summary>
+        ReturnProductFromCustomerView
     }
 
     public interface IMenuNavigator

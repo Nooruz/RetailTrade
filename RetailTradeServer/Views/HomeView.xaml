@@ -49,7 +49,8 @@
             <dxwui:HamburgerSubMenuNavigationButton Content="Цены (переоценка)"
                                                     Command="{Binding RevaluationCommand}"/>
             
-            <dxwui:HamburgerSubMenuNavigationButton Content="Возвраты товаров от клиентов"/>
+            <dxwui:HamburgerSubMenuNavigationButton Content="Возвраты товаров от клиентов"
+                                                    Command="{Binding ReturnProductFromCustomerCommand}"/>
 
         </dxwui:HamburgerSubMenu>
 

@@ -24,6 +24,7 @@ namespace RetailTradeServer.ViewModels.Factories
         private readonly CreateMenuViewModel<CashShiftsViewModel> _createCashShiftsViewModel;
         private readonly CreateMenuViewModel<WareHouseViewModel> _createWareHouseViewModel;
         private readonly CreateMenuViewModel<RevaluationViewModel> _createRevaluationViewModel;
+        private readonly CreateMenuViewModel<ReturnProductFromCustomerViewModel> _createReturnProductFromCustomerViewModel;
 
         #endregion
 
@@ -43,7 +44,8 @@ namespace RetailTradeServer.ViewModels.Factories
             CreateMenuViewModel<ConnectingAndConfiguringEquipmentViewModel> createConnectingAndConfiguringEquipmentViewModel,
             CreateMenuViewModel<CashShiftsViewModel> createCashShiftsViewModel,
             CreateMenuViewModel<WareHouseViewModel> createWareHouseViewModel,
-            CreateMenuViewModel<RevaluationViewModel> createRevaluationViewModel)
+            CreateMenuViewModel<RevaluationViewModel> createRevaluationViewModel,
+            CreateMenuViewModel<ReturnProductFromCustomerViewModel> createReturnProductFromCustomerViewModel)
         {
             _createProductViewModel = createProductViewModel;
             _createArrivalProductViewModel = createArrivalProductViewModel;
@@ -60,6 +62,7 @@ namespace RetailTradeServer.ViewModels.Factories
             _createCashShiftsViewModel = createCashShiftsViewModel;
             _createWareHouseViewModel = createWareHouseViewModel;
             _createRevaluationViewModel = createRevaluationViewModel;
+            _createReturnProductFromCustomerViewModel = createReturnProductFromCustomerViewModel;
         }
 
         #endregion
@@ -83,6 +86,7 @@ namespace RetailTradeServer.ViewModels.Factories
                 MenuViewType.CashierView => _createCashShiftsViewModel(),
                 MenuViewType.WareHouseView => _createWareHouseViewModel(),
                 MenuViewType.RevaluationView => _createRevaluationViewModel(),
+                MenuViewType.ReturnProductFromCustomerView => _createReturnProductFromCustomerViewModel(),
                 _ => throw new ArgumentException("The ViewType does not have a ViewModel.", "viewType"),
             };
         }

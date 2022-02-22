@@ -56,6 +56,7 @@ namespace RetailTradeServer.ViewModels
 
         public ICommand ProductsCommand => new RelayCommand(() => UpdateCurrentMenuViewModelCommand.Execute(MenuViewType.Products));
         public ICommand RevaluationCommand => new RelayCommand(() => UpdateCurrentMenuViewModelCommand.Execute(MenuViewType.RevaluationView));
+        public ICommand ReturnProductFromCustomerCommand => new RelayCommand(() => UpdateCurrentMenuViewModelCommand.Execute(MenuViewType.ReturnProductFromCustomerView));
         public ICommand ArrivalProductCommand => new RelayCommand(() => UpdateCurrentMenuViewModelCommand.Execute(MenuViewType.ArrivalProduct));
         public ICommand WriteDownProductCommand => new RelayCommand(() => UpdateCurrentMenuViewModelCommand.Execute(MenuViewType.WriteDownProduct));
         public ICommand OrderProductCommand => new RelayCommand(() => UpdateCurrentMenuViewModelCommand.Execute(MenuViewType.OrderProduct));
