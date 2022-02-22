@@ -1,4 +1,6 @@
-﻿using RetailTradeServer.ViewModels.Base;
+﻿using RetailTradeServer.Commands;
+using RetailTradeServer.ViewModels.Base;
+using System.Windows.Input;
 
 namespace RetailTradeServer.ViewModels.Menus
 {
@@ -18,7 +20,7 @@ namespace RetailTradeServer.ViewModels.Menus
 
         #region Commands
 
-
+        public ICommand UserControlLoadedCommand => new RelayCommand(UserControlLoaded);
 
         #endregion
 
@@ -26,14 +28,17 @@ namespace RetailTradeServer.ViewModels.Menus
 
         public ReturnProductFromCustomerViewModel()
         {
-
+            Header = "Возвраты товаров от клиентов";
         }
 
         #endregion
 
         #region Private Voids
 
-
+        private void UserControlLoaded()
+        {
+            ShowLoadingPanel = false;
+        }
 
         #endregion
     }
