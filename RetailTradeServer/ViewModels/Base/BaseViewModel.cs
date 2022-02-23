@@ -1,4 +1,5 @@
-﻿using RetailTrade.Domain.Models;
+﻿using DevExpress.Mvvm;
+using RetailTrade.Domain.Models;
 using RetailTradeServer.Commands;
 using RetailTradeServer.State.Authenticators;
 using System.ComponentModel;
@@ -9,7 +10,7 @@ namespace RetailTradeServer.ViewModels.Base
 {
     public delegate TViewModel CreateViewModel<TViewModel>() where TViewModel : BaseViewModel;
     public delegate TMenuViewModel CreateMenuViewModel<TMenuViewModel>() where TMenuViewModel : BaseViewModel;
-    public class BaseViewModel : INotifyPropertyChanged
+    public class BaseViewModel : ViewModelBase, INotifyPropertyChanged
     {
         #region Private Members
 
@@ -35,6 +36,13 @@ namespace RetailTradeServer.ViewModels.Base
         public ICommand CloseCommand { get; set; }
         public ICommand DialogResizeCommand => new RelayCommand(() => DialogState = DialogState == WindowState.Normal ? WindowState.Maximized : WindowState.Normal);
         public ICommand DialogCloseCommand => new RelayCommand(() => { DialogVisibility = Visibility.Collapsed; DialogContent = null; });
+
+        #endregion
+
+        #region Services
+
+        protected IWindowService WindowService => GetService<IWindowService>();
+        protected IDialogService DialogService => GetService<IDialogService>();
 
         #endregion
 

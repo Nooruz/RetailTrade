@@ -86,7 +86,6 @@ namespace RetailTradeServer.HostBuilders
         {
             return new ProductViewModel(services.GetRequiredService<ITypeProductService>(),
                 services.GetRequiredService<IProductService>(),
-                services.GetRequiredService<IDialogService>(),
                 services.GetRequiredService<IDataService<Unit>>(),
                 services.GetRequiredService<ISupplierService>(),
                 services.GetRequiredService<IMessageStore>(),

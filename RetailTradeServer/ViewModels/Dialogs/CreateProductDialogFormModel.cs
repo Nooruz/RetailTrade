@@ -243,10 +243,10 @@ namespace RetailTradeServer.ViewModels.Dialogs
             Units = await _unitService.GetAllAsync();
             TypeProducts = new(await _typeProductService.GetTypesAsync());
 
-            _zebraBarcodeScanner.Open();
-            _zebraBarcodeScanner.OnBarcodeEvent += ZebraBarcodeScanner_OnBarcodeEvent;
-            _comBarcodeService.Open();
-            _comBarcodeService.OnBarcodeEvent += ComBarcodeService_OnBarcodeEvent;
+            //_zebraBarcodeScanner.Open();
+            //_zebraBarcodeScanner.OnBarcodeEvent += ZebraBarcodeScanner_OnBarcodeEvent;
+            //_comBarcodeService.Open();
+            //_comBarcodeService.OnBarcodeEvent += ComBarcodeService_OnBarcodeEvent;
         }
 
         private void ComBarcodeService_OnBarcodeEvent(string obj)

@@ -281,7 +281,7 @@ namespace RetailTradeClient.ViewModels
                 }
                 else
                 {
-                    _ = _manager.ShowMessage("Количество превышает остаток.", "", MessageBoxButton.OK, MessageBoxImage.Information);
+                    _ = MessageBox.Show("Количество превышает остаток.", "", MessageBoxButton.OK, MessageBoxImage.Information);
                 }
                 OnPropertyChanged(nameof(Sum));
                 OnPropertyChanged(nameof(ToBePaid));
