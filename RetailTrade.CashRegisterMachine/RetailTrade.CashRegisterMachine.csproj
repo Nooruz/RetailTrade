@@ -10,21 +10,12 @@
   <ProjectExtensions><VisualStudio><UserProperties BuildVersion_StartDate="2000/1/1" /></VisualStudio></ProjectExtensions>
 
   <ItemGroup>
-    <COMReference Include="DrvFRLib">
+    <COMReference Include="DrvFRLib" Condition="'$(MSBuildRuntimeType)' != 'Core'">
       <VersionMinor>3</VersionMinor>
       <VersionMajor>1</VersionMajor>
       <Guid>332c8050-469c-4b4d-a192-68cd3cb252ba</Guid>
       <Lcid>0</Lcid>
       <WrapperTool>tlbimp</WrapperTool>
-      <Isolated>false</Isolated>
-      <EmbedInteropTypes>true</EmbedInteropTypes>
-    </COMReference>
-    <COMReference Include="SMDrvFR1CLib">
-      <WrapperTool>tlbimp</WrapperTool>
-      <VersionMinor>0</VersionMinor>
-      <VersionMajor>1</VersionMajor>
-      <Guid>f71b4ded-b3cc-4a90-9eb0-5362648ddde9</Guid>
-      <Lcid>0</Lcid>
       <Isolated>false</Isolated>
       <EmbedInteropTypes>true</EmbedInteropTypes>
     </COMReference>
