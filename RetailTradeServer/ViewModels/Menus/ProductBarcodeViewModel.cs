@@ -110,37 +110,32 @@ namespace RetailTradeServer.ViewModels.Menus
 
         private async void PrintProductBarcode()
         {
-            if (string.IsNullOrEmpty(Settings.Default.DefaultLabelPrinter))
-            {
-                _dialogService.ShowMessage("Принтер для печати этикеток не настроен.", "", MessageBoxButton.OK, MessageBoxImage.Error);
-            }
-            else
-            {
-                ProductBarcodeReport report = new();
+            ProductBarcodeReport report = new();
 
-                List<ProductBarcodePrinting> productBarcodePrintings = new();
+            List<ProductBarcodePrinting> productBarcodePrintings = new();
 
-                foreach (var item in ProductBarcodePrintings)
+            foreach (var item in ProductBarcodePrintings)
+            {
+                for (int i = 0; i < item.Quantity; i++)
                 {
-                    for (int i = 0; i < item.Quantity; i++)
+                    productBarcodePrintings.Add(new ProductBarcodePrinting
                     {
-                        productBarcodePrintings.Add(new ProductBarcodePrinting
-                        {
-                            Name = item.Name,
-                            Barcode = item.Barcode,
-                            Price = item.Price
-                        });
-                    }
+                        Name = item.Name,
+                        Barcode = item.Barcode,
+                        Price = item.Price
+                    });
                 }
-
-                report.DataSource = productBarcodePrintings;
-                await report.CreateDocumentAsync();
-
-                PrintToolBase tool = new(report.PrintingSystem);
-                tool.PrinterSettings.PrinterName = Settings.Default.DefaultLabelPrinter;
-                tool.PrintingSystem.EndPrint += PrintingSystem_EndPrint;
-                tool.Print();
             }
+
+            report.DataSource = productBarcodePrintings;
+            await report.CreateDocumentAsync();
+
+            await _dialogService.ShowPrintDialog(report);
+
+            //PrintToolBase tool = new(report.PrintingSystem);
+            //tool.PrinterSettings.PrinterName = Settings.Default.DefaultLabelPrinter;
+            //tool.PrintingSystem.EndPrint += PrintingSystem_EndPrint;
+            //tool.Print();
         }
 
         private void Clear()

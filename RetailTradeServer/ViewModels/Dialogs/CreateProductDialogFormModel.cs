@@ -416,11 +416,10 @@ namespace RetailTradeServer.ViewModels.Dialogs
 
         public override void Dispose()
         {
-            _zebraBarcodeScanner.OnBarcodeEvent -= ZebraBarcodeScanner_OnBarcodeEvent;
             _comBarcodeService.OnBarcodeEvent -= ComBarcodeService_OnBarcodeEvent;
             _supplierService.OnSupplierCreated -= SupplierService_OnSupplierCreated;
             _typeProductService.OnTypeProductCreated -= TypeProductService_OnTypeProductCreated;
-            _zebraBarcodeScanner.Close();
+            _comBarcodeService.Close();
             base.Dispose();
         }
 
