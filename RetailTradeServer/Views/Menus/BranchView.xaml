@@ -2,9 +2,23 @@
                      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
                      xmlns:dxg="http://schemas.devexpress.com/winfx/2008/xaml/grid"
                      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-                     xmlns:local="clr-namespace:RetailTradeServer.Views.Menus"
+                     xmlns:local="clr-namespace:RetailTradeServer.Views.Menus" xmlns:dxmvvm="http://schemas.devexpress.com/winfx/2008/xaml/mvvm"
                     Title="{Binding Header}">
 
+    <dxmvvm:Interaction.Behaviors>
+        <dxmvvm:WindowService AllowSetWindowOwner="True"
+                              WindowStartupLocation="CenterOwner">
+            <dxmvvm:WindowService.WindowStyle>
+                <Style TargetType="dx:ThemedWindow">
+                    <Setter Property="SizeToContent" Value="WidthAndHeight"/>
+                    <Setter Property="WindowStyle" Value="ToolWindow"/>
+                    <Setter Property="ResizeMode" Value="NoResize"/>
+                </Style>
+            </dxmvvm:WindowService.WindowStyle>
+        </dxmvvm:WindowService>
+    </dxmvvm:Interaction.Behaviors>
+    
+    
     <dxg:GridControl ItemsSource="{Binding Branches}">
         <dxg:GridControl.View>
             <dxg:TableView ShowTotalSummary="True" 

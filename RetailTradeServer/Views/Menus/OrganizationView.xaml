@@ -7,12 +7,25 @@
     xmlns:local="clr-namespace:RetailTradeServer.Views.Menus"
     x:Class="RetailTradeServer.Views.Menus.OrganizationView"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008" xmlns:dxmvvm="http://schemas.devexpress.com/winfx/2008/xaml/mvvm"
     mc:Ignorable="d"
     d:DesignHeight="450" d:DesignWidth="800"
     ShowLoadingPanel="False"
     ShowDefaultButtons="False"
     Title="{Binding Header}">
+
+    <dxmvvm:Interaction.Behaviors>
+        <dxmvvm:WindowService AllowSetWindowOwner="True"
+                              WindowStartupLocation="CenterOwner">
+            <dxmvvm:WindowService.WindowStyle>
+                <Style TargetType="dx:ThemedWindow">
+                    <Setter Property="SizeToContent" Value="WidthAndHeight"/>
+                    <Setter Property="WindowStyle" Value="ToolWindow"/>
+                    <Setter Property="ResizeMode" Value="NoResize"/>
+                </Style>
+            </dxmvvm:WindowService.WindowStyle>
+        </dxmvvm:WindowService>
+    </dxmvvm:Interaction.Behaviors>
 
     <dxlc:LayoutControl Orientation="Vertical">
 
