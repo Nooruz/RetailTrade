@@ -16,7 +16,6 @@
     <dxmvvm:Interaction.Behaviors>
         <dxmvvm:EventToCommand EventName="Loaded" Command="{Binding UserControlLoadedCommand}"/>
         <dxmvvm:WindowService AllowSetWindowOwner="True"
-                              Title="{Binding Title}"
                               WindowStartupLocation="CenterOwner">
             <dxmvvm:WindowService.WindowStyle>
                 <Style TargetType="dx:ThemedWindow">

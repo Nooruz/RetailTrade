@@ -11,6 +11,7 @@
     <dxmvvm:Interaction.Behaviors>
         <dxmvvm:EventToCommand EventName="Loaded"
                                Command="{Binding UserControlLoadedCommand}"/>
+        <dxmvvm:CurrentWindowService/>
     </dxmvvm:Interaction.Behaviors>
 
     <dxlc:LayoutControl ItemSpace="15"

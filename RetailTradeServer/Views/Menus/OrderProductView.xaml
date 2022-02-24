@@ -10,6 +10,16 @@
                     ShowDefaultButtons="False">
 
     <dxmvvm:Interaction.Behaviors>
+        <dxmvvm:WindowService AllowSetWindowOwner="True"
+                              WindowStartupLocation="CenterOwner">
+            <dxmvvm:WindowService.WindowStyle>
+                <Style TargetType="dx:ThemedWindow">
+                    <Setter Property="SizeToContent" Value="WidthAndHeight"/>
+                    <Setter Property="WindowStyle" Value="ToolWindow"/>
+                    <Setter Property="ResizeMode" Value="NoResize"/>
+                </Style>
+            </dxmvvm:WindowService.WindowStyle>
+        </dxmvvm:WindowService>
         <dxmvvm:EventToCommand EventName="Loaded"
                                Command="{Binding UserControlLoadedCommand}"/>
     </dxmvvm:Interaction.Behaviors>
