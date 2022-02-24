@@ -82,6 +82,7 @@ namespace RetailTradeServer.ViewModels.Dialogs
             CreateCommand = new RelayCommand(Create);
             SaveCommand = new RelayCommand(Save);
             UserControlLoadedCommand = new RelayCommand(UserControlLoaded);
+            CloseCommand = new RelayCommand(() => CurrentWindowService.Close());
         }
 
         #endregion
