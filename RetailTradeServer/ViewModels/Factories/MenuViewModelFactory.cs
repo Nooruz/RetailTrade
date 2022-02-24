@@ -20,7 +20,7 @@ namespace RetailTradeServer.ViewModels.Factories
         private readonly CreateMenuViewModel<SupplierViewModel> _createSupplierViewModel;
         private readonly CreateMenuViewModel<SaleDashboardView> _createMenuViewModel;
         private readonly CreateMenuViewModel<EmployeesViewModel> _createEmployeesViewModel;
-        private readonly CreateMenuViewModel<ConnectingAndConfiguringEquipmentViewModel> _createConnectingAndConfiguringEquipmentViewModel;
+        private readonly CreateMenuViewModel<ConnectingAndConfiguringHardwareViewModel> _createConnectingAndConfiguringEquipmentViewModel;
         private readonly CreateMenuViewModel<CashShiftsViewModel> _createCashShiftsViewModel;
         private readonly CreateMenuViewModel<WareHouseViewModel> _createWareHouseViewModel;
         private readonly CreateMenuViewModel<RevaluationViewModel> _createRevaluationViewModel;
@@ -41,7 +41,7 @@ namespace RetailTradeServer.ViewModels.Factories
             CreateMenuViewModel<SupplierViewModel> createSupplierViewModel,
             CreateMenuViewModel<SaleDashboardView> createMenuViewModel,
             CreateMenuViewModel<EmployeesViewModel> createEmployeesViewModel,
-            CreateMenuViewModel<ConnectingAndConfiguringEquipmentViewModel> createConnectingAndConfiguringEquipmentViewModel,
+            CreateMenuViewModel<ConnectingAndConfiguringHardwareViewModel> createConnectingAndConfiguringEquipmentViewModel,
             CreateMenuViewModel<CashShiftsViewModel> createCashShiftsViewModel,
             CreateMenuViewModel<WareHouseViewModel> createWareHouseViewModel,
             CreateMenuViewModel<RevaluationViewModel> createRevaluationViewModel,

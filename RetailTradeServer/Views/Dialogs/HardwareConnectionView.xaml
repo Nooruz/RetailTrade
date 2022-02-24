@@ -1,0 +1,34 @@
+﻿<UserControl
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:dxe="http://schemas.devexpress.com/winfx/2008/xaml/editors"
+    xmlns:dxlc="http://schemas.devexpress.com/winfx/2008/xaml/layoutcontrol"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    x:Class="SalePageServer.Views.Dialogs.HardwareConnectionView"
+    Width="500">
+
+    <dxlc:LayoutControl Orientation="Vertical">
+
+        <dxlc:LayoutGroup HorizontalAlignment="Left"
+                          VerticalAlignment="Top">
+            <Button Content="Сохранить и закрыть"/>
+        </dxlc:LayoutGroup>
+
+        <dxlc:LayoutItem Label="Тип оборудование:">
+            <dxe:ComboBoxEdit/>
+        </dxlc:LayoutItem>
+
+        <dxlc:LayoutItem Label="Драйвер оборудование:">
+            <dxe:ComboBoxEdit/>
+        </dxlc:LayoutItem>
+
+        <dxlc:LayoutItem Label="Наименование:">
+            <dxe:TextEdit/>
+        </dxlc:LayoutItem>
+
+        <dxlc:LayoutItem Label="Серийный номер:">
+            <dxe:TextEdit/>
+        </dxlc:LayoutItem>
+
+    </dxlc:LayoutControl>
+
+</UserControl>

@@ -245,8 +245,8 @@ namespace RetailTradeServer.ViewModels.Dialogs
 
             //_zebraBarcodeScanner.Open();
             //_zebraBarcodeScanner.OnBarcodeEvent += ZebraBarcodeScanner_OnBarcodeEvent;
-            //_comBarcodeService.Open();
-            //_comBarcodeService.OnBarcodeEvent += ComBarcodeService_OnBarcodeEvent;
+            _comBarcodeService.Open();
+            _comBarcodeService.OnBarcodeEvent += ComBarcodeService_OnBarcodeEvent;
         }
 
         private void ComBarcodeService_OnBarcodeEvent(string obj)

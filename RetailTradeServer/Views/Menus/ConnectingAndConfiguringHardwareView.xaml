@@ -8,7 +8,7 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:local="clr-namespace:RetailTradeServer.Views.Menus"
-    x:Class="RetailTradeServer.Views.Menus.ConnectingAndConfiguringEquipmentView"
+    x:Class="RetailTradeServer.Views.Menus.ConnectingAndConfiguringHardwareView"
     mc:Ignorable="d"
     d:DesignHeight="450" d:DesignWidth="800"
     ShowDefaultButtons="False"
@@ -17,6 +17,7 @@
     <dxmvvm:Interaction.Behaviors>
         <dxmvvm:EventToCommand EventName="Loaded"
                                Command="{Binding UserControlLoadedCommand}"/>
+        
     </dxmvvm:Interaction.Behaviors>
 
     <dxlc:LayoutControl Orientation="Vertical">
@@ -29,7 +30,8 @@
 
         <dxlc:LayoutGroup HorizontalAlignment="Left"
                           VerticalAlignment="Top">
-            <Button Content="Создать"/>
+            <Button Content="Создать"
+                    Command="{Binding CreateEquipmentCommand}"/>
             <Button Content="Настроить"/>
         </dxlc:LayoutGroup>
         

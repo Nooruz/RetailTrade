@@ -51,7 +51,7 @@ namespace RetailTradeServer.HostBuilders
                 services.AddSingleton<CreateMenuViewModel<RefundToSupplierViewModel>>(servicesProvider => () => CreateRefundToSupplierViewModel(servicesProvider));
                 services.AddSingleton<CreateMenuViewModel<SupplierViewModel>>(servicesProvider => () => CreateSupplierViewModel(servicesProvider));
                 services.AddSingleton<CreateMenuViewModel<EmployeesViewModel>>(servicesProvider => () => CreateEmployeesViewModel(servicesProvider));
-                services.AddSingleton<CreateMenuViewModel<ConnectingAndConfiguringEquipmentViewModel>>(servicesProvider => () => CreateConnectingAndConfiguringEquipmentViewModel(servicesProvider));
+                services.AddSingleton<CreateMenuViewModel<ConnectingAndConfiguringHardwareViewModel>>(servicesProvider => () => CreateConnectingAndConfiguringEquipmentViewModel(servicesProvider));
                 services.AddSingleton<CreateMenuViewModel<CashShiftsViewModel>>(servicesProvider => () => CreateCashShiftsViewModel(servicesProvider));
                 services.AddSingleton<CreateMenuViewModel<WareHouseViewModel>>(servicesProvider => () => CreateWareHouseViewModel(servicesProvider));
                 services.AddSingleton<CreateMenuViewModel<RevaluationViewModel>>(servicesProvider => () => CreateRevaluationViewModel(servicesProvider));
@@ -166,9 +166,9 @@ namespace RetailTradeServer.HostBuilders
                 services.GetRequiredService<IDataService<Gender>>());
         }
 
-        private static ConnectingAndConfiguringEquipmentViewModel CreateConnectingAndConfiguringEquipmentViewModel(IServiceProvider services)
+        private static ConnectingAndConfiguringHardwareViewModel CreateConnectingAndConfiguringEquipmentViewModel(IServiceProvider services)
         {
-            return new ConnectingAndConfiguringEquipmentViewModel(services.GetRequiredService<IDataService<TypeEquipment>>(),
+            return new ConnectingAndConfiguringHardwareViewModel(services.GetRequiredService<IDataService<TypeEquipment>>(),
                 services.GetRequiredService<IDialogService>());
         }
 

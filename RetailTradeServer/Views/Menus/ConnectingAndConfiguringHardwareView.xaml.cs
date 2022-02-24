@@ -3,9 +3,9 @@
     /// <summary>
     /// Логика взаимодействия для ConnectingAndConfiguringEquipmentView.xaml
     /// </summary>
-    public partial class ConnectingAndConfiguringEquipmentView : BaseMenuView
+    public partial class ConnectingAndConfiguringHardwareView : BaseMenuView
     {
-        public ConnectingAndConfiguringEquipmentView()
+        public ConnectingAndConfiguringHardwareView()
         {
             InitializeComponent();
         }

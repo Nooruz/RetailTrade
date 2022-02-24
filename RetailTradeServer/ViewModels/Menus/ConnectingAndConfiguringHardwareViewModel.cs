@@ -9,7 +9,7 @@ using System.Windows.Input;
 
 namespace RetailTradeServer.ViewModels.Menus
 {
-    public class ConnectingAndConfiguringEquipmentViewModel : BaseViewModel
+    public class ConnectingAndConfiguringHardwareViewModel : BaseViewModel
     {
         #region Private Members
 
@@ -47,12 +47,13 @@ namespace RetailTradeServer.ViewModels.Menus
 
         public ICommand UserControlLoadedCommand => new RelayCommand(UserControlLoaded);
         public ICommand AddEquipmentCommand => new RelayCommand(AddEquipment);
+        public ICommand CreateEquipmentCommand => new RelayCommand(CreateEquipment);
 
         #endregion
 
         #region Constructor
 
-        public ConnectingAndConfiguringEquipmentViewModel(IDataService<TypeEquipment> typeEquipmentService,
+        public ConnectingAndConfiguringHardwareViewModel(IDataService<TypeEquipment> typeEquipmentService,
             IDialogService dialogService)
         {
             _typeEquipmentService = typeEquipmentService;
@@ -64,6 +65,11 @@ namespace RetailTradeServer.ViewModels.Menus
         #endregion
 
         #region Private Voids
+
+        private void CreateEquipment()
+        {
+
+        }
 
         private async void UserControlLoaded()
         {
