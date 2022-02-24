@@ -34,7 +34,6 @@ namespace RetailTradeServer.ViewModels.Dialogs
         private string _name;
         private decimal _arrivalPrice;
         private decimal _salePrice;
-        private double _quantity;
         private string _tnved;
         private IEnumerable<Unit> _units;
         private ObservableCollection<Supplier> _suppliers;
@@ -121,16 +120,6 @@ namespace RetailTradeServer.ViewModels.Dialogs
                 OnPropertyChanged(nameof(CanTabSelect));
             }
         }
-        public double Quantity
-        {
-            get => _quantity;
-            set
-            {
-                _quantity = value;
-                OnPropertyChanged(nameof(Quantity));
-                OnPropertyChanged(nameof(CanTabSelect));
-            }
-        }
         public decimal ArrivalPrice
         {
             get => _arrivalPrice;
@@ -165,7 +154,6 @@ namespace RetailTradeServer.ViewModels.Dialogs
                                     SelectedUnitId == null &&
                                     SelectedTypeProductId == null &&
                                     ArrivalPrice == 0 &&
-                                    Quantity == 0 &&
                                     SalePrice == 0;
 
         #endregion
@@ -344,11 +332,6 @@ namespace RetailTradeServer.ViewModels.Dialogs
                 _messageStore.SetCurrentMessage("Введите цену продажа товара.", MessageType.Error);
                 return;
             }
-            if (Quantity <= 0)
-            {
-                _messageStore.SetCurrentMessage("Введите количество.", MessageType.Error);
-                return;
-            }
 
             if (await _productService.SearchByBarcode(Barcode))
             {
@@ -365,8 +348,7 @@ namespace RetailTradeServer.ViewModels.Dialogs
                     TypeProductId = SelectedTypeProductId.Value,
                     TNVED = TNVED,
                     ArrivalPrice = ArrivalPrice,
-                    SalePrice = SalePrice,
-                    Quantity = Quantity
+                    SalePrice = SalePrice
                 }) != null)
                 {
                     _messageStore.SetCurrentMessage("Товар успешно добавлено.", MessageType.Success);
@@ -410,11 +392,6 @@ namespace RetailTradeServer.ViewModels.Dialogs
                 _messageStore.SetCurrentMessage("Введите цену продажа товара.", MessageType.Error);
                 return;
             }
-            if (Quantity <= 0)
-            {
-                _messageStore.SetCurrentMessage("Введите количество.", MessageType.Error);
-                return;
-            }
 
             if (await _productService.CreateAsync(new Product
             {
@@ -425,7 +402,6 @@ namespace RetailTradeServer.ViewModels.Dialogs
                 TNVED = TNVED,
                 ArrivalPrice = ArrivalPrice,
                 SalePrice = SalePrice,
-                Quantity = Quantity,
                 WithoutBarcode = true
             }) != null)
             {

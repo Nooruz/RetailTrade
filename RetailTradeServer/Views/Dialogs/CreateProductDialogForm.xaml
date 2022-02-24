@@ -110,10 +110,6 @@
                                           AllowNullInput="True"/>
                         </dxlc:LayoutItem>
 
-                        <dxlc:LayoutItem Label="Количество:">
-                            <dxe:SpinEdit EditValue="{Binding Quantity, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
-                        </dxlc:LayoutItem>
-
                         <dxlc:LayoutGroup Orientation="Horizontal"
                                           HorizontalAlignment="Right"
                                           VerticalAlignment="Top">
@@ -394,10 +390,6 @@
                                           MaskType="Numeric"
                                           Mask="d" 
                                           AllowNullInput="True"/>
-                        </dxlc:LayoutItem>
-
-                        <dxlc:LayoutItem Label="Количество:">
-                            <dxe:SpinEdit EditValue="{Binding Quantity, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
                         </dxlc:LayoutItem>
 
                         <dxlc:LayoutGroup Orientation="Horizontal"

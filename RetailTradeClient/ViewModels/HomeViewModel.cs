@@ -372,7 +372,7 @@ namespace RetailTradeClient.ViewModels
 
             if (e.NewStartingIndex > 47)
             {
-                _manager.ShowMessage("49", "", MessageBoxButton.OK, MessageBoxImage.Information);
+                MessageBox.Show("49", "", MessageBoxButton.OK, MessageBoxImage.Information);
             }
 
             if (e.NewItems != null)
@@ -405,8 +405,8 @@ namespace RetailTradeClient.ViewModels
                     homeView.Focus();
                 }
             }
-            _zebraBarcodeScanner.Open();
-            _zebraBarcodeScanner.OnBarcodeEvent += ZebraBarcodeScanner_OnBarcodeEvent;
+            //_zebraBarcodeScanner.Open();
+            //_zebraBarcodeScanner.OnBarcodeEvent += ZebraBarcodeScanner_OnBarcodeEvent;
 
             _comBarcodeService.Open();
             _comBarcodeService.OnBarcodeEvent += ComBarcodeService_OnBarcodeEvent;
@@ -445,13 +445,20 @@ namespace RetailTradeClient.ViewModels
                         });
                     }
                 }
-                else if (IsKeepRecorsd && sale.Quantity < sale.QuantityInStock)
+                else if (IsKeepRecorsd)
                 {
-                    sale.Quantity++;
+                    if (sale.Quantity < sale.QuantityInStock)
+                    {
+                        sale.Quantity++;
+                    }
+                    else
+                    {
+                        _ = MessageBox.Show("Количество превышает остаток.", "", MessageBoxButton.OK, MessageBoxImage.Information);
+                    }
                 }
                 else
                 {
-                    _ = _manager.ShowMessage("Количество превышает остаток.", "", MessageBoxButton.OK, MessageBoxImage.Information);
+                    sale.Quantity++;
                 }
                 OnPropertyChanged(nameof(Sum));
                 OnPropertyChanged(nameof(ToBePaid));
@@ -479,7 +486,7 @@ namespace RetailTradeClient.ViewModels
             {
                 if (((Sale)e.Row).QuantityInStock < Convert.ToDouble(e.Value))
                 {
-                    _ = _manager.ShowMessage("Количество превышает остаток.", "", MessageBoxButton.OK, MessageBoxImage.Information);
+                    _ = MessageBox.Show("Количество превышает остаток.", "", MessageBoxButton.OK, MessageBoxImage.Information);
                     e.ErrorContent = "Количество превышает остаток.";
                     e.IsValid = false;
                 }
@@ -533,7 +540,7 @@ namespace RetailTradeClient.ViewModels
                         }
                         else
                         {
-                            _ = _manager.ShowMessage("Количество превышает остаток.", "", MessageBoxButton.OK, MessageBoxImage.Information);
+                            _ = MessageBox.Show("Количество превышает остаток.", "", MessageBoxButton.OK, MessageBoxImage.Information);
                         }
                     }
                     OnPropertyChanged(nameof(Sum));
@@ -630,7 +637,7 @@ namespace RetailTradeClient.ViewModels
                         }
                         else
                         {
-                            _ = _manager.ShowMessage("Количество превышает остаток.", "", MessageBoxButton.OK, MessageBoxImage.Information);
+                            _ = MessageBox.Show("Количество превышает остаток.", "", MessageBoxButton.OK, MessageBoxImage.Information);
                         }
                     }
                     else
@@ -685,7 +692,7 @@ namespace RetailTradeClient.ViewModels
         /// </summary>
         private void Logout()
         {
-            if (_manager.ShowMessage("Выйти?", "Выход из аккаунта", MessageBoxButton.YesNo, MessageBoxImage.Question) == MessageBoxResult.Yes)
+            if (MessageBox.Show("Выйти?", "Выход из аккаунта", MessageBoxButton.YesNo, MessageBoxImage.Question) == MessageBoxResult.Yes)
             {
                 _authenticator.Logout();
             }

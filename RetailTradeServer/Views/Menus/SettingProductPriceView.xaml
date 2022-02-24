@@ -81,8 +81,8 @@
                                                     ImmediatePopup="True"
                                                     IsPopupAutoWidth="True">
                                 <dxg:LookUpEditSettings.Buttons>
-                                    <dxe:ButtonInfo GlyphKind="Regular"
-                                            Command="{Binding ProductCommand}"/>
+                                    <!--<dxe:ButtonInfo GlyphKind="Regular"
+                                            Command="{Binding ProductCommand}"/>-->
                                 </dxg:LookUpEditSettings.Buttons>
                                 <dxg:LookUpEditSettings.PopupContentTemplate>
                                     <ControlTemplate>
