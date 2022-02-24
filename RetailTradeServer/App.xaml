@@ -7,7 +7,6 @@
              xmlns:views="clr-namespace:RetailTradeServer.Views"
              xmlns:dialogs="clr-namespace:RetailTradeServer.Views.Dialogs"
              xmlns:dialogViewModels="clr-namespace:RetailTradeServer.ViewModels.Dialogs"
-             xmlns:messageBox="clr-namespace:RetailTradeServer.Dialogs"
              xmlns:menuViews="clr-namespace:RetailTradeServer.Views.Menus">
     
     <Application.Resources>
@@ -37,10 +36,6 @@
             <!--<DataTemplate DataType="{x:Type viewModels:OrganizationViewModel}">
                 <views:OrganizationView/>
             </DataTemplate>-->
-
-            <DataTemplate DataType="{x:Type dialogViewModels:MessageBoxDialogViewModel}">
-                <messageBox:DialogMessageBox/>
-            </DataTemplate>
             
             <!--#endregion-->
 

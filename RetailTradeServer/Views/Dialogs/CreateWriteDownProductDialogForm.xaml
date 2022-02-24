@@ -5,7 +5,7 @@
                                xmlns:dxg="http://schemas.devexpress.com/winfx/2008/xaml/grid"
                                xmlns:dxlc="http://schemas.devexpress.com/winfx/2008/xaml/layoutcontrol"
                                xmlns:dxmvvm="http://schemas.devexpress.com/winfx/2008/xaml/mvvm"
-                               xmlns:dialogs="clr-namespace:RetailTradeServer.Dialogs"
+                               xmlns:dialogs="clr-namespace:RetailTradeServer.Views.Dialogs"
                                Width="600"
                                Height="500">
 

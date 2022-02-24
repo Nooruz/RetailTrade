@@ -9,7 +9,6 @@ using RetailTradeServer.ViewModels;
 using RetailTradeServer.ViewModels.Base;
 using RetailTradeServer.ViewModels.Factories;
 using RetailTradeServer.ViewModels.Menus;
-using SalePageServer.State.Dialogs;
 using System;
 
 namespace RetailTradeServer.HostBuilders
@@ -55,7 +54,6 @@ namespace RetailTradeServer.HostBuilders
         {
             return new HomeViewModel(services.GetRequiredService<IMenuNavigator>(),
                 services.GetRequiredService<IMenuViewModelFactory>(),
-                services.GetRequiredService<IDialogService>(),
                 services.GetRequiredService<IShiftService>(),
                 services.GetRequiredService<IMessageStore>(),
                 services.GetRequiredService<IProductSaleService>(),

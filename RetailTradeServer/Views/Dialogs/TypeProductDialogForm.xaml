@@ -4,7 +4,7 @@
     xmlns:dxlc="http://schemas.devexpress.com/winfx/2008/xaml/layoutcontrol"
     xmlns:dxmvvm="http://schemas.devexpress.com/winfx/2008/xaml/mvvm"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    xmlns:dialogs="clr-namespace:RetailTradeServer.Dialogs"
+    xmlns:dialogs="clr-namespace:RetailTradeServer.Views.Dialogs"
     x:Class="RetailTradeServer.Views.Dialogs.TypeProductDialogForm"
     MinWidth="450">
 

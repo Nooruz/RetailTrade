@@ -7,11 +7,9 @@ using RetailTradeServer.State.Barcode;
 using RetailTradeServer.State.Messages;
 using RetailTradeServer.State.Navigators;
 using RetailTradeServer.State.Users;
-using RetailTradeServer.ViewModels;
 using RetailTradeServer.ViewModels.Base;
 using RetailTradeServer.ViewModels.Factories;
 using RetailTradeServer.ViewModels.Menus;
-using SalePageServer.State.Dialogs;
 using System;
 
 namespace RetailTradeServer.HostBuilders
@@ -71,15 +69,13 @@ namespace RetailTradeServer.HostBuilders
             return new RevaluationViewModel(services.GetRequiredService<IProductService>(),
                 services.GetRequiredService<ITypeProductService>(),
                 services.GetRequiredService<IRevaluationService>(),
-                services.GetRequiredService<IDialogService>(),
                 services.GetRequiredService<IMenuNavigator>(),
                 services.GetRequiredService<IDataService<Unit>>());
         }
 
         private static SupplierViewModel CreateSupplierViewModel(IServiceProvider services)
         {
-            return new SupplierViewModel(services.GetRequiredService<ISupplierService>(),
-                services.GetRequiredService<IDialogService>());
+            return new SupplierViewModel(services.GetRequiredService<ISupplierService>());
         }
 
         private static ProductViewModel CreateProductViewModel(IServiceProvider services)
@@ -97,22 +93,19 @@ namespace RetailTradeServer.HostBuilders
         {
             return new ArrivalProductViewModel(services.GetRequiredService<IProductService>(),
                 services.GetRequiredService<IArrivalService>(),
-                services.GetRequiredService<ISupplierService>(),
-                services.GetRequiredService<IDialogService>());
+                services.GetRequiredService<ISupplierService>());
         }
 
         private static WriteDownProductViewModel CreateWriteDownProductViewModel(IServiceProvider services)
         {
             return new WriteDownProductViewModel(services.GetRequiredService<IProductService>(),
                 services.GetRequiredService<IWriteDownService>(),
-                services.GetRequiredService<ISupplierService>(),
-                services.GetRequiredService<IDialogService>());
+                services.GetRequiredService<ISupplierService>());
         }
 
         private static OrderProductViewModel CreateOrderProductViewModel(IServiceProvider services)
         {
             return new OrderProductViewModel(services.GetRequiredService<IOrderToSupplierService>(),
-                services.GetRequiredService<IDialogService>(),
                 services.GetRequiredService<IProductService>(),
                 services.GetRequiredService<ISupplierService>(),
                 services.GetRequiredService<IOrderStatusService>(),
@@ -123,8 +116,7 @@ namespace RetailTradeServer.HostBuilders
 
         private static ProductBarcodeViewModel CreateProductBarcodeViewModel(IServiceProvider services)
         {
-            return new ProductBarcodeViewModel(services.GetRequiredService<IProductService>(),
-                services.GetRequiredService<IDialogService>());
+            return new ProductBarcodeViewModel(services.GetRequiredService<IProductService>());
         }
 
         private static SaleDashboardView CreateSaleDashboardView(IServiceProvider services)
@@ -136,14 +128,12 @@ namespace RetailTradeServer.HostBuilders
         private static BranchViewModel CreateBranchViewModel(IServiceProvider services)
         {
             return new BranchViewModel(services.GetRequiredService<IDataService<Branch>>(),
-                services.GetRequiredService<IDialogService>(),
                 services.GetRequiredService<IUserService>());
         }
 
         private static UserViewModel CreateUserViewModel(IServiceProvider services)
         {
             return new UserViewModel(services.GetRequiredService<IUserService>(),
-                services.GetRequiredService<IDialogService>(),
                 services.GetRequiredService<IAuthenticator>(),
                 services.GetRequiredService<IRoleService>(),
                 services.GetRequiredService<IMessageStore>());
@@ -154,22 +144,19 @@ namespace RetailTradeServer.HostBuilders
             return new RefundToSupplierViewModel(services.GetRequiredService<IProductService>(),
                 services.GetRequiredService<IRefundToSupplierService>(),
                 services.GetRequiredService<IRefundToSupplierServiceProduct>(),
-                services.GetRequiredService<ISupplierService>(),
-                services.GetRequiredService<IDialogService>());
+                services.GetRequiredService<ISupplierService>());
         }
 
         private static EmployeesViewModel CreateEmployeesViewModel(IServiceProvider services)
         {
             return new EmployeesViewModel(services.GetRequiredService<IEmployeeService>(),
                 services.GetRequiredService<IGroupEmployeeService>(),
-                services.GetRequiredService<IDialogService>(),
                 services.GetRequiredService<IDataService<Gender>>());
         }
 
         private static ConnectingAndConfiguringHardwareViewModel CreateConnectingAndConfiguringEquipmentViewModel(IServiceProvider services)
         {
-            return new ConnectingAndConfiguringHardwareViewModel(services.GetRequiredService<IDataService<TypeEquipment>>(),
-                services.GetRequiredService<IDialogService>());
+            return new ConnectingAndConfiguringHardwareViewModel(services.GetRequiredService<IDataService<TypeEquipment>>());
         }
 
         private static CashShiftsViewModel CreateCashShiftsViewModel(IServiceProvider services)
@@ -180,8 +167,7 @@ namespace RetailTradeServer.HostBuilders
 
         private static WareHouseViewModel CreateWareHouseViewModel(IServiceProvider services)
         {
-            return new WareHouseViewModel(services.GetRequiredService<IDialogService>(),
-                services.GetRequiredService<IWareHouseService>(),
+            return new WareHouseViewModel(services.GetRequiredService<IWareHouseService>(),
                 services.GetRequiredService<IDataService<TypeWareHouse>>());
         }
     }

@@ -5,7 +5,7 @@
     xmlns:dxe="http://schemas.devexpress.com/winfx/2008/xaml/editors"
     x:Class="RetailTradeServer.Views.Dialogs.PrinterDialogForm"
     xmlns:components="clr-namespace:RetailTradeServer.Components"
-    xmlns:dialogs="clr-namespace:RetailTradeServer.Dialogs"
+    xmlns:dialogs="clr-namespace:RetailTradeServer.Views.Dialogs"
     Width="350">
 
     <dxlc:LayoutControl Orientation="Vertical">

@@ -1,6 +1,4 @@
-﻿using RetailTradeServer.Dialogs;
-
-namespace RetailTradeServer.Views.Dialogs
+﻿namespace RetailTradeServer.Views.Dialogs
 {
     /// <summary>
     /// Interaction logic for CreateSupplierProductDialogForm.xaml

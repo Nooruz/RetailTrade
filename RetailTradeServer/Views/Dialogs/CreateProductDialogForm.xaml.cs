@@ -1,5 +1,4 @@
-﻿using RetailTradeServer.Dialogs;
-using System.Windows.Input;
+﻿using System.Windows.Input;
 
 namespace RetailTradeServer.Views.Dialogs
 {

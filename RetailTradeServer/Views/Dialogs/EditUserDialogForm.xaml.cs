@@ -1,4 +1,4 @@
-﻿using RetailTradeServer.Dialogs;
+﻿using RetailTradeServer.Views.Dialogs;
 
 namespace SalePageServer.Views.Dialogs
 {

@@ -4,7 +4,7 @@
                                xmlns:dxlc="http://schemas.devexpress.com/winfx/2008/xaml/layoutcontrol"
                                xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
                                xmlns:components="clr-namespace:RetailTradeServer.Components"
-                               xmlns:dialogs="clr-namespace:RetailTradeServer.Dialogs"
+                               xmlns:dialogs="clr-namespace:RetailTradeServer.Views.Dialogs"
                                Width="350">
 
     <dxlc:LayoutControl Orientation="Vertical">

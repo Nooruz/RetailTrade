@@ -63,7 +63,7 @@ namespace RetailTradeServer.ViewModels.Menus
 
             Header = "История изменения цен";
 
-            CreateCommand = new RelayCommand(() => _menuNavigator.AddViewModel(new SettingProductPriceViewModel(productService, typeProductService, dialogService, revaluationService, unitService, menuNavigator) { Header = "Установка цен товаров (создание) *" }));
+            CreateCommand = new RelayCommand(() => _menuNavigator.AddViewModel(new SettingProductPriceViewModel(productService, typeProductService, revaluationService, unitService, menuNavigator) { Header = "Установка цен товаров (создание) *" }));
 
             _revaluationService.OnRevaluationCreated += RevaluationService_OnRevaluationCreated;
         }

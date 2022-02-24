@@ -10,6 +10,8 @@ namespace RetailTradeServer.ViewModels.Menus
     {
         #region Private Members
 
+        private readonly IOrganizationService _organizationService;
+        private readonly IRenavigator _homeViewModel;
         private string _name;
         private string _address;
         private string _fullName;
@@ -92,7 +94,7 @@ namespace RetailTradeServer.ViewModels.Menus
 
         #region Commands
 
-        public ICommand CreateOrganizationCommand => new CreateOrganizationCommand(organizationService, homeViewModel, this);
+        public ICommand CreateOrganizationCommand => new CreateOrganizationCommand(_organizationService, _homeViewModel, this);
 
         #endregion
 
@@ -102,6 +104,8 @@ namespace RetailTradeServer.ViewModels.Menus
             IRenavigator homeViewModel,
             INavigator navigator)
         {
+            _organizationService = organizationService;
+            _homeViewModel = homeViewModel;
             Header = "Сведения об организации";
         }
 
