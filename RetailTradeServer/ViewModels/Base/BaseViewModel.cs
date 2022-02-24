@@ -43,6 +43,7 @@ namespace RetailTradeServer.ViewModels.Base
 
         protected IWindowService WindowService => GetService<IWindowService>();
         protected IDialogService DialogService => GetService<IDialogService>();
+        protected ICurrentWindowService CurrentWindowService => GetService<ICurrentWindowService>();
 
         #endregion
 

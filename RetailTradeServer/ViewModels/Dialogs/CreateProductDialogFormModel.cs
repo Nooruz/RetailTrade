@@ -1,10 +1,12 @@
-﻿using DevExpress.Xpf.Core;
+﻿using DevExpress.Mvvm;
+using DevExpress.Xpf.Core;
 using RetailTrade.Domain.Models;
 using RetailTrade.Domain.Services;
 using RetailTradeServer.Commands;
 using RetailTradeServer.State.Barcode;
 using RetailTradeServer.State.Messages;
 using RetailTradeServer.ViewModels.Dialogs.Base;
+using RetailTradeServer.Views.Dialogs;
 using SalePageServer.State.Dialogs;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -22,8 +24,6 @@ namespace RetailTradeServer.ViewModels.Dialogs
         private readonly ISupplierService _supplierService;
         private readonly IProductService _productService;
         private readonly ITypeProductService _typeProductService;
-        private readonly IDialogService _dialogService;
-        private readonly IDialogService _localDialogService;
         private readonly IMessageStore _messageStore;
         private readonly IZebraBarcodeScanner _zebraBarcodeScanner;
         private readonly IComBarcodeService _comBarcodeService;
@@ -163,15 +163,15 @@ namespace RetailTradeServer.ViewModels.Dialogs
         /// <summary>
         /// Команда сохранение штучного товара
         /// </summary>
-        public ICommand SavePieceProductCommand { get; }
+        public ICommand SavePieceProductCommand => new RelayCommand(SavePieceProduct);
         /// <summary>
         /// Команда сохранение товара без штрих-кода
         /// </summary>
-        public ICommand SaveProductWithoutBarcodeCommand { get; }
-        public ICommand CreateSupplierCommand { get; }
-        public ICommand CreateTypeProductCommand { get; }
-        public ICommand TabControlLoadedCommand { get; }
-        public ICommand UserControlLoadedCommand { get; }
+        public ICommand SaveProductWithoutBarcodeCommand => new RelayCommand(SaveProductWithoutBarcode);
+        public ICommand CreateSupplierCommand => new RelayCommand(() => WindowService.Show(nameof(CreateSupplierProductDialogForm), new CreateSupplierProductDialogFormModal(_supplierService) { Title = "Поставщик (создания)" }));
+        public ICommand CreateTypeProductCommand => new RelayCommand(() => WindowService.Show(nameof(TypeProductDialogForm), new TypeProductDialogFormModel(_typeProductService) { Title = "Виды товаров (создание)" }));
+        public ICommand TabControlLoadedCommand => new ParameterCommand(sender => TabControlLoaded(sender));
+        public ICommand UserControlLoadedCommand => new RelayCommand(UserControlLoaded);
 
         #endregion
 
@@ -189,21 +189,14 @@ namespace RetailTradeServer.ViewModels.Dialogs
             _unitService = unitService;
             _productService = productService;
             _supplierService = supplierService;
-            _dialogService = new DialogService();            
             _messageStore = messageStore;
             _zebraBarcodeScanner = zebraBarcodeScanner;
             _comBarcodeService = comBarcodeService;
             GlobalMessageViewModel = new(_messageStore);
-            _localDialogService = new DialogService();
 
             _messageStore.Close();
 
-            SavePieceProductCommand = new RelayCommand(SavePieceProduct);
-            SaveProductWithoutBarcodeCommand = new RelayCommand(SaveProductWithoutBarcode);
-            CreateSupplierCommand = new RelayCommand(() => _localDialogService.ShowDialog(new CreateSupplierProductDialogFormModal(_supplierService, _localDialogService) { Title = "Поставщик (создания)" }));
-            TabControlLoadedCommand = new ParameterCommand(sender => TabControlLoaded(sender));
-            UserControlLoadedCommand = new RelayCommand(UserControlLoaded);
-            CreateTypeProductCommand = new RelayCommand(() => _localDialogService.ShowDialog(new TypeProductDialogFormModel(_typeProductService) { Title = "Виды товаров (создание)" }));
+            CloseCommand = new RelayCommand(() => CurrentWindowService.Close());
 
             _supplierService.OnSupplierCreated += SupplierService_OnSupplierCreated;
             _typeProductService.OnTypeProductCreated += TypeProductService_OnTypeProductCreated;
@@ -266,7 +259,7 @@ namespace RetailTradeServer.ViewModels.Dialogs
             }
             else
             {
-                if (_dialogService.ShowMessage("Данные не сохранены. Продолжить?", "", MessageBoxButton.YesNo, MessageBoxImage.Question)
+                if (MessageBox.Show("Данные не сохранены. Продолжить?", "", MessageBoxButton.YesNo, MessageBoxImage.Question)
                     == MessageBoxResult.No)
                 {
                     e.Cancel = false;
@@ -335,7 +328,7 @@ namespace RetailTradeServer.ViewModels.Dialogs
 
             if (await _productService.SearchByBarcode(Barcode))
             {
-                _dialogService.ShowMessage($"Товар со штрих-кодом \"{Barcode}\" существует.", "", MessageBoxButton.OK, MessageBoxImage.Error);
+                _ = MessageBox.Show($"Товар со штрих-кодом \"{Barcode}\" существует.", "", MessageBoxButton.OK, MessageBoxImage.Error);
             }
             else
             {

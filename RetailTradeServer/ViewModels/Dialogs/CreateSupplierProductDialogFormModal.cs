@@ -2,7 +2,6 @@
 using RetailTrade.Domain.Services;
 using RetailTradeServer.Commands;
 using RetailTradeServer.ViewModels.Dialogs.Base;
-using SalePageServer.State.Dialogs;
 using System;
 using System.Windows.Input;
 
@@ -13,7 +12,6 @@ namespace RetailTradeServer.ViewModels.Dialogs
         #region Private Members
 
         private readonly ISupplierService _supplierService;
-        private readonly IDialogService _dialogService;
         private string _fullName;
         private string _shortName;
         private string _address;
@@ -89,11 +87,9 @@ namespace RetailTradeServer.ViewModels.Dialogs
 
         #region Constructor
 
-        public CreateSupplierProductDialogFormModal(ISupplierService supplierService,
-            IDialogService dialogService)
+        public CreateSupplierProductDialogFormModal(ISupplierService supplierService)
         {
             _supplierService = supplierService;
-            _dialogService = dialogService;
             CreateCommand = new RelayCommand(Create);
             SaveCommand = new RelayCommand(Save);
         }
@@ -106,7 +102,7 @@ namespace RetailTradeServer.ViewModels.Dialogs
         {
             if (string.IsNullOrEmpty(FullName) || string.IsNullOrEmpty(ShortName))
                 return;
-            await _supplierService.CreateAsync(new Supplier
+            _ = await _supplierService.CreateAsync(new Supplier
             {
                 FullName = FullName,
                 ShortName = ShortName,
@@ -115,14 +111,13 @@ namespace RetailTradeServer.ViewModels.Dialogs
                 Inn = Inn,
                 CreateDate = DateTime.Now
             });
-            _dialogService.Close();
         }
 
         private async void Save()
         {
             if (string.IsNullOrEmpty(FullName) || string.IsNullOrEmpty(ShortName))
                 return;
-            await _supplierService.UpdateAsync(Id, new Supplier
+            _ = await _supplierService.UpdateAsync(Id, new Supplier
             {
                 FullName = FullName,
                 ShortName = ShortName,
@@ -130,7 +125,6 @@ namespace RetailTradeServer.ViewModels.Dialogs
                 Phone = Phone,
                 Inn = Inn
             });
-            _dialogService.Close();
         }
 
         #endregion

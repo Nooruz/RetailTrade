@@ -17,6 +17,16 @@
     <dxmvvm:Interaction.Behaviors>
         <dxmvvm:EventToCommand Event="PreviewTextInput" Command="{Binding PreviewTextInputCommand}"/>
         <dxmvvm:EventToCommand Event="Loaded" Command="{Binding UserControlLoadedCommand}"/>
+        <dxmvvm:CurrentWindowService/>
+        <dxmvvm:WindowService>
+            <dxmvvm:WindowService.WindowStyle>
+                <Style TargetType="{x:Type dx:ThemedWindow}">
+                    <Setter Property="ResizeMode" Value="NoResize"/>
+                    <Setter Property="SizeToContent" Value="WidthAndHeight"/>
+                    <Setter Property="WindowStyle" Value="ToolWindow"/>
+                </Style>
+            </dxmvvm:WindowService.WindowStyle>
+        </dxmvvm:WindowService>
     </dxmvvm:Interaction.Behaviors>
 
     <Grid>

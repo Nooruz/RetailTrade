@@ -198,6 +198,7 @@
                 <ResourceDictionary Source="/Styles/GridColumnStyle.xaml"/>
                 <ResourceDictionary Source="/Styles/BarButtonItemStyle.xaml"/>
                 <ResourceDictionary Source="/Styles/HamburgerMenuStyle.xaml"/>
+                <ResourceDictionary Source="/Styles/WindowStyle.xaml"/>
             </ResourceDictionary.MergedDictionaries>
 
         </ResourceDictionary>
