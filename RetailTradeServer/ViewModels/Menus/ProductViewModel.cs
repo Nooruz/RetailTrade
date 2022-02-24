@@ -160,12 +160,12 @@ namespace RetailTradeServer.ViewModels.Menus
         {
             if (SelectedTypeProduct == null)
             {
-                //MessageBox.Show("Выберите группу видов или вид товара!", "", MessageBoxButton.OK, MessageBoxImage.Exclamation);
+                MessageBox.Show("Выберите группу видов или вид товара!", "", MessageBoxButton.OK, MessageBoxImage.Exclamation);
                 return;
             }
             if (SelectedTypeProduct.Id != 1)
             {
-                //_dialogService.ShowDialog(new TypeProductDialogFormModel(_typeProductService, _dialogService) { Title = $"{SelectedTypeProduct.Name} (Виды товаров)", IsEditMode = true, TypeProduct = SelectedTypeProduct });
+                WindowService.Show(nameof(TypeProductDialogForm), new TypeProductDialogFormModel(_typeProductService) { Title = $"{SelectedTypeProduct.Name} (Виды товаров)", IsEditMode = true, TypeProduct = SelectedTypeProduct });
             }            
         }
 
@@ -194,14 +194,14 @@ namespace RetailTradeServer.ViewModels.Menus
         {
             if (SelectedProduct != null)
             {
-                //if (MessageBox.Show(SelectedProduct.DeleteMark ? $"Снять пометку \"{SelectedProduct.Name}\"?" : $"Пометить \"{SelectedProduct.Name}\" на удаление?", "", MessageBoxButton.YesNo, MessageBoxImage.Question) == MessageBoxResult.Yes)
-                //{
-                //    await _productService.MarkingForDeletion(SelectedProduct);
-                //}
+                if (MessageBox.Show(SelectedProduct.DeleteMark ? $"Снять пометку \"{SelectedProduct.Name}\"?" : $"Пометить \"{SelectedProduct.Name}\" на удаление?", "", MessageBoxButton.YesNo, MessageBoxImage.Question) == MessageBoxResult.Yes)
+                {
+                    await _productService.MarkingForDeletion(SelectedProduct);
+                }
             }
             else
             {
-                //_ = MessageBox.Show("Выберите товар", "", MessageBoxButton.OK, MessageBoxImage.Exclamation);
+                _ = MessageBox.Show("Выберите товар", "", MessageBoxButton.OK, MessageBoxImage.Exclamation);
             }
         }
 
@@ -218,23 +218,22 @@ namespace RetailTradeServer.ViewModels.Menus
 
         private void EditProduct()
         {
-            //if (SelectedProduct != null)
-            //{
-            //    _dialogService.ShowDialog(new EditProductWithBarcodeDialogFormModel(_typeProductService,
-            //    _unitService,
-            //    _productService,
-            //    _supplierService,
-            //    _dialogService,
-            //    _messageStore)
-            //    {
-            //        Title = $"{SelectedProduct.Name} (Товары)",
-            //        EditProduct = SelectedProduct
-            //    });
-            //}
-            //else
-            //{
-            //    _ = MessageBox.Show("Выберите товар", "", MessageBoxButton.OK, MessageBoxImage.Exclamation);
-            //}
+            if (SelectedProduct != null)
+            {
+                WindowService.Show(nameof(EditProductWithBarcodeDialogForm), new EditProductWithBarcodeDialogFormModel(_typeProductService,
+                _unitService,
+                _productService,
+                _supplierService,
+                _messageStore)
+                {
+                    Title = $"{SelectedProduct.Name} (Товары)",
+                    EditProduct = SelectedProduct
+                });
+            }
+            else
+            {
+                _ = MessageBox.Show("Выберите товар", "", MessageBoxButton.OK, MessageBoxImage.Exclamation);
+            }
         }
 
         private void ProductService_OnProductCreated(Product product)
