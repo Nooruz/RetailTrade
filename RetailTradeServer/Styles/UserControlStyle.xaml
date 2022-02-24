@@ -25,7 +25,7 @@
                                                  Title="{TemplateBinding LoadingPanelTitle}"
                                                  Text="{TemplateBinding LoadingPanelText}"
                                                  Panel.ZIndex="1"/>
-                            
+
                             <ContentPresenter/>
 
                         </Grid>
@@ -36,5 +36,5 @@
             </Setter.Value>
         </Setter>
     </Style>
-    
+
 </ResourceDictionary>
