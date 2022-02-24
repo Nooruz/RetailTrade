@@ -215,7 +215,7 @@ namespace RetailTradeServer.ViewModels.Dialogs
             CreateSupplierCommand = new RelayCommand(() => _localDialogService.ShowDialog(new CreateSupplierProductDialogFormModal(_supplierService, _localDialogService) { Title = "Поставщик (создания)" }));
             TabControlLoadedCommand = new ParameterCommand(sender => TabControlLoaded(sender));
             UserControlLoadedCommand = new RelayCommand(UserControlLoaded);
-            CreateTypeProductCommand = new RelayCommand(() => _localDialogService.ShowDialog(new TypeProductDialogFormModel(_typeProductService, _localDialogService) { Title = "Виды товаров (создание)" }));
+            CreateTypeProductCommand = new RelayCommand(() => _localDialogService.ShowDialog(new TypeProductDialogFormModel(_typeProductService) { Title = "Виды товаров (создание)" }));
 
             _supplierService.OnSupplierCreated += SupplierService_OnSupplierCreated;
             _typeProductService.OnTypeProductCreated += TypeProductService_OnTypeProductCreated;

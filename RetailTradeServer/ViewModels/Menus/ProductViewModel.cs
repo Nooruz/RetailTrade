@@ -7,6 +7,7 @@ using RetailTradeServer.State.Barcode;
 using RetailTradeServer.State.Messages;
 using RetailTradeServer.ViewModels.Base;
 using RetailTradeServer.ViewModels.Dialogs;
+using RetailTradeServer.Views.Dialogs;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Windows;
@@ -142,20 +143,17 @@ namespace RetailTradeServer.ViewModels.Menus
 
         private void CreateTypeProduct()
         {
-            //_ = _dialogService.ShowDialog(new TypeProductDialogFormModel(_typeProductService, _dialogService) { Title = "Виды товаров (создание)", SelectedTypeProductId = SelectedTypeProduct != null ? SelectedTypeProduct.Id : 1 });
+            WindowService.Show(nameof(TypeProductDialogForm), new TypeProductDialogFormModel(_typeProductService) { Title = "Виды товаров (создание)", SelectedTypeProductId = SelectedTypeProduct != null ? SelectedTypeProduct.Id : 1 });
         }
 
         private void CreateGroupTypeProduct()
         {
-            //_ = _dialogService.ShowDialog(new TypeProductDialogFormModel(_typeProductService, _dialogService) { Title = "Виды товаров (создание группы)", IsGroup = true, SelectedTypeProductId = SelectedTypeProduct != null ? SelectedTypeProduct.Id : 1 });
+            WindowService.Show(nameof(TypeProductDialogForm), new TypeProductDialogFormModel(_typeProductService) { Title = "Виды товаров (создание группы)", IsGroup = true, SelectedTypeProductId = SelectedTypeProduct != null ? SelectedTypeProduct.Id : 1 });
         }
 
         private void CreateProduct()
         {
-            CreateProductDialogFormModel viewModel = new(_typeProductService, _unitService, _productService, _supplierService, _messageStore, _zebraBarcodeScanner, _comBarcodeService) { Title = "Товаровы (Создать)", SelectedTypeProductId = SelectedTypeProduct?.Id };
-            //WindowService.Show(viewModel);
-            MessageResult result = DialogService.ShowDialog(dialogButtons: MessageButton.YesNo, title: "Товаровы (Создать)", viewModel:viewModel);
-            //_ = _dialogService.ShowDialog(new CreateProductDialogFormModel(_typeProductService, _unitService, _productService, _supplierService, _messageStore, _zebraBarcodeScanner, _comBarcodeService) { Title = "Товаровы (Создать)", SelectedTypeProductId = SelectedTypeProduct?.Id });
+            WindowService.Show(nameof(CreateProductDialogForm), new CreateProductDialogFormModel(_typeProductService, _unitService, _productService, _supplierService, _messageStore, _zebraBarcodeScanner, _comBarcodeService) { Title = "Товаровы (Создать)", SelectedTypeProductId = SelectedTypeProduct?.Id });
         }
 
         private void EditTypeProduct()

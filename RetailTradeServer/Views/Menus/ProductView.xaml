@@ -15,17 +15,14 @@
 
     <dxmvvm:Interaction.Behaviors>
         <dxmvvm:EventToCommand EventName="Loaded" Command="{Binding UserControlLoadedCommand}"/>
-        <dxmvvm:WindowService AllowSetWindowOwner="True"                              
+        <dxmvvm:WindowService AllowSetWindowOwner="True"
+                              Title="{Binding Title}"
                               WindowStartupLocation="CenterOwner">
-            <dxmvvm:WindowService.ViewTemplate>
-                <DataTemplate>
-                    <dialogs:CreateProductDialogForm/>
-                </DataTemplate>
-            </dxmvvm:WindowService.ViewTemplate>
             <dxmvvm:WindowService.WindowStyle>
                 <Style TargetType="dx:ThemedWindow">
                     <Setter Property="SizeToContent" Value="WidthAndHeight"/>
                     <Setter Property="WindowStyle" Value="ToolWindow"/>
+                    <Setter Property="ResizeMode" Value="NoResize"/>
                 </Style>
             </dxmvvm:WindowService.WindowStyle>
         </dxmvvm:WindowService>

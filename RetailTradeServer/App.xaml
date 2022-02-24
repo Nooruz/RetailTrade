@@ -94,8 +94,8 @@
                 <menuViews:EmployeesView/>
             </DataTemplate>
 
-            <DataTemplate DataType="{x:Type menuViewModels:ConnectingAndConfiguringEquipmentViewModel}">
-                <menuViews:ConnectingAndConfiguringEquipmentView/>
+            <DataTemplate DataType="{x:Type menuViewModels:ConnectingAndConfiguringHardwareViewModel}">
+                <menuViews:ConnectingAndConfiguringHardwareView/>
             </DataTemplate>
 
             <DataTemplate DataType="{x:Type menuViewModels:OrganizationViewModel}">

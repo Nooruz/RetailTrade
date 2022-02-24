@@ -14,7 +14,6 @@ namespace RetailTradeServer.ViewModels.Dialogs
         #region Private Members
 
         private readonly ITypeProductService _typeProductService;
-        private readonly IDialogService _dialogService;
         private string _name;
         private TypeProduct _typeProduct;
         private int? _selectedTypeProductId;
@@ -76,11 +75,9 @@ namespace RetailTradeServer.ViewModels.Dialogs
 
         #region Constructor
 
-        public TypeProductDialogFormModel(ITypeProductService typeProductService,
-            IDialogService dialogService)
+        public TypeProductDialogFormModel(ITypeProductService typeProductService)
         {
             _typeProductService = typeProductService;
-            _dialogService = dialogService;
 
             CreateCommand = new RelayCommand(Create);
             SaveCommand = new RelayCommand(Save);
@@ -100,7 +97,7 @@ namespace RetailTradeServer.ViewModels.Dialogs
         {
             if (string.IsNullOrEmpty(Name))
             {
-                _dialogService.ShowMessage("Введите наименование!", "", MessageBoxButton.OK, MessageBoxImage.Exclamation);
+                MessageBox.Show("Введите наименование!", "", MessageBoxButton.OK, MessageBoxImage.Exclamation);
                 return;
             }
             await _typeProductService.CreateAsync(new TypeProduct
@@ -109,18 +106,16 @@ namespace RetailTradeServer.ViewModels.Dialogs
                 IsGroup = IsGroup,
                 SubGroupId = SelectedTypeProductId == null ? 1 : SelectedTypeProductId.Value
             });
-            _dialogService.Close();
         }
 
         private async void Save()
         {
             if (string.IsNullOrEmpty(Name))
             {
-                _dialogService.ShowMessage("Введите наименование!", "", MessageBoxButton.OK, MessageBoxImage.Exclamation);
+                MessageBox.Show("Введите наименование!", "", MessageBoxButton.OK, MessageBoxImage.Exclamation);
                 return;
             }
             _ = await _typeProductService.UpdateAsync(TypeProduct.Id, new TypeProduct { Name = Name, SubGroupId = SelectedTypeProductId.Value });
-            _dialogService.Close();
         }
 
         #endregion
