@@ -3,7 +3,6 @@ using RetailTrade.Domain.Models;
 using RetailTrade.Domain.Services;
 using RetailTradeServer.Commands;
 using RetailTradeServer.ViewModels.Dialogs.Base;
-using SalePageServer.State.Dialogs;
 using SalePageServer.Utilities;
 using System;
 using System.Collections.Generic;
@@ -20,7 +19,6 @@ namespace RetailTradeServer.ViewModels.Dialogs
         private readonly IProductService _productService;
         private readonly ISupplierService _supplierService;
         private readonly IWriteDownService _writeDownService;
-        private readonly IDialogService _dialogService;
         private Supplier _selectedSupplier;
         private WriteDownProduct _selectedWriteDownProduct;
         private string _comment;
@@ -99,13 +97,11 @@ namespace RetailTradeServer.ViewModels.Dialogs
 
         public CreateWriteDownProductDialogFormModel(IProductService productService,
             ISupplierService supplierService,
-            IWriteDownService writeDownService,
-            IDialogService dialogService)
+            IWriteDownService writeDownService)
         {
             _productService = productService;
             _supplierService = supplierService;
             _writeDownService = writeDownService;
-            _dialogService = dialogService;
 
             GetSupplier();
 
@@ -183,7 +179,7 @@ namespace RetailTradeServer.ViewModels.Dialogs
                     //ignore
                 }
 
-                _dialogService.Close();
+                CurrentWindowService.Close();
             }
         }
 

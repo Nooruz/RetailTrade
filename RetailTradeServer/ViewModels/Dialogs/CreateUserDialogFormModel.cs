@@ -5,7 +5,6 @@ using RetailTradeServer.Commands;
 using RetailTradeServer.State.Authenticators;
 using RetailTradeServer.State.Messages;
 using RetailTradeServer.ViewModels.Dialogs.Base;
-using SalePageServer.State.Dialogs;
 using System;
 using System.Collections.Generic;
 using System.Windows.Input;
@@ -18,7 +17,6 @@ namespace RetailTradeServer.ViewModels.Dialogs
 
         private readonly IAuthenticator _authenticator;
         private readonly IRoleService _roleService;
-        private readonly IDialogService _dialogService;
         private readonly IMessageStore _messageStore;
         private string _username;
         private string _fullName;
@@ -107,12 +105,10 @@ namespace RetailTradeServer.ViewModels.Dialogs
 
         public CreateUserDialogFormModel(IAuthenticator authenticator,
             IRoleService roleService,
-            IDialogService dialogService,
             IMessageStore messageStore)
         {
             _authenticator = authenticator;
             _roleService = roleService;
-            _dialogService = dialogService;
             _messageStore = messageStore;
             GlobalMessageViewModel = new(_messageStore);
 
@@ -157,7 +153,7 @@ namespace RetailTradeServer.ViewModels.Dialogs
                 ConfirmPassword))
             {
                 case RegistrationResult.Success:
-                    _dialogService.Close();
+                    CurrentWindowService.Close();
                     break;
                 case RegistrationResult.PasswordDoesNotRequirements:
                     break;
@@ -205,7 +201,7 @@ namespace RetailTradeServer.ViewModels.Dialogs
             switch (result)
             {
                 case RegistrationResult.Success:
-                    _dialogService.Close();
+                    CurrentWindowService.Close();
                     break;
                 case RegistrationResult.PasswordDoesNotRequirements:
                     break;

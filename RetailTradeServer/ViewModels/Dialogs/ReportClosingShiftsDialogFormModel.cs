@@ -1,8 +1,9 @@
-﻿using RetailTrade.Domain.Services;
+﻿using DevExpress.Mvvm;
+using RetailTrade.Domain.Services;
 using RetailTradeServer.Commands;
 using RetailTradeServer.Report;
 using RetailTradeServer.ViewModels.Dialogs.Base;
-using SalePageServer.State.Dialogs;
+using RetailTradeServer.Views.Dialogs;
 using System;
 using System.Windows.Input;
 
@@ -12,7 +13,6 @@ namespace RetailTradeServer.ViewModels.Dialogs
     {
         #region Private Members
 
-        private readonly IDialogService _dialogService;
         private readonly IShiftService _shiftService;
         private DateTime _selectedStartDate = DateTime.Now.Date.AddDays(-30);
         private DateTime _selectedEndDate = DateTime.Now.Date;
@@ -45,19 +45,15 @@ namespace RetailTradeServer.ViewModels.Dialogs
 
         #region Commands
 
-        public ICommand PrintClosingShiftsCommand { get; }
+        public ICommand PrintClosingShiftsCommand => new RelayCommand(PrintClosingShifts);
 
         #endregion
 
         #region Constructor
 
-        public ReportClosingShiftsDialogFormModel(IDialogService dialogService,
-            IShiftService shiftService)
+        public ReportClosingShiftsDialogFormModel(IShiftService shiftService)
         {
-            _dialogService = dialogService;
             _shiftService = shiftService;
-
-            PrintClosingShiftsCommand = new RelayCommand(PrintClosingShifts);
         }
 
         #endregion
@@ -73,7 +69,7 @@ namespace RetailTradeServer.ViewModels.Dialogs
 
             await closingShiftsReport.CreateDocumentAsync();
 
-            await _dialogService.ShowPrintDialog(closingShiftsReport);
+            DocumentViewerService.Show(nameof(DocumentViewerView), new DocumentViewerViewModel { PrintingDocument = closingShiftsReport });
         }
 
         #endregion

@@ -1,10 +1,11 @@
-﻿using RetailTrade.Domain.Models;
+﻿using DevExpress.Mvvm;
+using RetailTrade.Domain.Models;
 using RetailTrade.Domain.Services;
 using RetailTradeServer.Commands;
 using RetailTradeServer.Report;
 using RetailTradeServer.State.Users;
 using RetailTradeServer.ViewModels.Dialogs.Base;
-using SalePageServer.State.Dialogs;
+using RetailTradeServer.Views.Dialogs;
 using System;
 using System.Linq;
 using System.Windows.Input;
@@ -15,7 +16,6 @@ namespace RetailTradeServer.ViewModels.Dialogs
     {
         #region Private Members
 
-        private readonly IDialogService _dialogService;
         private readonly IReceiptService _receiptService;
         private readonly IUserStore _userStore;
         private DateTime _selectedStartDate = DateTime.Now.Date.AddDays(-30);
@@ -49,21 +49,18 @@ namespace RetailTradeServer.ViewModels.Dialogs
 
         #region Commands
 
-        public ICommand PrintRevenueForPeriodCommand { get; }
+        public ICommand PrintRevenueForPeriodCommand => new RelayCommand(PrintRevenueForPeriod);
 
         #endregion
 
         #region Constructor
 
-        public ReportRevenueForPeriodDialogFormModel(IDialogService dialogService,
-            IReceiptService receiptService,
+        public ReportRevenueForPeriodDialogFormModel(IReceiptService receiptService,
             IUserStore userStore)
         {
-            _dialogService = dialogService;
             _receiptService = receiptService;
             _userStore = userStore;
 
-            PrintRevenueForPeriodCommand = new RelayCommand(PrintRevenueForPeriod);
         }
 
         #endregion
@@ -83,7 +80,8 @@ namespace RetailTradeServer.ViewModels.Dialogs
 
             await revenueForPeriodReport.CreateDocumentAsync();
 
-            await _dialogService.ShowPrintDialog(revenueForPeriodReport);
+            DocumentViewerService.Show(nameof(DocumentViewerView), new DocumentViewerViewModel() { PrintingDocument = revenueForPeriodReport });
+
         }
 
         #endregion

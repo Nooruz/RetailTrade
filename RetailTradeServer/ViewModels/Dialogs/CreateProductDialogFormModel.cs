@@ -7,12 +7,10 @@ using RetailTradeServer.State.Barcode;
 using RetailTradeServer.State.Messages;
 using RetailTradeServer.ViewModels.Dialogs.Base;
 using RetailTradeServer.Views.Dialogs;
-using SalePageServer.State.Dialogs;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Windows;
 using System.Windows.Input;
-using DialogService = SalePageServer.State.Dialogs.DialogService;
 
 namespace RetailTradeServer.ViewModels.Dialogs
 {

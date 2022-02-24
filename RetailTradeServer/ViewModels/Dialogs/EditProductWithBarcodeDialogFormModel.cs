@@ -3,9 +3,7 @@ using RetailTrade.Domain.Services;
 using RetailTradeServer.Commands;
 using RetailTradeServer.State.Messages;
 using RetailTradeServer.ViewModels.Dialogs.Base;
-using SalePageServer.State.Dialogs;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.Windows;
 using System.Windows.Input;
 
@@ -19,7 +17,6 @@ namespace RetailTradeServer.ViewModels.Dialogs
         private readonly IDataService<Unit> _unitService;
         private readonly ISupplierService _supplierService;
         private readonly IProductService _productService;
-        private readonly IDialogService _dialogService;
         private readonly IMessageStore _messageStore;
         private int? _selectedUnitId;
         private int? _selectedSupplierId;
@@ -176,14 +173,12 @@ namespace RetailTradeServer.ViewModels.Dialogs
             IDataService<Unit> unitService,
             IProductService productService,
             ISupplierService supplierService,
-            IDialogService dialogService,
             IMessageStore messageStore)
         {
             _typeProductService = typeProductService;
             _unitService = unitService;
             _productService = productService;
             _supplierService = supplierService;
-            _dialogService = dialogService;
             _messageStore = messageStore;
             GlobalMessageViewModel = new(_messageStore);
 
@@ -233,7 +228,7 @@ namespace RetailTradeServer.ViewModels.Dialogs
             EditProduct.UnitId = SelectedUnitId.Value;
 
             await _productService.UpdateAsync(EditProduct.Id, EditProduct);
-            _dialogService.Close();
+            CurrentWindowService.Close();
         }
 
         private async void UserControlLoaded()

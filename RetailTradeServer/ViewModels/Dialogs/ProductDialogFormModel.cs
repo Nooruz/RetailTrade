@@ -4,7 +4,6 @@ using RetailTrade.Domain.Models;
 using RetailTrade.Domain.Services;
 using RetailTradeServer.Commands;
 using RetailTradeServer.ViewModels.Dialogs.Base;
-using SalePageServer.State.Dialogs;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -19,7 +18,6 @@ namespace RetailTradeServer.ViewModels.Dialogs
 
         private readonly IProductService _productService;
         private readonly ITypeProductService _typeProductService;
-        private readonly IDialogService _dialogService;
         private ObservableCollection<Product> _products;
         private IEnumerable<TypeProduct> _typeProducts;
         private TypeProduct _selectedTypeProduct;
@@ -129,12 +127,10 @@ namespace RetailTradeServer.ViewModels.Dialogs
         #region Constructor
 
         public ProductDialogFormModel(IProductService productService,
-            ITypeProductService typeProductService,
-            IDialogService dialogService)
+            ITypeProductService typeProductService)
         {
             _productService = productService;
             _typeProductService = typeProductService;
-            _dialogService = dialogService;
         }
 
         #endregion
@@ -197,7 +193,7 @@ namespace RetailTradeServer.ViewModels.Dialogs
         {
             if (SelectedProduct != null)
             {
-                _dialogService.Close();
+                CurrentWindowService.Close();
             }
         }
 

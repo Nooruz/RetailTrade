@@ -3,7 +3,6 @@ using RetailTrade.Domain.Models;
 using RetailTrade.Domain.Services;
 using RetailTradeServer.Commands;
 using RetailTradeServer.ViewModels.Dialogs.Base;
-using SalePageServer.State.Dialogs;
 using SalePageServer.Utilities;
 using System;
 using System.Collections.Generic;
@@ -20,7 +19,6 @@ namespace RetailTradeServer.ViewModels.Dialogs
         private readonly IProductService _productService;
         private readonly ISupplierService _supplierService;
         private readonly IRefundToSupplierService _refundToSupplierService;
-        private readonly IDialogService _dialogService;
         private Supplier _selectedSupplier;
         private RefundToSupplierProduct _refundToSupplierProduct;
         private string _comment;
@@ -87,7 +85,7 @@ namespace RetailTradeServer.ViewModels.Dialogs
 
         #region Commands
 
-        public ICommand ValidateCellCommand { get; }
+        public ICommand ValidateCellCommand => new ParameterCommand(parameter => ValidateCell(parameter));
         public ICommand RefundToSupplierProductCommand { get; }
         public ICommand ClearCommand { get; }
         public ICommand AddProductToRefundCommand { get; }
@@ -99,19 +97,16 @@ namespace RetailTradeServer.ViewModels.Dialogs
 
         public CreateRefundToSupplierDialogFormModel(IProductService productService,
             ISupplierService supplierService,
-            IRefundToSupplierService refundToSupplierService,
-            IDialogService dialogService)
+            IRefundToSupplierService refundToSupplierService)
         {
             _productService = productService;
             _supplierService = supplierService;
             _refundToSupplierService = refundToSupplierService;
-            _dialogService = dialogService;
 
             _refundToSupplierProducts = new();
 
             GetSupplier();
 
-            ValidateCellCommand = new ParameterCommand(parameter => ValidateCell(parameter));
             RefundToSupplierProductCommand = new RelayCommand(CreateRefundToSupplierProduct);
             ClearCommand = new RelayCommand(Cleare);
             AddProductToRefundCommand = new RelayCommand(AddProductToRefund);
@@ -183,7 +178,7 @@ namespace RetailTradeServer.ViewModels.Dialogs
                     //ignore
                 }
 
-                _dialogService.Close();
+                CurrentWindowService.Close();
             }
         }
 
