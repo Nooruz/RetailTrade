@@ -15,7 +15,7 @@
 
     <dxmvvm:Interaction.Behaviors>
         <dxmvvm:EventToCommand EventName="Loaded" Command="{Binding UserControlLoadedCommand}"/>
-        <dxmvvm:WindowService AllowSetWindowOwner="True"
+        <!--<dxmvvm:WindowService AllowSetWindowOwner="True"
                               Title="{Binding Title}"
                               WindowStartupLocation="CenterOwner">
             <dxmvvm:WindowService.WindowStyle>
@@ -25,7 +25,7 @@
                     <Setter Property="ResizeMode" Value="NoResize"/>
                 </Style>
             </dxmvvm:WindowService.WindowStyle>
-        </dxmvvm:WindowService>
+        </dxmvvm:WindowService>-->
         <dx:DialogService>
             <dx:DialogService.DialogStyle>
                 <Style TargetType="Window">

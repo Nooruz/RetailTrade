@@ -24,6 +24,7 @@
                     <Setter Property="ResizeMode" Value="NoResize"/>
                     <Setter Property="SizeToContent" Value="WidthAndHeight"/>
                     <Setter Property="WindowStyle" Value="ToolWindow"/>
+                    <Setter Property="Title" Value="{Binding Path=DataContext.Title, RelativeSource={RelativeSource Mode=Self}}"/>
                 </Style>
             </dxmvvm:WindowService.WindowStyle>
         </dxmvvm:WindowService>
