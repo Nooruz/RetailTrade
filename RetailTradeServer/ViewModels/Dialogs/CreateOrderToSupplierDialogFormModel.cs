@@ -1,4 +1,5 @@
-﻿using DevExpress.Xpf.Grid;
+﻿using DevExpress.Mvvm;
+using DevExpress.Xpf.Grid;
 using RetailTrade.Domain.Models;
 using RetailTrade.Domain.Services;
 using RetailTradeServer.Commands;
@@ -6,7 +7,7 @@ using RetailTradeServer.Report;
 using RetailTradeServer.State.Barcode;
 using RetailTradeServer.State.Users;
 using RetailTradeServer.ViewModels.Dialogs.Base;
-using SalePageServer.State.Dialogs;
+using RetailTradeServer.Views.Dialogs;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -27,7 +28,6 @@ namespace RetailTradeServer.ViewModels.Dialogs
         private readonly IZebraBarcodeScanner _zebraBarcodeScanner;
         private readonly IDataService<Unit> _unitService;
         private readonly IUserStore _userStore;
-        private readonly IDialogService _dialogService;
         private Supplier _selectedSupplier;
         private OrderProduct _selectedOrderProduct;
         private int _selectedOrderStatusId = 1;
@@ -133,7 +133,7 @@ namespace RetailTradeServer.ViewModels.Dialogs
         #region Commands
 
         public ICommand ValidateCellCommand => new ParameterCommand(parameter => ValidateCell(parameter));
-        public ICommand OrderProductCommand { get; }
+        public ICommand OrderProductCommand => new RelayCommand(CreateOrder);
         public ICommand ClearCommand { get; }
         public ICommand AddProductToOrderCommand { get; }
         public ICommand UserControlLoadedCommand { get; }
@@ -150,8 +150,7 @@ namespace RetailTradeServer.ViewModels.Dialogs
             IOrderStatusService orderStatusService,
             IZebraBarcodeScanner zebraBarcodeScanner,
             IDataService<Unit> unitService,
-            IUserStore userStore,
-            IDialogService dialogService)
+            IUserStore userStore)
         {
             _productService = productService;
             _supplierService = supplierService;
@@ -159,12 +158,10 @@ namespace RetailTradeServer.ViewModels.Dialogs
             _orderStatusService = orderStatusService;
             _unitService = unitService;
             _userStore = userStore;
-            _dialogService = dialogService;
             _zebraBarcodeScanner = zebraBarcodeScanner;
 
             _orderProducts = new();
 
-            OrderProductCommand = new RelayCommand(CreateOrder);
             ClearCommand = new RelayCommand(Cleare);
             AddProductToOrderCommand = new RelayCommand(AddProductToOrder);
             UserControlLoadedCommand = new RelayCommand(UserControlLoaded);
@@ -272,7 +269,7 @@ namespace RetailTradeServer.ViewModels.Dialogs
 
             await report.CreateDocumentAsync();
 
-            await _dialogService.ShowPrintDialog(report);
+            DocumentViewerService.Show(nameof(DocumentViewerView), new DocumentViewerViewModel() { PrintingDocument = report });
         }
 
         private void Cleare()

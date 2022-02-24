@@ -2,7 +2,6 @@
 using RetailTrade.Domain.Services;
 using RetailTradeServer.Commands;
 using RetailTradeServer.ViewModels.Dialogs.Base;
-using SalePageServer.State.Dialogs;
 using System.Collections.Generic;
 using System.Windows.Input;
 
@@ -12,7 +11,6 @@ namespace RetailTradeServer.ViewModels.Dialogs
     {
         #region Private Members
 
-        private readonly IDialogService _dialogService;
         private readonly ISupplierService _supplierService;
 
         #endregion
@@ -31,10 +29,8 @@ namespace RetailTradeServer.ViewModels.Dialogs
 
         #region Constructor
 
-        public SupplierProductDialogFormModal(IDialogService dialogService,
-            ISupplierService supplierService)
+        public SupplierProductDialogFormModal(ISupplierService supplierService)
         {
-            _dialogService = dialogService;
             _supplierService = supplierService;
 
             CreateSupplierProductCommand = new RelayCommand(CreateSupplier);
