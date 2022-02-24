@@ -4,7 +4,6 @@ using Newtonsoft.Json;
 using RetailTradeServer.Commands;
 using RetailTradeServer.ViewModels.Dialogs.Base;
 using SalePageServer.Properties;
-using SalePageServer.State.Dialogs;
 using SalePageServer.Utilities;
 using System;
 using System.Collections.Generic;
@@ -22,7 +21,6 @@ namespace RetailTradeServer.ViewModels.Dialogs
     {
         #region Private Members
 
-        private readonly IDialogService _dialogService;
         private string _serverName;
         private readonly ObservableQueue<string> _dataBases = new();
         private bool _canCreateConnection;
@@ -74,8 +72,6 @@ namespace RetailTradeServer.ViewModels.Dialogs
 
         public AddConnectionDialogFormModel()
         {
-            _dialogService = new DialogService();
-
             CheckConnectionCommand = new RelayCommand(CheckConnection);
             OkCommand = new RelayCommand(Ok);
             CreateDataBaseCommand = new RelayCommand(CreateDataBase);
@@ -152,16 +148,16 @@ namespace RetailTradeServer.ViewModels.Dialogs
         {
             if (CheckConnectionString(ConnectionString))
             {
-               _ = _dialogService.ShowMessage("Проверка подключения выполнена.", "", MessageBoxButton.OK, MessageBoxImage.Information);
+               _ = MessageBox.Show("Проверка подключения выполнена.", "", MessageBoxButton.OK, MessageBoxImage.Information);
             }
             else if (string.IsNullOrEmpty(ServerName))
             {
-                _ = _dialogService.ShowMessage("Не удается проверить это подключение, поскольку не указано имя сервера.", 
+                _ = MessageBox.Show("Не удается проверить это подключение, поскольку не указано имя сервера.", 
                     "", MessageBoxButton.OK, MessageBoxImage.Information);
             }            
             else
             {
-                _ = _dialogService.ShowMessage(SQLExeption.Message,
+                _ = MessageBox.Show(SQLExeption.Message,
                     "", MessageBoxButton.OK, MessageBoxImage.Information);
             }
         }
@@ -181,7 +177,7 @@ namespace RetailTradeServer.ViewModels.Dialogs
                 Settings.Default.IsDataBaseConnectionAdded = true;
                 Settings.Default.IsFirstLaunch = false;
                 Settings.Default.Save();
-                _dialogService.Close();
+                CurrentWindowService.Close();
             }
             catch (Exception)
             {
@@ -213,12 +209,12 @@ namespace RetailTradeServer.ViewModels.Dialogs
                 try
                 {
                     createDBSQLCommand.ExecuteNonQuery();
-                    _ = _dialogService.ShowMessage("База данных успешно создана.", "", MessageBoxButton.OK, MessageBoxImage.Information);
+                    _ = MessageBox.Show("База данных успешно создана.", "", MessageBoxButton.OK, MessageBoxImage.Information);
                     CanCreateConnection = true;
                 }
                 catch (SqlException e)
                 {
-                    _ = _dialogService.ShowMessage(e.Message, "", MessageBoxButton.OK, MessageBoxImage.Information);
+                    _ = MessageBox.Show(e.Message, "", MessageBoxButton.OK, MessageBoxImage.Information);
                 }
                 finally
                 {

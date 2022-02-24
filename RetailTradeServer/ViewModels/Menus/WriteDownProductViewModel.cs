@@ -99,7 +99,7 @@ namespace RetailTradeServer.ViewModels.Menus
                 //}
                 //else
                 //{
-                //    _dialogService.ShowMessage("Выберите элемент.", "", MessageBoxButton.OKCancel, MessageBoxImage.Exclamation);
+                //    MessageBox.Show("Выберите элемент.", "", MessageBoxButton.OKCancel, MessageBoxImage.Exclamation);
                 //}
             }
             catch (Exception e)
@@ -128,14 +128,14 @@ namespace RetailTradeServer.ViewModels.Menus
         {
             if (SelectedWriteDown != null)
             {
-                if (_dialogService.ShowMessage("Вы точно хотите удалить?", "", MessageBoxButton.YesNo, MessageBoxImage.Question) == MessageBoxResult.Yes)
+                if (MessageBox.Show("Вы точно хотите удалить?", "", MessageBoxButton.YesNo, MessageBoxImage.Question) == MessageBoxResult.Yes)
                 {
                     await _writeDownService.DeleteAsync(SelectedWriteDown.Id);
                 }
             }
             else
             {
-                _dialogService.ShowMessage("Выберите элемента!", "", MessageBoxButton.OK, MessageBoxImage.Exclamation);
+                MessageBox.Show("Выберите элемента!", "", MessageBoxButton.OK, MessageBoxImage.Exclamation);
             }
         }
 

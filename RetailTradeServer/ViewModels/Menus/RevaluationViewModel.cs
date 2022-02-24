@@ -101,7 +101,7 @@ namespace RetailTradeServer.ViewModels.Menus
             }
             else
             {
-                _ = _dialogService.ShowMessage("Выберите историю изменения цен товаров!", "", MessageBoxButton.OK, MessageBoxImage.Exclamation);
+                _ = MessageBox.Show("Выберите историю изменения цен товаров!", "", MessageBoxButton.OK, MessageBoxImage.Exclamation);
             }
         }
 

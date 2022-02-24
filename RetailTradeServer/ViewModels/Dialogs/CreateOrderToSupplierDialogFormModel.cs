@@ -235,7 +235,7 @@ namespace RetailTradeServer.ViewModels.Dialogs
             }
             else
             {
-                _dialogService.ShowMessage("Выберите поставщика!", "", MessageBoxButton.OK, MessageBoxImage.Exclamation);
+                MessageBox.Show("Выберите поставщика!", "", MessageBoxButton.OK, MessageBoxImage.Exclamation);
             }
             OnPropertyChanged(nameof(CanOrderProduct));
         }
@@ -248,7 +248,7 @@ namespace RetailTradeServer.ViewModels.Dialogs
                 {
                     e.IsValid = false;
                     e.ErrorContent = "Количество заказа не должно быть 0.";
-                    _dialogService.ShowMessage("Количество заказа не должно быть 0.", "", MessageBoxButton.OK, MessageBoxImage.Error);
+                    MessageBox.Show("Количество заказа не должно быть 0.", "", MessageBoxButton.OK, MessageBoxImage.Error);
                 }
             }
             OnPropertyChanged(nameof(CanOrderProduct));

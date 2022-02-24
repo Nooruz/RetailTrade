@@ -143,7 +143,7 @@ namespace RetailTradeServer.ViewModels.Dialogs
             }
             else
             {
-                _dialogService.ShowMessage("Выберите поставщика!", "", MessageBoxButton.OK, MessageBoxImage.Exclamation);
+                MessageBox.Show("Выберите поставщика!", "", MessageBoxButton.OK, MessageBoxImage.Exclamation);
             }
         }
 
@@ -157,7 +157,7 @@ namespace RetailTradeServer.ViewModels.Dialogs
                     {
                         e.IsValid = false;
                         e.ErrorContent = "Количество списание товаров не должно превышать количество на складе.";
-                        _dialogService.ShowMessage("Количество списание товаров не должно превышать количество на складе.", "", MessageBoxButton.OK, MessageBoxImage.Error);
+                        MessageBox.Show("Количество списание товаров не должно превышать количество на складе.", "", MessageBoxButton.OK, MessageBoxImage.Error);
                     }
                 }
             }

@@ -160,7 +160,7 @@ namespace RetailTradeServer.ViewModels.Menus
         {
             if (SelectedTypeProduct == null)
             {
-                //_dialogService.ShowMessage("Выберите группу видов или вид товара!", "", MessageBoxButton.OK, MessageBoxImage.Exclamation);
+                //MessageBox.Show("Выберите группу видов или вид товара!", "", MessageBoxButton.OK, MessageBoxImage.Exclamation);
                 return;
             }
             if (SelectedTypeProduct.Id != 1)
@@ -194,14 +194,14 @@ namespace RetailTradeServer.ViewModels.Menus
         {
             if (SelectedProduct != null)
             {
-                //if (_dialogService.ShowMessage(SelectedProduct.DeleteMark ? $"Снять пометку \"{SelectedProduct.Name}\"?" : $"Пометить \"{SelectedProduct.Name}\" на удаление?", "", MessageBoxButton.YesNo, MessageBoxImage.Question) == MessageBoxResult.Yes)
+                //if (MessageBox.Show(SelectedProduct.DeleteMark ? $"Снять пометку \"{SelectedProduct.Name}\"?" : $"Пометить \"{SelectedProduct.Name}\" на удаление?", "", MessageBoxButton.YesNo, MessageBoxImage.Question) == MessageBoxResult.Yes)
                 //{
                 //    await _productService.MarkingForDeletion(SelectedProduct);
                 //}
             }
             else
             {
-                //_ = _dialogService.ShowMessage("Выберите товар", "", MessageBoxButton.OK, MessageBoxImage.Exclamation);
+                //_ = MessageBox.Show("Выберите товар", "", MessageBoxButton.OK, MessageBoxImage.Exclamation);
             }
         }
 
@@ -233,7 +233,7 @@ namespace RetailTradeServer.ViewModels.Menus
             //}
             //else
             //{
-            //    _ = _dialogService.ShowMessage("Выберите товар", "", MessageBoxButton.OK, MessageBoxImage.Exclamation);
+            //    _ = MessageBox.Show("Выберите товар", "", MessageBoxButton.OK, MessageBoxImage.Exclamation);
             //}
         }
 

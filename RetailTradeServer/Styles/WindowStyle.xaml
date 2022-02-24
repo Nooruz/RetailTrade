@@ -9,4 +9,8 @@
         <Setter Property="Title" Value="{Binding Path=DataContext.Title, RelativeSource={RelativeSource Mode=Self}}"/>
     </Style>
 
+    <Style TargetType="{x:Type dx:ThemedWindow}" x:Key="DocumentViewerService">
+        <Setter Property="Title" Value="{Binding Path=DataContext.Title, RelativeSource={RelativeSource Mode=Self}}"/>
+    </Style>
+
 </ResourceDictionary>

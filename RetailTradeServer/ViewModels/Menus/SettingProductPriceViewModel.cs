@@ -166,13 +166,13 @@ namespace RetailTradeServer.ViewModels.Menus
                 }
                 else
                 {
-                    _dialogService.ShowMessage("Товар не выбран.", "", MessageBoxButton.OK, MessageBoxImage.Error);
+                    MessageBox.Show("Товар не выбран.", "", MessageBoxButton.OK, MessageBoxImage.Error);
                     SelectedRevaluationProduct = revaluationProduct;
                 }
             }
             else
             {
-                _dialogService.ShowMessage("Не введено ни одной строки в список.", "", MessageBoxButton.OK, MessageBoxImage.Error);
+                MessageBox.Show("Не введено ни одной строки в список.", "", MessageBoxButton.OK, MessageBoxImage.Error);
             }
         }
 
@@ -240,7 +240,7 @@ namespace RetailTradeServer.ViewModels.Menus
                 }
                 else
                 {
-                    _dialogService.ShowMessage("Такой товар уже введен.", "", MessageBoxButton.OK, MessageBoxImage.Exclamation);
+                    MessageBox.Show("Такой товар уже введен.", "", MessageBoxButton.OK, MessageBoxImage.Exclamation);
                 }
             }            
         }
@@ -249,7 +249,7 @@ namespace RetailTradeServer.ViewModels.Menus
         {
             if (EmptyRevaluationProduct != null)
             {
-                _dialogService.ShowMessage("Товар не выбран.", "", MessageBoxButton.OK, MessageBoxImage.Exclamation);
+                MessageBox.Show("Товар не выбран.", "", MessageBoxButton.OK, MessageBoxImage.Exclamation);
                 SelectedRevaluationProduct = EmptyRevaluationProduct;
             }
             else

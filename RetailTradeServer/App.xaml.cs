@@ -1,20 +1,19 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Newtonsoft.Json;
 using RetailTrade.EntityFramework;
+using RetailTrade.SQLServerConnectionDialog;
 using RetailTradeServer.HostBuilders;
 using RetailTradeServer.State.Barcode;
 using RetailTradeServer.ViewModels;
 using RetailTradeServer.ViewModels.Dialogs;
 using SalePageServer.Properties;
-using SalePageServer.State.Dialogs;
 using System;
 using System.Data.SqlClient;
+using System.IO;
 using System.Threading.Tasks;
 using System.Windows;
-using RetailTrade.SQLServerConnectionDialog;
-using System.IO;
-using Newtonsoft.Json;
 
 namespace RetailTradeServer
 {
@@ -29,7 +28,6 @@ namespace RetailTradeServer
         private Window startingWindow;
         private IZebraBarcodeScanner _zebraBarcodeScanner;
         private IComBarcodeService _comBarcodeService;
-        private IDialogService _dialogService;
         private static SqlException _sqlException;
 
         #endregion
@@ -60,7 +58,6 @@ namespace RetailTradeServer
 
             _zebraBarcodeScanner = _host.Services.GetRequiredService<IZebraBarcodeScanner>();
             _comBarcodeService = _host.Services.GetRequiredService<IComBarcodeService>();
-            _dialogService = _host.Services.GetRequiredService<IDialogService>();
 
             //Settings.Default.AdminCreated = false;
             //Settings.Default.DefaultConnection = "Server=.ds;Database=RetailTradeDb;Trusted_Connection=True;";
@@ -114,7 +111,7 @@ namespace RetailTradeServer
             }
             catch (Exception exception)
             {
-                _dialogService.ShowMessage(exception.Message, "", MessageBoxButton.OK, MessageBoxImage.Error);
+                MessageBox.Show(exception.Message, "", MessageBoxButton.OK, MessageBoxImage.Error);
                 Current.Shutdown();
                 return;
             }

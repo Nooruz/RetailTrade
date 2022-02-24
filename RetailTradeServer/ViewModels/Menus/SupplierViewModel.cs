@@ -98,7 +98,7 @@ namespace RetailTradeServer.ViewModels.Menus
             //}
             //else
             //{
-            //    _dialogService.ShowMessage("Выберите поставщика.", "", MessageBoxButton.OK, MessageBoxImage.Exclamation);
+            //    MessageBox.Show("Выберите поставщика.", "", MessageBoxButton.OK, MessageBoxImage.Exclamation);
             //}
         }
 

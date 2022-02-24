@@ -3,7 +3,6 @@ using RetailTrade.Domain.Models;
 using RetailTrade.Domain.Services;
 using RetailTradeServer.Commands;
 using RetailTradeServer.ViewModels.Dialogs.Base;
-using SalePageServer.State.Dialogs;
 using SalePageServer.Utilities;
 using System;
 using System.Collections.Generic;
@@ -20,7 +19,6 @@ namespace RetailTradeServer.ViewModels.Dialogs
         private readonly IProductService _productService;
         private readonly ISupplierService _supplierService;
         private readonly IArrivalService _arrivalService;
-        private readonly IDialogService _dialogService;
         private Supplier _selectedSupplier;
         private ArrivalProduct _selectedArrivalProduct;
         private string _comment;
@@ -89,11 +87,11 @@ namespace RetailTradeServer.ViewModels.Dialogs
 
         #region Commands
 
-        public ICommand ValidateCellCommand { get; }
-        public ICommand ArrivalProductCommand { get; }
-        public ICommand ClearCommand { get; }
-        public ICommand CellValueChangedCommand { get; }
-        public ICommand AddProductToArrivalCommand { get; }
+        public ICommand ValidateCellCommand => new ParameterCommand(parameter => ValidateCell(parameter));
+        public ICommand ArrivalProductCommand => new RelayCommand(CreateArrival);
+        public ICommand ClearCommand => new RelayCommand(Cleare);
+        public ICommand CellValueChangedCommand => new ParameterCommand(p => CellValueChanged(p));
+        public ICommand AddProductToArrivalCommand => new RelayCommand(AddProductToArrival);
 
         #endregion
 
@@ -101,23 +99,15 @@ namespace RetailTradeServer.ViewModels.Dialogs
 
         public CreateArrivalProductDialogFormModel(IProductService productService,
             ISupplierService supplierService,
-            IArrivalService arrivalService,
-            IDialogService dialogService)
+            IArrivalService arrivalService)
         {
             _productService = productService;
             _supplierService = supplierService;
             _arrivalService = arrivalService;
-            _dialogService = dialogService;
 
             _arrivalProducts = new();
 
             GetSupplier();
-
-            ValidateCellCommand = new ParameterCommand(parameter => ValidateCell(parameter));
-            ArrivalProductCommand = new RelayCommand(CreateArrival);
-            ClearCommand = new RelayCommand(Cleare);
-            CellValueChangedCommand = new ParameterCommand(p => CellValueChanged(p));
-            AddProductToArrivalCommand = new RelayCommand(AddProductToArrival);
         }
 
         #endregion
@@ -132,7 +122,7 @@ namespace RetailTradeServer.ViewModels.Dialogs
             }
             else
             {
-                _dialogService.ShowMessage("Выберите поставщика!", "", MessageBoxButton.OK, MessageBoxImage.Exclamation);
+                MessageBox.Show("Выберите поставщика!", "", MessageBoxButton.OK, MessageBoxImage.Exclamation);
             }
         }
 
@@ -154,7 +144,7 @@ namespace RetailTradeServer.ViewModels.Dialogs
             OnPropertyChanged(nameof(CanArrivalProduct));
         }
 
-        private void ValidateCell(object parameter)
+        private static void ValidateCell(object parameter)
         {
             if (parameter is GridCellValidationEventArgs e)
             {
@@ -162,7 +152,7 @@ namespace RetailTradeServer.ViewModels.Dialogs
                 {
                     e.IsValid = false;
                     e.ErrorContent = "Количество не должно быть 0.";
-                    _dialogService.ShowMessage("Количество не должно быть 0.", "", MessageBoxButton.OK, MessageBoxImage.Error);
+                    MessageBox.Show("Количество не должно быть 0.", "", MessageBoxButton.OK, MessageBoxImage.Error);
                 }
             }
         }
@@ -188,8 +178,7 @@ namespace RetailTradeServer.ViewModels.Dialogs
                 {
                     //ignore
                 }
-
-                _dialogService.Close();
+                CurrentWindowService.Close();
             }
         }
 

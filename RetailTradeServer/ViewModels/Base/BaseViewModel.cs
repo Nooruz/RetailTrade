@@ -42,6 +42,7 @@ namespace RetailTradeServer.ViewModels.Base
         #region Services
 
         protected IWindowService WindowService => GetService<IWindowService>();
+        protected IWindowService DocumentViewerService => GetService<IWindowService>("DocumentViewerService");
         protected IDialogService DialogService => GetService<IDialogService>();
         protected ICurrentWindowService CurrentWindowService => GetService<ICurrentWindowService>();
 

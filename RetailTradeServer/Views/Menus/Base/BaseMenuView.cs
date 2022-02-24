@@ -84,6 +84,17 @@ namespace RetailTradeServer.Views.Menus
                     BasedOn = FindResource("DialogService") as Style
                 }
             });
+            Interaction.GetBehaviors(this).Add(new WindowService()
+            {
+                WindowStartupLocation = WindowStartupLocation.CenterOwner,
+                AllowSetWindowOwner = true,
+                Name = "DocumentViewerService",
+                WindowStyle = new Style
+                {
+                    TargetType = typeof(ThemedWindow),
+                    BasedOn = FindResource("DocumentViewerService") as Style
+                }
+            });
             Interaction.GetBehaviors(this).Add(new DialogService());
             Style = FindResource("BaseUserControl") as Style;
         }

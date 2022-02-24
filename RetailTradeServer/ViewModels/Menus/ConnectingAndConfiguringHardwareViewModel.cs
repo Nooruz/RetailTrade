@@ -98,7 +98,7 @@ namespace RetailTradeServer.ViewModels.Menus
             }
             else
             {
-                _ = _dialogService.ShowMessage("Выберите тип оборудования!", "", MessageBoxButton.OK, MessageBoxImage.Exclamation);
+                _ = MessageBox.Show("Выберите тип оборудования!", "", MessageBoxButton.OK, MessageBoxImage.Exclamation);
             }
         }
 

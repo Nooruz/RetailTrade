@@ -142,7 +142,7 @@ namespace RetailTradeServer.ViewModels.Dialogs
             }
             else
             {
-                _dialogService.ShowMessage("Выберите поставщика!", "", MessageBoxButton.OK, MessageBoxImage.Exclamation);
+                MessageBox.Show("Выберите поставщика!", "", MessageBoxButton.OK, MessageBoxImage.Exclamation);
             }
             OnPropertyChanged(nameof(CanRefundToSupplierProduct));
         }
@@ -157,7 +157,7 @@ namespace RetailTradeServer.ViewModels.Dialogs
                     {
                         e.IsValid = false;
                         e.ErrorContent = "Количество не должно превышать количество товаров на складе.";
-                        _dialogService.ShowMessage("Количество не должно превышать количество товаров на складе.", "", MessageBoxButton.OK, MessageBoxImage.Error);
+                        MessageBox.Show("Количество не должно превышать количество товаров на складе.", "", MessageBoxButton.OK, MessageBoxImage.Error);
                     }
                 }
             }
