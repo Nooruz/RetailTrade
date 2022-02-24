@@ -14,19 +14,6 @@
     ShowDefaultButtons="False"
     Title="{Binding Header}">
 
-    <dxmvvm:Interaction.Behaviors>
-        <dxmvvm:WindowService AllowSetWindowOwner="True"
-                              WindowStartupLocation="CenterOwner">
-            <dxmvvm:WindowService.WindowStyle>
-                <Style TargetType="dx:ThemedWindow">
-                    <Setter Property="SizeToContent" Value="WidthAndHeight"/>
-                    <Setter Property="WindowStyle" Value="ToolWindow"/>
-                    <Setter Property="ResizeMode" Value="NoResize"/>
-                </Style>
-            </dxmvvm:WindowService.WindowStyle>
-        </dxmvvm:WindowService>
-    </dxmvvm:Interaction.Behaviors>
-
     <dxlc:LayoutControl Orientation="Vertical">
 
         <dx:DXTabControl>

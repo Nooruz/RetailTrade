@@ -71,6 +71,7 @@ namespace RetailTradeServer.Views.Menus
 
         public BaseMenuView()
         {
+
             Style = FindResource("BaseUserControl") as Style;
         }
 
