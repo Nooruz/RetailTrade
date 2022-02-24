@@ -1,9 +1,10 @@
-﻿using RetailTrade.Domain.Models;
+﻿using DevExpress.Mvvm;
+using RetailTrade.Domain.Models;
 using RetailTrade.Domain.Services;
 using RetailTradeServer.Commands;
 using RetailTradeServer.ViewModels.Base;
 using RetailTradeServer.ViewModels.Dialogs;
-using SalePageServer.State.Dialogs;
+using RetailTradeServer.Views.Dialogs;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Windows.Input;
@@ -16,7 +17,6 @@ namespace RetailTradeServer.ViewModels.Menus
 
         private readonly IEmployeeService _employeeService;
         private readonly IGroupEmployeeService _groupEmployeeService;
-        private readonly IDialogService _dialogService;
         private readonly IDataService<Gender> _genderService;
         private ObservableCollection<GroupEmployeeDTO> _groupEmployees;
         private ObservableCollection<Employee> _employees;
@@ -58,8 +58,8 @@ namespace RetailTradeServer.ViewModels.Menus
 
         #region Commands
 
-        public ICommand UserControlLoadedCommand { get; }
-        public ICommand CreateEmployeeCommand { get; }
+        public ICommand UserControlLoadedCommand => new RelayCommand(UserControlLoaded);
+        public ICommand CreateEmployeeCommand => new RelayCommand(CreateEmployee);
         public ICommand CreateGroupEmployeeCommand { get; }
 
         #endregion
@@ -68,18 +68,13 @@ namespace RetailTradeServer.ViewModels.Menus
 
         public EmployeesViewModel(IEmployeeService employeeService,
             IGroupEmployeeService groupEmployeeService,
-            IDialogService dialogService,
             IDataService<Gender> genderService)
         {
             _groupEmployeeService = groupEmployeeService;
             _employeeService = employeeService;
-            _dialogService = dialogService;
             _genderService = genderService;
 
             Header = "Сотрудники";
-
-            UserControlLoadedCommand = new RelayCommand(UserControlLoaded);
-            CreateEmployeeCommand = new RelayCommand(CreateEmployee);
         }
 
         #endregion
@@ -102,7 +97,7 @@ namespace RetailTradeServer.ViewModels.Menus
 
         private async void CreateEmployee()
         {
-            _ = _dialogService.ShowDialog(new EmployeeDialogFormModel()
+            WindowService.Show(nameof(EmployeeDialogForm), new EmployeeDialogFormModel()
             {
                 Genders = await _genderService.GetAllAsync(),
                 GroupEmployees = await _groupEmployeeService.GetAllAsync(),

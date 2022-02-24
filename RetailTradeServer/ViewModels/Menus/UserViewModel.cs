@@ -1,11 +1,12 @@
-﻿using RetailTrade.Domain.Models;
+﻿using DevExpress.Mvvm;
+using RetailTrade.Domain.Models;
 using RetailTrade.Domain.Services;
 using RetailTradeServer.Commands;
 using RetailTradeServer.State.Authenticators;
 using RetailTradeServer.State.Messages;
 using RetailTradeServer.ViewModels.Base;
 using RetailTradeServer.ViewModels.Dialogs;
-using SalePageServer.State.Dialogs;
+using RetailTradeServer.Views.Dialogs;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Windows;
@@ -18,7 +19,6 @@ namespace RetailTradeServer.ViewModels.Menus
         #region Private Members
 
         private readonly IUserService _userService;
-        private readonly IDialogService _dialogService;
         private readonly IAuthenticator _authenticator;
         private readonly IRoleService _roleService;
         private readonly IMessageStore _messageStore;
@@ -53,20 +53,18 @@ namespace RetailTradeServer.ViewModels.Menus
 
         #region Commands
 
-        public ICommand UserControlLoadedCommand { get; }
+        public ICommand UserControlLoadedCommand => new RelayCommand(UserControlLoaded);
 
         #endregion
 
         #region Constructor
 
         public UserViewModel(IUserService userService,
-            IDialogService dialogService,
             IAuthenticator authenticator,
             IRoleService roleService,
             IMessageStore messageStore)
         {
             _userService = userService;
-            _dialogService = dialogService;
             _authenticator = authenticator;
             _roleService = roleService;
             _messageStore = messageStore;
@@ -78,7 +76,6 @@ namespace RetailTradeServer.ViewModels.Menus
             CreateCommand = new RelayCommand(CreateUser);
             DeleteCommand = new RelayCommand(DeleteUser);
             EditCommand = new RelayCommand(EditUser);
-            UserControlLoadedCommand = new RelayCommand(UserControlLoaded);
 
             _userService.PropertiesChanged += UserService_PropertiesChanged;
             _userService.OnUserCreated += UserService_OnUserCreated;
@@ -88,9 +85,9 @@ namespace RetailTradeServer.ViewModels.Menus
 
         #region Private Voids
 
-        private async void CreateUser()
+        private void CreateUser()
         {
-            await _dialogService.ShowDialog(new CreateUserDialogFormModel(_authenticator, _roleService, _dialogService, _messageStore) { Title = "Пользователи (создание)" });
+            WindowService.Show(nameof(CreateUserDialogForm), new CreateUserDialogFormModel(_authenticator, _roleService, _messageStore) { Title = "Пользователи (создание)" });
         }
 
         private async void DeleteUser()
@@ -118,7 +115,7 @@ namespace RetailTradeServer.ViewModels.Menus
                 }
                 else
                 {
-                    await _dialogService.ShowDialog(new CreateUserDialogFormModel(_authenticator, _roleService, _dialogService, _messageStore)
+                    WindowService.Show(nameof(CreateUserDialogForm), new CreateUserDialogFormModel(_authenticator, _roleService, _messageStore)
                     {
                         EditableUser = SelectedUser,
                         Title = $"Пользователи ({SelectedUser.Username})"

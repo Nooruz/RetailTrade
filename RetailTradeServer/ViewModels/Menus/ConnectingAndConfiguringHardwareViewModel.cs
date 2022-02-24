@@ -2,7 +2,6 @@
 using RetailTrade.Domain.Services;
 using RetailTradeServer.Commands;
 using RetailTradeServer.ViewModels.Base;
-using SalePageServer.State.Dialogs;
 using System.Collections.Generic;
 using System.Windows;
 using System.Windows.Input;
@@ -13,7 +12,6 @@ namespace RetailTradeServer.ViewModels.Menus
     {
         #region Private Members
 
-        private readonly IDialogService _dialogService;
         private readonly IDataService<TypeEquipment> _typeEquipmentService;
         private IEnumerable<TypeEquipment> _typeEquipments;
         private TypeEquipment _selectedTypeEquipment;
@@ -53,11 +51,9 @@ namespace RetailTradeServer.ViewModels.Menus
 
         #region Constructor
 
-        public ConnectingAndConfiguringHardwareViewModel(IDataService<TypeEquipment> typeEquipmentService,
-            IDialogService dialogService)
+        public ConnectingAndConfiguringHardwareViewModel(IDataService<TypeEquipment> typeEquipmentService)
         {
             _typeEquipmentService = typeEquipmentService;
-            _dialogService = dialogService;
 
             Header = "Подключение и настройка оборудования";
         }

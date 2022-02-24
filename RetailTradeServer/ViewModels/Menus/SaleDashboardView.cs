@@ -115,11 +115,11 @@ namespace RetailTradeServer.ViewModels.Menus
 
         #region Commands
 
-        public ICommand UserControlCommand { get; }
-        public ICommand YesterdayCommand { get; }
-        public ICommand TodayCommand { get; }
-        public ICommand LastMonthCommand { get; }
-        public ICommand CurrentMonthCommand { get; }
+        public ICommand UserControlCommand => new RelayCommand(UserControl);
+        public ICommand YesterdayCommand => new RelayCommand(Yesterday);
+        public ICommand TodayCommand => new RelayCommand(Today);
+        public ICommand LastMonthCommand => new RelayCommand(LastMonth);
+        public ICommand CurrentMonthCommand => new RelayCommand(CurrentMonth);
 
         #endregion
 
@@ -133,12 +133,6 @@ namespace RetailTradeServer.ViewModels.Menus
 
             AllowHide = false;
             Header = "Панель мониторинга продаж и доходов";
-
-            UserControlCommand = new RelayCommand(UserControl);
-            YesterdayCommand = new RelayCommand(Yesterday);
-            TodayCommand = new RelayCommand(Today);
-            LastMonthCommand = new RelayCommand(LastMonth);
-            CurrentMonthCommand = new RelayCommand(CurrentMonth);
         }
 
         #endregion

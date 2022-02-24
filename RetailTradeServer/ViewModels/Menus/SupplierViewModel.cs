@@ -1,9 +1,12 @@
-﻿using RetailTrade.Domain.Models;
+﻿using DevExpress.Mvvm;
+using RetailTrade.Domain.Models;
 using RetailTrade.Domain.Services;
 using RetailTradeServer.Commands;
 using RetailTradeServer.ViewModels.Base;
-using SalePageServer.State.Dialogs;
+using RetailTradeServer.ViewModels.Dialogs;
+using RetailTradeServer.Views.Dialogs;
 using System.Collections.ObjectModel;
+using System.Windows;
 using System.Windows.Input;
 
 namespace RetailTradeServer.ViewModels.Menus
@@ -13,7 +16,6 @@ namespace RetailTradeServer.ViewModels.Menus
         #region Private Members
 
         private readonly ISupplierService _supplierService;
-        private readonly IDialogService _dialogService;
         private ObservableCollection<Supplier> _suppliers;
 
         #endregion
@@ -37,23 +39,20 @@ namespace RetailTradeServer.ViewModels.Menus
 
         #region Commands
 
-        public ICommand UserControlLoadedCommand { get; }
+        public ICommand UserControlLoadedCommand => new RelayCommand(UserControlLoaded);
 
         #endregion
 
         #region Constructor
 
-        public SupplierViewModel(ISupplierService supplierService,
-            IDialogService dialogService)
+        public SupplierViewModel(ISupplierService supplierService)
         {
             _supplierService = supplierService;
-            _dialogService = dialogService;
 
             Header = "Поставщики";
 
             CreateCommand = new RelayCommand(Create);
             EditCommand = new RelayCommand(Edit);
-            UserControlLoadedCommand = new RelayCommand(UserControlLoaded);
 
             _supplierService.OnSupplierCreated += SupplierService_OnSupplierCreated;
         }
@@ -75,31 +74,30 @@ namespace RetailTradeServer.ViewModels.Menus
 
         private void Create()
         {
-            //_dialogService.ShowDialog(new CreateSupplierProductDialogFormModal(_supplierService, _dialogService) { Title = "Поставщики (новый)" }, 
-            //    new CreateSupplierProductDialogForm());
+            WindowService.Show(nameof(CreateSupplierProductDialogForm), new CreateSupplierProductDialogFormModal(_supplierService) { Title = "Поставщики (новый)" });
         }
 
         private void Edit()
         {
-            //if (SelectedSupplier != null)
-            //{
-            //    _dialogService.ShowDialog(new CreateSupplierProductDialogFormModal(_supplierService, _dialogService) 
-            //    { 
-            //        Title = $"Поставщики ({SelectedSupplier.ShortName})",
-            //        Id = SelectedSupplier.Id,
-            //        FullName = SelectedSupplier.FullName,
-            //        ShortName = SelectedSupplier.ShortName,
-            //        Address = SelectedSupplier.Address,
-            //        Phone = SelectedSupplier.Phone,
-            //        Inn = SelectedSupplier.Inn,
-            //        IsEditing = true
-            //    },
-            //    new CreateSupplierProductDialogForm());
-            //}
-            //else
-            //{
-            //    MessageBox.Show("Выберите поставщика.", "", MessageBoxButton.OK, MessageBoxImage.Exclamation);
-            //}
+            if (SelectedSupplier != null)
+            {
+                WindowService.Show(nameof(CreateSupplierProductDialogForm), new CreateSupplierProductDialogFormModal(_supplierService)
+                {
+                    Title = $"Поставщики ({SelectedSupplier.ShortName})",
+                    Id = SelectedSupplier.Id,
+                    FullName = SelectedSupplier.FullName,
+                    ShortName = SelectedSupplier.ShortName,
+                    Address = SelectedSupplier.Address,
+                    Phone = SelectedSupplier.Phone,
+                    Inn = SelectedSupplier.Inn,
+                    IsEditing = true
+                },
+                new CreateSupplierProductDialogForm());
+            }
+            else
+            {
+                MessageBox.Show("Выберите поставщика.", "", MessageBoxButton.OK, MessageBoxImage.Exclamation);
+            }
         }
 
         #endregion

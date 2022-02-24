@@ -1,10 +1,11 @@
-﻿using RetailTrade.Domain.Models;
+﻿using DevExpress.Mvvm;
+using RetailTrade.Domain.Models;
 using RetailTrade.Domain.Services;
 using RetailTradeServer.Commands;
+using RetailTradeServer.Report;
 using RetailTradeServer.ViewModels.Base;
 using RetailTradeServer.ViewModels.Dialogs;
 using RetailTradeServer.Views.Dialogs;
-using SalePageServer.State.Dialogs;
 using System;
 using System.Collections.Generic;
 using System.Windows;
@@ -19,7 +20,6 @@ namespace RetailTradeServer.ViewModels.Menus
         private readonly IProductService _productService;
         private readonly IWriteDownService _writeDownService;
         private readonly ISupplierService _supplierService;
-        private readonly IDialogService _dialogService;
         private WriteDown _selectedWriteDown;
         private IEnumerable<WriteDown> _writeDowns;
         private bool _showLoadingPanel;
@@ -51,9 +51,9 @@ namespace RetailTradeServer.ViewModels.Menus
 
         #region Commands
 
-        public ICommand LoadedCommand { get; }
+        public ICommand LoadedCommand => new RelayCommand(GetWriteDownsAsync);
         public ICommand DuplicateCommand { get; }
-        public ICommand PrintCommand { get; }
+        public ICommand PrintCommand => new RelayCommand(Print);
 
         #endregion
 
@@ -61,20 +61,16 @@ namespace RetailTradeServer.ViewModels.Menus
 
         public WriteDownProductViewModel(IProductService productService,
             IWriteDownService writeDownService,
-            ISupplierService supplierService,
-            IDialogService dialogService)
+            ISupplierService supplierService)
         {
             _productService = productService;
             _writeDownService = writeDownService;
             _supplierService = supplierService;
-            _dialogService = dialogService;
 
             Header = "Списание товара";
 
-            LoadedCommand = new RelayCommand(GetWriteDownsAsync);
             CreateCommand = new RelayCommand(Create);
             DeleteCommand = new RelayCommand(Delete);
-            PrintCommand = new RelayCommand(Print);
             //DuplicateCommand = new RelayCommand(DuplicateArrival);
 
             _writeDownService.PropertiesChanged += GetWriteDownsAsync;
@@ -84,23 +80,22 @@ namespace RetailTradeServer.ViewModels.Menus
 
         #region Private Voids
 
-        private void Print()
+        private async void Print()
         {
             try
             {
                 ShowLoadingPanel = true;
-                //if (SelectedWriteDown != null)
-                //{
-                //    WriteDownProductReport report = new(SelectedWriteDown.Id, SelectedWriteDown.WriteDownDate);
-                //    report.DataSource = SelectedWriteDown.WriteDownProducts;
-                //    await report.CreateDocumentAsync();
-                //    await _dialogService.ShowDialog(new DocumentViewerViewModel() { PrintingDocument = report },
-                //        new DocumentViewerView(), WindowState.Maximized, ResizeMode.CanResize, SizeToContent.Manual);
-                //}
-                //else
-                //{
-                //    MessageBox.Show("Выберите элемент.", "", MessageBoxButton.OKCancel, MessageBoxImage.Exclamation);
-                //}
+                if (SelectedWriteDown != null)
+                {
+                    WriteDownProductReport report = new(SelectedWriteDown.Id, SelectedWriteDown.WriteDownDate);
+                    report.DataSource = SelectedWriteDown.WriteDownProducts;
+                    await report.CreateDocumentAsync();
+                    DocumentViewerService.Show(nameof(DocumentViewerView), new DocumentViewerViewModel() { PrintingDocument = report });
+                }
+                else
+                {
+                    MessageBox.Show("Выберите элемент.", "", MessageBoxButton.OKCancel, MessageBoxImage.Exclamation);
+                }
             }
             catch (Exception e)
             {
@@ -119,9 +114,9 @@ namespace RetailTradeServer.ViewModels.Menus
             ShowLoadingPanel = false;
         }
 
-        private async void Create()
+        private void Create()
         {
-            await _dialogService.ShowDialog(new CreateWriteDownProductDialogFormModel(_productService, _supplierService, _writeDownService, _dialogService) { Title = "Списание товаров (новый)" });
+            WindowService.Show(nameof(CreateWriteDownProductDialogForm), new CreateWriteDownProductDialogFormModel(_productService, _supplierService, _writeDownService) { Title = "Списание товаров (новый)" });
         }
 
         private async void Delete()

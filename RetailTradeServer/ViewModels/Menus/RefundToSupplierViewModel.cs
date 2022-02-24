@@ -1,10 +1,10 @@
-﻿using RetailTrade.Domain.Models;
+﻿using DevExpress.Mvvm;
+using RetailTrade.Domain.Models;
 using RetailTrade.Domain.Services;
 using RetailTradeServer.Commands;
 using RetailTradeServer.ViewModels.Base;
 using RetailTradeServer.ViewModels.Dialogs;
 using RetailTradeServer.Views.Dialogs;
-using SalePageServer.State.Dialogs;
 using System.Collections.Generic;
 using System.Windows;
 using System.Windows.Input;
@@ -19,7 +19,6 @@ namespace RetailTradeServer.ViewModels.Menus
         private readonly IRefundToSupplierService _refundToSupplierService;
         private readonly IRefundToSupplierServiceProduct _refundToSupplierServiceProduct;
         private readonly ISupplierService _supplierService;
-        private readonly IDialogService _dialogService;
         private RefundToSupplier _selectedRefundToSupplier;
         private IEnumerable<RefundToSupplier> _refundToSuppliers;
 
@@ -50,7 +49,7 @@ namespace RetailTradeServer.ViewModels.Menus
 
         #region Commands
 
-        public ICommand LoadedCommand { get; }
+        public ICommand LoadedCommand => new RelayCommand(GetRefundToSuppliersAsync);
 
         #endregion
 
@@ -59,18 +58,15 @@ namespace RetailTradeServer.ViewModels.Menus
         public RefundToSupplierViewModel(IProductService productService,
             IRefundToSupplierService refundToSupplierService,
             IRefundToSupplierServiceProduct refundToSupplierServiceProduct,
-            ISupplierService supplierService,
-            IDialogService dialogService)
+            ISupplierService supplierService)
         {
             _productService = productService;
             _refundToSupplierService = refundToSupplierService;
             _refundToSupplierServiceProduct = refundToSupplierServiceProduct;
             _supplierService = supplierService;
-            _dialogService = dialogService;
 
             Header = "Возврат поставщику";
 
-            LoadedCommand = new RelayCommand(GetRefundToSuppliersAsync);
             CreateCommand = new RelayCommand(Create);
             DeleteCommand = new RelayCommand(Delete);
 
@@ -87,9 +83,9 @@ namespace RetailTradeServer.ViewModels.Menus
             ShowLoadingPanel = false;
         }
 
-        private async void Create()
+        private void Create()
         {
-            await _dialogService.ShowDialog(new CreateRefundToSupplierDialogFormModel(_productService, _supplierService, _refundToSupplierService, _dialogService) { Title = "Возврат поставщику (новый)" });
+            WindowService.Show(nameof(CreateRefundToSupplierDialogForm), new CreateRefundToSupplierDialogFormModel(_productService, _supplierService, _refundToSupplierService) { Title = "Возврат поставщику (новый)" });
         }
 
         private async void Delete()

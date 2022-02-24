@@ -1,9 +1,10 @@
-﻿using RetailTrade.Domain.Models;
+﻿using DevExpress.Mvvm;
+using RetailTrade.Domain.Models;
 using RetailTrade.Domain.Services;
 using RetailTradeServer.Commands;
 using RetailTradeServer.ViewModels.Base;
 using RetailTradeServer.ViewModels.Dialogs;
-using SalePageServer.State.Dialogs;
+using RetailTradeServer.Views.Dialogs;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Windows.Input;
@@ -14,7 +15,6 @@ namespace RetailTradeServer.ViewModels.Menus
     {
         #region Private Members
 
-        private readonly IDialogService _dialogService;
         private readonly IWareHouseService _wareHouseService;
         private readonly IDataService<TypeWareHouse> _typeWareHouseService;
         private IEnumerable<TypeWareHouse> _typeWareHouses;
@@ -47,25 +47,20 @@ namespace RetailTradeServer.ViewModels.Menus
 
         #region Commands
 
-        public ICommand UserControlLoadedCommand { get; }
-        public ICommand CreateWareHouseCommand { get; }
+        public ICommand UserControlLoadedCommand => new RelayCommand(UserControlLoaded);
+        public ICommand CreateWareHouseCommand => new RelayCommand(() => WindowService.Show(nameof(WareHouseDialogForm), new WareHouseDialogFormModel(_wareHouseService) { Title = "Склад (создание)" }));
 
         #endregion
 
         #region Constructor
 
-        public WareHouseViewModel(IDialogService dialogService,
-            IWareHouseService wareHouseService,
+        public WareHouseViewModel(IWareHouseService wareHouseService,
             IDataService<TypeWareHouse> typeWareHouseService)
         {
-            _dialogService = dialogService;
             _wareHouseService = wareHouseService;
             _typeWareHouseService = typeWareHouseService;
 
             Header = "Склады и магазины";
-
-            UserControlLoadedCommand = new RelayCommand(UserControlLoaded);
-            CreateWareHouseCommand = new RelayCommand(() => _dialogService.ShowDialog(new WareHouseDialogFormModel(wareHouseService) { Title = "Склад (создание)" }));
 
             _wareHouseService.OnWareHouseCreated += WareHouseService_OnWareHouseCreated;
         }

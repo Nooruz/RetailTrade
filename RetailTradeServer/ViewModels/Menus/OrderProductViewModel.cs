@@ -1,11 +1,12 @@
-﻿using RetailTrade.Domain.Models;
+﻿using DevExpress.Mvvm;
+using RetailTrade.Domain.Models;
 using RetailTrade.Domain.Services;
 using RetailTradeServer.Commands;
 using RetailTradeServer.State.Barcode;
 using RetailTradeServer.State.Users;
 using RetailTradeServer.ViewModels.Base;
 using RetailTradeServer.ViewModels.Dialogs;
-using SalePageServer.State.Dialogs;
+using RetailTradeServer.Views.Dialogs;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Windows;
@@ -19,7 +20,6 @@ namespace RetailTradeServer.ViewModels.Menus
 
         private readonly IOrderToSupplierService _orderToSupplierService;
         private readonly IOrderStatusService _orderStatusService;
-        private readonly IDialogService _dialogService;
         private readonly IProductService _productService;
         private readonly ISupplierService _supplierService;
         private readonly IUserStore _userStore;
@@ -56,19 +56,18 @@ namespace RetailTradeServer.ViewModels.Menus
 
         #region Commands
 
-        public ICommand CreateOrderCommand { get; }
-        public ICommand DeleteOrderCommand { get; }
-        public ICommand ValidateCommand { get; }
-        public ICommand DuplicateOrderCommand { get; }
-        public ICommand PrintOrderCommand { get; }
-        public ICommand UserControlLoadedCommand { get; }
+        public ICommand CreateOrderCommand => new RelayCommand(CreateOrder);
+        public ICommand DeleteOrderCommand => new RelayCommand(DeleteOrder);
+        public ICommand ValidateCommand => new ParameterCommand(parameter => Validate(parameter));
+        public ICommand DuplicateOrderCommand => new RelayCommand(DuplicateOrder);
+        public ICommand PrintOrderCommand => new RelayCommand(PrintOrder);
+        public ICommand UserControlLoadedCommand => new RelayCommand(UserControlLoaded);
 
         #endregion
 
         #region Constructor
 
         public OrderProductViewModel(IOrderToSupplierService orderToSupplierService,
-            IDialogService dialogService,
             IProductService productService,
             ISupplierService supplierService,
             IOrderStatusService orderStatusService,
@@ -77,7 +76,6 @@ namespace RetailTradeServer.ViewModels.Menus
             IDataService<Unit> unitService)
         {
             _orderToSupplierService = orderToSupplierService;
-            _dialogService = dialogService;
             _productService = productService;
             _supplierService = supplierService;
             _orderStatusService = orderStatusService;
@@ -86,13 +84,6 @@ namespace RetailTradeServer.ViewModels.Menus
             _zebraBarcodeScanner = zebraBarcodeScanner;
 
             Header = "Заказы поставщикам";
-
-            CreateOrderCommand = new RelayCommand(CreateOrder);
-            DeleteOrderCommand = new RelayCommand(DeleteOrder);
-            ValidateCommand = new ParameterCommand(parameter => Validate(parameter));
-            DuplicateOrderCommand = new RelayCommand(DuplicateOrder);
-            PrintOrderCommand = new RelayCommand(PrintOrder);
-            UserControlLoadedCommand = new RelayCommand(UserControlLoaded);
 
             _orderToSupplierService.OnOrderToSupplierCreated += OrderToSupplierService_OnOrderToSupplierCreated;
         }
@@ -142,9 +133,9 @@ namespace RetailTradeServer.ViewModels.Menus
 
         }
 
-        private async void CreateOrder()
+        private void CreateOrder()
         {
-            await _dialogService.ShowDialog(new CreateOrderToSupplierDialogFormModel(_productService, _supplierService, _orderToSupplierService, _orderStatusService, _zebraBarcodeScanner, _unitService, _userStore, _dialogService) { Title = "Заказ поставшику (новый)" });
+            WindowService.Show(nameof(CreateOrderToSupplierDialogForm), new CreateOrderToSupplierDialogFormModel(_productService, _supplierService, _orderToSupplierService, _orderStatusService, _zebraBarcodeScanner, _unitService, _userStore) { Title = "Заказ поставшику (новый)" });
         }
 
         private async void DeleteOrder()

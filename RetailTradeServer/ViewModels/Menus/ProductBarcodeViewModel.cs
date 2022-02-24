@@ -5,12 +5,10 @@ using RetailTradeServer.Commands;
 using RetailTradeServer.Report;
 using RetailTradeServer.ViewModels.Base;
 using SalePageServer.Properties;
-using SalePageServer.State.Dialogs;
 using SalePageServer.Utilities;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Windows;
 using System.Windows.Input;
 
 namespace RetailTradeServer.ViewModels.Menus
@@ -20,7 +18,6 @@ namespace RetailTradeServer.ViewModels.Menus
         #region Private Members
 
         private readonly IProductService _productService;
-        private readonly IDialogService _dialogService;
         private Product _selectedProduct;
         private ProductBarcodePrinting _selectedProductBarcodePrinting;
         private IEnumerable<Product> _products;
@@ -63,29 +60,21 @@ namespace RetailTradeServer.ViewModels.Menus
 
         #region Commands
 
-        public ICommand AddProductToPrintCommand { get; }
-        public ICommand PrintProductBarcodeCommand { get; }
-        public ICommand ClearCommand { get; }
-        public ICommand GenerateBarcodeCommand { get; }
-        public ICommand UserControlLoadedCommand { get; }
+        public ICommand AddProductToPrintCommand => new RelayCommand(AddProductToPrint);
+        public ICommand PrintProductBarcodeCommand => new RelayCommand(PrintProductBarcode);
+        public ICommand ClearCommand => new RelayCommand(Clear);
+        public ICommand GenerateBarcodeCommand => new RelayCommand(GenerateBarcode);
+        public ICommand UserControlLoadedCommand => new RelayCommand(UserControlLoaded);
 
         #endregion
 
         #region Constructor
 
-        public ProductBarcodeViewModel(IProductService productService,
-            IDialogService dialogService)
+        public ProductBarcodeViewModel(IProductService productService)
         {
             _productService = productService;
-            _dialogService = dialogService;
 
             Header = "Ценники и этикетки (Штрих-код)";
-
-            AddProductToPrintCommand = new RelayCommand(AddProductToPrint);
-            PrintProductBarcodeCommand = new RelayCommand(PrintProductBarcode);
-            ClearCommand = new RelayCommand(Clear);
-            GenerateBarcodeCommand = new RelayCommand(GenerateBarcode);
-            UserControlLoadedCommand = new RelayCommand(UserControlLoaded);
         }        
 
         #endregion
@@ -130,12 +119,10 @@ namespace RetailTradeServer.ViewModels.Menus
             report.DataSource = productBarcodePrintings;
             await report.CreateDocumentAsync();
 
-            await _dialogService.ShowPrintDialog(report);
-
-            //PrintToolBase tool = new(report.PrintingSystem);
-            //tool.PrinterSettings.PrinterName = Settings.Default.DefaultLabelPrinter;
-            //tool.PrintingSystem.EndPrint += PrintingSystem_EndPrint;
-            //tool.Print();
+            PrintToolBase tool = new(report.PrintingSystem);
+            tool.PrinterSettings.PrinterName = Settings.Default.DefaultLabelPrinter;
+            tool.PrintingSystem.EndPrint += PrintingSystem_EndPrint;
+            tool.Print();
         }
 
         private void Clear()

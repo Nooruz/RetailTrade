@@ -1,4 +1,5 @@
-﻿using DevExpress.Xpf.Grid;
+﻿using DevExpress.Mvvm;
+using DevExpress.Xpf.Grid;
 using DevExpress.XtraEditors.DXErrorProvider;
 using RetailTrade.Domain.Models;
 using RetailTrade.Domain.Services;
@@ -6,7 +7,7 @@ using RetailTradeServer.Commands;
 using RetailTradeServer.State.Navigators;
 using RetailTradeServer.ViewModels.Base;
 using RetailTradeServer.ViewModels.Dialogs;
-using SalePageServer.State.Dialogs;
+using RetailTradeServer.Views.Dialogs;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -22,8 +23,6 @@ namespace RetailTradeServer.ViewModels.Menus
 
         private readonly IProductService _productService;
         private readonly ITypeProductService _typeProductService;
-        private readonly IDialogService _dialogService;
-        private readonly IDialogService _localDialogService;
         private readonly IRevaluationService _revaluationService;
         private readonly IDataService<Unit> _unitService;
         private readonly IMenuNavigator _menuNavigator;
@@ -122,18 +121,15 @@ namespace RetailTradeServer.ViewModels.Menus
 
         public SettingProductPriceViewModel(IProductService productService,
             ITypeProductService typeProductService,
-            IDialogService dialogService,
             IRevaluationService revaluationService,
             IDataService<Unit> unitService,
             IMenuNavigator menuNavigator)
         {
             _productService = productService;
             _typeProductService = typeProductService;
-            _dialogService = dialogService;
             _revaluationService = revaluationService;
             _unitService = unitService;
             _menuNavigator = menuNavigator;
-            _localDialogService = new DialogService();
         }
 
         #endregion
@@ -226,11 +222,8 @@ namespace RetailTradeServer.ViewModels.Menus
 
         private void Create()
         {
-            ProductDialogFormModel viewModel = new(_productService, _typeProductService, _localDialogService)
-            {
-                Products = Products
-            };
-            _ = _localDialogService.ShowDialog(viewModel);
+            ProductDialogFormModel viewModel = new ProductDialogFormModel(_productService, _typeProductService) { Products = Products };
+            WindowService.Show(nameof(ProductDialogForm), viewModel);
             if (viewModel.SelectedProduct != null)
             {
                 if (RevaluationProducts.FirstOrDefault(r => r.ProductId == viewModel.SelectedProduct.Id) == null)

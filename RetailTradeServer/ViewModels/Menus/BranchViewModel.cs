@@ -1,9 +1,10 @@
-﻿using RetailTrade.Domain.Models;
+﻿using DevExpress.Mvvm;
+using RetailTrade.Domain.Models;
 using RetailTrade.Domain.Services;
 using RetailTradeServer.Commands;
 using RetailTradeServer.ViewModels.Base;
 using RetailTradeServer.ViewModels.Dialogs;
-using SalePageServer.State.Dialogs;
+using RetailTradeServer.Views.Dialogs;
 using System.Collections.Generic;
 
 namespace RetailTradeServer.ViewModels.Menus
@@ -13,7 +14,6 @@ namespace RetailTradeServer.ViewModels.Menus
         #region Private Members
 
         private readonly IDataService<Branch> _branchService;
-        private readonly IDialogService _dialogService;
         private readonly IUserService _userService;
 
         #endregion
@@ -33,11 +33,9 @@ namespace RetailTradeServer.ViewModels.Menus
         #region Constructor
 
         public BranchViewModel(IDataService<Branch> branchService,
-            IDialogService dialogService,
             IUserService userService)
         {
             _branchService = branchService;
-            _dialogService = dialogService;
             _userService = userService;
 
             Header = "Филиалы";
@@ -50,9 +48,9 @@ namespace RetailTradeServer.ViewModels.Menus
 
         #region Private Members
 
-        private async void CreateBranch()
+        private void CreateBranch()
         {
-            await _dialogService.ShowDialog(new CreateBranchDialogFormModel(_branchService, _userService));
+            WindowService.Show(nameof(CreateBranchDialogForm), new CreateBranchDialogFormModel(_branchService, _userService));
         }
 
         private void DeleteBranch()

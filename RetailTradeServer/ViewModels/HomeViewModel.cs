@@ -1,4 +1,5 @@
-﻿using RetailTrade.Domain.Services;
+﻿using DevExpress.Mvvm;
+using RetailTrade.Domain.Services;
 using RetailTradeServer.Commands;
 using RetailTradeServer.State.Messages;
 using RetailTradeServer.State.Navigators;
@@ -6,7 +7,7 @@ using RetailTradeServer.State.Users;
 using RetailTradeServer.ViewModels.Base;
 using RetailTradeServer.ViewModels.Dialogs;
 using RetailTradeServer.ViewModels.Factories;
-using SalePageServer.State.Dialogs;
+using RetailTradeServer.Views.Dialogs;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Windows.Input;
@@ -19,7 +20,6 @@ namespace RetailTradeServer.ViewModels
 
         private readonly IMenuNavigator _menuNavigator;
         private readonly IMessageStore _messageStore;
-        private readonly IDialogService _dialogService;
         private readonly IShiftService _shiftService;
         private readonly IProductSaleService _productSaleService;
         private readonly IReceiptService _receiptService;
@@ -100,7 +100,6 @@ namespace RetailTradeServer.ViewModels
 
         public HomeViewModel(IMenuNavigator menuNavigator,
             IMenuViewModelFactory menuViewModelFactory,
-            IDialogService dialogService,
             IShiftService shiftService,
             IMessageStore messageStore,
             IProductSaleService productSaleService,
@@ -108,7 +107,6 @@ namespace RetailTradeServer.ViewModels
             IReceiptService receiptService)
         {
             _menuNavigator = menuNavigator;
-            _dialogService = dialogService;
             _shiftService = shiftService;
             _messageStore = messageStore;
             _productSaleService = productSaleService;
@@ -152,18 +150,18 @@ namespace RetailTradeServer.ViewModels
             }            
         }
 
-        private async void Printer()
+        private void Printer()
         {
-            await _dialogService.ShowDialog(new PrinterDialogFormModel(_messageStore) { Title = "Настройки принтеров" });
+            WindowService.Show(nameof(PrinterDialogForm), new PrinterDialogFormModel(_messageStore) { Title = "Настройки принтеров" });
         }
         
-        private async void CashShifts()
+        private void CashShifts()
         {
-            await _dialogService.ShowDialog(new ReportClosingShiftsDialogFormModel(_dialogService, _shiftService) { Title = "Закрытие смены" });
+            WindowService.Show(nameof(ReportClosingShiftsDialogForm), new ReportClosingShiftsDialogFormModel(_shiftService) { Title = "Закрытие смены" });
         }
-        private async void RevenueForPeriod()
+        private void RevenueForPeriod()
         {
-            await _dialogService.ShowDialog(new ReportRevenueForPeriodDialogFormModel(_dialogService, _receiptService, _userStore) { Title = "Выручка за период" });
+            WindowService.Show(nameof(ReportRevenueForPeriodDialogForm), new ReportRevenueForPeriodDialogFormModel(_receiptService, _userStore) { Title = "Выручка за период" });
         }
 
         #endregion

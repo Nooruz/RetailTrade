@@ -77,12 +77,12 @@ namespace RetailTradeServer.ViewModels.Menus
 
         #region Commands
 
-        public ICommand UserControlLoadedCommand { get; }
-        public ICommand GridControlLoadedCommand { get; }
-        public ICommand SearchCommand { get; }
-        public ICommand CleareSelectedUserIdCommand { get; }
-        public ICommand CleareStartDateCommand { get; }
-        public ICommand CleareEndDateCommand { get; }
+        public ICommand UserControlLoadedCommand => new RelayCommand(UserControlLoaded);
+        public ICommand GridControlLoadedCommand => new ParameterCommand((p) => GridControlLoaded(p));
+        public ICommand SearchCommand => new RelayCommand(Search);
+        public ICommand CleareSelectedUserIdCommand => new RelayCommand(() => SelectedUserId = null);
+        public ICommand CleareStartDateCommand => new RelayCommand(() => StartDateTime = null);
+        public ICommand CleareEndDateCommand => new RelayCommand(() => EndDateTime = null);
 
         #endregion
 
@@ -95,13 +95,6 @@ namespace RetailTradeServer.ViewModels.Menus
             _userService = userService;
 
             Header = "Кассовые смены";
-
-            UserControlLoadedCommand = new RelayCommand(UserControlLoaded);
-            GridControlLoadedCommand = new ParameterCommand((p) => GridControlLoaded(p));
-            SearchCommand = new RelayCommand(Search);
-            CleareSelectedUserIdCommand = new RelayCommand(() => SelectedUserId = null);
-            CleareStartDateCommand = new RelayCommand(() => StartDateTime = null);
-            CleareEndDateCommand = new RelayCommand(() => EndDateTime = null);
         }
 
         #endregion

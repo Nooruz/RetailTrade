@@ -3,8 +3,6 @@ using RetailTrade.Domain.Services;
 using RetailTradeServer.Commands;
 using RetailTradeServer.State.Navigators;
 using RetailTradeServer.ViewModels.Base;
-using SalePageServer.State.Dialogs;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Windows;
 using System.Windows.Input;
@@ -16,7 +14,6 @@ namespace RetailTradeServer.ViewModels.Menus
         #region Private Members
 
         private readonly IRevaluationService _revaluationService;
-        private readonly IDialogService _dialogService;
         private readonly IMenuNavigator _menuNavigator; 
         private ObservableCollection<Revaluation> _revaluations;
         private Revaluation _selectedRevaluation;
@@ -58,12 +55,10 @@ namespace RetailTradeServer.ViewModels.Menus
         public RevaluationViewModel(IProductService productService,
             ITypeProductService typeProductService,
             IRevaluationService revaluationService,
-            IDialogService dialogService,
             IMenuNavigator menuNavigator,
             IDataService<Unit> unitService)
         {
             _revaluationService = revaluationService;
-            _dialogService = dialogService;
             _menuNavigator = menuNavigator;
 
             Header = "История изменения цен";
@@ -111,7 +106,7 @@ namespace RetailTradeServer.ViewModels.Menus
 
         public override void Dispose()
         {
-
+            _revaluationService.OnRevaluationCreated -= RevaluationService_OnRevaluationCreated;
             base.Dispose();
         }
 

@@ -120,14 +120,14 @@ namespace RetailTradeServer.ViewModels.Menus
             }
         }
 
-        private async void DuplicateArrival()
+        private void DuplicateArrival()
         {
             if (SelectedArrival != null)
             {
                 if (MessageBox.Show("Дублировать выбранный приход?", "", MessageBoxButton.YesNo, MessageBoxImage.Question) == MessageBoxResult.Yes)
                 {
-                    await _dialogService.ShowDialog(
-                    new CreateArrivalProductDialogFormModel(_productService, _supplierService, _arrivalService, _dialogService) 
+                    WindowService.Show(nameof(CreateArrivalProductDialogForm), 
+                        new CreateArrivalProductDialogFormModel(_productService, _supplierService, _arrivalService) 
                     { 
                         Title = "Приход товаров (дублирование)",
                         SelectedSupplier = SelectedArrival.Supplier,

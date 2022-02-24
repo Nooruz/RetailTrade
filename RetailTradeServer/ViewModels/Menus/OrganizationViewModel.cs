@@ -92,7 +92,7 @@ namespace RetailTradeServer.ViewModels.Menus
 
         #region Commands
 
-        public ICommand CreateOrganizationCommand { get; }
+        public ICommand CreateOrganizationCommand => new CreateOrganizationCommand(organizationService, homeViewModel, this);
 
         #endregion
 
@@ -103,8 +103,6 @@ namespace RetailTradeServer.ViewModels.Menus
             INavigator navigator)
         {
             Header = "Сведения об организации";
-
-            CreateOrganizationCommand = new CreateOrganizationCommand(organizationService, homeViewModel, this);
         }
 
         #endregion
