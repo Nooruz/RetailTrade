@@ -34,14 +34,13 @@ namespace RetailTradeServer.ViewModels.Base
         public ICommand DeleteCommand { get; set; }
         public ICommand EditCommand { get; set; }
         public ICommand CloseCommand { get; set; }
-        public ICommand DialogResizeCommand => new RelayCommand(() => DialogState = DialogState == WindowState.Normal ? WindowState.Maximized : WindowState.Normal);
-        public ICommand DialogCloseCommand => new RelayCommand(() => { DialogVisibility = Visibility.Collapsed; DialogContent = null; });
+        public ICommand CurrentWindowServiceCloseCommand { get; set; }
 
         #endregion
 
         #region Services
 
-        protected IWindowService WindowService => GetService<IWindowService>();
+        protected IWindowService WindowService => GetService<IWindowService>("DialogService");
         protected IWindowService DocumentViewerService => GetService<IWindowService>("DocumentViewerService");
         protected IDialogService DialogService => GetService<IDialogService>();
         protected ICurrentWindowService CurrentWindowService => GetService<ICurrentWindowService>();

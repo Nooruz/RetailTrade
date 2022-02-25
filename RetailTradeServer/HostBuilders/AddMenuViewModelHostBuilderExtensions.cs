@@ -107,6 +107,7 @@ namespace RetailTradeServer.HostBuilders
         {
             return new OrderProductViewModel(services.GetRequiredService<IOrderToSupplierService>(),
                 services.GetRequiredService<IProductService>(),
+                services.GetRequiredService<ITypeProductService>(),
                 services.GetRequiredService<ISupplierService>(),
                 services.GetRequiredService<IOrderStatusService>(),
                 services.GetRequiredService<IUserStore>(),

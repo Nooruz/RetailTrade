@@ -1,5 +1,4 @@
 ﻿using RetailTradeServer.ViewModels.Base;
-using System.Windows.Input;
 
 namespace RetailTradeServer.ViewModels.Dialogs.Base
 {
@@ -14,12 +13,6 @@ namespace RetailTradeServer.ViewModels.Dialogs.Base
         {
             set => ErrorMessageViewModel.Message = value;
         }
-
-        #endregion
-
-        #region Commands
-
-        public ICommand CloseCommand { get; set; }
 
         #endregion
 

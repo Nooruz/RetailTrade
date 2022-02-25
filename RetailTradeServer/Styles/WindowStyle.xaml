@@ -11,6 +11,7 @@
 
     <Style TargetType="{x:Type dx:ThemedWindow}" x:Key="DocumentViewerService">
         <Setter Property="Title" Value="{Binding Path=DataContext.Title, RelativeSource={RelativeSource Mode=Self}}"/>
+        <Setter Property="WindowState" Value="Maximized"/>
     </Style>
 
 </ResourceDictionary>

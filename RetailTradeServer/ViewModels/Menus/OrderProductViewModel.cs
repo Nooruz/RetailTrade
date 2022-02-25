@@ -21,6 +21,7 @@ namespace RetailTradeServer.ViewModels.Menus
         private readonly IOrderToSupplierService _orderToSupplierService;
         private readonly IOrderStatusService _orderStatusService;
         private readonly IProductService _productService;
+        private readonly ITypeProductService _typeProductService;
         private readonly ISupplierService _supplierService;
         private readonly IUserStore _userStore;
         private readonly IZebraBarcodeScanner _zebraBarcodeScanner;
@@ -69,6 +70,7 @@ namespace RetailTradeServer.ViewModels.Menus
 
         public OrderProductViewModel(IOrderToSupplierService orderToSupplierService,
             IProductService productService,
+            ITypeProductService typeProductService,
             ISupplierService supplierService,
             IOrderStatusService orderStatusService,
             IUserStore userStore,
@@ -77,6 +79,7 @@ namespace RetailTradeServer.ViewModels.Menus
         {
             _orderToSupplierService = orderToSupplierService;
             _productService = productService;
+            _typeProductService = typeProductService;
             _supplierService = supplierService;
             _orderStatusService = orderStatusService;
             _userStore = userStore;
@@ -135,7 +138,7 @@ namespace RetailTradeServer.ViewModels.Menus
 
         private void CreateOrder()
         {
-            WindowService.Show(nameof(CreateOrderToSupplierDialogForm), new CreateOrderToSupplierDialogFormModel(_productService, _supplierService, _orderToSupplierService, _orderStatusService, _zebraBarcodeScanner, _unitService, _userStore) { Title = "Заказ поставшику (новый)" });
+            WindowService.Show(nameof(CreateOrderToSupplierDialogForm), new CreateOrderToSupplierDialogFormModel(_productService, _typeProductService, _supplierService, _orderToSupplierService, _orderStatusService, _zebraBarcodeScanner, _unitService, _userStore) { Title = "Заказ поставшику (новый)" });
         }
 
         private async void DeleteOrder()

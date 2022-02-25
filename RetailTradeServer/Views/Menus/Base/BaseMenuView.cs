@@ -60,6 +60,7 @@ namespace RetailTradeServer.Views.Menus
             {
                 WindowStartupLocation = WindowStartupLocation.CenterOwner,
                 AllowSetWindowOwner = true,
+                Name = "DialogService",
                 WindowStyle = new Style
                 {
                     TargetType = typeof(ThemedWindow),

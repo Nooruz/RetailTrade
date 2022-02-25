@@ -22,6 +22,7 @@ namespace RetailTradeServer.ViewModels.Dialogs
         #region Private Members
 
         private readonly IProductService _productService;
+        private readonly ITypeProductService _typeProductService;
         private readonly ISupplierService _supplierService;
         private readonly IOrderStatusService _orderStatusService;
         private readonly IOrderToSupplierService _orderToSupplierService;
@@ -127,6 +128,7 @@ namespace RetailTradeServer.ViewModels.Dialogs
             }
         }
         public bool CanOrderProduct => OrderProducts.Any() && !OrderProducts.Any(p => p.Quantity == 0);
+        public ProductDialogFormModel ProductDialogFormModel => new(_typeProductService) { Products = new(Products) };
 
         #endregion
 
@@ -134,17 +136,19 @@ namespace RetailTradeServer.ViewModels.Dialogs
 
         public ICommand ValidateCellCommand => new ParameterCommand(parameter => ValidateCell(parameter));
         public ICommand OrderProductCommand => new RelayCommand(CreateOrder);
-        public ICommand ClearCommand { get; }
-        public ICommand AddProductToOrderCommand { get; }
-        public ICommand UserControlLoadedCommand { get; }
-        public ICommand CellValueChangedCommand { get; }
-        public ICommand DeleteSelectedOrderProductCommand { get; }
+        public ICommand ClearCommand => new RelayCommand(Cleare);
+        public ICommand AddProductToOrderCommand => new RelayCommand(AddProductToOrder);
+        public ICommand UserControlLoadedCommand => new RelayCommand(UserControlLoaded);
+        public ICommand CellValueChangedCommand => new ParameterCommand(p => CellValueChanged(p));
+        public ICommand DeleteSelectedOrderProductCommand => new RelayCommand(DeleteSelectedOrderProduct);
+        public ICommand ProductCommand => new RelayCommand(OpentProductDialog);
 
         #endregion
 
         #region Constructor
 
         public CreateOrderToSupplierDialogFormModel(IProductService productService,
+            ITypeProductService typeProductService,
             ISupplierService supplierService,
             IOrderToSupplierService orderToSupplierService,
             IOrderStatusService orderStatusService,
@@ -153,6 +157,7 @@ namespace RetailTradeServer.ViewModels.Dialogs
             IUserStore userStore)
         {
             _productService = productService;
+            _typeProductService = typeProductService;
             _supplierService = supplierService;
             _orderToSupplierService = orderToSupplierService;
             _orderStatusService = orderStatusService;
@@ -160,18 +165,37 @@ namespace RetailTradeServer.ViewModels.Dialogs
             _userStore = userStore;
             _zebraBarcodeScanner = zebraBarcodeScanner;
 
-            _orderProducts = new();
+            CurrentWindowServiceCloseCommand = new RelayCommand(OnCurrentWindowClosing);
 
-            ClearCommand = new RelayCommand(Cleare);
-            AddProductToOrderCommand = new RelayCommand(AddProductToOrder);
-            UserControlLoadedCommand = new RelayCommand(UserControlLoaded);
-            CellValueChangedCommand = new ParameterCommand(p => CellValueChanged(p));
-            DeleteSelectedOrderProductCommand = new RelayCommand(DeleteSelectedOrderProduct);
+            _orderProducts = new();
         }
 
         #endregion
 
         #region Private Voids
+
+        private void OnCurrentWindowClosing()
+        {
+            if (ProductDialogFormModel.SelectedProduct != null)
+            {
+                OrderProduct selectedOrderProduct = OrderProducts.FirstOrDefault(r => r.ProductId == ProductDialogFormModel.SelectedProduct.Id);
+                if (selectedOrderProduct == null)
+                {
+                    selectedOrderProduct.ProductId = ProductDialogFormModel.SelectedProduct.Id;
+                    selectedOrderProduct.Product = ProductDialogFormModel.SelectedProduct;
+                    selectedOrderProduct.ArrivalPrice = ProductDialogFormModel.SelectedProduct.ArrivalPrice;
+                }
+                else
+                {
+                    _ = MessageBoxService.Show("Такой товар уже введен.", "", MessageBoxButton.OK, MessageBoxImage.Exclamation);
+                }
+            }
+        }
+
+        private void OpentProductDialog()
+        {
+            WindowService.Show(nameof(ProductDialogForm), ProductDialogFormModel);
+        }
 
         private void DeleteSelectedOrderProduct()
         {
@@ -203,8 +227,6 @@ namespace RetailTradeServer.ViewModels.Dialogs
             Suppliers = await _supplierService.GetAllAsync();
             OrderStatuses = await _orderStatusService.GetAllAsync();
             Units = await _unitService.GetAllAsync();
-            _zebraBarcodeScanner.Open();
-            _zebraBarcodeScanner.OnBarcodeEvent += ZebraBarcodeScanner_OnBarcodeEvent;
         }
 
         private void ZebraBarcodeScanner_OnBarcodeEvent(string obj)
@@ -232,7 +254,7 @@ namespace RetailTradeServer.ViewModels.Dialogs
             }
             else
             {
-                MessageBox.Show("Выберите поставщика!", "", MessageBoxButton.OK, MessageBoxImage.Exclamation);
+                _ = MessageBoxService.Show("Выберите поставщика!", "", MessageBoxButton.OK, MessageBoxImage.Exclamation);
             }
             OnPropertyChanged(nameof(CanOrderProduct));
         }
@@ -245,7 +267,7 @@ namespace RetailTradeServer.ViewModels.Dialogs
                 {
                     e.IsValid = false;
                     e.ErrorContent = "Количество заказа не должно быть 0.";
-                    MessageBox.Show("Количество заказа не должно быть 0.", "", MessageBoxButton.OK, MessageBoxImage.Error);
+                    _ = MessageBoxService.Show("Количество заказа не должно быть 0.", "", MessageBoxButton.OK, MessageBoxImage.Error);
                 }
             }
             OnPropertyChanged(nameof(CanOrderProduct));
@@ -291,8 +313,6 @@ namespace RetailTradeServer.ViewModels.Dialogs
 
         public override void Dispose()
         {
-            _zebraBarcodeScanner.OnBarcodeEvent -= ZebraBarcodeScanner_OnBarcodeEvent;
-            _zebraBarcodeScanner.Close();
             base.Dispose();
         }
 

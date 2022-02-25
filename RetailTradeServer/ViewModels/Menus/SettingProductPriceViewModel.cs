@@ -222,7 +222,7 @@ namespace RetailTradeServer.ViewModels.Menus
 
         private void Create()
         {
-            ProductDialogFormModel viewModel = new ProductDialogFormModel(_productService, _typeProductService) { Products = Products };
+            ProductDialogFormModel viewModel = new(_typeProductService) { Products = Products };
             WindowService.Show(nameof(ProductDialogForm), viewModel);
             if (viewModel.SelectedProduct != null)
             {
@@ -235,7 +235,7 @@ namespace RetailTradeServer.ViewModels.Menus
                 {
                     MessageBox.Show("Такой товар уже введен.", "", MessageBoxButton.OK, MessageBoxImage.Exclamation);
                 }
-            }            
+            }
         }
 
         private void AddProduct()

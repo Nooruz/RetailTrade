@@ -16,7 +16,6 @@ namespace RetailTradeServer.ViewModels.Dialogs
     {
         #region Private Members
 
-        private readonly IProductService _productService;
         private readonly ITypeProductService _typeProductService;
         private ObservableCollection<Product> _products;
         private IEnumerable<TypeProduct> _typeProducts;
@@ -126,10 +125,8 @@ namespace RetailTradeServer.ViewModels.Dialogs
 
         #region Constructor
 
-        public ProductDialogFormModel(IProductService productService,
-            ITypeProductService typeProductService)
+        public ProductDialogFormModel(ITypeProductService typeProductService)
         {
-            _productService = productService;
             _typeProductService = typeProductService;
         }
 

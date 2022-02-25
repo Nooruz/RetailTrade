@@ -1,11 +1,9 @@
-﻿using System.Windows.Controls;
-
-namespace RetailTradeServer.Views.Dialogs
+﻿namespace RetailTradeServer.Views.Dialogs
 {
     /// <summary>
     /// Логика взаимодействия для ProductDialogForm.xaml
     /// </summary>
-    public partial class ProductDialogForm : UserControl
+    public partial class ProductDialogForm : BaseDialogUserControl
     {
         public ProductDialogForm()
         {

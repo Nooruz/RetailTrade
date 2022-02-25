@@ -1,14 +1,14 @@
-﻿<UserControl       x:Class="RetailTradeServer.Views.Dialogs.ProductDialogForm"
-                   xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-                   xmlns:dx="http://schemas.devexpress.com/winfx/2008/xaml/core"
-                   xmlns:dxe="http://schemas.devexpress.com/winfx/2008/xaml/editors"
-                   xmlns:dxg="http://schemas.devexpress.com/winfx/2008/xaml/grid"
-                   xmlns:dxlc="http://schemas.devexpress.com/winfx/2008/xaml/layoutcontrol"
-                   xmlns:dxmvvm="http://schemas.devexpress.com/winfx/2008/xaml/mvvm"
-                   xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-                   xmlns:components="clr-namespace:RetailTradeServer.Components"
-                   Height="500"
-                   Width="950">
+﻿<dialogs:BaseDialogUserControl       x:Class="RetailTradeServer.Views.Dialogs.ProductDialogForm"
+                                     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                                     xmlns:dx="http://schemas.devexpress.com/winfx/2008/xaml/core"
+                                     xmlns:dxe="http://schemas.devexpress.com/winfx/2008/xaml/editors"
+                                     xmlns:dxg="http://schemas.devexpress.com/winfx/2008/xaml/grid"
+                                     xmlns:dxlc="http://schemas.devexpress.com/winfx/2008/xaml/layoutcontrol"
+                                     xmlns:dxmvvm="http://schemas.devexpress.com/winfx/2008/xaml/mvvm"
+                                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                                     xmlns:components="clr-namespace:RetailTradeServer.Components"
+                                     xmlns:dialogs="clr-namespace:RetailTradeServer.Views.Dialogs"
+                                     Height="500" Width="950">
 
     <dxmvvm:Interaction.Behaviors>
         <dxmvvm:EventToCommand EventName="Loaded"
@@ -136,4 +136,4 @@
         
     </dxlc:LayoutControl>
     
-</UserControl>
+</dialogs:BaseDialogUserControl>
