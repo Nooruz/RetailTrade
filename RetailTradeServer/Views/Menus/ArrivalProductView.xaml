@@ -6,7 +6,6 @@
                     xmlns:local="clr-namespace:RetailTradeServer.Views.Menus"
                     xmlns:dxe="http://schemas.devexpress.com/winfx/2008/xaml/editors"
                     x:Class="RetailTradeServer.Views.Menus.ArrivalProductView"
-                    ShowDefaultButtons="False"
                     Title="{Binding Header}">
 
     <dxmvvm:Interaction.Behaviors>

@@ -10,14 +10,8 @@ namespace RetailTradeServer.Views.Menus
     {
         #region Dependency Properties
 
-        public static readonly DependencyProperty ShowDefaultButtonsProperty =
-            DependencyProperty.Register(nameof(ShowDefaultButtons), typeof(bool), typeof(BaseMenuView), new PropertyMetadata(true));
-
         public static readonly DependencyProperty TitleProperty =
             DependencyProperty.Register(nameof(Title), typeof(string), typeof(BaseMenuView), new PropertyMetadata("Название"));
-
-        public static readonly DependencyProperty ButtonsProperty =
-            DependencyProperty.Register(nameof(Buttons), typeof(UIElementCollection), typeof(BaseMenuView), new PropertyMetadata(null));
 
         public static readonly DependencyProperty ShowLoadingPanelProperty =
             DependencyProperty.Register(nameof(ShowLoadingPanel), typeof(bool), typeof(BaseMenuView), new PropertyMetadata(true));
@@ -32,22 +26,10 @@ namespace RetailTradeServer.Views.Menus
 
         #region Public Properties
 
-        public bool ShowDefaultButtons
-        {
-            get => (bool)GetValue(ShowDefaultButtonsProperty);
-            set => SetValue(ShowDefaultButtonsProperty, value);
-        }
-
         public string Title
         {
             get => (string)GetValue(TitleProperty);
             set => SetValue(TitleProperty, value);
-        }
-
-        public UIElementCollection Buttons
-        {
-            get { return (UIElementCollection)GetValue(ButtonsProperty); }
-            set { SetValue(ButtonsProperty, value); }
         }
 
         public bool ShowLoadingPanel
@@ -95,6 +77,7 @@ namespace RetailTradeServer.Views.Menus
                     BasedOn = FindResource("DocumentViewerService") as Style
                 }
             });
+            Interaction.GetBehaviors(this).Add(new DXMessageBoxService());
             Interaction.GetBehaviors(this).Add(new DialogService());
             Style = FindResource("BaseUserControl") as Style;
         }

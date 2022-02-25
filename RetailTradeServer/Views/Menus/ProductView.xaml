@@ -9,35 +9,11 @@
     xmlns:components="clr-namespace:RetailTradeServer.Components"
     xmlns:local="clr-namespace:RetailTradeServer.Views.Menus"
     x:Class="RetailTradeServer.Views.Menus.ProductView"
-    ShowDefaultButtons="False"
     xmlns:dialogs="clr-namespace:RetailTradeServer.Views.Dialogs"
     Title="{Binding Header}">
 
     <dxmvvm:Interaction.Behaviors>
         <dxmvvm:EventToCommand EventName="Loaded" Command="{Binding UserControlLoadedCommand}"/>
-        <dxmvvm:WindowService AllowSetWindowOwner="True"
-                              WindowStartupLocation="CenterOwner">
-            <dxmvvm:WindowService.WindowStyle>
-                <Style TargetType="dx:ThemedWindow">
-                    <Setter Property="SizeToContent" Value="WidthAndHeight"/>
-                    <Setter Property="WindowStyle" Value="ToolWindow"/>
-                    <Setter Property="ResizeMode" Value="NoResize"/>
-                </Style>
-            </dxmvvm:WindowService.WindowStyle>
-        </dxmvvm:WindowService>
-        <dx:DialogService>
-            <dx:DialogService.DialogStyle>
-                <Style TargetType="Window">
-                    <Setter Property="SizeToContent" Value="WidthAndHeight"/>
-                    <Setter Property="WindowStyle" Value="ToolWindow"/>
-                </Style>
-            </dx:DialogService.DialogStyle>
-            <dx:DialogService.ViewTemplate>
-                <DataTemplate>
-                    <dialogs:CreateProductDialogForm/>
-                </DataTemplate>
-            </dx:DialogService.ViewTemplate>
-        </dx:DialogService>
     </dxmvvm:Interaction.Behaviors>
 
     <dxlc:LayoutControl ItemSpace="10"

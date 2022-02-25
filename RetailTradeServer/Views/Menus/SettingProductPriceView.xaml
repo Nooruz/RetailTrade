@@ -8,7 +8,6 @@
     xmlns:custom="clr-namespace:RetailTradeServer.Components"
     xmlns:local="clr-namespace:RetailTradeServer.Views.Menus"
     x:Class="RetailTradeServer.Views.Menus.SettingProductPriceView"
-    ShowDefaultButtons="False"
     Title="{Binding Header}">
 
     <dxmvvm:Interaction.Behaviors>

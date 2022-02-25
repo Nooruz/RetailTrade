@@ -8,8 +8,7 @@
     xmlns:components="clr-namespace:RetailTradeServer.Components"
     xmlns:local="clr-namespace:RetailTradeServer.Views.Menus"
     x:Class="RetailTradeServer.Views.Menus.WareHouseView"
-    Title="{Binding Header}"
-    ShowDefaultButtons="False">
+    Title="{Binding Header}">
 
     <dxmvvm:Interaction.Behaviors>
         <dxmvvm:EventToCommand EventName="Loaded"

@@ -12,7 +12,7 @@ namespace RetailTradeServer.Report
             {
                 lbOrderNumberAndDate.Text = $"Заказ поставшику № {orderToSupplier.Id} от {orderToSupplier.OrderDate.ToShortDateString()}";
                 lbSupplier.Text = $"{supplier.FullName} ИНН {supplier.Inn}, {supplier.Address}, тел.: {supplier.Phone}";
-                lbBuyer.Text = $"{organization.FullName}, ИНН {organization.Inn}, {organization.Address}, тел.: {organization.Phone}";
+                lbBuyer.Text = $"{organization?.FullName}, ИНН {organization?.Inn}, {organization?.Address}, тел.: {organization?.Phone}";
             }
             catch (Exception e)
             {

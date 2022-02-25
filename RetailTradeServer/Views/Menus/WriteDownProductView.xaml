@@ -5,7 +5,6 @@
                     xmlns:dxmvvm="http://schemas.devexpress.com/winfx/2008/xaml/mvvm"
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
                     xmlns:local="clr-namespace:RetailTradeServer.Views.Menus"
-                    ShowDefaultButtons="False"
                     Title="{Binding Header}">
 
     <dxmvvm:Interaction.Behaviors>

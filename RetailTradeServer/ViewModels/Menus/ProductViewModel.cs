@@ -160,7 +160,7 @@ namespace RetailTradeServer.ViewModels.Menus
         {
             if (SelectedTypeProduct == null)
             {
-                MessageBox.Show("Выберите группу видов или вид товара!", "", MessageBoxButton.OK, MessageBoxImage.Exclamation);
+                _ = MessageBoxService.Show("Выберите группу видов или вид товара!", "", MessageBoxButton.OK, MessageBoxImage.Exclamation);
                 return;
             }
             if (SelectedTypeProduct.Id != 1)
@@ -194,14 +194,14 @@ namespace RetailTradeServer.ViewModels.Menus
         {
             if (SelectedProduct != null)
             {
-                if (MessageBox.Show(SelectedProduct.DeleteMark ? $"Снять пометку \"{SelectedProduct.Name}\"?" : $"Пометить \"{SelectedProduct.Name}\" на удаление?", "", MessageBoxButton.YesNo, MessageBoxImage.Question) == MessageBoxResult.Yes)
+                if (MessageBoxService.Show(SelectedProduct.DeleteMark ? $"Снять пометку \"{SelectedProduct.Name}\"?" : $"Пометить \"{SelectedProduct.Name}\" на удаление?", "", MessageBoxButton.YesNo, MessageBoxImage.Question) == MessageBoxResult.Yes)
                 {
                     await _productService.MarkingForDeletion(SelectedProduct);
                 }
             }
             else
             {
-                _ = MessageBox.Show("Выберите товар", "", MessageBoxButton.OK, MessageBoxImage.Exclamation);
+                _ = MessageBoxService.Show("Выберите товар", "", MessageBoxButton.OK, MessageBoxImage.Exclamation);
             }
         }
 
@@ -232,7 +232,7 @@ namespace RetailTradeServer.ViewModels.Menus
             }
             else
             {
-                _ = MessageBox.Show("Выберите товар", "", MessageBoxButton.OK, MessageBoxImage.Exclamation);
+                _ = MessageBoxService.Show("Выберите товар", "", MessageBoxButton.OK, MessageBoxImage.Exclamation);
             }
         }
 
@@ -249,6 +249,7 @@ namespace RetailTradeServer.ViewModels.Menus
         {
             _productService.OnProductCreated -= ProductService_OnProductCreated;
             _typeProductService.OnTypeProductCreated -= TypeProductService_OnTypeProductCreated;
+            _typeProductService.OnTypeProductEdited -= TypeProductService_OnTypeProductEdited;
             base.Dispose();
         }
 
