@@ -1,5 +1,6 @@
 ﻿using DevExpress.Mvvm;
 using DevExpress.Xpf.Grid;
+using DevExpress.XtraEditors.DXErrorProvider;
 using RetailTrade.Domain.Models;
 using RetailTrade.Domain.Services;
 using RetailTradeServer.Commands;
@@ -128,7 +129,7 @@ namespace RetailTradeServer.ViewModels.Dialogs
             }
         }
         public bool CanOrderProduct => OrderProducts.Any() && !OrderProducts.Any(p => p.Quantity == 0);
-        public ProductDialogFormModel ProductDialogFormModel => new(_typeProductService) { Products = new(Products) };
+        public GridControl OrderGridControl { get; set; }
 
         #endregion
 
@@ -142,6 +143,7 @@ namespace RetailTradeServer.ViewModels.Dialogs
         public ICommand CellValueChangedCommand => new ParameterCommand(p => CellValueChanged(p));
         public ICommand DeleteSelectedOrderProductCommand => new RelayCommand(DeleteSelectedOrderProduct);
         public ICommand ProductCommand => new RelayCommand(OpentProductDialog);
+        public ICommand GridControlLoadedCommand => new ParameterCommand((object p) => GridControlLoaded(p));
 
         #endregion
 
@@ -165,8 +167,6 @@ namespace RetailTradeServer.ViewModels.Dialogs
             _userStore = userStore;
             _zebraBarcodeScanner = zebraBarcodeScanner;
 
-            CurrentWindowServiceCloseCommand = new RelayCommand(OnCurrentWindowClosing);
-
             _orderProducts = new();
         }
 
@@ -174,16 +174,28 @@ namespace RetailTradeServer.ViewModels.Dialogs
 
         #region Private Voids
 
-        private void OnCurrentWindowClosing()
+        private void GridControlLoaded(object parameter)
         {
-            if (ProductDialogFormModel.SelectedProduct != null)
+            if (parameter is RoutedEventArgs e)
             {
-                OrderProduct selectedOrderProduct = OrderProducts.FirstOrDefault(r => r.ProductId == ProductDialogFormModel.SelectedProduct.Id);
+                if (e.Source is GridControl gridControl)
+                {
+                    OrderGridControl = gridControl;
+                }
+            }
+        }
+
+        private void ProductDialogFormModel_OnProductSelected(Product product)
+        {
+            if (product != null)
+            {
+                OrderProduct selectedOrderProduct = OrderProducts.FirstOrDefault(r => r.ProductId == product.Id);
                 if (selectedOrderProduct == null)
                 {
-                    selectedOrderProduct.ProductId = ProductDialogFormModel.SelectedProduct.Id;
-                    selectedOrderProduct.Product = ProductDialogFormModel.SelectedProduct;
-                    selectedOrderProduct.ArrivalPrice = ProductDialogFormModel.SelectedProduct.ArrivalPrice;
+                    SelectedOrderProduct.ProductId = product.Id;
+                    SelectedOrderProduct.Product = product;
+                    SelectedOrderProduct.ArrivalPrice = product.ArrivalPrice;
+                    OrderGridControl.View.MoveNextCell();
                 }
                 else
                 {
@@ -194,7 +206,9 @@ namespace RetailTradeServer.ViewModels.Dialogs
 
         private void OpentProductDialog()
         {
-            WindowService.Show(nameof(ProductDialogForm), ProductDialogFormModel);
+            ProductDialogFormModel viewModel = new(_typeProductService) { Products = new(Products) };
+            viewModel.OnProductSelected += ProductDialogFormModel_OnProductSelected;
+            WindowService.Show(nameof(ProductDialogForm), viewModel);
         }
 
         private void DeleteSelectedOrderProduct()
@@ -214,6 +228,7 @@ namespace RetailTradeServer.ViewModels.Dialogs
                     Product product = Products.FirstOrDefault(p => p.Id == (int)e.Value);
                     SelectedOrderProduct.ArrivalPrice = product.ArrivalPrice;
                     SelectedOrderProduct.Product = product;
+                    SelectedOrderProduct.Quantity = 1;
                 }
                 TableView tableView = e.Source as TableView;
                 tableView.PostEditor();
@@ -263,11 +278,35 @@ namespace RetailTradeServer.ViewModels.Dialogs
         {
             if (parameter is GridCellValidationEventArgs e)
             {
-                if ((decimal)e.Value < 0)
+                if (e.Cell.Property == nameof(OrderProduct.Quantity))
                 {
-                    e.IsValid = false;
-                    e.ErrorContent = "Количество заказа не должно быть 0.";
-                    _ = MessageBoxService.Show("Количество заказа не должно быть 0.", "", MessageBoxButton.OK, MessageBoxImage.Error);
+                    if ((decimal)e.Value < 0)
+                    {
+                        _ = MessageBoxService.Show("Количество заказа не должно быть 0.", "", MessageBoxButton.OK, MessageBoxImage.Error);                        
+                        e.ErrorContent = "Количество заказа не должно быть 0.";
+                        e.ErrorType = ErrorType.Critical;
+                        e.IsValid = false;
+                    }
+                }
+                if (e.Cell.Property == nameof(OrderProduct.ProductId))
+                {
+                    try
+                    {
+                        if (OrderProducts.Any(r => r.ProductId == (int)e.Value))
+                        {
+                            if (SelectedOrderProduct.ProductId != (int)e.Value)
+                            {
+                                _ = MessageBoxService.Show("Такой товар уже введен.", "", MessageBoxButton.OK, MessageBoxImage.Error);
+                                e.ErrorContent = "Такой товар уже введен.";
+                                e.ErrorType = ErrorType.Critical;
+                                e.IsValid = false;                                
+                            }
+                        }
+                    }
+                    catch (Exception)
+                    {
+                        //ignore
+                    }
                 }
             }
             OnPropertyChanged(nameof(CanOrderProduct));

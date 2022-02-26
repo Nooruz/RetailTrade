@@ -34,7 +34,6 @@ namespace RetailTradeServer.ViewModels.Base
         public ICommand DeleteCommand { get; set; }
         public ICommand EditCommand { get; set; }
         public ICommand CloseCommand { get; set; }
-        public ICommand CurrentWindowServiceCloseCommand { get; set; }
 
         #endregion
 

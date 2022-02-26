@@ -38,14 +38,7 @@ namespace RetailTradeServer.Views.Dialogs
             });
             Interaction.GetBehaviors(this).Add(new DXMessageBoxService());
             Interaction.GetBehaviors(this).Add(new DialogService());
-            Interaction.GetBehaviors(this).Add(new CurrentWindowService() 
-            { 
-                ClosingCommand = new Binding()
-                {
-                    RelativeSource = new RelativeSource(RelativeSourceMode.Self),
-                    Path = new PropertyPath("DataContext.CurrentWindowServiceCloseCommand")
-                } as ICommand
-            });
+            Interaction.GetBehaviors(this).Add(new CurrentWindowService());
         }
 
         #endregion

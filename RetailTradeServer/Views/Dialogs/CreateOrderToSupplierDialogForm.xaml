@@ -57,6 +57,9 @@
                         <dxmvvm:EventToCommand EventName="CellValueChanged"
                                                Command="{Binding CellValueChangedCommand}"
                                                PassEventArgsToCommand="True"/>
+                        <dxmvvm:EventToCommand EventName="ValidateCell"
+                                               Command="{Binding ValidateCellCommand}"
+                                               PassEventArgsToCommand="True"/>
                     </dxmvvm:Interaction.Behaviors>
                 </dxg:TableView>
             </dxg:GridControl.View>
@@ -148,6 +151,12 @@
                                      SummaryType="Sum"
                                      DisplayFormat="{}Всего: {0:n} сомов"/>
             </dxg:GridControl.TotalSummary>
+
+            <dxmvvm:Interaction.Behaviors>
+                <dxmvvm:EventToCommand EventName="Loaded"
+                                       Command="{Binding GridControlLoadedCommand}"
+                                       PassEventArgsToCommand="True"/>
+            </dxmvvm:Interaction.Behaviors>
 
         </dxg:GridControl>
 

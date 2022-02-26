@@ -123,6 +123,12 @@ namespace RetailTradeServer.ViewModels.Dialogs
 
         #endregion
 
+        #region Event Action
+
+        public event Action<Product> OnProductSelected;
+
+        #endregion
+
         #region Constructor
 
         public ProductDialogFormModel(ITypeProductService typeProductService)
@@ -190,6 +196,7 @@ namespace RetailTradeServer.ViewModels.Dialogs
         {
             if (SelectedProduct != null)
             {
+                OnProductSelected?.Invoke(SelectedProduct);
                 CurrentWindowService.Close();
             }
         }
