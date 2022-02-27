@@ -4,7 +4,27 @@ namespace RetailTrade.Domain.Models
 {
     public class DomainObject : INotifyPropertyChanged
     {
-        public int Id { get; set; }
+        #region Private Members
+
+        private int _id;
+
+        #endregion
+
+        #region Public Properties
+
+        public int Id
+        {
+            get => _id;
+            set
+            {
+                _id = value;
+                OnPropertyChanged(nameof(Id));
+            }
+        }
+
+        #endregion
+
+        #region PropertyChanged
 
         public event PropertyChangedEventHandler PropertyChanged;
 
@@ -12,5 +32,7 @@ namespace RetailTrade.Domain.Models
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
+
+        #endregion
     }
 }

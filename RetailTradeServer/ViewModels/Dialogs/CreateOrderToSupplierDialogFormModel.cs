@@ -15,6 +15,7 @@ using System.Collections.ObjectModel;
 using System.Linq;
 using System.Windows;
 using System.Windows.Input;
+using System.Windows.Threading;
 
 namespace RetailTradeServer.ViewModels.Dialogs
 {
@@ -130,6 +131,9 @@ namespace RetailTradeServer.ViewModels.Dialogs
         }
         public bool CanOrderProduct => OrderProducts.Any() && !OrderProducts.Any(p => p.Quantity == 0);
         public GridControl OrderGridControl { get; set; }
+        public TableView OrderTableView => OrderGridControl != null ? OrderGridControl.View as TableView : null;
+        public GridColumn OrderGridColumn { get; set; }
+        public OrderProduct EditOrderProduct => OrderProducts.FirstOrDefault(p => p.ProductId == 0);
 
         #endregion
 
@@ -142,7 +146,7 @@ namespace RetailTradeServer.ViewModels.Dialogs
         public ICommand UserControlLoadedCommand => new RelayCommand(UserControlLoaded);
         public ICommand CellValueChangedCommand => new ParameterCommand(p => CellValueChanged(p));
         public ICommand DeleteSelectedOrderProductCommand => new RelayCommand(DeleteSelectedOrderProduct);
-        public ICommand ProductCommand => new RelayCommand(OpentProductDialog);
+        public ICommand ProductCommand => new RelayCommand(OpenProductDialog);
         public ICommand GridControlLoadedCommand => new ParameterCommand((object p) => GridControlLoaded(p));
 
         #endregion
@@ -181,8 +185,14 @@ namespace RetailTradeServer.ViewModels.Dialogs
                 if (e.Source is GridControl gridControl)
                 {
                     OrderGridControl = gridControl;
+                    OrderTableView.ShownEditor += OrderTableView_ShownEditor;
                 }
             }
+        }
+
+        private void OrderTableView_ShownEditor(object sender, EditorEventArgs e)
+        {
+            OrderTableView.Grid.View.ActiveEditor.SelectAll();
         }
 
         private void ProductDialogFormModel_OnProductSelected(Product product)
@@ -194,17 +204,18 @@ namespace RetailTradeServer.ViewModels.Dialogs
                 {
                     SelectedOrderProduct.ProductId = product.Id;
                     SelectedOrderProduct.Product = product;
-                    SelectedOrderProduct.ArrivalPrice = product.ArrivalPrice;
-                    OrderGridControl.View.MoveNextCell();
+                    SelectedOrderProduct.ArrivalPrice = product.ArrivalPrice;                    
+                    SelectedOrderProduct.Quantity = 1;
+                    ShowEditor(2);
                 }
                 else
                 {
-                    _ = MessageBoxService.Show("Такой товар уже введен.", "", MessageBoxButton.OK, MessageBoxImage.Exclamation);
+                    _ = MessageBoxService.Show("Такой товар уже введен.", "", MessageBoxButton.OK, MessageBoxImage.Error);
                 }
             }
         }
 
-        private void OpentProductDialog()
+        private void OpenProductDialog()
         {
             ProductDialogFormModel viewModel = new(_typeProductService) { Products = new(Products) };
             viewModel.OnProductSelected += ProductDialogFormModel_OnProductSelected;
@@ -229,10 +240,10 @@ namespace RetailTradeServer.ViewModels.Dialogs
                     SelectedOrderProduct.ArrivalPrice = product.ArrivalPrice;
                     SelectedOrderProduct.Product = product;
                     SelectedOrderProduct.Quantity = 1;
+                    ShowEditor(2);
                 }
-                TableView tableView = e.Source as TableView;
-                tableView.PostEditor();
-                tableView.Grid.UpdateTotalSummary();
+                OrderTableView.PostEditor();
+                OrderTableView.Grid.UpdateTotalSummary();
             }
             OnPropertyChanged(nameof(CanOrderProduct));
         }
@@ -265,13 +276,33 @@ namespace RetailTradeServer.ViewModels.Dialogs
         {
             if (SelectedSupplier != null)
             {
-                OrderProducts.Add(new OrderProduct());
+                if (EditOrderProduct != null)
+                {
+                    _ = MessageBoxService.Show("Выберите товар!", "", MessageBoxButton.OK, MessageBoxImage.Exclamation);
+                    
+                }
+                else
+                {
+                    OrderProducts.Add(new OrderProduct());
+                    SelectedOrderProduct = EditOrderProduct;   
+                    ShowEditor(0);
+                }
             }
             else
             {
                 _ = MessageBoxService.Show("Выберите поставщика!", "", MessageBoxButton.OK, MessageBoxImage.Exclamation);
             }
             OnPropertyChanged(nameof(CanOrderProduct));
+        }
+
+        private void ShowEditor(int column)
+        {
+            OrderTableView.FocusedRowHandle = OrderProducts.IndexOf(SelectedOrderProduct);
+            OrderTableView.Grid.CurrentColumn = OrderTableView.Grid.Columns[column];
+            _ = OrderTableView.Dispatcher.BeginInvoke(new Action(() =>
+            {
+                OrderTableView.ShowEditor();
+            }), DispatcherPriority.Render);
         }
 
         private void ValidateCell(object parameter)

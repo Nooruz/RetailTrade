@@ -196,8 +196,8 @@ namespace RetailTradeServer.ViewModels.Dialogs
         {
             if (SelectedProduct != null)
             {
-                OnProductSelected?.Invoke(SelectedProduct);
                 CurrentWindowService.Close();
+                OnProductSelected?.Invoke(SelectedProduct);                
             }
         }
 

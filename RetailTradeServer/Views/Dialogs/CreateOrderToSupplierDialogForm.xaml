@@ -6,8 +6,8 @@
                                  xmlns:dxmvvm="http://schemas.devexpress.com/winfx/2008/xaml/mvvm"
                                  xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
                                  xmlns:dialogs="clr-namespace:RetailTradeServer.Views.Dialogs"
-                                 Width="700"
-                               Height="500">
+                                 Width="900"
+                               Height="700">
 
     <dxmvvm:Interaction.Behaviors>
         <dxmvvm:EventToCommand EventName="Loaded"
@@ -51,7 +51,8 @@
             
             <dxg:GridControl.View>
                 <dxg:TableView InvalidRowException="TableView_InvalidRowException"
-                               ShowGroupPanel="False"
+                               ShowGroupPanel="False" 
+                               EnableImmediatePosting="True"
                                ShowTotalSummary="True">
                     <dxmvvm:Interaction.Behaviors>
                         <dxmvvm:EventToCommand EventName="CellValueChanged"
