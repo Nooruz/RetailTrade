@@ -22,7 +22,7 @@ namespace RetailTrade.Barcode
         {
             _serialPort = new()
             {
-                PortName = "COM3",
+                PortName = "COM4",
                 BaudRate = 9600,
                 ReadTimeout = 1000,
             };
