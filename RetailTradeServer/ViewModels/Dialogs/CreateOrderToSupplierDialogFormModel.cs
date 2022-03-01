@@ -1,10 +1,10 @@
 ﻿using DevExpress.Mvvm;
+using DevExpress.Xpf.Editors;
 using DevExpress.Xpf.Grid;
 using DevExpress.XtraEditors.DXErrorProvider;
 using RetailTrade.Domain.Models;
 using RetailTrade.Domain.Services;
 using RetailTradeServer.Commands;
-using RetailTradeServer.Report;
 using RetailTradeServer.State.Barcode;
 using RetailTradeServer.State.Users;
 using RetailTradeServer.ViewModels.Dialogs.Base;
@@ -26,7 +26,6 @@ namespace RetailTradeServer.ViewModels.Dialogs
         private readonly IProductService _productService;
         private readonly ITypeProductService _typeProductService;
         private readonly ISupplierService _supplierService;
-        private readonly IOrderStatusService _orderStatusService;
         private readonly IOrderToSupplierService _orderToSupplierService;
         private readonly IZebraBarcodeScanner _zebraBarcodeScanner;
         private readonly IDataService<Unit> _unitService;
@@ -37,7 +36,6 @@ namespace RetailTradeServer.ViewModels.Dialogs
         private string _comment;
         private IEnumerable<Supplier> _suppliers;
         private IEnumerable<Product> _products;
-        private IEnumerable<OrderStatus> _orderStatuses;
         private IEnumerable<Unit> _units;
         private ObservableCollection<OrderProduct> _orderProducts;
 
@@ -52,15 +50,6 @@ namespace RetailTradeServer.ViewModels.Dialogs
             {
                 _suppliers = value;
                 OnPropertyChanged(nameof(Suppliers));
-            }
-        }
-        public IEnumerable<OrderStatus> OrderStatuses
-        {
-            get => _orderStatuses;
-            set
-            {
-                _orderStatuses = value;
-                OnPropertyChanged(nameof(OrderStatuses));
             }
         }
         public IEnumerable<Unit> Units
@@ -129,7 +118,6 @@ namespace RetailTradeServer.ViewModels.Dialogs
                 OnPropertyChanged(nameof(SelectedOrderProduct));                
             }
         }
-        public bool CanOrderProduct => OrderProducts.Any() && !OrderProducts.Any(p => p.Quantity == 0);
         public GridControl OrderGridControl { get; set; }
         public TableView OrderTableView => OrderGridControl != null ? OrderGridControl.View as TableView : null;
         public GridColumn OrderGridColumn { get; set; }
@@ -148,6 +136,7 @@ namespace RetailTradeServer.ViewModels.Dialogs
         public ICommand DeleteSelectedOrderProductCommand => new RelayCommand(DeleteSelectedOrderProduct);
         public ICommand ProductCommand => new RelayCommand(OpenProductDialog);
         public ICommand GridControlLoadedCommand => new ParameterCommand((object p) => GridControlLoaded(p));
+        public ICommand EditValueChangingCommand => new ParameterCommand((object p) => EditValueChanging(p));
 
         #endregion
 
@@ -157,7 +146,6 @@ namespace RetailTradeServer.ViewModels.Dialogs
             ITypeProductService typeProductService,
             ISupplierService supplierService,
             IOrderToSupplierService orderToSupplierService,
-            IOrderStatusService orderStatusService,
             IZebraBarcodeScanner zebraBarcodeScanner,
             IDataService<Unit> unitService,
             IUserStore userStore)
@@ -166,7 +154,6 @@ namespace RetailTradeServer.ViewModels.Dialogs
             _typeProductService = typeProductService;
             _supplierService = supplierService;
             _orderToSupplierService = orderToSupplierService;
-            _orderStatusService = orderStatusService;
             _unitService = unitService;
             _userStore = userStore;
             _zebraBarcodeScanner = zebraBarcodeScanner;
@@ -177,6 +164,25 @@ namespace RetailTradeServer.ViewModels.Dialogs
         #endregion
 
         #region Private Voids
+
+        private void EditValueChanging(object parameter)
+        {
+            if (OrderProducts.Any(o => o.ProductId != 0))
+            {
+                if (parameter is EditValueChangingEventArgs e)
+                {
+                    if (MessageBoxService.ShowMessage("Данные не сохранены. Продолжить?", "Sale Page", MessageButton.YesNo, MessageIcon.Question) == MessageResult.Yes)
+                    {
+                        Cleare();
+                    }
+                    else
+                    {
+                        e.IsCancel = true;
+                        e.Handled = true;
+                    }
+                }                
+            }
+        }
 
         private void GridControlLoaded(object parameter)
         {
@@ -245,13 +251,11 @@ namespace RetailTradeServer.ViewModels.Dialogs
                 OrderTableView.PostEditor();
                 OrderTableView.Grid.UpdateTotalSummary();
             }
-            OnPropertyChanged(nameof(CanOrderProduct));
         }
 
         private async void UserControlLoaded()
         {
             Suppliers = await _supplierService.GetAllAsync();
-            OrderStatuses = await _orderStatusService.GetAllAsync();
             Units = await _unitService.GetAllAsync();
         }
 
@@ -292,7 +296,6 @@ namespace RetailTradeServer.ViewModels.Dialogs
             {
                 _ = MessageBoxService.Show("Выберите поставщика!", "", MessageBoxButton.OK, MessageBoxImage.Exclamation);
             }
-            OnPropertyChanged(nameof(CanOrderProduct));
         }
 
         private void ShowEditor(int column)
@@ -340,28 +343,39 @@ namespace RetailTradeServer.ViewModels.Dialogs
                     }
                 }
             }
-            OnPropertyChanged(nameof(CanOrderProduct));
         }
 
         private async void CreateOrder()
         {
-            OrderToSupplier order = await _orderToSupplierService.CreateAsync(new OrderToSupplier
+            OrderProduct orderProduct = OrderProducts.FirstOrDefault(o => o.ProductId == 0);
+            if (orderProduct == null)
             {
-                OrderDate = DateTime.Now,
-                SupplierId = SelectedSupplier.Id,
-                OrderStatusId = 1,
-                Comment = Comment,
-                OrderProducts = OrderProducts.Select(o => new OrderProduct { ProductId = o.ProductId, Quantity = o.Quantity }).ToList()
-            });
-
-            OrderToSupplierReport report = new(order, SelectedSupplier, _userStore.CurrentOrganization)
+                orderProduct = OrderProducts.FirstOrDefault(o => o.Quantity == 0);
+                if (orderProduct == null)
+                {
+                    _ = await _orderToSupplierService.CreateAsync(new OrderToSupplier
+                    {
+                        OrderDate = DateTime.Now,
+                        SupplierId = SelectedSupplier.Id,
+                        OrderStatusId = 1,
+                        Comment = Comment,
+                        OrderProducts = OrderProducts.Select(o => new OrderProduct { ProductId = o.ProductId, Quantity = o.Quantity }).ToList()
+                    });
+                    CurrentWindowService.Close();
+                }
+                else
+                {
+                    _ = MessageBoxService.ShowMessage("Введите количество.", "", MessageButton.OK, MessageIcon.Error);
+                    SelectedOrderProduct = orderProduct;
+                    ShowEditor(2);
+                }
+            }
+            else
             {
-                DataSource = OrderProducts
-            };
-
-            await report.CreateDocumentAsync();
-
-            DocumentViewerService.Show(nameof(DocumentViewerView), new DocumentViewerViewModel() { PrintingDocument = report });
+                _ = MessageBoxService.ShowMessage("Товар не выбран.", "", MessageButton.OK, MessageIcon.Error);
+                SelectedOrderProduct = orderProduct;
+                ShowEditor(0);
+            }
         }
 
         private void Cleare()

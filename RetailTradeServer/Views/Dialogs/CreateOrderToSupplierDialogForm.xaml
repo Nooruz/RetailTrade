@@ -7,7 +7,7 @@
                                  xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
                                  xmlns:dialogs="clr-namespace:RetailTradeServer.Views.Dialogs"
                                  Width="900"
-                               Height="700">
+                               Height="500">
 
     <dxmvvm:Interaction.Behaviors>
         <dxmvvm:EventToCommand EventName="Loaded"
@@ -18,17 +18,28 @@
                         ItemSpace="10"
                         Orientation="Vertical">
 
-        <dxlc:LayoutItem Label="Статус:">
-            <dxe:ComboBoxEdit ItemsSource="{Binding OrderStatuses}"
-                              DisplayMember="Name"
-                              ValueMember="Id"
-                              EditValue="{Binding SelectedOrderStatusId}"/>
-        </dxlc:LayoutItem>
-
         <dxlc:LayoutItem Label="Поставщик:">
             <dxe:ComboBoxEdit ItemsSource="{Binding Suppliers}"
                               DisplayMember="ShortName"
-                              SelectedItem="{Binding SelectedSupplier}"/>
+                              SelectedItem="{Binding SelectedSupplier}">
+                <dxmvvm:Interaction.Behaviors>
+                    <dxmvvm:EventToCommand EventName="EditValueChanging"
+                                           Command="{Binding EditValueChangingCommand}"
+                                           PassEventArgsToCommand="True"/>
+                </dxmvvm:Interaction.Behaviors>
+            </dxe:ComboBoxEdit>
+        </dxlc:LayoutItem>
+
+        <dxlc:LayoutItem Label="Склад:">
+            <dxe:ComboBoxEdit ItemsSource="{Binding WareHouses}"
+                              DisplayMember="Name"
+                              SelectedItem="{Binding SelectedWareHouse}">
+                <dxmvvm:Interaction.Behaviors>
+                    <dxmvvm:EventToCommand EventName="EditValueChanging"
+                                           Command="{Binding EditValueChangingCommand}"
+                                           PassEventArgsToCommand="True"/>
+                </dxmvvm:Interaction.Behaviors>
+            </dxe:ComboBoxEdit>
         </dxlc:LayoutItem>
 
         <dxlc:LayoutGroup HorizontalAlignment="Left"
@@ -52,6 +63,8 @@
             <dxg:GridControl.View>
                 <dxg:TableView InvalidRowException="TableView_InvalidRowException"
                                ShowGroupPanel="False" 
+                               AutoWidth="True" 
+                               BestFitModeOnSourceChange="AllRows"
                                EnableImmediatePosting="True"
                                ShowTotalSummary="True">
                     <dxmvvm:Interaction.Behaviors>
@@ -65,7 +78,7 @@
                 </dxg:TableView>
             </dxg:GridControl.View>
 
-            <dxg:GridColumn Header="Наименование"                            
+            <dxg:GridColumn Header="Наименование" 
                             FieldName="ProductId">
                 <dxg:GridColumn.EditSettings>
                     <dxg:LookUpEditSettings DisplayMember="Name"
@@ -106,7 +119,8 @@
                 </dxg:GridColumn.EditSettings>
             </dxg:GridColumn>
 
-            <dxg:GridColumn Header="Количество"
+            <dxg:GridColumn Header="Количество" 
+                            FixedWidth="True"
                             ShowValidationAttributeErrors="True"
                             FieldName="Quantity"
                             IsSmart="True">
@@ -170,8 +184,7 @@
                           VerticalAlignment="Bottom">
 
             <Button Content="Заказать"
-                    Command="{Binding OrderProductCommand}"
-                    IsEnabled="{Binding CanOrderProduct, UpdateSourceTrigger=PropertyChanged}"/>
+                    Command="{Binding OrderProductCommand}"/>
 
             <Button Content="Очистить"
                     Command="{Binding ClearCommand}"/>

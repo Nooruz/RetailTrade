@@ -206,8 +206,8 @@ namespace RetailTrade.EntityFramework
                 new Unit { Id = 5, LongName = "Штука", ShortName = "шт" });
 
             modelBuilder.Entity<OrderStatus>().HasData(
-                new OrderStatus { Id = 1, Name = "Ожидание" },
-                new OrderStatus { Id = 2, Name = "Выполнено" },
+                new OrderStatus { Id = 1, Name = "Ожидается поступление" },
+                new OrderStatus { Id = 2, Name = "Закрыт" },
                 new OrderStatus { Id = 3, Name = "Не выполнено" });
 
             modelBuilder.Entity<Gender>().HasData(

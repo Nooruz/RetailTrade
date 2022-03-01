@@ -138,7 +138,7 @@ namespace RetailTradeServer.ViewModels.Menus
 
         private void CreateOrder()
         {
-            WindowService.Show(nameof(CreateOrderToSupplierDialogForm), new CreateOrderToSupplierDialogFormModel(_productService, _typeProductService, _supplierService, _orderToSupplierService, _orderStatusService, _zebraBarcodeScanner, _unitService, _userStore) { Title = "Заказ поставшику (новый)" });
+            WindowService.Show(nameof(CreateOrderToSupplierDialogForm), new CreateOrderToSupplierDialogFormModel(_productService, _typeProductService, _supplierService, _orderToSupplierService, _zebraBarcodeScanner, _unitService, _userStore) { Title = "Заказ поставшику (новый)" });
         }
 
         private async void DeleteOrder()
