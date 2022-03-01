@@ -48,6 +48,7 @@
                     Command="{Binding AddProductToOrderCommand}"/>
             <Button Style="{StaticResource ButtonWithHorizontalIcon}"
                     Tag="{StaticResource faBarcode}"
+                    Command="{Binding BarcodeSearchCommand}"
                     Content="Добавить по штрих-коду"/>
         </dxlc:LayoutGroup>
 
