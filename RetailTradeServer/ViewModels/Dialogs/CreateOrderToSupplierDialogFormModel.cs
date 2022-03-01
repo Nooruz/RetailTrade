@@ -137,6 +137,7 @@ namespace RetailTradeServer.ViewModels.Dialogs
         public ICommand ProductCommand => new RelayCommand(OpenProductDialog);
         public ICommand GridControlLoadedCommand => new ParameterCommand((object p) => GridControlLoaded(p));
         public ICommand EditValueChangingCommand => new ParameterCommand((object p) => EditValueChanging(p));
+        public ICommand BarcodeSearchCommand => new RelayCommand(BarcodeSearch);
 
         #endregion
 
@@ -164,6 +165,38 @@ namespace RetailTradeServer.ViewModels.Dialogs
         #endregion
 
         #region Private Voids
+
+        /// <summary>
+        /// Добавление по штрих коду
+        /// </summary>
+        private void BarcodeSearch()
+        {
+            if (SelectedSupplier != null)
+            {
+                BarcodeSearchDialogFormModel viewModel = new();
+                UICommand result = DialogService.ShowDialog(dialogCommands: viewModel.Commands, "Введите штрихкод", nameof(BarcodeSearchDialogForm), viewModel);
+                if (result.Id is MessageBoxResult messageResult && messageResult == MessageBoxResult.OK)
+                {
+                    Product product = Products.FirstOrDefault(p => p.Barcode == viewModel.Barcode);
+                    if (product != null)
+                    {
+                        OrderProducts.Add(new OrderProduct
+                        {
+                            ProductId = product.Id,
+                            Product = product,
+                            ArrivalPrice = product.ArrivalPrice,
+                            Quantity = 1
+                        });
+                        SelectedOrderProduct = OrderProducts.FirstOrDefault(o => o.ProductId == product.Id);
+                        ShowEditor(2);
+                    }
+                }
+            }
+            else
+            {
+                _ = MessageBoxService.ShowMessage("Выберите поставщика!", "Sale Page", MessageButton.OK, MessageIcon.Exclamation);
+            }
+        }
 
         private void EditValueChanging(object parameter)
         {
@@ -347,34 +380,41 @@ namespace RetailTradeServer.ViewModels.Dialogs
 
         private async void CreateOrder()
         {
-            OrderProduct orderProduct = OrderProducts.FirstOrDefault(o => o.ProductId == 0);
-            if (orderProduct == null)
+            if (OrderProducts.Any())
             {
-                orderProduct = OrderProducts.FirstOrDefault(o => o.Quantity == 0);
+                OrderProduct orderProduct = OrderProducts.FirstOrDefault(o => o.ProductId == 0);
                 if (orderProduct == null)
                 {
-                    _ = await _orderToSupplierService.CreateAsync(new OrderToSupplier
+                    orderProduct = OrderProducts.FirstOrDefault(o => o.Quantity == 0);
+                    if (orderProduct == null)
                     {
-                        OrderDate = DateTime.Now,
-                        SupplierId = SelectedSupplier.Id,
-                        OrderStatusId = 1,
-                        Comment = Comment,
-                        OrderProducts = OrderProducts.Select(o => new OrderProduct { ProductId = o.ProductId, Quantity = o.Quantity }).ToList()
-                    });
-                    CurrentWindowService.Close();
+                        _ = await _orderToSupplierService.CreateAsync(new OrderToSupplier
+                        {
+                            OrderDate = DateTime.Now,
+                            SupplierId = SelectedSupplier.Id,
+                            OrderStatusId = 1,
+                            Comment = Comment,
+                            OrderProducts = OrderProducts.Select(o => new OrderProduct { ProductId = o.ProductId, Quantity = o.Quantity }).ToList()
+                        });
+                        CurrentWindowService.Close();
+                    }
+                    else
+                    {
+                        _ = MessageBoxService.ShowMessage("Введите количество.", "Sale Page", MessageButton.OK, MessageIcon.Error);
+                        SelectedOrderProduct = orderProduct;
+                        ShowEditor(2);
+                    }
                 }
                 else
                 {
-                    _ = MessageBoxService.ShowMessage("Введите количество.", "", MessageButton.OK, MessageIcon.Error);
+                    _ = MessageBoxService.ShowMessage("Товар не выбран.", "Sale Page", MessageButton.OK, MessageIcon.Error);
                     SelectedOrderProduct = orderProduct;
-                    ShowEditor(2);
+                    ShowEditor(0);
                 }
             }
             else
             {
-                _ = MessageBoxService.ShowMessage("Товар не выбран.", "", MessageButton.OK, MessageIcon.Error);
-                SelectedOrderProduct = orderProduct;
-                ShowEditor(0);
+                _ = MessageBoxService.ShowMessage("Товары не выбраны.", "Sale Page", MessageButton.OK, MessageIcon.Error);
             }
         }
 

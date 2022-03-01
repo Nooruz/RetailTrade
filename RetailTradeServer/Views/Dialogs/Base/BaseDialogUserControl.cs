@@ -3,8 +3,6 @@ using DevExpress.Mvvm.UI.Interactivity;
 using DevExpress.Xpf.Core;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Input;
 
 namespace RetailTradeServer.Views.Dialogs
 {
@@ -37,7 +35,14 @@ namespace RetailTradeServer.Views.Dialogs
                 }
             });
             Interaction.GetBehaviors(this).Add(new DXMessageBoxService());
-            Interaction.GetBehaviors(this).Add(new DialogService());
+            Interaction.GetBehaviors(this).Add(new DialogService()
+            {
+                DialogStyle = new Style
+                {
+                    TargetType = typeof(Window),
+                    BasedOn = FindResource("DialogService") as Style
+                }
+            });
             Interaction.GetBehaviors(this).Add(new CurrentWindowService());
         }
 
