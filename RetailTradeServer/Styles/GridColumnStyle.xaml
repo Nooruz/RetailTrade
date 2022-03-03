@@ -46,7 +46,7 @@
     <Style TargetType="{x:Type dxg:GridColumn}" x:Key="SumTextEditSettings">
         <Setter Property="EditSettings">
             <Setter.Value>
-                <dxe:TextEditSettings MaskUseAsDisplayFormat="True"
+                <dxe:TextEditSettings MaskUseAsDisplayFormat="True"                                      
                                       SelectAllOnMouseUp="True"
                                       MaskType="Numeric" 
                                       Mask="n"/>

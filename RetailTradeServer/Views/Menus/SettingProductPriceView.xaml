@@ -81,7 +81,7 @@
                                                     IsPopupAutoWidth="True">
                                 <dxg:LookUpEditSettings.Buttons>
                                     <dxe:ButtonInfo GlyphKind="Regular"
-                                            Command="{Binding ProductCommand}"/>
+                                                    Command="{Binding ProductCommand}"/>
                                 </dxg:LookUpEditSettings.Buttons>
                                 <dxg:LookUpEditSettings.PopupContentTemplate>
                                     <ControlTemplate>
@@ -134,6 +134,9 @@
             <dxmvvm:Interaction.Behaviors>
                 <dxmvvm:KeyToCommand KeyGesture="Delete"
                                      Command="{Binding DeleteRevaluationProductCommand}"/>
+                <dxmvvm:EventToCommand EventName="Loaded"
+                                       Command="{Binding ProductGridControlLoadedCommand}"
+                                       PassEventArgsToCommand="True"/>
             </dxmvvm:Interaction.Behaviors>
         </dxg:GridControl>
 

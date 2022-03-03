@@ -14,6 +14,7 @@ using System.Collections.ObjectModel;
 using System.Linq;
 using System.Windows;
 using System.Windows.Input;
+using System.Windows.Threading;
 
 namespace RetailTradeServer.ViewModels.Menus
 {
@@ -102,6 +103,8 @@ namespace RetailTradeServer.ViewModels.Menus
                 OnPropertyChanged(nameof(Comment));
             }
         }
+        public GridControl ProductGridControl { get; set; }
+        public TableView ProductTableView => ProductGridControl != null ? ProductGridControl.View as TableView : null;
 
         #endregion
 
@@ -114,6 +117,7 @@ namespace RetailTradeServer.ViewModels.Menus
         public ICommand ValidateCellCommand => new ParameterCommand(ValidateCell);
         public ICommand CreateAndCloseCommand => new RelayCommand(CreateAndClose);
         public ICommand DeleteRevaluationProductCommand => new RelayCommand(DeleteRevaluationProduct);
+        public ICommand ProductGridControlLoadedCommand => new ParameterCommand((object p) => ProductGridControlLoaded(p));
 
         #endregion
 
@@ -136,6 +140,33 @@ namespace RetailTradeServer.ViewModels.Menus
 
         #region Private Voids
 
+        private void ProductGridControlLoaded(object parameter)
+        {
+            if (parameter is RoutedEventArgs e)
+            {
+                if (e.Source is GridControl gridControl)
+                {
+                    ProductGridControl = gridControl;
+                    ProductTableView.ShownEditor += ProductTableView_ShownEditor;
+                }
+            }
+        }
+
+        private void ProductTableView_ShownEditor(object sender, EditorEventArgs e)
+        {
+            ProductTableView.Grid.View.ActiveEditor.SelectAll();
+        }
+
+        private void ShowEditor(int column)
+        {
+            ProductTableView.FocusedRowHandle = RevaluationProducts.IndexOf(SelectedRevaluationProduct);
+            ProductTableView.Grid.CurrentColumn = ProductTableView.Grid.Columns[column];
+            _ = ProductTableView.Dispatcher.BeginInvoke(new Action(() =>
+            {
+                ProductTableView.ShowEditor();
+            }), DispatcherPriority.Render);
+        }
+
         private void DeleteRevaluationProduct()
         {
             if (SelectedRevaluationProduct != null)
@@ -148,27 +179,47 @@ namespace RetailTradeServer.ViewModels.Menus
         {
             if (RevaluationProducts.Any())
             {
-                RevaluationProduct revaluationProduct = RevaluationProducts.FirstOrDefault(r => r.ProductId == 0);
-                RevaluationProducts.ToList().ForEach(r => r.Product = null);
-                if (revaluationProduct == null)
+                if (EmptyRevaluationProduct == null)
                 {
-                    _ = await _revaluationService.CreateAsync(new Revaluation
+                    RevaluationProduct revaluationProduct = RevaluationProducts.FirstOrDefault(r => r.ArrivalPrice <= 0);
+                    if (revaluationProduct == null)
                     {
-                        RevaluationDate = DateTime.Now,
-                        Comment = Comment,
-                        RevaluationProducts = RevaluationProducts
-                    });
-                    _menuNavigator.DeleteViewModel(this);
+                        revaluationProduct = RevaluationProducts.FirstOrDefault(r => r.SalePrice <= 0);
+                        if (revaluationProduct == null)
+                        {
+                            RevaluationProducts.ToList().ForEach(r => r.Product = null);
+                            _ = await _revaluationService.CreateAsync(new Revaluation
+                            {
+                                RevaluationDate = DateTime.Now,
+                                Comment = Comment,
+                                RevaluationProducts = RevaluationProducts
+                            });
+                            _menuNavigator.DeleteViewModel(this);
+                        }
+                        else
+                        {
+                            _ = MessageBoxService.Show("Введите цену продажи.", "", MessageBoxButton.OK, MessageBoxImage.Error);
+                            SelectedRevaluationProduct = revaluationProduct;
+                            ShowEditor(5);
+                        }
+                    }
+                    else
+                    {
+                        _ = MessageBoxService.Show("Введите цену прихода.", "", MessageBoxButton.OK, MessageBoxImage.Error);
+                        SelectedRevaluationProduct = revaluationProduct;
+                        ShowEditor(4);
+                    }
                 }
                 else
                 {
-                    MessageBox.Show("Товар не выбран.", "", MessageBoxButton.OK, MessageBoxImage.Error);
-                    SelectedRevaluationProduct = revaluationProduct;
+                    _ = MessageBoxService.Show("Товар не выбран.", "", MessageBoxButton.OK, MessageBoxImage.Error);
+                    SelectedRevaluationProduct = EmptyRevaluationProduct;
+                    ShowEditor(0);
                 }
             }
             else
             {
-                MessageBox.Show("Не введено ни одной строки в список.", "", MessageBoxButton.OK, MessageBoxImage.Error);
+                _ = MessageBoxService.Show("Не введено ни одной строки в список.", "", MessageBoxButton.OK, MessageBoxImage.Error);
             }
         }
 
@@ -187,13 +238,25 @@ namespace RetailTradeServer.ViewModels.Menus
                                 e.ErrorContent = "Такой товар уже введен.";
                                 e.ErrorType = ErrorType.Critical;
                                 e.IsValid = false;
-                            }                            
+                            }
+                            else
+                            {
+                                ShowEditor(4);
+                            }
+                        }
+                        else
+                        {
+                            ShowEditor(4);
                         }
                     }
                     catch (Exception)
                     {
                         //ignore
                     }
+                }
+                if (e.Cell.Property == nameof(RevaluationProduct.ArrivalPrice))
+                {
+                    ShowEditor(5);
                 }
             }
         }
@@ -210,6 +273,7 @@ namespace RetailTradeServer.ViewModels.Menus
                         if (selectedProduct != null)
                         {
                             SelectedRevaluationProduct.Product = selectedProduct;
+                            ShowEditor(4);
                         }
                     }
                     catch (Exception)
@@ -223,17 +287,23 @@ namespace RetailTradeServer.ViewModels.Menus
         private void Create()
         {
             ProductDialogFormModel viewModel = new(_typeProductService) { Products = Products };
-            WindowService.Show(nameof(ProductDialogForm), viewModel);
-            if (viewModel.SelectedProduct != null)
+            viewModel.OnProductSelected += ProductDialogFormModel_OnProductSelected;
+            WindowService.Show(nameof(ProductDialogForm), viewModel);            
+        }
+
+        private void ProductDialogFormModel_OnProductSelected(Product product)
+        {
+            if (product != null)
             {
-                if (RevaluationProducts.FirstOrDefault(r => r.ProductId == viewModel.SelectedProduct.Id) == null)
+                if (RevaluationProducts.FirstOrDefault(r => r.ProductId == product.Id) == null)
                 {
-                    EmptyRevaluationProduct.Product = viewModel.SelectedProduct;
-                    EmptyRevaluationProduct.ProductId = viewModel.SelectedProduct.Id;
+                    EmptyRevaluationProduct.Product = product;
+                    EmptyRevaluationProduct.ProductId = product.Id;
+                    ShowEditor(4);
                 }
                 else
                 {
-                    MessageBox.Show("Такой товар уже введен.", "", MessageBoxButton.OK, MessageBoxImage.Exclamation);
+                    _ = MessageBoxService.Show("Такой товар уже введен.", "", MessageBoxButton.OK, MessageBoxImage.Exclamation);                    
                 }
             }
         }
@@ -242,13 +312,33 @@ namespace RetailTradeServer.ViewModels.Menus
         {
             if (EmptyRevaluationProduct != null)
             {
-                MessageBox.Show("Товар не выбран.", "", MessageBoxButton.OK, MessageBoxImage.Exclamation);
+                _ = MessageBoxService.Show("Товар не выбран.", "", MessageBoxButton.OK, MessageBoxImage.Exclamation);
                 SelectedRevaluationProduct = EmptyRevaluationProduct;
+                ShowEditor(0);
+                return;
             }
-            else
+            if (RevaluationProducts.Any())
             {
-                RevaluationProducts.Add(new RevaluationProduct());
-            }            
+                RevaluationProduct revaluationProduct = RevaluationProducts.FirstOrDefault(r => r.ArrivalPrice <= 0);
+                if (revaluationProduct != null)
+                {
+                    _ = MessageBoxService.Show("Введит цену прихода.", "", MessageBoxButton.OK, MessageBoxImage.Exclamation);
+                    SelectedRevaluationProduct = revaluationProduct;
+                    ShowEditor(4);
+                    return;
+                }
+                revaluationProduct = RevaluationProducts.FirstOrDefault(r => r.SalePrice <= 0);
+                if (revaluationProduct != null)
+                {
+                    _ = MessageBoxService.Show("Введит цену продажи.", "", MessageBoxButton.OK, MessageBoxImage.Exclamation);
+                    SelectedRevaluationProduct = revaluationProduct;
+                    ShowEditor(5);
+                    return;
+                }
+            }
+            RevaluationProducts.Add(new RevaluationProduct());
+            SelectedRevaluationProduct = EmptyRevaluationProduct;
+            ShowEditor(0);
         }
 
         private async void UserControlLoaded()

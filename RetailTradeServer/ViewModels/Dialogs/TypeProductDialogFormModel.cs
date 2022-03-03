@@ -67,8 +67,8 @@ namespace RetailTradeServer.ViewModels.Dialogs
 
         #region Commands
 
-        public ICommand SaveCommand { get; }
-        public ICommand UserControlLoadedCommand { get; }
+        public ICommand SaveCommand => new RelayCommand(Save);
+        public ICommand UserControlLoadedCommand => new RelayCommand(UserControlLoaded);
 
         #endregion
 
@@ -79,8 +79,6 @@ namespace RetailTradeServer.ViewModels.Dialogs
             _typeProductService = typeProductService;
 
             CreateCommand = new RelayCommand(Create);
-            SaveCommand = new RelayCommand(Save);
-            UserControlLoadedCommand = new RelayCommand(UserControlLoaded);
             CloseCommand = new RelayCommand(() => CurrentWindowService.Close());
         }
 
@@ -100,12 +98,13 @@ namespace RetailTradeServer.ViewModels.Dialogs
                 MessageBox.Show("Введите наименование!", "", MessageBoxButton.OK, MessageBoxImage.Exclamation);
                 return;
             }
-            await _typeProductService.CreateAsync(new TypeProduct
+            _ = await _typeProductService.CreateAsync(new TypeProduct
             {
                 Name = Name,
                 IsGroup = IsGroup,
                 SubGroupId = SelectedTypeProductId == null ? 1 : SelectedTypeProductId.Value
             });
+            CurrentWindowService.Close();
         }
 
         private async void Save()
@@ -116,6 +115,7 @@ namespace RetailTradeServer.ViewModels.Dialogs
                 return;
             }
             _ = await _typeProductService.UpdateAsync(TypeProduct.Id, new TypeProduct { Name = Name, SubGroupId = SelectedTypeProductId.Value });
+            CurrentWindowService.Close();
         }
 
         #endregion

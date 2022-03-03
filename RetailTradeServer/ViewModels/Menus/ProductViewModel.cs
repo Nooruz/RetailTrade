@@ -51,7 +51,7 @@ namespace RetailTradeServer.ViewModels.Menus
         #endregion
 
         #region Public Properties
-        
+
         public IEnumerable<Unit> Units
         {
             get => _units;
