@@ -1,4 +1,5 @@
-﻿using RetailTrade.Domain.Models;
+﻿using DevExpress.Mvvm;
+using RetailTrade.Domain.Models;
 using RetailTrade.Domain.Services;
 using RetailTradeServer.Commands;
 using RetailTradeServer.State.Navigators;
@@ -14,7 +15,10 @@ namespace RetailTradeServer.ViewModels.Menus
         #region Private Members
 
         private readonly IRevaluationService _revaluationService;
-        private readonly IMenuNavigator _menuNavigator; 
+        private readonly IMenuNavigator _menuNavigator;
+        private readonly IProductService _productService;
+        private readonly ITypeProductService _typeProductService;
+        private readonly IDataService<Unit> _unitService;
         private ObservableCollection<Revaluation> _revaluations;
         private Revaluation _selectedRevaluation;
 
@@ -60,6 +64,9 @@ namespace RetailTradeServer.ViewModels.Menus
         {
             _revaluationService = revaluationService;
             _menuNavigator = menuNavigator;
+            _productService = productService;
+            _typeProductService = typeProductService;
+            _unitService = unitService;
 
             Header = "История изменения цен";
 
@@ -96,7 +103,7 @@ namespace RetailTradeServer.ViewModels.Menus
             }
             else
             {
-                _ = MessageBox.Show("Выберите историю изменения цен товаров!", "", MessageBoxButton.OK, MessageBoxImage.Exclamation);
+                _ = MessageBoxService.Show("Выберите историю изменения цен товаров!", "", MessageBoxButton.OK, MessageBoxImage.Exclamation);
             }
         }
 

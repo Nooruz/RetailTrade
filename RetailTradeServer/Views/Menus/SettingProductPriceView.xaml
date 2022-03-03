@@ -120,7 +120,7 @@
                                     AllowEditing="False"
                                     Style="{StaticResource SumTextEditSettings}"/>
                 </dxg:GridControlBand>
-                <dxg:GridControlBand Header="Новая цена"  
+                <dxg:GridControlBand Header="Новая цена"
                                      VisibleIndex="2"
                                      HorizontalHeaderContentAlignment="Center">
                     <dxg:GridColumn Header="Цена прихода"
