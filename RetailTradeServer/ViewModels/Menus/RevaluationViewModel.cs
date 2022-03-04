@@ -4,6 +4,10 @@ using RetailTrade.Domain.Services;
 using RetailTradeServer.Commands;
 using RetailTradeServer.State.Navigators;
 using RetailTradeServer.ViewModels.Base;
+using RetailTradeServer.ViewModels.Dialogs;
+using RetailTradeServer.Views.Dialogs;
+using SalePageServer.Report;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Windows;
 using System.Windows.Input;
@@ -19,7 +23,10 @@ namespace RetailTradeServer.ViewModels.Menus
         private readonly IProductService _productService;
         private readonly ITypeProductService _typeProductService;
         private readonly IDataService<Unit> _unitService;
-        private ObservableCollection<Revaluation> _revaluations;
+        private readonly IRevaluationProductService _revaluationProductService;
+        private ObservableCollection<Revaluation> _revaluations = new();
+        private ObservableCollection<RevaluationProduct> _revaluationProducts = new();
+        private ObservableCollection<Product> _products = new();
         private Revaluation _selectedRevaluation;
 
         #endregion
@@ -28,11 +35,29 @@ namespace RetailTradeServer.ViewModels.Menus
 
         public ObservableCollection<Revaluation> Revaluations
         {
-            get => _revaluations ?? new();
+            get => _revaluations;
             set
             {
                 _revaluations = value;
                 OnPropertyChanged(nameof(Revaluations));
+            }
+        }
+        public ObservableCollection<RevaluationProduct> RevaluationProducts
+        {
+            get => _revaluationProducts;
+            set
+            {
+                _revaluationProducts = value;
+                OnPropertyChanged(nameof(RevaluationProducts));
+            }
+        }
+        public ObservableCollection<Product> Products
+        {
+            get => _products;
+            set
+            {
+                _products = value;
+                OnPropertyChanged(nameof(Products));
             }
         }
         public Revaluation SelectedRevaluation
@@ -60,13 +85,15 @@ namespace RetailTradeServer.ViewModels.Menus
             ITypeProductService typeProductService,
             IRevaluationService revaluationService,
             IMenuNavigator menuNavigator,
-            IDataService<Unit> unitService)
+            IDataService<Unit> unitService,
+            IRevaluationProductService revaluationProductService)
         {
             _revaluationService = revaluationService;
             _menuNavigator = menuNavigator;
             _productService = productService;
             _typeProductService = typeProductService;
             _unitService = unitService;
+            _revaluationProductService = revaluationProductService;
 
             Header = "История изменения цен";
 
@@ -95,11 +122,18 @@ namespace RetailTradeServer.ViewModels.Menus
 
         }
 
-        public void Print()
+        public async void Print()
         {
             if (SelectedRevaluation != null)
             {
-
+                ShowLoadingPanel = true;
+                RevaluationReport report = new(SelectedRevaluation)
+                {
+                    DataSource = await _revaluationProductService.GetAllByRevaluationId(SelectedRevaluation.Id)
+                };
+                await report.CreateDocumentAsync();
+                DocumentViewerService.Show(nameof(DocumentViewerView), new DocumentViewerViewModel { PrintingDocument = report } );
+                ShowLoadingPanel = false;
             }
             else
             {

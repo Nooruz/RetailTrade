@@ -45,6 +45,7 @@ namespace RetailTradeServer.HostBuilders
                 services.AddSingleton<ITypeProductService, TypeProductService>();
                 services.AddSingleton<IWareHouseService, WareHouseService>();
                 services.AddSingleton<IRevaluationService, RevaluationService>();
+                services.AddSingleton<IRevaluationProductService, RevaluationProductService>();
             });
         }
     }

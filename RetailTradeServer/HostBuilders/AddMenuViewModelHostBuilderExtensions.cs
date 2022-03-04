@@ -70,7 +70,8 @@ namespace RetailTradeServer.HostBuilders
                 services.GetRequiredService<ITypeProductService>(),
                 services.GetRequiredService<IRevaluationService>(),
                 services.GetRequiredService<IMenuNavigator>(),
-                services.GetRequiredService<IDataService<Unit>>());
+                services.GetRequiredService<IDataService<Unit>>(),
+                services.GetRequiredService<IRevaluationProductService>());
         }
 
         private static SupplierViewModel CreateSupplierViewModel(IServiceProvider services)

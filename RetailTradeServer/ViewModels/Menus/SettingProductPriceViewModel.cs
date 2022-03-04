@@ -187,7 +187,12 @@ namespace RetailTradeServer.ViewModels.Menus
                         revaluationProduct = RevaluationProducts.FirstOrDefault(r => r.SalePrice <= 0);
                         if (revaluationProduct == null)
                         {
-                            RevaluationProducts.ToList().ForEach(r => r.Product = null);
+                            RevaluationProducts.ToList().ForEach(r =>
+                            {
+                                r.OldArrivalPrice = r.Product.ArrivalPrice;
+                                r.OldSalePrice = r.Product.SalePrice;
+                                r.Product = null;                                
+                            });
                             _ = await _revaluationService.CreateAsync(new Revaluation
                             {
                                 RevaluationDate = DateTime.Now,

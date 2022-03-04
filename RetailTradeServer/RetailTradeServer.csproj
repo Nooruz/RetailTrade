@@ -43,6 +43,7 @@
     <None Remove="Report\ClosingShiftsReport.vsrepx" />
     <None Remove="Report\OrderToSupplierReport.vsrepx" />
     <None Remove="Report\ProductBarcodeReport.vsrepx" />
+    <None Remove="Report\RevaluationReport.vsrepx" />
     <None Remove="Report\RevenueForPeriodReport.vsrepx" />
     <None Remove="Report\WriteDownProductReport.vsrepx" />
     <None Remove="Resources\Icons\newlogo.ico" />
@@ -62,6 +63,7 @@
     <EmbeddedResource Include="Report\ClosingShiftsReport.vsrepx" />
     <EmbeddedResource Include="Report\OrderToSupplierReport.vsrepx" />
     <EmbeddedResource Include="Report\ProductBarcodeReport.vsrepx" />
+    <EmbeddedResource Include="Report\RevaluationReport.vsrepx" />
     <EmbeddedResource Include="Report\RevenueForPeriodReport.vsrepx" />
     <EmbeddedResource Include="Report\WriteDownProductReport.vsrepx" />
   </ItemGroup>
@@ -87,7 +89,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\RetailTrade.DialogService\RetailTrade.DialogService.csproj" />
+    <ProjectReference Include="..\RetailTrade.Barcode\RetailTrade.Barcode.csproj" />
+    <ProjectReference Include="..\RetailTrade.CashRegisterMachine\RetailTrade.CashRegisterMachine.csproj" />
     <ProjectReference Include="..\RetailTrade.Domain\RetailTrade.Domain.csproj" />
     <ProjectReference Include="..\RetailTrade.EntityFramework\RetailTrade.EntityFramework.csproj" />
     <ProjectReference Include="..\RetailTrade.LoadingPanelControl\RetailTrade.LoadingPanelControl.csproj" />
@@ -97,9 +100,6 @@
   <ItemGroup>
     <Content Include="Resources\Icons\lgog.ico" />
     <Content Include="Resources\Icons\newlogo.ico" />
-    <Reference Include="RetailTrade.Barcode">
-      <HintPath>..\RetailTrade.Barcode\bin\Release\net6.0-windows\publish\RetailTrade.Barcode.dll</HintPath>
-    </Reference>
     <Resource Include="Fonts\fa-brands-400.ttf">
       <CopyToOutputDirectory>Never</CopyToOutputDirectory>
     </Resource>
@@ -148,6 +148,12 @@
     </Compile>
     <Compile Update="Report\ProductBarcodeReport.Designer.cs">
       <DependentUpon>ProductBarcodeReport.vsrepx</DependentUpon>
+    </Compile>
+    <Compile Update="Report\RevaluationReport.cs">
+      <DependentUpon>RevaluationReport.vsrepx</DependentUpon>
+    </Compile>
+    <Compile Update="Report\RevaluationReport.Designer.cs">
+      <DependentUpon>RevaluationReport.vsrepx</DependentUpon>
     </Compile>
     <Compile Update="Report\RevenueForPeriodReport.cs">
       <DependentUpon>RevenueForPeriodReport.vsrepx</DependentUpon>

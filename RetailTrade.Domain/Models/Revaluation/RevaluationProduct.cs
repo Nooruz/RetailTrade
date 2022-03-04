@@ -11,6 +11,8 @@ namespace RetailTrade.Domain.Models
 
         private int _productId;
         private int _revaluationId;
+        private decimal _oldArrivalPrice;
+        private decimal _oldSalePrice;
         private decimal _arrivalPrice;
         private decimal _salePrice;
         private Product _product;
@@ -42,6 +44,34 @@ namespace RetailTrade.Domain.Models
             {
                 _revaluationId = value;
                 OnPropertyChanged(nameof(RevaluationId));
+            }
+        }
+
+        /// <summary>
+        /// Цена прихода
+        /// </summary>
+        [Column(TypeName = "decimal(18,2)")]
+        public decimal OldArrivalPrice
+        {
+            get => _oldArrivalPrice;
+            set
+            {
+                _oldArrivalPrice = value;
+                OnPropertyChanged(nameof(OldArrivalPrice));
+            }
+        }
+
+        /// <summary>
+        /// Цена продажи
+        /// </summary>
+        [Column(TypeName = "decimal(18,2)")]
+        public decimal OldSalePrice
+        {
+            get => _oldSalePrice;
+            set
+            {
+                _oldSalePrice = value;
+                OnPropertyChanged(nameof(OldSalePrice));
             }
         }
 
