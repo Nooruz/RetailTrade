@@ -2,7 +2,6 @@
 using RetailTrade.Domain.Models;
 using RetailTrade.Domain.Services;
 using RetailTradeClient.Commands;
-using RetailTradeClient.State.Dialogs;
 using RetailTradeClient.State.Shifts;
 using RetailTradeClient.State.Users;
 using System;
@@ -13,7 +12,6 @@ using System.ComponentModel;
 using System.Linq;
 using System.Windows;
 using System.Windows.Input;
-using System.Windows.Threading;
 
 namespace RetailTradeClient.ViewModels.Dialogs
 {
@@ -21,6 +19,9 @@ namespace RetailTradeClient.ViewModels.Dialogs
     {
         #region Private Members
 
+        private readonly IReceiptService _receiptService;
+        private readonly IShiftStore _shiftStore;
+        private readonly IUserStore _userStore;
         private decimal _amountToBePaid;
         private decimal _amountCash;
         private List<Sale> _saleProducts;
@@ -120,30 +121,25 @@ namespace RetailTradeClient.ViewModels.Dialogs
 
         #region Commands
 
-        public ICommand PaymentCashCommand { get; }
-        public ICommand PaymentCashlessCommand { get; }
-        public ICommand DigitalButtonPressCommand { get; }
-        public ICommand CommaButtonPressCommand { get; }
-        public ICommand BackspaceCommand { get; }
-        public ICommand GridControlLoadedCommand { get; }
-        public ICommand MakeComplexPaymentCommand { get; }
+        public ICommand PaymentCashCommand => new RelayCommand(PaymentCash);
+        public ICommand PaymentCashlessCommand => new RelayCommand(PaymentCashless);
+        public ICommand DigitalButtonPressCommand => new ParameterCommand(sender => DigitalButtonPress(sender));
+        public ICommand CommaButtonPressCommand => new RelayCommand(CommaButtonPress);
+        public ICommand BackspaceCommand => new RelayCommand(Backspace);
+        public ICommand GridControlLoadedCommand => new ParameterCommand(sender => GridControlLoaded(sender));
+        public ICommand MakeComplexPaymentCommand => new MakeComplexPaymentCommand(this, _receiptService, _shiftStore, _userStore);
 
         #endregion
 
         #region Constructor
 
         public PaymentComplexViewModel(IReceiptService receiptService,
-            IUIManager manager,
             IShiftStore shiftStore,
             IUserStore userStore)
         {
-            PaymentCashCommand = new RelayCommand(PaymentCash);
-            PaymentCashlessCommand = new RelayCommand(PaymentCashless);
-            CommaButtonPressCommand = new RelayCommand(CommaButtonPress);
-            BackspaceCommand = new RelayCommand(Backspace);
-            GridControlLoadedCommand = new ParameterCommand(sender => GridControlLoaded(sender));
-            DigitalButtonPressCommand = new ParameterCommand(sender => DigitalButtonPress(sender));
-            MakeComplexPaymentCommand = new MakeComplexPaymentCommand(this, receiptService, manager, shiftStore, userStore);
+            _receiptService = receiptService;
+            _shiftStore = shiftStore;
+            _userStore = userStore;
 
             PaymentTypes.CollectionChanged += PaymentTypes_CollectionChanged;
         }

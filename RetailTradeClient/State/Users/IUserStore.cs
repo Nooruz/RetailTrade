@@ -7,6 +7,7 @@ namespace RetailTradeClient.State.Users
     {
         User CurrentUser { get; set; }
         Organization Organization { get; set; }
-        event Action StateChanged;
+        public event Action CurrentUserChanged;
+        public event Action CurrentOrganizationChanged;
     }
 }

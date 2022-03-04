@@ -7,9 +7,15 @@ namespace RetailTradeClient.State.Shifts
     public enum CheckingResult
     {
         /// <summary>
-        /// Смена создана
+        /// Смена открыта
         /// </summary>
         Open,
+
+
+        /// <summary>
+        /// Смена создана
+        /// </summary>
+        Created,
 
         /// <summary>
         /// Смена закрыта
@@ -77,23 +83,23 @@ namespace RetailTradeClient.State.Shifts
         /// </summary>
         /// <param name="userId">Код кассира</param>
         /// <returns>Если открыто true, иначи false</returns>
-        Task<CheckingResult> OpeningShift(int userId);
+        Task OpeningShift(int userId);
 
         /// <summary>
         /// Закрытие смены
         /// </summary>
         /// <param name="userId">Код кассира</param>
-        Task<CheckingResult> ClosingShift(int userId);
+        Task ClosingShift(int userId);
 
         /// <summary>
         /// Проверка смены
         /// </summary>
         /// <returns>Если открыто true, иначи false</returns>
-        Task<CheckingResult> CheckingShift(int userId);
+        Task CheckingShift(int userId);
 
         /// <summary>
         /// Обработчик
         /// </summary>
-        event Action CurrentShiftChanged;
+        event Action<CheckingResult> CurrentShiftChanged;
     }
 }

@@ -1,11 +1,9 @@
-﻿using RetailTradeClient.Dialogs;
-
-namespace RetailTradeClient.Views.Dialogs
+﻿namespace RetailTradeClient.Views.Dialogs
 {
     /// <summary>
     /// Логика взаимодействия для ReturnOfGoodsView.xaml
     /// </summary>
-    public partial class RefundView : BaseDialogUserControl
+    public partial class RefundView : BaseUserControl
     {
         public RefundView()
         {

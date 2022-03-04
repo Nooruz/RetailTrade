@@ -4,7 +4,6 @@ using RetailTrade.Domain.Models;
 using RetailTrade.Domain.Services;
 using RetailTradeClient.Properties;
 using RetailTradeClient.Report;
-using RetailTradeClient.State.Dialogs;
 using RetailTradeClient.State.ProductSale;
 using RetailTradeClient.State.Shifts;
 using RetailTradeClient.State.Users;
@@ -21,7 +20,6 @@ namespace RetailTradeClient.Commands
 
         private readonly PaymentCashViewModel _paymentCashViewModel;
         private readonly IReceiptService _receiptService;
-        private readonly IUIManager _manager;
         private readonly IShiftStore _shiftStore;
         private readonly IUserStore _userStore;
         private readonly IProductSaleStore _productSaleStore;
@@ -32,14 +30,12 @@ namespace RetailTradeClient.Commands
 
         public MakeCashPaymentCommand(PaymentCashViewModel paymentCashViewModel,
             IReceiptService receiptService,
-            IUIManager manager,
             IShiftStore shiftStore,
             IUserStore userStore,
             IProductSaleStore productSaleStore)
         {
             _paymentCashViewModel = paymentCashViewModel;
             _receiptService = receiptService;
-            _manager = manager;
             _shiftStore = shiftStore;
             _userStore = userStore;
             _productSaleStore = productSaleStore;
@@ -145,7 +141,6 @@ namespace RetailTradeClient.Commands
 
         private void PrintingSystem_EndPrint(object sender, EventArgs e)
         {
-            _manager.Close();
             _paymentCashViewModel.Result = true;
         }
     }

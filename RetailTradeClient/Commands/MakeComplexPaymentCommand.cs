@@ -3,7 +3,6 @@ using RetailTrade.Domain.Models;
 using RetailTrade.Domain.Services;
 using RetailTradeClient.Properties;
 using RetailTradeClient.Report;
-using RetailTradeClient.State.Dialogs;
 using RetailTradeClient.State.Shifts;
 using RetailTradeClient.State.Users;
 using RetailTradeClient.ViewModels.Dialogs;
@@ -20,7 +19,6 @@ namespace RetailTradeClient.Commands
 
         private readonly PaymentComplexViewModel _paymentComplexViewModel;
         private readonly IReceiptService _receiptService;
-        private readonly IUIManager _manager;
         private readonly IShiftStore _shiftStore;
         private readonly IUserStore _userStore;
 
@@ -30,13 +28,11 @@ namespace RetailTradeClient.Commands
 
         public MakeComplexPaymentCommand(PaymentComplexViewModel paymentComplexViewModel,
             IReceiptService receiptService,
-            IUIManager manager,
             IShiftStore shiftStore,
             IUserStore userStore)
         {
             _paymentComplexViewModel = paymentComplexViewModel;
             _receiptService = receiptService;
-            _manager = manager;
             _shiftStore = shiftStore;
             _userStore = userStore;
         }
@@ -97,13 +93,12 @@ namespace RetailTradeClient.Commands
             }
             else
             {
-                _manager.ShowMessage("Остаток должен быть 0", "", MessageBoxButton.OK, MessageBoxImage.Exclamation);
+                MessageBox.Show("Остаток должен быть 0", "Sale Page", MessageBoxButton.OK, MessageBoxImage.Exclamation);
             }
         }
 
         private void PrintingSystem_EndPrint(object sender, EventArgs e)
         {
-            _manager.Close();
             _paymentComplexViewModel.Result = true;
         }
     }

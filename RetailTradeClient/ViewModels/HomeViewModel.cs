@@ -1,4 +1,5 @@
-﻿using DevExpress.Xpf.Grid;
+﻿using DevExpress.Mvvm;
+using DevExpress.Xpf.Grid;
 using RetailTrade.CashRegisterMachine;
 using RetailTrade.Domain.Models;
 using RetailTrade.Domain.Services;
@@ -6,7 +7,6 @@ using RetailTradeClient.Commands;
 using RetailTradeClient.Properties;
 using RetailTradeClient.State.Authenticators;
 using RetailTradeClient.State.Barcode;
-using RetailTradeClient.State.Dialogs;
 using RetailTradeClient.State.Messages;
 using RetailTradeClient.State.ProductSale;
 using RetailTradeClient.State.Shifts;
@@ -35,7 +35,6 @@ namespace RetailTradeClient.ViewModels
         private readonly IProductService _productService;
         private readonly IProductSaleService _productSaleService;
         private readonly IReceiptService _receiptService;
-        private readonly IUIManager _manager;
         private readonly IMessageStore _messageStore;
         private readonly IAuthenticator _authenticator;
         private readonly IShiftStore _shiftStore;
@@ -217,7 +216,6 @@ namespace RetailTradeClient.ViewModels
             IProductService productService,
             IProductSaleService productSaleService,
             IReceiptService receiptService,
-            IUIManager manager,
             IMessageStore messageStore,
             IAuthenticator authenticator,
             IShiftStore shiftStore,
@@ -230,7 +228,6 @@ namespace RetailTradeClient.ViewModels
             _productService = productService;
             _productSaleService = productSaleService;
             _receiptService = receiptService;
-            _manager = manager;
             _messageStore = messageStore;
             _authenticator = authenticator;
             _shiftStore = shiftStore;
@@ -313,13 +310,12 @@ namespace RetailTradeClient.ViewModels
 
             
 
-            _ = _manager.ShowDialog(viewModel, new KKMStatusView());
+            WindowService.Show(nameof(KKMStatusView), viewModel);
         }
 
         private void ReturnGoods()
         {
-            _ = _manager.ShowDialog(new RefundViewModel(_receiptService, _shiftStore, _manager) { Title = "Возврат товаров" },
-                new RefundView());
+            WindowService.Show(nameof(RefundView), new RefundViewModel(_receiptService, _shiftStore) { Title = "Возврат товаров" });
         }
 
         private void Multiply()
@@ -555,7 +551,7 @@ namespace RetailTradeClient.ViewModels
         /// </summary>
         private void PrinterSettings()
         {
-            _manager.ShowDialog(new PrinterViewModel(_messageStore) { Title = "Настройка принтеров" }, new PrinterView());
+            WindowService.Show(nameof(PrinterView), new PrinterViewModel(_messageStore) { Title = "Настройка принтеров" });
         }
 
         /// <summary>
@@ -580,14 +576,11 @@ namespace RetailTradeClient.ViewModels
         /// <summary>
         /// Просмотр отложенных чеков
         /// </summary>
-        private async void OpenPostponeReceipt()
+        private void OpenPostponeReceipt()
         {
             if (PostponeReceipts.Count > 0)
             {
-                if (await _manager.ShowDialog(new PostponeReceiptViewModel(this, _manager, _productService) { Title = "Выбор чека" }, new PostponeReceiptView()))
-                {
-
-                }
+                WindowService.Show(nameof(PostponeReceiptView), new PostponeReceiptViewModel(this, _productService) { Title = "Выбор чека" });
             }            
         }
 
@@ -637,7 +630,7 @@ namespace RetailTradeClient.ViewModels
                         }
                         else
                         {
-                            _ = MessageBox.Show("Количество превышает остаток.", "", MessageBoxButton.OK, MessageBoxImage.Information);
+                            _ = MessageBoxService.ShowMessage("Количество превышает остаток.", "Sale Page", MessageButton.OK, MessageIcon.Information);
                         }
                     }
                     else
@@ -651,21 +644,19 @@ namespace RetailTradeClient.ViewModels
         /// <summary>
         /// Оплата наличными
         /// </summary>
-        private async void PaymentCash()
+        private void PaymentCash()
         {
             if (SaleProducts.Count > 0)
             {
-                PaymentCashViewModel _paymentCashViewModel = new(_receiptService, _productSaleService, _userStore, _manager, _shiftStore, _productSaleStore ) 
+                PaymentCashViewModel _paymentCashViewModel = new(_receiptService, _productSaleService, _userStore, _shiftStore, _productSaleStore ) 
                 { 
                     Title = "Оплата наличными",
                     SaleProducts = SaleProducts.ToList()
                 };
 
-                if (await _manager.ShowDialog(_paymentCashViewModel,
-                new PaymentCashView()))
-                {
-                    SaleProducts.Clear();
-                }
+                WindowService.Show(nameof(PaymentCashView), _paymentCashViewModel);
+
+                //SaleProducts.Clear();
             }
         }
 
@@ -673,17 +664,13 @@ namespace RetailTradeClient.ViewModels
         {
             if (SaleProducts.Count > 0)
             {
-                PaymentComplexViewModel _paymentComplexViewModel = new(_receiptService, _manager, _shiftStore, _userStore) 
+                PaymentComplexViewModel _paymentComplexViewModel = new(_receiptService, _shiftStore, _userStore) 
                 { 
                     Title = "Оплата чека",
                     SaleProducts = SaleProducts.ToList()
                 };
-                
-                if (await _manager.ShowDialog(_paymentComplexViewModel,
-                new PaymentComplexView()))
-                {
-                    SaleProducts.Clear();
-                }
+
+                WindowService.Show(nameof(PaymentComplexView), _paymentComplexViewModel);
             }
         }
 

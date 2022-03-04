@@ -1,7 +1,6 @@
 ﻿using RetailTrade.Domain.Models;
 using RetailTrade.Domain.Services;
 using RetailTradeClient.Commands;
-using RetailTradeClient.State.Dialogs;
 using System;
 using System.Collections.Generic;
 using System.Windows.Input;
@@ -14,7 +13,6 @@ namespace RetailTradeClient.ViewModels.Dialogs
 
         private readonly IProductService _productService;
         private readonly HomeViewModel _viewModel;
-        private readonly IUIManager _manager;
         private PostponeReceipt _selectedPostponeReceipt;
 
         #endregion
@@ -44,11 +42,9 @@ namespace RetailTradeClient.ViewModels.Dialogs
         #region Constructor
 
         public PostponeReceiptViewModel(HomeViewModel viewModel,
-            IUIManager manager,
             IProductService productService)
         {
             _viewModel = viewModel;
-            _manager = manager;
             _productService = productService;
 
             PostponeReceipts = _viewModel.PostponeReceipts;
@@ -81,7 +77,7 @@ namespace RetailTradeClient.ViewModels.Dialogs
                     }
                     _viewModel.PostponeReceipts.Remove(SelectedPostponeReceipt);
                     Result = true;
-                    _manager.Close();
+                    CurrentWindowService.Close();
                 }
                 catch (Exception)
                 {

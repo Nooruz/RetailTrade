@@ -1,7 +1,5 @@
-﻿using RetailTradeClient.State.Dialogs;
-using RetailTradeClient.State.Shifts;
+﻿using RetailTradeClient.State.Shifts;
 using System.Threading.Tasks;
-using System.Windows;
 
 namespace RetailTradeClient.Commands
 {
@@ -10,7 +8,6 @@ namespace RetailTradeClient.Commands
         #region Private Members
 
         private readonly IShiftStore _shiftStore;
-        private readonly IUIManager _manager;
         private int _userId;
 
         #endregion
@@ -18,11 +15,9 @@ namespace RetailTradeClient.Commands
         #region Constructor
 
         public OpeningShiftCommand(IShiftStore shiftStore, 
-            int userId,
-            IUIManager manager)
+            int userId)
         {
             _shiftStore = shiftStore;
-            _manager = manager;
             _userId = userId;
         }
 
@@ -35,35 +30,7 @@ namespace RetailTradeClient.Commands
 
         public override async Task ExecuteAsync(object parameter)
         {
-            switch (await _shiftStore.OpeningShift(_userId))
-            {
-                case CheckingResult.Open:
-                    _manager.ShowMessage("Смена успешно отркыта.", "", MessageBoxButton.OK, MessageBoxImage.Information);
-                    break;
-                case CheckingResult.Close:
-                    _manager.ShowMessage("Смена успешно заккыта.", "", MessageBoxButton.OK, MessageBoxImage.Information);
-                    break;
-                case CheckingResult.IsAlreadyOpen:
-                    _manager.ShowMessage("Смена уже отркыта.", "", MessageBoxButton.OK, MessageBoxImage.Exclamation);
-                    break;
-                case CheckingResult.Exceeded:
-                    _manager.ShowMessage("Смена превысила 24 часа. Закройте смену!", "", MessageBoxButton.OK, MessageBoxImage.Exclamation);
-                    break;
-                case CheckingResult.ErrorOpeningShiftKKM:
-                    _manager.ShowMessage("Не удалось открыть смену фискального регистратора (ФР)", "", MessageBoxButton.OK, MessageBoxImage.Error);
-                    break;
-                case CheckingResult.ErrorOpening:
-                    _manager.ShowMessage("Ошибка при открытии смены.", "", MessageBoxButton.OK, MessageBoxImage.Exclamation);
-                    break;
-                case CheckingResult.ErrorClosing:
-                    break;
-                case CheckingResult.UnknownErrorWhenClosing:
-                    break;
-                case CheckingResult.Nothing:
-                    break;
-                default:
-                    break;
-            }
+            await _shiftStore.OpeningShift(_userId);
         }
     }
 }

@@ -20,7 +20,7 @@ namespace RetailTradeClient.State.Users
             set
             {
                 _currentUser = value;
-                StateChanged?.Invoke();
+                CurrentUserChanged?.Invoke();
             }
         }
 
@@ -30,7 +30,7 @@ namespace RetailTradeClient.State.Users
             set
             {
                 _organization = value;
-                StateChanged?.Invoke();
+                CurrentOrganizationChanged?.Invoke();
             }
         }
 
@@ -38,7 +38,8 @@ namespace RetailTradeClient.State.Users
 
         #region Public Event Actions
 
-        public event Action StateChanged;
+        public event Action CurrentUserChanged;
+        public event Action CurrentOrganizationChanged;
 
         #endregion        
     }

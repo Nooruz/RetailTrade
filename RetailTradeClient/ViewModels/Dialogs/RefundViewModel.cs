@@ -1,16 +1,14 @@
-﻿using RetailTrade.Domain.Models;
+﻿using DevExpress.Mvvm;
+using RetailTrade.Domain.Models;
 using RetailTrade.Domain.Services;
 using RetailTradeClient.Commands;
 using RetailTradeClient.Properties;
-using RetailTradeClient.State.Dialogs;
 using RetailTradeClient.State.Shifts;
 using RetailTradeClient.Views.Dialogs;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Collections.Specialized;
 using System.ComponentModel;
 using System.Linq;
-using System.Windows;
 using System.Windows.Input;
 
 namespace RetailTradeClient.ViewModels.Dialogs
@@ -21,7 +19,6 @@ namespace RetailTradeClient.ViewModels.Dialogs
 
         private readonly IReceiptService _receiptService;
         private readonly IShiftStore _shiftStore;
-        private readonly IUIManager _manager;
         private ObservableCollection<Receipt> _receipts; 
 
         #endregion
@@ -53,12 +50,10 @@ namespace RetailTradeClient.ViewModels.Dialogs
         #region Constructor
 
         public RefundViewModel(IReceiptService receiptService,
-            IShiftStore shiftStore,
-            IUIManager manager)
+            IShiftStore shiftStore)
         {
             _receiptService = receiptService;
             _shiftStore = shiftStore;
-            _manager = manager;
 
             LoadedCommand = new RelayCommand(Loaded);
             ReturnCommand = new RelayCommand(Return);
@@ -79,25 +74,24 @@ namespace RetailTradeClient.ViewModels.Dialogs
         {            
             if (SelectedReceipt != null)
             {
-                IUIManager uIManager = new UIManager();
                 if (Settings.Default.ShtrihMConnected)
                 {
-                    _ = uIManager.ShowDialog(new ReceiptNumberViewModel(_receiptService, uIManager) { SelectedReceipt = SelectedReceipt }, new ReceiptNumberView());
-                    _manager.Close();
+                    WindowService.Show(nameof(ReceiptNumberView), new ReceiptNumberViewModel(_receiptService) { SelectedReceipt = SelectedReceipt });
+                    CurrentWindowService.Close();
                 }
-                else if (_manager.ShowMessage("Устройство фискального регистратора (ФР) не обноружено. Продолжить?", "", MessageBoxButton.YesNo, MessageBoxImage.Question) == MessageBoxResult.Yes)
+                else if (MessageBoxService.ShowMessage("Устройство фискального регистратора (ФР) не обноружено. Продолжить?", "Sale Page", MessageButton.YesNo, MessageIcon.Question) == MessageResult.Yes)
                 {
                     if (await _receiptService.Refund(SelectedReceipt))
                     {
                         Receipt editReceipt = Receipts.FirstOrDefault(r => r.Id == SelectedReceipt.Id);
                         editReceipt.IsRefund = true;
                     }
-                    _manager.Close();
+                    CurrentWindowService.Close();
                 }
             }
             else
             {
-                _manager.ShowMessage("Выберите квитанцию.", "", MessageBoxButton.OK, MessageBoxImage.Exclamation);
+                _ = MessageBoxService.ShowMessage("Выберите квитанцию.", "Sale Page", MessageButton.OK, MessageIcon.Exclamation);
             }
         }
 

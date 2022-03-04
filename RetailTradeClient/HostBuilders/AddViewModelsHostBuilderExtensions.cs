@@ -3,7 +3,6 @@ using Microsoft.Extensions.Hosting;
 using RetailTrade.Domain.Services;
 using RetailTradeClient.State.Authenticators;
 using RetailTradeClient.State.Barcode;
-using RetailTradeClient.State.Dialogs;
 using RetailTradeClient.State.Messages;
 using RetailTradeClient.State.Navigators;
 using RetailTradeClient.State.ProductSale;
@@ -53,7 +52,6 @@ namespace RetailTradeClient.HostBuilders
                 services.GetRequiredService<IProductService>(),
                 services.GetRequiredService<IProductSaleService>(),
                 services.GetRequiredService<IReceiptService>(),
-                services.GetRequiredService<IUIManager>(),
                 services.GetRequiredService<IMessageStore>(),
                 services.GetRequiredService<IAuthenticator>(),
                 services.GetRequiredService<IShiftStore>(),
@@ -67,7 +65,6 @@ namespace RetailTradeClient.HostBuilders
         {
             return new LoginViewModel(services.GetRequiredService<IAuthenticator>(),
                 services.GetRequiredService<ViewModelDelegateRenavigator<HomeViewModel>>(),
-                services.GetRequiredService<IUIManager>(),
                 services.GetRequiredService<GlobalMessageViewModel>(),
                 services.GetRequiredService<IMessageStore>(),
                 services.GetRequiredService<IUserService>(),

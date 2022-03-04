@@ -1,9 +1,9 @@
-﻿<dialogs:BaseDialogUserControl
+﻿<local:BaseUserControl
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:dxe="http://schemas.devexpress.com/winfx/2008/xaml/editors"
     xmlns:dxlc="http://schemas.devexpress.com/winfx/2008/xaml/layoutcontrol"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    xmlns:dialogs="clr-namespace:RetailTradeClient.Dialogs"
+    xmlns:local="clr-namespace:RetailTradeClient.Views.Dialogs"
     xmlns:dxmvvm="http://schemas.devexpress.com/winfx/2008/xaml/mvvm"
     x:Class="RetailTradeClient.Views.Dialogs.PaymentCashView"
     Width="600"
@@ -11,7 +11,7 @@
     IsTabStop="True"
     Loaded="BaseDialogUserControl_Loaded">
 
-    <dialogs:BaseDialogUserControl.InputBindings>
+    <local:BaseUserControl.InputBindings>
 
         <KeyBinding Key="Delete"
                     Command="{Binding ClearCommand}"/>
@@ -22,7 +22,7 @@
         <KeyBinding Key="OemComma"
                     Command="{Binding CommaButtonPressCommand}"/>
 
-    </dialogs:BaseDialogUserControl.InputBindings>
+    </local:BaseUserControl.InputBindings>
 
     <dxmvvm:Interaction.Behaviors>
         <dxmvvm:EventToCommand EventName="TextInput"
@@ -142,4 +142,4 @@
 
     </dxlc:LayoutControl>
 
-</dialogs:BaseDialogUserControl>
+</local:BaseUserControl>

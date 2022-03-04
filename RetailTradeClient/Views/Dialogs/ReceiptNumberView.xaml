@@ -1,9 +1,9 @@
-﻿<local:BaseDialogUserControl
+﻿<local:BaseUserControl
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:dxe="http://schemas.devexpress.com/winfx/2008/xaml/editors"
     xmlns:dxlc="http://schemas.devexpress.com/winfx/2008/xaml/layoutcontrol"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    xmlns:local="clr-namespace:RetailTradeClient.Dialogs"
+    xmlns:local="clr-namespace:RetailTradeClient.Views.Dialogs"
     x:Class="RetailTradeClient.Views.Dialogs.ReceiptNumberView"
     Width="300">
 
@@ -19,4 +19,4 @@
         </dxlc:LayoutGroup>
     </dxlc:LayoutControl>
 
-</local:BaseDialogUserControl>
+</local:BaseUserControl>

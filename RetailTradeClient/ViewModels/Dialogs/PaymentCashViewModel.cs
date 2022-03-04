@@ -2,7 +2,6 @@
 using RetailTrade.Domain.Models;
 using RetailTrade.Domain.Services;
 using RetailTradeClient.Commands;
-using RetailTradeClient.State.Dialogs;
 using RetailTradeClient.State.ProductSale;
 using RetailTradeClient.State.Shifts;
 using RetailTradeClient.State.Users;
@@ -144,7 +143,6 @@ namespace RetailTradeClient.ViewModels.Dialogs
         public PaymentCashViewModel(IReceiptService receiptService,
             IProductSaleService productSaleService,
             IUserStore userStore,
-            IUIManager manager,
             IShiftStore shiftStore,
             IProductSaleStore productSaleStore)
         {
@@ -156,10 +154,11 @@ namespace RetailTradeClient.ViewModels.Dialogs
             ClearCommand = new RelayCommand(Clear);
             BackspaceCommand = new RelayCommand(Baclspace);
             CommaButtonPressCommand = new RelayCommand(CommaButtonPress);
-            MakeCashPaymentCommand = new MakeCashPaymentCommand(this, receiptService, manager, shiftStore, userStore, _productSaleStore);
+            MakeCashPaymentCommand = new MakeCashPaymentCommand(this, receiptService, shiftStore, userStore, productSaleStore);
             EnteredLoadedCommand = new ParameterCommand(parameter => EnteredLoaded(parameter));
 
-            _userStore.StateChanged += UserStore_StateChanged;
+            _userStore.CurrentUserChanged += UserStore_CurrentUserChanged;
+            _userStore.CurrentOrganizationChanged += UserStore_CurrentOrganizationChanged;
         }
 
         #endregion
@@ -243,9 +242,12 @@ namespace RetailTradeClient.ViewModels.Dialogs
             IsCommaButtonPressed = true;
         }
 
-        private void UserStore_StateChanged()
+        private void UserStore_CurrentUserChanged()
         {
             OnPropertyChanged(nameof(CurrentUser));
+        }
+        private void UserStore_CurrentOrganizationChanged()
+        {
             OnPropertyChanged(nameof(CurrentOrganization));
         }
 

@@ -1,11 +1,9 @@
-﻿using RetailTradeClient.Dialogs;
-
-namespace RetailTradeClient.Views.Dialogs
+﻿namespace RetailTradeClient.Views.Dialogs
 {
     /// <summary>
     /// Логика взаимодействия для PaymentCashView.xaml
     /// </summary>
-    public partial class PaymentCashView : BaseDialogUserControl
+    public partial class PaymentCashView : BaseUserControl
     {
         public PaymentCashView()
         {

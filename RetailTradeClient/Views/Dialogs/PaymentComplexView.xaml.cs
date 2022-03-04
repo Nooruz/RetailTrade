@@ -1,5 +1,4 @@
 ﻿using DevExpress.Xpf.Grid;
-using RetailTradeClient.Dialogs;
 using System;
 using System.Windows.Threading;
 
@@ -8,7 +7,7 @@ namespace RetailTradeClient.Views.Dialogs
     /// <summary>
     /// Логика взаимодействия для PaymentCashlessView.xaml
     /// </summary>
-    public partial class PaymentComplexView : BaseDialogUserControl
+    public partial class PaymentComplexView : BaseUserControl
     {
         public PaymentComplexView()
         {

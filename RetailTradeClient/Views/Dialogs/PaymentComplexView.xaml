@@ -1,14 +1,14 @@
-﻿<dialogs:BaseDialogUserControl
+﻿<local:BaseUserControl
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:dxe="http://schemas.devexpress.com/winfx/2008/xaml/editors"
     xmlns:dxg="http://schemas.devexpress.com/winfx/2008/xaml/grid"
     xmlns:dxlc="http://schemas.devexpress.com/winfx/2008/xaml/layoutcontrol"
     xmlns:dxmvvm="http://schemas.devexpress.com/winfx/2008/xaml/mvvm"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    xmlns:dialogs="clr-namespace:RetailTradeClient.Dialogs"
+    xmlns:local="clr-namespace:RetailTradeClient.Views.Dialogs"
     x:Class="RetailTradeClient.Views.Dialogs.PaymentComplexView">
 
-    <dialogs:BaseDialogUserControl.InputBindings>
+    <local:BaseUserControl.InputBindings>
 
         <KeyBinding Key="Delete"
                     Command="{Binding ClearCommand}"/>
@@ -19,7 +19,7 @@
         <KeyBinding Key="OemComma"
                     Command="{Binding CommaButtonPressCommand}"/>
 
-    </dialogs:BaseDialogUserControl.InputBindings>
+    </local:BaseUserControl.InputBindings>
 
     <dxlc:LayoutControl ItemSpace="10">
 
@@ -165,4 +165,4 @@
 
     </dxlc:LayoutControl>
 
-</dialogs:BaseDialogUserControl>
+</local:BaseUserControl>

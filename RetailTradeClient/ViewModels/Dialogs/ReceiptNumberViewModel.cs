@@ -1,15 +1,10 @@
-﻿using RetailTrade.CashRegisterMachine;
+﻿using DevExpress.Mvvm;
+using RetailTrade.CashRegisterMachine;
 using RetailTrade.Domain.Models;
 using RetailTrade.Domain.Services;
 using RetailTradeClient.Commands;
-using RetailTradeClient.State.Dialogs;
-using RetailTradeClient.State.Shifts;
 using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows;
 using System.Windows.Input;
 
 namespace RetailTradeClient.ViewModels.Dialogs
@@ -20,7 +15,6 @@ namespace RetailTradeClient.ViewModels.Dialogs
 
         private int? _receiptNumber;
         private readonly IReceiptService _receiptService;
-        private readonly IUIManager _manager;        
 
         #endregion
 
@@ -47,11 +41,9 @@ namespace RetailTradeClient.ViewModels.Dialogs
 
         #region Constructor
 
-        public ReceiptNumberViewModel(IReceiptService receiptService,
-            IUIManager manager)
+        public ReceiptNumberViewModel(IReceiptService receiptService)
         {
             _receiptService = receiptService;
-            _manager = manager;
 
             RefundCommand = new RelayCommand(Refund);
         }
@@ -91,11 +83,11 @@ namespace RetailTradeClient.ViewModels.Dialogs
                 ShtrihM.CloseCheck();
                 ShtrihM.CutCheck();
                 _ = await _receiptService.Refund(SelectedReceipt);
-                _manager.Close();
+                CurrentWindowService.Close();
             }
             else
             {
-                _ = _manager.ShowMessage("Номер чека должен быть больше 0.", "", MessageBoxButton.OK, MessageBoxImage.Error);
+                _ = MessageBoxService.ShowMessage("Номер чека должен быть больше 0.", "Sale Page", MessageButton.OK, MessageIcon.Error);
             }
         }
 

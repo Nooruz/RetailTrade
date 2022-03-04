@@ -1,11 +1,11 @@
-﻿<dialogs:BaseDialogUserControl
+﻿<local:BaseUserControl
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:dxe="http://schemas.devexpress.com/winfx/2008/xaml/editors"
     xmlns:dxg="http://schemas.devexpress.com/winfx/2008/xaml/grid"
     xmlns:dxlc="http://schemas.devexpress.com/winfx/2008/xaml/layoutcontrol"
     xmlns:dxmvvm="http://schemas.devexpress.com/winfx/2008/xaml/mvvm"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    xmlns:dialogs="clr-namespace:RetailTradeClient.Dialogs"
+    xmlns:local="clr-namespace:RetailTradeClient.Views.Dialogs"
     x:Class="RetailTradeClient.Views.Dialogs.RefundView"
     Width="600"
     Height="400">
@@ -79,4 +79,4 @@
 
     </dxlc:LayoutControl>
 
-</dialogs:BaseDialogUserControl>
+</local:BaseUserControl>

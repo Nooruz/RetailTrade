@@ -1,11 +1,11 @@
-﻿<dialogs:BaseDialogUserControl     x:Class="RetailTradeClient.Views.Dialogs.PrinterView"
-                                   xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-                                   xmlns:dxe="http://schemas.devexpress.com/winfx/2008/xaml/editors"
-                                   xmlns:dxlc="http://schemas.devexpress.com/winfx/2008/xaml/layoutcontrol"
-                                   xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-                                   xmlns:dialogs="clr-namespace:RetailTradeClient.Dialogs"
-                                   xmlns:components="clr-namespace:RetailTradeClient.Components"
-                                   Width="350"
+﻿<local:BaseUserControl    x:Class="RetailTradeClient.Views.Dialogs.PrinterView"
+                          xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                          xmlns:dxe="http://schemas.devexpress.com/winfx/2008/xaml/editors"
+                          xmlns:dxlc="http://schemas.devexpress.com/winfx/2008/xaml/layoutcontrol"
+                          xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                          xmlns:components="clr-namespace:RetailTradeClient.Components"
+                          xmlns:local="clr-namespace:RetailTradeClient.Views.Dialogs"
+                          Width="350"
                                    MinHeight="110">
 
     <dxlc:LayoutControl Orientation="Vertical">
@@ -45,4 +45,4 @@
 
     </dxlc:LayoutControl>
     
-</dialogs:BaseDialogUserControl>
+</local:BaseUserControl>
