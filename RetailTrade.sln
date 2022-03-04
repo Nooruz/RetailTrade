@@ -17,8 +17,6 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RetailTrade.LoadingPanelCon
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RetailTrade.SQLServerConnectionDialog", "RetailTrade.SQLServerConnectionDialog\RetailTrade.SQLServerConnectionDialog.csproj", "{BE032DA3-FA8D-41A7-8C55-A3589DED0126}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RetailTrade.DialogService", "RetailTrade.DialogService\RetailTrade.DialogService.csproj", "{D1AAB3B3-126D-4066-80D9-9B41172104EE}"
-EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RetailTrade.Barcode", "RetailTrade.Barcode\RetailTrade.Barcode.csproj", "{88640049-20CF-49F8-905C-2FA7121B6A2C}"
 EndProject
 Global
@@ -55,10 +53,6 @@ Global
 		{BE032DA3-FA8D-41A7-8C55-A3589DED0126}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{BE032DA3-FA8D-41A7-8C55-A3589DED0126}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{BE032DA3-FA8D-41A7-8C55-A3589DED0126}.Release|Any CPU.Build.0 = Release|Any CPU
-		{D1AAB3B3-126D-4066-80D9-9B41172104EE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{D1AAB3B3-126D-4066-80D9-9B41172104EE}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{D1AAB3B3-126D-4066-80D9-9B41172104EE}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{D1AAB3B3-126D-4066-80D9-9B41172104EE}.Release|Any CPU.Build.0 = Release|Any CPU
 		{88640049-20CF-49F8-905C-2FA7121B6A2C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{88640049-20CF-49F8-905C-2FA7121B6A2C}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{88640049-20CF-49F8-905C-2FA7121B6A2C}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -68,7 +62,7 @@ Global
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
-		BuildVersion_StartDate = 2000/1/1
 		SolutionGuid = {1B5BED5D-604D-4352-A831-4FDEE07951CB}
+		BuildVersion_StartDate = 2000/1/1
 	EndGlobalSection
 EndGlobal
