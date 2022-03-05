@@ -38,13 +38,13 @@ namespace RetailTrade.Domain.Services.AuthenticationServices
 
             if (storedUser == null)
             {
-                throw new InvalidUsernameOrPasswordException("Неверное имя или пароль.", username, password);
+                throw new InvalidUsernameOrPasswordException("Идентификация пользователя не выполнена.", username, password);
             }
 
             PasswordVerificationResult passwordResult = _passwordHasher.VerifyHashedPassword(storedUser.PasswordHash, password);
 
             return passwordResult != PasswordVerificationResult.Success
-                ? throw new InvalidUsernameOrPasswordException("Неверное имя или пароль.", username, password)
+                ? throw new InvalidUsernameOrPasswordException("Идентификация пользователя не выполнена.", username, password)
                 : storedUser;
         }
 

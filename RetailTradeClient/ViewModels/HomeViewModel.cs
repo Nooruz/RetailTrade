@@ -18,7 +18,6 @@ using RetailTradeClient.Views.Dialogs;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Collections.Specialized;
 using System.ComponentModel;
 using System.Linq;
 using System.Windows;
@@ -62,13 +61,13 @@ namespace RetailTradeClient.ViewModels
             }
         }
         public bool IsKeepRecorsd => Settings.Default.IsKeepRecords;
-        public ObservableCollection<Sale> SaleProducts { get; set; }
+        public ObservableCollection<Sale> ProductSales => _productSaleStore.ProductSales;
         public ICollectionView SaleProductsCollectionView { get; set; }
         public decimal Sum
         {
             get
             {
-                decimal sum = SaleProducts.Sum(sp => sp.Sum);
+                decimal sum = ProductSales.Sum(sp => sp.Sum);
                 if (sum != 0)
                     Change = 0;
                 return sum;
@@ -108,7 +107,7 @@ namespace RetailTradeClient.ViewModels
                 OnPropertyChanged(nameof(SelectedProductSale));
             }
         }
-        public int FocusedRowHandle => SaleProducts.Count - 1;
+        public int FocusedRowHandle => ProductSales.Count - 1;
         public TableView SaleTableView { get; set; }
 
         #endregion
@@ -119,8 +118,6 @@ namespace RetailTradeClient.ViewModels
         /// Выход из аккаунта
         /// </summary>
         public ICommand LogoutCommand => new RelayCommand(Logout);
-        public ICommand TextInputCommand => new ParameterCommand(parameter => TextInput(parameter));
-        public ICommand KeyDownCommand => new ParameterCommand(parameter => KeyDown(parameter));
         /// <summary>
         /// Настройки принтера
         /// </summary>
@@ -236,64 +233,19 @@ namespace RetailTradeClient.ViewModels
             _zebraBarcodeScanner = zebraBarcodeScanner;
             _comBarcodeService = comBarcodeService;
 
-            SaleProducts = new();
             PostponeReceipts = new List<PostponeReceipt>();
 
-            SaleProductsCollectionView = CollectionViewSource.GetDefaultView(SaleProducts);
-            BindingOperations.EnableCollectionSynchronization(SaleProducts, _syncLock);
+            SaleProductsCollectionView = CollectionViewSource.GetDefaultView(ProductSales);
+            BindingOperations.EnableCollectionSynchronization(ProductSales, _syncLock);
 
             PrintXReportCommand = new PrintXReportCommand();
 
-            SaleProducts.CollectionChanged += SaleProducts_CollectionChanged;
             _productService.OnProductSaleOrRefund += ProductService_OnProductSaleOrRefund;
         }
 
         #endregion
 
         #region Private Voids
-
-        private async void AddProductToSale(string barcode)
-        {
-            var newProduct = await _productService.Predicate(p => p.Barcode == barcode && p.Quantity > 0, p => new Product { Id = p.Id, Name = p.Name, Quantity = p.Quantity, SalePrice = p.SalePrice, TNVED = p.TNVED });
-            if (newProduct != null)
-            {
-                var product = SaleProducts.FirstOrDefault(sp => sp.Id == newProduct.Id);
-                if (product == null)
-                {
-                    SaleProducts.Add(new Sale
-                    {
-                        Id = newProduct.Id,
-                        Name = newProduct.Name,
-                        Quantity = 1,
-                        QuantityInStock = newProduct.Quantity,
-                        SalePrice = newProduct.SalePrice,
-                        TNVED = newProduct.TNVED,
-                        //Sum = newProduct.SalePrice * 1
-                    });
-                }
-                else if (product.Quantity < product.QuantityInStock)
-                {
-                    product.Quantity++;
-                    //product.Sum = product.SalePrice * (decimal)product.Quantity;
-                }
-                else
-                {
-                    _ = MessageBox.Show("Количество превышает остаток.", "", MessageBoxButton.OK, MessageBoxImage.Information);
-                }
-                OnPropertyChanged(nameof(Sum));
-                OnPropertyChanged(nameof(ToBePaid));
-            }            
-        }
-
-        private byte[] FromHex(string hex)
-        {
-            byte[] raw = new byte[hex.Length / 4];
-            for (int i = 0; i < raw.Length; i++)
-            {
-                raw[i] = Convert.ToByte(hex.Substring(i * 4, 4), 16);
-            }
-            return raw;
-        }
 
         private void GetShortECRStatus()
         {
@@ -324,7 +276,7 @@ namespace RetailTradeClient.ViewModels
             {
                 if (SaleTableView.Grid.CurrentItem == null)
                 {
-                    SaleTableView.Grid.CurrentItem = SaleProducts.LastOrDefault();
+                    SaleTableView.Grid.CurrentItem = ProductSales.LastOrDefault();
                 }
                 SaleTableView.Grid.CurrentColumn = SaleTableView.Grid.Columns[2];                
                 SaleTableView.Grid.View.ShowEditor();
@@ -354,40 +306,6 @@ namespace RetailTradeClient.ViewModels
                     SaleTableView.CellValueChanged += SaleTableView_CellValueChanged;
                 }
             }
-        }        
-
-        private void SaleProducts_CollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
-        {
-            if (e.OldItems != null)
-            {
-                foreach (INotifyPropertyChanged item in e.OldItems)
-                {
-                    item.PropertyChanged -= Item_PropertyChanged;
-                }
-            }
-
-            if (e.NewStartingIndex > 47)
-            {
-                MessageBox.Show("49", "", MessageBoxButton.OK, MessageBoxImage.Information);
-            }
-
-            if (e.NewItems != null)
-            {
-                foreach (INotifyPropertyChanged item in e.NewItems)
-                {
-                    item.PropertyChanged += Item_PropertyChanged;
-                }
-            }
-
-            OnPropertyChanged(nameof(Sum));
-            OnPropertyChanged(nameof(FocusedRowHandle));
-        }
-
-        private void Item_PropertyChanged(object sender, PropertyChangedEventArgs e)
-        {
-            OnPropertyChanged(nameof(SaleProducts));
-            OnPropertyChanged(nameof(Sum));
-            OnPropertyChanged(nameof(FocusedRowHandle));
         }
 
         private async void LoadedHomeView(object parameter)
@@ -424,12 +342,12 @@ namespace RetailTradeClient.ViewModels
         {
             if (product != null)
             {
-                var sale = SaleProducts.FirstOrDefault(sp => sp.Id == product.Id);
+                var sale = _productSaleStore.ProductSales.FirstOrDefault(sp => sp.Id == product.Id);
                 if (sale == null)
                 {
                     lock (_syncLock)
                     {
-                        SaleProducts.Add(new Sale
+                        _productSaleStore.ProductSales.Add(new Sale
                         {
                             Id = product.Id,
                             Name = product.Name,
@@ -470,12 +388,6 @@ namespace RetailTradeClient.ViewModels
             }            
         }
 
-        private void ProductService_OnProductRefund(int id, double quantity)
-        {
-            Product editProduct = ProductsWithoutBarcode.FirstOrDefault(p => p.Id == id);
-            editProduct.Quantity = quantity;
-        }
-
         private void QuantityValidate(object parameter)
         {
             if (parameter is GridCellValidationEventArgs e)
@@ -490,63 +402,6 @@ namespace RetailTradeClient.ViewModels
         }
 
         /// <summary>
-        /// Штрих-код сканер менен сканлерлеп жаткандагы цифраларды алуу
-        /// </summary>
-        /// <param name="parameter">Цифралар</param>
-        private void TextInput(object parameter)
-        {
-            if (parameter is TextCompositionEventArgs e)
-            {
-                Barcode += e.Text;
-            }
-        }
-
-        /// <summary>
-        /// Штрих-кодду сканерлеп буткондон кийинки басылуучу ентерди алуу
-        /// </summary>
-        /// <param name="parameter">Ентер</param>
-        private async void KeyDown(object parameter)
-        {
-            if (parameter is KeyEventArgs e)
-            {
-                if (e.Key == Key.Enter)
-                {
-                    var newProduct = await _productService.Predicate(p => p.Barcode == Barcode && p.Quantity > 0,
-                        p => new Product { Id = p.Id, Name = p.Name, Quantity = p.Quantity, SalePrice = p.SalePrice, TNVED = p.TNVED });
-                    if (newProduct != null)
-                    {
-                        var product = SaleProducts.FirstOrDefault(sp => sp.Id == newProduct.Id);
-                        if (product == null)
-                        {
-                            SaleProducts.Add(new Sale
-                            {
-                                Id = newProduct.Id,
-                                Name = newProduct.Name,
-                                Quantity = 1,
-                                QuantityInStock = newProduct.Quantity,
-                                SalePrice = newProduct.SalePrice,
-                                TNVED = newProduct.TNVED,
-                                Sum = newProduct.SalePrice,
-                            });
-                        }
-                        else if (product.Quantity < product.QuantityInStock)
-                        {
-                            product.Quantity++;
-                            //product.Sum = newProduct.SalePrice,
-                        }
-                        else
-                        {
-                            _ = MessageBox.Show("Количество превышает остаток.", "", MessageBoxButton.OK, MessageBoxImage.Information);
-                        }
-                    }
-                    OnPropertyChanged(nameof(Sum));
-                    OnPropertyChanged(nameof(ToBePaid));
-                    Barcode = string.Empty;
-                }
-            }
-        }      
-
-        /// <summary>
         /// Принтерлерди настройкалоо
         /// </summary>
         private void PrinterSettings()
@@ -559,16 +414,16 @@ namespace RetailTradeClient.ViewModels
         /// </summary>
         private void PostponeReceipt()
         {
-            if (SaleProducts.Count != 0)
+            if (ProductSales.Count != 0)
             {
                 PostponeReceipts.Add(new PostponeReceipt
                 {
                     Id = new Guid(),
                     DateTime = DateTime.Now,       
-                    Sum = SaleProducts.Sum(sp => sp.Sum),
-                    PostponeProducts = SaleProducts.Select(sp => new PostponeProduct { Id = sp.Id, Name = sp.Name, ArrivalPrice = sp.ArrivalPrice, SalePrice = sp.SalePrice, Quantity = sp.Quantity, Sum = sp.Sum }).ToList()
+                    Sum = ProductSales.Sum(sp => sp.Sum),
+                    PostponeProducts = ProductSales.Select(sp => new PostponeProduct { Id = sp.Id, Name = sp.Name, ArrivalPrice = sp.ArrivalPrice, SalePrice = sp.SalePrice, Quantity = sp.Quantity, Sum = sp.Sum }).ToList()
                 });
-                SaleProducts.Clear();
+                ProductSales.Clear();
                 OnPropertyChanged(nameof(Sum));
             }            
         }
@@ -592,22 +447,11 @@ namespace RetailTradeClient.ViewModels
         {
             if (parameter is int id)
             {
-                var saleProduct = SaleProducts.FirstOrDefault(sp => sp.Id == id);
+                var saleProduct = ProductSales.FirstOrDefault(sp => sp.Id == id);
                 if (saleProduct == null)
                 {
                     Product getProduct = IsKeepRecorsd ? await _productService.Predicate(p => p.Id == id && p.DeleteMark == false && p.Quantity > 0, p => new Product { Id = p.Id, Name = p.Name, Quantity = p.Quantity, SalePrice = p.SalePrice, TNVED = p.TNVED }) :
                             await _productService.Predicate(p => p.Id == id && p.DeleteMark == false, p => new Product { Id = p.Id, Name = p.Name, Quantity = p.Quantity, SalePrice = p.SalePrice, TNVED = p.TNVED });
-                    SaleProducts.Add(new Sale
-                    {
-                        Id = getProduct.Id,
-                        Name = getProduct.Name,
-                        Quantity = 1,
-                        SalePrice = getProduct.SalePrice,
-                        ArrivalPrice = getProduct.ArrivalPrice,
-                        Sum = getProduct.SalePrice,
-                        QuantityInStock = getProduct.Quantity,
-                        TNVED = getProduct.TNVED
-                    });
                     _productSaleStore.AddProduct(new Sale
                     {
                         Id = getProduct.Id,
@@ -646,28 +490,24 @@ namespace RetailTradeClient.ViewModels
         /// </summary>
         private void PaymentCash()
         {
-            if (SaleProducts.Count > 0)
+            if (ProductSales.Count > 0)
             {
-                PaymentCashViewModel _paymentCashViewModel = new(_receiptService, _productSaleService, _userStore, _shiftStore, _productSaleStore ) 
+                PaymentCashViewModel _paymentCashViewModel = new(_receiptService, _userStore, _shiftStore, _productSaleStore) 
                 { 
-                    Title = "Оплата наличными",
-                    SaleProducts = SaleProducts.ToList()
+                    Title = "Оплата наличными"
                 };
 
                 WindowService.Show(nameof(PaymentCashView), _paymentCashViewModel);
-
-                //SaleProducts.Clear();
             }
         }
 
-        private async void PaymentComplex()
+        private void PaymentComplex()
         {
-            if (SaleProducts.Count > 0)
+            if (ProductSales.Count > 0)
             {
                 PaymentComplexViewModel _paymentComplexViewModel = new(_receiptService, _shiftStore, _userStore) 
                 { 
-                    Title = "Оплата чека",
-                    SaleProducts = SaleProducts.ToList()
+                    Title = "Оплата чека"
                 };
 
                 WindowService.Show(nameof(PaymentComplexView), _paymentComplexViewModel);
@@ -679,7 +519,7 @@ namespace RetailTradeClient.ViewModels
         /// </summary>
         private void Logout()
         {
-            if (MessageBox.Show("Выйти?", "Выход из аккаунта", MessageBoxButton.YesNo, MessageBoxImage.Question) == MessageBoxResult.Yes)
+            if (MessageBoxService.ShowMessage("Выйти?", "Sale Page", MessageButton.YesNo, MessageIcon.Question) == MessageResult.Yes)
             {
                 _authenticator.Logout();
             }
@@ -692,11 +532,11 @@ namespace RetailTradeClient.ViewModels
         {
             if (SelectedProductSale != null)
             {
-                SaleProducts.Remove(SelectedProductSale);
+                _productSaleStore.DeleteProduct(SelectedProductSale);                
             }
-            else if (SaleProducts.Count > 0)
+            else if (ProductSales.Count > 0)
             {
-                SaleProducts.Remove(SaleProducts.LastOrDefault());
+                _productSaleStore.DeleteProduct(ProductSales.LastOrDefault());
             }
         }
 
@@ -725,7 +565,7 @@ namespace RetailTradeClient.ViewModels
         /// </summary>
         private void Cancel()
         {
-            SaleProducts.Clear();            
+            _productSaleStore.ProductSales.Clear();            
         }
 
         #endregion

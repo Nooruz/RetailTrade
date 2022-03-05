@@ -1,18 +1,20 @@
 ﻿using RetailTrade.Domain.Models;
 using System;
-using System.Collections.Generic;
+using System.Collections.ObjectModel;
 
 namespace RetailTradeClient.State.ProductSale
 {
     public interface IProductSaleStore
     {
-        IEnumerable<Sale> ProductSales { get; }
-        event Action<Sale> OnProductAdd;
-        event Action<Sale> OnProductDelete;
-        event Action<Sale> OnProductUpdate;
+        ObservableCollection<Sale> ProductSales { get; }
+        decimal ToBePaid { get; set; }
+        decimal Entered { get; set; }
+        decimal Change { get; }
+        public bool SaleCompleted { get; set; }
+        event Action OnPropertyChanged;
 
         void AddProduct(Sale productSale);
         void DeleteProduct(Sale productSale);
-        void Updateroduct(Sale productSale);
+        void UpdateProduct(Sale productSale);
     }
 }

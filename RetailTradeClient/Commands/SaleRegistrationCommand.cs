@@ -1,4 +1,5 @@
-﻿using RetailTradeClient.State.Shifts;
+﻿using DevExpress.Mvvm;
+using RetailTradeClient.State.Shifts;
 using System.Threading.Tasks;
 
 namespace RetailTradeClient.Commands
@@ -9,16 +10,19 @@ namespace RetailTradeClient.Commands
 
         private readonly IShiftStore _shiftStore;
         private int _userId;
+        private IMessageBoxService _messageBoxService;
 
         #endregion
 
         #region Constructor
 
-        public SaleRegistrationCommand(IShiftStore shiftStore,
+        public SaleRegistrationCommand(IMessageBoxService messageBoxService,
+            IShiftStore shiftStore,
             int userId)
         {
             _shiftStore = shiftStore;
             _userId = userId;
+            _messageBoxService = messageBoxService;
         }
 
         #endregion
@@ -30,7 +34,7 @@ namespace RetailTradeClient.Commands
 
         public override async Task ExecuteAsync(object parameter)
         {
-            await _shiftStore.CheckingShift(_userId);
+            await _shiftStore.CheckingShift(_messageBoxService, _userId);
         }
     }
 }

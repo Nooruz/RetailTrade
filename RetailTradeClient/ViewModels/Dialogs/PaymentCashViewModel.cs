@@ -6,8 +6,6 @@ using RetailTradeClient.State.ProductSale;
 using RetailTradeClient.State.Shifts;
 using RetailTradeClient.State.Users;
 using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Windows;
 using System.Windows.Input;
 
@@ -19,9 +17,8 @@ namespace RetailTradeClient.ViewModels.Dialogs
 
         private readonly IUserStore _userStore;
         private readonly IProductSaleStore _productSaleStore;
-        private decimal _entered;
-        private decimal _amountToBePaid;
-        private List<Sale> _saleProducts;
+        private readonly IReceiptService _receiptService;
+        private readonly IShiftStore _shiftStore;
 
         #endregion
 
@@ -34,10 +31,10 @@ namespace RetailTradeClient.ViewModels.Dialogs
         /// </summary>
         public decimal Entered
         {
-            get => _entered;
+            get => _productSaleStore.Entered;
             set
             {
-                _entered = value - Math.Truncate(value) == 0 ? Math.Truncate(value) : value;
+                _productSaleStore.Entered = value - Math.Truncate(value) == 0 ? Math.Truncate(value) : value;
                 OnPropertyChanged(nameof(Entered));
                 OnPropertyChanged(nameof(Change));
             }
@@ -48,10 +45,10 @@ namespace RetailTradeClient.ViewModels.Dialogs
         /// </summary>
         public decimal AmountToBePaid
         {
-            get => _amountToBePaid;
+            get => _productSaleStore.ToBePaid;
             set
             {
-                _amountToBePaid = value;
+                _productSaleStore.ToBePaid = value;
                 OnPropertyChanged(nameof(AmountToBePaid));
                 OnPropertyChanged(nameof(Change));
             }
@@ -66,21 +63,6 @@ namespace RetailTradeClient.ViewModels.Dialogs
             set
             {
 
-            }
-        }
-
-        /// <summary>
-        /// Покупаемы товары
-        /// </summary>
-        public List<Sale> SaleProducts
-        {
-            get => _saleProducts;
-            set
-            {
-                _saleProducts = value;
-                Entered = _saleProducts.Sum(sp => sp.Sum);
-                AmountToBePaid = Entered;
-                OnPropertyChanged(nameof(SaleProducts));
             }
         }
 
@@ -106,34 +88,34 @@ namespace RetailTradeClient.ViewModels.Dialogs
         /// <summary>
         /// Нажатия кнопки с цифрами
         /// </summary>
-        public ICommand DigitalButtonPressCommand { get; }
+        public ICommand DigitalButtonPressCommand => new ParameterCommand(parameter => EnterNumber(parameter));
 
         /// <summary>
         /// Нажатия кнопки очистки
         /// </summary>
-        public ICommand ClearCommand { get; }
+        public ICommand ClearCommand => new RelayCommand(Clear);
 
         /// <summary>
         /// Нажатия кнопки пробела назад
         /// </summary>
-        public ICommand BackspaceCommand { get; }
+        public ICommand BackspaceCommand => new RelayCommand(Baclspace);
 
         /// <summary>
         /// Нажатия кнопки запятая
         /// </summary>
-        public ICommand CommaButtonPressCommand { get; }
+        public ICommand CommaButtonPressCommand => new RelayCommand(CommaButtonPress);
 
         /// <summary>
         /// Оплатить
         /// </summary>
-        public ICommand MakeCashPaymentCommand { get; }
+        public ICommand MakeCashPaymentCommand => new MakeCashPaymentCommand(_receiptService, _shiftStore, _userStore, _productSaleStore);
 
         /// <summary>
         /// Следить за нажатием кнопки клавиатуры
         /// </summary>
-        public ICommand TextInputCommand { get; }
+        public ICommand TextInputCommand => new ParameterCommand(parameter => TextInput(parameter));
 
-        public ICommand EnteredLoadedCommand { get; }
+        public ICommand EnteredLoadedCommand => new ParameterCommand(parameter => EnteredLoaded(parameter));
 
 
         #endregion
@@ -141,25 +123,24 @@ namespace RetailTradeClient.ViewModels.Dialogs
         #region Constructor
 
         public PaymentCashViewModel(IReceiptService receiptService,
-            IProductSaleService productSaleService,
             IUserStore userStore,
             IShiftStore shiftStore,
             IProductSaleStore productSaleStore)
         {
             _userStore = userStore;
             _productSaleStore = productSaleStore;
-
-            DigitalButtonPressCommand = new ParameterCommand(parameter => EnterNumber(parameter));
-            TextInputCommand = new ParameterCommand(parameter => TextInput(parameter));
-            ClearCommand = new RelayCommand(Clear);
-            BackspaceCommand = new RelayCommand(Baclspace);
-            CommaButtonPressCommand = new RelayCommand(CommaButtonPress);
-            MakeCashPaymentCommand = new MakeCashPaymentCommand(this, receiptService, shiftStore, userStore, productSaleStore);
-            EnteredLoadedCommand = new ParameterCommand(parameter => EnteredLoaded(parameter));
+            _receiptService = receiptService;
+            _shiftStore = shiftStore;
 
             _userStore.CurrentUserChanged += UserStore_CurrentUserChanged;
             _userStore.CurrentOrganizationChanged += UserStore_CurrentOrganizationChanged;
         }
+
+        #endregion
+
+        #region Actions
+
+        public event Action OnPayment;
 
         #endregion
 

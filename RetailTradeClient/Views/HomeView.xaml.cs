@@ -1,12 +1,12 @@
 ﻿using DevExpress.Xpf.Grid;
-using System.Windows.Controls;
+using RetailTradeClient.Views.Dialogs;
 
 namespace RetailTradeClient.Views
 {
     /// <summary>
     /// Логика взаимодействия для HomeView.xaml
     /// </summary>
-    public partial class HomeView : UserControl
+    public partial class HomeView : BaseUserControl
     {
         public HomeView()
         {

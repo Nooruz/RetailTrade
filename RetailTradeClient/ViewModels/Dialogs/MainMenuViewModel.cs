@@ -30,9 +30,9 @@ namespace RetailTradeClient.ViewModels.Dialogs
 
         #region Commands
 
-        public ICommand OpeningShiftCommand => new OpeningShiftCommand(_shiftStore, _userId);
-        public ICommand ClosingShiftCommand => new ClosingShiftCommand(_shiftStore, _userId);
-        public ICommand SaleRegistrationCommand => new SaleRegistrationCommand(_shiftStore, _userId);
+        public ICommand OpeningShiftCommand => new OpeningShiftCommand(MessageBoxService, _shiftStore, _userId);
+        public ICommand ClosingShiftCommand => new ClosingShiftCommand(MessageBoxService, _shiftStore, _userId);
+        public ICommand SaleRegistrationCommand => new SaleRegistrationCommand(MessageBoxService, _shiftStore, _userId);
         public ICommand SettingCommand => new RelayCommand(Setting);
 
         #endregion

@@ -7,7 +7,6 @@ using RetailTradeClient.Report;
 using RetailTradeClient.State.ProductSale;
 using RetailTradeClient.State.Shifts;
 using RetailTradeClient.State.Users;
-using RetailTradeClient.ViewModels.Dialogs;
 using System;
 using System.Linq;
 using System.Threading.Tasks;
@@ -18,7 +17,6 @@ namespace RetailTradeClient.Commands
     {
         #region Private Members
 
-        private readonly PaymentCashViewModel _paymentCashViewModel;
         private readonly IReceiptService _receiptService;
         private readonly IShiftStore _shiftStore;
         private readonly IUserStore _userStore;
@@ -28,13 +26,11 @@ namespace RetailTradeClient.Commands
 
         #region Constructor
 
-        public MakeCashPaymentCommand(PaymentCashViewModel paymentCashViewModel,
-            IReceiptService receiptService,
+        public MakeCashPaymentCommand(IReceiptService receiptService,
             IShiftStore shiftStore,
             IUserStore userStore,
             IProductSaleStore productSaleStore)
         {
-            _paymentCashViewModel = paymentCashViewModel;
             _receiptService = receiptService;
             _shiftStore = shiftStore;
             _userStore = userStore;
@@ -50,7 +46,7 @@ namespace RetailTradeClient.Commands
 
         public override async Task ExecuteAsync(object parameter)
         {
-            if (_paymentCashViewModel.Change >= 0)
+            if (_productSaleStore.Change >= 0)
             {
                 try
                 {
@@ -60,11 +56,11 @@ namespace RetailTradeClient.Commands
                     newReceipt = await _receiptService.CreateAsync(new Receipt
                     {
                         DateOfPurchase = DateTime.Now,
-                        Sum = _paymentCashViewModel.AmountToBePaid,
-                        PaidInCash = _paymentCashViewModel.Entered,
+                        Sum = _productSaleStore.ToBePaid,
+                        PaidInCash = _productSaleStore.Entered,
                         ShiftId = _shiftStore.CurrentShift.Id,
-                        Change = _paymentCashViewModel.Change,
-                        ProductSales = _paymentCashViewModel.SaleProducts.Select(s =>
+                        Change = _productSaleStore.Change,
+                        ProductSales = _productSaleStore.ProductSales.Select(s =>
                             new ProductSale
                             {
                                 ProductId = s.Id,
@@ -83,7 +79,7 @@ namespace RetailTradeClient.Commands
 
                         if (newReceipt != null)
                         {
-                            foreach (Sale sale in _paymentCashViewModel.SaleProducts)
+                            foreach (Sale sale in _productSaleStore.ProductSales)
                             {
                                 ShtrihM.Password = 30;
                                 ShtrihM.Department = 1;
@@ -116,7 +112,7 @@ namespace RetailTradeClient.Commands
                     //Подготовка документа для печати чека
                     ProductSaleReport report = new(_userStore, newReceipt)
                     {
-                        DataSource = _paymentCashViewModel.SaleProducts
+                        DataSource = _productSaleStore.ProductSales
                     };
                     await report.CreateDocumentAsync();
 
@@ -141,7 +137,7 @@ namespace RetailTradeClient.Commands
 
         private void PrintingSystem_EndPrint(object sender, EventArgs e)
         {
-            _paymentCashViewModel.Result = true;
+            _productSaleStore.SaleCompleted = true;
         }
     }
 }

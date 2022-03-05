@@ -1,4 +1,5 @@
-﻿using RetailTrade.CashRegisterMachine;
+﻿using DevExpress.Mvvm;
+using RetailTrade.CashRegisterMachine;
 using RetailTrade.Domain.Models;
 using RetailTrade.Domain.Services;
 using RetailTradeClient.Properties;
@@ -45,7 +46,8 @@ namespace RetailTradeClient.State.Shifts
 
         public event Action<CheckingResult> CurrentShiftChanged;
 
-        public async Task CheckingShift(int userId)
+        public async Task CheckingShift(IMessageBoxService MessageBoxService,
+            int userId)
         {
             if (ShtrihM.CheckConnection() == 0)
             {
@@ -53,7 +55,7 @@ namespace RetailTradeClient.State.Shifts
                 CurrentShiftChanged.Invoke(await Check(userId));
                 return;
             }
-            if (MessageBox.Show("Устройство фискального регистратора (ФР) не обноружено. Продолжить?", "Sale Page", MessageBoxButton.YesNo, MessageBoxImage.Question) == MessageBoxResult.Yes)
+            if (MessageBoxService.ShowMessage("Устройство фискального регистратора (ФР) не обноружено. Продолжить?", "Sale Page", MessageButton.YesNo, MessageIcon.Question) == MessageResult.Yes)
             {
                 ShtrihMConnected(false);
                 CurrentShiftChanged.Invoke(await Check(userId));
@@ -62,7 +64,8 @@ namespace RetailTradeClient.State.Shifts
             CurrentShiftChanged.Invoke(CheckingResult.Nothing);
         }        
 
-        public async Task ClosingShift(int userId)
+        public async Task ClosingShift(IMessageBoxService MessageBoxService,
+            int userId)
         {
             var result = await _shiftService.GetOpenShiftByUserIdAsync(userId);
             if (result != null)
@@ -74,7 +77,7 @@ namespace RetailTradeClient.State.Shifts
                     CurrentShiftChanged.Invoke(await Closing(userId));
                     return;
                 }
-                if (MessageBox.Show("Устройство фискального регистратора (ФР) не обноружено. Продолжить?", "Sale Page", MessageBoxButton.YesNo, MessageBoxImage.Question) == MessageBoxResult.Yes)
+                if (MessageBoxService.ShowMessage("Устройство фискального регистратора (ФР) не обноружено. Продолжить?", "Sale Page", MessageButton.YesNo, MessageIcon.Question) == MessageResult.Yes)
                 {
                     ShtrihMConnected(false);
                     CurrentShiftChanged.Invoke(await Closing(userId));
@@ -90,7 +93,8 @@ namespace RetailTradeClient.State.Shifts
             return;
         }
 
-        public async Task OpeningShift(int userId)
+        public async Task OpeningShift(IMessageBoxService MessageBoxService,
+            int userId)
         {
             var result = await _shiftService.GetOpenShiftByUserIdAsync(userId);
             if (result == null)
@@ -102,7 +106,7 @@ namespace RetailTradeClient.State.Shifts
                     CurrentShiftChanged.Invoke(await Opening(userId));
                     return;
                 }
-                if (MessageBox.Show("Устройство фискального регистратора (ФР) не обноружено. Продолжить?", "Sale Page", MessageBoxButton.YesNo, MessageBoxImage.Question) == MessageBoxResult.Yes)
+                if (MessageBoxService.ShowMessage("Устройство фискального регистратора (ФР) не обноружено. Продолжить?", "Sale Page", MessageButton.YesNo, MessageIcon.Question) == MessageResult.Yes)
                 {
                     ShtrihMConnected(false);
                     CurrentShiftChanged.Invoke(await Opening(userId));

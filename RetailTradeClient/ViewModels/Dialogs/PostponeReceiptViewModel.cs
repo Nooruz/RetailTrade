@@ -65,7 +65,7 @@ namespace RetailTradeClient.ViewModels.Dialogs
                     
                     foreach (PostponeProduct postponeProduct in SelectedPostponeReceipt.PostponeProducts)
                     {
-                        _viewModel.SaleProducts.Add(new Sale
+                        _viewModel.ProductSales.Add(new Sale
                         {
                             Id = postponeProduct.Id,
                             Name = postponeProduct.Name,

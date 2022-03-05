@@ -1,21 +1,62 @@
 ﻿using RetailTrade.Domain.Models;
-using RetailTradeClient.Utilities;
 using System;
-using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System.ComponentModel;
 
 namespace RetailTradeClient.State.ProductSale
 {
-    public class ProductSaleStore : IProductSaleStore
+    public class ProductSaleStore : IProductSaleStore, INotifyPropertyChanged
     {
         #region Private Members
 
-        private ObservableQueue<Sale> _productSales;
+        private ObservableCollection<Sale> _productSales = new();
+        private decimal _toBePaid;
+        private decimal _entered;
+        private bool _saleCompleted;
 
         #endregion
 
         #region Public Properties
 
-        public IEnumerable<Sale> ProductSales => _productSales;
+        public ObservableCollection<Sale> ProductSales
+        {
+            get => _productSales;
+            set
+            {
+                _productSales = value;
+                OnPropertyChanged(nameof(ProductSales));
+            }
+        }
+        public decimal ToBePaid
+        {
+            get => _toBePaid;
+            set
+            {
+                _toBePaid = value;
+                OnPropertyChanged(nameof(ToBePaid));
+                OnPropertyChanged(nameof(Change));
+            }
+        }
+        public decimal Entered
+        {
+            get => _entered;
+            set
+            {
+                _entered = value;
+                OnPropertyChanged(nameof(Entered));
+                OnPropertyChanged(nameof(Change));
+            }
+        }
+        public decimal Change => Entered - ToBePaid;
+        public bool SaleCompleted
+        {
+            get => _saleCompleted;
+            set
+            {
+                _saleCompleted = value;
+                OnPropertyChanged(nameof(SaleCompleted));
+            }
+        }
 
         #endregion
 
@@ -30,27 +71,36 @@ namespace RetailTradeClient.State.ProductSale
 
         #region Public Events
 
-        public event Action<Sale> OnProductAdd;
-        public event Action<Sale> OnProductDelete;
-        public event Action<Sale> OnProductUpdate;
-
+        public event Action OnPropertyChanged;
+        
         #endregion
 
         #region Public Voids
 
-        public void AddProduct(Sale Sale)
+        public void AddProduct(Sale sale)
         {
-            _productSales.Enqueue(Sale);
+            ProductSales.Add(sale);
         }
 
-        public void DeleteProduct(Sale Sale)
+        public void DeleteProduct(Sale sale)
         {
-            //_productSales.Dequeue();
+            _ = ProductSales.Remove(sale);
         }
 
-        public void Updateroduct(Sale Sale)
+        public void UpdateProduct(Sale sale)
         {
             throw new NotImplementedException();
+        }
+
+        #endregion
+
+        #region PropertyChanged
+
+        public event PropertyChangedEventHandler PropertyChanged;
+
+        protected void OnPropertyChanged(string propertyName)
+        {
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
 
         #endregion

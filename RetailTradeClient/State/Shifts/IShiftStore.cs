@@ -1,4 +1,5 @@
-﻿using RetailTrade.Domain.Models;
+﻿using DevExpress.Mvvm;
+using RetailTrade.Domain.Models;
 using System;
 using System.Threading.Tasks;
 
@@ -83,19 +84,19 @@ namespace RetailTradeClient.State.Shifts
         /// </summary>
         /// <param name="userId">Код кассира</param>
         /// <returns>Если открыто true, иначи false</returns>
-        Task OpeningShift(int userId);
+        Task OpeningShift(IMessageBoxService MessageBoxService, int userId);
 
         /// <summary>
         /// Закрытие смены
         /// </summary>
         /// <param name="userId">Код кассира</param>
-        Task ClosingShift(int userId);
+        Task ClosingShift(IMessageBoxService MessageBoxService, int userId);
 
         /// <summary>
         /// Проверка смены
         /// </summary>
         /// <returns>Если открыто true, иначи false</returns>
-        Task CheckingShift(int userId);
+        Task CheckingShift(IMessageBoxService MessageBoxService, int userId);
 
         /// <summary>
         /// Обработчик
