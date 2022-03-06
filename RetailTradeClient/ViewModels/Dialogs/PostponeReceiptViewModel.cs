@@ -1,8 +1,8 @@
 ﻿using RetailTrade.Domain.Models;
-using RetailTrade.Domain.Services;
 using RetailTradeClient.Commands;
+using RetailTradeClient.State.ProductSale;
 using System;
-using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Windows.Input;
 
 namespace RetailTradeClient.ViewModels.Dialogs
@@ -11,15 +11,14 @@ namespace RetailTradeClient.ViewModels.Dialogs
     {
         #region Private Members
 
-        private readonly IProductService _productService;
-        private readonly HomeViewModel _viewModel;
+        private readonly IProductSaleStore _productSaleStore;
         private PostponeReceipt _selectedPostponeReceipt;
 
         #endregion
 
         #region Public Properties
 
-        public List<PostponeReceipt> PostponeReceipts { get; set; }
+        public ObservableCollection<PostponeReceipt> PostponeReceipts => _productSaleStore.PostponeReceipts;
         public PostponeReceipt SelectedPostponeReceipt
         {
             get => _selectedPostponeReceipt;
@@ -34,49 +33,29 @@ namespace RetailTradeClient.ViewModels.Dialogs
 
         #region Commands
 
-        public ICommand ResumeReceiptCommand { get; }
-        public ICommand RowDoubleClickCommand { get; }
+        public ICommand ResumeReceiptCommand => new RelayCommand(ResumeReceipt);
+        public ICommand RowDoubleClickCommand => new RelayCommand(ResumeReceipt);
 
         #endregion
 
         #region Constructor
 
-        public PostponeReceiptViewModel(HomeViewModel viewModel,
-            IProductService productService)
+        public PostponeReceiptViewModel(IProductSaleStore productSaleStore)
         {
-            _viewModel = viewModel;
-            _productService = productService;
-
-            PostponeReceipts = _viewModel.PostponeReceipts;
-            ResumeReceiptCommand = new RelayCommand(ResumeReceipt);
-            RowDoubleClickCommand = new RelayCommand(ResumeReceipt);
+            _productSaleStore = productSaleStore;
         }
 
         #endregion
 
         #region Private Voids
 
-        private async void ResumeReceipt()
+        private void ResumeReceipt()
         {
             if (SelectedPostponeReceipt != null)
             {
                 try
                 {
-                    
-                    foreach (PostponeProduct postponeProduct in SelectedPostponeReceipt.PostponeProducts)
-                    {
-                        _viewModel.ProductSales.Add(new Sale
-                        {
-                            Id = postponeProduct.Id,
-                            Name = postponeProduct.Name,
-                            SalePrice = postponeProduct.SalePrice,
-                            Quantity = postponeProduct.Quantity,
-                            Sum = postponeProduct.Sum,
-                            QuantityInStock = await _productService.GetQuantity(postponeProduct.Id)
-                        });
-                    }
-                    _viewModel.PostponeReceipts.Remove(SelectedPostponeReceipt);
-                    Result = true;
+                    _productSaleStore.ResumeReceipt(SelectedPostponeReceipt.Id);
                     CurrentWindowService.Close();
                 }
                 catch (Exception)

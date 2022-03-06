@@ -35,8 +35,8 @@ namespace RetailTradeClient.ViewModels.Dialogs
             set
             {
                 _productSaleStore.Entered = value - Math.Truncate(value) == 0 ? Math.Truncate(value) : value;
+                Change = _productSaleStore.Entered - _productSaleStore.ToBePaid;
                 OnPropertyChanged(nameof(Entered));
-                OnPropertyChanged(nameof(Change));
             }
         }
         
@@ -46,12 +46,7 @@ namespace RetailTradeClient.ViewModels.Dialogs
         public decimal AmountToBePaid
         {
             get => _productSaleStore.ToBePaid;
-            set
-            {
-                _productSaleStore.ToBePaid = value;
-                OnPropertyChanged(nameof(AmountToBePaid));
-                OnPropertyChanged(nameof(Change));
-            }
+            set { }
         }
 
         /// <summary>
@@ -59,10 +54,11 @@ namespace RetailTradeClient.ViewModels.Dialogs
         /// </summary>
         public decimal Change
         {
-            get => Entered - AmountToBePaid;
+            get => _productSaleStore.Change;
             set
             {
-
+                _productSaleStore.Change = value;
+                OnPropertyChanged(nameof(Change));
             }
         }
 
@@ -108,7 +104,7 @@ namespace RetailTradeClient.ViewModels.Dialogs
         /// <summary>
         /// Оплатить
         /// </summary>
-        public ICommand MakeCashPaymentCommand => new MakeCashPaymentCommand(_receiptService, _shiftStore, _userStore, _productSaleStore);
+        public ICommand MakeCashPaymentCommand => new MakeCashPaymentCommand(_receiptService, _shiftStore, _userStore, _productSaleStore, CurrentWindowService);
 
         /// <summary>
         /// Следить за нажатием кнопки клавиатуры
@@ -134,6 +130,7 @@ namespace RetailTradeClient.ViewModels.Dialogs
 
             _userStore.CurrentUserChanged += UserStore_CurrentUserChanged;
             _userStore.CurrentOrganizationChanged += UserStore_CurrentOrganizationChanged;
+            _productSaleStore.OnProductSalesChanged += () => OnPropertyChanged(nameof(Change));
         }
 
         #endregion

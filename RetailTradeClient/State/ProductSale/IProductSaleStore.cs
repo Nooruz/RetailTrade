@@ -1,20 +1,31 @@
 ﻿using RetailTrade.Domain.Models;
 using System;
 using System.Collections.ObjectModel;
+using System.Threading.Tasks;
 
 namespace RetailTradeClient.State.ProductSale
 {
     public interface IProductSaleStore
     {
         ObservableCollection<Sale> ProductSales { get; }
-        decimal ToBePaid { get; set; }
+        ObservableCollection<PostponeReceipt> PostponeReceipts { get; }
+        decimal ToBePaid { get; }
         decimal Entered { get; set; }
-        decimal Change { get; }
+        decimal Change { get; set; }
         public bool SaleCompleted { get; set; }
-        event Action OnPropertyChanged;
+        event Action OnProductSalesChanged;
+        event Action<bool> OnProductSale;
+        event Action OnPostponeReceiptChanged;
 
-        void AddProduct(Sale productSale);
-        void DeleteProduct(Sale productSale);
-        void UpdateProduct(Sale productSale);
+        Task AddProduct(string barcode);
+        Task AddProduct(int id);
+        void DeleteProduct(int id);
+        void ProductSale(bool success);
+        /// <summary>
+        /// Отложить чек
+        /// </summary>
+        /// <returns></returns>
+        void CreatePostponeReceipt();
+        void ResumeReceipt(Guid guid);
     }
 }

@@ -1,4 +1,5 @@
-﻿using DevExpress.XtraPrinting;
+﻿using DevExpress.Mvvm;
+using DevExpress.XtraPrinting;
 using RetailTrade.CashRegisterMachine;
 using RetailTrade.Domain.Models;
 using RetailTrade.Domain.Services;
@@ -21,6 +22,7 @@ namespace RetailTradeClient.Commands
         private readonly IShiftStore _shiftStore;
         private readonly IUserStore _userStore;
         private readonly IProductSaleStore _productSaleStore;
+        private readonly ICurrentWindowService _currentWindowService;
 
         #endregion
 
@@ -29,12 +31,14 @@ namespace RetailTradeClient.Commands
         public MakeCashPaymentCommand(IReceiptService receiptService,
             IShiftStore shiftStore,
             IUserStore userStore,
-            IProductSaleStore productSaleStore)
+            IProductSaleStore productSaleStore,
+            ICurrentWindowService currentWindowService)
         {
             _receiptService = receiptService;
             _shiftStore = shiftStore;
             _userStore = userStore;
             _productSaleStore = productSaleStore;
+            _currentWindowService = currentWindowService;
         }
 
         #endregion
@@ -51,7 +55,6 @@ namespace RetailTradeClient.Commands
                 try
                 {
                     Receipt newReceipt;
-                    var r = _productSaleStore.ProductSales;
                     //Создания чека
                     newReceipt = await _receiptService.CreateAsync(new Receipt
                     {
@@ -122,15 +125,17 @@ namespace RetailTradeClient.Commands
                     tool.PrintingSystem.EndPrint += PrintingSystem_EndPrint;
                     tool.Print();
 
-
+                    _productSaleStore.ProductSale(true);
                 }
-                catch (Exception e)
+                catch (Exception)
                 {
                     //ignore
+                    _productSaleStore.ProductSale(false);
                 }
                 finally
                 {
                     ShtrihM.Disconnect();
+                    _currentWindowService.Close();
                 }
             }
         }

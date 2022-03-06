@@ -10,6 +10,7 @@ using RetailTradeClient.State.Shifts;
 using RetailTradeClient.State.Users;
 using RetailTradeClient.ViewModels;
 using RetailTradeClient.ViewModels.Base;
+using RetailTradeClient.ViewModels.Components;
 using RetailTradeClient.ViewModels.Factories;
 using System;
 
@@ -27,15 +28,23 @@ namespace RetailTradeClient.HostBuilders
                 services.AddTransient(CreateHomeViewModel);
                 services.AddTransient(CreateLoginViewModel);
                 services.AddTransient(CreateGlobalMessageViewModel);
+                services.AddTransient(CreateProductsWithoutBarcodeViewModel);
 
                 services.AddSingleton<CreateViewModel<HomeViewModel>>(servicesProvider => () => CreateHomeViewModel(servicesProvider));
                 services.AddSingleton<CreateViewModel<LoginViewModel>>(servicesProvider => () => CreateLoginViewModel(servicesProvider));
+                services.AddSingleton<CreateViewModel<ProductsWithoutBarcodeViewModel>>(servicesProvider => () => CreateProductsWithoutBarcodeViewModel(servicesProvider));
 
                 services.AddSingleton<IViewModelFactory, ViewModelFactory>();
 
                 services.AddSingleton<ViewModelDelegateRenavigator<LoginViewModel>>();
                 services.AddSingleton<ViewModelDelegateRenavigator<HomeViewModel>>();
             });
+        }
+
+        private static ProductsWithoutBarcodeViewModel CreateProductsWithoutBarcodeViewModel(IServiceProvider services)
+        {
+            return new ProductsWithoutBarcodeViewModel(services.GetRequiredService<IProductService>(),
+                services.GetRequiredService<IProductSaleStore>());
         }
 
         private static MainViewModel CreateMainWindowViewModel(IServiceProvider services)
@@ -49,7 +58,6 @@ namespace RetailTradeClient.HostBuilders
         private static HomeViewModel CreateHomeViewModel(IServiceProvider services)
         {
             return new HomeViewModel(services.GetRequiredService<IUserStore>(),
-                services.GetRequiredService<IProductService>(),
                 services.GetRequiredService<IProductSaleService>(),
                 services.GetRequiredService<IReceiptService>(),
                 services.GetRequiredService<IMessageStore>(),
@@ -58,7 +66,8 @@ namespace RetailTradeClient.HostBuilders
                 services.GetRequiredService<IRefundService>(),
                 services.GetRequiredService<IProductSaleStore>(),
                 services.GetRequiredService<IZebraBarcodeScanner>(),
-                services.GetRequiredService<IComBarcodeService>());
+                services.GetRequiredService<IComBarcodeService>(),
+                services.GetRequiredService<ProductsWithoutBarcodeViewModel>());
         }
 
         private static LoginViewModel CreateLoginViewModel(IServiceProvider services)

@@ -104,7 +104,7 @@ namespace RetailTradeClient.ViewModels
         {
             if (_userStore.CurrentUser != null)
             {
-                WindowService.Show(nameof(MainMenuView),
+                WindowService?.Show(nameof(MainMenuView),
                 new MainMenuViewModel(_shiftStore, _userStore.CurrentUser.Id, _homeNavigato, _userStore)
                 {
                     Title = $"РМК: {_userStore.CurrentUser.FullName}"

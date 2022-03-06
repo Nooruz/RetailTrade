@@ -140,9 +140,7 @@
 
                 </dxlc:LayoutGroup>
 
-                <ListView Style="{StaticResource lvWithoutBarcode}"
-                          Margin="-2.5 0"
-                          ItemsSource="{Binding ProductsWithoutBarcode, UpdateSourceTrigger=PropertyChanged}"/>
+                <ContentControl Content="{Binding ProductsWithoutBarcodeViewModel}"/>
 
             </dxlc:LayoutGroup>
 
@@ -281,6 +279,7 @@
                     </dxg:GridColumn>
                     <dxg:GridColumn Header="Сумма" 
                                     FieldName="Sum"
+                                    IsSmart="True"
                                     AllowColumnFiltering="False"
                                     AllowEditing="False">
                         <dxg:GridColumn.EditSettings>
@@ -288,7 +287,7 @@
                         </dxg:GridColumn.EditSettings>
                     </dxg:GridColumn>
                     <dxg:GridColumn Header="Остаток"
-                                    Visible="{Binding IsKeepRecorsd}"
+                                    Visible="{Binding IsKeepRecords}"
                                     FieldName="QuantityInStock"
                                     AllowColumnFiltering="False"
                                     AllowEditing="False">
