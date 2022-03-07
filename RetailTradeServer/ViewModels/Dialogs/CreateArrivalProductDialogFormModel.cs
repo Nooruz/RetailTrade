@@ -1,14 +1,18 @@
-﻿using DevExpress.Xpf.Grid;
+﻿using DevExpress.Mvvm;
+using DevExpress.Xpf.Grid;
+using DevExpress.XtraEditors.DXErrorProvider;
 using RetailTrade.Domain.Models;
 using RetailTrade.Domain.Services;
 using RetailTradeServer.Commands;
 using RetailTradeServer.ViewModels.Dialogs.Base;
-using SalePageServer.Utilities;
+using RetailTradeServer.Views.Dialogs;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Windows;
 using System.Windows.Input;
+using System.Windows.Threading;
 
 namespace RetailTradeServer.ViewModels.Dialogs
 {
@@ -19,12 +23,13 @@ namespace RetailTradeServer.ViewModels.Dialogs
         private readonly IProductService _productService;
         private readonly ISupplierService _supplierService;
         private readonly IArrivalService _arrivalService;
+        private readonly ITypeProductService _typeProductService;
         private Supplier _selectedSupplier;
         private ArrivalProduct _selectedArrivalProduct;
         private string _comment;
         private IEnumerable<Supplier> _suppliers;
         private IEnumerable<Product> _products;
-        private ObservableQueue<ArrivalProduct> _arrivalProducts;
+        private ObservableCollection<ArrivalProduct> _arrivalProducts = new();
 
         #endregion
 
@@ -69,7 +74,15 @@ namespace RetailTradeServer.ViewModels.Dialogs
                 OnPropertyChanged(nameof(Products));
             }
         }
-        public IEnumerable<ArrivalProduct> ArrivalProducts => _arrivalProducts;
+        public ObservableCollection<ArrivalProduct> ArrivalProducts
+        {
+            get => _arrivalProducts;
+            set
+            {
+                _arrivalProducts = value;
+                OnPropertyChanged(nameof(ArrivalProducts));
+            }
+        }
         public ArrivalProduct SelectedArrivalProduct
         {
             get => _selectedArrivalProduct;
@@ -82,6 +95,9 @@ namespace RetailTradeServer.ViewModels.Dialogs
         public bool CanArrivalProduct => ArrivalProducts.Any() && !ArrivalProducts.Any(p => p.Quantity == 0);
         public string InvoiceNumber { get; set; }
         public DateTime? InvoiceDate { get; set; }
+        public GridControl ArrivalGridControl { get; set; }
+        public TableView ArrivalTableView => ArrivalGridControl != null ? ArrivalGridControl.View as TableView : null;
+        public ArrivalProduct EmptyArrivalProduct => ArrivalProducts.FirstOrDefault(a => a.ProductId == 0);
 
         #endregion
 
@@ -92,6 +108,8 @@ namespace RetailTradeServer.ViewModels.Dialogs
         public ICommand ClearCommand => new RelayCommand(Cleare);
         public ICommand CellValueChangedCommand => new ParameterCommand(p => CellValueChanged(p));
         public ICommand AddProductToArrivalCommand => new RelayCommand(AddProductToArrival);
+        public ICommand GridControlLoadedCommand => new ParameterCommand((object p) => GridControlLoaded(p));
+        public ICommand ProductCommand => new RelayCommand(OpenProductDialog);
 
         #endregion
 
@@ -99,13 +117,13 @@ namespace RetailTradeServer.ViewModels.Dialogs
 
         public CreateArrivalProductDialogFormModel(IProductService productService,
             ISupplierService supplierService,
-            IArrivalService arrivalService)
+            IArrivalService arrivalService,
+            ITypeProductService typeProductService)
         {
             _productService = productService;
             _supplierService = supplierService;
             _arrivalService = arrivalService;
-
-            _arrivalProducts = new();
+            _typeProductService = typeProductService;
 
             GetSupplier();
         }
@@ -114,15 +132,61 @@ namespace RetailTradeServer.ViewModels.Dialogs
 
         #region Private Voids
 
+        private void OpenProductDialog()
+        {
+            ProductDialogFormModel viewModel = new(_typeProductService) { Products = new(Products) };
+            viewModel.OnProductSelected += ProductDialogFormModel_OnProductSelected;
+            WindowService.Show(nameof(ProductDialogForm), viewModel);
+        }
+
+        private void ProductDialogFormModel_OnProductSelected(Product product)
+        {
+            if (product != null)
+            {
+                ArrivalProduct selectedArrivalProduct = ArrivalProducts.FirstOrDefault(r => r.ProductId == product.Id);
+                if (selectedArrivalProduct == null)
+                {
+                    SelectedArrivalProduct.ProductId = product.Id;
+                    SelectedArrivalProduct.Product = product;
+                    SelectedArrivalProduct.ArrivalPrice = product.ArrivalPrice;
+                    SelectedArrivalProduct.Quantity = 1;
+                    ShowEditor(1);
+                }
+                else
+                {
+                    _ = MessageBoxService.Show("Такой товар уже введен.", "", MessageBoxButton.OK, MessageBoxImage.Error);
+                }
+            }
+        }
+
+        private void GridControlLoaded(object parameter)
+        {
+            if (parameter is RoutedEventArgs e)
+            {
+                if (e.Source is GridControl gridControl)
+                {
+                    ArrivalGridControl = gridControl;
+                    ArrivalTableView.ShownEditor += ArrivalTableView_ShownEditor;
+                }
+            }
+        }
+
+        private void ArrivalTableView_ShownEditor(object sender, EditorEventArgs e)
+        {
+            ArrivalTableView.Grid.View.ActiveEditor.SelectAll();
+        }
+
         private void AddProductToArrival()
         {
             if (SelectedSupplier != null)
             {
-                _arrivalProducts.Enqueue(new ArrivalProduct());
+                ArrivalProducts.Add(new ArrivalProduct());
+                SelectedArrivalProduct = EmptyArrivalProduct;
+                ShowEditor(0);
             }
             else
             {
-                MessageBox.Show("Выберите поставщика!", "", MessageBoxButton.OK, MessageBoxImage.Exclamation);
+                _ = MessageBoxService.ShowMessage("Выберите поставщика!", "Sale Page", MessageButton.OK, MessageIcon.Exclamation);
             }
         }
 
@@ -135,24 +199,48 @@ namespace RetailTradeServer.ViewModels.Dialogs
                     if (SelectedArrivalProduct != null)
                     {
                         SelectedArrivalProduct.ArrivalPrice = Products.FirstOrDefault(p => p.Id == (int)e.Value).ArrivalPrice;
+                        ShowEditor(1);
                     }
                 }
-                TableView tableView = e.Source as TableView;
-                tableView.PostEditor();
-                tableView.Grid.UpdateTotalSummary();
+                ArrivalTableView.PostEditor();
+                ArrivalTableView.Grid.UpdateTotalSummary();
             }            
             OnPropertyChanged(nameof(CanArrivalProduct));
         }
 
-        private static void ValidateCell(object parameter)
+        private void ValidateCell(object parameter)
         {
             if (parameter is GridCellValidationEventArgs e)
             {
-                if ((decimal)e.Value < 0)
+                if (e.Cell.Property == nameof(ArrivalProduct.Quantity))
                 {
-                    e.IsValid = false;
-                    e.ErrorContent = "Количество не должно быть 0.";
-                    MessageBox.Show("Количество не должно быть 0.", "", MessageBoxButton.OK, MessageBoxImage.Error);
+                    if ((decimal)e.Value < 0)
+                    {
+                        _ = MessageBoxService.ShowMessage("Количество не должно быть 0.", "", MessageButton.OK, MessageIcon.Error);
+                        e.ErrorContent = "Количество не должно быть 0.";                        
+                        e.ErrorType = ErrorType.Critical;
+                        e.IsValid = false;
+                    }
+                }
+                if (e.Cell.Property == nameof(ArrivalProduct.ProductId))
+                {
+                    try
+                    {
+                        if (ArrivalProducts.Any(r => r.ProductId == (int)e.Value))
+                        {
+                            if (SelectedArrivalProduct.ProductId != (int)e.Value)
+                            {
+                                _ = MessageBoxService.Show("Такой товар уже введен.", "", MessageBoxButton.OK, MessageBoxImage.Error);
+                                e.ErrorContent = "Такой товар уже введен.";
+                                e.ErrorType = ErrorType.Critical;
+                                e.IsValid = false;
+                            }
+                        }
+                    }
+                    catch (Exception)
+                    {
+                        //ignore
+                    }
                 }
             }
         }
@@ -182,16 +270,26 @@ namespace RetailTradeServer.ViewModels.Dialogs
             }
         }
 
+        private void ShowEditor(int column)
+        {
+            ArrivalTableView.FocusedRowHandle = ArrivalProducts.IndexOf(SelectedArrivalProduct);
+            ArrivalTableView.Grid.CurrentColumn = ArrivalTableView.Grid.Columns[column];
+            _ = ArrivalTableView.Dispatcher.BeginInvoke(new Action(() =>
+            {
+                ArrivalTableView.ShowEditor();
+            }), DispatcherPriority.Render);
+        }
+
         private void Cleare()
         {
-            _arrivalProducts.Clear();
+            ArrivalProducts.Clear();
         }
 
         private async void GetProducts()
         {
             if (SelectedSupplier != null)
             {
-               Products = await _productService.PredicateSelect(p => p.SupplierId == SelectedSupplier.Id, p => new Product { Id = p.Id, Name = p.Name, ArrivalPrice = p.ArrivalPrice });
+                Products = await _productService.PredicateSelect(p => p.SupplierId == SelectedSupplier.Id && p.DeleteMark == false, p => new Product { Id = p.Id, Name = p.Name, ArrivalPrice = p.ArrivalPrice });
             }
         }
 

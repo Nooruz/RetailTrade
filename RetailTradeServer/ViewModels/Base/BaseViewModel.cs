@@ -51,15 +51,6 @@ namespace RetailTradeServer.ViewModels.Base
 
         public User CurrentUser => _authenticator.CurrentUser;
         public bool IsLogin => CurrentUser != null;
-        public bool IsModalOpen
-        {
-            get => _isModalOpen;
-            set
-            {
-                _isModalOpen = value;
-                OnPropertyChanged(nameof(IsModalOpen));
-            }
-        }
         public string LoadingPanelTitle
         {
             get => _loadingPanelTitle;
@@ -160,22 +151,6 @@ namespace RetailTradeServer.ViewModels.Base
         public BaseViewModel()
         {
             CloseCommand = new ParameterCommand(Close);
-        }
-
-        #endregion
-
-        #region Public Voids не рабочий
-
-        public void ShowDialog(BaseViewModel viewModel)
-        {
-            DialogContent = viewModel;
-            DialogVisibility = Visibility.Visible;
-        }
-
-        public void CloseDialog()
-        {
-            DialogVisibility = Visibility.Collapsed;
-            DialogContent = null;
         }
 
         #endregion

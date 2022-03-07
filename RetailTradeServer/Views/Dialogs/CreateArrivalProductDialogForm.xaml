@@ -57,6 +57,9 @@
                         <dxmvvm:EventToCommand EventName="CellValueChanged"
                                                Command="{Binding CellValueChangedCommand}"
                                                PassEventArgsToCommand="True"/>
+                        <dxmvvm:EventToCommand EventName="ValidateCell"
+                                               Command="{Binding ValidateCellCommand}"
+                                               PassEventArgsToCommand="True"/>
                     </dxmvvm:Interaction.Behaviors>
                 </dxg:TableView>
             </dxg:GridControl.View>
@@ -64,11 +67,31 @@
             <dxg:GridColumn Header="Наименование"                            
                             FieldName="ProductId">
                 <dxg:GridColumn.EditSettings>
-                    <dxe:ComboBoxEditSettings ItemsSource="{Binding Products}"
-                                              DisplayMember="Name"
-                                              ValueMember="Id"
-                                              AutoComplete="True" 
-                                              IncrementalFiltering="True"/>
+                    <dxg:LookUpEditSettings DisplayMember="Name"
+                                            ValueMember="Id"
+                                            IncrementalFiltering="True"
+                                            AutoComplete="False"                                            
+                                            AutoPopulateColumns="False"
+                                            ItemsSource="{Binding Products}"
+                                            ImmediatePopup="True"
+                                            IsPopupAutoWidth="True">
+                        <dxg:LookUpEditSettings.Buttons>
+                            <dxe:ButtonInfo GlyphKind="Regular"
+                                            Command="{Binding ProductCommand}"/>
+                        </dxg:LookUpEditSettings.Buttons>
+                        <dxg:LookUpEditSettings.PopupContentTemplate>
+                            <ControlTemplate>
+                                <dxg:GridControl Name="PART_GridControl"
+                                                 AutoGenerateColumns="None">
+                                    <dxg:GridControl.View>
+                                        <dxg:TableView AutoWidth="True"/>
+                                    </dxg:GridControl.View>
+                                    <dxg:GridColumn Header="Наименование"
+                                                    FieldName="Name"/>
+                                </dxg:GridControl>
+                            </ControlTemplate>
+                        </dxg:LookUpEditSettings.PopupContentTemplate>
+                    </dxg:LookUpEditSettings>
                 </dxg:GridColumn.EditSettings>
             </dxg:GridColumn>
 
@@ -120,6 +143,12 @@
                                      SummaryType="Sum"
                                      DisplayFormat="{}Всего: {0:n} сомов"/>
             </dxg:GridControl.TotalSummary>
+
+            <dxmvvm:Interaction.Behaviors>
+                <dxmvvm:EventToCommand EventName="Loaded"
+                                       Command="{Binding GridControlLoadedCommand}"
+                                       PassEventArgsToCommand="True"/>
+            </dxmvvm:Interaction.Behaviors>
 
         </dxg:GridControl>
 

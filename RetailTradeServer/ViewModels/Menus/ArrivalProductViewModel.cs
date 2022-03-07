@@ -19,6 +19,7 @@ namespace RetailTradeServer.ViewModels.Menus
         private readonly IProductService _productService;
         private readonly IArrivalService _arrivalService;
         private readonly ISupplierService _supplierService;
+        private readonly ITypeProductService _typeProductService;
         private Arrival _selectedArrival;
         private IEnumerable<Arrival> _arrivals;
 
@@ -61,11 +62,13 @@ namespace RetailTradeServer.ViewModels.Menus
 
         public ArrivalProductViewModel(IProductService productService,
             IArrivalService arrivalService,
-            ISupplierService supplierService)
+            ISupplierService supplierService,
+            ITypeProductService typeProductService)
         {
             _productService = productService;
             _arrivalService = arrivalService;
             _supplierService = supplierService;
+            _typeProductService = typeProductService;
 
             Header = "Приход товара";
 
@@ -102,7 +105,7 @@ namespace RetailTradeServer.ViewModels.Menus
 
         private void CreateArrival()
         {
-            WindowService.Show(nameof(CreateArrivalProductDialogForm), new CreateArrivalProductDialogFormModel(_productService, _supplierService, _arrivalService) { Title = "Приход товаров (новый)" });
+            WindowService.Show(nameof(CreateArrivalProductDialogForm), new CreateArrivalProductDialogFormModel(_productService, _supplierService, _arrivalService, _typeProductService) { Title = "Приход товаров (новый)" });
         }
 
         private async void DeleteArrival()
@@ -127,7 +130,7 @@ namespace RetailTradeServer.ViewModels.Menus
                 if (MessageBox.Show("Дублировать выбранный приход?", "", MessageBoxButton.YesNo, MessageBoxImage.Question) == MessageBoxResult.Yes)
                 {
                     WindowService.Show(nameof(CreateArrivalProductDialogForm), 
-                        new CreateArrivalProductDialogFormModel(_productService, _supplierService, _arrivalService) 
+                        new CreateArrivalProductDialogFormModel(_productService, _supplierService, _arrivalService, _typeProductService) 
                     { 
                         Title = "Приход товаров (дублирование)",
                         SelectedSupplier = SelectedArrival.Supplier,

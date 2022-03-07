@@ -41,7 +41,6 @@ namespace RetailTradeServer.ViewModels
         public ICommand UsersCommand { get; }
         public ICommand CurrencyCommand { get; }
         public ICommand AboutCommand { get; }
-        public ICommand CloseModalCommand { get; }
 
         #endregion
 
@@ -55,7 +54,6 @@ namespace RetailTradeServer.ViewModels
             _authenticator = authenticator;
 
             //AboutCommand = new RelayCommand(About);
-            CloseModalCommand = new RelayCommand(CloseModal);
 
             _navigator.StateChanged += Navigator_StateChanged;
             _authenticator.StateChanged += AuthenticatorStateChanged;
@@ -76,11 +74,6 @@ namespace RetailTradeServer.ViewModels
         private void Navigator_StateChanged()
         {
             OnPropertyChanged(nameof(CurrentViewModel));
-        }
-
-        private void CloseModal()
-        {
-            IsModalOpen = false;
         }
 
         #endregion
