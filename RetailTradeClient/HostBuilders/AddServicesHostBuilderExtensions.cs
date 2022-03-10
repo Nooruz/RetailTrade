@@ -13,15 +13,15 @@ namespace RetailTradeClient.HostBuilders
         {
             return host.ConfigureServices(services =>
             {
-                services.AddSingleton<IPasswordHasher, PasswordHasher>();
+                _ = services.AddSingleton<IPasswordHasher, PasswordHasher>();
 
-                services.AddSingleton<IAuthenticationService, AuthenticationService>();
-                services.AddSingleton<IUserService, UserService>();
-                services.AddSingleton<IProductService, ProductService>();
-                services.AddSingleton<IOrganizationService, OrganizationService>();
-                services.AddSingleton<IProductSaleService, ProductSaleService>();
-                services.AddSingleton<IShiftService, ShiftService>();
-                services.AddSingleton<IRefundService, RefundService>();
+                _ = services.AddSingleton<IAuthenticationService, AuthenticationService>();
+                _ = services.AddSingleton<IUserService, UserService>();
+                _ = services.AddSingleton<IProductService, ProductService>();
+                _ = services.AddSingleton<IOrganizationService, OrganizationService>();
+                _ = services.AddSingleton<IProductSaleService, ProductSaleService>();
+                _ = services.AddSingleton<IShiftService, ShiftService>();
+                _ = services.AddSingleton<IRefundService, RefundService>();
             });
         }
     }

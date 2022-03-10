@@ -9,6 +9,7 @@ using RetailTradeClient.State.Authenticators;
 using RetailTradeClient.State.Barcode;
 using RetailTradeClient.State.Messages;
 using RetailTradeClient.State.ProductSale;
+using RetailTradeClient.State.Reports;
 using RetailTradeClient.State.Shifts;
 using RetailTradeClient.State.Users;
 using RetailTradeClient.ViewModels.Base;
@@ -17,7 +18,6 @@ using RetailTradeClient.ViewModels.Dialogs;
 using RetailTradeClient.Views;
 using RetailTradeClient.Views.Dialogs;
 using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Linq;
@@ -41,6 +41,7 @@ namespace RetailTradeClient.ViewModels
         private readonly IProductSaleStore _productSaleStore;
         private readonly IZebraBarcodeScanner _zebraBarcodeScanner;
         private readonly IComBarcodeService _comBarcodeService;
+        private readonly IReportService _reportService;
         private string _barcode;
         private Sale _selectedProductSale;
         private object _syncLock = new();
@@ -126,7 +127,7 @@ namespace RetailTradeClient.ViewModels
         /// <summary>
         /// Распечатать х-отчет
         /// </summary>
-        public ICommand PrintXReportCommand { get; }
+        public ICommand PrintXReportCommand => new PrintXReportCommand(_reportService);
         /// <summary>
         /// Настройки ККМ
         /// </summary>
@@ -192,7 +193,8 @@ namespace RetailTradeClient.ViewModels
             IProductSaleStore productSaleStore,
             IZebraBarcodeScanner zebraBarcodeScanner,
             IComBarcodeService comBarcodeService,
-            ProductsWithoutBarcodeViewModel productsWithoutBarcodeViewModel)
+            ProductsWithoutBarcodeViewModel productsWithoutBarcodeViewModel,
+            IReportService reportService)
         {
             _userStore = userStore;
             _productSaleService = productSaleService;
@@ -204,13 +206,12 @@ namespace RetailTradeClient.ViewModels
             _productSaleStore = productSaleStore;
             _zebraBarcodeScanner = zebraBarcodeScanner;
             _comBarcodeService = comBarcodeService;
+            _reportService = reportService;
 
             ProductsWithoutBarcodeViewModel = productsWithoutBarcodeViewModel;
 
             SaleProductsCollectionView = CollectionViewSource.GetDefaultView(ProductSales);
             BindingOperations.EnableCollectionSynchronization(ProductSales, _syncLock);
-
-            PrintXReportCommand = new PrintXReportCommand();
 
             _productSaleStore.OnProductSalesChanged += () => OnPropertyChanged(nameof(Sum));
             _productSaleStore.OnProductSale += ProductSaleStore_OnProductSale;

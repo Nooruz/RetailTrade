@@ -67,7 +67,7 @@ namespace RetailTradeClient.ViewModels.Dialogs
 
         private async void Loaded()
         {
-            Receipts = new(await _receiptService.GetReceiptsFromCurrentShift(_shiftStore.CurrentShift.Id));
+            Receipts = new(await _receiptService.GetReceiptsFromCurrentShiftAsync(_shiftStore.CurrentShift.Id));
         }
 
         private async void Return()

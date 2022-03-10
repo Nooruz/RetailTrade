@@ -18,6 +18,7 @@ namespace RetailTrade.Domain.Models
         private decimal _paidInCash;
         private decimal _paidInCashless;
         private decimal _change;
+        private decimal _deposited;
         private string _kKMCheckNumber;
         private bool _isRefund;
         private Shift _shift;
@@ -78,6 +79,20 @@ namespace RetailTrade.Domain.Models
             {
                 _paidInCash = value;
                 OnPropertyChanged(nameof(PaidInCash));
+            }
+        }
+
+        /// <summary>
+        /// Внесено
+        /// </summary>
+        [Column(TypeName = "decimal(18,2)")]
+        public decimal Deposited
+        {
+            get => _deposited;
+            set
+            {
+                _deposited = value;
+                OnPropertyChanged(nameof(Deposited));
             }
         }
 

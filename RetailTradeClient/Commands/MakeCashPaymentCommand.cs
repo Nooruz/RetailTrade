@@ -60,7 +60,8 @@ namespace RetailTradeClient.Commands
                     {
                         DateOfPurchase = DateTime.Now,
                         Sum = _productSaleStore.ToBePaid,
-                        PaidInCash = _productSaleStore.Entered,
+                        Deposited = _productSaleStore.Entered,
+                        PaidInCash = _productSaleStore.ToBePaid,
                         ShiftId = _shiftStore.CurrentShift.Id,
                         Change = _productSaleStore.Change,
                         ProductSales = _productSaleStore.ProductSales.Select(s =>

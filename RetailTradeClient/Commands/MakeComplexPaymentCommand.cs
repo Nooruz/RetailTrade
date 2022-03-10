@@ -56,6 +56,7 @@ namespace RetailTradeClient.Commands
                     {
                         DateOfPurchase = DateTime.Now,
                         Sum = _paymentComplexViewModel.AmountToBePaid,
+                        Deposited = _paymentComplexViewModel.AmountToBePaid,
                         PaidInCash = _paymentComplexViewModel.PaymentTypes.Where(pt => pt.Id == 1).Sum(pt => pt.Sum),
                         PaidInCashless = _paymentComplexViewModel.PaymentTypes.Where(pt => pt.Id == 2).Sum(pt => pt.Sum),
                         ShiftId = _shiftStore.CurrentShift.Id,

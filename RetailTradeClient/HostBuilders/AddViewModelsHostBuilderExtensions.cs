@@ -6,6 +6,7 @@ using RetailTradeClient.State.Barcode;
 using RetailTradeClient.State.Messages;
 using RetailTradeClient.State.Navigators;
 using RetailTradeClient.State.ProductSale;
+using RetailTradeClient.State.Reports;
 using RetailTradeClient.State.Shifts;
 using RetailTradeClient.State.Users;
 using RetailTradeClient.ViewModels;
@@ -67,7 +68,8 @@ namespace RetailTradeClient.HostBuilders
                 services.GetRequiredService<IProductSaleStore>(),
                 services.GetRequiredService<IZebraBarcodeScanner>(),
                 services.GetRequiredService<IComBarcodeService>(),
-                services.GetRequiredService<ProductsWithoutBarcodeViewModel>());
+                services.GetRequiredService<ProductsWithoutBarcodeViewModel>(),
+                services.GetRequiredService<IReportService>());
         }
 
         private static LoginViewModel CreateLoginViewModel(IServiceProvider services)

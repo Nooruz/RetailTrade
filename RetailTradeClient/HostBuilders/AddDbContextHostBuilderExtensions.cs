@@ -15,14 +15,14 @@ namespace RetailTradeClient.HostBuilders
                 string connectionString = context.Configuration.GetConnectionString("DefaultConnection");
                 void ConfigureDbContext(DbContextOptionsBuilder o) => o.UseSqlServer(connectionString);
 
-                services.AddDbContext<RetailTradeDbContext>(ConfigureDbContext);
-                services.AddSingleton(new RetailTradeDbContextFactory(ConfigureDbContext));
+                _ = services.AddDbContext<RetailTradeDbContext>(ConfigureDbContext);
+                _ = services.AddSingleton(new RetailTradeDbContextFactory(ConfigureDbContext));
 
                 string clientConnectionString = context.Configuration.GetConnectionString("ClientConnection");
                 void ConfigureClientDbContext(DbContextOptionsBuilder o) => o.UseSqlite(clientConnectionString);
 
-                services.AddDbContext<ClientRetailTradeDbContext>(ConfigureClientDbContext);
-                services.AddSingleton(new ClientRetailTradeDbContextFactory(ConfigureClientDbContext));
+                _ = services.AddDbContext<ClientRetailTradeDbContext>(ConfigureClientDbContext);
+                _ = services.AddSingleton(new ClientRetailTradeDbContextFactory(ConfigureClientDbContext));
             });
         }
     }

@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<XtraReportsLayoutSerializer SerializerVersion="21.1.6.0" Ref="0" ControlType="DevExpress.XtraReports.UI.XtraReport, DevExpress.XtraReports.v21.1, Version=21.1.6.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a" Name="XReport" RollPaper="true" Margins="20, 20, 11, 10" PaperKind="Custom" PageWidth="302" PageHeight="1100" Version="21.1">
+<XtraReportsLayoutSerializer SerializerVersion="21.2.3.0" Ref="0" ControlType="DevExpress.XtraReports.UI.XtraReport, DevExpress.XtraReports.v21.2, Version=21.2.3.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a" Name="XReport" RollPaper="true" Margins="20, 20, 11, 10" PaperKind="Custom" PageWidth="302" PageHeight="1100" Version="21.2">
   <Extensions>
     <Item1 Ref="1" Key="VSReportExtInfo" Value=".vsrepx" />
   </Extensions>
@@ -31,7 +31,7 @@
         <Item8 Ref="18" ControlType="XRLabel" Name="label3" Multiline="true" Text="Наличными:" TextAlignment="MiddleLeft" SizeF="121.236084,17.0000019" LocationFloat="0,17.0000019" Padding="2,2,0,0,100">
           <StylePriority Ref="19" UseTextAlignment="false" />
         </Item8>
-        <Item9 Ref="20" ControlType="XRLabel" Name="label2" Multiline="true" Text="Вид оплаты:" TextAlignment="MiddleLeft" SizeF="121.236084,17" LocationFloat="0,0" Padding="2,2,0,0,96">
+        <Item9 Ref="20" ControlType="XRLabel" Name="label2" Multiline="true" Text="Вид оплаты:" TextAlignment="MiddleLeft" SizeF="121.236084,17" LocationFloat="0,0" Padding="2,2,0,0,100">
           <StylePriority Ref="21" UseTextAlignment="false" />
         </Item9>
       </Controls>

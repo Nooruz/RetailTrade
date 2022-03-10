@@ -85,19 +85,36 @@ namespace RetailTrade.EntityFramework.Services
             return context.Receipts.ToList();
         }
 
-        public async Task<IEnumerable<Receipt>> GetReceiptsFromCurrentShift(int shiftId)
+        public async Task<IEnumerable<Receipt>> GetReceiptsFromCurrentShiftAsync(int shiftId)
         {
             try
             {
                 await using RetailTradeDbContext context = _contextFactory.CreateDbContext();
-                var result = await context.Receipts
+                return await context.Receipts
                     .Where(r => r.ShiftId == shiftId)
                     .Include(r => r.ProductSales)
                     .ThenInclude(r => r.Product)
                     .ToListAsync();
-                return result;
             }
-            catch (Exception e)
+            catch (Exception)
+            {
+                //ignore
+            }
+            return null;
+        }
+
+        public IEnumerable<Receipt> GetReceiptsFromCurrentShift(int shiftId)
+        {
+            try
+            {
+                using RetailTradeDbContext context = _contextFactory.CreateDbContext();
+                return context.Receipts
+                    .Where(r => r.ShiftId == shiftId)
+                    .Include(r => r.ProductSales)
+                    .ThenInclude(r => r.Product)
+                    .ToList();
+            }
+            catch (Exception)
             {
                 //ignore
             }
@@ -129,7 +146,7 @@ namespace RetailTrade.EntityFramework.Services
                     return true;
                 }                
             }
-            catch (Exception e)
+            catch (Exception)
             {
                 //ignore
             }
@@ -149,7 +166,7 @@ namespace RetailTrade.EntityFramework.Services
                     .Select(select)
                     .ToListAsync();
             }
-            catch (Exception e)
+            catch (Exception)
             {
                 //ignore
             }
@@ -165,7 +182,7 @@ namespace RetailTrade.EntityFramework.Services
                     .Where(r => r.IsRefund == false && r.DateOfPurchase.Date == DateTime.Now.Date)
                     .ToListAsync();
             }
-            catch (Exception e)
+            catch (Exception)
             {
                 //ignore
             }
@@ -181,7 +198,7 @@ namespace RetailTrade.EntityFramework.Services
                     .Where(r => r.IsRefund == false && r.DateOfPurchase.Date == DateTime.Now.Date.AddDays(-1))
                     .ToListAsync();
             }
-            catch (Exception e)
+            catch (Exception)
             {
                 //ignore
             }
@@ -198,7 +215,7 @@ namespace RetailTrade.EntityFramework.Services
                     .Where(r => r.IsRefund == false && r.DateOfPurchase.Date >= mondayOfLastWeek && r.DateOfPurchase <= mondayOfLastWeek.AddDays(6))
                     .ToListAsync();
             }
-            catch (Exception e)
+            catch (Exception)
             {
                 //ignore
             }
@@ -215,7 +232,7 @@ namespace RetailTrade.EntityFramework.Services
                     .Where(r => r.IsRefund == false && r.DateOfPurchase.Date >= firstDayOfCurrentMonth)
                     .ToListAsync();
             }
-            catch (Exception e)
+            catch (Exception)
             {
                 //ignore
             }
@@ -232,7 +249,7 @@ namespace RetailTrade.EntityFramework.Services
                     .Where(r => r.IsRefund == false && r.DateOfPurchase.Date >= firstDayOfLastMonth && r.DateOfPurchase <= firstDayOfLastMonth.AddMonths(1).AddDays(-1))
                     .SumAsync(s => s.Sum);
             }
-            catch (Exception e)
+            catch (Exception)
             {
                 //ignore
             }
@@ -249,7 +266,7 @@ namespace RetailTrade.EntityFramework.Services
                     .Where(r => r.IsRefund == false && r.DateOfPurchase.Date >= beginningYear)
                     .SumAsync(s => s.Sum);
             }
-            catch (Exception e)
+            catch (Exception)
             {
                 //ignore
             }
@@ -265,7 +282,7 @@ namespace RetailTrade.EntityFramework.Services
                 receipt.KKMCheckNumber = checkNumber;
                 await UpdateAsync(id, receipt);
             }
-            catch (Exception e)
+            catch (Exception)
             {
                 //ignore
             }

@@ -1,6 +1,6 @@
 ﻿using DevExpress.XtraPrinting;
 using RetailTradeClient.Report;
-using RetailTradeClient.State.Shifts;
+using RetailTradeClient.State.Reports;
 using System;
 using System.Threading.Tasks;
 
@@ -13,16 +13,15 @@ namespace RetailTradeClient.Commands
     {
         #region Private Members
 
-        private readonly IShiftStore _shiftStore;
-        private int _userId;
+        private readonly IReportService _reportService;
 
         #endregion
 
         #region Constructor
 
-        public PrintXReportCommand()
+        public PrintXReportCommand(IReportService reportService)
         {
-
+            _reportService = reportService;
         }
 
         #endregion
@@ -34,13 +33,18 @@ namespace RetailTradeClient.Commands
 
         public override async Task ExecuteAsync(object parameter)
         {
-            XReport report = new();
-            await report.CreateDocumentAsync();
-
-            PrintToolBase tool = new(report.PrintingSystem);
-            tool.PrinterSettings.PrinterName = Properties.Settings.Default.DefaultReceiptPrinter;
-            tool.PrintingSystem.EndPrint += PrintingSystem_EndPrint;
-            tool.Print();
+            try
+            {
+                XReport xReport = await _reportService.CreateXReport();
+                PrintToolBase tool = new(xReport.PrintingSystem);
+                tool.PrinterSettings.PrinterName = Properties.Settings.Default.DefaultReceiptPrinter;
+                tool.PrintingSystem.EndPrint += PrintingSystem_EndPrint;
+                tool.Print();
+            }
+            catch (Exception)
+            {
+                //ignore
+            }            
         }
 
         private void PrintingSystem_EndPrint(object sender, EventArgs e)

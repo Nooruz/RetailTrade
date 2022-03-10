@@ -18,15 +18,15 @@ namespace RetailTradeClient.HostBuilders
         {
             return host.ConfigureServices(services =>
             {
-                services.AddSingleton<INavigator, Navigator>();
-                services.AddSingleton<IAuthenticator, Authenticator>();
-                services.AddSingleton<IUserStore, UserStore>();
-                services.AddSingleton<IMessageStore, MessageStore>();
-                services.AddSingleton<IReceiptService, ReceiptService>();
-                services.AddSingleton<IShiftStore, ShiftStore>();
-                services.AddSingleton<IProductSaleStore, ProductSaleStore>();
-                services.AddSingleton<IZebraBarcodeScanner, ZebraBarcodeScanner>();
-                services.AddSingleton<IComBarcodeService, ComBarcodeService>();
+                _ = services.AddSingleton<INavigator, Navigator>();
+                _ = services.AddSingleton<IAuthenticator, Authenticator>();
+                _ = services.AddSingleton<IUserStore, UserStore>();
+                _ = services.AddSingleton<IMessageStore, MessageStore>();
+                _ = services.AddSingleton<IReceiptService, ReceiptService>();
+                _ = services.AddSingleton<IShiftStore, ShiftStore>();
+                _ = services.AddSingleton<IProductSaleStore, ProductSaleStore>();
+                _ = services.AddSingleton<IZebraBarcodeScanner, ZebraBarcodeScanner>();
+                _ = services.AddSingleton<IComBarcodeService, ComBarcodeService>();
             });
         }
     }

@@ -36,8 +36,9 @@ namespace RetailTradeClient
             return Host.CreateDefaultBuilder(args)
             .AddConfiguration()
             .AddDbContext()
-            .AddServices()
+            .AddServices()            
             .AddStores()
+            .AddReports()
             .AddViewModels();
         }
 

@@ -1,6 +1,8 @@
 ﻿using DevExpress.Mvvm;
 using RetailTrade.Domain.Models;
 using System;
+using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Threading.Tasks;
 
 namespace RetailTradeClient.State.Shifts
@@ -78,6 +80,8 @@ namespace RetailTradeClient.State.Shifts
         /// Текущая открытая смена
         /// </summary>
         Shift CurrentShift { get; }
+
+        ObservableCollection<Receipt> Receipts { get; }
 
         /// <summary>
         /// Открытие смены

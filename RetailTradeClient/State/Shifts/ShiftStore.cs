@@ -4,8 +4,8 @@ using RetailTrade.Domain.Models;
 using RetailTrade.Domain.Services;
 using RetailTradeClient.Properties;
 using System;
+using System.Collections.ObjectModel;
 using System.Threading.Tasks;
-using System.Windows;
 
 namespace RetailTradeClient.State.Shifts
 {
@@ -14,6 +14,7 @@ namespace RetailTradeClient.State.Shifts
         #region Private Members
 
         private readonly IShiftService _shiftService;
+        private readonly IReceiptService _receiptService;
         private bool _isShiftOpen;
         private Shift _currentShift;
 
@@ -25,10 +26,12 @@ namespace RetailTradeClient.State.Shifts
 
         #region Constructor
 
-        public ShiftStore(IShiftService shiftService)
+        public ShiftStore(IShiftService shiftService,
+            IReceiptService receiptService)
         {
             _shiftService = shiftService;
-        }        
+            _receiptService = receiptService;
+        }
 
         #endregion
 
@@ -43,6 +46,8 @@ namespace RetailTradeClient.State.Shifts
             get => _currentShift;
             private set => _currentShift = value;
         }
+
+        public ObservableCollection<Receipt> Receipts => new(_receiptService.GetReceiptsFromCurrentShift(CurrentShift.Id));
 
         public event Action<CheckingResult> CurrentShiftChanged;
 
@@ -128,7 +133,7 @@ namespace RetailTradeClient.State.Shifts
             CurrentShiftChanged.Invoke(CheckingResult.IsAlreadyOpen);
         }
 
-        private void ShtrihMConnected(bool isConnected)
+        private static void ShtrihMConnected(bool isConnected)
         {
             Settings.Default.ShtrihMConnected = isConnected;
             Settings.Default.Save();
