@@ -1,4 +1,5 @@
-﻿using DevExpress.Xpf.Grid;
+﻿using DevExpress.Mvvm;
+using DevExpress.Xpf.Grid;
 using RetailTrade.Domain.Models;
 using RetailTrade.Domain.Services;
 using RetailTradeServer.Commands;
@@ -137,7 +138,7 @@ namespace RetailTradeServer.ViewModels.Dialogs
             }
             else
             {
-                MessageBox.Show("Выберите поставщика!", "", MessageBoxButton.OK, MessageBoxImage.Exclamation);
+                _ = MessageBoxService.ShowMessage("Выберите поставщика!", "", MessageButton.OK, MessageIcon.Exclamation);
             }
             OnPropertyChanged(nameof(CanRefundToSupplierProduct));
         }
@@ -152,7 +153,7 @@ namespace RetailTradeServer.ViewModels.Dialogs
                     {
                         e.IsValid = false;
                         e.ErrorContent = "Количество не должно превышать количество товаров на складе.";
-                        MessageBox.Show("Количество не должно превышать количество товаров на складе.", "", MessageBoxButton.OK, MessageBoxImage.Error);
+                        _ = MessageBoxService.ShowMessage("Количество не должно превышать количество товаров на складе.", "", MessageButton.OK, MessageIcon.Error);
                     }
                 }
             }
@@ -173,7 +174,7 @@ namespace RetailTradeServer.ViewModels.Dialogs
                         RefundToSupplierProducts = RefundToSupplierProducts.Select(p => new RefundToSupplierProduct { ProductId = p.ProductId, Quantity = p.Quantity }).ToList()
                     });
                 }
-                catch (Exception e)
+                catch (Exception)
                 {
                     //ignore
                 }

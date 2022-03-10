@@ -6,29 +6,47 @@ namespace RetailTradeClient.Report
 {
     public partial class ProductSaleReport
     {
-        public ProductSaleReport(IUserStore userStore,
-            Receipt receipt)
+        #region Private Members
+
+        private readonly IUserStore _userStore;
+
+        #endregion
+
+        #region Constructor
+
+        public ProductSaleReport(IUserStore userStore)
         {
             InitializeComponent();
+            _userStore = userStore;
+        }
+
+        #endregion
+
+        #region Public Voids
+
+        public void SetValues(Receipt receipt)
+        {
             try
             {
                 CashDate.Text = $"Дата: {receipt.DateOfPurchase.ToShortDateString()}";
                 CashTime.Text = $"Время: {receipt.DateOfPurchase.ToShortTimeString()}";
                 CashReceipt.Text = $"Товарный чек № {receipt.Id:D6}";
-                lbUserFullName.Text = userStore.CurrentUser.FullName;
+                lbUserFullName.Text = _userStore.CurrentUser.FullName;
                 lbCash.Text = $"{receipt.PaidInCash:N2} сом";
                 lbCashless.Text = $"{receipt.PaidInCashless:N2} сом";
                 lbChange.Text = $"{receipt.Change:N2} сом";
-                if (userStore.Organization != null)
+                if (_userStore.Organization != null)
                 {
-                    OrganizationName.Text = userStore.Organization.Name;
-                    Address.Text = userStore.Organization.Address;
+                    OrganizationName.Text = _userStore.Organization.Name;
+                    Address.Text = _userStore.Organization.Address;
                 }
             }
-            catch (Exception e)
+            catch (Exception)
             {
                 //ignore
-            }            
+            }
         }
+
+        #endregion
     }
 }

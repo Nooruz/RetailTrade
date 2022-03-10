@@ -135,15 +135,15 @@ namespace RetailTradeClient.ViewModels
         /// <summary>
         /// Снять отчет без гашения
         /// </summary>
-        public ICommand PrintReportWithoutCleaningCommand => new RelayCommand(() => ShtrihM.PrintReportWithoutCleaning());
+        public static ICommand PrintReportWithoutCleaningCommand => new RelayCommand(() => ShtrihM.PrintReportWithoutCleaning());
         /// <summary>
         /// Снять отчет с гашнием
         /// </summary>
-        public ICommand PrintReportWithCleaningCommand => new RelayCommand(() => ShtrihM.PrintReportWithCleaning());
+        public static ICommand PrintReportWithCleaningCommand => new RelayCommand(() => ShtrihM.PrintReportWithCleaning());
         /// <summary>
         /// Открыть смену ККМ
         /// </summary>
-        public ICommand OpenSessionCommand => new RelayCommand(() => ShtrihM.OpenSession());
+        public static ICommand OpenSessionCommand => new RelayCommand(() => ShtrihM.OpenSession());
         /// <summary>
         /// Краткий запрос
         /// </summary>
@@ -151,7 +151,7 @@ namespace RetailTradeClient.ViewModels
         /// <summary>
         /// Анулировать чек
         /// </summary>
-        public ICommand CancelCheckCommand => new RelayCommand(() => ShtrihM.SysAdminCancelCheck());
+        public static ICommand CancelCheckCommand => new RelayCommand(() => ShtrihM.SysAdminCancelCheck());
         /// <summary>
         /// Установить текущее время ККМ
         /// </summary>
@@ -159,7 +159,7 @@ namespace RetailTradeClient.ViewModels
         /// <summary>
         /// Отрезать чек
         /// </summary>
-        public ICommand CutCheckCommand => new RelayCommand(() => ShtrihM.CutCheck());
+        public static ICommand CutCheckCommand => new RelayCommand(() => ShtrihM.CutCheck());
         /// <summary>
         /// 
         /// </summary>

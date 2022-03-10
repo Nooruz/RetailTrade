@@ -1,4 +1,5 @@
-﻿using RetailTrade.Domain.Models;
+﻿using DevExpress.Mvvm;
+using RetailTrade.Domain.Models;
 using RetailTrade.Domain.Services;
 using RetailTradeServer.Commands;
 using RetailTradeServer.ViewModels.Base;
@@ -94,7 +95,7 @@ namespace RetailTradeServer.ViewModels.Menus
             }
             else
             {
-                _ = MessageBox.Show("Выберите тип оборудования!", "", MessageBoxButton.OK, MessageBoxImage.Exclamation);
+                _ = MessageBoxService.ShowMessage("Выберите тип оборудования!", "", MessageButton.OK, MessageIcon.Exclamation);
             }
         }
 

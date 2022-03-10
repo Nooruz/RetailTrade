@@ -1,9 +1,5 @@
-﻿using DevExpress.Mvvm.UI;
-using DevExpress.Mvvm.UI.Interactivity;
-using DevExpress.Xpf.Core;
-using System.Windows;
+﻿using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
 
 namespace RetailTradeClient.Views.Dialogs
 {

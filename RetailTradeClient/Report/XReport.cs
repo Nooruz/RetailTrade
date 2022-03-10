@@ -21,7 +21,7 @@ namespace RetailTradeClient.Report
 
         public void SetValues()
         {
-            ObservableCollection<Receipt> receipts = _shiftStore.Receipts;
+            ObservableCollection<Receipt> receipts = _shiftStore.GetReceipts();
 
             OrganizationName.Text = _userStore.Organization.ShortName;
             Address.Text = _userStore.Organization.Address;
@@ -30,6 +30,10 @@ namespace RetailTradeClient.Report
             lbShiftNumber.Text = $"Смена № {_shiftStore.CurrentShift.Id:0000}";
             lbStartShift.Text = $"Начало смены: {_shiftStore.CurrentShift.OpeningDate:dd.MM.yyyy HH:mm}";
             lbCashSum.Text = $"{receipts?.Sum(r => r.PaidInCash)} сом";
+            lbCashlessSum.Text = $"{receipts?.Sum(r => r.PaidInCashless)} сом";
+            lbReceiptCount.Text = $"#{receipts?.Count:00000}";
+            lbCashOnHand.Text = $"{receipts?.Sum(r => r.Sum)} сом";
+            lbShiftTotal.Text = $"{receipts?.Sum(r => r.Sum)} сом";
         }
     }
 }

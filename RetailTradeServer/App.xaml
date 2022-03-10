@@ -5,6 +5,8 @@
              xmlns:viewModels="clr-namespace:RetailTradeServer.ViewModels"
              xmlns:menuViewModels="clr-namespace:RetailTradeServer.ViewModels.Menus"
              xmlns:views="clr-namespace:RetailTradeServer.Views"
+             xmlns:dialogs="clr-namespace:RetailTradeServer.Views.Dialogs"
+             xmlns:dialogModels="clr-namespace:RetailTradeServer.ViewModels.Dialogs"
              xmlns:menuViews="clr-namespace:RetailTradeServer.Views.Menus">
     
     <Application.Resources>
@@ -113,6 +115,10 @@
 
             <!--#endregion-->
 
+            <DataTemplate DataType="{x:Type dialogModels:StartingViewModel}">
+                <dialogs:StartingView/>
+            </DataTemplate>
+
             <ResourceDictionary.MergedDictionaries>
                 <ResourceDictionary Source="/Styles/Fonts.xaml"/>
                 <ResourceDictionary Source="/Styles/Colors.xaml"/>
@@ -124,7 +130,6 @@
                 <ResourceDictionary Source="/Styles/RadioButtonStyle.xaml"/>
                 <ResourceDictionary Source="/Styles/ListViewStyle.xaml"/>
                 <ResourceDictionary Source="/Styles/HamburgerSubMenuStyle.xaml"/>
-                <ResourceDictionary Source="/Styles/UserControlStyle.xaml"/>
                 <ResourceDictionary Source="/Styles/LookUpEditSettingsStyle.xaml"/>
                 <ResourceDictionary Source="/Styles/TreeListColumnStyle.xaml"/>
                 <ResourceDictionary Source="/Styles/ComboBoxEditStyle.xaml"/>
@@ -132,6 +137,8 @@
                 <ResourceDictionary Source="/Styles/BarButtonItemStyle.xaml"/>
                 <ResourceDictionary Source="/Styles/HamburgerMenuStyle.xaml"/>
                 <ResourceDictionary Source="/Styles/WindowStyle.xaml"/>
+                <ResourceDictionary Source="/Styles/DialogServiceStyle.xaml"/>
+                <ResourceDictionary Source="/Styles/UserControlStyle.xaml"/>
             </ResourceDictionary.MergedDictionaries>
 
         </ResourceDictionary>

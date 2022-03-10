@@ -47,8 +47,6 @@ namespace RetailTradeClient.State.Shifts
             private set => _currentShift = value;
         }
 
-        public ObservableCollection<Receipt> Receipts => new(_receiptService.GetReceiptsFromCurrentShift(CurrentShift.Id));
-
         public event Action<CheckingResult> CurrentShiftChanged;
 
         public async Task CheckingShift(IMessageBoxService MessageBoxService,
@@ -179,6 +177,11 @@ namespace RetailTradeClient.State.Shifts
                 return CheckingResult.Created;
             }
             return CheckingResult.ErrorOpening;
+        }
+
+        public ObservableCollection<Receipt> GetReceipts()
+        {
+            return new(_receiptService.GetReceiptsFromCurrentShift(CurrentShift.Id));
         }
     }
 }

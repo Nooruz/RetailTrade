@@ -94,7 +94,7 @@ namespace RetailTradeServer.ViewModels.Menus
                 }
                 else
                 {
-                    MessageBox.Show("Выберите элемент.", "", MessageBoxButton.OKCancel, MessageBoxImage.Exclamation);
+                    _ = MessageBoxService.ShowMessage("Выберите элемент.", "", MessageButton.OKCancel, MessageIcon.Exclamation);
                 }
             }
             catch (Exception e)
@@ -123,14 +123,14 @@ namespace RetailTradeServer.ViewModels.Menus
         {
             if (SelectedWriteDown != null)
             {
-                if (MessageBox.Show("Вы точно хотите удалить?", "", MessageBoxButton.YesNo, MessageBoxImage.Question) == MessageBoxResult.Yes)
+                if (MessageBoxService.ShowMessage("Вы точно хотите удалить?", "", MessageButton.YesNo, MessageIcon.Question) == MessageResult.Yes)
                 {
                     await _writeDownService.DeleteAsync(SelectedWriteDown.Id);
                 }
             }
             else
             {
-                MessageBox.Show("Выберите элемента!", "", MessageBoxButton.OK, MessageBoxImage.Exclamation);
+                _ = MessageBoxService.ShowMessage("Выберите элемента!", "", MessageButton.OK, MessageIcon.Exclamation);
             }
         }
 

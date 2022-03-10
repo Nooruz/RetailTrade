@@ -1,0 +1,17 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:dx="http://schemas.devexpress.com/winfx/2008/xaml/core"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+
+    <Style TargetType="{x:Type Window}" x:Key="DialogService">
+        <Setter Property="ResizeMode" Value="NoResize"/>
+        <Setter Property="SizeToContent" Value="WidthAndHeight"/>
+        <Setter Property="WindowStyle" Value="ToolWindow"/>
+        <Setter Property="Title" Value="{Binding Path=DataContext.Title, RelativeSource={RelativeSource Mode=Self}}"/>
+    </Style>
+
+    <Style TargetType="{x:Type dx:ThemedWindow}" x:Key="DocumentViewerService">
+        <Setter Property="Title" Value="{Binding Path=DataContext.Title, RelativeSource={RelativeSource Mode=Self}}"/>
+        <Setter Property="WindowState" Value="Maximized"/>
+    </Style>
+
+</ResourceDictionary>

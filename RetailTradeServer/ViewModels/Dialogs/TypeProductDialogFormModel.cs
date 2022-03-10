@@ -1,4 +1,5 @@
-﻿using RetailTrade.Domain.Models;
+﻿using DevExpress.Mvvm;
+using RetailTrade.Domain.Models;
 using RetailTrade.Domain.Services;
 using RetailTradeServer.Commands;
 using RetailTradeServer.ViewModels.Dialogs.Base;
@@ -95,7 +96,7 @@ namespace RetailTradeServer.ViewModels.Dialogs
         {
             if (string.IsNullOrEmpty(Name))
             {
-                MessageBox.Show("Введите наименование!", "", MessageBoxButton.OK, MessageBoxImage.Exclamation);
+                _ = MessageBoxService.ShowMessage("Введите наименование!", "", MessageButton.OK, MessageIcon.Exclamation);
                 return;
             }
             _ = await _typeProductService.CreateAsync(new TypeProduct
@@ -111,7 +112,7 @@ namespace RetailTradeServer.ViewModels.Dialogs
         {
             if (string.IsNullOrEmpty(Name))
             {
-                MessageBox.Show("Введите наименование!", "", MessageBoxButton.OK, MessageBoxImage.Exclamation);
+                _ = MessageBoxService.ShowMessage("Введите наименование!", "", MessageButton.OK, MessageIcon.Exclamation);
                 return;
             }
             _ = await _typeProductService.UpdateAsync(TypeProduct.Id, new TypeProduct { Name = Name, SubGroupId = SelectedTypeProductId.Value });

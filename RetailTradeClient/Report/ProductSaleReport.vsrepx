@@ -60,7 +60,7 @@
         <Item5 Ref="27" ControlType="XRLabel" Name="label5" Multiline="true" Text="Безналичными:" TextAlignment="MiddleLeft" SizeF="107.986221,20" LocationFloat="0.000114440918,53.9493752" Padding="2,2,0,0,100">
           <StylePriority Ref="28" UseTextAlignment="false" />
         </Item5>
-        <Item6 Ref="29" ControlType="XRLabel" Name="label4" Multiline="true" Text="Наличными:" TextAlignment="MiddleLeft" SizeF="107.986221,20" LocationFloat="0.000111262,33.9493752" Padding="2,2,0,0,96">
+        <Item6 Ref="29" ControlType="XRLabel" Name="label4" Multiline="true" Text="Наличными:" TextAlignment="MiddleLeft" SizeF="107.986221,20" LocationFloat="0.000111262,33.9493752" Padding="2,2,0,0,100">
           <StylePriority Ref="30" UseTextAlignment="false" />
         </Item6>
         <Item7 Ref="31" ControlType="XRLine" Name="line2" LineWidth="2" LineStyle="Dash" SizeF="261.999573,6.000023" LocationFloat="0,0" />
@@ -113,10 +113,10 @@
         </Item1>
       </SubBands>
       <Controls>
-        <Item1 Ref="58" ControlType="XRLabel" Name="OrganizationName" Multiline="true" Text="ОсОО Мастер" TextAlignment="MiddleCenter" SizeF="262,23" LocationFloat="0,3.267971" Font="Arial, 12pt, style=Bold, charSet=204" Padding="2,2,0,0,100">
+        <Item1 Ref="58" ControlType="XRLabel" Name="OrganizationName" Multiline="true" TextAlignment="MiddleCenter" SizeF="262,23" LocationFloat="0,3.267971" Font="Arial, 12pt, style=Bold, charSet=204" Padding="2,2,0,0,100">
           <StylePriority Ref="59" UseFont="false" UseTextAlignment="false" />
         </Item1>
-        <Item2 Ref="60" ControlType="XRLabel" Name="Address" Multiline="true" Text="г. Ош, село Гулбаар-Толойкон, ул. Жаны Чек 33" TextAlignment="MiddleCenter" SizeF="262,23" LocationFloat="0,26.26797" Font="Arial, 9.75pt, charSet=204" Padding="2,2,0,0,100">
+        <Item2 Ref="60" ControlType="XRLabel" Name="Address" Multiline="true" TextAlignment="MiddleCenter" SizeF="262,23" LocationFloat="0,26.26797" Font="Arial, 9.75pt, charSet=204" Padding="2,2,0,0,100">
           <StylePriority Ref="61" UseFont="false" UseTextAlignment="false" />
         </Item2>
       </Controls>

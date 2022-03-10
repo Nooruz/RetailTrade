@@ -1,4 +1,5 @@
-﻿using DevExpress.Xpf.Grid;
+﻿using DevExpress.Mvvm;
+using DevExpress.Xpf.Grid;
 using RetailTrade.Domain.Models;
 using RetailTrade.Domain.Services;
 using RetailTradeServer.Commands;
@@ -139,7 +140,7 @@ namespace RetailTradeServer.ViewModels.Dialogs
             }
             else
             {
-                MessageBox.Show("Выберите поставщика!", "", MessageBoxButton.OK, MessageBoxImage.Exclamation);
+                _ = MessageBoxService.ShowMessage("Выберите поставщика!", "", MessageButton.OK, MessageIcon.Exclamation);
             }
         }
 
@@ -153,7 +154,7 @@ namespace RetailTradeServer.ViewModels.Dialogs
                     {
                         e.IsValid = false;
                         e.ErrorContent = "Количество списание товаров не должно превышать количество на складе.";
-                        MessageBox.Show("Количество списание товаров не должно превышать количество на складе.", "", MessageBoxButton.OK, MessageBoxImage.Error);
+                        _ = MessageBoxService.ShowMessage("Количество списание товаров не должно превышать количество на складе.", "", MessageButton.OK, MessageIcon.Error);
                     }
                 }
             }

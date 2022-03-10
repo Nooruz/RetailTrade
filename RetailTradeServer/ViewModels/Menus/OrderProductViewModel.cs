@@ -115,7 +115,7 @@ namespace RetailTradeServer.ViewModels.Menus
             }
             else
             {
-                MessageBox.Show("Выберите заказ.", "", MessageBoxButton.OK, MessageBoxImage.Exclamation);
+                _ = MessageBoxService.ShowMessage("Выберите заказ.", "", MessageButton.OK, MessageIcon.Exclamation);
             }
         }
 
@@ -127,7 +127,7 @@ namespace RetailTradeServer.ViewModels.Menus
             }
             else
             {
-                MessageBox.Show("Выберите заказ.", "", MessageBoxButton.OK, MessageBoxImage.Exclamation);
+                _ = MessageBoxService.ShowMessage("Выберите заказ.", "", MessageButton.OK, MessageIcon.Exclamation);
             }
         }
 
@@ -145,14 +145,14 @@ namespace RetailTradeServer.ViewModels.Menus
         {
             if (SelectedOrderToSupplier != null)
             {
-                if (MessageBox.Show("Вы точно хотите удалит выбранный заказ?", "", MessageBoxButton.YesNo, MessageBoxImage.Question) == MessageBoxResult.Yes)
+                if (MessageBoxService.ShowMessage("Вы точно хотите удалит выбранный заказ?", "", MessageButton.YesNo, MessageIcon.Question) == MessageResult.Yes)
                 {
                     await _orderToSupplierService.DeleteAsync(SelectedOrderToSupplier.Id);
                 }                
             }
             else
             {
-                MessageBox.Show("Выберите заказ.", "", MessageBoxButton.OK, MessageBoxImage.Exclamation);
+                _ = MessageBoxService.ShowMessage("Выберите заказ.", "", MessageButton.OK, MessageIcon.Exclamation);
             }
         }
 

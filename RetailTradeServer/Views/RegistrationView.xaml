@@ -1,8 +1,9 @@
-﻿<UserControl x:Class="RetailTradeServer.Views.RegistrationView"
+﻿<local:BaseView x:Class="RetailTradeServer.Views.RegistrationView"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:dxe="http://schemas.devexpress.com/winfx/2008/xaml/editors"
              xmlns:dxlc="http://schemas.devexpress.com/winfx/2008/xaml/layoutcontrol"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:local="clr-namespace:RetailTradeServer.Views"
              xmlns:components="clr-namespace:RetailTradeServer.Components">
 
     <dxlc:LayoutControl ItemSpace="10"
@@ -41,4 +42,4 @@
 
     </dxlc:LayoutControl>
 
-</UserControl>
+</local:BaseView>

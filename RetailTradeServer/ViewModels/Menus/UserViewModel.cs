@@ -94,14 +94,14 @@ namespace RetailTradeServer.ViewModels.Menus
         {
             if (SelectedUser != null)
             {
-                if (MessageBox.Show(SelectedUser.DeleteMark ? $"Снять пометку \"{SelectedUser.Username}\"?" : $"Пометить \"{SelectedUser.Username}\" на удаление?", "", MessageBoxButton.YesNo, MessageBoxImage.Question) == MessageBoxResult.Yes)
+                if (MessageBoxService.ShowMessage(SelectedUser.DeleteMark ? $"Снять пометку \"{SelectedUser.Username}\"?" : $"Пометить \"{SelectedUser.Username}\" на удаление?", "", MessageButton.YesNo, MessageIcon.Question) == MessageResult.Yes)
                 {
                     await _userService.MarkingForDeletion(SelectedUser);
                 }
             }
             else
             {
-                _ = MessageBox.Show("Выберите пользователя!", "", MessageBoxButton.OK, MessageBoxImage.Exclamation);
+                _ = MessageBoxService.ShowMessage("Выберите пользователя!", "", MessageButton.OK, MessageIcon.Exclamation);
             }
         }
 
@@ -111,7 +111,7 @@ namespace RetailTradeServer.ViewModels.Menus
             {
                 if (SelectedUser.DeleteMark)
                 {
-                    _ = MessageBox.Show("Помечено на удаление!", "", MessageBoxButton.OK, MessageBoxImage.Exclamation);
+                    _ = MessageBoxService.ShowMessage("Помечено на удаление!", "", MessageButton.OK, MessageIcon.Exclamation);
                 }
                 else
                 {
@@ -124,7 +124,7 @@ namespace RetailTradeServer.ViewModels.Menus
             }
             else
             {
-                _ = MessageBox.Show("Выберите пользователя!", "", MessageBoxButton.OK, MessageBoxImage.Exclamation);
+                _ = MessageBoxService.ShowMessage("Выберите пользователя!", "", MessageButton.OK, MessageIcon.Exclamation);
             }
         }
 

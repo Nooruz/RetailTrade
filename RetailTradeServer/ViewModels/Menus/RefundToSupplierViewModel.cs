@@ -92,14 +92,14 @@ namespace RetailTradeServer.ViewModels.Menus
         {
             if (SelectedRefundToSupplier != null)
             {
-                if (MessageBox.Show("Вы точно хотите удалить выбранный элемент?", "", MessageBoxButton.YesNo, MessageBoxImage.Question) == MessageBoxResult.Yes)
+                if (MessageBoxService.ShowMessage("Вы точно хотите удалить выбранный элемент?", "", MessageButton.YesNo, MessageIcon.Question) == MessageResult.Yes)
                 {
                     _ = await _refundToSupplierService.DeleteAsync(SelectedRefundToSupplier.Id);
                 }
             }
             else
             {
-                MessageBox.Show("Выберите элемент!", "", MessageBoxButton.OK, MessageBoxImage.Exclamation);
+                _ = MessageBoxService.ShowMessage("Выберите элемент!", "", MessageButton.OK, MessageIcon.Exclamation);
             }
         }
 

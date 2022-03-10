@@ -15,6 +15,7 @@ namespace RetailTradeClient.HostBuilders
             return host.ConfigureServices(services =>
             {                
                 _ = services.AddSingleton(CreateXReport);
+                _ = services.AddSingleton(CreateProductSaleReport);
                 _ = services.AddSingleton<IReportService, ReportService>();
             });
         }
@@ -23,6 +24,11 @@ namespace RetailTradeClient.HostBuilders
         {
             return new XReport(serviceProvider.GetRequiredService<IUserStore>(),
                 serviceProvider.GetRequiredService<IShiftStore>());
+        }
+
+        private static ProductSaleReport CreateProductSaleReport(IServiceProvider serviceProvider)
+        {
+            return new ProductSaleReport(serviceProvider.GetRequiredService<IUserStore>());
         }
     }
 }

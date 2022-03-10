@@ -257,8 +257,8 @@ namespace RetailTradeServer.ViewModels.Dialogs
             }
             else
             {
-                if (MessageBox.Show("Данные не сохранены. Продолжить?", "", MessageBoxButton.YesNo, MessageBoxImage.Question)
-                    == MessageBoxResult.No)
+                if (MessageBoxService.ShowMessage("Данные не сохранены. Продолжить?", "", MessageButton.YesNo, MessageIcon.Question)
+                    == MessageResult.No)
                 {
                     e.Cancel = false;
                     CleareAllItems();
@@ -326,7 +326,7 @@ namespace RetailTradeServer.ViewModels.Dialogs
 
             if (await _productService.SearchByBarcode(Barcode))
             {
-                _ = MessageBox.Show($"Товар со штрих-кодом \"{Barcode}\" существует.", "", MessageBoxButton.OK, MessageBoxImage.Error);
+                _ = MessageBoxService.ShowMessage($"Товар со штрих-кодом \"{Barcode}\" существует.", "", MessageButton.OK, MessageIcon.Error);
             }
             else
             {

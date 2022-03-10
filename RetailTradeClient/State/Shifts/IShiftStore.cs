@@ -81,7 +81,7 @@ namespace RetailTradeClient.State.Shifts
         /// </summary>
         Shift CurrentShift { get; }
 
-        ObservableCollection<Receipt> Receipts { get; }
+        ObservableCollection<Receipt> GetReceipts();
 
         /// <summary>
         /// Открытие смены

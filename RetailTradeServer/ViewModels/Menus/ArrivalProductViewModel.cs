@@ -93,7 +93,7 @@ namespace RetailTradeServer.ViewModels.Menus
             }
             else
             {
-                _ = MessageBox.Show("Выберите приход", "", MessageBoxButton.OK, MessageBoxImage.Exclamation);
+                _ = MessageBoxService.ShowMessage("Выберите приход", "", MessageButton.OK, MessageIcon.Exclamation);
             }
         }
 
@@ -112,14 +112,14 @@ namespace RetailTradeServer.ViewModels.Menus
         {
             if (SelectedArrival != null)
             {
-                if (MessageBox.Show("Вы точно хотите удалить выбранный приход?", "", MessageBoxButton.YesNo, MessageBoxImage.Question) == MessageBoxResult.Yes)
+                if (MessageBoxService.ShowMessage("Вы точно хотите удалить выбранный приход?", "", MessageButton.YesNo, MessageIcon.Question) == MessageResult.Yes)
                 {
                     await _arrivalService.DeleteAsync(SelectedArrival.Id);
                 }
             }
             else
             {
-                MessageBox.Show("Выберите приход!", "", MessageBoxButton.OK, MessageBoxImage.Exclamation);
+                _ = MessageBoxService.ShowMessage("Выберите приход!", "", MessageButton.OK, MessageIcon.Exclamation);
             }
         }
 
@@ -127,7 +127,7 @@ namespace RetailTradeServer.ViewModels.Menus
         {
             if (SelectedArrival != null)
             {
-                if (MessageBox.Show("Дублировать выбранный приход?", "", MessageBoxButton.YesNo, MessageBoxImage.Question) == MessageBoxResult.Yes)
+                if (MessageBoxService.ShowMessage("Дублировать выбранный приход?", "", MessageButton.YesNo, MessageIcon.Question) == MessageResult.Yes)
                 {
                     WindowService.Show(nameof(CreateArrivalProductDialogForm), 
                         new CreateArrivalProductDialogFormModel(_productService, _supplierService, _arrivalService, _typeProductService) 
@@ -140,7 +140,7 @@ namespace RetailTradeServer.ViewModels.Menus
             }
             else
             {
-                MessageBox.Show("Выберите приход!", "", MessageBoxButton.OK, MessageBoxImage.Exclamation);
+                _ = MessageBoxService.ShowMessage("Выберите приход!", "", MessageButton.OK, MessageIcon.Exclamation);
             }
         }
 
