@@ -10,6 +10,7 @@ using RetailTradeServer.ViewModels.Dialogs;
 using RetailTradeServer.Views.Dialogs;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Linq;
 using System.Windows;
 using System.Windows.Input;
 
@@ -133,6 +134,7 @@ namespace RetailTradeServer.ViewModels.Menus
             Header = "Товары";
 
             _productService.OnProductCreated += ProductService_OnProductCreated;
+            _productService.OnProductEdited += ProductService_OnProductEdited;
             _typeProductService.OnTypeProductCreated += TypeProductService_OnTypeProductCreated;
             _typeProductService.OnTypeProductEdited += TypeProductService_OnTypeProductEdited;
         }
@@ -140,6 +142,12 @@ namespace RetailTradeServer.ViewModels.Menus
         #endregion
 
         #region Private Voids
+
+        private void ProductService_OnProductEdited(Product obj)
+        {
+            Product product = GetProducts.FirstOrDefault(p => p.Id == obj.Id);
+            product.Barcode = obj.Barcode;
+        }
 
         private void CreateTypeProduct()
         {
