@@ -111,6 +111,7 @@ namespace RetailTradeServer.ViewModels.Dialogs
                 Inn = Inn,
                 CreateDate = DateTime.Now
             });
+            CurrentWindowService.Close();
         }
 
         private async void Save()
@@ -125,6 +126,7 @@ namespace RetailTradeServer.ViewModels.Dialogs
                 Phone = Phone,
                 Inn = Inn
             });
+            CurrentWindowService.Close();
         }
 
         #endregion

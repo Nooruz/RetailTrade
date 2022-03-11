@@ -100,6 +100,7 @@ namespace RetailTradeServer.ViewModels.Dialogs
                 Address = Address,
                 UserId = SelectedUserId.Value
             });
+            CurrentWindowService.Close();
         }
 
         #endregion

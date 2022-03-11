@@ -83,6 +83,7 @@ namespace RetailTradeServer.ViewModels.Dialogs
                     TypeWareHouseId = 1
                 });
             }
+            CurrentWindowService.Close();
         }
 
         #endregion
