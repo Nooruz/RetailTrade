@@ -12,7 +12,7 @@ namespace RetailTradeServer.Report {
     
     public partial class ProductBarcodeReport : DevExpress.XtraReports.UI.XtraReport {
         private void InitializeComponent() {
-            DevExpress.XtraReports.ReportInitializer reportInitializer = new DevExpress.XtraReports.ReportInitializer(this, "RetailTradeServer.Report.ProductBarcodeReport.vsrepx");
+            DevExpress.XtraReports.ReportInitializer reportInitializer = new DevExpress.XtraReports.ReportInitializer(this, "SalePageServer.Report.ProductBarcodeReport.vsrepx");
 
             // Controls
             this.topMarginBand1 = reportInitializer.GetControl<DevExpress.XtraReports.UI.TopMarginBand>("topMarginBand1");

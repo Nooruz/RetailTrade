@@ -122,10 +122,12 @@ namespace RetailTradeServer.ViewModels.Menus
             report.DataSource = productBarcodePrintings;
             await report.CreateDocumentAsync();
 
-            PrintToolBase tool = new(report.PrintingSystem);
-            tool.PrinterSettings.PrinterName = Settings.Default.DefaultLabelPrinter;
-            tool.PrintingSystem.EndPrint += PrintingSystem_EndPrint;
-            tool.Print();
+            DocumentViewerService.Show(nameof(DocumentViewerView), new DocumentViewerViewModel() { PrintingDocument = report });
+
+            //PrintToolBase tool = new(report.PrintingSystem);
+            //tool.PrinterSettings.PrinterName = Settings.Default.DefaultLabelPrinter;
+            //tool.PrintingSystem.EndPrint += PrintingSystem_EndPrint;
+            //tool.Print();
         }
 
         private void Clear()
