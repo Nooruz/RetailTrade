@@ -1,7 +1,6 @@
 ﻿using DevExpress.Mvvm;
 using RetailTradeClient.State.Shifts;
 using System.Threading.Tasks;
-using System.Windows;
 
 namespace RetailTradeClient.Commands
 {

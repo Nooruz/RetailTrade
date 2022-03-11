@@ -1,4 +1,5 @@
 ﻿using DevExpress.Mvvm;
+using DevExpress.Mvvm.DataAnnotations;
 using RetailTrade.Domain.Services;
 using RetailTradeServer.Commands;
 using RetailTradeServer.State.Messages;
@@ -139,7 +140,6 @@ namespace RetailTradeServer.ViewModels
             //    viewModel.IsSelected = true;
             //}
         }
-
         private void Close(object parameter)
         {
             BaseViewModel viewModel = CurrentMenuViewModels.FirstOrDefault(v => v.ToString() == parameter.ToString());
@@ -149,12 +149,10 @@ namespace RetailTradeServer.ViewModels
                 _ = CurrentMenuViewModels.Remove(viewModel);
             }            
         }
-
         private void Printer()
         {
             WindowService.Show(nameof(PrinterDialogForm), new PrinterDialogFormModel(_messageStore) { Title = "Настройки принтеров" });
         }
-        
         private void CashShifts()
         {
             WindowService.Show(nameof(ReportClosingShiftsDialogForm), new ReportClosingShiftsDialogFormModel(_shiftService) { Title = "Закрытие смены" });

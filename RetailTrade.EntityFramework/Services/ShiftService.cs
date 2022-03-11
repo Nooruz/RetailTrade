@@ -105,10 +105,13 @@ namespace RetailTrade.EntityFramework.Services
             try
             {
                 await using RetailTradeDbContext context = _contextFactory.CreateDbContext();
-                var result = await context.Shifts.FirstOrDefaultAsync(s => s.UserId == userId && s.ClosingDate == null);
+                var result = await context.Shifts
+                    .Include(s => s.Receipts)
+                    .FirstOrDefaultAsync(s => s.UserId == userId && s.ClosingDate == null);
                 if (result != null)
                 {
                     result.ClosingDate = DateTime.Now;
+                    result.Sum = result.Receipts.Any() ? result.Receipts.Sum(r => r.Sum) : 0;
                     await UpdateAsync(result.Id, result);
                     return true;
                 }

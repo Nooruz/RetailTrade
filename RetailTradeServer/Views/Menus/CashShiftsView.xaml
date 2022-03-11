@@ -32,28 +32,6 @@
                 </dxe:ComboBoxEdit>
             </dxlc:LayoutItem>
 
-            <dxlc:LayoutItem Label="Дата с:"
-                             HorizontalAlignment="Left"
-                             MinWidth="180">
-                <dxe:DateEdit EditValue="{Binding StartDateTime}">
-                    <dxe:DateEdit.Buttons>
-                        <dxe:ButtonInfo GlyphKind="Cancel"
-                                        Command="{Binding CleareStartDateCommand}"/>
-                    </dxe:DateEdit.Buttons>
-                </dxe:DateEdit>
-            </dxlc:LayoutItem>
-
-            <dxlc:LayoutItem Label="по:"
-                             HorizontalAlignment="Left"
-                             MinWidth="180">
-                <dxe:DateEdit EditValue="{Binding EndDateTime}">
-                    <dxe:DateEdit.Buttons>
-                        <dxe:ButtonInfo GlyphKind="Cancel"
-                                        Command="{Binding CleareEndDateCommand}"/>
-                    </dxe:DateEdit.Buttons>
-                </dxe:DateEdit>
-            </dxlc:LayoutItem>
-
             <Button Content="Поиск" 
                     HorizontalAlignment="Left"
                     VerticalAlignment="Top"
@@ -63,8 +41,9 @@
 
         <dxg:GridControl ItemsSource="{Binding Shifts}">
             <dxg:GridControl.View>
-                <dxg:TableView ShowTotalSummary="True" 
-                               AutoWidth="True" 
+                <dxg:TableView ShowTotalSummary="True"
+                               AutoWidth="True"
+                               ShowFilterPanelMode="Never"
                                AllowEditing="False"/>
             </dxg:GridControl.View>
 

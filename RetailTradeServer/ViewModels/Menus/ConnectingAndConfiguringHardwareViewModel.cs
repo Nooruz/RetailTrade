@@ -3,8 +3,9 @@ using RetailTrade.Domain.Models;
 using RetailTrade.Domain.Services;
 using RetailTradeServer.Commands;
 using RetailTradeServer.ViewModels.Base;
+using RetailTradeServer.ViewModels.Dialogs;
+using RetailTradeServer.Views.Dialogs;
 using System.Collections.Generic;
-using System.Windows;
 using System.Windows.Input;
 
 namespace RetailTradeServer.ViewModels.Menus
@@ -15,19 +16,19 @@ namespace RetailTradeServer.ViewModels.Menus
 
         private readonly IDataService<TypeEquipment> _typeEquipmentService;
         private IEnumerable<TypeEquipment> _typeEquipments;
-        private TypeEquipment _selectedTypeEquipment;
+        private int _selectedTypeEquipmentId = 1;
 
         #endregion
 
         #region Public Properties
 
-        public TypeEquipment SelectedTypeEquipment
+        public int SelectedTypeEquipmentId
         {
-            get => _selectedTypeEquipment;
+            get => _selectedTypeEquipmentId;
             set
             {
-                _selectedTypeEquipment = value;
-                OnPropertyChanged(nameof(SelectedTypeEquipment));
+                _selectedTypeEquipmentId = value;
+                OnPropertyChanged(nameof(SelectedTypeEquipmentId));
             }
         }
         public IEnumerable<TypeEquipment> TypeEquipments
@@ -45,7 +46,7 @@ namespace RetailTradeServer.ViewModels.Menus
         #region Commands
 
         public ICommand UserControlLoadedCommand => new RelayCommand(UserControlLoaded);
-        public ICommand AddEquipmentCommand => new RelayCommand(AddEquipment);
+        //public ICommand AddEquipmentCommand => new RelayCommand(AddEquipment);
         public ICommand CreateEquipmentCommand => new RelayCommand(CreateEquipment);
 
         #endregion
@@ -65,38 +66,16 @@ namespace RetailTradeServer.ViewModels.Menus
 
         private void CreateEquipment()
         {
-
+            if (SelectedTypeEquipmentId != 0)
+            {
+                WindowService.Show(nameof(BarcodeScannerView), new EquipmentViewModel() { TypeEquipments = TypeEquipments, SelectedTypeEquipmentId = SelectedTypeEquipmentId });
+            }
         }
 
         private async void UserControlLoaded()
         {
             TypeEquipments = await _typeEquipmentService.GetAllAsync();
             ShowLoadingPanel = false;
-        }
-
-        private void AddEquipment()
-        {
-            if (SelectedTypeEquipment != null)
-            {
-                switch (SelectedTypeEquipment.Id)
-                {
-                    //Сканеры штрихкода
-                    case 1:
-                        break;
-                    case 2:
-                        break;
-                    case 3:
-                        break;
-                    case 4:
-                        break;
-                    default:
-                        break;
-                }
-            }
-            else
-            {
-                _ = MessageBoxService.ShowMessage("Выберите тип оборудования!", "", MessageButton.OK, MessageIcon.Exclamation);
-            }
         }
 
         #endregion

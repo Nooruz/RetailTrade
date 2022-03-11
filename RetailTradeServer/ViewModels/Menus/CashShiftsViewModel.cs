@@ -1,4 +1,5 @@
-﻿using DevExpress.Xpf.Grid;
+﻿using DevExpress.Data.Filtering;
+using DevExpress.Xpf.Grid;
 using RetailTrade.Domain.Models;
 using RetailTrade.Domain.Services;
 using RetailTradeServer.Commands;
@@ -19,8 +20,6 @@ namespace RetailTradeServer.ViewModels.Menus
         private IEnumerable<Shift> _shifts;
         private IEnumerable<User> _users;
         private int? _selectedUserId;
-        private DateTime? _startDateTime;
-        private DateTime? _endDateTime;
 
         #endregion
 
@@ -53,25 +52,14 @@ namespace RetailTradeServer.ViewModels.Menus
                 OnPropertyChanged(nameof(SelectedUserId));
             }
         }
-        public DateTime? StartDateTime
-        {
-            get => _startDateTime;
-            set
-            {
-                _startDateTime = value;
-                OnPropertyChanged(nameof(StartDateTime));
-            }
-        }
-        public DateTime? EndDateTime
-        {
-            get => _endDateTime;
-            set
-            {
-                _endDateTime = value;
-                OnPropertyChanged(nameof(EndDateTime));
-            }
-        }
         public GridControl ShiftGridControl { get; set; }
+        public CriteriaOperator FilterCriteria
+        {
+            get => ShiftGridControl.FilterCriteria;
+            set => ShiftGridControl.FilterCriteria = value;
+        }
+        public CriteriaOperator OpeningDateFilter => ShiftGridControl.GetColumnFilterCriteria("OpeningDate");
+        public CriteriaOperator UserIdFilter => ShiftGridControl.GetColumnFilterCriteria("UserId");
 
         #endregion
 
@@ -80,9 +68,7 @@ namespace RetailTradeServer.ViewModels.Menus
         public ICommand UserControlLoadedCommand => new RelayCommand(UserControlLoaded);
         public ICommand GridControlLoadedCommand => new ParameterCommand((p) => GridControlLoaded(p));
         public ICommand SearchCommand => new RelayCommand(Search);
-        public ICommand CleareSelectedUserIdCommand => new RelayCommand(() => SelectedUserId = null);
-        public ICommand CleareStartDateCommand => new RelayCommand(() => StartDateTime = null);
-        public ICommand CleareEndDateCommand => new RelayCommand(() => EndDateTime = null);
+        public ICommand CleareSelectedUserIdCommand => new RelayCommand(ClearColumnFilter);
 
         #endregion
 
@@ -101,13 +87,19 @@ namespace RetailTradeServer.ViewModels.Menus
 
         #region Private Voids
 
+        [Obsolete]
         private void Search()
         {
-            string filter;
-            filter = SelectedUserId != null ? $"[UserId] = {SelectedUserId}" : string.Empty;
-            filter = string.IsNullOrEmpty(filter) ? StartDateTime != null ? $"[OpeningDate] >= '{StartDateTime}'" : string.Empty : StartDateTime != null ? filter + $" AND [OpeningDate] >= '{StartDateTime}'" : filter;
-            filter = string.IsNullOrEmpty(filter) ? EndDateTime != null ? $"[OpeningDate] <= '{EndDateTime}'" : string.Empty : EndDateTime != null ? filter + $" AND [OpeningDate] <= '{EndDateTime}'" : filter;
-            ShiftGridControl.FilterString = filter;
+            if (SelectedUserId != null)
+            {
+                FilterCriteria = new BinaryOperator(nameof(Shift.UserId), SelectedUserId.Value, BinaryOperatorType.Equal);
+            }
+        }
+
+        private void ClearColumnFilter()
+        {
+            ShiftGridControl.ClearColumnFilter(nameof(Shift.UserId));
+            SelectedUserId = null;
         }
 
         private async void UserControlLoaded()
