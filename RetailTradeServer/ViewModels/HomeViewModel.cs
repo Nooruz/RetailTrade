@@ -91,7 +91,7 @@ namespace RetailTradeServer.ViewModels
         #region Настройки
 
         public ICommand PrinterCommand => new RelayCommand(Printer);
-        public ICommand ConnectingAndConfiguringEquipmentCommand => new RelayCommand(() => UpdateCurrentMenuViewModelCommand.Execute(MenuViewType.ConnectingAndConfiguringEquipment));
+        public ICommand ConnectingAndConfiguringEquipmentCommand => new RelayCommand(() => WindowService.Show(nameof(EquipmentView), new EquipmentViewModel() { SelectedTypeEquipment = TypeEquipment.BarcodeScanner, Title = "Настройки оборудования" }));
 
         #endregion
 

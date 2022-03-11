@@ -19,9 +19,7 @@
 
         <dxlc:LayoutItem Label="Тип оборудование:">
             <dxe:ComboBoxEdit ItemsSource="{Binding TypeEquipments}"
-                              DisplayMember="Name"
-                              ValueMember="Id"
-                              EditValue="{Binding SelectedTypeEquipmentId}"/>
+                              EditValue="{Binding SelectedTypeEquipment}"/>
         </dxlc:LayoutItem>
 
         <dxlc:LayoutGroup HorizontalAlignment="Left"

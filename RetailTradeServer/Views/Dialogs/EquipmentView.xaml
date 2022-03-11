@@ -11,25 +11,32 @@
 
         <dxlc:LayoutItem Label="Тип оборудования:">
             <dxe:ComboBoxEdit ItemsSource="{Binding TypeEquipments}"
-                              DisplayMember="Name"
-                              ValueMember="Id"
-                              EditValue="{Binding SelectedTypeEquipmentId}"/>
+                              EditValue="{Binding SelectedTypeEquipment, UpdateSourceTrigger=PropertyChanged}"/>
         </dxlc:LayoutItem>
 
-        <dxlc:LayoutItem Label="Драйвер оборудования:">
-            <dxe:ComboBoxEdit ItemsSource="{Binding TypeEquipments}"
-                              DisplayMember="Name"
-                              ValueMember="Id"
-                              EditValue="{Binding SelectedTypeEquipmentId}"/>
-        </dxlc:LayoutItem>
+        <dxlc:LayoutGroup Orientation="Vertical"
+                          Visibility="{Binding BarcodeSettings}">
+            
+            <dxlc:LayoutItem Label="COM порт:">
+                <dxe:ComboBoxEdit ItemsSource="{Binding ComPorts}"
+                                  EditValue="{Binding SelectedComPort}"/>
+            </dxlc:LayoutItem>
+            <dxlc:LayoutItem Label="Скорость:">
+                <dxe:ComboBoxEdit ItemsSource="{Binding BarcodeSpeed}"
+                                  EditValue="{Binding SelectedBarcodeSpeed}"/>
+            </dxlc:LayoutItem>
 
-        <dxlc:LayoutItem Label="Наименование:">
-            <dxe:TextEdit/>
-        </dxlc:LayoutItem>
+        </dxlc:LayoutGroup>
 
-        <dxlc:LayoutItem Label="Серийный номер:">
-            <dxe:TextEdit/>
-        </dxlc:LayoutItem>
+        <dxlc:LayoutGroup Orientation="Vertical" 
+                          Visibility="{Binding LabelPrinterSettings}">
+
+            <dxlc:LayoutItem Label="Принтеры:">
+                <dxe:ComboBoxEdit ItemsSource="{Binding LocalPrinters}"
+                                  EditValue="{Binding SelectedPrinter}"/>
+            </dxlc:LayoutItem>
+
+        </dxlc:LayoutGroup>
 
         <dxlc:LayoutGroup HorizontalAlignment="Right"
                           VerticalAlignment="Top">

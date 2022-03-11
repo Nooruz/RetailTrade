@@ -7,6 +7,8 @@ using RetailTradeServer.State.Barcode;
 using RetailTradeServer.State.Messages;
 using RetailTradeServer.ViewModels.Dialogs.Base;
 using RetailTradeServer.Views.Dialogs;
+using SalePageServer.Properties;
+using SalePageServer.ViewModels.Dialogs;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Windows;
@@ -224,6 +226,14 @@ namespace RetailTradeServer.ViewModels.Dialogs
 
             //_zebraBarcodeScanner.Open();
             //_zebraBarcodeScanner.OnBarcodeEvent += ZebraBarcodeScanner_OnBarcodeEvent;
+            if (string.IsNullOrEmpty(Settings.Default.BarcodeCom) || Settings.Default.BarcodeSpeed == 0)
+            {
+                _ = MessageBoxService.ShowMessage("Сканер штрихкода не настоен.", "Sale Page", MessageButton.OK, MessageIcon.Information);
+            }
+            else
+            {
+                _comBarcodeService.SetParameters(Settings.Default.BarcodeCom, Settings.Default.BarcodeSpeed);
+            }
             _comBarcodeService.Open();
             _comBarcodeService.OnBarcodeEvent += ComBarcodeService_OnBarcodeEvent;
         }
@@ -384,7 +394,7 @@ namespace RetailTradeServer.ViewModels.Dialogs
                 return;
             }
 
-            if (await _productService.CreateAsync(new Product
+            Product product = await _productService.CreateAsync(new Product
             {
                 Name = Name,
                 UnitId = SelectedUnitId.Value,
@@ -394,8 +404,11 @@ namespace RetailTradeServer.ViewModels.Dialogs
                 ArrivalPrice = ArrivalPrice,
                 SalePrice = SalePrice,
                 WithoutBarcode = true
-            }) != null)
+            });
+
+            if (product != null)
             {
+                _ = await _productService.GenerateBarcode(product.Id);
                 _messageStore.SetCurrentMessage("Товар успешно добавлено.", MessageType.Success);
                 CleareAllItems();
             }

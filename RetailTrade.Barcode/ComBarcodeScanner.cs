@@ -16,21 +16,6 @@ namespace RetailTrade.Barcode
 
         #endregion
 
-        #region Constructor
-
-        static ComBarcodeScanner()
-        {
-            _serialPort = new()
-            {
-                PortName = "COM4",
-                BaudRate = 9600,
-                ReadTimeout = 1000,
-            };
-            _serialPort.DataReceived += SerialPort_DataReceived;
-        }
-
-        #endregion
-
         #region Private Static Voids
 
         private static void SerialPort_DataReceived(object sender, SerialDataReceivedEventArgs e)
@@ -70,6 +55,17 @@ namespace RetailTrade.Barcode
                     //ignore
                 }                
             }            
+        }
+
+        public static void SetParameters(string portName, int baudRate)
+        {
+            _serialPort = new()
+            {
+                PortName = portName,
+                BaudRate = baudRate,
+                ReadTimeout = 1000,
+            };
+            _serialPort.DataReceived += SerialPort_DataReceived;
         }
 
         public static void Close()

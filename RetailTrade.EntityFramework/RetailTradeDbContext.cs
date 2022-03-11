@@ -127,12 +127,6 @@ namespace RetailTrade.EntityFramework
 
         #endregion
 
-        #region Equipment
-
-        public DbSet<TypeEquipment> TypeEquipments { get; set; }
-
-        #endregion
-
         #region Revaluation
 
         public DbSet<Revaluation> Revaluations { get; set; }
@@ -221,12 +215,6 @@ namespace RetailTrade.EntityFramework
 
             modelBuilder.Entity<TypeProduct>().HasData(
                 new TypeProduct { Id = 1, Name = "Виды товаров", IsGroup = true });
-
-            modelBuilder.Entity<TypeEquipment>().HasData(
-                new TypeEquipment { Id = 1, Name = "Сканеры штрихкода" },
-                new TypeEquipment { Id = 2, Name = "Контрольно-кассовая машина (ККМ)" },
-                new TypeEquipment { Id = 3, Name = "Принтеры чеков" },
-                new TypeEquipment { Id = 4, Name = "Принтеры этикеток" });
 
             modelBuilder.Entity<Role>().HasData(
                 new Role { Id = 1, Name = "Администратор"},

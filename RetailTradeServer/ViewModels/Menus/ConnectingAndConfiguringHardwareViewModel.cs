@@ -1,11 +1,11 @@
 ﻿using DevExpress.Mvvm;
-using RetailTrade.Domain.Models;
-using RetailTrade.Domain.Services;
 using RetailTradeServer.Commands;
 using RetailTradeServer.ViewModels.Base;
 using RetailTradeServer.ViewModels.Dialogs;
 using RetailTradeServer.Views.Dialogs;
+using SalePageServer.Properties;
 using System.Collections.Generic;
+using System.Linq;
 using System.Windows.Input;
 
 namespace RetailTradeServer.ViewModels.Menus
@@ -14,49 +14,37 @@ namespace RetailTradeServer.ViewModels.Menus
     {
         #region Private Members
 
-        private readonly IDataService<TypeEquipment> _typeEquipmentService;
         private IEnumerable<TypeEquipment> _typeEquipments;
-        private int _selectedTypeEquipmentId = 1;
+        private string _selectedTypeEquipment = TypeEquipment.BarcodeScanner;
 
         #endregion
 
         #region Public Properties
 
-        public int SelectedTypeEquipmentId
+        public string SelectedTypeEquipment
         {
-            get => _selectedTypeEquipmentId;
+            get => _selectedTypeEquipment;
             set
             {
-                _selectedTypeEquipmentId = value;
-                OnPropertyChanged(nameof(SelectedTypeEquipmentId));
+                _selectedTypeEquipment = value;
+                OnPropertyChanged(nameof(SelectedTypeEquipment));
             }
         }
-        public IEnumerable<TypeEquipment> TypeEquipments
-        {
-            get => _typeEquipments;
-            set
-            {
-                _typeEquipments = value;
-                OnPropertyChanged(nameof(TypeEquipments));
-            }
-        }
+        public IEnumerable<string> TypeEquipments => Settings.Default.TypeEquipment.Cast<string>().ToList();
 
         #endregion
 
         #region Commands
 
         public ICommand UserControlLoadedCommand => new RelayCommand(UserControlLoaded);
-        //public ICommand AddEquipmentCommand => new RelayCommand(AddEquipment);
         public ICommand CreateEquipmentCommand => new RelayCommand(CreateEquipment);
 
         #endregion
 
         #region Constructor
 
-        public ConnectingAndConfiguringHardwareViewModel(IDataService<TypeEquipment> typeEquipmentService)
+        public ConnectingAndConfiguringHardwareViewModel()
         {
-            _typeEquipmentService = typeEquipmentService;
-
             Header = "Подключение и настройка оборудования";
         }
 
@@ -66,15 +54,14 @@ namespace RetailTradeServer.ViewModels.Menus
 
         private void CreateEquipment()
         {
-            if (SelectedTypeEquipmentId != 0)
+            if (!string.IsNullOrEmpty(SelectedTypeEquipment))
             {
-                WindowService.Show(nameof(BarcodeScannerView), new EquipmentViewModel() { TypeEquipments = TypeEquipments, SelectedTypeEquipmentId = SelectedTypeEquipmentId });
+                WindowService.Show(nameof(EquipmentView), new EquipmentViewModel() { SelectedTypeEquipment = SelectedTypeEquipment });
             }
         }
 
         private async void UserControlLoaded()
         {
-            TypeEquipments = await _typeEquipmentService.GetAllAsync();
             ShowLoadingPanel = false;
         }
 

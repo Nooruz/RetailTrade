@@ -20,5 +20,18 @@
     <Setting Name="DefaultConnection" Type="System.String" Scope="User">
       <Value Profile="(Default)">Server=.;Database=RetailTradeDb;Trusted_Connection=True;</Value>
     </Setting>
+    <Setting Name="TypeEquipment" Type="System.Collections.Specialized.StringCollection" Scope="User">
+      <Value Profile="(Default)">&lt;?xml version="1.0" encoding="utf-16"?&gt;
+&lt;ArrayOfString xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"&gt;
+  &lt;string&gt;Сканер штрихкода&lt;/string&gt;
+  &lt;string&gt;Принтер этикеток&lt;/string&gt;
+&lt;/ArrayOfString&gt;</Value>
+    </Setting>
+    <Setting Name="BarcodeCom" Type="System.String" Scope="User">
+      <Value Profile="(Default)" />
+    </Setting>
+    <Setting Name="BarcodeSpeed" Type="System.Int32" Scope="User">
+      <Value Profile="(Default)">0</Value>
+    </Setting>
   </Settings>
 </SettingsFile>

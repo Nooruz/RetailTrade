@@ -17,5 +17,10 @@ namespace RetailTradeServer.State.Barcode
             ComBarcodeScanner.Open();
             ComBarcodeScanner.OnBarcodeEvent += ((string barcode) => OnBarcodeEvent?.Invoke(barcode));
         }
+
+        public void SetParameters(string portName, int baudRate)
+        {
+            ComBarcodeScanner.SetParameters(portName, baudRate);
+        }
     }
 }

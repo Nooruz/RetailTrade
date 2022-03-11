@@ -7,11 +7,13 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Microsoft.AspNet.Identity.Core" Version="2.2.3" />
+    <Compile Remove="Models\Organization\**" />
+    <EmbeddedResource Remove="Models\Organization\**" />
+    <None Remove="Models\Organization\**" />
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Models\Organization\" />
+    <PackageReference Include="Microsoft.AspNet.Identity.Core" Version="2.2.3" />
   </ItemGroup>
 
   <ProjectExtensions><VisualStudio><UserProperties BuildVersion_StartDate="2000/1/1" /></VisualStudio></ProjectExtensions>
