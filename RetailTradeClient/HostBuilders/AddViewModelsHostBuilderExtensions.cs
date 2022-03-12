@@ -45,7 +45,8 @@ namespace RetailTradeClient.HostBuilders
         private static ProductsWithoutBarcodeViewModel CreateProductsWithoutBarcodeViewModel(IServiceProvider services)
         {
             return new ProductsWithoutBarcodeViewModel(services.GetRequiredService<IProductService>(),
-                services.GetRequiredService<IProductSaleStore>());
+                services.GetRequiredService<IProductSaleStore>(),
+                services.GetRequiredService<IReceiptService>());
         }
 
         private static MainViewModel CreateMainWindowViewModel(IServiceProvider services)

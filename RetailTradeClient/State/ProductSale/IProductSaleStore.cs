@@ -9,6 +9,7 @@ namespace RetailTradeClient.State.ProductSale
     {
         ObservableCollection<Sale> ProductSales { get; }
         ObservableCollection<PostponeReceipt> PostponeReceipts { get; }
+        ObservableCollection<PaymentType> PaymentTypes { get; set; }
         decimal ToBePaid { get; }
         decimal Entered { get; set; }
         decimal Change { get; set; }
@@ -21,6 +22,7 @@ namespace RetailTradeClient.State.ProductSale
         Task AddProduct(int id);
         void DeleteProduct(int id);
         void ProductSale(bool success);
+        void ProductSaleCashless(bool success);
         /// <summary>
         /// Отложить чек
         /// </summary>

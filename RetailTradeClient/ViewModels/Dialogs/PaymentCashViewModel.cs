@@ -3,6 +3,7 @@ using RetailTrade.Domain.Models;
 using RetailTrade.Domain.Services;
 using RetailTradeClient.Commands;
 using RetailTradeClient.State.ProductSale;
+using RetailTradeClient.State.Reports;
 using RetailTradeClient.State.Shifts;
 using RetailTradeClient.State.Users;
 using System;
@@ -19,6 +20,7 @@ namespace RetailTradeClient.ViewModels.Dialogs
         private readonly IProductSaleStore _productSaleStore;
         private readonly IReceiptService _receiptService;
         private readonly IShiftStore _shiftStore;
+        private readonly IReportService _reportService;
 
         #endregion
 
@@ -104,7 +106,7 @@ namespace RetailTradeClient.ViewModels.Dialogs
         /// <summary>
         /// Оплатить
         /// </summary>
-        public ICommand MakeCashPaymentCommand => new MakeCashPaymentCommand(_receiptService, _shiftStore, _userStore, _productSaleStore, CurrentWindowService);
+        public ICommand MakeCashPaymentCommand => new MakeCashPaymentCommand(_receiptService, _shiftStore, _productSaleStore, CurrentWindowService, _reportService);
 
         /// <summary>
         /// Следить за нажатием кнопки клавиатуры
@@ -121,12 +123,16 @@ namespace RetailTradeClient.ViewModels.Dialogs
         public PaymentCashViewModel(IReceiptService receiptService,
             IUserStore userStore,
             IShiftStore shiftStore,
-            IProductSaleStore productSaleStore)
+            IProductSaleStore productSaleStore,
+            IReportService reportService)
         {
             _userStore = userStore;
             _productSaleStore = productSaleStore;
             _receiptService = receiptService;
             _shiftStore = shiftStore;
+            _reportService = reportService;
+
+            Entered = _productSaleStore.ToBePaid;
 
             _userStore.CurrentUserChanged += UserStore_CurrentUserChanged;
             _userStore.CurrentOrganizationChanged += UserStore_CurrentOrganizationChanged;

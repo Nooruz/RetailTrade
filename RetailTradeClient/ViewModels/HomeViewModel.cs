@@ -312,6 +312,7 @@ namespace RetailTradeClient.ViewModels
             //_zebraBarcodeScanner.Open();
             //_zebraBarcodeScanner.OnBarcodeEvent += ZebraBarcodeScanner_OnBarcodeEvent;
 
+            _comBarcodeService.SetParameters(Settings.Default.BarcodeCom, Settings.Default.BarcodeSpeed);
             _comBarcodeService.Open();
             _comBarcodeService.OnBarcodeEvent += async (string barcode) => await _productSaleStore.AddProduct(barcode);
         }
@@ -355,7 +356,7 @@ namespace RetailTradeClient.ViewModels
         {
             if (ProductSales.Count > 0)
             {
-                PaymentCashViewModel _paymentCashViewModel = new(_receiptService, _userStore, _shiftStore, _productSaleStore) 
+                PaymentCashViewModel _paymentCashViewModel = new(_receiptService, _userStore, _shiftStore, _productSaleStore, _reportService) 
                 { 
                     Title = "Оплата наличными"
                 };
@@ -368,7 +369,7 @@ namespace RetailTradeClient.ViewModels
         {
             if (ProductSales.Count > 0)
             {
-                PaymentComplexViewModel _paymentComplexViewModel = new(_receiptService, _shiftStore, _userStore) 
+                PaymentComplexViewModel _paymentComplexViewModel = new(_receiptService, _shiftStore, _reportService, _productSaleStore)
                 { 
                     Title = "Оплата чека"
                 };

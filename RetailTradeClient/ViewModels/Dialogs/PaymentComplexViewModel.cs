@@ -2,8 +2,9 @@
 using RetailTrade.Domain.Models;
 using RetailTrade.Domain.Services;
 using RetailTradeClient.Commands;
+using RetailTradeClient.State.ProductSale;
+using RetailTradeClient.State.Reports;
 using RetailTradeClient.State.Shifts;
-using RetailTradeClient.State.Users;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -12,6 +13,7 @@ using System.ComponentModel;
 using System.Linq;
 using System.Windows;
 using System.Windows.Input;
+using System.Windows.Threading;
 
 namespace RetailTradeClient.ViewModels.Dialogs
 {
@@ -21,11 +23,9 @@ namespace RetailTradeClient.ViewModels.Dialogs
 
         private readonly IReceiptService _receiptService;
         private readonly IShiftStore _shiftStore;
-        private readonly IUserStore _userStore;
-        private decimal _amountToBePaid;
+        private readonly IProductSaleStore _productSaleStore;
+        private readonly IReportService _reportService;
         private decimal _amountCash;
-        private List<Sale> _saleProducts;
-        private ObservableCollection<PaymentType> _paymentTypes = new();
         private PaymentType _selectedPaymentType;
         private bool _sumFocusable;
 
@@ -34,17 +34,16 @@ namespace RetailTradeClient.ViewModels.Dialogs
         #region Public Properties
 
         public GridControl ComplexPaymentGridControl { get; set; }
-
+        public TableView ComplexPaymentTableView => ComplexPaymentGridControl != null ? ComplexPaymentGridControl.View as TableView : null;
         public ObservableCollection<PaymentType> PaymentTypes
         {
-            get => _paymentTypes;
+            get => _productSaleStore.PaymentTypes;
             set
             {
-                _paymentTypes = value;
+                _productSaleStore.PaymentTypes = value;
                 OnPropertyChanged(nameof(PaymentTypes));
             }
         }
-
         public PaymentType SelectedPaymentType
         {
             get => _selectedPaymentType;
@@ -54,44 +53,29 @@ namespace RetailTradeClient.ViewModels.Dialogs
                 OnPropertyChanged(nameof(SelectedPaymentType));
             }
         }
-
         /// <summary>
         /// Сумма к оплате
         /// </summary>
         public decimal AmountToBePaid
         {
-            get => _amountToBePaid;
-            set
-            {
-                _amountToBePaid = value;
-                OnPropertyChanged(nameof(AmountToBePaid));
-                OnPropertyChanged(nameof(Balance));
-            }
+            get => _productSaleStore.ToBePaid;
+            set { }
         }
-
         /// <summary>
         /// Остаток
         /// </summary>
         public decimal Balance
         {
-            get => AmountToBePaid - PaymentTypes.Sum(pt => pt.Sum);
+            get
+            {
+                _productSaleStore.Change = AmountToBePaid - PaymentTypes.Sum(pt => pt.Sum);
+                return _productSaleStore.Change;
+            }
             set
             {
 
             }
         }
-
-        public List<Sale> SaleProducts
-        {
-            get => _saleProducts;
-            set
-            {
-                _saleProducts = value;
-                AmountToBePaid = _saleProducts.Sum(sp => sp.Sum);
-                OnPropertyChanged(nameof(SaleProducts));
-            }
-        }
-
         public decimal AmountCash
         {
             get => _amountCash;
@@ -101,7 +85,6 @@ namespace RetailTradeClient.ViewModels.Dialogs
                 OnPropertyChanged(nameof(AmountCash));
             }
         }
-
         public bool SumFocusable
         {
             get => _sumFocusable;
@@ -111,11 +94,16 @@ namespace RetailTradeClient.ViewModels.Dialogs
                 OnPropertyChanged(nameof(SumFocusable));
             }
         }
-
         /// <summary>
         /// Если кнопка запятая нажата
         /// </summary>
         public bool IsCommaButtonPressed { get; set; }
+
+        #endregion
+
+        #region Actions
+
+        public event Action OnPayment;
 
         #endregion
 
@@ -127,7 +115,8 @@ namespace RetailTradeClient.ViewModels.Dialogs
         public ICommand CommaButtonPressCommand => new RelayCommand(CommaButtonPress);
         public ICommand BackspaceCommand => new RelayCommand(Backspace);
         public ICommand GridControlLoadedCommand => new ParameterCommand(sender => GridControlLoaded(sender));
-        public ICommand MakeComplexPaymentCommand => new MakeComplexPaymentCommand(this, _receiptService, _shiftStore, _userStore);
+        public ICommand ClearCommand => new RelayCommand(Cleare);
+        public ICommand MakeComplexPaymentCommand => new MakeComplexPaymentCommand(_receiptService, _shiftStore, _reportService, _productSaleStore);
 
         #endregion
 
@@ -135,18 +124,43 @@ namespace RetailTradeClient.ViewModels.Dialogs
 
         public PaymentComplexViewModel(IReceiptService receiptService,
             IShiftStore shiftStore,
-            IUserStore userStore)
+            IReportService reportService,
+            IProductSaleStore productSaleStore)
         {
             _receiptService = receiptService;
             _shiftStore = shiftStore;
-            _userStore = userStore;
+            _reportService = reportService;
+            _productSaleStore = productSaleStore;
 
             PaymentTypes.CollectionChanged += PaymentTypes_CollectionChanged;
+            _productSaleStore.OnProductSale += ProductSaleStore_OnProductSale;
         }
 
         #endregion
 
         #region Private Voids
+
+        private void ProductSaleStore_OnProductSale(bool obj)
+        {
+            CurrentWindowService.Close();
+            _productSaleStore.Change = 0;
+        }
+
+        private void Cleare()
+        {
+            PaymentTypes.Clear();
+            OnPropertyChanged(nameof(Balance));
+        }
+
+        private void ShowEditor(int column)
+        {
+            ComplexPaymentTableView.FocusedRowHandle = PaymentTypes.IndexOf(SelectedPaymentType);
+            ComplexPaymentTableView.Grid.CurrentColumn = ComplexPaymentTableView.Grid.Columns[column];
+            _ = ComplexPaymentTableView.Dispatcher.BeginInvoke(new Action(() =>
+            {
+                ComplexPaymentTableView.ShowEditor();
+            }), DispatcherPriority.Render);
+        }
 
         private void GridControlLoaded(object sender)
         {
@@ -162,6 +176,7 @@ namespace RetailTradeClient.ViewModels.Dialogs
 
         private void ComplexPaymentGridControl_SelectedItemChanged(object sender, SelectedItemChangedEventArgs e)
         {
+            ShowEditor(1);
         }
 
         private void Backspace()
@@ -182,10 +197,10 @@ namespace RetailTradeClient.ViewModels.Dialogs
 
         private void DigitalButtonPress(object sender)
         {
-            int number;
             if (!SumFocusable)
             {
-                if (int.TryParse(sender.ToString(), out number))
+                ComplexPaymentTableView.CloseEditor();
+                if (int.TryParse(sender.ToString(), out int number))
                 {
                     if (IsCommaButtonPressed)
                     {

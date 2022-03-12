@@ -1,5 +1,7 @@
 ﻿using RetailTrade.Domain.Models;
 using RetailTradeClient.Report;
+using RetailTradeClient.State.ProductSale;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace RetailTradeClient.State.Reports
@@ -10,16 +12,19 @@ namespace RetailTradeClient.State.Reports
 
         private readonly XReport _xReport;
         private readonly ProductSaleReport _productSaleReport;
+        private readonly IProductSaleStore _productSaleStore;
 
         #endregion
 
         #region Constructor
 
         public ReportService(XReport xReport,
-            ProductSaleReport productSaleReport)
+            ProductSaleReport productSaleReport,
+            IProductSaleStore productSaleStore)
         {
             _xReport = xReport;
             _productSaleReport = productSaleReport;
+            _productSaleStore = productSaleStore;
         }
 
         #endregion
@@ -35,7 +40,7 @@ namespace RetailTradeClient.State.Reports
 
         public async Task<ProductSaleReport> CreateProductSaleReport(Receipt receipt)
         {
-            _productSaleReport.SetValues(receipt);
+            _productSaleReport.SetValues(receipt, _productSaleStore.ProductSales);
             await _productSaleReport.CreateDocumentAsync();
             return _productSaleReport;
         }

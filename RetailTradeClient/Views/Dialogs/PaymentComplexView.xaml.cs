@@ -1,8 +1,4 @@
-﻿using DevExpress.Xpf.Grid;
-using System;
-using System.Windows.Threading;
-
-namespace RetailTradeClient.Views.Dialogs
+﻿namespace RetailTradeClient.Views.Dialogs
 {
     /// <summary>
     /// Логика взаимодействия для PaymentCashlessView.xaml
@@ -12,16 +8,6 @@ namespace RetailTradeClient.Views.Dialogs
         public PaymentComplexView()
         {
             InitializeComponent();
-        }
-
-        private void TableView_FocusedRowChanged(object sender, FocusedRowChangedEventArgs e)
-        {
-            TableView tableView = sender as TableView;
-            tableView.Grid.CurrentColumn = tableView.Grid.Columns[1];
-            Dispatcher.BeginInvoke(new Action(() => 
-            {
-                tableView.ShowEditor();
-            }), DispatcherPriority.Render);
         }
     }
 }

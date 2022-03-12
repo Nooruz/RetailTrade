@@ -6,6 +6,7 @@ using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Linq;
 using System.Threading.Tasks;
+using System.Windows;
 
 namespace RetailTradeClient.State.ProductSale
 {
@@ -16,6 +17,7 @@ namespace RetailTradeClient.State.ProductSale
         private readonly IProductService _productService;
         private ObservableCollection<Sale> _productSales = new();
         private ObservableCollection<PostponeReceipt> _postponeReceipts = new();
+        private ObservableCollection<PaymentType> _paymentTypes = new();
         private decimal _entered;
         private decimal _change;
         private bool _saleCompleted;
@@ -71,7 +73,16 @@ namespace RetailTradeClient.State.ProductSale
                 OnPropertyChanged(nameof(SaleCompleted));
             }
         }
-        public bool IsKeepRecords => Settings.Default.IsKeepRecords;        
+        public bool IsKeepRecords => Settings.Default.IsKeepRecords;
+        public ObservableCollection<PaymentType> PaymentTypes
+        {
+            get => _paymentTypes;
+            set
+            {
+                _paymentTypes = value;
+                OnPropertyChanged(nameof(PaymentTypes));
+            }
+        }
 
         #endregion
 
@@ -101,7 +112,17 @@ namespace RetailTradeClient.State.ProductSale
                 Sale sale = ProductSales.FirstOrDefault(s => s.Barcode == barcode);
                 if (sale != null)
                 {
-                    sale.Quantity++;
+                    if (Settings.Default.IsKeepRecords)
+                    {
+                        if (sale.QuantityInStock < sale.Quantity + 1)
+                        {
+                            _ = MessageBox.Show("Количество превышает остаток.", "", MessageBoxButton.OK, MessageBoxImage.Information);
+                        }
+                        else
+                        {
+                            sale.Quantity++;
+                        }
+                    }
                 }
                 else
                 {
@@ -123,7 +144,17 @@ namespace RetailTradeClient.State.ProductSale
                 Sale sale = ProductSales.FirstOrDefault(s => s.Id == id);
                 if (sale != null)
                 {
-                    sale.Quantity++;
+                    if (Settings.Default.IsKeepRecords)
+                    {
+                        if (sale.QuantityInStock < sale.Quantity + 1)
+                        {
+                            _ = MessageBox.Show("Количество превышает остаток.", "", MessageBoxButton.OK, MessageBoxImage.Information);
+                        }
+                        else
+                        {
+                            sale.Quantity++;
+                        }
+                    }
                 }
                 else
                 {
@@ -164,6 +195,33 @@ namespace RetailTradeClient.State.ProductSale
             }
         }
 
+        public void ProductSale(bool success)
+        {
+            Change = Entered - ToBePaid;
+            ProductSales.Clear();
+            OnPropertyChanged(nameof(ToBePaid));
+            OnProductSale?.Invoke(success);
+        }
+
+        public void ProductSaleCashless(bool success)
+        {
+            ProductSales.Clear();
+            PaymentTypes.Clear();
+            OnPropertyChanged(nameof(ToBePaid));
+            OnProductSale?.Invoke(success);
+        }
+
+        public void ResumeReceipt(Guid guid)
+        {
+            PostponeReceipt postponeReceipt = PostponeReceipts.FirstOrDefault(p => p.Id == guid);
+            if (postponeReceipt != null)
+            {
+                postponeReceipt.Sales.ForEach(s => ProductSales.Add(s));
+                _ = PostponeReceipts.Remove(postponeReceipt);
+                OnPostponeReceiptChanged?.Invoke();
+            }
+        }
+
         #endregion
 
         #region Private Voids
@@ -194,36 +252,27 @@ namespace RetailTradeClient.State.ProductSale
 
         private void AddProductToCart(Product product)
         {
-            ProductSales.Add(new Sale
+            if (product != null)
             {
-                Id = product.Id,
-                Name = product.Name,
-                SalePrice = product.SalePrice,                
-                ArrivalPrice = product.ArrivalPrice,
-                QuantityInStock = IsKeepRecords ? product.Quantity : 0,
-                TNVED = product.TNVED,
-                Quantity = 1,
-                Barcode = product.Barcode
-            });
-        }
-
-        public void ProductSale(bool success)
-        {
-            Change = Entered - ToBePaid;
-            ProductSales.Clear();
-            OnPropertyChanged(nameof(ToBePaid));
-            OnProductSale?.Invoke(success);
-        }
-
-        public void ResumeReceipt(Guid guid)
-        {
-            PostponeReceipt postponeReceipt = PostponeReceipts.FirstOrDefault(p => p.Id == guid);
-            if (postponeReceipt != null)
-            {
-                postponeReceipt.Sales.ForEach(s => ProductSales.Add(s));
-                _ = PostponeReceipts.Remove(postponeReceipt);
-                OnPostponeReceiptChanged?.Invoke();
-            }            
+                try
+                {
+                    ProductSales.Add(new Sale
+                    {
+                        Id = product.Id,
+                        Name = product.Name,
+                        SalePrice = product.SalePrice,
+                        ArrivalPrice = product.ArrivalPrice,
+                        QuantityInStock = IsKeepRecords ? product.Quantity : 0,
+                        TNVED = product.TNVED,
+                        Quantity = 1,
+                        Barcode = product.Barcode
+                    });
+                }
+                catch (Exception)
+                {
+                    //ignore
+                }
+            }
         }
 
         #endregion

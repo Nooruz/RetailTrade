@@ -8,6 +8,7 @@ namespace RetailTrade.Domain.Services
 {
     public interface IReceiptService : IDataService<Receipt>
     {
+        event Action<IEnumerable<ProductSale>> OnProductSale;
         Task<Receipt> CreateAsync(Receipt receipt, bool isKeepRecords);
         /// <summary>
         /// Получить квитанции из текущего смена

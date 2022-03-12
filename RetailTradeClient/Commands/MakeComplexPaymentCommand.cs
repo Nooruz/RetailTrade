@@ -3,8 +3,9 @@ using RetailTrade.Domain.Models;
 using RetailTrade.Domain.Services;
 using RetailTradeClient.Properties;
 using RetailTradeClient.Report;
+using RetailTradeClient.State.ProductSale;
+using RetailTradeClient.State.Reports;
 using RetailTradeClient.State.Shifts;
-using RetailTradeClient.State.Users;
 using RetailTradeClient.ViewModels.Dialogs;
 using System;
 using System.Linq;
@@ -17,24 +18,24 @@ namespace RetailTradeClient.Commands
     {
         #region Private Members
 
-        private readonly PaymentComplexViewModel _paymentComplexViewModel;
         private readonly IReceiptService _receiptService;
         private readonly IShiftStore _shiftStore;
-        private readonly IUserStore _userStore;
+        private readonly IReportService _reportService;
+        private readonly IProductSaleStore _productSaleStore;
 
         #endregion
 
         #region Constructor
 
-        public MakeComplexPaymentCommand(PaymentComplexViewModel paymentComplexViewModel,
-            IReceiptService receiptService,
+        public MakeComplexPaymentCommand(IReceiptService receiptService,
             IShiftStore shiftStore,
-            IUserStore userStore)
+            IReportService reportService,
+            IProductSaleStore productSaleStore)
         {
-            _paymentComplexViewModel = paymentComplexViewModel;
             _receiptService = receiptService;
             _shiftStore = shiftStore;
-            _userStore = userStore;
+            _reportService = reportService;
+            _productSaleStore = productSaleStore;
         }
 
         #endregion
@@ -46,7 +47,7 @@ namespace RetailTradeClient.Commands
 
         public override async Task ExecuteAsync(object parameter)
         {
-            if (_paymentComplexViewModel.Balance == 0)
+            if (_productSaleStore.Change == 0)
             {
                 try
                 {
@@ -55,13 +56,13 @@ namespace RetailTradeClient.Commands
                     newReceipt = await _receiptService.CreateAsync(new Receipt
                     {
                         DateOfPurchase = DateTime.Now,
-                        Sum = _paymentComplexViewModel.AmountToBePaid,
-                        Deposited = _paymentComplexViewModel.AmountToBePaid,
-                        PaidInCash = _paymentComplexViewModel.PaymentTypes.Where(pt => pt.Id == 1).Sum(pt => pt.Sum),
-                        PaidInCashless = _paymentComplexViewModel.PaymentTypes.Where(pt => pt.Id == 2).Sum(pt => pt.Sum),
+                        Sum = _productSaleStore.ToBePaid,
+                        Deposited = _productSaleStore.ToBePaid,
+                        PaidInCash = _productSaleStore.PaymentTypes.Where(pt => pt.Id == 1).Sum(pt => pt.Sum),
+                        PaidInCashless = _productSaleStore.PaymentTypes.Where(pt => pt.Id == 2).Sum(pt => pt.Sum),
                         ShiftId = _shiftStore.CurrentShift.Id,
                         Change = 0,
-                        ProductSales = _paymentComplexViewModel.SaleProducts.Select(s =>
+                        ProductSales = _productSaleStore.ProductSales.Select(s =>
                             new ProductSale
                             {
                                 ProductId = s.Id,
@@ -73,23 +74,19 @@ namespace RetailTradeClient.Commands
                     }, Settings.Default.IsKeepRecords);
 
                     //Подготовка документа для печати чека
-                    ProductSaleReport report = new(_userStore, newReceipt)
-                    {
-                        DataSource = _paymentComplexViewModel.SaleProducts
-                    };
-                    await report.CreateDocumentAsync();
+                    ProductSaleReport report = await _reportService.CreateProductSaleReport(newReceipt);
 
                     //Подготовка принтера
                     PrintToolBase tool = new(report.PrintingSystem);
-                    tool.PrinterSettings.PrinterName = Properties.Settings.Default.DefaultReceiptPrinter;
+                    tool.PrinterSettings.PrinterName = Settings.Default.DefaultReceiptPrinter;
                     tool.PrintingSystem.EndPrint += PrintingSystem_EndPrint;
                     tool.Print();
 
 
                 }
-                catch (Exception e)
+                catch (Exception)
                 {
-                    //ignore
+                    _productSaleStore.ProductSaleCashless(false);
                 }
             }
             else
@@ -100,7 +97,7 @@ namespace RetailTradeClient.Commands
 
         private void PrintingSystem_EndPrint(object sender, EventArgs e)
         {
-            _paymentComplexViewModel.Result = true;
+            _productSaleStore.ProductSaleCashless(true);
         }
     }
 }

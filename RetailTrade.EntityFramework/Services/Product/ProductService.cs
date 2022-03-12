@@ -208,7 +208,7 @@ namespace RetailTrade.EntityFramework.Services
             {
                 await using var context = _contextFactory.CreateDbContext();
                 Product product = await GetAsync(productId);
-                product.Barcode = $"2{new('0', 12 - product.Id.ToString().Length)}{product.Id}";
+                product.Barcode = $"2{new('0', 13 - product.Id.ToString().Length)}{product.Id}";
                 Product updateProduct = await UpdateAsync(productId, product);
                 OnProductEdited?.Invoke(updateProduct);
                 return updateProduct.Barcode;

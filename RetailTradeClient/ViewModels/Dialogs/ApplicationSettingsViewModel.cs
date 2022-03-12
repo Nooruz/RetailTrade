@@ -6,8 +6,8 @@ using RetailTradeClient.Properties;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Drawing.Printing;
+using System.IO.Ports;
 using System.Linq;
-using System.Windows;
 using System.Windows.Input;
 
 namespace RetailTradeClient.ViewModels.Dialogs
@@ -24,6 +24,26 @@ namespace RetailTradeClient.ViewModels.Dialogs
 
         #region Public Properties
 
+        public int SelectedBarcodeSpeed
+        {
+            get => Settings.Default.BarcodeSpeed;
+            set
+            {
+                Settings.Default.BarcodeSpeed = value;
+                OnPropertyChanged(nameof(SelectedBarcodeSpeed));
+            }
+        }
+        public string SelectedComPort
+        {
+            get => Settings.Default.BarcodeCom;
+            set
+            {
+                Settings.Default.BarcodeCom = value;
+                OnPropertyChanged(nameof(SelectedComPort));
+            }
+        }
+        public IEnumerable<string> ComPorts => SerialPort.GetPortNames();
+        public IEnumerable<int> BarcodeSpeed => new List<int>() { 2400, 4800, 7200, 9600, 14400, 19200, 38400 };
         public List<string> KKMs { get; set; }
         public string SelectedKKM
         {

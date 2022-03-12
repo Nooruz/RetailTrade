@@ -59,13 +59,16 @@ namespace RetailTrade.Barcode
 
         public static void SetParameters(string portName, int baudRate)
         {
-            _serialPort = new()
+            if (!string.IsNullOrEmpty(portName) && baudRate > 0)
             {
-                PortName = portName,
-                BaudRate = baudRate,
-                ReadTimeout = 1000,
-            };
-            _serialPort.DataReceived += SerialPort_DataReceived;
+                _serialPort = new()
+                {
+                    PortName = portName,
+                    BaudRate = baudRate,
+                    ReadTimeout = 1000,
+                };
+                _serialPort.DataReceived += SerialPort_DataReceived;
+            }
         }
 
         public static void Close()

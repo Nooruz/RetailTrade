@@ -1,6 +1,7 @@
 using RetailTrade.Domain.Models;
 using RetailTradeClient.State.Users;
 using System;
+using System.Collections.Generic;
 
 namespace RetailTradeClient.Report
 {
@@ -24,10 +25,11 @@ namespace RetailTradeClient.Report
 
         #region Public Voids
 
-        public void SetValues(Receipt receipt)
+        public void SetValues(Receipt receipt, IEnumerable<Sale> sales)
         {
             try
             {
+                DataSource = sales;
                 CashDate.Text = $"Дата: {receipt.DateOfPurchase.ToShortDateString()}";
                 CashTime.Text = $"Время: {receipt.DateOfPurchase.ToShortTimeString()}";
                 CashReceipt.Text = $"Товарный чек № {receipt.Id:D6}";

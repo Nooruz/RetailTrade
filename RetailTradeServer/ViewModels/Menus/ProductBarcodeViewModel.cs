@@ -1,5 +1,4 @@
 ﻿using DevExpress.Mvvm;
-using DevExpress.XtraPrinting;
 using RetailTrade.Domain.Models;
 using RetailTrade.Domain.Services;
 using RetailTradeServer.Commands;
@@ -7,7 +6,6 @@ using RetailTradeServer.Report;
 using RetailTradeServer.ViewModels.Base;
 using RetailTradeServer.ViewModels.Dialogs;
 using RetailTradeServer.Views.Dialogs;
-using SalePageServer.Properties;
 using SalePageServer.Utilities;
 using System;
 using System.Collections.Generic;

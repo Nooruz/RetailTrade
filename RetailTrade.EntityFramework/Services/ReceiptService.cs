@@ -18,6 +18,7 @@ namespace RetailTrade.EntityFramework.Services
         private readonly IProductService _productService;
 
         public event Action PropertiesChanged;
+        public event Action<IEnumerable<ProductSale>> OnProductSale;
 
         public ReceiptService(RetailTradeDbContextFactory contextFactory,
             IRefundService refundService,
@@ -39,7 +40,7 @@ namespace RetailTrade.EntityFramework.Services
                     _ = await _productService.Sale(productSale.ProductId, productSale.Quantity, true);
                 }
                 if (result != null)
-                    PropertiesChanged?.Invoke();
+                    OnProductSale?.Invoke(entity.ProductSales);
                 return result;
             }
             catch (Exception)
@@ -311,7 +312,16 @@ namespace RetailTrade.EntityFramework.Services
                     _ = await _productService.Sale(productSale.ProductId, productSale.Quantity, isKeepRecords);
                 }
                 if (result != null)
-                    PropertiesChanged?.Invoke();
+                {
+                    if (isKeepRecords)
+                    {
+                        OnProductSale?.Invoke(receipt.ProductSales);
+                    }
+                    else
+                    {
+                        PropertiesChanged?.Invoke();
+                    }
+                }
                 return result;
             }
             catch (Exception)

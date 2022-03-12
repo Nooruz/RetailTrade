@@ -27,6 +27,16 @@
                               SelectedItem="{Binding SelectedReceiptPrinter}"/>
         </dxlc:LayoutItem>
 
+        <dxlc:LayoutItem Label="Сканер штрихкода">
+            <dxe:ComboBoxEdit ItemsSource="{Binding ComPorts}"
+                              EditValue="{Binding SelectedComPort}"/>
+        </dxlc:LayoutItem>
+
+        <dxlc:LayoutItem Label="Скорость сканера штрихкода">
+            <dxe:ComboBoxEdit ItemsSource="{Binding BarcodeSpeed}"
+                              EditValue="{Binding SelectedBarcodeSpeed}"/>
+        </dxlc:LayoutItem>
+
         <dxlc:LayoutItem Label="Вести учет">
             <dxe:CheckEdit IsChecked="{Binding IsKeepRecords}"/>
         </dxlc:LayoutItem>

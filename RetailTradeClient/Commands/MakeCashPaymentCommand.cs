@@ -6,8 +6,8 @@ using RetailTrade.Domain.Services;
 using RetailTradeClient.Properties;
 using RetailTradeClient.Report;
 using RetailTradeClient.State.ProductSale;
+using RetailTradeClient.State.Reports;
 using RetailTradeClient.State.Shifts;
-using RetailTradeClient.State.Users;
 using System;
 using System.Linq;
 using System.Threading.Tasks;
@@ -20,9 +20,9 @@ namespace RetailTradeClient.Commands
 
         private readonly IReceiptService _receiptService;
         private readonly IShiftStore _shiftStore;
-        private readonly IUserStore _userStore;
         private readonly IProductSaleStore _productSaleStore;
         private readonly ICurrentWindowService _currentWindowService;
+        private readonly IReportService _reportService;
 
         #endregion
 
@@ -30,15 +30,15 @@ namespace RetailTradeClient.Commands
 
         public MakeCashPaymentCommand(IReceiptService receiptService,
             IShiftStore shiftStore,
-            IUserStore userStore,
             IProductSaleStore productSaleStore,
-            ICurrentWindowService currentWindowService)
+            ICurrentWindowService currentWindowService,
+            IReportService reportService)
         {
             _receiptService = receiptService;
             _shiftStore = shiftStore;
-            _userStore = userStore;
             _productSaleStore = productSaleStore;
             _currentWindowService = currentWindowService;
+            _reportService = reportService;
         }
 
         #endregion
@@ -111,14 +111,10 @@ namespace RetailTradeClient.Commands
                             ShtrihM.CloseCheck();
                             ShtrihM.CutCheck();
                         }
-                    }                    
+                    }
 
                     //Подготовка документа для печати чека
-                    ProductSaleReport report = new(_userStore, newReceipt)
-                    {
-                        DataSource = _productSaleStore.ProductSales
-                    };
-                    await report.CreateDocumentAsync();
+                    ProductSaleReport report = await _reportService.CreateProductSaleReport(newReceipt);
 
                     //Подготовка принтера
                     PrintToolBase tool = new(report.PrintingSystem);
