@@ -4,8 +4,7 @@
                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
                    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
                    mc:Ignorable="d"
-                   xmlns:dialog="clr-namespace:RetailTrade.DialogService;assembly=RetailTrade.DialogService"
-             d:DesignHeight="600" d:DesignWidth="600">
+                   d:DesignHeight="600" d:DesignWidth="600">
     <Border BorderThickness="1"
             BorderBrush="Black"
             Padding="10">
