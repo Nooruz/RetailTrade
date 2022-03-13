@@ -60,20 +60,33 @@ namespace RetailTrade.Barcode.Services
 
         #region Private Voids
 
-
+        private void SerialPort_DataReceived(object sender, SerialDataReceivedEventArgs e)
+        {
+            
+        }
 
         #endregion
 
         #region ComBarcode
 
-        private void OpenComBarcode(string comPortName, int speed)
+        private void OpenComBarcode()
         {
-            if (_serialPort == null)
+            if (!string.IsNullOrEmpty(Properties.Resources.BarcodeComName.ToString()) && speed > 0)
             {
-                _serialPort = new()
+                if (_serialPort == null)
                 {
-                    
-                };
+                    _serialPort = new()
+                    {
+                        PortName = comPortName,
+                        BaudRate = speed,
+                        ReadTimeout = 1000,
+                    };
+                }
+                else
+                {
+                    _serialPort.PortName = comPortName;
+                }
+                _serialPort.DataReceived += SerialPort_DataReceived;
             }
         }
 
