@@ -10,6 +10,7 @@ using System.Collections.ObjectModel;
 using System.Drawing.Printing;
 using System.IO.Ports;
 using System.Linq;
+using System.Windows;
 using System.Windows.Input;
 
 namespace RetailTradeClient.ViewModels.Dialogs
@@ -86,6 +87,7 @@ namespace RetailTradeClient.ViewModels.Dialogs
                 OnPropertyChanged(nameof(IsKeepRecords));
             }
         }
+        public Visibility ComSettingsVisibility => SelectedBarcodeDevice == BarcodeDevice.Com ? Visibility.Visible : Visibility.Collapsed;
         public BarcodeDevice SelectedBarcodeDevice
         {
             get => _selectedBarcodeDevice;
@@ -93,6 +95,7 @@ namespace RetailTradeClient.ViewModels.Dialogs
             {
                 _selectedBarcodeDevice = value;
                 OnPropertyChanged(nameof(SelectedBarcodeDevice));
+                OnPropertyChanged(nameof(ComSettingsVisibility));
             }
         }
 
@@ -155,6 +158,7 @@ namespace RetailTradeClient.ViewModels.Dialogs
         {
             Settings.Default.DefaultReceiptPrinter = SelectedReceiptPrinter?.Name;
             Settings.Default.DefaultKKMName = SelectedKKM;
+            Settings.Default.BarcodeDefaultDevice = SelectedBarcodeDevice.ToString();
             Settings.Default.Save();
             CurrentWindowService.Close();
         }
