@@ -1,9 +1,9 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using RetailTrade.Barcode.Services;
 using RetailTrade.Domain.Models;
 using RetailTrade.Domain.Services;
 using RetailTradeServer.State.Authenticators;
-using RetailTradeServer.State.Barcode;
 using RetailTradeServer.State.Messages;
 using RetailTradeServer.State.Navigators;
 using RetailTradeServer.State.Users;
@@ -86,8 +86,7 @@ namespace RetailTradeServer.HostBuilders
                 services.GetRequiredService<IDataService<Unit>>(),
                 services.GetRequiredService<ISupplierService>(),
                 services.GetRequiredService<IMessageStore>(),
-                services.GetRequiredService<IZebraBarcodeScanner>(),
-                services.GetRequiredService<IComBarcodeService>());
+                services.GetRequiredService<IBarcodeService>());
         }
 
         private static ArrivalProductViewModel CreateArrivalProductViewModel(IServiceProvider services)
@@ -113,7 +112,6 @@ namespace RetailTradeServer.HostBuilders
                 services.GetRequiredService<ISupplierService>(),
                 services.GetRequiredService<IOrderStatusService>(),
                 services.GetRequiredService<IUserStore>(),
-                services.GetRequiredService<IZebraBarcodeScanner>(),
                 services.GetRequiredService<IDataService<Unit>>());
         }
 

@@ -1,7 +1,7 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using RetailTrade.Barcode.Services;
 using RetailTradeClient.State.Authenticators;
-using RetailTradeClient.State.Barcode;
 using RetailTradeClient.State.Messages;
 using RetailTradeClient.State.Navigators;
 using RetailTradeClient.State.ProductSale;
@@ -22,8 +22,7 @@ namespace RetailTradeClient.HostBuilders
                 _ = services.AddSingleton<IMessageStore, MessageStore>();
                 _ = services.AddSingleton<IShiftStore, ShiftStore>();
                 _ = services.AddSingleton<IProductSaleStore, ProductSaleStore>();
-                _ = services.AddSingleton<IZebraBarcodeScanner, ZebraBarcodeScanner>();
-                _ = services.AddSingleton<IComBarcodeService, ComBarcodeService>();
+                _ = services.AddSingleton<IBarcodeService, BarcodeService>();
             });
         }
     }

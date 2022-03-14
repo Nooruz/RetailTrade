@@ -1,14 +1,13 @@
 ﻿using DevExpress.Mvvm;
 using DevExpress.Xpf.Core;
+using RetailTrade.Barcode.Services;
 using RetailTrade.Domain.Models;
 using RetailTrade.Domain.Services;
 using RetailTradeServer.Commands;
-using RetailTradeServer.State.Barcode;
 using RetailTradeServer.State.Messages;
 using RetailTradeServer.ViewModels.Dialogs.Base;
 using RetailTradeServer.Views.Dialogs;
 using SalePageServer.Properties;
-using SalePageServer.ViewModels.Dialogs;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Windows;
@@ -26,8 +25,7 @@ namespace RetailTradeServer.ViewModels.Dialogs
         private readonly IProductService _productService;
         private readonly ITypeProductService _typeProductService;
         private readonly IMessageStore _messageStore;
-        private readonly IZebraBarcodeScanner _zebraBarcodeScanner;
-        private readonly IComBarcodeService _comBarcodeService;
+        private readonly IBarcodeService _barcodeService;
         private int? _selectedUnitId;
         private int? _selectedSupplierId;
         private int? _selectedTypeProductId;
@@ -183,16 +181,14 @@ namespace RetailTradeServer.ViewModels.Dialogs
             IProductService productService,
             ISupplierService supplierService,
             IMessageStore messageStore,
-            IZebraBarcodeScanner zebraBarcodeScanner,
-            IComBarcodeService comBarcodeService)
+            IBarcodeService barcodeService)
         {
             _typeProductService = typeProductService;
             _unitService = unitService;
             _productService = productService;
             _supplierService = supplierService;
             _messageStore = messageStore;
-            _zebraBarcodeScanner = zebraBarcodeScanner;
-            _comBarcodeService = comBarcodeService;
+            _barcodeService = barcodeService;
             GlobalMessageViewModel = new(_messageStore);
 
             _messageStore.Close();
@@ -219,40 +215,36 @@ namespace RetailTradeServer.ViewModels.Dialogs
             SelectedSupplierId = supplier.Id;
         }
 
-        private async void UserControlLoaded(object userControl)
+        private async void UserControlLoaded(object parameter)
         {
-            if (userControl is RoutedEventArgs e)
+            if (parameter is RoutedEventArgs e)
             {
-                if (e.Source is UserControl control)
+                if (e.Source is UserControl userControl)
                 {
-                    control.Unloaded += Control_Unloaded;
+                    userControl.Unloaded += UserControl_Unloaded;
                 }
             }
             Suppliers = new(await _supplierService.GetAllAsync());
             Units = await _unitService.GetAllAsync();
             TypeProducts = new(await _typeProductService.GetTypesAsync());
 
-            _comBarcodeService.SetParameters(Settings.Default.BarcodeCom, Settings.Default.BarcodeSpeed);
-            _comBarcodeService.Open();
-            _comBarcodeService.OnBarcodeEvent += ComBarcodeService_OnBarcodeEvent;
+            _barcodeService.SetAppSetting("ComPortName", Settings.Default.BarcodeCom);
+            _barcodeService.SetAppSetting("ComPortSpeed", Settings.Default.BarcodeSpeed.ToString());
+            _barcodeService.Open(BarcodeDevice.Com);
+            _barcodeService.OnBarcodeEvent += BarcodeService_OnBarcodeEvent;
         }
 
-        private void Control_Unloaded(object sender, RoutedEventArgs e)
+        private void UserControl_Unloaded(object sender, RoutedEventArgs e)
         {
             _supplierService.OnSupplierCreated -= SupplierService_OnSupplierCreated;
             _typeProductService.OnTypeProductCreated -= TypeProductService_OnTypeProductCreated;
-            _comBarcodeService.OnBarcodeEvent -= ComBarcodeService_OnBarcodeEvent;
-            _comBarcodeService.Close();
+            _barcodeService.OnBarcodeEvent -= BarcodeService_OnBarcodeEvent;
+            _barcodeService.Close(BarcodeDevice.Com);
         }
 
-        private void ComBarcodeService_OnBarcodeEvent(string obj)
+        private void BarcodeService_OnBarcodeEvent(string barcode)
         {
-            Barcode = obj;
-        }
-
-        private void ZebraBarcodeScanner_OnBarcodeEvent(string obj)
-        {
-            Barcode = obj;
+            Barcode = barcode;
         }
 
         private void TabControlLoaded(object sender)

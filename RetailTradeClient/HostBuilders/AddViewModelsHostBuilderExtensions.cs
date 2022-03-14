@@ -1,8 +1,8 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using RetailTrade.Barcode.Services;
 using RetailTrade.Domain.Services;
 using RetailTradeClient.State.Authenticators;
-using RetailTradeClient.State.Barcode;
 using RetailTradeClient.State.Messages;
 using RetailTradeClient.State.Navigators;
 using RetailTradeClient.State.ProductSale;
@@ -67,8 +67,7 @@ namespace RetailTradeClient.HostBuilders
                 services.GetRequiredService<IShiftStore>(),
                 services.GetRequiredService<IRefundService>(),
                 services.GetRequiredService<IProductSaleStore>(),
-                services.GetRequiredService<IZebraBarcodeScanner>(),
-                services.GetRequiredService<IComBarcodeService>(),
+                services.GetRequiredService<IBarcodeService>(),
                 services.GetRequiredService<ProductsWithoutBarcodeViewModel>(),
                 services.GetRequiredService<IReportService>());
         }

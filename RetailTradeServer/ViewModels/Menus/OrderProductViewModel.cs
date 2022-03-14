@@ -2,14 +2,12 @@
 using RetailTrade.Domain.Models;
 using RetailTrade.Domain.Services;
 using RetailTradeServer.Commands;
-using RetailTradeServer.State.Barcode;
 using RetailTradeServer.State.Users;
 using RetailTradeServer.ViewModels.Base;
 using RetailTradeServer.ViewModels.Dialogs;
 using RetailTradeServer.Views.Dialogs;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Windows;
 using System.Windows.Input;
 
 namespace RetailTradeServer.ViewModels.Menus
@@ -24,7 +22,6 @@ namespace RetailTradeServer.ViewModels.Menus
         private readonly ITypeProductService _typeProductService;
         private readonly ISupplierService _supplierService;
         private readonly IUserStore _userStore;
-        private readonly IZebraBarcodeScanner _zebraBarcodeScanner;
         private readonly IDataService<Unit> _unitService;
         private IEnumerable<OrderStatus> _orderStatuses;
         private ObservableCollection<OrderToSupplier> _ordersToSuppliers;
@@ -74,7 +71,6 @@ namespace RetailTradeServer.ViewModels.Menus
             ISupplierService supplierService,
             IOrderStatusService orderStatusService,
             IUserStore userStore,
-            IZebraBarcodeScanner zebraBarcodeScanner,
             IDataService<Unit> unitService)
         {
             _orderToSupplierService = orderToSupplierService;
@@ -84,7 +80,6 @@ namespace RetailTradeServer.ViewModels.Menus
             _orderStatusService = orderStatusService;
             _userStore = userStore;
             _unitService = unitService;
-            _zebraBarcodeScanner = zebraBarcodeScanner;
 
             Header = "Заказы поставщикам";
 
@@ -138,7 +133,7 @@ namespace RetailTradeServer.ViewModels.Menus
 
         private void CreateOrder()
         {
-            WindowService.Show(nameof(CreateOrderToSupplierDialogForm), new CreateOrderToSupplierDialogFormModel(_productService, _typeProductService, _supplierService, _orderToSupplierService, _zebraBarcodeScanner, _unitService, _userStore) { Title = "Заказ поставшику (новый)" });
+            WindowService.Show(nameof(CreateOrderToSupplierDialogForm), new CreateOrderToSupplierDialogFormModel(_productService, _typeProductService, _supplierService, _orderToSupplierService, _unitService, _userStore) { Title = "Заказ поставшику (новый)" });
         }
 
         private async void DeleteOrder()
