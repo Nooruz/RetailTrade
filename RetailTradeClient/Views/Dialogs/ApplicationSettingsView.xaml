@@ -28,6 +28,11 @@
         </dxlc:LayoutItem>
 
         <dxlc:LayoutItem Label="Сканер штрихкода">
+            <dxe:ComboBoxEdit ItemsSource="{Binding BarcodeDevices}"
+                              EditValue="{Binding SelectedBarcodeDevice}"/>
+        </dxlc:LayoutItem>
+
+        <dxlc:LayoutItem Label="COM порт:">
             <dxe:ComboBoxEdit ItemsSource="{Binding ComPorts}"
                               EditValue="{Binding SelectedComPort}"/>
         </dxlc:LayoutItem>

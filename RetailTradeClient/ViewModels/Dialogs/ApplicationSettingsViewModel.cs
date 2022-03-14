@@ -1,8 +1,10 @@
 ﻿using DevExpress.Mvvm;
+using RetailTrade.Barcode.Services;
 using RetailTrade.CashRegisterMachine;
 using RetailTrade.Domain.Models;
 using RetailTradeClient.Commands;
 using RetailTradeClient.Properties;
+using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Drawing.Printing;
@@ -19,6 +21,7 @@ namespace RetailTradeClient.ViewModels.Dialogs
         private int? _selectedLocalPrinterId;
         private LocalPrinter _selectedReceiptPrinter;
         private string _selectedKKM = Settings.Default.DefaultKKMName;
+        private BarcodeDevice _selectedBarcodeDevice;
 
         #endregion
 
@@ -43,6 +46,7 @@ namespace RetailTradeClient.ViewModels.Dialogs
             }
         }
         public IEnumerable<string> ComPorts => SerialPort.GetPortNames();
+        public IEnumerable<BarcodeDevice> BarcodeDevices => Enum.GetValues(typeof(BarcodeDevice)).Cast<BarcodeDevice>();
         public IEnumerable<int> BarcodeSpeed => new List<int>() { 2400, 4800, 7200, 9600, 14400, 19200, 38400 };
         public List<string> KKMs { get; set; }
         public string SelectedKKM
@@ -80,6 +84,15 @@ namespace RetailTradeClient.ViewModels.Dialogs
             {
                 Settings.Default.IsKeepRecords = value;
                 OnPropertyChanged(nameof(IsKeepRecords));
+            }
+        }
+        public BarcodeDevice SelectedBarcodeDevice
+        {
+            get => _selectedBarcodeDevice;
+            set
+            {
+                _selectedBarcodeDevice = value;
+                OnPropertyChanged(nameof(SelectedBarcodeDevice));
             }
         }
 
