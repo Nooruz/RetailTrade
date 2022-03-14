@@ -1,17 +1,17 @@
 ﻿using DevExpress.Mvvm;
 using DevExpress.Xpf.Core;
+using RetailTrade.Barcode.Services;
 using RetailTrade.Domain.Models;
 using RetailTrade.Domain.Services;
 using RetailTradeServer.Commands;
-using RetailTradeServer.State.Barcode;
 using RetailTradeServer.State.Messages;
 using RetailTradeServer.ViewModels.Dialogs.Base;
 using RetailTradeServer.Views.Dialogs;
 using SalePageServer.Properties;
-using SalePageServer.ViewModels.Dialogs;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Windows;
+using System.Windows.Controls;
 using System.Windows.Input;
 
 namespace RetailTradeServer.ViewModels.Dialogs
@@ -25,8 +25,7 @@ namespace RetailTradeServer.ViewModels.Dialogs
         private readonly IProductService _productService;
         private readonly ITypeProductService _typeProductService;
         private readonly IMessageStore _messageStore;
-        private readonly IZebraBarcodeScanner _zebraBarcodeScanner;
-        private readonly IComBarcodeService _comBarcodeService;
+        private readonly IBarcodeService _barcodeService;
         private int? _selectedUnitId;
         private int? _selectedSupplierId;
         private int? _selectedTypeProductId;
@@ -171,7 +170,7 @@ namespace RetailTradeServer.ViewModels.Dialogs
         public ICommand CreateSupplierCommand => new RelayCommand(() => WindowService.Show(nameof(CreateSupplierProductDialogForm), new CreateSupplierProductDialogFormModal(_supplierService) { Title = "Поставщик (создания)" }));
         public ICommand CreateTypeProductCommand => new RelayCommand(() => WindowService.Show(nameof(TypeProductDialogForm), new TypeProductDialogFormModel(_typeProductService) { Title = "Виды товаров (создание)" }));
         public ICommand TabControlLoadedCommand => new ParameterCommand(sender => TabControlLoaded(sender));
-        public ICommand UserControlLoadedCommand => new RelayCommand(UserControlLoaded);
+        public ICommand UserControlLoadedCommand => new ParameterCommand(sender => UserControlLoaded(sender));
 
         #endregion
 
@@ -182,16 +181,14 @@ namespace RetailTradeServer.ViewModels.Dialogs
             IProductService productService,
             ISupplierService supplierService,
             IMessageStore messageStore,
-            IZebraBarcodeScanner zebraBarcodeScanner,
-            IComBarcodeService comBarcodeService)
+            IBarcodeService barcodeService)
         {
             _typeProductService = typeProductService;
             _unitService = unitService;
             _productService = productService;
             _supplierService = supplierService;
             _messageStore = messageStore;
-            _zebraBarcodeScanner = zebraBarcodeScanner;
-            _comBarcodeService = comBarcodeService;
+            _barcodeService = barcodeService;
             GlobalMessageViewModel = new(_messageStore);
 
             _messageStore.Close();
@@ -218,34 +215,36 @@ namespace RetailTradeServer.ViewModels.Dialogs
             SelectedSupplierId = supplier.Id;
         }
 
-        private async void UserControlLoaded()
+        private async void UserControlLoaded(object parameter)
         {
+            if (parameter is RoutedEventArgs e)
+            {
+                if (e.Source is UserControl userControl)
+                {
+                    userControl.Unloaded += UserControl_Unloaded;
+                }
+            }
             Suppliers = new(await _supplierService.GetAllAsync());
             Units = await _unitService.GetAllAsync();
             TypeProducts = new(await _typeProductService.GetTypesAsync());
 
-            //_zebraBarcodeScanner.Open();
-            //_zebraBarcodeScanner.OnBarcodeEvent += ZebraBarcodeScanner_OnBarcodeEvent;
-            if (string.IsNullOrEmpty(Settings.Default.BarcodeCom) || Settings.Default.BarcodeSpeed == 0)
-            {
-                _ = MessageBoxService.ShowMessage("Сканер штрихкода не настоен.", "Sale Page", MessageButton.OK, MessageIcon.Information);
-            }
-            else
-            {
-                _comBarcodeService.SetParameters(Settings.Default.BarcodeCom, Settings.Default.BarcodeSpeed);
-            }
-            _comBarcodeService.Open();
-            _comBarcodeService.OnBarcodeEvent += ComBarcodeService_OnBarcodeEvent;
+            _barcodeService.SetAppSetting("ComPortName", Settings.Default.BarcodeCom);
+            _barcodeService.SetAppSetting("ComPortSpeed", Settings.Default.BarcodeSpeed.ToString());
+            _barcodeService.Open(BarcodeDevice.Com);
+            _barcodeService.OnBarcodeEvent += BarcodeService_OnBarcodeEvent;
         }
 
-        private void ComBarcodeService_OnBarcodeEvent(string obj)
+        private void UserControl_Unloaded(object sender, RoutedEventArgs e)
         {
-            Barcode = obj;
+            _supplierService.OnSupplierCreated -= SupplierService_OnSupplierCreated;
+            _typeProductService.OnTypeProductCreated -= TypeProductService_OnTypeProductCreated;
+            _barcodeService.OnBarcodeEvent -= BarcodeService_OnBarcodeEvent;
+            _barcodeService.Close(BarcodeDevice.Com);
         }
 
-        private void ZebraBarcodeScanner_OnBarcodeEvent(string obj)
+        private void BarcodeService_OnBarcodeEvent(string barcode)
         {
-            Barcode = obj;
+            Barcode = barcode;
         }
 
         private void TabControlLoaded(object sender)
@@ -420,10 +419,6 @@ namespace RetailTradeServer.ViewModels.Dialogs
 
         public override void Dispose()
         {
-            _comBarcodeService.OnBarcodeEvent -= ComBarcodeService_OnBarcodeEvent;
-            _supplierService.OnSupplierCreated -= SupplierService_OnSupplierCreated;
-            _typeProductService.OnTypeProductCreated -= TypeProductService_OnTypeProductCreated;
-            _comBarcodeService.Close();
             base.Dispose();
         }
 

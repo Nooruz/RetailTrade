@@ -1,7 +1,6 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using RetailTradeClient.HostBuilders;
-using RetailTradeClient.State.Barcode;
 using RetailTradeClient.ViewModels;
 using System;
 using System.Windows;
@@ -17,8 +16,6 @@ namespace RetailTradeClient
         #region Private Members
 
         private readonly IHost _host;
-        private IZebraBarcodeScanner _barcodeScanner;
-        private IComBarcodeService _comBarcodeService;
 
         #endregion
 
@@ -46,9 +43,6 @@ namespace RetailTradeClient
         {
             _host.Start();
 
-            _barcodeScanner = _host.Services.GetRequiredService<IZebraBarcodeScanner>();
-            _comBarcodeService = _host.Services.GetRequiredService<IComBarcodeService>();
-
             try
             {                
                 Window window = _host.Services.GetRequiredService<MainWindow>();
@@ -67,8 +61,7 @@ namespace RetailTradeClient
             _host.Dispose();
             try
             {
-                _barcodeScanner.Close();
-                _comBarcodeService.Close();
+
             }
             catch (Exception)
             {

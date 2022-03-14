@@ -1,7 +1,7 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using RetailTrade.Barcode.Services;
 using RetailTradeServer.State.Authenticators;
-using RetailTradeServer.State.Barcode;
 using RetailTradeServer.State.Messages;
 using RetailTradeServer.State.Navigators;
 using RetailTradeServer.State.Users;
@@ -14,13 +14,12 @@ namespace RetailTradeServer.HostBuilders
         {
             return host.ConfigureServices(services =>
             {
-                services.AddSingleton<INavigator, Navigator>();
-                services.AddSingleton<IAuthenticator, Authenticator>();
-                services.AddSingleton<IUserStore, UserStore>();
-                services.AddSingleton<IMenuNavigator, MenuNavigator>();                
-                services.AddSingleton<IMessageStore, MessageStore>();
-                services.AddSingleton<IZebraBarcodeScanner, ZebraBarcodeScanner>();
-                services.AddSingleton<IComBarcodeService, ComBarcodeService>();
+                _ = services.AddSingleton<INavigator, Navigator>();
+                _ = services.AddSingleton<IAuthenticator, Authenticator>();
+                _ = services.AddSingleton<IUserStore, UserStore>();
+                _ = services.AddSingleton<IMenuNavigator, MenuNavigator>();                
+                _ = services.AddSingleton<IMessageStore, MessageStore>();
+                _ = services.AddSingleton<IBarcodeService, BarcodeService>();
             });
         }
     }

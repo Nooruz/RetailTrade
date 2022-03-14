@@ -5,14 +5,12 @@ using Newtonsoft.Json;
 using RetailTrade.EntityFramework;
 using RetailTrade.SQLServerConnectionDialog;
 using RetailTradeServer.HostBuilders;
-using RetailTradeServer.State.Barcode;
 using RetailTradeServer.ViewModels;
 using RetailTradeServer.ViewModels.Dialogs;
 using SalePageServer.Properties;
 using System;
 using System.Data.SqlClient;
 using System.IO;
-using System.Threading.Tasks;
 using System.Windows;
 
 namespace RetailTradeServer
@@ -26,8 +24,6 @@ namespace RetailTradeServer
 
         private readonly IHost _host;
         private Window startingWindow;
-        private IZebraBarcodeScanner _zebraBarcodeScanner;
-        private IComBarcodeService _comBarcodeService;
         private static SqlException _sqlException;
 
         #endregion
@@ -55,9 +51,6 @@ namespace RetailTradeServer
         protected override async void OnStartup(StartupEventArgs e)
         {
             await _host.StartAsync();
-
-            _zebraBarcodeScanner = _host.Services.GetRequiredService<IZebraBarcodeScanner>();
-            _comBarcodeService = _host.Services.GetRequiredService<IComBarcodeService>();
 
             //Settings.Default.AdminCreated = false;
             //Settings.Default.DefaultConnection = "Server=.ds;Database=RetailTradeDb;Trusted_Connection=True;";
@@ -131,8 +124,7 @@ namespace RetailTradeServer
 
             try
             {
-                _zebraBarcodeScanner.Close();
-                _comBarcodeService.Close();
+
             }
             catch (Exception)
             {
@@ -158,28 +150,6 @@ namespace RetailTradeServer
             finally
             {
                 connection.Close();
-            }
-        }
-
-        private static async Task<bool> CreateDataBase(string connectionString)
-        {
-            using SqlConnection connection = new(connectionString.Replace("Database=RetailTradeDb;", string.Empty));
-            string str = "CREATE DATABASE RetailTradeDb";
-            SqlCommand command = new(str, connection);
-            try
-            {
-                await connection.OpenAsync();
-                await command.ExecuteNonQueryAsync();
-                return true;
-            }
-            catch (SqlException sqlException)
-            {
-                _sqlException = sqlException;
-                return false;
-            }
-            finally
-            {
-                await connection.CloseAsync();
             }
         }
     }
