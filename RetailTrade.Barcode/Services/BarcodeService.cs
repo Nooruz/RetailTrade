@@ -91,6 +91,14 @@ namespace RetailTrade.Barcode.Services
             }
         }
 
+        private static string Replace(string text)
+        {
+            if (!string.IsNullOrEmpty(text))
+            {
+                return text.Replace("\r", string.Empty);
+            }
+            return string.Empty;
+        }
 
         private static string GetAppSetting(string key)
         {
@@ -162,7 +170,10 @@ namespace RetailTrade.Barcode.Services
 
         #region Zebra
 
+        private void OpenZebra()
+        {
 
+        }
 
         #endregion
 
