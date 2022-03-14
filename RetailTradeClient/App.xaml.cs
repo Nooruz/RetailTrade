@@ -3,6 +3,9 @@ using Microsoft.Extensions.Hosting;
 using RetailTradeClient.HostBuilders;
 using RetailTradeClient.ViewModels;
 using System;
+using System.IO.Ports;
+using System.Linq;
+using System.Management;
 using System.Windows;
 using System.Xml.Serialization;
 
@@ -53,6 +56,22 @@ namespace RetailTradeClient
             {
                 MessageBox.Show(exception.Message, "Ошибка.", MessageBoxButton.OK, MessageBoxImage.Error);
             }
+
+            KLSJD();
+        }
+
+        private void KLSJD()
+        {
+            using (var searcher = new ManagementObjectSearcher("SELECT * FROM Win32_PnPEntity WHERE Caption like '%(COM%'"))
+            {
+                var portnames = SerialPort.GetPortNames();
+                var ports = searcher.Get().Cast<ManagementBaseObject>().ToList().Select(p => p["Caption"].ToString());
+                var portList = portnames.Select(n => n + " - " + ports.FirstOrDefault(s => s.Contains(n))).ToList();
+                foreach (string s in portList)
+                {
+                    var port = s;
+                }
+            }
         }
 
         protected override async void OnExit(ExitEventArgs e)
@@ -70,6 +89,12 @@ namespace RetailTradeClient
             base.OnExit(e);
         }
 
+    }
+
+    public class BarcodePort
+    {
+        public string ComPort { get; set; }
+        public string ComPortName { get; set; }
     }
 
     [XmlRoot("arg-xml"), XmlType("arg-xml")]

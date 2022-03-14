@@ -416,7 +416,7 @@ namespace RetailTradeServer.ViewModels.Dialogs
         #endregion
 
         #region Dispose
-
+        
         public override void Dispose()
         {
             base.Dispose();
