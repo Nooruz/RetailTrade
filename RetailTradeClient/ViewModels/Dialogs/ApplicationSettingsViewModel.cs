@@ -22,7 +22,7 @@ namespace RetailTradeClient.ViewModels.Dialogs
         private int? _selectedLocalPrinterId;
         private LocalPrinter _selectedReceiptPrinter;
         private string _selectedKKM = Settings.Default.DefaultKKMName;
-        private BarcodeDevice _selectedBarcodeDevice;
+        private BarcodeDevice _selectedBarcodeDevice = Enum.TryParse(Settings.Default.BarcodeDefaultDevice, out BarcodeDevice barcodeDevice) ? barcodeDevice : BarcodeDevice.Com;
 
         #endregion
 

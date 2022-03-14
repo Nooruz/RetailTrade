@@ -93,10 +93,14 @@ namespace RetailTradeClient.State.ProductSale
         #region Constructor
 
         public ProductSaleStore(IProductService productService,
-            IReportService reportService)
+            IReportService reportService,
+            IReceiptService receiptService,
+            IShiftStore shiftStore)
         {
             _productService = productService;
             _reportService = reportService;
+            _receiptService = receiptService;
+            _shiftStore = shiftStore;
         }
 
         #endregion

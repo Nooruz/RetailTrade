@@ -236,6 +236,21 @@ namespace RetailTradeClient.ViewModels
             OnPropertyChanged(nameof(Change));
         }
 
+        private void BarcodeOpen()
+        {
+            if (Enum.IsDefined(typeof(BarcodeDevice), Settings.Default.BarcodeDefaultDevice))
+            {
+                BarcodeDevice barcodeDevice = Enum.Parse<BarcodeDevice>(Settings.Default.BarcodeDefaultDevice);
+                _barcodeService.Open(barcodeDevice);
+                _barcodeService.OnBarcodeEvent += async (string barcode) => await _productSaleStore.AddProduct(barcode);
+                if (barcodeDevice == BarcodeDevice.Com)
+                {
+                    _barcodeService.SetAppSetting("ComPortName", Settings.Default.BarcodeCom);
+                    _barcodeService.SetAppSetting("ComPortSpeed", Settings.Default.BarcodeSpeed.ToString());
+                }
+            }
+        }
+
         private void GetShortECRStatus()
         {
             ShtrihM.GetShortECRStatus();
@@ -306,10 +321,7 @@ namespace RetailTradeClient.ViewModels
                     homeView.Focus();
                 }
             }
-            _barcodeService.SetAppSetting("ComPortName", Settings.Default.BarcodeCom);
-            _barcodeService.SetAppSetting("ComPortSpeed", Settings.Default.BarcodeSpeed.ToString());
-            _barcodeService.Open(BarcodeDevice.Com);
-            _barcodeService.OnBarcodeEvent += async (string barcode) => await _productSaleStore.AddProduct(barcode);
+            BarcodeOpen();
         }
 
         private static void QuantityValidate(object parameter)
