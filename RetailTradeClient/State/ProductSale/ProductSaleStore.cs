@@ -1,6 +1,8 @@
 ﻿using RetailTrade.Domain.Models;
 using RetailTrade.Domain.Services;
 using RetailTradeClient.Properties;
+using RetailTradeClient.State.Reports;
+using RetailTradeClient.State.Shifts;
 using System;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
@@ -15,6 +17,9 @@ namespace RetailTradeClient.State.ProductSale
         #region Private Members
 
         private readonly IProductService _productService;
+        private readonly IReportService _reportService;
+        private readonly IReceiptService _receiptService;
+        private readonly IShiftStore _shiftStore;
         private ObservableCollection<Sale> _productSales = new();
         private ObservableCollection<PostponeReceipt> _postponeReceipts = new();
         private ObservableCollection<PaymentType> _paymentTypes = new();
@@ -88,9 +93,11 @@ namespace RetailTradeClient.State.ProductSale
 
         #region Constructor
 
-        public ProductSaleStore(IProductService productService)
+        public ProductSaleStore(IProductService productService,
+            IReportService reportService)
         {
             _productService = productService;
+            _reportService = reportService;
         }
 
         #endregion

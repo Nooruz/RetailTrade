@@ -1,12 +1,12 @@
 ﻿using DevExpress.Mvvm;
 using DevExpress.Xpf.Grid;
+using RetailTrade.Barcode.Services;
 using RetailTrade.CashRegisterMachine;
 using RetailTrade.Domain.Models;
 using RetailTrade.Domain.Services;
 using RetailTradeClient.Commands;
 using RetailTradeClient.Properties;
 using RetailTradeClient.State.Authenticators;
-using RetailTradeClient.State.Barcode;
 using RetailTradeClient.State.Messages;
 using RetailTradeClient.State.ProductSale;
 using RetailTradeClient.State.Reports;
@@ -39,8 +39,7 @@ namespace RetailTradeClient.ViewModels
         private readonly IShiftStore _shiftStore;
         private readonly IRefundService _refundService;
         private readonly IProductSaleStore _productSaleStore;
-        private readonly IZebraBarcodeScanner _zebraBarcodeScanner;
-        private readonly IComBarcodeService _comBarcodeService;
+        private readonly IBarcodeService _barcodeService;
         private readonly IReportService _reportService;
         private string _barcode;
         private Sale _selectedProductSale;
@@ -167,7 +166,7 @@ namespace RetailTradeClient.ViewModels
         /// <summary>
         /// Проверка ввода количестов товаров для продажи
         /// </summary>
-        public ICommand QuantityValidateCommand => new ParameterCommand(parameter => QuantityValidate(parameter));
+        public static ICommand QuantityValidateCommand => new ParameterCommand(parameter => QuantityValidate(parameter));
         /// <summary>
         /// Возврат товаров
         /// </summary>
@@ -191,8 +190,7 @@ namespace RetailTradeClient.ViewModels
             IShiftStore shiftStore,
             IRefundService refundService,
             IProductSaleStore productSaleStore,
-            IZebraBarcodeScanner zebraBarcodeScanner,
-            IComBarcodeService comBarcodeService,
+            IBarcodeService barcodeService,
             ProductsWithoutBarcodeViewModel productsWithoutBarcodeViewModel,
             IReportService reportService)
         {
@@ -204,8 +202,7 @@ namespace RetailTradeClient.ViewModels
             _shiftStore = shiftStore;
             _refundService = refundService;
             _productSaleStore = productSaleStore;
-            _zebraBarcodeScanner = zebraBarcodeScanner;
-            _comBarcodeService = comBarcodeService;
+            _barcodeService = barcodeService;
             _reportService = reportService;
 
             ProductsWithoutBarcodeViewModel = productsWithoutBarcodeViewModel;
@@ -309,15 +306,13 @@ namespace RetailTradeClient.ViewModels
                     homeView.Focus();
                 }
             }
-            //_zebraBarcodeScanner.Open();
-            //_zebraBarcodeScanner.OnBarcodeEvent += ZebraBarcodeScanner_OnBarcodeEvent;
-
-            _comBarcodeService.SetParameters(Settings.Default.BarcodeCom, Settings.Default.BarcodeSpeed);
-            _comBarcodeService.Open();
-            _comBarcodeService.OnBarcodeEvent += async (string barcode) => await _productSaleStore.AddProduct(barcode);
+            _barcodeService.SetAppSetting("ComPortName", Settings.Default.BarcodeCom);
+            _barcodeService.SetAppSetting("ComPortSpeed", Settings.Default.BarcodeSpeed.ToString());
+            _barcodeService.Open(BarcodeDevice.Com);
+            _barcodeService.OnBarcodeEvent += async (string barcode) => await _productSaleStore.AddProduct(barcode);
         }
 
-        private void QuantityValidate(object parameter)
+        private static void QuantityValidate(object parameter)
         {
             if (parameter is GridCellValidationEventArgs e)
             {

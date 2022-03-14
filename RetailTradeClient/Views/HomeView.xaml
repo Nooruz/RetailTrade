@@ -11,43 +11,31 @@
              IsTabStop="True">
 
     <dxmvvm:Interaction.Behaviors>
+        <dxmvvm:KeyToCommand KeyGesture="Add"
+                             EventName="KeyDown"
+                             Command="{Binding PaymentCashCommand}"/>
+        <dxmvvm:KeyToCommand KeyGesture="F6"
+                             EventName="KeyDown"
+                             Command="{Binding PaymentComplexCommand}"/>
+        <dxmvvm:KeyToCommand KeyGesture="Subtract"
+                             EventName="KeyDown"
+                             Command="{Binding ReturnGoodsCommand}"/>
+        <dxmvvm:KeyToCommand KeyGesture="Alt+F5"
+                             EventName="KeyDown"
+                             Command="{Binding PostponeReceiptCommand}"/>
+        <dxmvvm:KeyToCommand KeyGesture="Ctrl+F5"
+                             EventName="KeyDown"
+                             Command="{Binding OpenPostponeReceiptCommand}"/>
+        <dxmvvm:KeyToCommand KeyGesture="Escape"
+                             EventName="KeyDown"
+                             Command="{Binding CancelCommand}"/>
         <dxmvvm:EventToCommand EventName="TextInput" 
                                Command="{Binding TextInputCommand}"
-                               PassEventArgsToCommand="True"/>
-        <dxmvvm:EventToCommand EventName="KeyDown"
-                               Command="{Binding KeyDownCommand}"
                                PassEventArgsToCommand="True"/>
         <dxmvvm:EventToCommand EventName="Loaded"
                                Command="{Binding LoadedHomeViewCommand}"
                                PassEventArgsToCommand="True"/>
     </dxmvvm:Interaction.Behaviors>
-
-    <UserControl.InputBindings>
-
-        <KeyBinding Key="Escape"
-                    Command="{Binding LogoutCommand}"/>
-
-        <KeyBinding Key="Add"
-                    Command="{Binding PaymentCashCommand}"/>
-
-        <KeyBinding Key="F6"
-                    Command="{Binding PaymentCashlessCommand}"/>
-
-        <KeyBinding Key="F5" 
-                    Modifiers="Alt"
-                    Command="{Binding PostponeReceiptCommand}"/>
-
-        <KeyBinding Key="F5" 
-                    Modifiers="Ctrl"
-                    Command="{Binding OpenPostponeReceiptCommand}"/>
-
-        <KeyBinding Key="Delete"
-                    Command="{Binding DeleteSelectedRowCommand}"/>
-
-        <KeyBinding Key="Multiply"
-                    Command="{Binding MultiplyCommand}"/>
-
-    </UserControl.InputBindings>
 
     <dxlc:LayoutControl Orientation="Vertical"
                         Padding="0">

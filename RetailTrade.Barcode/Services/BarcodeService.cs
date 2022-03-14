@@ -1,4 +1,6 @@
-﻿using System.IO.Ports;
+﻿using System.Configuration;
+using System.IO.Ports;
+using System.Reflection;
 
 namespace RetailTrade.Barcode.Services
 {
@@ -26,6 +28,7 @@ namespace RetailTrade.Barcode.Services
             switch (barcodeDevice)
             {
                 case BarcodeDevice.Com:
+                    CloseComBarcode();
                     break;
                 case BarcodeDevice.Zebra:
                     break;
@@ -41,6 +44,7 @@ namespace RetailTrade.Barcode.Services
             switch (barcodeDevice)
             {
                 case BarcodeDevice.Com:
+                    OpenComBarcode();
                     break;
                 case BarcodeDevice.Zebra:
                     break;
@@ -51,10 +55,27 @@ namespace RetailTrade.Barcode.Services
             }
         }
 
-        public void Open(BarcodeDevice barcodeDevice, string comPortName, int speed)
+        public void SetAppSetting(string key, string value)
         {
-            
+            try
+            {
+                var asmPath = Assembly.GetExecutingAssembly().Location;
+                var config = ConfigurationManager.OpenExeConfiguration(asmPath);
+                config.AppSettings.Settings[key].Value = value;
+                config.Save(ConfigurationSaveMode.Full, true);
+                ConfigurationManager.RefreshSection("appSettings");
+            }
+            catch (Exception e)
+            {
+                throw new InvalidOperationException("Error reading configuration setting", e);
+            }
         }
+
+        #endregion
+
+        #region Action
+
+        public event Action<string> OnBarcodeEvent;
 
         #endregion
 
@@ -62,7 +83,28 @@ namespace RetailTrade.Barcode.Services
 
         private void SerialPort_DataReceived(object sender, SerialDataReceivedEventArgs e)
         {
-            
+            if (!_serialPort.IsOpen)
+            {
+                Thread.Sleep(500);
+                OnBarcodeEvent?.Invoke(Replace(_serialPort.ReadExisting()));
+                _serialPort.DiscardInBuffer();
+            }
+        }
+
+
+        private static string GetAppSetting(string key)
+        {
+            try
+            {
+                var asmPath = Assembly.GetExecutingAssembly().Location;
+                var config = ConfigurationManager.OpenExeConfiguration(asmPath);
+                var setting = config.AppSettings.Settings[key];
+                return setting.Value;
+            }
+            catch (Exception e)
+            {
+                throw new InvalidOperationException("Ошибка при чтении настроек конфигурации ComBarcode.", e);
+            }
         }
 
         #endregion
@@ -71,23 +113,49 @@ namespace RetailTrade.Barcode.Services
 
         private void OpenComBarcode()
         {
-            if (!string.IsNullOrEmpty(Properties.Resources.BarcodeComName.ToString()) && speed > 0)
+            string comPortName = GetAppSetting("ComPortName");
+            int comPortSpeed = int.TryParse(GetAppSetting("ComPortSpeed"), out int speed) ? 9600 : speed;
+            if (_serialPort == null)
             {
-                if (_serialPort == null)
+                if (!string.IsNullOrEmpty(comPortName))
                 {
                     _serialPort = new()
                     {
                         PortName = comPortName,
-                        BaudRate = speed,
-                        ReadTimeout = 1000,
+                        BaudRate = comPortSpeed
                     };
+                    _serialPort.DataReceived += SerialPort_DataReceived;
+                    _serialPort.Open();
                 }
-                else
-                {
-                    _serialPort.PortName = comPortName;
-                }
-                _serialPort.DataReceived += SerialPort_DataReceived;
             }
+            if (_serialPort != null)
+            {
+                if (_serialPort.IsOpen)
+                {
+                    _serialPort.Close();
+                }
+                _serialPort.PortName = comPortName;
+                _serialPort.BaudRate = comPortSpeed;
+                _serialPort.DataReceived += SerialPort_DataReceived;
+                _serialPort.Open();
+            }
+        }
+
+        private void CloseComBarcode()
+        {
+            if (_serialPort != null)
+            {
+                if (_serialPort.IsOpen)
+                {
+                    _serialPort.DataReceived -= SerialPort_DataReceived;
+                    _serialPort.Close();
+                }
+            }
+        }
+
+        public void ComBarcodeSettings(string comName, int speed)
+        {
+            
         }
 
         #endregion

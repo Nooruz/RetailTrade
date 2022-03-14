@@ -1,9 +1,9 @@
 ﻿using DevExpress.Mvvm;
 using DevExpress.Xpf.Grid;
+using RetailTrade.Barcode.Services;
 using RetailTrade.Domain.Models;
 using RetailTrade.Domain.Services;
 using RetailTradeServer.Commands;
-using RetailTradeServer.State.Barcode;
 using RetailTradeServer.State.Messages;
 using RetailTradeServer.ViewModels.Base;
 using RetailTradeServer.ViewModels.Dialogs;
@@ -25,8 +25,7 @@ namespace RetailTradeServer.ViewModels.Menus
         private readonly IDataService<Unit> _unitService;
         private readonly ISupplierService _supplierService;
         private readonly IMessageStore _messageStore;
-        private readonly IZebraBarcodeScanner _zebraBarcodeScanner;
-        private readonly IComBarcodeService _comBarcodeService;
+        private readonly IBarcodeService _barcodeService;
         private TypeProduct _selectedTypeProduct;
         private ObservableCollection<Product> _getProducts;
         private ObservableCollection<TypeProduct> _typeProducts;
@@ -119,16 +118,14 @@ namespace RetailTradeServer.ViewModels.Menus
             IDataService<Unit> unitService,
             ISupplierService supplierService,
             IMessageStore messageStore,
-            IZebraBarcodeScanner zebraBarcodeScanner,
-            IComBarcodeService comBarcodeService)
+            IBarcodeService barcodeService)
         {
             _typeProductService = typeProductService;
             _productService = productService;
             _unitService = unitService;
             _supplierService = supplierService;            
             _messageStore = messageStore;
-            _zebraBarcodeScanner = zebraBarcodeScanner;
-            _comBarcodeService = comBarcodeService;
+            _barcodeService = barcodeService;
             _typeProductService = typeProductService;
 
             Header = "Товары";
@@ -161,7 +158,7 @@ namespace RetailTradeServer.ViewModels.Menus
 
         private void CreateProduct()
         {
-            WindowService.Show(nameof(CreateProductDialogForm), new CreateProductDialogFormModel(_typeProductService, _unitService, _productService, _supplierService, _messageStore, _zebraBarcodeScanner, _comBarcodeService) { Title = "Товаровы (Создать)", SelectedTypeProductId = SelectedTypeProduct?.Id });
+            WindowService.Show(nameof(CreateProductDialogForm), new CreateProductDialogFormModel(_typeProductService, _unitService, _productService, _supplierService, _messageStore, _barcodeService) { Title = "Товаровы (Создать)", SelectedTypeProductId = SelectedTypeProduct?.Id });
         }
 
         private void EditTypeProduct()

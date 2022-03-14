@@ -5,7 +5,6 @@ using DevExpress.XtraEditors.DXErrorProvider;
 using RetailTrade.Domain.Models;
 using RetailTrade.Domain.Services;
 using RetailTradeServer.Commands;
-using RetailTradeServer.State.Barcode;
 using RetailTradeServer.State.Users;
 using RetailTradeServer.ViewModels.Dialogs.Base;
 using RetailTradeServer.Views.Dialogs;
@@ -27,7 +26,6 @@ namespace RetailTradeServer.ViewModels.Dialogs
         private readonly ITypeProductService _typeProductService;
         private readonly ISupplierService _supplierService;
         private readonly IOrderToSupplierService _orderToSupplierService;
-        private readonly IZebraBarcodeScanner _zebraBarcodeScanner;
         private readonly IDataService<Unit> _unitService;
         private readonly IUserStore _userStore;
         private Supplier _selectedSupplier;
@@ -147,7 +145,6 @@ namespace RetailTradeServer.ViewModels.Dialogs
             ITypeProductService typeProductService,
             ISupplierService supplierService,
             IOrderToSupplierService orderToSupplierService,
-            IZebraBarcodeScanner zebraBarcodeScanner,
             IDataService<Unit> unitService,
             IUserStore userStore)
         {
@@ -157,7 +154,6 @@ namespace RetailTradeServer.ViewModels.Dialogs
             _orderToSupplierService = orderToSupplierService;
             _unitService = unitService;
             _userStore = userStore;
-            _zebraBarcodeScanner = zebraBarcodeScanner;
 
             _orderProducts = new();
         }
