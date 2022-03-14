@@ -16,7 +16,9 @@
 
     <dxmvvm:Interaction.Behaviors>
         <dxmvvm:EventToCommand Event="PreviewTextInput" Command="{Binding PreviewTextInputCommand}"/>
-        <dxmvvm:EventToCommand Event="Loaded" Command="{Binding UserControlLoadedCommand}"/>
+        <dxmvvm:EventToCommand Event="Loaded" 
+                               Command="{Binding UserControlLoadedCommand}"
+                               PassEventArgsToCommand="True"/>
         <dxmvvm:CurrentWindowService/>
         <dxmvvm:WindowService>
             <dxmvvm:WindowService.WindowStyle>

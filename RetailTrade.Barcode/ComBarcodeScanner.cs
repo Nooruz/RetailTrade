@@ -61,13 +61,23 @@ namespace RetailTrade.Barcode
         {
             if (!string.IsNullOrEmpty(portName) && baudRate > 0)
             {
-                _serialPort = new()
+                try
                 {
-                    PortName = portName,
-                    BaudRate = baudRate,
-                    ReadTimeout = 1000,
-                };
-                _serialPort.DataReceived += SerialPort_DataReceived;
+                    if (_serialPort == null)
+                    {
+                        _serialPort = new()
+                        {
+                            PortName = portName,
+                            BaudRate = baudRate,
+                            ReadTimeout = 1000,
+                        };
+                    }
+                    _serialPort.DataReceived += SerialPort_DataReceived;
+                }
+                catch (Exception)
+                {
+                    //ignore
+                }
             }
         }
 
@@ -75,6 +85,7 @@ namespace RetailTrade.Barcode
         {
             try
             {
+                _serialPort.DataReceived -= SerialPort_DataReceived;
                 _serialPort.Close();
             }
             catch (Exception)

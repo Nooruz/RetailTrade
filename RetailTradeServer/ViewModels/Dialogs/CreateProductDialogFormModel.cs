@@ -12,6 +12,7 @@ using SalePageServer.ViewModels.Dialogs;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Windows;
+using System.Windows.Controls;
 using System.Windows.Input;
 
 namespace RetailTradeServer.ViewModels.Dialogs
@@ -171,7 +172,7 @@ namespace RetailTradeServer.ViewModels.Dialogs
         public ICommand CreateSupplierCommand => new RelayCommand(() => WindowService.Show(nameof(CreateSupplierProductDialogForm), new CreateSupplierProductDialogFormModal(_supplierService) { Title = "Поставщик (создания)" }));
         public ICommand CreateTypeProductCommand => new RelayCommand(() => WindowService.Show(nameof(TypeProductDialogForm), new TypeProductDialogFormModel(_typeProductService) { Title = "Виды товаров (создание)" }));
         public ICommand TabControlLoadedCommand => new ParameterCommand(sender => TabControlLoaded(sender));
-        public ICommand UserControlLoadedCommand => new RelayCommand(UserControlLoaded);
+        public ICommand UserControlLoadedCommand => new ParameterCommand(sender => UserControlLoaded(sender));
 
         #endregion
 
@@ -218,24 +219,30 @@ namespace RetailTradeServer.ViewModels.Dialogs
             SelectedSupplierId = supplier.Id;
         }
 
-        private async void UserControlLoaded()
+        private async void UserControlLoaded(object userControl)
         {
+            if (userControl is RoutedEventArgs e)
+            {
+                if (e.Source is UserControl control)
+                {
+                    control.Unloaded += Control_Unloaded;
+                }
+            }
             Suppliers = new(await _supplierService.GetAllAsync());
             Units = await _unitService.GetAllAsync();
             TypeProducts = new(await _typeProductService.GetTypesAsync());
 
-            //_zebraBarcodeScanner.Open();
-            //_zebraBarcodeScanner.OnBarcodeEvent += ZebraBarcodeScanner_OnBarcodeEvent;
-            if (string.IsNullOrEmpty(Settings.Default.BarcodeCom) || Settings.Default.BarcodeSpeed == 0)
-            {
-                _ = MessageBoxService.ShowMessage("Сканер штрихкода не настоен.", "Sale Page", MessageButton.OK, MessageIcon.Information);
-            }
-            else
-            {
-                _comBarcodeService.SetParameters(Settings.Default.BarcodeCom, Settings.Default.BarcodeSpeed);
-            }
+            _comBarcodeService.SetParameters(Settings.Default.BarcodeCom, Settings.Default.BarcodeSpeed);
             _comBarcodeService.Open();
             _comBarcodeService.OnBarcodeEvent += ComBarcodeService_OnBarcodeEvent;
+        }
+
+        private void Control_Unloaded(object sender, RoutedEventArgs e)
+        {
+            _supplierService.OnSupplierCreated -= SupplierService_OnSupplierCreated;
+            _typeProductService.OnTypeProductCreated -= TypeProductService_OnTypeProductCreated;
+            _comBarcodeService.OnBarcodeEvent -= ComBarcodeService_OnBarcodeEvent;
+            _comBarcodeService.Close();
         }
 
         private void ComBarcodeService_OnBarcodeEvent(string obj)
@@ -417,13 +424,9 @@ namespace RetailTradeServer.ViewModels.Dialogs
         #endregion
 
         #region Dispose
-
+        
         public override void Dispose()
         {
-            _comBarcodeService.OnBarcodeEvent -= ComBarcodeService_OnBarcodeEvent;
-            _supplierService.OnSupplierCreated -= SupplierService_OnSupplierCreated;
-            _typeProductService.OnTypeProductCreated -= TypeProductService_OnTypeProductCreated;
-            _comBarcodeService.Close();
             base.Dispose();
         }
 

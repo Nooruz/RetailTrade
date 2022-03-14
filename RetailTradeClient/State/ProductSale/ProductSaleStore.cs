@@ -6,7 +6,6 @@ using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Linq;
 using System.Threading.Tasks;
-using System.Windows;
 
 namespace RetailTradeClient.State.ProductSale
 {
@@ -116,12 +115,16 @@ namespace RetailTradeClient.State.ProductSale
                     {
                         if (sale.QuantityInStock < sale.Quantity + 1)
                         {
-                            _ = MessageBox.Show("Количество превышает остаток.", "", MessageBoxButton.OK, MessageBoxImage.Information);
+                            //_ = MessageBox.Show("Количество превышает остаток.", "", MessageBoxButton.OK, MessageBoxImage.Information);
                         }
                         else
                         {
                             sale.Quantity++;
                         }
+                    }
+                    else
+                    {
+                        sale.Quantity++;
                     }
                 }
                 else
@@ -148,12 +151,16 @@ namespace RetailTradeClient.State.ProductSale
                     {
                         if (sale.QuantityInStock < sale.Quantity + 1)
                         {
-                            _ = MessageBox.Show("Количество превышает остаток.", "", MessageBoxButton.OK, MessageBoxImage.Information);
+                            //_ = MessageBox.Show("Количество превышает остаток.", "", MessageBoxButton.OK, MessageBoxImage.Information);
                         }
                         else
                         {
                             sale.Quantity++;
                         }
+                    }
+                    else
+                    {
+                        sale.Quantity++;
                     }
                 }
                 else
