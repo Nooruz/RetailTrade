@@ -29,11 +29,11 @@
 
         <dxlc:LayoutItem Label="Сканер штрихкода">
             <dxe:ComboBoxEdit ItemsSource="{Binding BarcodeDevices}"
-                              EditValue="{Binding SelectedBarcodeDevice}"/>
+                              SelectedItem="{Binding SelectedBarcodeDevice}"/>
         </dxlc:LayoutItem>
 
         <dxlc:LayoutGroup Orientation="Vertical"
-                          Visibility="{Binding SelectedBarcodeDevice}">
+                          Visibility="{Binding ComSettingsVisibility}">
             <dxlc:LayoutItem Label="COM порт:">
                 <dxe:ComboBoxEdit ItemsSource="{Binding ComPorts}"
                               EditValue="{Binding SelectedComPort}"/>
