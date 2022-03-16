@@ -21,8 +21,8 @@ namespace RetailTradeClient.HostBuilders
                 _ = services.AddSingleton<IUserStore, UserStore>();
                 _ = services.AddSingleton<IMessageStore, MessageStore>();
                 _ = services.AddSingleton<IShiftStore, ShiftStore>();
-                _ = services.AddSingleton<IProductSaleStore, ProductSaleStore>();
                 _ = services.AddSingleton<IBarcodeService, BarcodeService>();
+                _ = services.AddSingleton<IProductSaleStore, ProductSaleStore>();                
             });
         }
     }

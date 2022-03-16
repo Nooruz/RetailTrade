@@ -49,7 +49,7 @@ namespace RetailTradeClient.State.Shifts
 
         public event Action<CheckingResult> CurrentShiftChanged;
 
-        public async Task CheckingShift(IMessageBoxService MessageBoxService,
+        public async Task<CheckingResult> CheckingShift(IMessageBoxService MessageBoxService,
             int userId)
         {
             if (ShtrihM.CheckConnection() == 0)

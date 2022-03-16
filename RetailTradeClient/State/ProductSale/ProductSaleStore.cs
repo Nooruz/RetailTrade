@@ -1,4 +1,5 @@
-﻿using RetailTrade.Domain.Models;
+﻿using RetailTrade.Barcode.Services;
+using RetailTrade.Domain.Models;
 using RetailTrade.Domain.Services;
 using RetailTradeClient.Properties;
 using RetailTradeClient.State.Reports;
@@ -18,6 +19,7 @@ namespace RetailTradeClient.State.ProductSale
         private readonly IProductService _productService;
         private readonly IReportService _reportService;
         private readonly IReceiptService _receiptService;
+        private readonly IBarcodeService _barcodeService;
         private readonly IShiftStore _shiftStore;
         private ObservableCollection<Sale> _productSales = new();
         private ObservableCollection<PostponeReceipt> _postponeReceipts = new();
@@ -95,12 +97,16 @@ namespace RetailTradeClient.State.ProductSale
         public ProductSaleStore(IProductService productService,
             IReportService reportService,
             IReceiptService receiptService,
-            IShiftStore shiftStore)
+            IShiftStore shiftStore,
+            IBarcodeService barcodeService)
         {
             _productService = productService;
             _reportService = reportService;
             _receiptService = receiptService;
             _shiftStore = shiftStore;
+            _barcodeService = barcodeService;
+
+            _barcodeService.OnBarcodeEvent += BarcodeService_OnBarcodeEvent;
         }
 
         #endregion
@@ -243,6 +249,11 @@ namespace RetailTradeClient.State.ProductSale
         #endregion
 
         #region Private Voids
+
+        private async void BarcodeService_OnBarcodeEvent(string barcode)
+        {
+            await AddProduct(barcode);
+        }
 
         private async Task<Product> GetProduct(string barcode)
         {

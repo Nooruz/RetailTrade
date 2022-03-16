@@ -1,7 +1,6 @@
 ﻿using DevExpress.Mvvm;
 using RetailTrade.Domain.Models;
 using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Threading.Tasks;
 
@@ -100,7 +99,7 @@ namespace RetailTradeClient.State.Shifts
         /// Проверка смены
         /// </summary>
         /// <returns>Если открыто true, иначи false</returns>
-        Task CheckingShift(IMessageBoxService MessageBoxService, int userId);
+        Task<CheckingResult> CheckingShift(IMessageBoxService MessageBoxService, int userId);
 
         /// <summary>
         /// Обработчик

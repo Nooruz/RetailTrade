@@ -242,7 +242,6 @@ namespace RetailTradeClient.ViewModels
             {
                 BarcodeDevice barcodeDevice = Enum.Parse<BarcodeDevice>(Settings.Default.BarcodeDefaultDevice);
                 _barcodeService.Open(barcodeDevice);
-                _barcodeService.OnBarcodeEvent += async (string barcode) => await _productSaleStore.AddProduct(barcode);
                 if (barcodeDevice == BarcodeDevice.Com)
                 {
                     _barcodeService.SetAppSetting("ComPortName", Settings.Default.BarcodeCom);

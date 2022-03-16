@@ -34,7 +34,11 @@ namespace RetailTradeClient.Commands
 
         public override async Task ExecuteAsync(object parameter)
         {
-            await _shiftStore.CheckingShift(_messageBoxService, _userId);
+            switch (await _shiftStore.CheckingShift(_messageBoxService, _userId))
+            {
+                default:
+                    break;
+            }
         }
     }
 }
