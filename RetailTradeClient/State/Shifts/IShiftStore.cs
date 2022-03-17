@@ -62,7 +62,12 @@ namespace RetailTradeClient.State.Shifts
         /// <summary>
         /// Нет открытого смена
         /// </summary>
-        NoOpenShift
+        NoOpenShift,
+
+        /// <summary>
+        /// Смена открыта другим пользователем
+        /// </summary>
+        ShiftOpenedByAnotherUser
     }
 
     /// <summary>
@@ -85,21 +90,19 @@ namespace RetailTradeClient.State.Shifts
         /// <summary>
         /// Открытие смены
         /// </summary>
-        /// <param name="userId">Код кассира</param>
         /// <returns>Если открыто true, иначи false</returns>
-        Task OpeningShift(IMessageBoxService MessageBoxService, int userId);
+        Task OpeningShift(IMessageBoxService MessageBoxService);
 
         /// <summary>
         /// Закрытие смены
         /// </summary>
-        /// <param name="userId">Код кассира</param>
-        Task ClosingShift(IMessageBoxService MessageBoxService, int userId);
+        Task ClosingShift(IMessageBoxService MessageBoxService);
 
         /// <summary>
         /// Проверка смены
         /// </summary>
         /// <returns>Если открыто true, иначи false</returns>
-        Task<CheckingResult> CheckingShift(IMessageBoxService MessageBoxService, int userId);
+        Task CheckingShift(IMessageBoxService MessageBoxService);
 
         /// <summary>
         /// Обработчик

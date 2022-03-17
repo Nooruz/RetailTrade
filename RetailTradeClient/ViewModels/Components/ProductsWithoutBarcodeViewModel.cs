@@ -4,7 +4,6 @@ using RetailTradeClient.Commands;
 using RetailTradeClient.Properties;
 using RetailTradeClient.State.ProductSale;
 using RetailTradeClient.ViewModels.Base;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Windows.Input;
@@ -17,7 +16,6 @@ namespace RetailTradeClient.ViewModels.Components
 
         private readonly IProductService _productService;
         private readonly IProductSaleStore _productSaleStore;
-        private readonly IReceiptService _receiptService;
         private ObservableCollection<Product> _products = new();
 
         #endregion
@@ -47,35 +45,15 @@ namespace RetailTradeClient.ViewModels.Components
         #region Constructor
 
         public ProductsWithoutBarcodeViewModel(IProductService productService,
-            IProductSaleStore productSaleStore,
-            IReceiptService receiptService)
+            IProductSaleStore productSaleStore)
         {
             _productService = productService;
             _productSaleStore = productSaleStore;
-            _receiptService = receiptService;
-
-            _receiptService.OnProductSale += ReceiptService_OnProductSale;
         }
 
         #endregion
 
         #region Private Voids
-
-        private void ReceiptService_OnProductSale(IEnumerable<ProductSale> productSales)
-        {
-            if (productSales.Any())
-            {
-                productSales.ToList().ForEach((item) =>
-                {
-                    Product product = Products.FirstOrDefault(p => p.Id == item.ProductId);
-                    product.Quantity -= item.Quantity;
-                    if (product.Quantity <= 0)
-                    {
-                        _ = Products.Remove(product);
-                    }
-                });
-            }
-        }
 
         private async void UserControlLoaded()
         {
@@ -88,6 +66,15 @@ namespace RetailTradeClient.ViewModels.Components
             if (parameter is int id)
             {
                 await _productSaleStore.AddProduct(id);
+                if (IsKeepRecords)
+                {
+                    Product product = Products.FirstOrDefault(p => p.Id == id);
+                    product.Quantity -= 1;
+                    if (product.Quantity <= 0)
+                    {
+                        _ = Products.Remove(product);
+                    }
+                }
             }            
         }
 

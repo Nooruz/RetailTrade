@@ -1,12 +1,8 @@
 ﻿using DevExpress.Xpf.Grid;
 using RetailTrade.Domain.Models;
-using RetailTrade.Domain.Services;
 using RetailTradeClient.Commands;
 using RetailTradeClient.State.ProductSale;
-using RetailTradeClient.State.Reports;
-using RetailTradeClient.State.Shifts;
 using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Collections.Specialized;
 using System.ComponentModel;
@@ -21,10 +17,7 @@ namespace RetailTradeClient.ViewModels.Dialogs
     {
         #region Private Members
 
-        private readonly IReceiptService _receiptService;
-        private readonly IShiftStore _shiftStore;
         private readonly IProductSaleStore _productSaleStore;
-        private readonly IReportService _reportService;
         private decimal _amountCash;
         private PaymentType _selectedPaymentType;
         private bool _sumFocusable;
@@ -116,20 +109,14 @@ namespace RetailTradeClient.ViewModels.Dialogs
         public ICommand BackspaceCommand => new RelayCommand(Backspace);
         public ICommand GridControlLoadedCommand => new ParameterCommand(sender => GridControlLoaded(sender));
         public ICommand ClearCommand => new RelayCommand(Cleare);
-        public ICommand MakeComplexPaymentCommand => new MakeComplexPaymentCommand(_receiptService, _shiftStore, _reportService, _productSaleStore);
+        public ICommand MakeComplexPaymentCommand => new RelayCommand(async () => await _productSaleStore.CashlessPayment());
 
         #endregion
 
         #region Constructor
 
-        public PaymentComplexViewModel(IReceiptService receiptService,
-            IShiftStore shiftStore,
-            IReportService reportService,
-            IProductSaleStore productSaleStore)
+        public PaymentComplexViewModel(IProductSaleStore productSaleStore)
         {
-            _receiptService = receiptService;
-            _shiftStore = shiftStore;
-            _reportService = reportService;
             _productSaleStore = productSaleStore;
 
             PaymentTypes.CollectionChanged += PaymentTypes_CollectionChanged;

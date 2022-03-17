@@ -25,7 +25,7 @@ namespace RetailTrade.Domain.Services
         /// </summary>
         /// <param name="userId">Код кассира</param>
         /// <returns>Возврашает смену</returns>
-        Task<Shift> GetOpenShiftByUserIdAsync(int userId);
+        Task<Shift> GetOpenShiftAsync();
 
         /// <summary>
         /// Получить открытую смену

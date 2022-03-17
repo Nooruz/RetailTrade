@@ -54,10 +54,10 @@ namespace RetailTradeClient.ViewModels.Dialogs
 
         #region Constructor
 
-        public PrinterViewModel(IMessageStore messageStore)
+        public PrinterViewModel()
         {
-            _messageStore = messageStore;
-            GlobalMessageViewModel = new(messageStore);
+            _messageStore = new MessageStore();
+            GlobalMessageViewModel = new(_messageStore);
 
             LocalPrinters = new();
 

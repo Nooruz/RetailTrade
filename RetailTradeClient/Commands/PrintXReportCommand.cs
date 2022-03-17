@@ -19,9 +19,9 @@ namespace RetailTradeClient.Commands
 
         #region Constructor
 
-        public PrintXReportCommand(IReportService reportService)
+        public PrintXReportCommand()
         {
-            _reportService = reportService;
+            //_reportService = new ReportService();
         }
 
         #endregion

@@ -23,6 +23,8 @@ namespace RetailTradeClient.State.ProductSale
         void DeleteProduct(int id);
         void ProductSale(bool success);
         void ProductSaleCashless(bool success);
+        Task CashPayment();
+        Task CashlessPayment();
         /// <summary>
         /// Отложить чек
         /// </summary>

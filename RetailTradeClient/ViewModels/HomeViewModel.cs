@@ -7,9 +7,7 @@ using RetailTrade.Domain.Services;
 using RetailTradeClient.Commands;
 using RetailTradeClient.Properties;
 using RetailTradeClient.State.Authenticators;
-using RetailTradeClient.State.Messages;
 using RetailTradeClient.State.ProductSale;
-using RetailTradeClient.State.Reports;
 using RetailTradeClient.State.Shifts;
 using RetailTradeClient.State.Users;
 using RetailTradeClient.ViewModels.Base;
@@ -32,15 +30,13 @@ namespace RetailTradeClient.ViewModels
         #region Private Members
 
         private readonly IUserStore _userStore;
-        private readonly IProductSaleService _productSaleService;
         private readonly IReceiptService _receiptService;
-        private readonly IMessageStore _messageStore;
         private readonly IAuthenticator _authenticator;
         private readonly IShiftStore _shiftStore;
-        private readonly IRefundService _refundService;
         private readonly IProductSaleStore _productSaleStore;
         private readonly IBarcodeService _barcodeService;
-        private readonly IReportService _reportService;
+        private readonly PaymentCashViewModel _paymentCashViewModel;
+        private readonly PaymentComplexViewModel _paymentComplexViewModel;
         private string _barcode;
         private Sale _selectedProductSale;
         private object _syncLock = new();
@@ -126,7 +122,7 @@ namespace RetailTradeClient.ViewModels
         /// <summary>
         /// Распечатать х-отчет
         /// </summary>
-        public ICommand PrintXReportCommand => new PrintXReportCommand(_reportService);
+        public ICommand PrintXReportCommand => new PrintXReportCommand();
         /// <summary>
         /// Настройки ККМ
         /// </summary>
@@ -183,27 +179,23 @@ namespace RetailTradeClient.ViewModels
         #region Constructor
 
         public HomeViewModel(IUserStore userStore,
-            IProductSaleService productSaleService,
             IReceiptService receiptService,
-            IMessageStore messageStore,
             IAuthenticator authenticator,
             IShiftStore shiftStore,
-            IRefundService refundService,
             IProductSaleStore productSaleStore,
             IBarcodeService barcodeService,
             ProductsWithoutBarcodeViewModel productsWithoutBarcodeViewModel,
-            IReportService reportService)
+            PaymentCashViewModel paymentCashViewModel,
+            PaymentComplexViewModel paymentComplexViewModel)
         {
             _userStore = userStore;
-            _productSaleService = productSaleService;
             _receiptService = receiptService;
-            _messageStore = messageStore;
             _authenticator = authenticator;
             _shiftStore = shiftStore;
-            _refundService = refundService;
             _productSaleStore = productSaleStore;
             _barcodeService = barcodeService;
-            _reportService = reportService;
+            _paymentCashViewModel = paymentCashViewModel;
+            _paymentComplexViewModel = paymentComplexViewModel;
 
             ProductsWithoutBarcodeViewModel = productsWithoutBarcodeViewModel;
 
@@ -341,7 +333,7 @@ namespace RetailTradeClient.ViewModels
         /// </summary>
         private void PrinterSettings()
         {
-            WindowService.Show(nameof(PrinterView), new PrinterViewModel(_messageStore) { Title = "Настройка принтеров" });
+            WindowService.Show(nameof(PrinterView), new PrinterViewModel() { Title = "Настройка принтеров" });
         }
 
         /// <summary>
@@ -362,11 +354,6 @@ namespace RetailTradeClient.ViewModels
         {
             if (ProductSales.Count > 0)
             {
-                PaymentCashViewModel _paymentCashViewModel = new(_receiptService, _userStore, _shiftStore, _productSaleStore, _reportService) 
-                { 
-                    Title = "Оплата наличными"
-                };
-
                 WindowService.Show(nameof(PaymentCashView), _paymentCashViewModel);
             }
         }
@@ -375,11 +362,6 @@ namespace RetailTradeClient.ViewModels
         {
             if (ProductSales.Count > 0)
             {
-                PaymentComplexViewModel _paymentComplexViewModel = new(_receiptService, _shiftStore, _reportService, _productSaleStore)
-                { 
-                    Title = "Оплата чека"
-                };
-
                 WindowService.Show(nameof(PaymentComplexView), _paymentComplexViewModel);
             }
         }
@@ -415,7 +397,6 @@ namespace RetailTradeClient.ViewModels
         /// </summary>
         private void CRMSettings()
         {
-            //await _manager.ShowDialog(new CommunicationSettingsViewModel() { Title = "Настройка связи с ККМ" }, new CommunicationSettingsView());            
             ShtrihM.ShowProperties();
         }
 

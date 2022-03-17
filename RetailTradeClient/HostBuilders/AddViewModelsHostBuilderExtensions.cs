@@ -12,6 +12,7 @@ using RetailTradeClient.State.Users;
 using RetailTradeClient.ViewModels;
 using RetailTradeClient.ViewModels.Base;
 using RetailTradeClient.ViewModels.Components;
+using RetailTradeClient.ViewModels.Dialogs;
 using RetailTradeClient.ViewModels.Factories;
 using System;
 
@@ -30,6 +31,8 @@ namespace RetailTradeClient.HostBuilders
                 services.AddTransient(CreateLoginViewModel);
                 services.AddTransient(CreateGlobalMessageViewModel);
                 services.AddTransient(CreateProductsWithoutBarcodeViewModel);
+                services.AddTransient(CreatePaymentCashViewModel);
+                services.AddTransient(CreatePaymentComplexViewModel);
 
                 services.AddSingleton<CreateViewModel<HomeViewModel>>(servicesProvider => () => CreateHomeViewModel(servicesProvider));
                 services.AddSingleton<CreateViewModel<LoginViewModel>>(servicesProvider => () => CreateLoginViewModel(servicesProvider));
@@ -42,11 +45,20 @@ namespace RetailTradeClient.HostBuilders
             });
         }
 
+        private static PaymentCashViewModel CreatePaymentCashViewModel(IServiceProvider services)
+        {
+            return new PaymentCashViewModel(services.GetRequiredService<IProductSaleStore>()) { Title = "Оплата наличными" };
+        }
+
+        private static PaymentComplexViewModel CreatePaymentComplexViewModel(IServiceProvider services)
+        {
+            return new PaymentComplexViewModel(services.GetRequiredService<IProductSaleStore>()) { Title = "Оплата наличными" };
+        }
+
         private static ProductsWithoutBarcodeViewModel CreateProductsWithoutBarcodeViewModel(IServiceProvider services)
         {
             return new ProductsWithoutBarcodeViewModel(services.GetRequiredService<IProductService>(),
-                services.GetRequiredService<IProductSaleStore>(),
-                services.GetRequiredService<IReceiptService>());
+                services.GetRequiredService<IProductSaleStore>());
         }
 
         private static MainViewModel CreateMainWindowViewModel(IServiceProvider services)
@@ -60,16 +72,14 @@ namespace RetailTradeClient.HostBuilders
         private static HomeViewModel CreateHomeViewModel(IServiceProvider services)
         {
             return new HomeViewModel(services.GetRequiredService<IUserStore>(),
-                services.GetRequiredService<IProductSaleService>(),
                 services.GetRequiredService<IReceiptService>(),
-                services.GetRequiredService<IMessageStore>(),
                 services.GetRequiredService<IAuthenticator>(),
                 services.GetRequiredService<IShiftStore>(),
-                services.GetRequiredService<IRefundService>(),
                 services.GetRequiredService<IProductSaleStore>(),
                 services.GetRequiredService<IBarcodeService>(),
                 services.GetRequiredService<ProductsWithoutBarcodeViewModel>(),
-                services.GetRequiredService<IReportService>());
+                services.GetRequiredService<PaymentCashViewModel>(),
+                services.GetRequiredService<PaymentComplexViewModel>());
         }
 
         private static LoginViewModel CreateLoginViewModel(IServiceProvider services)

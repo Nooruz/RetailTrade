@@ -114,13 +114,13 @@ namespace RetailTradeClient.Commands
                     }
 
                     //Подготовка документа для печати чека
-                    ProductSaleReport report = await _reportService.CreateProductSaleReport(newReceipt);
+                    //ProductSaleReport report = await _reportService.CreateProductSaleReport(newReceipt);
 
                     //Подготовка принтера
-                    PrintToolBase tool = new(report.PrintingSystem);
-                    tool.PrinterSettings.PrinterName = Settings.Default.DefaultReceiptPrinter;
-                    tool.PrintingSystem.EndPrint += PrintingSystem_EndPrint;
-                    tool.Print();
+                    //PrintToolBase tool = new(report.PrintingSystem);
+                    //tool.PrinterSettings.PrinterName = Settings.Default.DefaultReceiptPrinter;
+                    //tool.PrintingSystem.EndPrint += PrintingSystem_EndPrint;
+                    //tool.Print();
 
                     _productSaleStore.ProductSale(true);
                 }

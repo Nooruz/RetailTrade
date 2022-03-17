@@ -87,12 +87,12 @@ namespace RetailTrade.EntityFramework.Services
             return null;
         }
 
-        public async Task<Shift> GetOpenShiftByUserIdAsync(int userId)
+        public async Task<Shift> GetOpenShiftAsync()
         {
             try
             {
                 await using RetailTradeDbContext context = _contextFactory.CreateDbContext();
-                return await context.Shifts.FirstOrDefaultAsync(s => s.UserId == userId && s.ClosingDate == null);
+                return await context.Shifts.FirstOrDefaultAsync(s => s.ClosingDate == null);
             }
             catch (ShiftException e)
             {

@@ -6,7 +6,6 @@ using RetailTradeClient.Report;
 using RetailTradeClient.State.ProductSale;
 using RetailTradeClient.State.Reports;
 using RetailTradeClient.State.Shifts;
-using RetailTradeClient.ViewModels.Dialogs;
 using System;
 using System.Linq;
 using System.Threading.Tasks;
@@ -74,13 +73,13 @@ namespace RetailTradeClient.Commands
                     }, Settings.Default.IsKeepRecords);
 
                     //Подготовка документа для печати чека
-                    ProductSaleReport report = await _reportService.CreateProductSaleReport(newReceipt);
+                    //ProductSaleReport report = await _reportService.CreateProductSaleReport(newReceipt);
 
-                    //Подготовка принтера
-                    PrintToolBase tool = new(report.PrintingSystem);
-                    tool.PrinterSettings.PrinterName = Settings.Default.DefaultReceiptPrinter;
-                    tool.PrintingSystem.EndPrint += PrintingSystem_EndPrint;
-                    tool.Print();
+                    ////Подготовка принтера
+                    //PrintToolBase tool = new(report.PrintingSystem);
+                    //tool.PrinterSettings.PrinterName = Settings.Default.DefaultReceiptPrinter;
+                    //tool.PrintingSystem.EndPrint += PrintingSystem_EndPrint;
+                    //tool.Print();
 
 
                 }

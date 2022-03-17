@@ -14,8 +14,8 @@ namespace RetailTradeClient.ViewModels.Dialogs
         #region Private Members
 
         private readonly IShiftStore _shiftStore;
-        private readonly IUserStore _userStore;
         private readonly IRenavigator _homeRenavigator;
+        private readonly IUserStore _userStore;
         private int _userId;
 
         #endregion
@@ -30,24 +30,22 @@ namespace RetailTradeClient.ViewModels.Dialogs
 
         #region Commands
 
-        public ICommand OpeningShiftCommand => new OpeningShiftCommand(MessageBoxService, _shiftStore, _userId);
-        public ICommand ClosingShiftCommand => new ClosingShiftCommand(MessageBoxService, _shiftStore, _userId);
-        public ICommand SaleRegistrationCommand => new SaleRegistrationCommand(MessageBoxService, _shiftStore, _userId);
-        public ICommand SettingCommand => new RelayCommand(Setting);
+        public ICommand OpeningShiftCommand => new RelayCommand(async () => await _shiftStore.OpeningShift(MessageBoxService));
+        public ICommand ClosingShiftCommand => new RelayCommand(async () => await _shiftStore.ClosingShift(MessageBoxService));
+        public ICommand SaleRegistrationCommand => new RelayCommand(async () => await _shiftStore.CheckingShift(MessageBoxService));
+        public ICommand SettingCommand => new RelayCommand(() => WindowService.Show(nameof(ApplicationSettingsView), new ApplicationSettingsViewModel() { Title = "Настройки" }));
 
         #endregion
 
         #region Constructor
 
         public MainMenuViewModel(IShiftStore shiftStore,
-            int userId,
             IRenavigator homeRenavigator,
             IUserStore userStore)
         {
             _shiftStore = shiftStore;
-            _userStore = userStore;
-            _userId = userId;
             _homeRenavigator = homeRenavigator;
+            _userStore = userStore;
 
             _shiftStore.CurrentShiftChanged += ShiftStore_CurrentShiftChanged;
         }
@@ -60,12 +58,12 @@ namespace RetailTradeClient.ViewModels.Dialogs
         {
             switch (result)
             {
-                case CheckingResult.Open:                    
+                case CheckingResult.Open:
                     CurrentWindowService.Close();
                     _homeRenavigator.Renavigate();
                     break;
                 case CheckingResult.Close:
-                    _ = MessageBoxService.ShowMessage("Смена успешно заккыта.", "Sale Page", MessageButton.OK, MessageIcon.Information);
+                    _ = MessageBoxService.ShowMessage("Смена успешно закрыта.", "Sale Page", MessageButton.OK, MessageIcon.Information);
                     break;
                 case CheckingResult.IsAlreadyOpen:
                     _ = MessageBoxService.ShowMessage("Смена уже отркыта.", "Sale Page", MessageButton.OK, MessageIcon.Exclamation);
@@ -93,14 +91,12 @@ namespace RetailTradeClient.ViewModels.Dialogs
                 case CheckingResult.Created:
                     _ = MessageBoxService.ShowMessage("Смена успешно отркыта.", "Sale Page", MessageButton.OK, MessageIcon.Information);
                     break;
+                case CheckingResult.ShiftOpenedByAnotherUser:
+                    _ = MessageBoxService.ShowMessage("Смена открыта другим пользователем.", "Sale Page", MessageButton.OK, MessageIcon.Information);
+                    break;
                 default:
                     break;
             }
-        }
-
-        private void Setting()
-        {            
-            WindowService.Show(nameof(ApplicationSettingsView), new ApplicationSettingsViewModel() { Title = "Настройки"});
         }
 
         private void ShiftStore_CurrentShiftChanged()

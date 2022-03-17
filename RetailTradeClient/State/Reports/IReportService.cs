@@ -1,5 +1,6 @@
 ﻿using RetailTrade.Domain.Models;
 using RetailTradeClient.Report;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace RetailTradeClient.State.Reports
@@ -7,6 +8,6 @@ namespace RetailTradeClient.State.Reports
     public interface IReportService
     {
         Task<XReport> CreateXReport();
-        Task<ProductSaleReport> CreateProductSaleReport(Receipt receipt);
+        Task<ProductSaleReport> CreateProductSaleReport(Receipt receipt, IEnumerable<Sale> sales);
     }
 }

@@ -315,6 +315,16 @@ namespace RetailTradeClient.State.ProductSale
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
 
+        public Task CashPayment()
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task CashlessPayment()
+        {
+            throw new NotImplementedException();
+        }
+
         #endregion
     }
 }

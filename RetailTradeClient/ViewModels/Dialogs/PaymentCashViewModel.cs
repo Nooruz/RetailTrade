@@ -1,11 +1,6 @@
 ﻿using DevExpress.Xpf.Editors;
-using RetailTrade.Domain.Models;
-using RetailTrade.Domain.Services;
 using RetailTradeClient.Commands;
 using RetailTradeClient.State.ProductSale;
-using RetailTradeClient.State.Reports;
-using RetailTradeClient.State.Shifts;
-using RetailTradeClient.State.Users;
 using System;
 using System.Windows;
 using System.Windows.Input;
@@ -16,11 +11,7 @@ namespace RetailTradeClient.ViewModels.Dialogs
     {
         #region Private Members
 
-        private readonly IUserStore _userStore;
         private readonly IProductSaleStore _productSaleStore;
-        private readonly IReceiptService _receiptService;
-        private readonly IShiftStore _shiftStore;
-        private readonly IReportService _reportService;
 
         #endregion
 
@@ -69,16 +60,6 @@ namespace RetailTradeClient.ViewModels.Dialogs
         /// </summary>
         public bool IsCommaButtonPressed { get; set; }
 
-        /// <summary>
-        /// Текущий пользователь
-        /// </summary>
-        public User CurrentUser => _userStore.CurrentUser;
-
-        /// <summary>
-        /// Организация
-        /// </summary>
-        public Organization CurrentOrganization => _userStore.Organization;
-
         #endregion
 
         #region Commands
@@ -106,7 +87,7 @@ namespace RetailTradeClient.ViewModels.Dialogs
         /// <summary>
         /// Оплатить
         /// </summary>
-        public ICommand MakeCashPaymentCommand => new MakeCashPaymentCommand(_receiptService, _shiftStore, _productSaleStore, CurrentWindowService, _reportService);
+        public ICommand MakeCashPaymentCommand => new RelayCommand(async () => await _productSaleStore.CashPayment());
 
         /// <summary>
         /// Следить за нажатием кнопки клавиатуры
@@ -120,30 +101,14 @@ namespace RetailTradeClient.ViewModels.Dialogs
 
         #region Constructor
 
-        public PaymentCashViewModel(IReceiptService receiptService,
-            IUserStore userStore,
-            IShiftStore shiftStore,
-            IProductSaleStore productSaleStore,
-            IReportService reportService)
+        public PaymentCashViewModel(IProductSaleStore productSaleStore)
         {
-            _userStore = userStore;
             _productSaleStore = productSaleStore;
-            _receiptService = receiptService;
-            _shiftStore = shiftStore;
-            _reportService = reportService;
 
             Entered = _productSaleStore.ToBePaid;
 
-            _userStore.CurrentUserChanged += UserStore_CurrentUserChanged;
-            _userStore.CurrentOrganizationChanged += UserStore_CurrentOrganizationChanged;
             _productSaleStore.OnProductSalesChanged += () => OnPropertyChanged(nameof(Change));
         }
-
-        #endregion
-
-        #region Actions
-
-        public event Action OnPayment;
 
         #endregion
 
@@ -224,15 +189,6 @@ namespace RetailTradeClient.ViewModels.Dialogs
         private void CommaButtonPress()
         {
             IsCommaButtonPressed = true;
-        }
-
-        private void UserStore_CurrentUserChanged()
-        {
-            OnPropertyChanged(nameof(CurrentUser));
-        }
-        private void UserStore_CurrentOrganizationChanged()
-        {
-            OnPropertyChanged(nameof(CurrentOrganization));
         }
 
         #endregion
