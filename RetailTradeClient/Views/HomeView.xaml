@@ -29,9 +29,9 @@
         <dxmvvm:KeyToCommand KeyGesture="Escape"
                              EventName="KeyDown"
                              Command="{Binding CancelCommand}"/>
-        <dxmvvm:EventToCommand EventName="TextInput" 
-                               Command="{Binding TextInputCommand}"
-                               PassEventArgsToCommand="True"/>
+        <dxmvvm:KeyToCommand KeyGesture="Delete"
+                             EventName="KeyDown"
+                             Command="{Binding DeleteSelectedRowCommand}"/>
         <dxmvvm:EventToCommand EventName="Loaded"
                                Command="{Binding LoadedHomeViewCommand}"
                                PassEventArgsToCommand="True"/>
@@ -142,11 +142,11 @@
                             Tag="{StaticResource faMoneyBillAlt}"
                             Command="{Binding PaymentCashCommand}"/>
 
-                    <Button Content="Безнал. (F6)"
+                    <!--<Button Content="Безнал. (F6)"
                             Style="{StaticResource ButtonWithIcon}"
                             Tag="{StaticResource faCreditCard}"
                             ToolTip="Оплата безналичными"
-                            Command="{Binding PaymentComplexCommand}"/>
+                            Command="{Binding PaymentComplexCommand}"/>-->
     
                     <Button Content="Возврат (-)"
                             Style="{StaticResource ButtonWithIcon}"
