@@ -27,10 +27,8 @@ namespace RetailTradeClient.Report {
             this.tableCell3 = reportInitializer.GetControl<DevExpress.XtraReports.UI.XRTableCell>("tableCell3");
             this.tableCell4 = reportInitializer.GetControl<DevExpress.XtraReports.UI.XRTableCell>("tableCell4");
             this.lbChange = reportInitializer.GetControl<DevExpress.XtraReports.UI.XRLabel>("lbChange");
-            this.lbCashless = reportInitializer.GetControl<DevExpress.XtraReports.UI.XRLabel>("lbCashless");
-            this.lbCash = reportInitializer.GetControl<DevExpress.XtraReports.UI.XRLabel>("lbCash");
+            this.lbDeposited = reportInitializer.GetControl<DevExpress.XtraReports.UI.XRLabel>("lbDeposited");
             this.label6 = reportInitializer.GetControl<DevExpress.XtraReports.UI.XRLabel>("label6");
-            this.label5 = reportInitializer.GetControl<DevExpress.XtraReports.UI.XRLabel>("label5");
             this.label4 = reportInitializer.GetControl<DevExpress.XtraReports.UI.XRLabel>("label4");
             this.line2 = reportInitializer.GetControl<DevExpress.XtraReports.UI.XRLine>("line2");
             this.label3 = reportInitializer.GetControl<DevExpress.XtraReports.UI.XRLabel>("label3");
@@ -68,10 +66,8 @@ namespace RetailTradeClient.Report {
         private DevExpress.XtraReports.UI.XRTableCell tableCell3;
         private DevExpress.XtraReports.UI.XRTableCell tableCell4;
         private DevExpress.XtraReports.UI.XRLabel lbChange;
-        private DevExpress.XtraReports.UI.XRLabel lbCashless;
-        private DevExpress.XtraReports.UI.XRLabel lbCash;
+        private DevExpress.XtraReports.UI.XRLabel lbDeposited;
         private DevExpress.XtraReports.UI.XRLabel label6;
-        private DevExpress.XtraReports.UI.XRLabel label5;
         private DevExpress.XtraReports.UI.XRLabel label4;
         private DevExpress.XtraReports.UI.XRLine line2;
         private DevExpress.XtraReports.UI.XRLabel label3;

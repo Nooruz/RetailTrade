@@ -34,8 +34,7 @@ namespace RetailTradeClient.Report
                 CashTime.Text = $"Время: {receipt.DateOfPurchase.ToShortTimeString()}";
                 CashReceipt.Text = $"Товарный чек № {receipt.Id:D6}";
                 lbUserFullName.Text = _userStore.CurrentUser.FullName;
-                lbCash.Text = $"{receipt.PaidInCash:N2} сом";
-                lbCashless.Text = $"{receipt.PaidInCashless:N2} сом";
+                lbDeposited.Text = $"{receipt.Deposited:N2} сом";
                 lbChange.Text = $"{receipt.Change:N2} сом";
                 if (_userStore.Organization != null)
                 {

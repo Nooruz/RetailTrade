@@ -1,9 +1,7 @@
-﻿using DevExpress.XtraPrinting;
-using RetailTrade.Domain.Models;
+﻿using RetailTrade.Domain.Models;
 using RetailTrade.Domain.Services;
 using RetailTradeClient.Properties;
-using RetailTradeClient.Report;
-using RetailTradeClient.State.ProductSale;
+using RetailTradeClient.State.ProductSales;
 using RetailTradeClient.State.Reports;
 using RetailTradeClient.State.Shifts;
 using System;
@@ -61,7 +59,7 @@ namespace RetailTradeClient.Commands
                         PaidInCashless = _productSaleStore.PaymentTypes.Where(pt => pt.Id == 2).Sum(pt => pt.Sum),
                         ShiftId = _shiftStore.CurrentShift.Id,
                         Change = 0,
-                        ProductSales = _productSaleStore.ProductSales.Select(s =>
+                        ProductSales = _productSaleStore.Sales.Select(s =>
                             new ProductSale
                             {
                                 ProductId = s.Id,

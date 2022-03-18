@@ -1,6 +1,6 @@
 ﻿using DevExpress.Xpf.Editors;
 using RetailTradeClient.Commands;
-using RetailTradeClient.State.ProductSale;
+using RetailTradeClient.State.ProductSales;
 using System;
 using System.Windows;
 using System.Windows.Input;
@@ -87,7 +87,7 @@ namespace RetailTradeClient.ViewModels.Dialogs
         /// <summary>
         /// Оплатить
         /// </summary>
-        public ICommand MakeCashPaymentCommand => new RelayCommand(async () => await _productSaleStore.CashPayment());
+        public ICommand MakeCashPaymentCommand => new RelayCommand(MakeCashPayment);
 
         /// <summary>
         /// Следить за нажатием кнопки клавиатуры
@@ -113,6 +113,12 @@ namespace RetailTradeClient.ViewModels.Dialogs
         #endregion
 
         #region Private Voids
+
+        private async void MakeCashPayment()
+        {
+            CurrentWindowService.Close();
+            await _productSaleStore.CashPayment();
+        }
 
         private void EnteredLoaded(object parameter)
         {

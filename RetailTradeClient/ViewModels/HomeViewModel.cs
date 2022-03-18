@@ -7,7 +7,7 @@ using RetailTrade.Domain.Services;
 using RetailTradeClient.Commands;
 using RetailTradeClient.Properties;
 using RetailTradeClient.State.Authenticators;
-using RetailTradeClient.State.ProductSale;
+using RetailTradeClient.State.ProductSales;
 using RetailTradeClient.State.Shifts;
 using RetailTradeClient.State.Users;
 using RetailTradeClient.ViewModels.Base;
@@ -45,7 +45,7 @@ namespace RetailTradeClient.ViewModels
 
         #region Public Properties
 
-        public ObservableCollection<Sale> ProductSales => _productSaleStore.ProductSales;
+        public ObservableCollection<Sale> ProductSales => _productSaleStore.Sales;
         public ICollectionView SaleProductsCollectionView { get; set; }
         public bool IsKeepRecords => Settings.Default.IsKeepRecords;
         public decimal Sum
@@ -405,7 +405,7 @@ namespace RetailTradeClient.ViewModels
         /// </summary>
         private void Cancel()
         {
-            _productSaleStore.ProductSales.Clear();            
+            _productSaleStore.Sales.Clear();            
         }
 
         #endregion

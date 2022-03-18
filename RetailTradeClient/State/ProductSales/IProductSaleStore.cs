@@ -3,11 +3,11 @@ using System;
 using System.Collections.ObjectModel;
 using System.Threading.Tasks;
 
-namespace RetailTradeClient.State.ProductSale
+namespace RetailTradeClient.State.ProductSales
 {
     public interface IProductSaleStore
     {
-        ObservableCollection<Sale> ProductSales { get; }
+        ObservableCollection<Sale> Sales { get; }
         ObservableCollection<PostponeReceipt> PostponeReceipts { get; }
         ObservableCollection<PaymentType> PaymentTypes { get; set; }
         decimal ToBePaid { get; }

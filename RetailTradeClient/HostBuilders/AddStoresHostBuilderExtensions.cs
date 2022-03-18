@@ -5,7 +5,7 @@ using RetailTradeClient.Report;
 using RetailTradeClient.State.Authenticators;
 using RetailTradeClient.State.Messages;
 using RetailTradeClient.State.Navigators;
-using RetailTradeClient.State.ProductSale;
+using RetailTradeClient.State.ProductSales;
 using RetailTradeClient.State.Reports;
 using RetailTradeClient.State.Shifts;
 using RetailTradeClient.State.Users;

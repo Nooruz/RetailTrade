@@ -1,11 +1,9 @@
 ﻿using DevExpress.Mvvm;
-using DevExpress.XtraPrinting;
 using RetailTrade.CashRegisterMachine;
 using RetailTrade.Domain.Models;
 using RetailTrade.Domain.Services;
 using RetailTradeClient.Properties;
-using RetailTradeClient.Report;
-using RetailTradeClient.State.ProductSale;
+using RetailTradeClient.State.ProductSales;
 using RetailTradeClient.State.Reports;
 using RetailTradeClient.State.Shifts;
 using System;
@@ -64,7 +62,7 @@ namespace RetailTradeClient.Commands
                         PaidInCash = _productSaleStore.ToBePaid,
                         ShiftId = _shiftStore.CurrentShift.Id,
                         Change = _productSaleStore.Change,
-                        ProductSales = _productSaleStore.ProductSales.Select(s =>
+                        ProductSales = _productSaleStore.Sales.Select(s =>
                             new ProductSale
                             {
                                 ProductId = s.Id,
@@ -83,7 +81,7 @@ namespace RetailTradeClient.Commands
 
                         if (newReceipt != null)
                         {
-                            foreach (Sale sale in _productSaleStore.ProductSales)
+                            foreach (Sale sale in _productSaleStore.Sales)
                             {
                                 ShtrihM.Password = 30;
                                 ShtrihM.Department = 1;

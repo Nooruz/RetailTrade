@@ -2,7 +2,7 @@
 using RetailTrade.Domain.Services;
 using RetailTradeClient.Commands;
 using RetailTradeClient.Properties;
-using RetailTradeClient.State.ProductSale;
+using RetailTradeClient.State.ProductSales;
 using RetailTradeClient.ViewModels.Base;
 using System.Collections.ObjectModel;
 using System.Linq;

@@ -1,7 +1,10 @@
-﻿using RetailTrade.Barcode.Services;
+﻿using DevExpress.XtraPrinting;
+using RetailTrade.Barcode.Services;
+using RetailTrade.CashRegisterMachine;
 using RetailTrade.Domain.Models;
 using RetailTrade.Domain.Services;
 using RetailTradeClient.Properties;
+using RetailTradeClient.Report;
 using RetailTradeClient.State.Reports;
 using RetailTradeClient.State.Shifts;
 using System;
@@ -10,7 +13,7 @@ using System.ComponentModel;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace RetailTradeClient.State.ProductSale
+namespace RetailTradeClient.State.ProductSales
 {
     public class ProductSaleStore : IProductSaleStore, INotifyPropertyChanged
     {
@@ -21,7 +24,7 @@ namespace RetailTradeClient.State.ProductSale
         private readonly IReceiptService _receiptService;
         private readonly IBarcodeService _barcodeService;
         private readonly IShiftStore _shiftStore;
-        private ObservableCollection<Sale> _productSales = new();
+        private ObservableCollection<Sale> _sales = new();
         private ObservableCollection<PostponeReceipt> _postponeReceipts = new();
         private ObservableCollection<PaymentType> _paymentTypes = new();
         private decimal _entered;
@@ -41,19 +44,19 @@ namespace RetailTradeClient.State.ProductSale
                 OnPropertyChanged(nameof(PostponeReceipts));
             }
         }
-        public ObservableCollection<Sale> ProductSales
+        public ObservableCollection<Sale> Sales
         {
-            get => _productSales;
+            get => _sales;
             set
             {
-                _productSales = value;
-                OnPropertyChanged(nameof(ProductSales));
+                _sales = value;
+                OnPropertyChanged(nameof(Sales));
             }
         }
-        public decimal ToBePaid => ProductSales.Sum(p => p.Sum);
+        public decimal ToBePaid => Sales.Sum(p => p.Sum);
         public decimal Entered
         {
-            get => _entered;
+            get => _entered == 0 ? ToBePaid : _entered;
             set
             {
                 _entered = value;
@@ -123,9 +126,9 @@ namespace RetailTradeClient.State.ProductSale
 
         public async Task AddProduct(string barcode)
         {
-            if (ProductSales.Any())
+            if (Sales.Any())
             {
-                Sale sale = ProductSales.FirstOrDefault(s => s.Barcode == barcode);
+                Sale sale = Sales.FirstOrDefault(s => s.Barcode == barcode);
                 if (sale != null)
                 {
                     if (Settings.Default.IsKeepRecords)
@@ -159,9 +162,9 @@ namespace RetailTradeClient.State.ProductSale
 
         public async Task AddProduct(int id)
         {            
-            if (ProductSales.Any())
+            if (Sales.Any())
             {
-                Sale sale = ProductSales.FirstOrDefault(s => s.Id == id);
+                Sale sale = Sales.FirstOrDefault(s => s.Id == id);
                 if (sale != null)
                 {
                     if (Settings.Default.IsKeepRecords)
@@ -195,26 +198,26 @@ namespace RetailTradeClient.State.ProductSale
 
         public void DeleteProduct(int id)
         {
-            Sale sale = ProductSales.FirstOrDefault(s => s.Id == id);
+            Sale sale = Sales.FirstOrDefault(s => s.Id == id);
             if (sale != null)
             {
-                _ = ProductSales.Remove(sale);
+                _ = Sales.Remove(sale);
             }
             OnProductSalesChanged?.Invoke();
         }
 
         public void CreatePostponeReceipt()
         {
-            if (ProductSales.Any())
+            if (Sales.Any())
             {
                 PostponeReceipts.Add(new PostponeReceipt
                 {
                     Id = Guid.NewGuid(),
                     DateTime = DateTime.Now,
-                    Sum = ProductSales.Sum(sp => sp.Sum),
-                    Sales = ProductSales.ToList()
+                    Sum = Sales.Sum(sp => sp.Sum),
+                    Sales = Sales.ToList()
                 });
-                ProductSales.Clear();
+                Sales.Clear();
                 OnPostponeReceiptChanged?.Invoke();
             }
         }
@@ -222,14 +225,14 @@ namespace RetailTradeClient.State.ProductSale
         public void ProductSale(bool success)
         {
             Change = Entered - ToBePaid;
-            ProductSales.Clear();
+            Sales.Clear();
             OnPropertyChanged(nameof(ToBePaid));
             OnProductSale?.Invoke(success);
         }
 
         public void ProductSaleCashless(bool success)
         {
-            ProductSales.Clear();
+            Sales.Clear();
             PaymentTypes.Clear();
             OnPropertyChanged(nameof(ToBePaid));
             OnProductSale?.Invoke(success);
@@ -240,7 +243,7 @@ namespace RetailTradeClient.State.ProductSale
             PostponeReceipt postponeReceipt = PostponeReceipts.FirstOrDefault(p => p.Id == guid);
             if (postponeReceipt != null)
             {
-                postponeReceipt.Sales.ForEach(s => ProductSales.Add(s));
+                postponeReceipt.Sales.ForEach(s => Sales.Add(s));
                 _ = PostponeReceipts.Remove(postponeReceipt);
                 OnPostponeReceiptChanged?.Invoke();
             }
@@ -285,7 +288,7 @@ namespace RetailTradeClient.State.ProductSale
             {
                 try
                 {
-                    ProductSales.Add(new Sale
+                    Sales.Add(new Sale
                     {
                         Id = product.Id,
                         Name = product.Name,
@@ -315,14 +318,109 @@ namespace RetailTradeClient.State.ProductSale
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
 
-        public Task CashPayment()
+        public async Task CashPayment()
         {
-            throw new NotImplementedException();
+            try
+            {
+                Receipt receipt = await _receiptService.CreateAsync(new Receipt()
+                {
+                    DateOfPurchase = DateTime.Now,
+                    Sum = ToBePaid,
+                    Deposited = Entered,
+                    PaidInCash = ToBePaid,
+                    ShiftId = _shiftStore.CurrentShift.Id,
+                    Change = Change,
+                    ProductSales = Sales.Select(s =>
+                        new ProductSale
+                        {
+                            ProductId = s.Id,
+                            Quantity = s.Quantity,
+                            Sum = s.Sum,
+                            SalePrice = s.SalePrice,
+                            ArrivalPrice = s.ArrivalPrice
+                        }).ToList()
+                });
+
+                await PrintReceipt(receipt);
+
+                PrintCashRegisterMachine(receipt);
+
+                await _receiptService.CreateAsync(receipt);
+            }
+            catch (Exception)
+            {
+                //ignore
+            }
         }
 
-        public Task CashlessPayment()
+        public async Task CashlessPayment()
         {
-            throw new NotImplementedException();
+            
+        }
+
+        #endregion
+
+        #region Private Voids
+
+        private async Task PrintReceipt(Receipt receipt)
+        {
+            ProductSaleReport report = await _reportService.CreateProductSaleReport(receipt, Sales);
+
+            PrintToolBase tool = new(report.PrintingSystem);
+            tool.PrinterSettings.PrinterName = Settings.Default.DefaultReceiptPrinter;
+            tool.PrintingSystem.EndPrint += PrintingSystem_EndPrint;
+            tool.Print();
+        }
+
+        private void PrintCashRegisterMachine(Receipt receipt)
+        {
+            if (Settings.Default.ShtrihMConnected)
+            {
+                try
+                {
+                    ShtrihM.Connect();
+                    ShtrihM.CheckType = 0;
+
+                    foreach (Sale sale in Sales)
+                    {
+                        ShtrihM.Password = 30;
+                        ShtrihM.Department = 1;
+                        ShtrihM.Quantity = Convert.ToDouble(sale.Quantity);
+                        ShtrihM.Price = sale.SalePrice;
+                        var sum1NSP = Math.Round(sale.SalePrice * 1 / 102, 2);
+                        //var sum1NDS = Math.Round(sale.SalePrice * 12 / 113, 2);
+                        string sumNSP = Math.Round(sum1NSP * 100, 0).ToString();
+                        //string sumNDS = Math.Round(sum1NDS * 100, 0).ToString();
+
+                        ShtrihM.StringForPrinting =
+                            string.Join(";", new string[] { "", sale.TNVED, "", "", "0", "", "4", sumNSP + "\n" + sale.Name });
+
+                        //ShtrihM.BarCode = "46198488";
+
+                        ShtrihM.Tax1 = 0;
+                        ShtrihM.Tax2 = 4;
+                        ShtrihM.Tax3 = 0;
+                        ShtrihM.Tax4 = 0;
+
+                        ShtrihM.Sale();
+                    }
+                    ShtrihM.Summ1 = receipt.Sum;
+                    ShtrihM.StringForPrinting = "";
+                    ShtrihM.CloseCheck();
+                    ShtrihM.CutCheck();
+                }
+                catch (Exception)
+                {
+                    //ignore
+                }
+            }
+        }
+
+        private void PrintingSystem_EndPrint(object sender, EventArgs e)
+        {
+            Change = Entered - ToBePaid;
+            Sales.Clear();
+            OnPropertyChanged(nameof(ToBePaid));
         }
 
         #endregion

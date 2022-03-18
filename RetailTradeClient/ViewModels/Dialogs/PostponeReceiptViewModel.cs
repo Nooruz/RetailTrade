@@ -1,6 +1,6 @@
 ﻿using RetailTrade.Domain.Models;
 using RetailTradeClient.Commands;
-using RetailTradeClient.State.ProductSale;
+using RetailTradeClient.State.ProductSales;
 using System;
 using System.Collections.ObjectModel;
 using System.Windows.Input;

@@ -159,9 +159,9 @@ namespace RetailTrade.CashRegisterMachine
         /// <summary>
         /// Открытие смены ККМ
         /// </summary>
-        public static void OpenSession()
+        public static int OpenSession()
         {
-            drvFR.OpenSession();
+            return drvFR.OpenSession();
         }
 
         /// <summary>

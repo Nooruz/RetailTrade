@@ -303,6 +303,7 @@ namespace RetailTrade.Barcode.Services
                     OpenComBarcode();
                     break;
                 case BarcodeDevice.Zebra:
+                    OpenZebra();
                     break;
                 case BarcodeDevice.USB:
                     break;
@@ -377,43 +378,57 @@ namespace RetailTrade.Barcode.Services
 
         private void OpenComBarcode()
         {
-            string comPortName = GetAppSetting("ComPortName");
-            int comPortSpeed = int.TryParse(GetAppSetting("ComPortSpeed"), out int speed) ? 9600 : speed;
-            if (_serialPort == null)
+            try
             {
-                if (!string.IsNullOrEmpty(comPortName))
+                string comPortName = GetAppSetting("ComPortName");
+                int comPortSpeed = int.TryParse(GetAppSetting("ComPortSpeed"), out int speed) ? 9600 : speed;
+                if (_serialPort == null)
                 {
-                    _serialPort = new()
+                    if (!string.IsNullOrEmpty(comPortName))
                     {
-                        PortName = comPortName,
-                        BaudRate = comPortSpeed
-                    };
+                        _serialPort = new()
+                        {
+                            PortName = comPortName,
+                            BaudRate = comPortSpeed
+                        };
+                        _serialPort.DataReceived += SerialPort_DataReceived;
+                        _serialPort.Open();
+                    }
+                }
+                if (_serialPort != null)
+                {
+                    if (_serialPort.IsOpen)
+                    {
+                        _serialPort.Close();
+                    }
+                    _serialPort.PortName = comPortName;
+                    _serialPort.BaudRate = comPortSpeed;
                     _serialPort.DataReceived += SerialPort_DataReceived;
                     _serialPort.Open();
                 }
             }
-            if (_serialPort != null)
+            catch (Exception)
             {
-                if (_serialPort.IsOpen)
-                {
-                    _serialPort.Close();
-                }
-                _serialPort.PortName = comPortName;
-                _serialPort.BaudRate = comPortSpeed;
-                _serialPort.DataReceived += SerialPort_DataReceived;
-                _serialPort.Open();
+                //ignore
             }
         }
 
         private void CloseComBarcode()
         {
-            if (_serialPort != null)
+            try
             {
-                if (_serialPort.IsOpen)
+                if (_serialPort != null)
                 {
-                    _serialPort.DataReceived -= SerialPort_DataReceived;
-                    _serialPort.Close();
+                    if (_serialPort.IsOpen)
+                    {
+                        _serialPort.DataReceived -= SerialPort_DataReceived;
+                        _serialPort.Close();
+                    }
                 }
+            }
+            catch (Exception)
+            {
+                //ignore
             }
         }
 
