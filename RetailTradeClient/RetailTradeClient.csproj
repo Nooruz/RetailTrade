@@ -30,12 +30,14 @@
     <None Remove="Fonts\fa-brands-400.ttf" />
     <None Remove="Fonts\fa-regular-400.ttf" />
     <None Remove="Fonts\fa-solid-900.ttf" />
+    <None Remove="Report\ProductSaleCashlessReport.vsrepx" />
     <None Remove="Report\ProductSaleReport.vsrepx" />
     <None Remove="Report\XReport.vsrepx" />
     <None Remove="Report\ZReport.vsrepx" />
   </ItemGroup>
 
   <ItemGroup>
+    <EmbeddedResource Include="Report\ProductSaleCashlessReport.vsrepx" />
     <EmbeddedResource Include="Report\ProductSaleReport.vsrepx" />
     <EmbeddedResource Include="Report\XReport.vsrepx" />
     <EmbeddedResource Include="Report\ZReport.vsrepx" />
@@ -95,6 +97,12 @@
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
       <AutoGen>True</AutoGen>
       <DependentUpon>Settings.settings</DependentUpon>
+    </Compile>
+    <Compile Update="Report\ProductSaleReport - Копировать.cs">
+      <DependentUpon>ProductSaleReport.vsrepx</DependentUpon>
+    </Compile>
+    <Compile Update="Report\ProductSaleReport - Копировать.Designer.cs">
+      <DependentUpon>ProductSaleReport.vsrepx</DependentUpon>
     </Compile>
     <Compile Update="Report\ProductSaleReport.cs">
       <DependentUpon>ProductSaleReport.vsrepx</DependentUpon>
