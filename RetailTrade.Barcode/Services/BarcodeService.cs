@@ -1,5 +1,4 @@
-﻿using CoreScanner;
-using System.Configuration;
+﻿using System.Configuration;
 using System.IO.Ports;
 using System.Reflection;
 using System.Text;
@@ -263,7 +262,6 @@ namespace RetailTrade.Barcode.Services
         #region Private Members
 
         private SerialPort _serialPort;
-        private CCoreScanner _scanner;
 
         #endregion
 
@@ -438,38 +436,38 @@ namespace RetailTrade.Barcode.Services
 
         private void OpenZebra()
         {
-            try
-            {
-                if (_scanner == null)
-                {
-                    _scanner = new();
-                }
+            //try
+            //{
+            //    if (_scanner == null)
+            //    {
+            //        _scanner = new();
+            //    }
 
-                int appHandle = 0;
-                short[] scannerTypes = new short[1];
-                scannerTypes[0] = 1;
-                short numberOfScannerTypes = 1;
+            //    int appHandle = 0;
+            //    short[] scannerTypes = new short[1];
+            //    scannerTypes[0] = 1;
+            //    short numberOfScannerTypes = 1;
 
-                _scanner.Open(appHandle, scannerTypes, numberOfScannerTypes, out int status);
+            //    _scanner.Open(appHandle, scannerTypes, numberOfScannerTypes, out int status);
 
-                string inXML = "<inArgs>" +
-                                   "<cmdArgs>" +
-                                       "<arg-int>6</arg-int>" + // Number of events you want to subscribe
-                                       "<arg-int>1,2,4,8,16,32</arg-int>" + // Comma separated event IDs
-                                   "</cmdArgs>" +
-                               "</inArgs>";
+            //    string inXML = "<inArgs>" +
+            //                       "<cmdArgs>" +
+            //                           "<arg-int>6</arg-int>" + // Number of events you want to subscribe
+            //                           "<arg-int>1,2,4,8,16,32</arg-int>" + // Comma separated event IDs
+            //                       "</cmdArgs>" +
+            //                   "</inArgs>";
 
-                _scanner.ExecCommand((int)Opcode.RegisterForEvents, ref inXML, out string outXML, out status);
+            //    _scanner.ExecCommand((int)Opcode.RegisterForEvents, ref inXML, out string outXML, out status);
 
-                if (status == (int)Status.Success)
-                {
-                    _scanner.BarcodeEvent += new _ICoreScannerEvents_BarcodeEventEventHandler(OnZebraBarcodeEvent);
-                }
-            }
-            catch (Exception)
-            {
-                //ignore
-            }
+            //    if (status == (int)Status.Success)
+            //    {
+            //        _scanner.BarcodeEvent += new _ICoreScannerEvents_BarcodeEventEventHandler(OnZebraBarcodeEvent);
+            //    }
+            //}
+            //catch (Exception)
+            //{
+            //    //ignore
+            //}
         }
         private void OnZebraBarcodeEvent(short eventType, ref string pscanData)
         {
@@ -486,7 +484,7 @@ namespace RetailTrade.Barcode.Services
         }
         private void CloseZebra()
         {
-            _scanner.Close(0, out _);
+            //_scanner.Close(0, out _);
         }
 
         #endregion
