@@ -27,7 +27,6 @@
                           Width="400">
 
             <dxlc:LayoutItem Label="Всего к оплате:"
-                             LabelPosition="Top"
                              Style="{StaticResource liCash}">
                 <dxe:TextEdit Style="{StaticResource teCash}"
                               Text="{Binding AmountToBePaid, UpdateSourceTrigger=PropertyChanged}"
@@ -61,13 +60,13 @@
                 </dxmvvm:Interaction.Behaviors>
             </dxg:GridControl>
 
-            <dxlc:LayoutItem Label="Остаток:"
-                             LabelPosition="Top"
+            <dxlc:LayoutItem Label="{Binding ChangeLabel}"
+                             Foreground="{Binding ChangeForeground}"
                              Style="{StaticResource liCash}">
                 <dxe:TextEdit Style="{StaticResource teCash}"
                               Text="{Binding Balance, UpdateSourceTrigger=PropertyChanged}"
                               IsReadOnly="True"
-                              Foreground="Red"/>
+                              Foreground="{Binding ChangeForeground}"/>
             </dxlc:LayoutItem>
 
         </dxlc:LayoutGroup>
@@ -156,6 +155,7 @@
                         FontSize="14"
                         Padding="0"
                         IsDefault="True"
+                        IsEnabled="{Binding CanMakeCashlessPayment}"
                         Command="{Binding MakeComplexPaymentCommand}"/>
 
             </dxlc:LayoutGroup>

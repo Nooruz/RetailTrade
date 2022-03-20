@@ -5,7 +5,7 @@
     <Style TargetType="{x:Type dxlc:LayoutItem}" x:Key="liCash">
         <Setter Property="FontSize" Value="20"/>
         <Setter Property="FontWeight" Value="Bold"/>
-        
+        <Setter Property="LabelPosition" Value="Top"/>
     </Style>
     
 </ResourceDictionary>

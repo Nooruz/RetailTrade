@@ -56,12 +56,11 @@ namespace RetailTradeClient.State.ProductSales
         public decimal ToBePaid => Sales.Sum(p => p.Sum);
         public decimal Entered
         {
-            get => _entered == 0 ? ToBePaid : _entered;
+            get => _entered;
             set
             {
                 _entered = value;
                 OnPropertyChanged(nameof(Entered));
-                OnPropertyChanged(nameof(Change));
             }
         }
         public decimal Change

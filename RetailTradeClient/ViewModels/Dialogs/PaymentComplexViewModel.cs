@@ -9,6 +9,7 @@ using System.ComponentModel;
 using System.Linq;
 using System.Windows;
 using System.Windows.Input;
+using System.Windows.Media;
 using System.Windows.Threading;
 
 namespace RetailTradeClient.ViewModels.Dialogs
@@ -61,7 +62,8 @@ namespace RetailTradeClient.ViewModels.Dialogs
         {
             get
             {
-                _productSaleStore.Change = AmountToBePaid - PaymentTypes.Sum(pt => pt.Sum);
+                _productSaleStore.Entered = PaymentTypes.Sum(pt => pt.Sum);
+                _productSaleStore.Change = _productSaleStore.ToBePaid - _productSaleStore.Entered;
                 return _productSaleStore.Change;
             }
             set
@@ -91,6 +93,9 @@ namespace RetailTradeClient.ViewModels.Dialogs
         /// Если кнопка запятая нажата
         /// </summary>
         public bool IsCommaButtonPressed { get; set; }
+        public string ChangeLabel => _productSaleStore.Entered - _productSaleStore.ToBePaid < 0 ? "Осталось доплатить:" : "Сдача:";
+        public Brush ChangeForeground => _productSaleStore.Entered - _productSaleStore.ToBePaid < 0 ? Brushes.Red : Brushes.Green;
+        public bool CanMakeCashlessPayment => _productSaleStore.Entered - _productSaleStore.ToBePaid >= 0;
 
         #endregion
 
@@ -137,6 +142,9 @@ namespace RetailTradeClient.ViewModels.Dialogs
         {
             PaymentTypes.Clear();
             OnPropertyChanged(nameof(Balance));
+            OnPropertyChanged(nameof(ChangeLabel));
+            OnPropertyChanged(nameof(ChangeForeground));
+            OnPropertyChanged(nameof(CanMakeCashlessPayment));
         }
 
         private void ShowEditor(int column)
@@ -291,6 +299,9 @@ namespace RetailTradeClient.ViewModels.Dialogs
         {
             OnPropertyChanged(nameof(PaymentTypes));
             OnPropertyChanged(nameof(Balance));
+            OnPropertyChanged(nameof(ChangeLabel));
+            OnPropertyChanged(nameof(ChangeForeground));
+            OnPropertyChanged(nameof(CanMakeCashlessPayment));
         }
 
         #endregion

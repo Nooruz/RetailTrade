@@ -228,9 +228,7 @@ namespace RetailTradeServer.ViewModels.Dialogs
             Units = await _unitService.GetAllAsync();
             TypeProducts = new(await _typeProductService.GetTypesAsync());
 
-            _barcodeService.SetAppSetting("ComPortName", Settings.Default.BarcodeCom);
-            _barcodeService.SetAppSetting("ComPortSpeed", Settings.Default.BarcodeSpeed.ToString());
-            _barcodeService.Open(BarcodeDevice.Com);
+            _barcodeService.Open(BarcodeDevice.Com, Settings.Default.BarcodeCom, Settings.Default.BarcodeSpeed);
             _barcodeService.OnBarcodeEvent += BarcodeService_OnBarcodeEvent;
         }
 

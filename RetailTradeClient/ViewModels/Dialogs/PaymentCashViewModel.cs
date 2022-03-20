@@ -2,6 +2,7 @@
 using RetailTradeClient.Commands;
 using RetailTradeClient.State.ProductSales;
 using System;
+using System.Windows.Media;
 using System.Windows;
 using System.Windows.Input;
 
@@ -18,7 +19,6 @@ namespace RetailTradeClient.ViewModels.Dialogs
         #region Public Properties
 
         public bool IsEnteredFocusable { get; set; }
-
         /// <summary>
         /// Внесено
         /// </summary>
@@ -27,12 +27,11 @@ namespace RetailTradeClient.ViewModels.Dialogs
             get => _productSaleStore.Entered;
             set
             {
-                _productSaleStore.Entered = value - Math.Truncate(value) == 0 ? Math.Truncate(value) : value;
+                _productSaleStore.Entered = value;
                 Change = _productSaleStore.Entered - _productSaleStore.ToBePaid;
                 OnPropertyChanged(nameof(Entered));
             }
         }
-        
         /// <summary>
         /// Сумма к оплате
         /// </summary>
@@ -41,7 +40,6 @@ namespace RetailTradeClient.ViewModels.Dialogs
             get => _productSaleStore.ToBePaid;
             set { }
         }
-
         /// <summary>
         /// Сдача
         /// </summary>
@@ -50,19 +48,26 @@ namespace RetailTradeClient.ViewModels.Dialogs
             get => _productSaleStore.Change;
             set
             {
-                _productSaleStore.Change = value;
+                _productSaleStore.Change = value < 0 ? value * -1 : value;
                 OnPropertyChanged(nameof(Change));
+                OnPropertyChanged(nameof(ChangeLabel));
+                OnPropertyChanged(nameof(ChangeForeground));
+                OnPropertyChanged(nameof(CanMakeCashPayment));
             }
         }
-
         /// <summary>
         /// Если кнопка запятая нажата
         /// </summary>
         public bool IsCommaButtonPressed { get; set; }
+        public string ChangeLabel => _productSaleStore.Entered - _productSaleStore.ToBePaid < 0 ? "Осталось доплатить:" : "Сдача:";
+        public Brush ChangeForeground => _productSaleStore.Entered - _productSaleStore.ToBePaid < 0 ? Brushes.Red : Brushes.Green;
+        public bool CanMakeCashPayment => _productSaleStore.Entered - _productSaleStore.ToBePaid >= 0;
 
         #endregion
 
         #region Commands
+
+        public ICommand UserControlLoadedCommand => new RelayCommand(UserControlLoaded);
 
         /// <summary>
         /// Нажатия кнопки с цифрами
@@ -105,8 +110,6 @@ namespace RetailTradeClient.ViewModels.Dialogs
         {
             _productSaleStore = productSaleStore;
 
-            Entered = _productSaleStore.ToBePaid;
-
             _productSaleStore.OnProductSalesChanged += () => OnPropertyChanged(nameof(Change));
         }
 
@@ -114,10 +117,18 @@ namespace RetailTradeClient.ViewModels.Dialogs
 
         #region Private Voids
 
+        private void UserControlLoaded()
+        {
+            Entered = _productSaleStore.ToBePaid;
+        }
+
         private async void MakeCashPayment()
         {
-            CurrentWindowService.Close();
-            await _productSaleStore.CashPayment();
+            if (CanMakeCashPayment)
+            {
+                CurrentWindowService.Close();
+                await _productSaleStore.CashPayment();
+            }
         }
 
         private void EnteredLoaded(object parameter)

@@ -9,8 +9,8 @@
     public interface IBarcodeService
     {
         void Open(BarcodeDevice barcodeDevice);
+        void Open(BarcodeDevice barcodeDevice, string comPortName, int speed);
         void Close(BarcodeDevice barcodeDevice);
-        void SetAppSetting(string key, string value);
         event Action<string> OnBarcodeEvent;
     }
 }

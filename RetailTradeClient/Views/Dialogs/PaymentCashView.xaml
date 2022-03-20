@@ -6,7 +6,6 @@
     xmlns:local="clr-namespace:RetailTradeClient.Views.Dialogs"
     xmlns:dxmvvm="http://schemas.devexpress.com/winfx/2008/xaml/mvvm"
     x:Class="RetailTradeClient.Views.Dialogs.PaymentCashView"
-    Width="600"
     Focusable="True" 
     IsTabStop="True"
     Loaded="BaseDialogUserControl_Loaded">
@@ -28,9 +27,12 @@
         <dxmvvm:EventToCommand EventName="TextInput"
                                Command="{Binding TextInputCommand}"
                                PassEventArgsToCommand="True"/>
+        <dxmvvm:EventToCommand EventName="Loaded"
+                               Command="{Binding UserControlLoadedCommand}"/>
     </dxmvvm:Interaction.Behaviors>
 
-    <dxlc:LayoutControl ItemSpace="10">
+    <dxlc:LayoutControl ItemSpace="10"
+                        Orientation="Vertical">
 
         <dxlc:LayoutGroup Orientation="Vertical">
 
@@ -53,18 +55,19 @@
                               IsReadOnly="True"/>
             </dxlc:LayoutItem>
 
-            <dxlc:LayoutItem Label="Сдача:"
-                             Foreground="Green"
+            <dxlc:LayoutItem Label="{Binding ChangeLabel}"
+                             Foreground="{Binding ChangeForeground}"
                              Style="{StaticResource liCash}">
-                <dxe:TextEdit Style="{StaticResource teCash}" 
-                              IsReadOnly="True"
+                <dxe:TextEdit IsReadOnly="True"
+                              Style="{StaticResource teCash}"
                               Text="{Binding Change}"
-                              Foreground="Green"/>
+                              Foreground="{Binding ChangeForeground}"/>
             </dxlc:LayoutItem>
 
         </dxlc:LayoutGroup>
 
-        <dxlc:LayoutGroup Orientation="Vertical">
+        <dxlc:LayoutGroup Orientation="Vertical"
+                          HorizontalAlignment="Left">
             <dxlc:LayoutGroup.Resources>
                 <Style TargetType="{x:Type Button}" BasedOn="{StaticResource btnCash}"/>
                 <Style TargetType="{x:Type Button}" BasedOn="{StaticResource btnCash}" x:Key="btnNumber">
@@ -134,7 +137,8 @@
                         FontSize="14"
                         Padding="0"
                         IsDefault="True"
-                        Command="{Binding MakeCashPaymentCommand}"/>
+                        Command="{Binding MakeCashPaymentCommand}"
+                        IsEnabled="{Binding CanMakeCashPayment}"/>
 
             </dxlc:LayoutGroup>
 
