@@ -1,9 +1,90 @@
 ﻿using DrvFRLib;
 using RetailTrade.CashRegisterMachine.Properties;
 using System;
+using System.Reflection;
+using System.Runtime.InteropServices;
 
 namespace RetailTrade.CashRegisterMachine
 {
+    [AttributeUsage(AttributeTargets.All)]
+    public class StringValueAttribute : Attribute
+    {
+
+        #region Properties
+
+        /// <summary>
+        /// Holds the stringvalue for a value in an enum.
+        /// </summary>
+        public string StringValue { get; protected set; }
+
+        #endregion
+
+        #region Constructor
+
+        /// <summary>
+        /// Constructor used to init a StringValue Attribute
+        /// </summary>
+        /// <param name="value"></param>
+        public StringValueAttribute(string value)
+        {
+            StringValue = value;
+        }
+
+        #endregion
+
+    }
+
+    public enum ECRModeEnum : int
+    {
+        [StringValue("Принтер в рабочем режиме.")]
+        Mode0 = 0,
+
+        [StringValue("Выдача данных.")]
+        Mode1 = 1,
+
+        [StringValue("Открытая смена, 24 часа не кончились.")]
+        Mode2 = 2,
+
+        [StringValue("Открытая смена, 24 часа кончились.")]
+        Mode3 = 3,
+
+        [StringValue("Закрытая смена.")]
+        Mode4 = 4,
+
+        [StringValue("Блокировка по неправильному паролю налогового инспектора.")]
+        Mode5 = 5,
+
+        [StringValue("Ожидание подтверждения ввода даты.")]
+        Mode6 = 6,
+
+        [StringValue("Разрешение изменения положения десятичной точки.")]
+        Mode7 = 7,
+
+        [StringValue("Открытый документ.")]
+        Mode8 = 8,
+
+        [StringValue("Режим разрешения технологического обнуления.")]
+        Mode9 = 9,
+
+        [StringValue("Тестовый прогон.")]
+        Mode10 = 10,
+
+        [StringValue("Печать полного фискального отчета.")]
+        Mode11 = 11,
+
+        [StringValue("Печать длинного отчета ЭКЛЗ.")]
+        Mode12 = 12,
+
+        [StringValue("Работа с фискальным подкладным документом.")]
+        Mode13 = 13,
+
+        [StringValue("Печать подкладного документа.")]
+        Mode14 = 14,
+
+        [StringValue("Фискальный подкладной документ сформирован.")]
+        Mode15 = 15
+    }
+
     public static class ShtrihM
     {
         #region Private Members
@@ -18,7 +99,7 @@ namespace RetailTrade.CashRegisterMachine
         {
             get => drvFR.CheckType;
             set => drvFR.CheckType = value;
-        }        
+        }
 
         public static int RegisterNumber
         {
@@ -110,15 +191,38 @@ namespace RetailTrade.CashRegisterMachine
                 BaudRate = Settings.Default.BaudRate,
                 Timeout = Settings.Default.Timeout
             };
+
+            _ = drvFR.ResultCode;
         }
 
         #endregion
 
         #region Public Static Voids
 
-        public static void Connect()
+        public static string GetStringValue(this Enum value)
+        {
+            // Get the type
+            Type type = value.GetType();
+
+            // Get fieldinfo for this type
+            FieldInfo fieldInfo = type.GetField(value.ToString());
+
+            // Get the stringvalue attributes
+            StringValueAttribute[] attribs = fieldInfo.GetCustomAttributes(
+                typeof(StringValueAttribute), false) as StringValueAttribute[];
+
+            // Return the first if there was a match.
+            return attribs.Length > 0 ? attribs[0].StringValue : null;
+        }
+
+        public static ECRModeEnum GetECRMode()
+        {
+            return (ECRModeEnum)Enum.GetValues<ECRModeEnum>().GetValue(ECRMode);
+        }
+
+        public static int Connect()
         {            
-            drvFR.Connect();
+            return drvFR.Connect();
         }
 
         public static int FNGetCurrentSessionParams()
@@ -126,18 +230,23 @@ namespace RetailTrade.CashRegisterMachine
             return drvFR.FNGetCurrentSessionParams();
         }
 
-        public static void ShowProperties()
+        public static int ShowProperties()
         {
-            drvFR.ShowProperties();
+            if (drvFR.ShowProperties() == 0)
+            {
+                Settings.Default.ComNumber = drvFR.ComNumber;
+                Settings.Default.BaudRate = drvFR.BaudRate;
+                Settings.Default.Timeout = drvFR.Timeout;
+                Settings.Default.Save();
 
-            Settings.Default.ComNumber = drvFR.ComNumber;
-            Settings.Default.BaudRate = drvFR.BaudRate;
-            Settings.Default.Timeout = drvFR.Timeout;
-            Settings.Default.Save();
+                drvFR.StringQuantity = 24;
 
-            drvFR.StringQuantity = 24;
-
-            drvFR.SetExchangeParam();
+                return drvFR.SetExchangeParam();
+            }
+            else
+            {
+                return drvFR.ShowProperties();
+            }
         }
 
         /// <summary>
@@ -151,9 +260,9 @@ namespace RetailTrade.CashRegisterMachine
         /// <summary>
         /// Снаять отчет без гашения
         /// </summary>
-        public static void PrintReportWithoutCleaning()
+        public static int PrintReportWithoutCleaning()
         {
-            drvFR.PrintReportWithoutCleaning();
+            return drvFR.PrintReportWithoutCleaning();
         }
 
         /// <summary>
@@ -172,17 +281,17 @@ namespace RetailTrade.CashRegisterMachine
             return drvFR.CheckConnection();
         }
 
-        public static void Sale()
+        public static int Sale()
         {
-            drvFR.Sale();
+            return drvFR.Sale();
         }
 
         /// <summary>
         /// Закрыть чек
         /// </summary>
-        public static void CloseCheck()
+        public static int CloseCheck()
         {
-            drvFR.CloseCheck();
+            return drvFR.CloseCheck();
         }
 
         public static int ReadLastReceipt()
@@ -200,7 +309,7 @@ namespace RetailTrade.CashRegisterMachine
         /// Закрытие чек с резултатом
         /// </summary>
         /// <returns></returns>
-        public static object CloseCheckWithResult()
+        public static int CloseCheckWithResult()
         {
             return drvFR.CloseCheckWithResult();
         }
@@ -208,38 +317,14 @@ namespace RetailTrade.CashRegisterMachine
         /// <summary>
         /// Отрезать чек
         /// </summary>
-        public static void CutCheck()
+        public static int CutCheck()
         {
-            drvFR.CutCheck();
+            return drvFR.CutCheck();
         }
 
-        public static void Disconnect()
+        public static int Disconnect()
         {
-            drvFR.Disconnect();
-        }
-
-        public static string GetECRMode()
-        {
-            return drvFR.ECRMode switch
-            {
-                0 => "Принтер в рабочем режиме",
-                1 => "Выдача данных",
-                2 => "Открытая смена, 24 часа не кончились",
-                3 => "Открытая смена, 24 часа кончились",
-                4 => "Закрытая смена",
-                5 => "Блокировка по неправильному паролю налогового инспектора",
-                6 => "Ожидание подтверждения ввода даты",
-                7 => "Разрешение изменения положения десятичной точки",
-                8 => "Открытый документ",
-                9 => "Режим разрешения технологического обнуления",
-                10 => "Тестовый прогон",
-                11 => "Печать полного фискального отчета",
-                12 => "Печать длинного отчета ЭКЛЗ",
-                13 => "Работа с фискальным подкладным документом",
-                14 => "Печать подкладного документа",
-                15 => "Фискальный подкладной документ сформирован",
-                _ => "",
-            };
+            return drvFR.Disconnect();
         }
 
         /// <summary>
@@ -254,9 +339,9 @@ namespace RetailTrade.CashRegisterMachine
         /// <summary>
         /// Снять отчет с гашением
         /// </summary>
-        public static void PrintReportWithCleaning()
+        public static int PrintReportWithCleaning()
         {
-            drvFR.PrintReportWithCleaning();
+            return drvFR.PrintReportWithCleaning();
         }
 
         /// <summary>

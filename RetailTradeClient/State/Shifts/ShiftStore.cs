@@ -1,11 +1,13 @@
 ﻿using DevExpress.Mvvm;
 using RetailTrade.CashRegisterMachine;
+using RetailTrade.CashRegisterMachine.Services;
 using RetailTrade.Domain.Models;
 using RetailTrade.Domain.Services;
 using RetailTradeClient.Properties;
 using RetailTradeClient.State.Users;
 using System;
 using System.Collections.ObjectModel;
+using System.Reflection;
 using System.Threading.Tasks;
 
 namespace RetailTradeClient.State.Shifts
@@ -17,6 +19,7 @@ namespace RetailTradeClient.State.Shifts
         private readonly IShiftService _shiftService;
         private readonly IReceiptService _receiptService;
         private readonly IUserStore _userStore;
+        private readonly ICashRegisterMachineService _cashRegisterMachineService;
         private bool _isShiftOpen;
         private Shift _currentShift;
 
@@ -30,11 +33,13 @@ namespace RetailTradeClient.State.Shifts
 
         public ShiftStore(IShiftService shiftService,
             IReceiptService receiptService,
-            IUserStore userStore)
+            IUserStore userStore,
+            ICashRegisterMachineService cashRegisterMachineService)
         {
             _shiftService = shiftService;
             _receiptService = receiptService;
             _userStore = userStore;
+            _cashRegisterMachineService = cashRegisterMachineService;
         }
 
         #endregion
@@ -55,19 +60,45 @@ namespace RetailTradeClient.State.Shifts
 
         public async Task CheckingShift(IMessageBoxService MessageBoxService)
         {
-            if (ShtrihM.CheckConnection() == 0)
+            try
             {
-                ShtrihMConnected(true);
+                ECRModeEnum eCRModeEnum = _cashRegisterMachineService.ECRMode();
+
+                if (eCRModeEnum == ECRModeEnum.Mode3)
+                {
+                    if (MessageBoxService.ShowMessage($"{eCRModeEnum.GetStringValue()} Закрыть смену ККМ?", "Sale Page", MessageButton.YesNo, MessageIcon.Question) == MessageResult.Yes)
+                    {
+                        if (!string.IsNullOrEmpty(_cashRegisterMachineService.CloseShift()))
+                        {
+                            _ = MessageBoxService.ShowMessage(_cashRegisterMachineService.ErrorMessage, "Sale Page", MessageButton.YesNo, MessageIcon.Question);
+                            CurrentShiftChanged?.Invoke(CheckingResult.UnknownErrorWhenClosing);
+                            return;
+                        }
+                    }
+                }
+                if (eCRModeEnum == ECRModeEnum.Mode4)
+                {
+                    if (MessageBoxService.ShowMessage($"{eCRModeEnum.GetStringValue()} Открыть смену ККМ?", "Sale Page", MessageButton.YesNo, MessageIcon.Question) == MessageResult.Yes)
+                    {
+                        if (!string.IsNullOrEmpty(_cashRegisterMachineService.CloseShift()))
+                        {
+                            _ = MessageBoxService.ShowMessage(_cashRegisterMachineService.ErrorMessage, "Sale Page", MessageButton.YesNo, MessageIcon.Question);
+                            CurrentShiftChanged?.Invoke(CheckingResult.UnknownErrorWhenClosing);
+                            return;
+                        }
+                    }
+                }
+                if (eCRModeEnum != ECRModeEnum.Mode3 && eCRModeEnum != ECRModeEnum.Mode4)
+                {
+                    _ = MessageBoxService.ShowMessage(eCRModeEnum.GetStringValue(), "Sale Page", MessageButton.OK, MessageIcon.Information);
+                }
+
                 CurrentShiftChanged.Invoke(await Check());
-                return;
             }
-            if (MessageBoxService.ShowMessage("Устройство фискального регистратора (ФР) не обноружено. Продолжить?", "Sale Page", MessageButton.YesNo, MessageIcon.Question) == MessageResult.Yes)
+            catch (Exception e)
             {
-                ShtrihMConnected(false);
-                CurrentShiftChanged.Invoke(await Check());
-                return;
+                _ = MessageBoxService.ShowMessage(e.Message, "Sale Page", MessageButton.OK, MessageIcon.Error);
             }
-            CurrentShiftChanged.Invoke(CheckingResult.Nothing);
         }        
 
         public async Task ClosingShift(IMessageBoxService MessageBoxService)
@@ -75,24 +106,16 @@ namespace RetailTradeClient.State.Shifts
             var result = await _shiftService.GetOpenShiftAsync();
             if (result != null)
             {
-                if (ShtrihM.CheckConnection() == 0)
+                ECRModeEnum eCRModeEnum = _cashRegisterMachineService.ECRMode();
+                if (eCRModeEnum != ECRModeEnum.Mode4)
                 {
-                    ShtrihM.PrintReportWithCleaning();
-                    ShtrihMConnected(true);
-                    CurrentShiftChanged.Invoke(await Closing());
-                    return;
+                    if (!string.IsNullOrEmpty(_cashRegisterMachineService.CloseShift()))
+                    {
+                        _ = MessageBoxService.ShowMessage(_cashRegisterMachineService.ErrorMessage, "Sale Page", MessageButton.YesNo, MessageIcon.Question);
+                        CurrentShiftChanged?.Invoke(CheckingResult.UnknownErrorWhenClosing);
+                    }
                 }
-                if (MessageBoxService.ShowMessage("Устройство фискального регистратора (ФР) не обноружено. Продолжить?", "Sale Page", MessageButton.YesNo, MessageIcon.Question) == MessageResult.Yes)
-                {
-                    ShtrihMConnected(false);
-                    CurrentShiftChanged.Invoke(await Closing());
-                    return;
-                }
-                else
-                {
-                    CurrentShiftChanged.Invoke(CheckingResult.Nothing);
-                    return;
-                }
+                CurrentShiftChanged.Invoke(await Closing());
             }
             CurrentShiftChanged.Invoke(CheckingResult.NoOpenShift);
             return;

@@ -15,7 +15,7 @@ namespace RetailTradeClient.Report
 
         #region Constructor
 
-        public ProductSaleReport(IUserStore userStore)
+        public ProductSaleCashlessReport(IUserStore userStore)
         {
             InitializeComponent();
             _userStore = userStore;

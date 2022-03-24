@@ -19,6 +19,15 @@
       <Isolated>false</Isolated>
       <EmbedInteropTypes>true</EmbedInteropTypes>
     </COMReference>
+    <COMReference Include="SMDrvFR1CLib">
+      <WrapperTool>tlbimp</WrapperTool>
+      <VersionMinor>0</VersionMinor>
+      <VersionMajor>1</VersionMajor>
+      <Guid>f71b4ded-b3cc-4a90-9eb0-5362648ddde9</Guid>
+      <Lcid>0</Lcid>
+      <Isolated>False</Isolated>
+      <EmbedInteropTypes>False</EmbedInteropTypes>
+    </COMReference>
   </ItemGroup>
 
   <ItemGroup>

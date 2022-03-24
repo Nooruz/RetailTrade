@@ -62,6 +62,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\RetailTrade.CashRegisterMachine\RetailTrade.CashRegisterMachine.csproj" />
     <ProjectReference Include="..\RetailTrade.Domain\RetailTrade.Domain.csproj" />
     <ProjectReference Include="..\RetailTrade.EntityFramework\RetailTrade.EntityFramework.csproj" />
   </ItemGroup>
@@ -74,9 +75,6 @@
   <ItemGroup>
     <Reference Include="RetailTrade.Barcode">
       <HintPath>..\RetailTrade.Barcode\bin\Release\net6.0\RetailTrade.Barcode.dll</HintPath>
-    </Reference>
-    <Reference Include="RetailTrade.CashRegisterMachine">
-      <HintPath>..\RetailTrade.CashRegisterMachine\bin\Release\net6.0-windows\RetailTrade.CashRegisterMachine.dll</HintPath>
     </Reference>
   </ItemGroup>
 
@@ -97,6 +95,12 @@
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
       <AutoGen>True</AutoGen>
       <DependentUpon>Settings.settings</DependentUpon>
+    </Compile>
+    <Compile Update="Report\ProductSaleCashlessReport.cs">
+      <DependentUpon>ProductSaleCashlessReport.vsrepx</DependentUpon>
+    </Compile>
+    <Compile Update="Report\ProductSaleCashlessReport.Designer.cs">
+      <DependentUpon>ProductSaleCashlessReport.vsrepx</DependentUpon>
     </Compile>
     <Compile Update="Report\ProductSaleReport - Копировать.cs">
       <DependentUpon>ProductSaleReport.vsrepx</DependentUpon>

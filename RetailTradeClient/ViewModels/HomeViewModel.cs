@@ -233,11 +233,9 @@ namespace RetailTradeClient.ViewModels
             if (Enum.IsDefined(typeof(BarcodeDevice), Settings.Default.BarcodeDefaultDevice))
             {
                 BarcodeDevice barcodeDevice = Enum.Parse<BarcodeDevice>(Settings.Default.BarcodeDefaultDevice);
-                _barcodeService.Open(barcodeDevice);
                 if (barcodeDevice == BarcodeDevice.Com)
                 {
-                    _barcodeService.SetAppSetting("ComPortName", Settings.Default.BarcodeCom);
-                    _barcodeService.SetAppSetting("ComPortSpeed", Settings.Default.BarcodeSpeed.ToString());
+                    _barcodeService.Open(barcodeDevice, Settings.Default.BarcodeCom, Settings.Default.BarcodeSpeed);
                 }
             }
         }

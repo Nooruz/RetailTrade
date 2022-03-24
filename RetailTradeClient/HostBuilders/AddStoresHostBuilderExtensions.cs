@@ -1,6 +1,7 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using RetailTrade.Barcode.Services;
+using RetailTrade.CashRegisterMachine.Services;
 using RetailTradeClient.Report;
 using RetailTradeClient.State.Authenticators;
 using RetailTradeClient.State.Messages;
@@ -22,9 +23,10 @@ namespace RetailTradeClient.HostBuilders
                 _ = services.AddSingleton<INavigator, Navigator>();
                 _ = services.AddSingleton<IAuthenticator, Authenticator>();
                 _ = services.AddSingleton<IUserStore, UserStore>();
-                _ = services.AddSingleton<IMessageStore, MessageStore>();
-                _ = services.AddSingleton<IShiftStore, ShiftStore>();
+                _ = services.AddSingleton<IMessageStore, MessageStore>();                
                 _ = services.AddSingleton<IBarcodeService, BarcodeService>();
+                _ = services.AddSingleton<ICashRegisterMachineService, CashRegisterMachineService>();
+                _ = services.AddSingleton<IShiftStore, ShiftStore>();
                 _ = services.AddSingleton(CreateXReport);
                 _ = services.AddSingleton(CreateProductSaleReport);
                 _ = services.AddSingleton<IReportService, ReportService>();
