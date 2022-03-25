@@ -10,6 +10,9 @@ namespace RetailTrade.CashRegisterMachine.Services
 
     public interface ICashRegisterMachineService
     {
+        int RegisterNumber { get; set; }
+        int ContentsOfOperationRegister { get; }
+        string NameOperationReg { get; }
         string ErrorMessage { get; }
         string StringForPrinting { get; set; }
         int CheckType { get; set; }
@@ -31,6 +34,7 @@ namespace RetailTrade.CashRegisterMachine.Services
         string CutCheck();
         string Disconnect();
         string ReturnSale();
+        string GetOperationReg();
         ECRModeEnum ECRMode();
         event Action CashRegisterEvent;
     }

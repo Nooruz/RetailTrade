@@ -2,7 +2,6 @@
 using RetailTrade.CashRegisterMachine.Properties;
 using System;
 using System.Reflection;
-using System.Runtime.InteropServices;
 
 namespace RetailTrade.CashRegisterMachine
 {
@@ -299,10 +298,9 @@ namespace RetailTrade.CashRegisterMachine
             return drvFR.ReadLastReceipt();
         }
 
-        public static string GetOperationReg()
+        public static int GetOperationReg()
         {
-            int checkNumber = drvFR.GetOperationReg();
-            return checkNumber.ToString();
+            return drvFR.GetOperationReg();
         }
 
         /// <summary>

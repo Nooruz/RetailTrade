@@ -1,6 +1,7 @@
 ﻿using DevExpress.XtraPrinting;
 using RetailTrade.Barcode.Services;
 using RetailTrade.CashRegisterMachine;
+using RetailTrade.CashRegisterMachine.Services;
 using RetailTrade.Domain.Models;
 using RetailTrade.Domain.Services;
 using RetailTradeClient.Properties;
@@ -23,6 +24,7 @@ namespace RetailTradeClient.State.ProductSales
         private readonly IReportService _reportService;
         private readonly IReceiptService _receiptService;
         private readonly IBarcodeService _barcodeService;
+        private readonly ICashRegisterMachineService _cashRegisterMachineService;
         private readonly IShiftStore _shiftStore;
         private ObservableCollection<Sale> _sales = new();
         private ObservableCollection<PostponeReceipt> _postponeReceipts = new();
@@ -100,13 +102,15 @@ namespace RetailTradeClient.State.ProductSales
             IReportService reportService,
             IReceiptService receiptService,
             IShiftStore shiftStore,
-            IBarcodeService barcodeService)
+            IBarcodeService barcodeService,
+            ICashRegisterMachineService cashRegisterMachineService)
         {
             _productService = productService;
             _reportService = reportService;
             _receiptService = receiptService;
             _shiftStore = shiftStore;
             _barcodeService = barcodeService;
+            _cashRegisterMachineService = cashRegisterMachineService;
 
             _barcodeService.OnBarcodeEvent += BarcodeService_OnBarcodeEvent;
         }
@@ -321,6 +325,8 @@ namespace RetailTradeClient.State.ProductSales
         {
             try
             {
+                PrintCashRegisterMachine();
+
                 Receipt receipt = await _receiptService.CreateAsync(new Receipt()
                 {
                     DateOfPurchase = DateTime.Now,
@@ -341,8 +347,6 @@ namespace RetailTradeClient.State.ProductSales
                 });
 
                 await PrintReceipt(receipt);
-
-                PrintCashRegisterMachine(receipt);
 
                 await _receiptService.CreateAsync(receipt);
             }
@@ -371,47 +375,46 @@ namespace RetailTradeClient.State.ProductSales
             tool.Print();
         }
 
-        private void PrintCashRegisterMachine(Receipt receipt)
+        private void PrintCashRegisterMachine()
         {
-            if (Settings.Default.ShtrihMConnected)
+            if (_cashRegisterMachineService.ECRMode() == ECRModeEnum.Mode2)
             {
-                try
-                {
-                    ShtrihM.Connect();
-                    ShtrihM.CheckType = 0;
+                _cashRegisterMachineService.Connect();
+                _cashRegisterMachineService.CheckType = 0;
 
-                    foreach (Sale sale in Sales)
+                if (Sales.Any())
+                {
+                    foreach (Sale item in Sales)
                     {
-                        ShtrihM.Password = 30;
-                        ShtrihM.Department = 1;
-                        ShtrihM.Quantity = Convert.ToDouble(sale.Quantity);
-                        ShtrihM.Price = sale.SalePrice;
-                        var sum1NSP = Math.Round(sale.SalePrice * 1 / 102, 2);
-                        //var sum1NDS = Math.Round(sale.SalePrice * 12 / 113, 2);
+                        _cashRegisterMachineService.Quantity = Convert.ToDouble(item.Quantity);
+                        _cashRegisterMachineService.Price = item.SalePrice;
+
+                        var sum1NSP = Math.Round(item.SalePrice * 1 / 102, 2);
                         string sumNSP = Math.Round(sum1NSP * 100, 0).ToString();
-                        //string sumNDS = Math.Round(sum1NDS * 100, 0).ToString();
 
-                        ShtrihM.StringForPrinting =
-                            string.Join(";", new string[] { "", sale.TNVED, "", "", "0", "", "4", sumNSP + "\n" + sale.Name });
-
-                        //ShtrihM.BarCode = "46198488";
-
-                        ShtrihM.Tax1 = 0;
-                        ShtrihM.Tax2 = 4;
-                        ShtrihM.Tax3 = 0;
-                        ShtrihM.Tax4 = 0;
-
-                        ShtrihM.Sale();
+                        _cashRegisterMachineService.StringForPrinting =
+                            string.Join(";", new string[] { "", item.TNVED, "", "", "0", "0", "4", sumNSP + "\n" + item.Name });
+                        _cashRegisterMachineService.Tax1 = 4;
+                        _cashRegisterMachineService.Tax2 = 0;
+                        _cashRegisterMachineService.Tax3 = 0;
+                        _cashRegisterMachineService.Tax4 = 0;
+                        string result = _cashRegisterMachineService.Sale();
                     }
-                    ShtrihM.Summ1 = receipt.Sum;
-                    ShtrihM.StringForPrinting = "";
-                    ShtrihM.CloseCheck();
-                    ShtrihM.CutCheck();
+
+                    _cashRegisterMachineService.Summ1 = Sales.Sum(s => s.SalePrice);
+                    _cashRegisterMachineService.StringForPrinting = "";
+                    _cashRegisterMachineService.CloseCheck();
+                    _cashRegisterMachineService.CutCheck();
+                    _cashRegisterMachineService.Disconnect();
+
+                    _cashRegisterMachineService.RegisterNumber = 148;
+                    _cashRegisterMachineService.GetOperationReg();
+                    string d = _cashRegisterMachineService.GetOperationReg();
+                    int f = _cashRegisterMachineService.ContentsOfOperationRegister;
+                    string df = _cashRegisterMachineService.NameOperationReg;
+
                 }
-                catch (Exception)
-                {
-                    //ignore
-                }
+
             }
         }
 

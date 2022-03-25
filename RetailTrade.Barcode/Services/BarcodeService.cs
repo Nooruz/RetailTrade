@@ -327,23 +327,37 @@ namespace RetailTrade.Barcode.Services
 
         private void SerialPort_DataReceived(object sender, SerialDataReceivedEventArgs e)
         {
-            if (!_serialPort.IsOpen)
+            try
             {
-                _serialPort.Open();
+                if (!_serialPort.IsOpen)
+                {
+                    _serialPort.Open();
+                }
+                else
+                {
+                    Thread.Sleep(100);
+                    OnBarcodeEvent?.Invoke(Replace(_serialPort.ReadExisting()));
+                    _serialPort.DiscardInBuffer();
+                }
             }
-            else
+            catch (Exception)
             {
-                Thread.Sleep(100);
-                OnBarcodeEvent?.Invoke(Replace(_serialPort.ReadExisting()));
-                _serialPort.DiscardInBuffer();
+                //ignore
             }
         }
 
         private static string Replace(string text)
         {
-            if (!string.IsNullOrEmpty(text))
+            try
             {
-                return text.Replace("\r", string.Empty);
+                if (!string.IsNullOrEmpty(text))
+                {
+                    return text.Replace("\r", string.Empty);
+                }
+            }
+            catch (Exception)
+            {
+                //ignore
             }
             return string.Empty;
         }
@@ -358,15 +372,27 @@ namespace RetailTrade.Barcode.Services
             {
                 if (!string.IsNullOrEmpty(comPortName))
                 {
-                    _serialPort = new()
+                    if (_serialPort != null)
                     {
-                        PortName = comPortName,
-                        BaudRate = speed,
-                        ReadTimeout = 1000
-                    };
-                    _serialPort.Open();
-                    _serialPort.DiscardInBuffer();
-                    _serialPort.DataReceived += SerialPort_DataReceived;
+                        if (!_serialPort.IsOpen)
+                        {
+                            _serialPort.Open();
+                            _serialPort.DiscardInBuffer();
+                            _serialPort.DataReceived += SerialPort_DataReceived;
+                        }
+                    }
+                    else
+                    {
+                        _serialPort = new()
+                        {
+                            PortName = comPortName,
+                            BaudRate = speed,
+                            ReadTimeout = 1000
+                        };
+                        _serialPort.Open();
+                        _serialPort.DiscardInBuffer();
+                        _serialPort.DataReceived += SerialPort_DataReceived;
+                    }
                 }
             }
             catch (Exception)

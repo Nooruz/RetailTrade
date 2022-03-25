@@ -19,6 +19,19 @@ namespace RetailTrade.CashRegisterMachine.Services
             get => ShtrihM.StringForPrinting;
             set => ShtrihM.StringForPrinting = value;
         }
+        public int RegisterNumber
+        {
+            get => ShtrihM.RegisterNumber;
+            set => ShtrihM.RegisterNumber = value;
+        }
+        public int ContentsOfOperationRegister
+        {
+            get => ShtrihM.ContentsOfOperationRegister;
+        }
+        public string NameOperationReg
+        {
+            get => ShtrihM.NameOperationReg;
+        }
         public int CheckType
         {
             get => ShtrihM.CheckType;
@@ -178,6 +191,18 @@ namespace RetailTrade.CashRegisterMachine.Services
             {
                 return e.Message;
             }
+        }
+        public string GetOperationReg()
+        {
+            try
+            {
+                return Result(ShtrihM.GetOperationReg());
+            }
+            catch (Exception)
+            {
+                //ignore
+            }
+            return string.Empty;
         }
         public ECRModeEnum ECRMode()
         {

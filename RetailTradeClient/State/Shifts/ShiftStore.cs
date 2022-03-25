@@ -3,11 +3,9 @@ using RetailTrade.CashRegisterMachine;
 using RetailTrade.CashRegisterMachine.Services;
 using RetailTrade.Domain.Models;
 using RetailTrade.Domain.Services;
-using RetailTradeClient.Properties;
 using RetailTradeClient.State.Users;
 using System;
 using System.Collections.ObjectModel;
-using System.Reflection;
 using System.Threading.Tasks;
 
 namespace RetailTradeClient.State.Shifts
@@ -62,8 +60,8 @@ namespace RetailTradeClient.State.Shifts
         {
             try
             {
+                CurrentShiftChanged.Invoke(await Check());
                 ECRModeEnum eCRModeEnum = _cashRegisterMachineService.ECRMode();
-
                 if (eCRModeEnum == ECRModeEnum.Mode3)
                 {
                     if (MessageBoxService.ShowMessage($"{eCRModeEnum.GetStringValue()} Закрыть смену ККМ?", "Sale Page", MessageButton.YesNo, MessageIcon.Question) == MessageResult.Yes)
@@ -80,7 +78,7 @@ namespace RetailTradeClient.State.Shifts
                 {
                     if (MessageBoxService.ShowMessage($"{eCRModeEnum.GetStringValue()} Открыть смену ККМ?", "Sale Page", MessageButton.YesNo, MessageIcon.Question) == MessageResult.Yes)
                     {
-                        if (!string.IsNullOrEmpty(_cashRegisterMachineService.CloseShift()))
+                        if (!string.IsNullOrEmpty(_cashRegisterMachineService.OpenShift()))
                         {
                             _ = MessageBoxService.ShowMessage(_cashRegisterMachineService.ErrorMessage, "Sale Page", MessageButton.YesNo, MessageIcon.Question);
                             CurrentShiftChanged?.Invoke(CheckingResult.UnknownErrorWhenClosing);
@@ -92,8 +90,6 @@ namespace RetailTradeClient.State.Shifts
                 {
                     _ = MessageBoxService.ShowMessage(eCRModeEnum.GetStringValue(), "Sale Page", MessageButton.OK, MessageIcon.Information);
                 }
-
-                CurrentShiftChanged.Invoke(await Check());
             }
             catch (Exception e)
             {
@@ -106,6 +102,7 @@ namespace RetailTradeClient.State.Shifts
             var result = await _shiftService.GetOpenShiftAsync();
             if (result != null)
             {
+                CurrentShiftChanged.Invoke(await Closing());
                 ECRModeEnum eCRModeEnum = _cashRegisterMachineService.ECRMode();
                 if (eCRModeEnum != ECRModeEnum.Mode4)
                 {
@@ -115,7 +112,7 @@ namespace RetailTradeClient.State.Shifts
                         CurrentShiftChanged?.Invoke(CheckingResult.UnknownErrorWhenClosing);
                     }
                 }
-                CurrentShiftChanged.Invoke(await Closing());
+                return;
             }
             CurrentShiftChanged.Invoke(CheckingResult.NoOpenShift);
             return;
@@ -126,24 +123,17 @@ namespace RetailTradeClient.State.Shifts
             var result = await _shiftService.GetOpenShiftAsync();
             if (result == null)
             {
-                if (ShtrihM.CheckConnection() == 0)
+                CurrentShiftChanged.Invoke(await Opening());
+                ECRModeEnum eCRModeEnum = _cashRegisterMachineService.ECRMode();
+                if (eCRModeEnum != ECRModeEnum.Mode2)
                 {
-                    ShtrihM.OpenSession();
-                    ShtrihMConnected(true);
-                    CurrentShiftChanged.Invoke(await Opening());
-                    return;
+                    if (!string.IsNullOrEmpty(_cashRegisterMachineService.OpenShift()))
+                    {
+                        _ = MessageBoxService.ShowMessage(_cashRegisterMachineService.ErrorMessage, "Sale Page", MessageButton.YesNo, MessageIcon.Question);
+                        CurrentShiftChanged?.Invoke(CheckingResult.UnknownErrorWhenClosing);
+                    }
                 }
-                if (MessageBoxService.ShowMessage("Устройство фискального регистратора (ФР) не обноружено. Продолжить?", "Sale Page", MessageButton.YesNo, MessageIcon.Question) == MessageResult.Yes)
-                {
-                    ShtrihMConnected(false);
-                    CurrentShiftChanged.Invoke(await Opening());
-                    return;
-                }
-                else
-                {
-                    CurrentShiftChanged.Invoke(CheckingResult.Nothing);
-                    return;
-                }
+                return;
             }
             if (DateTime.Now.Subtract(result.OpeningDate).Days > 0)
             {
@@ -153,12 +143,6 @@ namespace RetailTradeClient.State.Shifts
             CurrentShift = result;
             IsShiftOpen = true;
             CurrentShiftChanged.Invoke(CheckingResult.IsAlreadyOpen);
-        }
-
-        private static void ShtrihMConnected(bool isConnected)
-        {
-            Settings.Default.ShtrihMConnected = isConnected;
-            Settings.Default.Save();
         }
 
         private async Task<CheckingResult> Check()
