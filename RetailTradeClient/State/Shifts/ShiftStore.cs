@@ -80,7 +80,7 @@ namespace RetailTradeClient.State.Shifts
                     {
                         if (!string.IsNullOrEmpty(_cashRegisterMachineService.OpenShift()))
                         {
-                            _ = MessageBoxService.ShowMessage(_cashRegisterMachineService.ErrorMessage, "Sale Page", MessageButton.YesNo, MessageIcon.Question);
+                            _ = MessageBoxService.ShowMessage($"Устройство ККМ. {_cashRegisterMachineService.ErrorMessage}", "Sale Page", MessageButton.OK, MessageIcon.Error);
                             CurrentShiftChanged?.Invoke(CheckingResult.UnknownErrorWhenClosing);
                             return;
                         }
@@ -88,7 +88,7 @@ namespace RetailTradeClient.State.Shifts
                 }
                 if (eCRModeEnum != ECRModeEnum.Mode3 && eCRModeEnum != ECRModeEnum.Mode4)
                 {
-                    _ = MessageBoxService.ShowMessage(eCRModeEnum.GetStringValue(), "Sale Page", MessageButton.OK, MessageIcon.Information);
+                    _ = MessageBoxService.ShowMessage($"Устройство ККМ. {eCRModeEnum.GetStringValue()}", "Sale Page", MessageButton.OK, MessageIcon.Information);
                 }
             }
             catch (Exception e)
@@ -108,8 +108,7 @@ namespace RetailTradeClient.State.Shifts
                 {
                     if (!string.IsNullOrEmpty(_cashRegisterMachineService.CloseShift()))
                     {
-                        _ = MessageBoxService.ShowMessage(_cashRegisterMachineService.ErrorMessage, "Sale Page", MessageButton.YesNo, MessageIcon.Question);
-                        CurrentShiftChanged?.Invoke(CheckingResult.UnknownErrorWhenClosing);
+                        _ = MessageBoxService.ShowMessage($"Устройство ККМ. {_cashRegisterMachineService.ErrorMessage}", "Sale Page", MessageButton.OK, MessageIcon.Error);
                     }
                 }
                 return;
@@ -129,8 +128,7 @@ namespace RetailTradeClient.State.Shifts
                 {
                     if (!string.IsNullOrEmpty(_cashRegisterMachineService.OpenShift()))
                     {
-                        _ = MessageBoxService.ShowMessage(_cashRegisterMachineService.ErrorMessage, "Sale Page", MessageButton.YesNo, MessageIcon.Question);
-                        CurrentShiftChanged?.Invoke(CheckingResult.UnknownErrorWhenClosing);
+                        _ = MessageBoxService.ShowMessage($"Устройство ККМ. {_cashRegisterMachineService.ErrorMessage}", "Sale Page", MessageButton.OK, MessageIcon.Error);
                     }
                 }
                 return;

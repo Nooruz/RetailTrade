@@ -64,11 +64,22 @@
                                       KeyFieldName="Id"
                                       ParentFieldName="SubGroupId">
                         <dxg:TreeListView.RowCellMenuCustomizations>
+                            <!--<components:CustomBarButtonItem Style="{StaticResource CustomBarButtonItem}"
+                                                            Icon="{StaticResource faPlus}"
+                                                            IconColor="{StaticResource GreenColorBrush}"
+                                                            Command="{Binding CreateTypeProductCommand}"
+                                                            Content="Вид товара"
+                                                            HotKey="Ins"/>
                             <components:CustomBarButtonItem Style="{StaticResource CustomBarButtonItem}"
                                                             Icon="{StaticResource faPlus}"
                                                             IconColor="{StaticResource GreenColorBrush}"
-                                                            Content="Вид товара"
-                                                            HotKey="Ins"/>
+                                                            Command="{Binding CreateGroupTypeProductCommand}"
+                                                            Content="Группа видов товара"/>
+                            <components:CustomBarButtonItem Style="{StaticResource CustomBarButtonItem}"
+                                                            Icon="{StaticResource faPlus}"
+                                                            IconColor="{StaticResource GreenColorBrush}"
+                                                            Command="{Binding EditTypeProductCommand}"
+                                                            Content="Изменить выбранный элемент"/>-->
                         </dxg:TreeListView.RowCellMenuCustomizations>
                     </dxg:TreeListView>
                 </dxg:TreeListControl.View>
