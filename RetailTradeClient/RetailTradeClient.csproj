@@ -62,7 +62,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\RetailTrade.CashRegisterMachine\RetailTrade.CashRegisterMachine.csproj" />
     <ProjectReference Include="..\RetailTrade.Domain\RetailTrade.Domain.csproj" />
     <ProjectReference Include="..\RetailTrade.EntityFramework\RetailTrade.EntityFramework.csproj" />
   </ItemGroup>
@@ -75,6 +74,9 @@
   <ItemGroup>
     <Reference Include="RetailTrade.Barcode">
       <HintPath>..\RetailTrade.Barcode\bin\Release\net6.0\RetailTrade.Barcode.dll</HintPath>
+    </Reference>
+    <Reference Include="RetailTrade.CashRegisterMachine">
+      <HintPath>..\RetailTrade.CashRegisterMachine\bin\Release\net6.0-windows\publish\RetailTrade.CashRegisterMachine.dll</HintPath>
     </Reference>
   </ItemGroup>
 

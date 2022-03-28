@@ -112,6 +112,7 @@ namespace RetailTradeServer.ViewModels.Dialogs
             ClearCommand = new RelayCommand(Cleare);
             AddProductToRefundCommand = new RelayCommand(AddProductToRefund);
             CellValueChangedCommand = new ParameterCommand(p => CellValueChanged(p));
+            CloseCommand = new RelayCommand(() => CurrentWindowService.Close());
         }
 
         #endregion

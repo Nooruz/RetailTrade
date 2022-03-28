@@ -1,4 +1,5 @@
 ﻿using DevExpress.Mvvm;
+using RetailTrade.Barcode.Services;
 using RetailTrade.Domain.Models;
 using RetailTrade.Domain.Services;
 using RetailTradeServer.Commands;
@@ -19,6 +20,7 @@ namespace RetailTradeServer.ViewModels.Menus
         private readonly IArrivalService _arrivalService;
         private readonly ISupplierService _supplierService;
         private readonly ITypeProductService _typeProductService;
+        private readonly IBarcodeService _barcodeService;
         private Arrival _selectedArrival;
         private IEnumerable<Arrival> _arrivals;
 
@@ -62,12 +64,14 @@ namespace RetailTradeServer.ViewModels.Menus
         public ArrivalProductViewModel(IProductService productService,
             IArrivalService arrivalService,
             ISupplierService supplierService,
-            ITypeProductService typeProductService)
+            ITypeProductService typeProductService,
+            IBarcodeService barcodeService)
         {
             _productService = productService;
             _arrivalService = arrivalService;
             _supplierService = supplierService;
             _typeProductService = typeProductService;
+            _barcodeService = barcodeService;
 
             Header = "Приход товара";
 
@@ -104,7 +108,7 @@ namespace RetailTradeServer.ViewModels.Menus
 
         private void CreateArrival()
         {
-            WindowService.Show(nameof(CreateArrivalProductDialogForm), new CreateArrivalProductDialogFormModel(_productService, _supplierService, _arrivalService, _typeProductService) { Title = "Приход товаров (новый)" });
+            WindowService.Show(nameof(CreateArrivalProductDialogForm), new CreateArrivalProductDialogFormModel(_productService, _supplierService, _arrivalService, _typeProductService, _barcodeService) { Title = "Приход товаров (новый)" });
         }
 
         private async void DeleteArrival()
@@ -129,7 +133,7 @@ namespace RetailTradeServer.ViewModels.Menus
                 if (MessageBoxService.ShowMessage("Дублировать выбранный приход?", "", MessageButton.YesNo, MessageIcon.Question) == MessageResult.Yes)
                 {
                     WindowService.Show(nameof(CreateArrivalProductDialogForm), 
-                        new CreateArrivalProductDialogFormModel(_productService, _supplierService, _arrivalService, _typeProductService) 
+                        new CreateArrivalProductDialogFormModel(_productService, _supplierService, _arrivalService, _typeProductService, _barcodeService) 
                     { 
                         Title = "Приход товаров (дублирование)",
                         SelectedSupplier = SelectedArrival.Supplier,

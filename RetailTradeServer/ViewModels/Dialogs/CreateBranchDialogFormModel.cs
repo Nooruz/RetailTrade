@@ -71,6 +71,7 @@ namespace RetailTradeServer.ViewModels.Dialogs
             _userService = userService;
 
             CreateBranchCommand = new RelayCommand(CreateBranch);
+            CloseCommand = new RelayCommand(() => CurrentWindowService.Close());
         }
 
         #endregion

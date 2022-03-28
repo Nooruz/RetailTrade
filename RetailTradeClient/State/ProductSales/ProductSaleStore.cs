@@ -377,7 +377,7 @@ namespace RetailTradeClient.State.ProductSales
 
         private void PrintCashRegisterMachine()
         {
-            if (_cashRegisterMachineService.ECRMode() == ECRModeEnum.Mode2)
+            if (_cashRegisterMachineService.ECRMode() == ECRModeEnum.Mode2 || _cashRegisterMachineService.ECRMode() == ECRModeEnum.Mode0)
             {
                 _cashRegisterMachineService.Connect();
                 _cashRegisterMachineService.CheckType = 0;
@@ -407,11 +407,11 @@ namespace RetailTradeClient.State.ProductSales
                     _cashRegisterMachineService.CutCheck();
                     _cashRegisterMachineService.Disconnect();
 
-                    _cashRegisterMachineService.RegisterNumber = 148;
-                    _cashRegisterMachineService.GetOperationReg();
-                    string d = _cashRegisterMachineService.GetOperationReg();
-                    int f = _cashRegisterMachineService.ContentsOfOperationRegister;
-                    string df = _cashRegisterMachineService.NameOperationReg;
+                    //_cashRegisterMachineService.RegisterNumber = 148;
+                    //_cashRegisterMachineService.GetOperationReg();
+                    //string d = _cashRegisterMachineService.GetOperationReg();
+                    //int f = _cashRegisterMachineService.ContentsOfOperationRegister;
+                    //string df = _cashRegisterMachineService.NameOperationReg;
 
                 }
 

@@ -155,6 +155,8 @@ namespace RetailTradeServer.ViewModels.Dialogs
             _unitService = unitService;
             _userStore = userStore;
 
+            CloseCommand = new RelayCommand(() => CurrentWindowService.Close());
+
             _orderProducts = new();
         }
 

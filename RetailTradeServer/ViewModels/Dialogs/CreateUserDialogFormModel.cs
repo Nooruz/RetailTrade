@@ -113,6 +113,7 @@ namespace RetailTradeServer.ViewModels.Dialogs
             GlobalMessageViewModel = new(_messageStore);
 
             CreateUserCommand = new RelayCommand(CreateUser);
+            CloseCommand = new RelayCommand(() => CurrentWindowService.Close());
             SaveUserCommand = new RelayCommand(SaveUser);
         }
 

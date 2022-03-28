@@ -1,10 +1,13 @@
-﻿using RetailTrade.Domain.Models;
+﻿using RetailTrade.Barcode.Services;
+using RetailTrade.Domain.Models;
 using RetailTrade.Domain.Services;
 using RetailTradeServer.Commands;
 using RetailTradeServer.State.Messages;
 using RetailTradeServer.ViewModels.Dialogs.Base;
+using SalePageServer.Properties;
 using System.Collections.Generic;
 using System.Windows;
+using System.Windows.Controls;
 using System.Windows.Input;
 
 namespace RetailTradeServer.ViewModels.Dialogs
@@ -18,6 +21,7 @@ namespace RetailTradeServer.ViewModels.Dialogs
         private readonly ISupplierService _supplierService;
         private readonly IProductService _productService;
         private readonly IMessageStore _messageStore;
+        private readonly IBarcodeService _barcodeService;
         private int? _selectedUnitId;
         private int? _selectedSupplierId;
         private int? _selectedTypeProductId;
@@ -162,8 +166,8 @@ namespace RetailTradeServer.ViewModels.Dialogs
 
         #region Commands
 
-        public ICommand UserControlLoadedCommand { get; }
-        public ICommand SaveCommand { get; }
+        public ICommand UserControlLoadedCommand => new ParameterCommand(sender => UserControlLoaded(sender));
+        public ICommand SaveCommand => new RelayCommand(Save);
 
         #endregion
 
@@ -173,17 +177,18 @@ namespace RetailTradeServer.ViewModels.Dialogs
             IDataService<Unit> unitService,
             IProductService productService,
             ISupplierService supplierService,
-            IMessageStore messageStore)
+            IMessageStore messageStore,
+            IBarcodeService barcodeService)
         {
             _typeProductService = typeProductService;
             _unitService = unitService;
             _productService = productService;
             _supplierService = supplierService;
             _messageStore = messageStore;
+            _barcodeService = barcodeService;
+
             GlobalMessageViewModel = new(_messageStore);
 
-            UserControlLoadedCommand = new RelayCommand(UserControlLoaded);
-            SaveCommand = new RelayCommand(Save);;
         }
 
         #endregion
@@ -231,11 +236,32 @@ namespace RetailTradeServer.ViewModels.Dialogs
             CurrentWindowService.Close();
         }
 
-        private async void UserControlLoaded()
+        private async void UserControlLoaded(object parameter)
         {
+            if (parameter is RoutedEventArgs e)
+            {
+                if (e.Source is UserControl userControl)
+                {
+                    userControl.Unloaded += UserControl_Unloaded;
+                }
+            }
             TypeProducts = await _typeProductService.GetTypesAsync();
             Suppliers = await _supplierService.GetAllAsync();
             Units = await _unitService.GetAllAsync();
+
+            _barcodeService.Open(BarcodeDevice.Com, Settings.Default.BarcodeCom, Settings.Default.BarcodeSpeed);
+            _barcodeService.OnBarcodeEvent += BarcodeService_OnBarcodeEvent;
+        }
+
+        private void UserControl_Unloaded(object sender, RoutedEventArgs e)
+        {
+            _barcodeService.OnBarcodeEvent -= BarcodeService_OnBarcodeEvent;
+            _barcodeService.Close(BarcodeDevice.Com);
+        }
+
+        private void BarcodeService_OnBarcodeEvent(string barcode)
+        {
+            Barcode = barcode;
         }
 
         #endregion

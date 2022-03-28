@@ -109,6 +109,7 @@ namespace RetailTradeServer.ViewModels.Dialogs
             ValidateCellCommand = new ParameterCommand(parameter => ValidateCell(parameter));
             WriteDownProductCommand = new RelayCommand(CreateArrival);
             ClearCommand = new RelayCommand(Cleare);
+            CloseCommand = new RelayCommand(() => CurrentWindowService.Close());
             AddProductToWriteDownCommand = new RelayCommand(AddProductToWriteDown);
             CellValueChangedCommand = new ParameterCommand(p => CellValueChanged(p));
 

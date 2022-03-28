@@ -11,6 +11,8 @@ namespace RetailTrade.CashRegisterMachine.Services
 
         #endregion
 
+
+
         #region Public Properties
 
         public string ErrorMessage { get; private set; }

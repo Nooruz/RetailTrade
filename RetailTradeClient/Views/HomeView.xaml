@@ -249,8 +249,7 @@
                                                        PassEventArgsToCommand="True"/>
                             </dxmvvm:Interaction.Behaviors>
                             <dxg:GridColumn.EditSettings>
-                                <dxe:SpinEditSettings SelectAllOnMouseUp="True"
-                                                      MinValue="1">
+                                <dxe:SpinEditSettings SelectAllOnMouseUp="True">
                                     <dxmvvm:Interaction.Behaviors>
                                         <dxmvvm:EventToCommand EventName="FocusableChanged"
                                                                Command="{Binding QuantityCellLoadedCommand}"

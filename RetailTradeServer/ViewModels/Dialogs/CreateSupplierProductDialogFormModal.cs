@@ -92,6 +92,7 @@ namespace RetailTradeServer.ViewModels.Dialogs
             _supplierService = supplierService;
             CreateCommand = new RelayCommand(Create);
             SaveCommand = new RelayCommand(Save);
+            CloseCommand = new RelayCommand(() => CurrentWindowService.Close());
         }
 
         #endregion

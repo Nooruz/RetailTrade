@@ -134,6 +134,9 @@ namespace RetailTradeServer.ViewModels.Dialogs
         public ProductDialogFormModel(ITypeProductService typeProductService)
         {
             _typeProductService = typeProductService;
+
+            Header = "Товары";
+            Title = "Товары";
         }
 
         #endregion

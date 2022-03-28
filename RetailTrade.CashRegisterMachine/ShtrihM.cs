@@ -238,7 +238,7 @@ namespace RetailTrade.CashRegisterMachine
                 Settings.Default.Timeout = drvFR.Timeout;
                 Settings.Default.Save();
 
-                drvFR.StringQuantity = 24;
+                //drvFR.StringQuantity = 24;
 
                 return drvFR.SetExchangeParam();
             }

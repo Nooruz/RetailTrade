@@ -106,6 +106,28 @@ namespace RetailTradeServer.ViewModels.Menus
                 _selectedTypeProduct = value;
                 ProductGridControl.FilterString = _selectedTypeProduct.Id == 1 ? string.Empty : $"[TypeProductId] = {_selectedTypeProduct.Id}";
                 OnPropertyChanged(nameof(SelectedTypeProduct));
+                OnPropertyChanged(nameof(SelectedGroupTypeProduct));
+            }
+        }
+        public TypeProduct SelectedGroupTypeProduct
+        {
+            get
+            {
+                if (SelectedTypeProduct != null)
+                {
+                    if (SelectedTypeProduct.IsGroup)
+                    {
+                        return SelectedTypeProduct;
+                    }
+                    else
+                    {
+                        return null;
+                    }
+                }
+                else
+                {
+                    return null;
+                }
             }
         }
 
@@ -148,12 +170,12 @@ namespace RetailTradeServer.ViewModels.Menus
 
         private void CreateTypeProduct()
         {
-            WindowService.Show(nameof(TypeProductDialogForm), new TypeProductDialogFormModel(_typeProductService) { Title = "Виды товаров (создание)", SelectedTypeProductId = SelectedTypeProduct != null ? SelectedTypeProduct.Id : 1 });
+            WindowService.Show(nameof(TypeProductDialogForm), new TypeProductDialogFormModel(_typeProductService) { Title = "Виды товаров (создание)", SelectedTypeProductId = SelectedGroupTypeProduct != null ? SelectedGroupTypeProduct.Id : 1 });
         }
 
         private void CreateGroupTypeProduct()
         {
-            WindowService.Show(nameof(TypeProductDialogForm), new TypeProductDialogFormModel(_typeProductService) { Title = "Виды товаров (создание группы)", IsGroup = true, SelectedTypeProductId = SelectedTypeProduct != null ? SelectedTypeProduct.Id : 1 });
+            WindowService.Show(nameof(TypeProductDialogForm), new TypeProductDialogFormModel(_typeProductService) { Title = "Виды товаров (создание группы)", IsGroup = true, SelectedTypeProductId = SelectedGroupTypeProduct != null ? SelectedGroupTypeProduct.Id : 1 });
         }
 
         private void CreateProduct()
@@ -229,7 +251,8 @@ namespace RetailTradeServer.ViewModels.Menus
                 _unitService,
                 _productService,
                 _supplierService,
-                _messageStore)
+                _messageStore,
+                _barcodeService)
                 {
                     Title = $"{SelectedProduct.Name} (Товары)",
                     EditProduct = SelectedProduct

@@ -9,6 +9,12 @@
                                Width="700"
                                Height="500">
 
+    <dxmvvm:Interaction.Behaviors>
+        <dxmvvm:EventToCommand EventName="Loaded"
+                               Command="{Binding UserControlLoadedCommand}"
+                               PassEventArgsToCommand="True"/>
+    </dxmvvm:Interaction.Behaviors>
+
     <dxlc:LayoutControl Grid.Row="0"
                         ItemSpace="10"
                         Orientation="Vertical">
@@ -45,7 +51,7 @@
         </dxlc:LayoutGroup>
 
         <dxg:GridControl SelectionMode="Row"
-                         ItemsSource="{Binding ArrivalProducts}"
+                         ItemsSource="{Binding ArrivalProductsCollectionView}"
                          SelectedItem="{Binding SelectedArrivalProduct}">
 
             <dxg:GridControl.View>

@@ -1,16 +1,21 @@
 ﻿using DevExpress.Mvvm;
 using DevExpress.Xpf.Grid;
 using DevExpress.XtraEditors.DXErrorProvider;
+using RetailTrade.Barcode.Services;
 using RetailTrade.Domain.Models;
 using RetailTrade.Domain.Services;
 using RetailTradeServer.Commands;
 using RetailTradeServer.ViewModels.Dialogs.Base;
 using RetailTradeServer.Views.Dialogs;
+using SalePageServer.Properties;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.ComponentModel;
 using System.Linq;
 using System.Windows;
+using System.Windows.Controls;
+using System.Windows.Data;
 using System.Windows.Input;
 using System.Windows.Threading;
 
@@ -24,17 +29,20 @@ namespace RetailTradeServer.ViewModels.Dialogs
         private readonly ISupplierService _supplierService;
         private readonly IArrivalService _arrivalService;
         private readonly ITypeProductService _typeProductService;
+        private readonly IBarcodeService _barcodeService;
         private Supplier _selectedSupplier;
         private ArrivalProduct _selectedArrivalProduct;
         private string _comment;
         private IEnumerable<Supplier> _suppliers;
         private IEnumerable<Product> _products;
         private ObservableCollection<ArrivalProduct> _arrivalProducts = new();
+        private object _syncLock = new();
 
         #endregion
 
         #region Public Properties
 
+        public ICollectionView ArrivalProductsCollectionView { get; set; }
         public IEnumerable<Supplier> Suppliers
         {
             get => _suppliers;
@@ -110,6 +118,7 @@ namespace RetailTradeServer.ViewModels.Dialogs
         public ICommand AddProductToArrivalCommand => new RelayCommand(AddProductToArrival);
         public ICommand GridControlLoadedCommand => new ParameterCommand((object p) => GridControlLoaded(p));
         public ICommand ProductCommand => new RelayCommand(OpenProductDialog);
+        public ICommand UserControlLoadedCommand => new ParameterCommand(sender => UserControlLoaded(sender));
 
         #endregion
 
@@ -118,12 +127,19 @@ namespace RetailTradeServer.ViewModels.Dialogs
         public CreateArrivalProductDialogFormModel(IProductService productService,
             ISupplierService supplierService,
             IArrivalService arrivalService,
-            ITypeProductService typeProductService)
+            ITypeProductService typeProductService,
+            IBarcodeService barcodeService)
         {
             _productService = productService;
             _supplierService = supplierService;
             _arrivalService = arrivalService;
             _typeProductService = typeProductService;
+            _barcodeService = barcodeService;
+
+            ArrivalProductsCollectionView = CollectionViewSource.GetDefaultView(ArrivalProducts);
+            BindingOperations.EnableCollectionSynchronization(ArrivalProducts, _syncLock);
+
+            CloseCommand = new RelayCommand(() => CurrentWindowService.Close());
 
             GetSupplier();
         }
@@ -131,6 +147,71 @@ namespace RetailTradeServer.ViewModels.Dialogs
         #endregion
 
         #region Private Voids
+
+        private async void UserControlLoaded(object parameter)
+        {
+            if (parameter is RoutedEventArgs e)
+            {
+                if (e.Source is UserControl userControl)
+                {
+                    userControl.Unloaded += UserControl_Unloaded;
+                }
+            }
+            _barcodeService.Open(BarcodeDevice.Com, Settings.Default.BarcodeCom, Settings.Default.BarcodeSpeed);
+            _barcodeService.OnBarcodeEvent += BarcodeService_OnBarcodeEvent;
+        }
+
+        private void BarcodeService_OnBarcodeEvent(string barcode)
+        {
+            try
+            {
+                if (Products.Any())
+                {
+                    Product product = Products.FirstOrDefault(p => p.Barcode == barcode);
+                    if (product != null)
+                    {
+                        if (ArrivalProducts.Any())
+                        {
+                            ArrivalProduct arrivalProduct = ArrivalProducts.FirstOrDefault(r => r.ProductId == product.Id);
+                            if (arrivalProduct == null)
+                            {
+                                SelectedArrivalProduct.ProductId = product.Id;
+                                SelectedArrivalProduct.Product = product;
+                                SelectedArrivalProduct.ArrivalPrice = product.ArrivalPrice;
+                                SelectedArrivalProduct.Quantity = 1;
+                                ShowEditor(1);
+                            }
+                            else
+                            {
+                                arrivalProduct.Quantity++;
+                            }
+                        }
+                        else
+                        {
+                            ArrivalProducts.Add(new ArrivalProduct
+                            {
+                                ProductId = product.Id,
+                                Product = product,
+                                ArrivalPrice = product.ArrivalPrice,
+                                Quantity = 1
+                            });
+                            ShowEditor(1);
+                        }
+                        UpdateTotalSum();
+                    }
+                }
+            }
+            catch (Exception)
+            {
+                //ignore
+            }
+        }
+
+        private void UserControl_Unloaded(object sender, RoutedEventArgs e)
+        {
+            _barcodeService.OnBarcodeEvent -= BarcodeService_OnBarcodeEvent;
+            _barcodeService.Close(BarcodeDevice.Com);
+        }
 
         private void OpenProductDialog()
         {
@@ -203,9 +284,14 @@ namespace RetailTradeServer.ViewModels.Dialogs
                     }
                 }
                 ArrivalTableView.PostEditor();
-                ArrivalTableView.Grid.UpdateTotalSummary();
+                UpdateTotalSum();
             }            
             OnPropertyChanged(nameof(CanArrivalProduct));
+        }
+
+        private void UpdateTotalSum()
+        {
+            ArrivalTableView.Grid.UpdateTotalSummary();
         }
 
         private void ValidateCell(object parameter)
@@ -289,7 +375,7 @@ namespace RetailTradeServer.ViewModels.Dialogs
         {
             if (SelectedSupplier != null)
             {
-                Products = await _productService.PredicateSelect(p => p.SupplierId == SelectedSupplier.Id && p.DeleteMark == false, p => new Product { Id = p.Id, Name = p.Name, ArrivalPrice = p.ArrivalPrice });
+                Products = await _productService.PredicateSelect(p => p.SupplierId == SelectedSupplier.Id && p.DeleteMark == false, p => new Product { Id = p.Id, Name = p.Name, ArrivalPrice = p.ArrivalPrice, TypeProductId = p.TypeProductId, Barcode = p.Barcode });
             }
         }
 
