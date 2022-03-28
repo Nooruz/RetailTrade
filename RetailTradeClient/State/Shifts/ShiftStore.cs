@@ -68,7 +68,7 @@ namespace RetailTradeClient.State.Shifts
                     {
                         if (!string.IsNullOrEmpty(_cashRegisterMachineService.CloseShift()))
                         {
-                            _ = MessageBoxService.ShowMessage(_cashRegisterMachineService.ErrorMessage, "Sale Page", MessageButton.YesNo, MessageIcon.Question);
+                            //_ = MessageBoxService.ShowMessage(_cashRegisterMachineService.ErrorMessage, "Sale Page", MessageButton.YesNo, MessageIcon.Question);
                             CurrentShiftChanged?.Invoke(CheckingResult.UnknownErrorWhenClosing);
                             return;
                         }
@@ -80,7 +80,7 @@ namespace RetailTradeClient.State.Shifts
                     {
                         if (!string.IsNullOrEmpty(_cashRegisterMachineService.OpenShift()))
                         {
-                            _ = MessageBoxService.ShowMessage($"Устройство ККМ. {_cashRegisterMachineService.ErrorMessage}", "Sale Page", MessageButton.OK, MessageIcon.Error);
+                            //_ = MessageBoxService.ShowMessage($"Устройство ККМ. {_cashRegisterMachineService.ErrorMessage}", "Sale Page", MessageButton.OK, MessageIcon.Error);
                             CurrentShiftChanged?.Invoke(CheckingResult.UnknownErrorWhenClosing);
                             return;
                         }

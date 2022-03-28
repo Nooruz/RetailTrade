@@ -308,6 +308,7 @@ namespace RetailTradeClient.ViewModels
                 if (e.Source is HomeView homeView)
                 {
                     homeView.Focus();
+                    Keyboard.Focus(homeView);
                 }
             }
             BarcodeOpen();

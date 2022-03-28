@@ -11,30 +11,30 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              mc:Ignorable="d"
              d:DesignWidth="800"
-             Focusable="True"
-             IsTabStop="True">
+             Focusable="True">
 
     <dxmvvm:Interaction.Behaviors>
+        <dxmvvm:FocusBehavior />
         <dxmvvm:KeyToCommand KeyGesture="Add"
-                             EventName="KeyDown"
+                             EventName="PreviewKeyDown"
                              Command="{Binding PaymentCashCommand}"/>
         <dxmvvm:KeyToCommand KeyGesture="F6"
-                             EventName="KeyDown"
+                             EventName="PreviewKeyDown"
                              Command="{Binding PaymentComplexCommand}"/>
         <dxmvvm:KeyToCommand KeyGesture="Subtract"
-                             EventName="KeyDown"
+                             EventName="PreviewKeyDown"
                              Command="{Binding ReturnGoodsCommand}"/>
         <dxmvvm:KeyToCommand KeyGesture="Alt+F5"
-                             EventName="KeyDown"
+                             EventName="PreviewKeyDown"
                              Command="{Binding PostponeReceiptCommand}"/>
         <dxmvvm:KeyToCommand KeyGesture="Ctrl+F5"
-                             EventName="KeyDown"
+                             EventName="PreviewKeyDown"
                              Command="{Binding OpenPostponeReceiptCommand}"/>
         <dxmvvm:KeyToCommand KeyGesture="Escape"
-                             EventName="KeyDown"
+                             EventName="PreviewKeyDown"
                              Command="{Binding CancelCommand}"/>
         <dxmvvm:KeyToCommand KeyGesture="Delete"
-                             EventName="KeyDown"
+                             EventName="PreviewKeyDown"
                              Command="{Binding DeleteSelectedRowCommand}"/>
         <dxmvvm:EventToCommand EventName="Loaded"
                                Command="{Binding LoadedHomeViewCommand}"
@@ -145,7 +145,11 @@
 
                     </dxlc:LayoutGroup>
 
-                    <ContentControl Content="{Binding ProductsWithoutBarcodeViewModel}"/>
+                    <ContentControl Content="{Binding ProductsWithoutBarcodeViewModel}">
+                        <dxmvvm:Interaction.Behaviors>
+                            <dxmvvm:FocusBehavior/>
+                        </dxmvvm:Interaction.Behaviors>
+                    </ContentControl>
 
                 </dxlc:LayoutGroup>
 
