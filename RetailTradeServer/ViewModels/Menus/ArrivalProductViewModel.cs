@@ -10,6 +10,7 @@ using RetailTradeServer.ViewModels.Dialogs;
 using RetailTradeServer.Views.Dialogs;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Windows.Input;
 
 namespace RetailTradeServer.ViewModels.Menus
@@ -111,11 +112,8 @@ namespace RetailTradeServer.ViewModels.Menus
                 {
                     CreateArrivalProductDialogFormModel viewModel = new(_productService, _supplierService, _arrivalService, _typeProductService, _barcodeService)
                     {
-                        IsEditMode = true,
                         Title = $"Приход товаров №{SelectedArrival.Id} от {SelectedArrival.ArrivalDate}",
-                        SelectedSupplierId = SelectedArrival.SupplierId,
-                        ArrivalProducts = new(SelectedArrival.ArrivalProducts)
-                        
+                        Arrival = SelectedArrival
                     };
                     WindowService.Show(nameof(CreateArrivalProductDialogForm), viewModel);
                 }

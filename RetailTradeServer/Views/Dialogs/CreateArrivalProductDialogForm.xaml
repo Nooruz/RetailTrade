@@ -35,6 +35,7 @@
             <dxe:ComboBoxEdit ItemsSource="{Binding Suppliers}"
                               IsEnabled="{Binding IsEditMode, Converter={StaticResource BooleanReverseConverter}}"
                               DisplayMember="ShortName"
+                              ValueMember="Id"
                               EditValue="{Binding SelectedSupplierId}"/>
         </dxlc:LayoutItem>
 

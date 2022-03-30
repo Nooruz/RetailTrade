@@ -14,7 +14,6 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Linq;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
@@ -39,13 +38,31 @@ namespace RetailTradeServer.ViewModels.Dialogs
         private IEnumerable<Product> _products;
         private ObservableCollection<ArrivalProduct> _arrivalProducts = new();
         private object _syncLock = new();
+        private Arrival _arrival;
 
         #endregion
 
         #region Public Properties
 
         public bool IsEditMode { get; set; }
-        public ICollectionView ArrivalProductsCollectionView { get; set; }
+        public Arrival Arrival
+        {
+            get => _arrival;
+            set
+            {
+                _arrival = value;
+                if (_arrival != null)
+                {
+                    IsEditMode = true;
+                    SelectedSupplierId = _arrival.SupplierId;
+                    ArrivalProducts = new(_arrival.ArrivalProducts);
+                    InvoiceNumber = _arrival.InvoiceNumber;
+                    InvoiceDate = _arrival.InvoiceDate;
+                }
+                OnPropertyChanged(nameof(Arrival));
+            }
+        }
+        public ICollectionView ArrivalProductsCollectionView => CollectionViewSource.GetDefaultView(ArrivalProducts);
         public IEnumerable<Supplier> Suppliers
         {
             get => _suppliers;
@@ -139,7 +156,6 @@ namespace RetailTradeServer.ViewModels.Dialogs
             _typeProductService = typeProductService;
             _barcodeService = barcodeService;
 
-            ArrivalProductsCollectionView = CollectionViewSource.GetDefaultView(ArrivalProducts);
             BindingOperations.EnableCollectionSynchronization(ArrivalProducts, _syncLock);
 
             CloseCommand = new RelayCommand(() => CurrentWindowService.Close());
@@ -381,6 +397,31 @@ namespace RetailTradeServer.ViewModels.Dialogs
         private async void GetSupplier()
         {
             Suppliers = await _supplierService.GetAllAsync();
+        }
+
+        #endregion
+
+        #region Public Voids
+
+        [Command]
+        public void SaveArrivalProduct()
+        {
+            try
+            {
+                foreach (ArrivalProduct item in ArrivalProducts.Where(a => a.Id != 0))
+                {
+                    ArrivalProduct arrivalProduct = _arrival.ArrivalProducts.FirstOrDefault(a => a.Id == item.Id);
+
+                    if (arrivalProduct != null)
+                    {
+
+                    }
+                }
+            }
+            catch (Exception)
+            {
+                //ignore
+            }
         }
 
         #endregion
