@@ -1,4 +1,5 @@
 ﻿using DevExpress.Mvvm;
+using DevExpress.Mvvm.DataAnnotations;
 using DevExpress.Xpf.Grid;
 using DevExpress.XtraEditors.DXErrorProvider;
 using RetailTrade.Barcode.Services;
@@ -13,6 +14,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Linq;
+using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
@@ -105,7 +107,7 @@ namespace RetailTradeServer.ViewModels.Dialogs
         public string InvoiceNumber { get; set; }
         public DateTime? InvoiceDate { get; set; }
         public GridControl ArrivalGridControl { get; set; }
-        public TableView ArrivalTableView => ArrivalGridControl != null ? ArrivalGridControl.View as TableView : null;
+        public TableView ArrivalTableView { get; set; }
         public ArrivalProduct EmptyArrivalProduct => ArrivalProducts.FirstOrDefault(a => a.ProductId == 0);
 
         #endregion
@@ -147,7 +149,7 @@ namespace RetailTradeServer.ViewModels.Dialogs
 
         #region Private Voids
 
-        private async void UserControlLoaded(object parameter)
+        private void UserControlLoaded(object parameter)
         {
             if (parameter is RoutedEventArgs e)
             {
@@ -175,11 +177,7 @@ namespace RetailTradeServer.ViewModels.Dialogs
                             ArrivalProduct arrivalProduct = ArrivalProducts.FirstOrDefault(r => r.ProductId == product.Id);
                             if (arrivalProduct == null)
                             {
-                                SelectedArrivalProduct.ProductId = product.Id;
-                                SelectedArrivalProduct.Product = product;
-                                SelectedArrivalProduct.ArrivalPrice = product.ArrivalPrice;
-                                SelectedArrivalProduct.Quantity = 1;
-                                ShowEditor(1);
+                                Add(product);
                             }
                             else
                             {
@@ -188,16 +186,9 @@ namespace RetailTradeServer.ViewModels.Dialogs
                         }
                         else
                         {
-                            ArrivalProducts.Add(new ArrivalProduct
-                            {
-                                ProductId = product.Id,
-                                Product = product,
-                                ArrivalPrice = product.ArrivalPrice,
-                                Quantity = 1
-                            });
-                            ShowEditor(1);
+                            Add(product);
                         }
-                        UpdateTotalSum();
+                        ArrivalTableView.Grid.UpdateGroupSummary();
                     }
                 }
             }
@@ -205,6 +196,18 @@ namespace RetailTradeServer.ViewModels.Dialogs
             {
                 //ignore
             }
+        }
+
+        private void Add(Product product)
+        {
+            ArrivalProducts.Add(new ArrivalProduct
+            {
+                ProductId = product.Id,
+                Product = product,
+                ArrivalPrice = product.ArrivalPrice,
+                Quantity = 1
+            });
+            ShowEditor(1);
         }
 
         private void UserControl_Unloaded(object sender, RoutedEventArgs e)
@@ -247,6 +250,7 @@ namespace RetailTradeServer.ViewModels.Dialogs
                 if (e.Source is GridControl gridControl)
                 {
                     ArrivalGridControl = gridControl;
+                    ArrivalTableView = ArrivalGridControl.View as TableView;
                     ArrivalTableView.ShownEditor += ArrivalTableView_ShownEditor;
                 }
             }
@@ -284,14 +288,9 @@ namespace RetailTradeServer.ViewModels.Dialogs
                     }
                 }
                 ArrivalTableView.PostEditor();
-                UpdateTotalSum();
+                ArrivalTableView.Grid.UpdateGroupSummary();
             }            
             OnPropertyChanged(nameof(CanArrivalProduct));
-        }
-
-        private void UpdateTotalSum()
-        {
-            ArrivalTableView.Grid.UpdateTotalSummary();
         }
 
         private void ValidateCell(object parameter)
