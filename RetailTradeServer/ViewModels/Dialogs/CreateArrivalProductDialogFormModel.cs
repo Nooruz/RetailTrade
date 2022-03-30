@@ -30,7 +30,7 @@ namespace RetailTradeServer.ViewModels.Dialogs
         private readonly IArrivalService _arrivalService;
         private readonly ITypeProductService _typeProductService;
         private readonly IBarcodeService _barcodeService;
-        private Supplier _selectedSupplier;
+        private int? _selectedSupplierId;
         private ArrivalProduct _selectedArrivalProduct;
         private string _comment;
         private IEnumerable<Supplier> _suppliers;
@@ -42,6 +42,7 @@ namespace RetailTradeServer.ViewModels.Dialogs
 
         #region Public Properties
 
+        public bool IsEditMode { get; set; }
         public ICollectionView ArrivalProductsCollectionView { get; set; }
         public IEnumerable<Supplier> Suppliers
         {
@@ -52,13 +53,13 @@ namespace RetailTradeServer.ViewModels.Dialogs
                 OnPropertyChanged(nameof(Suppliers));
             }
         }
-        public Supplier SelectedSupplier
+        public int? SelectedSupplierId
         {
-            get => _selectedSupplier;
+            get => _selectedSupplierId;
             set
             {
-                _selectedSupplier = value;
-                OnPropertyChanged(nameof(SelectedSupplier));
+                _selectedSupplierId = value;
+                OnPropertyChanged(nameof(SelectedSupplierId));
                 OnPropertyChanged(nameof(Products));
                 Cleare();
                 GetProducts();
@@ -140,8 +141,6 @@ namespace RetailTradeServer.ViewModels.Dialogs
             BindingOperations.EnableCollectionSynchronization(ArrivalProducts, _syncLock);
 
             CloseCommand = new RelayCommand(() => CurrentWindowService.Close());
-
-            GetSupplier();
         }
 
         #endregion
@@ -157,6 +156,7 @@ namespace RetailTradeServer.ViewModels.Dialogs
                     userControl.Unloaded += UserControl_Unloaded;
                 }
             }
+            GetSupplier();
             _barcodeService.Open(BarcodeDevice.Com, Settings.Default.BarcodeCom, Settings.Default.BarcodeSpeed);
             _barcodeService.OnBarcodeEvent += BarcodeService_OnBarcodeEvent;
         }
@@ -259,7 +259,7 @@ namespace RetailTradeServer.ViewModels.Dialogs
 
         private void AddProductToArrival()
         {
-            if (SelectedSupplier != null)
+            if (SelectedSupplierId != null)
             {
                 ArrivalProducts.Add(new ArrivalProduct());
                 SelectedArrivalProduct = EmptyArrivalProduct;
@@ -342,7 +342,7 @@ namespace RetailTradeServer.ViewModels.Dialogs
                         ArrivalDate = DateTime.Now,
                         InvoiceNumber = InvoiceNumber,
                         InvoiceDate = InvoiceDate,
-                        SupplierId = SelectedSupplier.Id,
+                        SupplierId = SelectedSupplierId.Value,
                         Comment = Comment,
                         Sum = ArrivalProducts.Sum(ap => ap.ArrivalSum),
                         ArrivalProducts = ArrivalProducts.ToList()
@@ -373,9 +373,9 @@ namespace RetailTradeServer.ViewModels.Dialogs
 
         private async void GetProducts()
         {
-            if (SelectedSupplier != null)
+            if (SelectedSupplierId != null)
             {
-                Products = await _productService.PredicateSelect(p => p.SupplierId == SelectedSupplier.Id && p.DeleteMark == false, p => new Product { Id = p.Id, Name = p.Name, ArrivalPrice = p.ArrivalPrice, TypeProductId = p.TypeProductId, Barcode = p.Barcode });
+                Products = await _productService.PredicateSelect(p => p.SupplierId == SelectedSupplierId.Value && p.DeleteMark == false, p => new Product { Id = p.Id, Name = p.Name, ArrivalPrice = p.ArrivalPrice, TypeProductId = p.TypeProductId, Barcode = p.Barcode });
             }
         }
 

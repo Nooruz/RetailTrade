@@ -33,8 +33,9 @@
 
         <dxlc:LayoutItem Label="Поставщик:">
             <dxe:ComboBoxEdit ItemsSource="{Binding Suppliers}"
+                              IsEnabled="{Binding IsEditMode, Converter={StaticResource BooleanReverseConverter}}"
                               DisplayMember="ShortName"
-                              SelectedItem="{Binding SelectedSupplier}"/>
+                              EditValue="{Binding SelectedSupplierId}"/>
         </dxlc:LayoutItem>
 
         <dxlc:LayoutGroup Orientation="Horizontal"
@@ -168,6 +169,22 @@
 
             <Button Content="Создать"
                     Command="{Binding ArrivalProductCommand}"
+                    IsEnabled="{Binding CanArrivalProduct, UpdateSourceTrigger=PropertyChanged}">
+                <Button.Style>
+                    <Style TargetType="Button">
+                        <Setter Property="Visibility" Value="Visible"/>
+                        <Style.Triggers>
+                            <DataTrigger Binding="{Binding IsEditMode}" Value="True">
+                                <Setter Property="Visibility" Value="Collapsed"/>
+                            </DataTrigger>
+                        </Style.Triggers>
+                    </Style>
+                </Button.Style>
+            </Button>
+
+            <Button Content="Сохранить"
+                    Visibility="{Binding IsEditMode, Converter={StaticResource BooleanToVisibilityConverter}}"
+                    Command="{Binding SaveArrivalProductCommand}"
                     IsEnabled="{Binding CanArrivalProduct, UpdateSourceTrigger=PropertyChanged}"/>
 
             <Button Content="Очистить"

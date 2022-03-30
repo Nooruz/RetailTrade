@@ -35,6 +35,11 @@
                     Style="{StaticResource FAButton}"
                     Content="{StaticResource faPrint}"/>
 
+            <Button Command="{Binding EditArrivalCommand}"
+                    ToolTip="Редактировать приход"
+                    Style="{StaticResource FAButton}"
+                    Content="{StaticResource faEdit}"/>
+
         </dxlc:LayoutGroup>
 
         <dxg:GridControl SelectionMode="Row"
