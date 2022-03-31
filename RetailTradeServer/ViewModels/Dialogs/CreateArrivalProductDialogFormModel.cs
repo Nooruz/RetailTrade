@@ -207,7 +207,11 @@ namespace RetailTradeServer.ViewModels.Dialogs
                         {
                             Add(product);
                         }
-                        ArrivalTableView.Grid.UpdateGroupSummary();
+                        OnPropertyChanged(nameof(CanArrivalProduct));
+                        _ = ArrivalTableView.Dispatcher.BeginInvoke(new Action(() =>
+                        {
+                            ArrivalTableView.Grid.UpdateTotalSummary();
+                        }), DispatcherPriority.Render);
                     }
                 }
             }
@@ -455,6 +459,24 @@ namespace RetailTradeServer.ViewModels.Dialogs
                     ArrivalProducts.Remove(SelectedArrivalProduct);
                 }
                 
+            }
+        }
+
+        [Command]
+        public void BarcodeSearch()
+        {
+            try
+            {
+                BarcodeSearchDialogFormModel viewModel = new();
+                UICommand result = DialogService.ShowDialog(dialogCommands: viewModel.Commands, "Введите штрихкод", nameof(BarcodeSearchDialogForm), viewModel);
+                if (result != null && result.Id is MessageBoxResult messageResult && messageResult == MessageBoxResult.OK)
+                {
+                    BarcodeService_OnBarcodeEvent(viewModel.Barcode);
+                }
+            }
+            catch (Exception)
+            {
+                //ignore
             }
         }
 

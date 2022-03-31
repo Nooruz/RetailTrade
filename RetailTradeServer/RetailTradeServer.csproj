@@ -102,7 +102,7 @@
       <HintPath>..\RetailTrade.Barcode\bin\Release\net6.0\publish\RetailTrade.Barcode.dll</HintPath>
     </Reference>
     <Reference Include="RetailTrade.CashRegisterMachine">
-      <HintPath>..\RetailTrade.CashRegisterMachine\bin\Release\net6.0-windows\RetailTrade.CashRegisterMachine.dll</HintPath>
+      <HintPath>..\RetailTrade.CashRegisterMachine\bin\Release\net6.0-windows\publish\RetailTrade.CashRegisterMachine.dll</HintPath>
     </Reference>
     <Resource Include="Fonts\fa-brands-400.ttf">
       <CopyToOutputDirectory>Never</CopyToOutputDirectory>

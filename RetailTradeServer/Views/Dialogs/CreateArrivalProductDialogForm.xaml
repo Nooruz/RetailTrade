@@ -36,7 +36,7 @@
                               IsEnabled="{Binding IsEditMode, Converter={StaticResource BooleanReverseConverter}}"
                               DisplayMember="ShortName"
                               ValueMember="Id"
-                              EditValue="{Binding SelectedSupplierId}"/>
+                              EditValue="{Binding SelectedSupplierId, UpdateSourceTrigger=PropertyChanged}"/>
         </dxlc:LayoutItem>
 
         <dxlc:LayoutGroup Orientation="Horizontal"
@@ -48,7 +48,8 @@
             
             <Button Content="Добавить по штрих коду"
                     Style="{StaticResource ButtonWithHorizontalIcon}"
-                    Tag="{StaticResource faBarcode}"/>
+                    Tag="{StaticResource faBarcode}"
+                    Command="{Binding BarcodeSearchCommand}"/>
             
         </dxlc:LayoutGroup>
 
