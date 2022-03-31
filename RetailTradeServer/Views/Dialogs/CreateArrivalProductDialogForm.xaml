@@ -157,6 +157,9 @@
                 <dxmvvm:EventToCommand EventName="Loaded"
                                        Command="{Binding GridControlLoadedCommand}"
                                        PassEventArgsToCommand="True"/>
+                <dxmvvm:KeyToCommand KeyGesture="Delete"
+                             EventName="PreviewKeyDown"
+                             Command="{Binding DeleteSelectedRowCommand}"/>
             </dxmvvm:Interaction.Behaviors>
 
         </dxg:GridControl>

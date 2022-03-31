@@ -29,6 +29,7 @@ namespace RetailTradeServer.ViewModels.Dialogs
         private readonly IProductService _productService;
         private readonly ISupplierService _supplierService;
         private readonly IArrivalService _arrivalService;
+        private readonly IArrivalProductService _arrivalProductService;
         private readonly ITypeProductService _typeProductService;
         private readonly IBarcodeService _barcodeService;
         private int? _selectedSupplierId;
@@ -148,13 +149,15 @@ namespace RetailTradeServer.ViewModels.Dialogs
             ISupplierService supplierService,
             IArrivalService arrivalService,
             ITypeProductService typeProductService,
-            IBarcodeService barcodeService)
+            IBarcodeService barcodeService,
+            IArrivalProductService arrivalProductService)
         {
             _productService = productService;
             _supplierService = supplierService;
             _arrivalService = arrivalService;
             _typeProductService = typeProductService;
             _barcodeService = barcodeService;
+            _arrivalProductService = arrivalProductService;
 
             BindingOperations.EnableCollectionSynchronization(ArrivalProducts, _syncLock);
 
@@ -404,23 +407,54 @@ namespace RetailTradeServer.ViewModels.Dialogs
         #region Public Voids
 
         [Command]
-        public void SaveArrivalProduct()
+        public async void SaveArrivalProduct()
         {
             try
             {
-                foreach (ArrivalProduct item in ArrivalProducts.Where(a => a.Id != 0))
+                foreach (ArrivalProduct newArrivalProduct in ArrivalProducts.Where(a => a.Id != 0).ToList())
                 {
-                    ArrivalProduct arrivalProduct = _arrival.ArrivalProducts.FirstOrDefault(a => a.Id == item.Id);
-
-                    if (arrivalProduct != null)
-                    {
-
-                    }
+                    _ = await _arrivalProductService.EditAsync(newArrivalProduct);
                 }
+                foreach (ArrivalProduct item in ArrivalProducts.Where(a => a.Id == 0).ToList())
+                {
+                    item.ArrivalId = Arrival.Id;
+                    _ = await _arrivalProductService.CreateAsync(item);
+                }
+
+                Arrival.Sum = ArrivalProducts.Sum(a => a.ArrivalSum);
+                Arrival.InvoiceDate = InvoiceDate;
+                Arrival.InvoiceNumber = InvoiceNumber;
+                Arrival.Comment = Comment;
+                Arrival.ArrivalProducts = null;
+                Arrival.Supplier = null;
+
+                _ = await _arrivalService.UpdateAsync(Arrival.Id, Arrival);
+
+                CurrentWindowService.Close();
             }
             catch (Exception)
             {
                 //ignore
+            }
+        }
+
+        [Command]
+        public void DeleteSelectedRow()
+        {
+            if (SelectedArrivalProduct != null)
+            {
+                if (IsEditMode)
+                {
+                    if (SelectedArrivalProduct.Id == 0)
+                    {
+                        ArrivalProducts.Remove(SelectedArrivalProduct);
+                    }
+                }
+                else
+                {
+                    ArrivalProducts.Remove(SelectedArrivalProduct);
+                }
+                
             }
         }
 

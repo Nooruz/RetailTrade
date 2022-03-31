@@ -24,6 +24,8 @@ namespace RetailTrade.EntityFramework.Services
         }
 
         public event Action PropertiesChanged;
+        public event Action<Arrival> OnEdited;
+        public event Action<Arrival> OnCreated;
 
         public async Task<bool> Clone(int id)
         {
@@ -67,7 +69,7 @@ namespace RetailTrade.EntityFramework.Services
                         await _productService.UpdateAsync(product.Id, product);
                     }
                 }
-                PropertiesChanged?.Invoke();
+                OnCreated?.Invoke(await GetByIncludAsync(result.Id));
             }
             return result;
         }
@@ -157,11 +159,30 @@ namespace RetailTrade.EntityFramework.Services
             return null;
         }
 
+        public async Task<Arrival> GetByIncludAsync(int id)
+        {
+            try
+            {
+                await using var context = _contextFactory.CreateDbContext();
+                return await context.Arrivals
+                    .Include(o => o.ArrivalProducts)
+                    .ThenInclude(o => o.Product)
+                    .ThenInclude(o => o.Unit)
+                    .Include(o => o.Supplier)
+                    .FirstOrDefaultAsync((e) => e.Id == id);
+            }
+            catch (Exception)
+            {
+                //ignore
+            }
+            return null;
+        }
+
         public async Task<Arrival> UpdateAsync(int id, Arrival entity)
         {
             var result = await _nonQueryDataService.Update(id, entity);
             if (result != null)
-                PropertiesChanged?.Invoke();
+                OnEdited?.Invoke(await GetByIncludAsync(result.Id));
             return result;
         }
     }

@@ -16,6 +16,8 @@ namespace RetailTrade.EntityFramework.Services
         private readonly IProductService _productService;
 
         public event Action PropertiesChanged;
+        public event Action<ArrivalProduct> OnEdited;
+        public event Action<ArrivalProduct> OnCreated;
 
         public ArrivalProductService(RetailTradeDbContextFactory contextFactory, 
             IProductService productService)
@@ -29,7 +31,22 @@ namespace RetailTrade.EntityFramework.Services
         {
             var result = await _nonQueryDataService.Create(entity);
             if (result != null)
-                PropertiesChanged?.Invoke();
+            {
+                try
+                {
+                    OnCreated?.Invoke(await GetByInclude(result.Id));
+                    Product product = await _productService.GetAsync(entity.ProductId);
+                    if (product != null)
+                    {
+                        product.Quantity += result.Quantity;
+                        _ = await _productService.UpdateAsync(product.Id, product);
+                    }
+                }
+                catch (Exception)
+                {
+                    //ignore
+                }
+            }
             return result;
         }
 
@@ -45,7 +62,7 @@ namespace RetailTrade.EntityFramework.Services
         {
             var result = await _nonQueryDataService.Update(id, entity);
             if (result != null)
-                PropertiesChanged?.Invoke();
+                OnEdited?.Invoke(result);
             return result;
         }
 
@@ -55,9 +72,9 @@ namespace RetailTrade.EntityFramework.Services
             {
                 await using var context = _contextFactory.CreateDbContext();
                 return await context.ArrivalProducts
-                    .FirstOrDefaultAsync((e) => e.Id == id);
+                    .FirstOrDefaultAsync(a => a.Id == id);
             }
-            catch (Exception e)
+            catch (Exception)
             {
                 //ignore
             }
@@ -87,7 +104,7 @@ namespace RetailTrade.EntityFramework.Services
                 return await context.ArrivalProducts
                     .ToListAsync();
             }
-            catch (Exception e)
+            catch (Exception)
             {
                 //ignore
             }
@@ -112,11 +129,52 @@ namespace RetailTrade.EntityFramework.Services
                 }
                 return true;
             }
-            catch (Exception e)
+            catch (Exception)
             {
                 //ignore
                 return false;
             }            
+        }
+
+        public async Task<bool> EditAsync(ArrivalProduct newArrivalProduct)
+        {
+            try
+            {
+                ArrivalProduct oldArrivalProduct = await GetAsync(newArrivalProduct.Id);
+                Product product = await _productService.GetByIdAsync(oldArrivalProduct.ProductId);
+                if (product != null)
+                {
+                    product.Quantity += newArrivalProduct.Quantity - oldArrivalProduct.Quantity;
+                    _ = await _productService.UpdateAsync(product.Id, product);
+                }
+                oldArrivalProduct.Quantity = newArrivalProduct.Quantity;
+                oldArrivalProduct.ArrivalPrice = newArrivalProduct.ArrivalPrice;
+                oldArrivalProduct.SalePrice = newArrivalProduct.SalePrice;
+                oldArrivalProduct.ArrivalSum = newArrivalProduct.ArrivalSum;
+                _ = await UpdateAsync(oldArrivalProduct.Id, oldArrivalProduct);
+                return true;
+            }
+            catch (Exception)
+            {
+                //ignore
+            }
+            return false;
+        }
+
+        public async Task<ArrivalProduct> GetByInclude(int id)
+        {
+            try
+            {
+                await using var context = _contextFactory.CreateDbContext();
+                return await context.ArrivalProducts
+                    .Include(a => a.Product)
+                    .FirstOrDefaultAsync(a => a.Id == id);
+            }
+            catch (Exception)
+            {
+                //ignore
+            }
+            return null;
         }
     }
 }
