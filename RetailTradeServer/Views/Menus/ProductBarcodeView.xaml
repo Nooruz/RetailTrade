@@ -24,6 +24,7 @@
 
             <Button Style="{StaticResource FAButton}"
                     ToolTip="Поиск по штрихкоду"
+                    Command="{Binding SearchBarcodeCommand}"
                     Content="{StaticResource faBarcode}"/>
 
             <Button Content="Очистить"
@@ -38,12 +39,6 @@
                 <dxg:TableView AutoWidth="True"
                                ShowGroupPanel="False"/>
             </dxg:GridControl.View>
-
-            <dxg:GridColumn Header="Выбран">
-                <dxg:GridColumn.EditSettings>
-                    <dxe:CheckEditSettings/>
-                </dxg:GridColumn.EditSettings>
-            </dxg:GridColumn>
 
             <dxg:GridColumn Header="Наименование товара"
                             FieldName="Name"
@@ -66,7 +61,6 @@
                                           Mask="n0"/>
                 </dxg:GridColumn.EditSettings>
             </dxg:GridColumn>
-
             <dxg:GridColumn Header="Шаблон этикетки">
                 <dxg:GridColumn.EditSettings>
                     <dxe:ComboBoxEditSettings/>
@@ -80,34 +74,15 @@
                                           Mask="n0"/>
                 </dxg:GridColumn.EditSettings>
             </dxg:GridColumn>
-
             <dxg:GridColumn Header="Количество"
                             FieldName="Quantity">
                 <dxg:GridColumn.EditSettings>
                     <dxe:SpinEditSettings SelectAllOnMouseUp="True"/>
                 </dxg:GridColumn.EditSettings>
             </dxg:GridColumn>
-
             <dxg:GridColumn Header="Штрих-код"
                             FieldName="Barcode"
-                            AllowEditing="False">
-                <dxg:GridColumn.CellTemplate>
-                    <DataTemplate>
-                        <Grid>
-                            <Button Content="Генерировать штрих-код"
-                                    Visibility="{Binding RowData.Row.Barcode, Converter={StaticResource StringIsNullOrEmptyVisibilityConverter}}"
-                                    Command="{Binding Path=DataContext.GenerateBarcodeCommand, RelativeSource={RelativeSource AncestorType={x:Type UserControl}, Mode=FindAncestor}}"/>
-                            <dxe:TextEdit x:Name="PART_Editor"
-                                          Visibility="Collapsed"/>
-                        </Grid>
-                        <DataTemplate.Triggers>
-                            <DataTrigger Binding="{Binding RowData.Row.Barcode, Converter={StaticResource StringIsNullOrEmptyVisibilityConverter}}" Value="Collapsed">
-                                <Setter TargetName="PART_Editor" Property="Visibility" Value="Visible"/>
-                            </DataTrigger>
-                        </DataTemplate.Triggers>
-                    </DataTemplate>
-                </dxg:GridColumn.CellTemplate>
-            </dxg:GridColumn>
+                            AllowEditing="False"/>
 
         </dxg:GridControl>
 

@@ -1,6 +1,5 @@
 ﻿using DevExpress.Mvvm;
 using RetailTrade.Domain.Models;
-using RetailTradeServer.Commands;
 using RetailTradeServer.State.Authenticators;
 using System.ComponentModel;
 using System.Windows;
@@ -150,17 +149,12 @@ namespace RetailTradeServer.ViewModels.Base
 
         public BaseViewModel()
         {
-            CloseCommand = new ParameterCommand(Close);
+
         }
 
         #endregion
 
         #region Private Members
-
-        private void Close(object parameter)
-        {
-
-        }
 
         private void AuthenticatorStateChanged()
         {

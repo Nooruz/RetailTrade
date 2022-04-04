@@ -7,10 +7,11 @@ using RetailTradeServer.Report;
 using RetailTradeServer.ViewModels.Base;
 using RetailTradeServer.ViewModels.Dialogs;
 using RetailTradeServer.Views.Dialogs;
-using SalePageServer.Utilities;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
+using System.Windows;
 using System.Windows.Input;
 
 namespace RetailTradeServer.ViewModels.Menus
@@ -24,7 +25,8 @@ namespace RetailTradeServer.ViewModels.Menus
         private Product _selectedProduct;
         private ProductBarcodePrinting _selectedProductBarcodePrinting;
         private IEnumerable<Product> _products;
-        private ObservableQueue<ProductBarcodePrinting> _productBarcodePrintings;
+        private ObservableCollection<ProductBarcodePrinting> _productBarcodePrintings = new();
+        private ProductDialogFormModel _productDialogFormModel;
 
         #endregion
 
@@ -39,7 +41,15 @@ namespace RetailTradeServer.ViewModels.Menus
                 OnPropertyChanged(nameof(Products));
             }
         }
-        public IEnumerable<ProductBarcodePrinting> ProductBarcodePrintings => _productBarcodePrintings;
+        public ObservableCollection<ProductBarcodePrinting> ProductBarcodePrintings
+        {
+            get => _productBarcodePrintings;
+            set
+            {
+                _productBarcodePrintings = value;
+                OnPropertyChanged(nameof(ProductBarcodePrintings));
+            }
+        }
         public Product SelectedProduct
         {
             get => _selectedProduct;
@@ -63,7 +73,6 @@ namespace RetailTradeServer.ViewModels.Menus
 
         #region Commands
 
-        public ICommand AddProductToPrintCommand => new RelayCommand(AddProductToPrint);
         public ICommand PrintProductBarcodeCommand => new RelayCommand(PrintProductBarcode);
         public ICommand ClearCommand => new RelayCommand(Clear);
         public ICommand GenerateBarcodeCommand => new RelayCommand(GenerateBarcode);
@@ -79,25 +88,63 @@ namespace RetailTradeServer.ViewModels.Menus
             _productService = productService;
             _typeProductService = typeProductService;
 
+            _productDialogFormModel = new(_typeProductService);
+
             Header = "Ценники и этикетки (Штрих-код)";
+
+            _productDialogFormModel.OnProductsSelected += ProductDialogFormModel_OnProductsSelected;
         }
 
         #endregion
 
         #region Private Voids
 
-        private void AddProductToPrint()
+        private void ProductDialogFormModel_OnProductsSelected(IEnumerable<Product> products)
         {
-            if (ProductBarcodePrintings.FirstOrDefault(p => p.Id == SelectedProduct.Id) == null)
+            products.ToList().ForEach(item =>
             {
-                _productBarcodePrintings.Enqueue(new ProductBarcodePrinting
+                try
                 {
-                    Id = SelectedProduct.Id,
-                    Name = SelectedProduct.Name,
-                    Barcode = SelectedProduct.Barcode,
-                    Quantity = 1
-                });
-                OnPropertyChanged(nameof(ProductBarcodePrintings));
+                    if (!ProductBarcodePrintings.Any(p => p.Id == item.Id))
+                    {
+                        ProductBarcodePrintings.Add(new ProductBarcodePrinting
+                        {
+                            Id = item.Id,
+                            Name = item.Name,
+                            Barcode = item.Barcode,
+                            Quantity = 1
+                        });
+                    }
+                }
+                catch (Exception)
+                {
+                    //ignore
+                }
+            });
+        }
+
+        private void AddProductToPrint(string barcode)
+        {
+            try
+            {
+                if (Products.Any())
+                {
+                    Product product = Products.FirstOrDefault(p => p.Barcode == barcode);
+                    if (product != null)
+                    {
+                        ProductBarcodePrintings.Add(new ProductBarcodePrinting
+                        {
+                            Id = product.Id,
+                            Name = product.Name,
+                            Barcode = product.Barcode,
+                            Quantity = 1
+                        });
+                    }
+                }
+            }
+            catch (Exception)
+            {
+                //ignore
             }
         }
 
@@ -132,7 +179,17 @@ namespace RetailTradeServer.ViewModels.Menus
 
         private void Clear()
         {
-            _productBarcodePrintings.Clear();
+            try
+            {
+                if (MessageBoxService.ShowMessage("Очистить список?", "Sale Page", MessageButton.YesNo, MessageIcon.Question) == MessageResult.Yes)
+                {
+                    ProductBarcodePrintings.Clear();
+                }
+            }
+            catch (Exception)
+            {
+                //ignore
+            }
         }
 
         private void PrintingSystem_EndPrint(object sender, EventArgs e)
@@ -162,7 +219,26 @@ namespace RetailTradeServer.ViewModels.Menus
         [Command]
         public void AddProduct()
         {
-            WindowService.Show(nameof(ProductDialogForm), new ProductDialogFormModel(_typeProductService) { Products = new(Products) });
+            _productDialogFormModel.Products = new(Products);
+            WindowService.Show(nameof(ProductDialogForm), _productDialogFormModel);
+        }
+
+        [Command]
+        public void SearchBarcode()
+        {
+            try
+            {
+                BarcodeSearchDialogFormModel viewModel = new();
+                UICommand result = DialogService.ShowDialog(dialogCommands: viewModel.Commands, "Введите штрихкод", nameof(BarcodeSearchDialogForm), viewModel);
+                if (result != null && result.Id is MessageBoxResult messageResult && messageResult == MessageBoxResult.OK)
+                {
+                    AddProductToPrint(viewModel.Barcode);
+                }
+            }
+            catch (Exception)
+            {
+                //ignore
+            }
         }
 
         #endregion

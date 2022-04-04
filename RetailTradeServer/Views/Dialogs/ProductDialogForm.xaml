@@ -109,9 +109,9 @@
 
             </dxlc:LayoutGroup>
 
-            <dxg:GridControl ItemsSource="{Binding Products}" 
-                             SelectionMode="Row"                             
-                             SelectedItem="{Binding SelectedProduct}">
+            <components:CustomGridControl ItemsSource="{Binding Products}" 
+                                          SelectionMode="MultipleRow"
+                                          SelectedItem="{Binding SelectedProduct}">
                 <dxmvvm:Interaction.Behaviors>
                     <dxmvvm:EventToCommand Event="Loaded"
                                            Command="{Binding GridControlLoadedCommand}"
@@ -119,6 +119,7 @@
                 </dxmvvm:Interaction.Behaviors>
                 <dxg:GridControl.View>
                     <dxg:TableView AllowEditing="False"
+                                   ShowCheckBoxSelectorColumn="True"
                                    ShowGroupPanel="False" 
                                    ShowFilterPanelMode="Never"
                                    AutoWidth="True">
@@ -130,7 +131,7 @@
                 </dxg:GridControl.View>
                 <dxg:GridColumn FieldName="Name"
                                 Header="Наименование"/>
-            </dxg:GridControl>
+            </components:CustomGridControl>
             
         </dxlc:LayoutGroup>
         

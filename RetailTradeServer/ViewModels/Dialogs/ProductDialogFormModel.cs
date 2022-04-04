@@ -3,10 +3,12 @@ using DevExpress.Xpf.Grid;
 using RetailTrade.Domain.Models;
 using RetailTrade.Domain.Services;
 using RetailTradeServer.Commands;
+using RetailTradeServer.Components;
 using RetailTradeServer.ViewModels.Dialogs.Base;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Linq;
 using System.Windows;
 using System.Windows.Input;
 
@@ -74,6 +76,7 @@ namespace RetailTradeServer.ViewModels.Dialogs
                 OnPropertyChanged(nameof(Products));
             }
         }
+        public ObservableCollection<Product> SelectedProducts { get; } = new();
         public Product SelectedProduct
         {
             get => _selectedProduct;
@@ -92,7 +95,7 @@ namespace RetailTradeServer.ViewModels.Dialogs
                 OnPropertyChanged(nameof(TypeProducts));
             }
         }
-        public GridControl ProductGridControl { get; set; }
+        public CustomGridControl ProductGridControl { get; set; }
         public TypeProduct SelectedTypeProduct
         {
             get => _selectedTypeProduct;
@@ -126,6 +129,7 @@ namespace RetailTradeServer.ViewModels.Dialogs
         #region Event Action
 
         public event Action<Product> OnProductSelected;
+        public event Action<IEnumerable<Product>> OnProductsSelected;
 
         #endregion
 
@@ -198,9 +202,17 @@ namespace RetailTradeServer.ViewModels.Dialogs
         private void Select()
         {
             if (SelectedProduct != null)
-            {
-                CurrentWindowService.Close();
-                OnProductSelected?.Invoke(SelectedProduct);                
+            {                
+                try
+                {
+                    CurrentWindowService.Close();
+                    OnProductSelected?.Invoke(SelectedProduct);
+                    OnProductsSelected?.Invoke(ProductGridControl.MySelectedItems.Cast<Product>().ToList());
+                }
+                catch (Exception)
+                {
+                    //ignore
+                }
             }
         }
 
@@ -208,7 +220,7 @@ namespace RetailTradeServer.ViewModels.Dialogs
         {
             if (parameter is RoutedEventArgs e)
             {
-                if (e.Source is GridControl gridControl)
+                if (e.Source is CustomGridControl gridControl)
                 {
                     ProductGridControl = gridControl;
                 }

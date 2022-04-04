@@ -79,7 +79,15 @@ namespace RetailTradeServer.Views.Menus
                 }
             });
             Interaction.GetBehaviors(this).Add(new DXMessageBoxService());
-            Interaction.GetBehaviors(this).Add(new DialogService());
+            Interaction.GetBehaviors(this).Add(new DialogService()
+            {
+                DialogStyle = new Style
+                {
+                    TargetType = typeof(Window),
+                    BasedOn = FindResource("DialogService") as Style
+                }
+            });
+            Interaction.GetBehaviors(this).Add(new CurrentWindowService());
             Style = FindResource("BaseUserControl") as Style;
         }
 
