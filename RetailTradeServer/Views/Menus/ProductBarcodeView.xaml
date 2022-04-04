@@ -19,7 +19,8 @@
         <dxlc:LayoutGroup HorizontalAlignment="Left"
                           VerticalAlignment="Top">
 
-            <Button Content="Добавить"/>
+            <Button Content="Добавить"
+                    Command="{Binding AddProductCommand}"/>
 
             <Button Style="{StaticResource FAButton}"
                     ToolTip="Поиск по штрихкоду"

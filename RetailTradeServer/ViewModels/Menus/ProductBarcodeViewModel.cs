@@ -1,4 +1,5 @@
 ﻿using DevExpress.Mvvm;
+using DevExpress.Mvvm.DataAnnotations;
 using RetailTrade.Domain.Models;
 using RetailTrade.Domain.Services;
 using RetailTradeServer.Commands;
@@ -19,6 +20,7 @@ namespace RetailTradeServer.ViewModels.Menus
         #region Private Members
 
         private readonly IProductService _productService;
+        private readonly ITypeProductService _typeProductService;
         private Product _selectedProduct;
         private ProductBarcodePrinting _selectedProductBarcodePrinting;
         private IEnumerable<Product> _products;
@@ -71,12 +73,14 @@ namespace RetailTradeServer.ViewModels.Menus
 
         #region Constructor
 
-        public ProductBarcodeViewModel(IProductService productService)
+        public ProductBarcodeViewModel(IProductService productService,
+            ITypeProductService typeProductService)
         {
             _productService = productService;
+            _typeProductService = typeProductService;
 
             Header = "Ценники и этикетки (Штрих-код)";
-        }        
+        }
 
         #endregion
 
@@ -133,14 +137,14 @@ namespace RetailTradeServer.ViewModels.Menus
 
         private void PrintingSystem_EndPrint(object sender, EventArgs e)
         {
-            _productBarcodePrintings.Clear();            
+            _productBarcodePrintings.Clear();
         }
 
         private async void GenerateBarcode()
         {
             if (SelectedProductBarcodePrinting != null)
             {
-                SelectedProductBarcodePrinting.Barcode = await _productService.GenerateBarcode(SelectedProductBarcodePrinting.Id);                
+                SelectedProductBarcodePrinting.Barcode = await _productService.GenerateBarcode(SelectedProductBarcodePrinting.Id);
             }
         }
 
@@ -149,6 +153,16 @@ namespace RetailTradeServer.ViewModels.Menus
             Products = await _productService.GetAllAsync();
             _productBarcodePrintings = new();
             ShowLoadingPanel = false;
+        }
+
+        #endregion
+
+        #region Public Voids
+
+        [Command]
+        public void AddProduct()
+        {
+            WindowService.Show(nameof(ProductDialogForm), new ProductDialogFormModel(_typeProductService) { Products = new(Products) });
         }
 
         #endregion

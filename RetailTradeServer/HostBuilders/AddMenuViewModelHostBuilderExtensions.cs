@@ -119,7 +119,8 @@ namespace RetailTradeServer.HostBuilders
 
         private static ProductBarcodeViewModel CreateProductBarcodeViewModel(IServiceProvider services)
         {
-            return new ProductBarcodeViewModel(services.GetRequiredService<IProductService>());
+            return new ProductBarcodeViewModel(services.GetRequiredService<IProductService>(),
+                services.GetRequiredService<ITypeProductService>());
         }
 
         private static SaleDashboardView CreateSaleDashboardView(IServiceProvider services)
