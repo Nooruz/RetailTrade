@@ -91,8 +91,7 @@ namespace RetailTradeServer.ViewModels.Menus
                     Id = SelectedProduct.Id,
                     Name = SelectedProduct.Name,
                     Barcode = SelectedProduct.Barcode,
-                    Quantity = 1,
-                    Price = SelectedProduct.SalePrice
+                    Quantity = 1
                 });
                 OnPropertyChanged(nameof(ProductBarcodePrintings));
             }
@@ -111,8 +110,7 @@ namespace RetailTradeServer.ViewModels.Menus
                     productBarcodePrintings.Add(new ProductBarcodePrinting
                     {
                         Name = item.Name,
-                        Barcode = item.Barcode,
-                        Price = item.Price
+                        Barcode = item.Barcode
                     });
                 }
             }

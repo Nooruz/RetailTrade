@@ -16,32 +16,70 @@
 
     <dxlc:LayoutControl Orientation="Vertical">
 
-        <dxg:GridControl ItemsSource="{Binding Products}"
-                         SelectedItem="{Binding SelectedProduct}">
-            <dxg:GridControl.View>
-                <dxg:TableView AutoWidth="True" 
-                               AllowEditing="False">
-                    <dxmvvm:Interaction.Behaviors>
-                        <dxmvvm:EventToCommand EventName="MouseDoubleClick" Command="{Binding AddProductToPrintCommand}"/>
-                    </dxmvvm:Interaction.Behaviors>
-                </dxg:TableView>
-            </dxg:GridControl.View>
-            <dxg:GridColumn Header="Наименование товара"
-                            FieldName="Name"/>
-        </dxg:GridControl>
+        <dxlc:LayoutGroup HorizontalAlignment="Left"
+                          VerticalAlignment="Top">
+
+            <Button Content="Добавить"/>
+
+            <Button Style="{StaticResource FAButton}"
+                    ToolTip="Поиск по штрихкоду"
+                    Content="{StaticResource faBarcode}"/>
+
+            <Button Content="Очистить"
+                    Command="{Binding ClearCommand}"/>
+
+        </dxlc:LayoutGroup>
 
         <dxg:GridControl ItemsSource="{Binding ProductBarcodePrintings}"
                          SelectedItem="{Binding SelectedProductBarcodePrinting}">
-            
+
             <dxg:GridControl.View>
                 <dxg:TableView AutoWidth="True"
                                ShowGroupPanel="False"/>
             </dxg:GridControl.View>
-            
+
+            <dxg:GridColumn Header="Выбран">
+                <dxg:GridColumn.EditSettings>
+                    <dxe:CheckEditSettings/>
+                </dxg:GridColumn.EditSettings>
+            </dxg:GridColumn>
+
             <dxg:GridColumn Header="Наименование товара"
                             FieldName="Name"
                             AllowEditing="False"/>
-            
+
+            <dxg:GridColumn Header="Ед. изм."/>
+            <dxg:GridColumn Header="Штрихкод"/>
+            <dxg:GridColumn Header="Цена"/>
+            <dxg:GridColumn Header="На складе"/>
+            <dxg:GridColumn Header="Шаблон ценника">
+                <dxg:GridColumn.EditSettings>
+                    <dxe:ComboBoxEditSettings/>
+                </dxg:GridColumn.EditSettings>
+            </dxg:GridColumn>
+            <dxg:GridColumn Header="Кол. ценников (шт)">
+                <dxg:GridColumn.EditSettings>
+                    <dxe:SpinEditSettings MinValue="1" 
+                                          MaskUseAsDisplayFormat="True" 
+                                          MaxValue="100" 
+                                          Mask="n0"/>
+                </dxg:GridColumn.EditSettings>
+            </dxg:GridColumn>
+
+            <dxg:GridColumn Header="Шаблон этикетки">
+                <dxg:GridColumn.EditSettings>
+                    <dxe:ComboBoxEditSettings/>
+                </dxg:GridColumn.EditSettings>
+            </dxg:GridColumn>
+            <dxg:GridColumn Header="Кол. этикеток (шт)">
+                <dxg:GridColumn.EditSettings>
+                    <dxe:SpinEditSettings MinValue="1" 
+                                          MaskUseAsDisplayFormat="True" 
+                                          MaxValue="100" 
+                                          Mask="n0"/>
+                </dxg:GridColumn.EditSettings>
+            </dxg:GridColumn>
+
             <dxg:GridColumn Header="Количество"
                             FieldName="Quantity">
                 <dxg:GridColumn.EditSettings>
@@ -69,20 +107,7 @@
                     </DataTemplate>
                 </dxg:GridColumn.CellTemplate>
             </dxg:GridColumn>
-            
-            <!--<dxg:GridColumn Width="30">
-                <dxg:GridColumn.CellTemplate>
-                    <DataTemplate>
-                        <Button x:Name="PART_Editor" 
-                                Content="{StaticResource faSyncAlt}"
-                                FontFamily="{StaticResource FontAwesomeBold}"
-                                ToolTip="Генерировать штрих-код"
-                                Visibility="{Binding RowData.Row.Barcode, Converter={StaticResource StringIsNullOrEmptyVisibilityConverter}}"
-                                Command="{Binding Path=DataContext.GenerateBarcodeCommand, RelativeSource={RelativeSource AncestorType={x:Type UserControl}, Mode=FindAncestor}}"/>
-                    </DataTemplate>
-                </dxg:GridColumn.CellTemplate>
-            </dxg:GridColumn>-->
-            
+
         </dxg:GridControl>
 
         <dxlc:LayoutGroup HorizontalAlignment="Right"
@@ -90,8 +115,6 @@
 
             <Button Content="Печатать"
                     Command="{Binding PrintProductBarcodeCommand}"/>
-            <Button Content="Очистить"
-                    Command="{Binding ClearCommand}"/>
 
         </dxlc:LayoutGroup>
 

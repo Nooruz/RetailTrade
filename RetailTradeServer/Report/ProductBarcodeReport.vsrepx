@@ -8,30 +8,21 @@
     <Item2 Ref="4" ControlType="DetailBand" Name="detailBand1" HeightF="246.520874" Dpi="254">
       <HierarchyPrintOptions Ref="5" Indent="50.8" />
       <Controls>
-        <Item1 Ref="6" ControlType="XRBarCode" Name="barCode1" Module="5.08" AutoModule="true" SizeF="410,129.680878" LocationFloat="25.0000076,58.4200058" Dpi="254" Padding="26,26,0,0,254">
+        <Item1 Ref="6" ControlType="XRBarCode" Name="barCode1" Module="5.08" AutoModule="true" SizeF="410,129.680878" LocationFloat="25.0000076,103.399132" Dpi="254" Padding="26,26,0,0,254">
           <Symbology Ref="7" Name="Code128" />
           <ExpressionBindings>
             <Item1 Ref="8" EventName="BeforePrint" PropertyName="Text" Expression="[Barcode]" />
           </ExpressionBindings>
         </Item1>
-        <Item2 Ref="9" ControlType="XRLabel" Name="label3" TextFormatString="{0} сом" Multiline="true" Text="label3" TextAlignment="MiddleCenter" SizeF="314.75,58.4199829" LocationFloat="120.250008,188.100876" Dpi="254" Padding="5,5,0,0,254">
+        <Item2 Ref="9" ControlType="XRLabel" Name="label1" Multiline="true" Text="label1" TextAlignment="MiddleLeft" WordWrap="false" SizeF="410,58.42" LocationFloat="25.0000076,0" Dpi="254" Padding="5,5,0,0,254">
           <ExpressionBindings>
-            <Item1 Ref="10" EventName="BeforePrint" PropertyName="Text" Expression="[Price]" />
+            <Item1 Ref="10" EventName="BeforePrint" PropertyName="Text" Expression="[Name]" />
           </ExpressionBindings>
           <StylePriority Ref="11" UseTextAlignment="false" />
         </Item2>
-        <Item3 Ref="12" ControlType="XRLabel" Name="label2" Multiline="true" Text="Цена:" TextAlignment="MiddleLeft" SizeF="95.25,58.4199829" LocationFloat="25.0000076,188.100876" Dpi="254" Padding="5,5,0,0,254">
-          <StylePriority Ref="13" UseTextAlignment="false" />
-        </Item3>
-        <Item4 Ref="14" ControlType="XRLabel" Name="label1" Multiline="true" Text="label1" TextAlignment="MiddleLeft" WordWrap="false" SizeF="410,58.42" LocationFloat="25.0000076,0" Dpi="254" Padding="5,5,0,0,254">
-          <ExpressionBindings>
-            <Item1 Ref="15" EventName="BeforePrint" PropertyName="Text" Expression="[Name]" />
-          </ExpressionBindings>
-          <StylePriority Ref="16" UseTextAlignment="false" />
-        </Item4>
       </Controls>
     </Item2>
-    <Item3 Ref="17" ControlType="BottomMarginBand" Name="bottomMarginBand1" HeightF="0" Dpi="254" />
+    <Item3 Ref="12" ControlType="BottomMarginBand" Name="bottomMarginBand1" HeightF="0" Dpi="254" />
   </Bands>
   <ComponentStorage>
     <Item1 Ref="0" ObjectType="DevExpress.DataAccess.ObjectBinding.ObjectDataSource,DevExpress.DataAccess.v21.2" Name="objectDataSource1" Base64="PE9iamVjdERhdGFTb3VyY2UgTmFtZT0ib2JqZWN0RGF0YVNvdXJjZTEiPjxDb25zdHJ1Y3RvciAvPjwvT2JqZWN0RGF0YVNvdXJjZT4=" />
