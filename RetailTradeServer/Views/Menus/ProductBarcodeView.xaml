@@ -33,24 +33,40 @@
         </dxlc:LayoutGroup>
 
         <dxg:GridControl ItemsSource="{Binding ProductBarcodePrintings}"
-                         SelectedItem="{Binding SelectedProductBarcodePrinting}">
+                         SelectedItem="{Binding SelectedProductBarcodePrinting}"
+                         AutoGenerateColumns="None">
 
             <dxg:GridControl.View>
                 <dxg:TableView AutoWidth="True"
+                               AllowEditing="False"
                                ShowGroupPanel="False"/>
             </dxg:GridControl.View>
 
             <dxg:GridColumn Header="Наименование товара"
-                            FieldName="Name"
-                            AllowEditing="False"/>
-
-            <dxg:GridColumn Header="Ед. изм."/>
-            <dxg:GridColumn Header="Штрихкод"/>
-            <dxg:GridColumn Header="Цена"/>
-            <dxg:GridColumn Header="На складе"/>
-            <dxg:GridColumn Header="Шаблон ценника">
+                            FieldName="Name"/>
+            <dxg:GridColumn FieldName="UnitId" Header="Ед. изм.">
                 <dxg:GridColumn.EditSettings>
-                    <dxe:ComboBoxEditSettings/>
+                    <dxe:ComboBoxEditSettings ItemsSource="{Binding Units}"
+                                              DisplayMember="ShortName"
+                                              ValueMember="Id"/>
+                </dxg:GridColumn.EditSettings>
+            </dxg:GridColumn>
+            <dxg:GridColumn Header="Штрихкод"
+                            FieldName="Barcode"/>
+            <dxg:GridColumn Header="Цена"
+                            FieldName="SalePrice"/>
+            <dxg:GridColumn Header="На складе"
+                            FieldName="QuantityInStock">
+                <dxg:GridColumn.EditSettings>
+                    <dxe:TextEditSettings MaskUseAsDisplayFormat="True" MaskType="Numeric" Mask="n"/>
+                </dxg:GridColumn.EditSettings>
+            </dxg:GridColumn>
+            <dxg:GridColumn Header="Шаблон ценника"
+                            FieldName="PriceTagId">
+                <dxg:GridColumn.EditSettings>
+                    <dxe:ComboBoxEditSettings ItemsSource="{Binding PriceTags}"
+                                              DisplayMember="Name"
+                                              ValueMember="Id"/>
                 </dxg:GridColumn.EditSettings>
             </dxg:GridColumn>
             <dxg:GridColumn Header="Кол. ценников (шт)">
@@ -61,9 +77,25 @@
                                           Mask="n0"/>
                 </dxg:GridColumn.EditSettings>
             </dxg:GridColumn>
-            <dxg:GridColumn Header="Шаблон этикетки">
+            <dxg:GridColumn Header="Шаблон этикеток"
+                            FieldName="LabelId"
+                            AllowEditing="True">
                 <dxg:GridColumn.EditSettings>
-                    <dxe:ComboBoxEditSettings/>
+                    <dxe:ComboBoxEditSettings ItemsSource="{Binding Labels}"
+                                              DisplayMember="Name"
+                                              ValueMember="Id">
+                        <dxe:ComboBoxEditSettings.Buttons>
+                            <dxe:ButtonInfo GlyphKind="Custom"
+                                            Command="{Binding ShowLabelCommand}">
+                                <dxe:ButtonInfo.Content>
+                                    <TextBlock Style="{StaticResource IconicTextBlock}"
+                                               FontSize="11"
+                                               Padding="3 0 3 0"
+                                               Text="{StaticResource faCompress}"/>
+                                </dxe:ButtonInfo.Content>
+                            </dxe:ButtonInfo>
+                        </dxe:ComboBoxEditSettings.Buttons>
+                    </dxe:ComboBoxEditSettings>
                 </dxg:GridColumn.EditSettings>
             </dxg:GridColumn>
             <dxg:GridColumn Header="Кол. этикеток (шт)">
@@ -80,9 +112,6 @@
                     <dxe:SpinEditSettings SelectAllOnMouseUp="True"/>
                 </dxg:GridColumn.EditSettings>
             </dxg:GridColumn>
-            <dxg:GridColumn Header="Штрих-код"
-                            FieldName="Barcode"
-                            AllowEditing="False"/>
 
         </dxg:GridControl>
 

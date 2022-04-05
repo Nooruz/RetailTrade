@@ -48,9 +48,9 @@ namespace RetailTradeServer.Commands
             {
                 await _authenticator.Login(_viewModel.SelectedUser.Username, _viewModel.Password);                
                 _homeRavigator.Renavigate();
-                if (!Settings.Default.AdminCreated)
+                if (Settings.Default.DefaultUserName != _viewModel.SelectedUser.Username)
                 {
-                    Settings.Default.AdminCreated = true;
+                    Settings.Default.DefaultUserName = _viewModel.SelectedUser.Username;
                     Settings.Default.Save();
                 }
             }

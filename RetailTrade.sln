@@ -19,8 +19,6 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RetailTrade.SQLServerConnec
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RetailTrade.Barcode", "RetailTrade.Barcode\RetailTrade.Barcode.csproj", "{88640049-20CF-49F8-905C-2FA7121B6A2C}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RetailTrade.MAUI", "RetailTrade.MAUI\RetailTrade.MAUI.csproj", "{13F5E2B5-74F9-49FA-B39F-0EFC0C83452E}"
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -59,18 +57,12 @@ Global
 		{88640049-20CF-49F8-905C-2FA7121B6A2C}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{88640049-20CF-49F8-905C-2FA7121B6A2C}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{88640049-20CF-49F8-905C-2FA7121B6A2C}.Release|Any CPU.Build.0 = Release|Any CPU
-		{13F5E2B5-74F9-49FA-B39F-0EFC0C83452E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{13F5E2B5-74F9-49FA-B39F-0EFC0C83452E}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{13F5E2B5-74F9-49FA-B39F-0EFC0C83452E}.Debug|Any CPU.Deploy.0 = Debug|Any CPU
-		{13F5E2B5-74F9-49FA-B39F-0EFC0C83452E}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{13F5E2B5-74F9-49FA-B39F-0EFC0C83452E}.Release|Any CPU.Build.0 = Release|Any CPU
-		{13F5E2B5-74F9-49FA-B39F-0EFC0C83452E}.Release|Any CPU.Deploy.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
-		BuildVersion_StartDate = 2000/1/1
 		SolutionGuid = {1B5BED5D-604D-4352-A831-4FDEE07951CB}
+		BuildVersion_StartDate = 2000/1/1
 	EndGlobalSection
 EndGlobal

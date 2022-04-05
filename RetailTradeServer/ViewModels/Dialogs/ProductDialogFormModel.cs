@@ -205,9 +205,9 @@ namespace RetailTradeServer.ViewModels.Dialogs
             {                
                 try
                 {
-                    CurrentWindowService.Close();
                     OnProductSelected?.Invoke(SelectedProduct);
                     OnProductsSelected?.Invoke(ProductGridControl.MySelectedItems.Cast<Product>().ToList());
+                    CurrentWindowService.Close();
                 }
                 catch (Exception)
                 {

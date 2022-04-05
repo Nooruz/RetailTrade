@@ -1,4 +1,5 @@
-﻿using RetailTrade.Domain.Models;
+﻿using DevExpress.Mvvm.DataAnnotations;
+using RetailTrade.Domain.Models;
 using RetailTrade.Domain.Services;
 using RetailTradeServer.Commands;
 using RetailTradeServer.State.Authenticators;
@@ -7,7 +8,9 @@ using RetailTradeServer.State.Navigators;
 using RetailTradeServer.ViewModels.Base;
 using SalePageServer.Commands;
 using SalePageServer.Properties;
+using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Windows;
 using System.Windows.Input;
 
@@ -43,6 +46,7 @@ namespace RetailTradeServer.ViewModels
                 _selectedUser = value;
                 OnPropertyChanged(nameof(CanLogin));
                 OnPropertyChanged(nameof(SelectedUser));
+                OnPropertyChanged(nameof(IsSelectedUser));
             }
         }
         public string Password
@@ -58,6 +62,7 @@ namespace RetailTradeServer.ViewModels
         public GlobalMessageViewModel GlobalMessageViewModel { get; }
         public bool CanLogin => SelectedUser != null && !string.IsNullOrEmpty(Password);
         public Visibility IsAdminCreated => Settings.Default.AdminCreated ? Visibility.Collapsed : Visibility.Visible;
+        public bool IsSelectedUser => SelectedUser != null;
 
         #endregion
 
@@ -82,16 +87,27 @@ namespace RetailTradeServer.ViewModels
 
             LoginCommand = new LoginCommand(this, authenticator, homeRenavigator, messageStore);
             RegistrationCommand = new RenavigateCommand(registrationRenavigator);
-            GetAdmin();
         }
 
         #endregion
 
-        #region Private Voids
+        #region Public Voids
 
-        private async void GetAdmin()
+        [Command]
+        public async void UserControlLoaded()
         {
-            Users = await _userService.GetAdminAsync();
+            try
+            {
+                Users = await _userService.GetAdminAsync();
+                if (!string.IsNullOrEmpty(Settings.Default.DefaultUserName))
+                {
+                    SelectedUser = Users.FirstOrDefault(u => u.Username == Settings.Default.DefaultUserName);
+                }
+            }
+            catch (Exception)
+            {
+                //ignore
+            }
         }
 
         #endregion

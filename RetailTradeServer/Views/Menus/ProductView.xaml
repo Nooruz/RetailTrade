@@ -9,7 +9,6 @@
     xmlns:components="clr-namespace:RetailTradeServer.Components"
     xmlns:local="clr-namespace:RetailTradeServer.Views.Menus"
     x:Class="RetailTradeServer.Views.Menus.ProductView"
-    xmlns:dialogs="clr-namespace:RetailTradeServer.Views.Dialogs"
     Title="{Binding Header}">
 
     <dxmvvm:Interaction.Behaviors>

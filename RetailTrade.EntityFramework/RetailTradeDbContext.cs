@@ -102,6 +102,16 @@ namespace RetailTrade.EntityFramework
         /// </summary>
         public DbSet<ProductRefund> ProductRefunds { get; set; }
 
+        /// <summary>
+        /// Тип шаблона ценников и этикеток
+        /// </summary>
+        public DbSet<TypeLabelPriceTag> TypeLabelPriceTags { get; set; }
+
+        /// <summary>
+        /// Шаблон ценников и этикеток
+        /// </summary>
+        public DbSet<LabelPriceTag> LabelPriceTags { get; set; }
+
         #region Employee
 
         /// <summary>
@@ -191,6 +201,14 @@ namespace RetailTrade.EntityFramework
                     .IsRequired(false)
                     .OnDelete(DeleteBehavior.Restrict);
             });
+
+            modelBuilder.Entity<TypeLabelPriceTag>().HasData(
+                new TypeLabelPriceTag { Id = 1, Name = "Этикетка для товаров" },
+                new TypeLabelPriceTag { Id = 2, Name = "Ценник для товаров" });
+
+            modelBuilder.Entity<LabelPriceTag>().HasData(
+                new LabelPriceTag { Id = 1, Name = "Этикетка для товара", TypeLabelPriceTagId = 1 },
+                new LabelPriceTag { Id = 2, Name = "Ценник для товара", TypeLabelPriceTagId = 2 });
 
             modelBuilder.Entity<Unit>().HasData(
                 new Unit { Id = 1, LongName = "Килограмм", ShortName = "кг" },

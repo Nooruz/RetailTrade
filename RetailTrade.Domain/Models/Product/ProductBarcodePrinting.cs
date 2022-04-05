@@ -5,10 +5,12 @@ namespace RetailTrade.Domain.Models
     public class ProductBarcodePrinting : INotifyPropertyChanged
     {
         private int _id;
+        private int _unitId;
+        private int _labelId;
         private string _name;
-        private double _quantity;
+        private double _quantityInStock;
         private string _barcode;
-        private decimal _price;
+        private decimal _salePrice;
 
         public int Id
         {
@@ -17,6 +19,24 @@ namespace RetailTrade.Domain.Models
             {
                 _id = value;
                 OnPropertyChanged(nameof(Id));
+            }
+        }
+        public int UnitId
+        {
+            get => _unitId;
+            set
+            {
+                _unitId = value;
+                OnPropertyChanged(nameof(UnitId));
+            }
+        }
+        public int LabelId
+        {
+            get => _labelId;
+            set
+            {
+                _labelId = value;
+                OnPropertyChanged(nameof(LabelId));
             }
         }
         public string Name
@@ -28,13 +48,13 @@ namespace RetailTrade.Domain.Models
                 OnPropertyChanged(nameof(Name));
             }
         }
-        public double Quantity
+        public double QuantityInStock
         {
-            get => _quantity;
+            get => _quantityInStock;
             set
             {
-                _quantity = value;
-                OnPropertyChanged(nameof(Quantity));
+                _quantityInStock = value;
+                OnPropertyChanged(nameof(QuantityInStock));
             }
         }
         public string Barcode
@@ -46,13 +66,13 @@ namespace RetailTrade.Domain.Models
                 OnPropertyChanged(nameof(Barcode));
             }
         }
-        public decimal Price
+        public decimal SalePrice
         {
-            get => _price;
+            get => _salePrice;
             set
             {
-                _price = value;
-                OnPropertyChanged(nameof(Price));
+                _salePrice = value;
+                OnPropertyChanged(nameof(SalePrice));
             }
         }
 

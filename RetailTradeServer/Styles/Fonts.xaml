@@ -45,5 +45,6 @@
     <system:String x:Key="faFolderPlus">&#xf65e;</system:String>
     <system:String x:Key="faExpand">&#xf065;</system:String>
     <system:String x:Key="faBallotCheck">&#xf733;</system:String>
+    <system:String x:Key="faCompress">&#xf066;</system:String>
 
 </ResourceDictionary>

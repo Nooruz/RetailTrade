@@ -1,0 +1,50 @@
+﻿<local:BaseDialogUserControl xmlns:dxp="http://schemas.devexpress.com/winfx/2008/xaml/printing" 
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:dxe="http://schemas.devexpress.com/winfx/2008/xaml/editors"
+    xmlns:dxlc="http://schemas.devexpress.com/winfx/2008/xaml/layoutcontrol"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="clr-namespace:RetailTradeServer.Views.Dialogs"
+    x:Class="RetailTradeServer.Views.Dialogs.CreationAssistantLabelPriceTagView"
+    Width="400">
+
+    <dxlc:LayoutControl Orientation="Vertical">
+
+        <dxlc:LayoutGroup Orientation="Vertical">
+
+            <dxlc:LayoutItem Label="Наименование:"
+                             LabelPosition="Top">
+                <dxe:TextEdit/>
+            </dxlc:LayoutItem>
+
+            <dxlc:LayoutItem Label="Размер ленты:"
+                             LabelPosition="Top">
+                <dxe:ComboBoxEdit/>
+            </dxlc:LayoutItem>
+
+            <dxlc:LayoutItem Label="Назначение:"
+                             LabelPosition="Top">
+                <dxe:ComboBoxEdit/>
+            </dxlc:LayoutItem>
+
+        </dxlc:LayoutGroup>
+        
+        <dxp:DocumentPreviewControl AllowDocumentEditing="False"
+                                    AutoShowDocumentMap="False"
+                                    AutoShowParametersPanel="False"
+                                    CommandBarStyle="None"
+                                    ShowThumbnails="False"
+                                    ShowNavigationPane="False"
+                                    ShowPageMargins="False"
+                                    ShowCoverPage="False"/>
+
+        <dxlc:LayoutGroup HorizontalAlignment="Right"
+                          VerticalAlignment="Bottom">
+
+            <Button Content="Напечатать образец"/>
+            <Button Content="Сохранить"/>
+
+        </dxlc:LayoutGroup>
+
+    </dxlc:LayoutControl>
+
+</local:BaseDialogUserControl>

@@ -133,5 +133,17 @@ namespace SalePageServer.Properties {
                 this["BarcodeSpeed"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string DefaultUserName {
+            get {
+                return ((string)(this["DefaultUserName"]));
+            }
+            set {
+                this["DefaultUserName"] = value;
+            }
+        }
     }
 }
