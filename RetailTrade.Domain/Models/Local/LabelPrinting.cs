@@ -2,13 +2,14 @@
 
 namespace RetailTrade.Domain.Models
 {
-    public class ProductBarcodePrinting : INotifyPropertyChanged
+    public class LabelPrinting : INotifyPropertyChanged
     {
         private int _id;
         private int _unitId;
         private int _labelId;
         private string _name;
         private double _quantityInStock;
+        private double _quantity;
         private string _barcode;
         private decimal _salePrice;
 
@@ -55,6 +56,15 @@ namespace RetailTrade.Domain.Models
             {
                 _quantityInStock = value;
                 OnPropertyChanged(nameof(QuantityInStock));
+            }
+        }
+        public double Quantity
+        {
+            get => _quantity;
+            set
+            {
+                _quantity = value;
+                OnPropertyChanged(nameof(Quantity));
             }
         }
         public string Barcode

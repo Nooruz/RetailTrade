@@ -32,9 +32,15 @@
 
         </dxlc:LayoutGroup>
 
-        <dxg:GridControl ItemsSource="{Binding ProductBarcodePrintings}"
-                         SelectedItem="{Binding SelectedProductBarcodePrinting}"
+        <dxg:GridControl ItemsSource="{Binding LabelPrintings}"
+                         SelectedItem="{Binding SelectedLabelPrinting}"
                          AutoGenerateColumns="None">
+
+            <dxmvvm:Interaction.Behaviors>
+                <dxmvvm:EventToCommand EventName="Loaded"
+                                       Command="{Binding GridControlLoadedCommand}"
+                                       PassEventArgsToCommand="True"/>
+            </dxmvvm:Interaction.Behaviors>
 
             <dxg:GridControl.View>
                 <dxg:TableView AutoWidth="True"
@@ -86,7 +92,8 @@
                                               ValueMember="Id">
                         <dxe:ComboBoxEditSettings.Buttons>
                             <dxe:ButtonInfo GlyphKind="Custom"
-                                            Command="{Binding ShowLabelCommand}">
+                                            Command="{Binding ShowLabelCommand}"
+                                            CommandParameter="{Binding Path=DataContext.SelectedLabelPrinting.LabelId, RelativeSource={RelativeSource AncestorType={x:Type dxg:GridControl}, Mode=FindAncestor}}">
                                 <dxe:ButtonInfo.Content>
                                     <TextBlock Style="{StaticResource IconicTextBlock}"
                                                FontSize="11"

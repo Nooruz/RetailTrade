@@ -1,8 +1,10 @@
 ﻿using DevExpress.Mvvm;
 using DevExpress.Mvvm.DataAnnotations;
+using DevExpress.Xpf.Grid;
 using RetailTrade.Domain.Models;
 using RetailTrade.Domain.Services;
-using RetailTradeServer.Report;
+using RetailTradeServer.State.Printing;
+using RetailTradeServer.State.Reports;
 using RetailTradeServer.ViewModels.Base;
 using RetailTradeServer.ViewModels.Dialogs;
 using RetailTradeServer.Views.Dialogs;
@@ -22,13 +24,16 @@ namespace RetailTradeServer.ViewModels.Menus
         private readonly ITypeProductService _typeProductService;
         private readonly IDataService<Unit> _unitService;
         private readonly IDataService<LabelPriceTag> _labelPriceTagService;
+        private readonly IDataService<TypeLabelPriceTag> _typeLabelPriceTagService;
+        private readonly ILabelPrintingService _labelPrintingService;
+        private readonly IReportService _reportService;
         private Product _selectedProduct;
-        private ProductBarcodePrinting _selectedProductBarcodePrinting;
+        private LabelPrinting _selectedLabelPrinting;
         private IEnumerable<Product> _products;
         private IEnumerable<Unit> _units;
         private IEnumerable<LabelPriceTag> _labelPriceTags;
         private IEnumerable<LabelPriceTag> _labels;
-        private ObservableCollection<ProductBarcodePrinting> _productBarcodePrintings = new();
+        private ObservableCollection<LabelPrinting> _productBarcodePrintings = new();
         private ProductDialogFormModel _productDialogFormModel;
 
         #endregion
@@ -71,15 +76,7 @@ namespace RetailTradeServer.ViewModels.Menus
                 OnPropertyChanged(nameof(Labels));
             }
         }
-        public ObservableCollection<ProductBarcodePrinting> ProductBarcodePrintings
-        {
-            get => _productBarcodePrintings;
-            set
-            {
-                _productBarcodePrintings = value;
-                OnPropertyChanged(nameof(ProductBarcodePrintings));
-            }
-        }
+        public ObservableCollection<LabelPrinting> LabelPrintings => _labelPrintingService.LabelPrintings;
         public Product SelectedProduct
         {
             get => _selectedProduct;
@@ -89,15 +86,16 @@ namespace RetailTradeServer.ViewModels.Menus
                 OnPropertyChanged(nameof(SelectedProduct));
             }
         }
-        public ProductBarcodePrinting SelectedProductBarcodePrinting
+        public LabelPrinting SelectedLabelPrinting
         {
-            get => _selectedProductBarcodePrinting;
+            get => _selectedLabelPrinting;
             set
             {
-                _selectedProductBarcodePrinting = value;
-                OnPropertyChanged(nameof(SelectedProductBarcodePrinting));
+                _selectedLabelPrinting = value;
+                OnPropertyChanged(nameof(SelectedLabelPrinting));
             }
         }
+        public GridControl BarcodeGridControl { get; set; }
 
         #endregion
 
@@ -106,12 +104,18 @@ namespace RetailTradeServer.ViewModels.Menus
         public ProductBarcodeViewModel(IProductService productService,
             ITypeProductService typeProductService,
             IDataService<Unit> unitService,
-            IDataService<LabelPriceTag> labelPriceTagService)
+            IDataService<LabelPriceTag> labelPriceTagService,
+            IDataService<TypeLabelPriceTag> typeLabelPriceTagService,
+            ILabelPrintingService labelPrintingService,
+            IReportService reportService)
         {
             _productService = productService;
             _typeProductService = typeProductService;
             _unitService = unitService;
             _labelPriceTagService = labelPriceTagService;
+            _typeLabelPriceTagService = typeLabelPriceTagService;
+            _labelPrintingService = labelPrintingService;
+            _reportService = reportService;
 
             _productDialogFormModel = new(_typeProductService);
 
@@ -130,20 +134,17 @@ namespace RetailTradeServer.ViewModels.Menus
             {
                 try
                 {
-                    if (!ProductBarcodePrintings.Any(p => p.Id == item.Id))
+                    _labelPrintingService.Add(new LabelPrinting
                     {
-                        ProductBarcodePrintings.Add(new ProductBarcodePrinting
-                        {
-                            Id = item.Id,
-                            Name = item.Name,
-                            Barcode = item.Barcode,
-                            UnitId = item.UnitId,
-                            SalePrice = item.SalePrice,
-                            QuantityInStock = item.Quantity,
-                            LabelId = 1
-                        });
-                        OnPropertyChanged(nameof(ProductBarcodePrintings));
-                    }
+                        Id = item.Id,
+                        Name = item.Name,
+                        Barcode = item.Barcode,
+                        UnitId = item.UnitId,
+                        SalePrice = item.SalePrice,
+                        QuantityInStock = item.Quantity,
+                        LabelId = 1
+                    });
+                    
                 }
                 catch (Exception)
                 {
@@ -161,12 +162,15 @@ namespace RetailTradeServer.ViewModels.Menus
                     Product product = Products.FirstOrDefault(p => p.Barcode == barcode);
                     if (product != null)
                     {
-                        ProductBarcodePrintings.Add(new ProductBarcodePrinting
+                        _labelPrintingService.Add(new LabelPrinting
                         {
                             Id = product.Id,
                             Name = product.Name,
                             Barcode = product.Barcode,
-                            QuantityInStock = product.Quantity
+                            UnitId = product.UnitId,
+                            SalePrice = product.SalePrice,
+                            QuantityInStock = product.Quantity,
+                            LabelId = 1
                         });
                     }
                 }
@@ -179,7 +183,7 @@ namespace RetailTradeServer.ViewModels.Menus
 
         private void PrintingSystem_EndPrint(object sender, EventArgs e)
         {
-            _productBarcodePrintings.Clear();
+            _labelPrintingService.Clear();
         }
 
         #endregion
@@ -187,11 +191,11 @@ namespace RetailTradeServer.ViewModels.Menus
         #region Public Voids
 
         [Command]
-        public void ShowLabel()
+        public void ShowLabel(int labelId)
         {
             try
             {
-                WindowService.Show(nameof(LabelPriceTagTemplateView), new LabelPriceTagTemplateViewModel() { LabelPriceTags = Labels });
+                WindowService.Show(nameof(LabelPriceTagTemplateView), new LabelPriceTagTemplateViewModel(_reportService, _labelPriceTagService, _typeLabelPriceTagService) { SelectedTypeLabelPriceTagId = labelId });
             }
             catch (Exception)
             {
@@ -202,33 +206,14 @@ namespace RetailTradeServer.ViewModels.Menus
         [Command]
         public async void PrintProductBarcode()
         {
-            ProductBarcodeReport report = new();
-
-            List<ProductBarcodePrinting> productBarcodePrintings = new();
-
-            foreach (var item in ProductBarcodePrintings)
+            try
             {
-                //for (int i = 0; i < item.Quantity; i++)
-                //{
-                //    productBarcodePrintings.Add(new ProductBarcodePrinting
-                //    {
-                //        Name = item.Name,
-                //        Barcode = item.Barcode,
-                //        UnitId = item.UnitId,
-                //        SalePrice = item.SalePrice
-                //    });
-                //}
+                DocumentViewerService.Show(nameof(DocumentViewerView), new DocumentViewerViewModel() { PrintingDocument = await _reportService.CreateLabelReport() });
             }
-
-            report.DataSource = productBarcodePrintings;
-            await report.CreateDocumentAsync();
-
-            DocumentViewerService.Show(nameof(DocumentViewerView), new DocumentViewerViewModel() { PrintingDocument = report });
-
-            //PrintToolBase tool = new(report.PrintingSystem);
-            //tool.PrinterSettings.PrinterName = Settings.Default.DefaultLabelPrinter;
-            //tool.PrintingSystem.EndPrint += PrintingSystem_EndPrint;
-            //tool.Print();
+            catch (Exception)
+            {
+                //ignore
+            }
         }
 
         [Command]
@@ -238,7 +223,7 @@ namespace RetailTradeServer.ViewModels.Menus
             {
                 if (MessageBoxService.ShowMessage("Очистить список?", "Sale Page", MessageButton.YesNo, MessageIcon.Question) == MessageResult.Yes)
                 {
-                    ProductBarcodePrintings.Clear();
+                    _labelPrintingService.Clear();
                 }
             }
             catch (Exception)
@@ -282,6 +267,25 @@ namespace RetailTradeServer.ViewModels.Menus
                 if (result != null && result.Id is MessageBoxResult messageResult && messageResult == MessageBoxResult.OK)
                 {
                     AddProductToPrint(viewModel.Barcode);
+                }
+            }
+            catch (Exception)
+            {
+                //ignore
+            }
+        }
+
+        [Command]
+        public void GridControlLoaded(object sender)
+        {
+            try
+            {
+                if (sender is RoutedEventArgs e)
+                {
+                    if (e.Source is GridControl gridControl)
+                    {
+                        BarcodeGridControl = gridControl;
+                    }
                 }
             }
             catch (Exception)

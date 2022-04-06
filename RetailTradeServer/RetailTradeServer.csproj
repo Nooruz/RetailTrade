@@ -41,8 +41,8 @@
     <None Remove="Fonts\fa-solid-900.ttf" />
     <None Remove="Report\ArrivalProductReport.vsrepx" />
     <None Remove="Report\ClosingShiftsReport.vsrepx" />
+    <None Remove="Report\LabelReport.vsrepx" />
     <None Remove="Report\OrderToSupplierReport.vsrepx" />
-    <None Remove="Report\ProductBarcodeReport.vsrepx" />
     <None Remove="Report\RevaluationReport.vsrepx" />
     <None Remove="Report\RevenueForPeriodReport.vsrepx" />
     <None Remove="Report\WriteDownProductReport.vsrepx" />
@@ -61,8 +61,8 @@
   <ItemGroup>
     <EmbeddedResource Include="Report\ArrivalProductReport.vsrepx" />
     <EmbeddedResource Include="Report\ClosingShiftsReport.vsrepx" />
+    <EmbeddedResource Include="Report\LabelReport.vsrepx" />
     <EmbeddedResource Include="Report\OrderToSupplierReport.vsrepx" />
-    <EmbeddedResource Include="Report\ProductBarcodeReport.vsrepx" />
     <EmbeddedResource Include="Report\RevaluationReport.vsrepx" />
     <EmbeddedResource Include="Report\RevenueForPeriodReport.vsrepx" />
     <EmbeddedResource Include="Report\WriteDownProductReport.vsrepx" />
@@ -140,17 +140,17 @@
     <Compile Update="Report\ClosingShiftsReport.Designer.cs">
       <DependentUpon>ClosingShiftsReport.vsrepx</DependentUpon>
     </Compile>
+    <Compile Update="Report\LabelReport.cs">
+      <DependentUpon>LabelReport.vsrepx</DependentUpon>
+    </Compile>
+    <Compile Update="Report\LabelReport.Designer.cs">
+      <DependentUpon>LabelReport.vsrepx</DependentUpon>
+    </Compile>
     <Compile Update="Report\OrderToSupplierReport.cs">
       <DependentUpon>OrderToSupplierReport.vsrepx</DependentUpon>
     </Compile>
     <Compile Update="Report\OrderToSupplierReport.Designer.cs">
       <DependentUpon>OrderToSupplierReport.vsrepx</DependentUpon>
-    </Compile>
-    <Compile Update="Report\ProductBarcodeReport.cs">
-      <DependentUpon>ProductBarcodeReport.vsrepx</DependentUpon>
-    </Compile>
-    <Compile Update="Report\ProductBarcodeReport.Designer.cs">
-      <DependentUpon>ProductBarcodeReport.vsrepx</DependentUpon>
     </Compile>
     <Compile Update="Report\RevaluationReport.cs">
       <DependentUpon>RevaluationReport.vsrepx</DependentUpon>

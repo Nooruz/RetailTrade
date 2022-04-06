@@ -4,7 +4,11 @@ using RetailTrade.Barcode.Services;
 using RetailTradeServer.State.Authenticators;
 using RetailTradeServer.State.Messages;
 using RetailTradeServer.State.Navigators;
+using RetailTradeServer.State.Printing;
+using RetailTradeServer.State.Reports;
 using RetailTradeServer.State.Users;
+using SalePageServer.Report;
+using System;
 
 namespace RetailTradeServer.HostBuilders
 {
@@ -20,7 +24,15 @@ namespace RetailTradeServer.HostBuilders
                 _ = services.AddSingleton<IMenuNavigator, MenuNavigator>();                
                 _ = services.AddSingleton<IMessageStore, MessageStore>();
                 _ = services.AddSingleton<IBarcodeService, BarcodeService>();
+                _ = services.AddSingleton<ILabelPrintingService, LabelPrintingService>();
+                _ = services.AddSingleton(CreateXReport);
+                _ = services.AddSingleton<IReportService, ReportService>();
             });
+        }
+
+        private static LabelReport CreateXReport(IServiceProvider serviceProvider)
+        {
+            return new LabelReport();
         }
     }
 }

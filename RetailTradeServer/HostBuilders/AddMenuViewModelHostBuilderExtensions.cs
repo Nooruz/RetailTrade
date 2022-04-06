@@ -6,6 +6,8 @@ using RetailTrade.Domain.Services;
 using RetailTradeServer.State.Authenticators;
 using RetailTradeServer.State.Messages;
 using RetailTradeServer.State.Navigators;
+using RetailTradeServer.State.Printing;
+using RetailTradeServer.State.Reports;
 using RetailTradeServer.State.Users;
 using RetailTradeServer.ViewModels.Base;
 using RetailTradeServer.ViewModels.Factories;
@@ -122,7 +124,10 @@ namespace RetailTradeServer.HostBuilders
             return new ProductBarcodeViewModel(services.GetRequiredService<IProductService>(),
                 services.GetRequiredService<ITypeProductService>(),
                 services.GetRequiredService<IDataService<Unit>>(),
-                services.GetRequiredService<IDataService<LabelPriceTag>>());
+                services.GetRequiredService<IDataService<LabelPriceTag>>(),
+                services.GetRequiredService<IDataService<TypeLabelPriceTag>>(),
+                services.GetRequiredService<ILabelPrintingService>(),
+                services.GetRequiredService<IReportService>());
         }
 
         private static SaleDashboardView CreateSaleDashboardView(IServiceProvider services)
