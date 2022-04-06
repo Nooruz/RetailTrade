@@ -68,6 +68,29 @@ namespace RetailTradeServer.State.Reports
             return null;
         }
 
+        public async Task<LabelReport> ForTemplate()
+        {
+            try
+            {
+                List<LabelPrinting> labelPrintings = new()
+                {
+                    new LabelPrinting
+                    {
+                        Name = "Наименование товара",
+                        Barcode = "2000000000001"
+                    }
+                };
+                _labelReport.DataSource = labelPrintings;
+                await _labelReport.CreateDocumentAsync();
+                return _labelReport;
+            }
+            catch (Exception)
+            {
+                //ignore
+            }
+            return null;
+        }
+
         #endregion
     }
 }

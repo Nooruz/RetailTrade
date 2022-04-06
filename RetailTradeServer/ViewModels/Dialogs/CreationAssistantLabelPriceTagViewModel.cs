@@ -82,7 +82,7 @@ namespace RetailTradeServer.ViewModels.Dialogs
         [Command]
         public async void UserControlLoaded()
         {
-            Report = await _reportService.CreateLabelReport();
+            Report = await _reportService.ForTemplate();
             TypeLabelPriceTags = await _typeLabelPriceTagService.GetAllAsync();
         }
 

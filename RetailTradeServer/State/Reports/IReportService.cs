@@ -6,5 +6,6 @@ namespace RetailTradeServer.State.Reports
     public interface IReportService
     {
         Task<LabelReport> CreateLabelReport();
+        Task<LabelReport> ForTemplate();
     }
 }

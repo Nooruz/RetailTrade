@@ -17,6 +17,6 @@ namespace RetailTrade.Domain.Services
 
         Task<bool> DeleteAsync(int id);
 
-        event Action PropertiesChanged;        
+        event Action PropertiesChanged;
     }
 }
