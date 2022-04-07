@@ -17,7 +17,8 @@ namespace RetailTradeServer.ViewModels.Dialogs
         #region Private Members
 
         private readonly IReportService _reportService;
-        private readonly IDataService<LabelPriceTag> _labelPriceTagService;
+        private readonly ILabelPriceTagService _labelPriceTagService;
+        private readonly ILabelPriceTagSizeService _labelPriceTagSizeService;
         private readonly IDataService<TypeLabelPriceTag> _typeLabelPriceTagService;
         private IEnumerable<LabelPriceTag> _labelPriceTags;
         private int _selectedTypeLabelPriceTagId;
@@ -72,12 +73,14 @@ namespace RetailTradeServer.ViewModels.Dialogs
         #region Constructor
 
         public LabelPriceTagTemplateViewModel(IReportService reportService,
-            IDataService<LabelPriceTag> labelPriceTagService, 
-            IDataService<TypeLabelPriceTag> typeLabelPriceTagService)
+            ILabelPriceTagService labelPriceTagService, 
+            IDataService<TypeLabelPriceTag> typeLabelPriceTagService,
+            ILabelPriceTagSizeService labelPriceTagSizeService)
         {
             _reportService = reportService;
             _labelPriceTagService = labelPriceTagService;
             _typeLabelPriceTagService = typeLabelPriceTagService;
+            _labelPriceTagSizeService = labelPriceTagSizeService;
             Title = "Шаблоны этикеток и ценников";
         }
 
@@ -90,7 +93,7 @@ namespace RetailTradeServer.ViewModels.Dialogs
         {
             try
             {
-                WindowService.Show(nameof(CreationAssistantLabelPriceTagView), new CreationAssistantLabelPriceTagViewModel(_reportService, _typeLabelPriceTagService) { SelectedTypeLabelPriceTagId = SelectedTypeLabelPriceTagId });
+                WindowService.Show(nameof(CreationAssistantLabelPriceTagView), new CreationAssistantLabelPriceTagViewModel(_reportService, _typeLabelPriceTagService, _labelPriceTagSizeService) { SelectedTypeLabelPriceTagId = SelectedTypeLabelPriceTagId });
             }
             catch (Exception)
             {

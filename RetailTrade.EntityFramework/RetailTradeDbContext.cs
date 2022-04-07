@@ -112,6 +112,11 @@ namespace RetailTrade.EntityFramework
         /// </summary>
         public DbSet<LabelPriceTag> LabelPriceTags { get; set; }
 
+        /// <summary>
+        /// Размеры ценников и этикеток
+        /// </summary>
+        public DbSet<LabelPriceTagSize> LabelPriceTagSizes { get; set; }
+
         #region Employee
 
         /// <summary>
@@ -206,9 +211,12 @@ namespace RetailTrade.EntityFramework
                 new TypeLabelPriceTag { Id = 1, Name = "Этикетка для товаров" },
                 new TypeLabelPriceTag { Id = 2, Name = "Ценник для товаров" });
 
+            modelBuilder.Entity<LabelPriceTagSize>().HasData(
+                new LabelPriceTagSize { Id = 1, Height = 250, Width = 460, TypeLabelPriceTagId = 1 });
+
             modelBuilder.Entity<LabelPriceTag>().HasData(
-                new LabelPriceTag { Id = 1, Name = "Этикетка для товара", TypeLabelPriceTagId = 1, Height = 250, Width = 460 },
-                new LabelPriceTag { Id = 2, Name = "Ценник для товара", TypeLabelPriceTagId = 2, Height = 250, Width = 460 });
+                new LabelPriceTag { Id = 1, Name = "Этикетка для товара", TypeLabelPriceTagId = 1, LabelPriceTagSizeId = 1 },
+                new LabelPriceTag { Id = 2, Name = "Ценник для товара", TypeLabelPriceTagId = 2 });
 
             modelBuilder.Entity<Unit>().HasData(
                 new Unit { Id = 1, LongName = "Килограмм", ShortName = "кг" },

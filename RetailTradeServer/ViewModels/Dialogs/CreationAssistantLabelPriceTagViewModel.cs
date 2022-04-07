@@ -3,7 +3,6 @@ using RetailTrade.Domain.Models;
 using RetailTrade.Domain.Services;
 using RetailTradeServer.State.Reports;
 using RetailTradeServer.ViewModels.Dialogs.Base;
-using SalePageServer.Report;
 using System;
 using System.Collections.Generic;
 
@@ -15,7 +14,9 @@ namespace RetailTradeServer.ViewModels.Dialogs
 
         private readonly IReportService _reportService;
         private readonly IDataService<TypeLabelPriceTag> _typeLabelPriceTagService;
+        private readonly ILabelPriceTagSizeService _labelPriceTagSizeService;
         private IEnumerable<TypeLabelPriceTag> _typeLabelPriceTags;
+        private IEnumerable<LabelPriceTagSize> _labelPriceTagSizes;
         private int? _selectedTypeLabelPriceTagId;
         private object _report;
 
@@ -30,6 +31,16 @@ namespace RetailTradeServer.ViewModels.Dialogs
             {
                 _typeLabelPriceTags = value;
                 OnPropertyChanged(nameof(TypeLabelPriceTags));
+            }
+        }
+
+        public IEnumerable<LabelPriceTagSize> LabelPriceTagSizes
+        {
+            get => _labelPriceTagSizes;
+            set
+            {
+                _labelPriceTagSizes = value;
+                OnPropertyChanged(nameof(LabelPriceTagSizes));
             }
         }
 
@@ -69,9 +80,11 @@ namespace RetailTradeServer.ViewModels.Dialogs
         #region Constructor
 
         public CreationAssistantLabelPriceTagViewModel(IReportService reportService,
-            IDataService<TypeLabelPriceTag> typeLabelPriceTagService)
+            IDataService<TypeLabelPriceTag> typeLabelPriceTagService,
+            ILabelPriceTagSizeService labelPriceTagSizeService)
         {
             _reportService = reportService;
+            _labelPriceTagSizeService = labelPriceTagSizeService;
             _typeLabelPriceTagService = typeLabelPriceTagService;
         }
 
@@ -83,6 +96,7 @@ namespace RetailTradeServer.ViewModels.Dialogs
         public async void UserControlLoaded()
         {
             Report = await _reportService.ForTemplate();
+            LabelPriceTagSizes = await _labelPriceTagSizeService.GetAllAsync();
             TypeLabelPriceTags = await _typeLabelPriceTagService.GetAllAsync();
         }
 

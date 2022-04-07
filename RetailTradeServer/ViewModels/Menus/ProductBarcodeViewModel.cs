@@ -23,10 +23,11 @@ namespace RetailTradeServer.ViewModels.Menus
         private readonly IProductService _productService;
         private readonly ITypeProductService _typeProductService;
         private readonly IDataService<Unit> _unitService;
-        private readonly IDataService<LabelPriceTag> _labelPriceTagService;
+        private readonly ILabelPriceTagService _labelPriceTagService;
         private readonly IDataService<TypeLabelPriceTag> _typeLabelPriceTagService;
         private readonly ILabelPrintingService _labelPrintingService;
         private readonly IReportService _reportService;
+        private readonly ILabelPriceTagSizeService _labelPriceTagSizeService;
         private Product _selectedProduct;
         private LabelPrinting _selectedLabelPrinting;
         private IEnumerable<Product> _products;
@@ -104,10 +105,11 @@ namespace RetailTradeServer.ViewModels.Menus
         public ProductBarcodeViewModel(IProductService productService,
             ITypeProductService typeProductService,
             IDataService<Unit> unitService,
-            IDataService<LabelPriceTag> labelPriceTagService,
+            ILabelPriceTagService labelPriceTagService,
             IDataService<TypeLabelPriceTag> typeLabelPriceTagService,
             ILabelPrintingService labelPrintingService,
-            IReportService reportService)
+            IReportService reportService,
+            ILabelPriceTagSizeService labelPriceTagSizeService)
         {
             _productService = productService;
             _typeProductService = typeProductService;
@@ -116,6 +118,7 @@ namespace RetailTradeServer.ViewModels.Menus
             _typeLabelPriceTagService = typeLabelPriceTagService;
             _labelPrintingService = labelPrintingService;
             _reportService = reportService;
+            _labelPriceTagSizeService = labelPriceTagSizeService;
 
             _productDialogFormModel = new(_typeProductService);
 
@@ -195,7 +198,7 @@ namespace RetailTradeServer.ViewModels.Menus
         {
             try
             {
-                WindowService.Show(nameof(LabelPriceTagTemplateView), new LabelPriceTagTemplateViewModel(_reportService, _labelPriceTagService, _typeLabelPriceTagService) { SelectedTypeLabelPriceTagId = labelId });
+                WindowService.Show(nameof(LabelPriceTagTemplateView), new LabelPriceTagTemplateViewModel(_reportService, _labelPriceTagService, _typeLabelPriceTagService, _labelPriceTagSizeService) { SelectedTypeLabelPriceTagId = labelId });
             }
             catch (Exception)
             {

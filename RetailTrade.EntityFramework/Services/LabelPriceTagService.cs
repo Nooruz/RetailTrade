@@ -1,10 +1,10 @@
-﻿using RetailTrade.Domain.Models;
+﻿using Microsoft.EntityFrameworkCore;
+using RetailTrade.Domain.Models;
 using RetailTrade.Domain.Services;
 using RetailTrade.EntityFramework.Services.Common;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace RetailTrade.EntityFramework.Services
@@ -15,6 +15,9 @@ namespace RetailTrade.EntityFramework.Services
         private readonly NonQueryDataService<LabelPriceTag> _nonQueryDataService;
 
         public event Action PropertiesChanged;
+        public event Action<LabelPriceTag> OnCreated;
+        public event Action<int> OnDeleted;
+        public event Action<LabelPriceTag> OnEdited;
 
         public LabelPriceTagService(RetailTradeDbContextFactory contextFactory)
         {
@@ -26,7 +29,7 @@ namespace RetailTrade.EntityFramework.Services
         {
             var result = await _nonQueryDataService.Create(entity);
             if (result != null)
-                oned?.Invoke();
+                OnCreated?.Invoke(result);
             return result;
         }
 
@@ -34,43 +37,34 @@ namespace RetailTrade.EntityFramework.Services
         {
             var result = await _nonQueryDataService.Delete(id);
             if (result)
-                PropertiesChanged?.Invoke();
+                OnDeleted?.Invoke(id);
             return result;
         }
 
-        public async Task<T> GetAsync(int id)
+        public async Task<LabelPriceTag> GetAsync(int id)
         {
-            await using (RetailTradeDbContext context = _contextFactory.CreateDbContext())
-            {
-                T entity = await context.Set<T>().FirstOrDefaultAsync((e) => e.Id == id);
-                return entity;
-            }
+            await using RetailTradeDbContext context = _contextFactory.CreateDbContext();
+            return await context.LabelPriceTags.FirstOrDefaultAsync((e) => e.Id == id);
         }
 
-        public async Task<IEnumerable<T>> GetAllAsync()
+        public async Task<IEnumerable<LabelPriceTag>> GetAllAsync()
         {
-            await using (RetailTradeDbContext context = _contextFactory.CreateDbContext())
-            {
-                IEnumerable<T> entities = await context.Set<T>().ToListAsync();
-                return entities;
-            }
+            await using RetailTradeDbContext context = _contextFactory.CreateDbContext();
+            return await context.LabelPriceTags.ToListAsync();
         }
 
-        public async Task<T> UpdateAsync(int id, T entity)
+        public async Task<LabelPriceTag> UpdateAsync(int id, LabelPriceTag entity)
         {
             var result = await _nonQueryDataService.Update(id, entity);
             if (result != null)
-                PropertiesChanged?.Invoke();
+                OnEdited?.Invoke(result);
             return result;
         }
 
-        public IEnumerable<T> GetAll()
+        public IEnumerable<LabelPriceTag> GetAll()
         {
-            using (RetailTradeDbContext context = _contextFactory.CreateDbContext())
-            {
-                IEnumerable<T> entities = context.Set<T>().ToList();
-                return entities;
-            }
+            using RetailTradeDbContext context = _contextFactory.CreateDbContext();
+            return context.LabelPriceTags.ToList();
         }
     }
 }

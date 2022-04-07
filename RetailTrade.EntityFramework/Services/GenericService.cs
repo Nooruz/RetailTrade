@@ -40,20 +40,30 @@ namespace RetailTrade.EntityFramework.Services
 
         public async Task<T> GetAsync(int id)
         {
-            await using (RetailTradeDbContext context = _contextFactory.CreateDbContext())
+            try
             {
-                T entity = await context.Set<T>().FirstOrDefaultAsync((e) => e.Id == id);
-                return entity;
+                await using RetailTradeDbContext context = _contextFactory.CreateDbContext();
+                return await context.Set<T>().FirstOrDefaultAsync((e) => e.Id == id);
             }
+            catch (Exception)
+            {
+                //ignore
+            }
+            return null;
         }
 
         public async Task<IEnumerable<T>> GetAllAsync()
         {
-            await using (RetailTradeDbContext context = _contextFactory.CreateDbContext())
+            try
             {
-                IEnumerable<T> entities = await context.Set<T>().ToListAsync();
-                return entities;
+                await using RetailTradeDbContext context = _contextFactory.CreateDbContext();
+                return await context.Set<T>().ToListAsync();
             }
+            catch (Exception)
+            {
+                //ignore
+            }
+            return null;
         }
 
         public async Task<T> UpdateAsync(int id, T entity)
@@ -66,11 +76,16 @@ namespace RetailTrade.EntityFramework.Services
 
         public IEnumerable<T> GetAll()
         {
-            using (RetailTradeDbContext context = _contextFactory.CreateDbContext())
+            try
             {
-                IEnumerable<T> entities = context.Set<T>().ToList();
-                return entities;
+                using RetailTradeDbContext context = _contextFactory.CreateDbContext();
+                return context.Set<T>().ToList();
             }
+            catch (Exception)
+            {
+                //ignore
+            }
+            return null;
         }
     }
 }

@@ -6,8 +6,7 @@
 
         private string _name;
         private int _typeLabelPriceTagId;
-        private int _width;
-        private int _height;
+        private int? _labelPriceTagSizeId;
 
         #endregion
 
@@ -33,27 +32,18 @@
             }
         }
 
-        public int Width
+        public int? LabelPriceTagSizeId
         {
-            get => _width;
+            get => _labelPriceTagSizeId;
             set
             {
-                _width = value;
-                OnPropertyChanged(nameof(Width));
-            }
-        }
-
-        public int Height
-        {
-            get => _height;
-            set
-            {
-                _height = value;
-                OnPropertyChanged(nameof(Height));
+                _labelPriceTagSizeId = value;
+                OnPropertyChanged(nameof(LabelPriceTagSizeId));
             }
         }
 
         public TypeLabelPriceTag TypeLabelPriceTag { get; set; }
+        public LabelPriceTagSize LabelPriceTagSize { get; set; }
 
         #endregion
     }

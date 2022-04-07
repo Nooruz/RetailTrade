@@ -31,10 +31,19 @@
 
             <dxlc:LayoutItem Label="Назначение:"
                              LabelPosition="Top">
-                <dxe:ComboBoxEdit ItemsSource="{Binding TypeLabelPriceTags}"
-                                  DisplayMember="Name"
+                <dxe:ComboBoxEdit ItemsSource="{Binding LabelPriceTagSizes}"
                                   ValueMember="Id"
-                                  EditValue="{Binding SelectedTypeLabelPriceTagId}"/>
+                                  EditValue="{Binding SelectedTypeLabelPriceTagId}">
+                    <dxe:ComboBoxEdit.DisplayTemplate>
+                        <ControlTemplate>
+                            <StackPanel>
+                                <TextBlock Text="{Binding Width}"/>
+                                <TextBlock Text="x"/>
+                                <TextBlock Text="{Binding Height}"/>
+                            </StackPanel>
+                        </ControlTemplate>
+                    </dxe:ComboBoxEdit.DisplayTemplate>
+                </dxe:ComboBoxEdit>
             </dxlc:LayoutItem>
 
         </dxlc:LayoutGroup>

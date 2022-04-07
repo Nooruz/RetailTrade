@@ -6,5 +6,6 @@ namespace RetailTrade.Domain.Models
     {
         public string Name { get; set; }
         public ICollection<LabelPriceTag> LabelPriceTags { get; set; }
+        public ICollection<LabelPriceTagSize> LabelPriceTagSizes { get; set; }
     }
 }
