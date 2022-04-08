@@ -1,8 +1,10 @@
-﻿using DevExpress.Mvvm.DataAnnotations;
+﻿using DevExpress.Mvvm;
+using DevExpress.Mvvm.DataAnnotations;
 using RetailTrade.Domain.Models;
 using RetailTrade.Domain.Services;
 using RetailTradeServer.State.Reports;
 using RetailTradeServer.ViewModels.Dialogs.Base;
+using RetailTradeServer.Views.Dialogs;
 using System;
 using System.Collections.Generic;
 
@@ -18,6 +20,7 @@ namespace RetailTradeServer.ViewModels.Dialogs
         private IEnumerable<TypeLabelPriceTag> _typeLabelPriceTags;
         private IEnumerable<LabelPriceTagSize> _labelPriceTagSizes;
         private int? _selectedTypeLabelPriceTagId;
+        private int? _selectedLabelPriceTagSizeId = 1;
         private object _report;
 
         #endregion
@@ -65,6 +68,16 @@ namespace RetailTradeServer.ViewModels.Dialogs
             }
         }
 
+        public int? SelectedLabelPriceTagSizeId
+        {
+            get => _selectedLabelPriceTagSizeId;
+            set
+            {
+                _selectedLabelPriceTagSizeId = value;
+                OnPropertyChanged(nameof(SelectedLabelPriceTagSizeId));
+            }
+        }
+
         public object Report
         {
             get => _report;
@@ -98,6 +111,19 @@ namespace RetailTradeServer.ViewModels.Dialogs
             Report = await _reportService.ForTemplate();
             LabelPriceTagSizes = await _labelPriceTagSizeService.GetAllAsync();
             TypeLabelPriceTags = await _typeLabelPriceTagService.GetAllAsync();
+        }
+
+        [Command]
+        public void CreateLabelPriceTagSize()
+        {
+            try
+            {
+                WindowService.Show(nameof(CreateLabelPriceTagSizeView), new CreateLabelPriceTagSizeViewModel(_labelPriceTagSizeService) { TypeLabelPriceTags = TypeLabelPriceTags });
+            }
+            catch (Exception)
+            {
+                //ignore
+            }
         }
 
         #endregion

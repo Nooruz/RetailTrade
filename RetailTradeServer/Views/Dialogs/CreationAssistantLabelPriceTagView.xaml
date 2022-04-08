@@ -26,24 +26,33 @@
 
             <dxlc:LayoutItem Label="Размер ленты:"
                              LabelPosition="Top">
-                <dxe:ComboBoxEdit/>
-            </dxlc:LayoutItem>
-
-            <dxlc:LayoutItem Label="Назначение:"
-                             LabelPosition="Top">
                 <dxe:ComboBoxEdit ItemsSource="{Binding LabelPriceTagSizes}"
                                   ValueMember="Id"
-                                  EditValue="{Binding SelectedTypeLabelPriceTagId}">
-                    <dxe:ComboBoxEdit.DisplayTemplate>
-                        <ControlTemplate>
-                            <StackPanel>
+                                  IsTextEditable="False"
+                                  ApplyItemTemplateToSelectedItem="True"
+                                  EditValue="{Binding SelectedLabelPriceTagSizeId}">
+                    <dxe:ComboBoxEdit.ItemTemplate>
+                        <DataTemplate>
+                            <StackPanel Orientation="Horizontal">
                                 <TextBlock Text="{Binding Width}"/>
                                 <TextBlock Text="x"/>
                                 <TextBlock Text="{Binding Height}"/>
                             </StackPanel>
-                        </ControlTemplate>
-                    </dxe:ComboBoxEdit.DisplayTemplate>
+                        </DataTemplate>
+                    </dxe:ComboBoxEdit.ItemTemplate>
+                    <dxe:ComboBoxEdit.Buttons>
+                        <dxe:ButtonInfo GlyphKind="Plus"
+                                        Command="{Binding CreateLabelPriceTagSizeCommand}"/>
+                    </dxe:ComboBoxEdit.Buttons>
                 </dxe:ComboBoxEdit>
+            </dxlc:LayoutItem>
+
+            <dxlc:LayoutItem Label="Назначение:"
+                             LabelPosition="Top">
+                <dxe:ComboBoxEdit ItemsSource="{Binding TypeLabelPriceTags}"
+                                  DisplayMember="Name"
+                                  ValueMember="Id"
+                                  EditValue="{Binding SelectedTypeLabelPriceTagId}"/>
             </dxlc:LayoutItem>
 
         </dxlc:LayoutGroup>

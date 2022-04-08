@@ -21,12 +21,13 @@ namespace RetailTrade.EntityFramework.Services
         }
 
         public event Action PropertiesChanged;
+        public event Action<LabelPriceTagSize> OnCreated;
 
         public async Task<LabelPriceTagSize> CreateAsync(LabelPriceTagSize entity)
         {
             var result = await _nonQueryDataService.Create(entity);
             if (result != null)
-                PropertiesChanged?.Invoke();
+                OnCreated?.Invoke(result);
             return result;
         }
 

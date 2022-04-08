@@ -1,0 +1,47 @@
+﻿<dialogs:BaseDialogUserControl
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:dxe="http://schemas.devexpress.com/winfx/2008/xaml/editors"
+    xmlns:dxlc="http://schemas.devexpress.com/winfx/2008/xaml/layoutcontrol"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:dialogs="clr-namespace:RetailTradeServer.Views.Dialogs"
+    x:Class="RetailTradeServer.Views.Dialogs.CreateLabelPriceTagSizeView"
+    Width="300">
+
+    <dxlc:LayoutControl Orientation="Vertical">
+
+        <dxlc:LayoutItem Label="Назначение:"
+                         LabelPosition="Top">
+            <dxe:ComboBoxEdit ItemsSource="{Binding TypeLabelPriceTags}"
+                              DisplayMember="Name"
+                              ValueMember="Id"
+                              EditValue="{Binding SelectedTypeLabelPriceTagId}"/>
+        </dxlc:LayoutItem>
+
+        <dxlc:LayoutItem Label="Ширина:"
+                         LabelPosition="Top">
+            <dxe:TextEdit EditValue="{Binding Width}" 
+                          MaskUseAsDisplayFormat="True" 
+                          MaskType="Numeric"
+                          Mask="n0"/>
+        </dxlc:LayoutItem>
+
+        <dxlc:LayoutItem Label="Высота:"
+                         LabelPosition="Top">
+            <dxe:TextEdit EditValue="{Binding Width}" 
+                          MaskUseAsDisplayFormat="True" 
+                          MaskType="Numeric"
+                          Mask="n0"/>
+        </dxlc:LayoutItem>
+
+        <dxlc:LayoutGroup>
+
+            <Button Content="Сохранить"
+                    Command="{Binding CreateLabelPriceTagSizeCommand}"/>
+            <Button Content="Отмена"
+                    Command="{Binding CloseCommand}"/>
+
+        </dxlc:LayoutGroup>
+
+    </dxlc:LayoutControl>
+
+</dialogs:BaseDialogUserControl>
