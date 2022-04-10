@@ -27,7 +27,7 @@
 
         <dxlc:LayoutItem Label="Высота:"
                          LabelPosition="Top">
-            <dxe:TextEdit EditValue="{Binding Width}" 
+            <dxe:TextEdit EditValue="{Binding Height}" 
                           MaskUseAsDisplayFormat="True" 
                           MaskType="Numeric"
                           Mask="n0"/>

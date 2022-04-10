@@ -243,6 +243,7 @@ namespace RetailTradeServer.ViewModels.Dialogs
         {
             ProductDialogFormModel viewModel = new(_typeProductService) { Products = new(Products) };
             viewModel.OnProductSelected += ProductDialogFormModel_OnProductSelected;
+            viewModel.OnProductsSelected += ProductDialogFormModel_OnProductsSelected;
             WindowService.Show(nameof(ProductDialogForm), viewModel);
         }
 
@@ -264,6 +265,29 @@ namespace RetailTradeServer.ViewModels.Dialogs
                     _ = MessageBoxService.Show("Такой товар уже введен.", "", MessageBoxButton.OK, MessageBoxImage.Error);
                 }
             }
+        }
+
+        private void ProductDialogFormModel_OnProductsSelected(IEnumerable<Product> products)
+        {
+            products.ToList().ForEach(product =>
+            {
+                try
+                {
+
+                    ArrivalProduct selectedArrivalProduct = ArrivalProducts.FirstOrDefault(r => r.ProductId == product.Id);
+                    if (selectedArrivalProduct == null)
+                    {
+                        SelectedArrivalProduct.ProductId = product.Id;
+                        SelectedArrivalProduct.Product = product;
+                        SelectedArrivalProduct.ArrivalPrice = product.ArrivalPrice;
+                        SelectedArrivalProduct.Quantity = 1;
+                    }
+                }
+                catch (Exception)
+                {
+                    //ignore
+                }
+            });
         }
 
         private void GridControlLoaded(object parameter)

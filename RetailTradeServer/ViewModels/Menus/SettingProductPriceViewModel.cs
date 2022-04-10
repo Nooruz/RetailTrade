@@ -293,6 +293,7 @@ namespace RetailTradeServer.ViewModels.Menus
         {
             ProductDialogFormModel viewModel = new(_typeProductService) { Products = Products };
             viewModel.OnProductSelected += ProductDialogFormModel_OnProductSelected;
+            viewModel.OnProductsSelected += ProductDialogFormModel_OnProductsSelected;
             WindowService.Show(nameof(ProductDialogForm), viewModel);            
         }
 
@@ -311,6 +312,25 @@ namespace RetailTradeServer.ViewModels.Menus
                     _ = MessageBoxService.Show("Такой товар уже введен.", "", MessageBoxButton.OK, MessageBoxImage.Exclamation);                    
                 }
             }
+        }
+
+        private void ProductDialogFormModel_OnProductsSelected(IEnumerable<Product> products)
+        {
+            products.ToList().ForEach(product =>
+            {
+                try
+                {
+                    if (RevaluationProducts.FirstOrDefault(r => r.ProductId == product.Id) == null)
+                    {
+                        EmptyRevaluationProduct.Product = product;
+                        EmptyRevaluationProduct.ProductId = product.Id;
+                    }
+                }
+                catch (Exception)
+                {
+                    //ignore
+                }
+            });
         }
 
         private void AddProduct()

@@ -1,6 +1,7 @@
 ﻿using RetailTrade.Domain.Models;
 using System;
 using System.Collections.ObjectModel;
+using System.Linq;
 
 namespace RetailTradeServer.State.Printing
 {
@@ -22,7 +23,15 @@ namespace RetailTradeServer.State.Printing
         {
             try
             {
-                LabelPrintings.Add(labelPrinting);
+                LabelPrinting label = LabelPrintings.FirstOrDefault(l => l.Id == labelPrinting.Id);
+                if (label != null)
+                {
+                    label.Quantity++;
+                }
+                else
+                {
+                    LabelPrintings.Add(labelPrinting);
+                }
             }
             catch (Exception)
             {

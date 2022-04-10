@@ -7,5 +7,6 @@ namespace RetailTradeServer.State.Reports
     {
         Task<LabelReport> CreateLabelReport();
         Task<LabelReport> ForTemplate();
+        Task<LabelReport> ChangeSizeLabelReport(int width, int height);
     }
 }

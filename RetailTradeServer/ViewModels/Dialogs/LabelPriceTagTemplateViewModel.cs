@@ -7,7 +7,7 @@ using RetailTradeServer.State.Reports;
 using RetailTradeServer.ViewModels.Dialogs.Base;
 using RetailTradeServer.Views.Dialogs;
 using System;
-using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Windows;
 
 namespace RetailTradeServer.ViewModels.Dialogs
@@ -20,7 +20,7 @@ namespace RetailTradeServer.ViewModels.Dialogs
         private readonly ILabelPriceTagService _labelPriceTagService;
         private readonly ILabelPriceTagSizeService _labelPriceTagSizeService;
         private readonly IDataService<TypeLabelPriceTag> _typeLabelPriceTagService;
-        private IEnumerable<LabelPriceTag> _labelPriceTags;
+        private ObservableCollection<LabelPriceTag> _labelPriceTags = new();
         private int _selectedTypeLabelPriceTagId;
         private LabelPriceTag _labelPriceTag;
 
@@ -28,7 +28,7 @@ namespace RetailTradeServer.ViewModels.Dialogs
 
         #region Public Properties
 
-        public IEnumerable<LabelPriceTag> LabelPriceTags
+        public ObservableCollection<LabelPriceTag> LabelPriceTags
         {
             get => _labelPriceTags;
             set
@@ -82,6 +82,24 @@ namespace RetailTradeServer.ViewModels.Dialogs
             _typeLabelPriceTagService = typeLabelPriceTagService;
             _labelPriceTagSizeService = labelPriceTagSizeService;
             Title = "Шаблоны этикеток и ценников";
+
+            _labelPriceTagService.OnCreated += LabelPriceTagService_OnCreated;
+        }
+
+        #endregion
+
+        #region Private Voids
+
+        private void LabelPriceTagService_OnCreated(LabelPriceTag labelPriceTag)
+        {
+            try
+            {
+                LabelPriceTags.Add(labelPriceTag);
+            }
+            catch (Exception)
+            {
+                //ignore
+            }
         }
 
         #endregion
@@ -93,7 +111,7 @@ namespace RetailTradeServer.ViewModels.Dialogs
         {
             try
             {
-                WindowService.Show(nameof(CreationAssistantLabelPriceTagView), new CreationAssistantLabelPriceTagViewModel(_reportService, _typeLabelPriceTagService, _labelPriceTagSizeService) { SelectedTypeLabelPriceTagId = SelectedTypeLabelPriceTagId });
+                WindowService.Show(nameof(CreationAssistantLabelPriceTagView), new CreationAssistantLabelPriceTagViewModel(_labelPriceTagService, _reportService, _typeLabelPriceTagService, _labelPriceTagSizeService) { SelectedTypeLabelPriceTagId = SelectedTypeLabelPriceTagId });
             }
             catch (Exception)
             {
@@ -106,7 +124,7 @@ namespace RetailTradeServer.ViewModels.Dialogs
         {
             try
             {
-                LabelPriceTags = await _labelPriceTagService.GetAllAsync();
+                LabelPriceTags = new(await _labelPriceTagService.GetAllAsync());
             }
             catch (Exception)
             {

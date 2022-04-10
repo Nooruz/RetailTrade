@@ -21,7 +21,8 @@
 
             <dxlc:LayoutItem Label="Наименование:"
                              LabelPosition="Top">
-                <dxe:TextEdit/>
+                <dxe:TextEdit EditValue="{Binding Name}"
+                              MaxLength="80"/>
             </dxlc:LayoutItem>
 
             <dxlc:LayoutItem Label="Размер ленты:"
@@ -30,6 +31,7 @@
                                   ValueMember="Id"
                                   IsTextEditable="False"
                                   ApplyItemTemplateToSelectedItem="True"
+                                  SelectedItem="{Binding SelectedLabelPriceTagSize}"
                                   EditValue="{Binding SelectedLabelPriceTagSizeId}">
                     <dxe:ComboBoxEdit.ItemTemplate>
                         <DataTemplate>
@@ -44,6 +46,10 @@
                         <dxe:ButtonInfo GlyphKind="Plus"
                                         Command="{Binding CreateLabelPriceTagSizeCommand}"/>
                     </dxe:ComboBoxEdit.Buttons>
+                    <dxmvvm:Interaction.Behaviors>
+                        <dxmvvm:EventToCommand EventName="SelectedIndexChanged"
+                                               Command="{Binding SelectedIndexChangedCommand}"/>
+                    </dxmvvm:Interaction.Behaviors>
                 </dxe:ComboBoxEdit>
             </dxlc:LayoutItem>
 
@@ -70,8 +76,9 @@
         <dxlc:LayoutGroup HorizontalAlignment="Right"
                           VerticalAlignment="Bottom">
 
-            <Button Content="Напечатать образец"/>
-            <Button Content="Сохранить"/>
+            <!--<Button Content="Напечатать образец"/>-->
+            <Button Content="Сохранить"
+                    Command="{Binding CreateLabelPriceTagCommand}"/>
 
         </dxlc:LayoutGroup>
 

@@ -109,6 +109,21 @@ namespace RetailTrade.EntityFramework.Services
             return null;
         }
 
+        public async Task<Product> GetByBarcodeAsync(string barcode)
+        {
+            try
+            {
+                await using var context = _contextFactory.CreateDbContext();
+                return await context.Products
+                    .FirstOrDefaultAsync(p => p.Barcode == barcode);
+            }
+            catch (Exception)
+            {
+                //ignore
+            }
+            return null;
+        }
+
         public IEnumerable<Product> GetForRefund(int supplierId)
         {
             try

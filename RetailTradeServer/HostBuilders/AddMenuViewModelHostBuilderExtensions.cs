@@ -128,7 +128,8 @@ namespace RetailTradeServer.HostBuilders
                 services.GetRequiredService<IDataService<TypeLabelPriceTag>>(),
                 services.GetRequiredService<ILabelPrintingService>(),
                 services.GetRequiredService<IReportService>(),
-                services.GetRequiredService<ILabelPriceTagSizeService>());
+                services.GetRequiredService<ILabelPriceTagSizeService>(),
+                services.GetRequiredService<IBarcodeService>());
         }
 
         private static SaleDashboardView CreateSaleDashboardView(IServiceProvider services)

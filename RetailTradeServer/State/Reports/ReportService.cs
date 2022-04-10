@@ -49,14 +49,6 @@ namespace RetailTradeServer.State.Reports
                         }
                     }
                 }
-                else
-                {
-                    labelPrintings.Add(new LabelPrinting
-                    {
-                        Name = "Наименование товара",
-                        Barcode = "2000000000001"
-                    });
-                }
                 _labelReport.DataSource = labelPrintings;
                 await _labelReport.CreateDocumentAsync();
                 return _labelReport;
@@ -78,6 +70,30 @@ namespace RetailTradeServer.State.Reports
                     {
                         Name = "Наименование товара",
                         Barcode = "2000000000001"
+                    }
+                };
+                _labelReport.DataSource = labelPrintings;
+                await _labelReport.CreateDocumentAsync();
+                return _labelReport;
+            }
+            catch (Exception)
+            {
+                //ignore
+            }
+            return null;
+        }
+
+        public async Task<LabelReport> ChangeSizeLabelReport(int width, int height)
+        {
+            try
+            {
+                _labelReport.ChangeSize(width, height);
+                List<LabelPrinting> labelPrintings = new()
+                {
+                    new LabelPrinting
+                    {
+                        Name = "Наименование товара",
+                        Barcode = "2000000000002"
                     }
                 };
                 _labelReport.DataSource = labelPrintings;

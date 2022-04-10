@@ -1,6 +1,7 @@
 ﻿using DevExpress.Mvvm;
 using DevExpress.Mvvm.DataAnnotations;
 using DevExpress.Xpf.Grid;
+using RetailTrade.Barcode.Services;
 using RetailTrade.Domain.Models;
 using RetailTrade.Domain.Services;
 using RetailTradeServer.State.Printing;
@@ -8,11 +9,13 @@ using RetailTradeServer.State.Reports;
 using RetailTradeServer.ViewModels.Base;
 using RetailTradeServer.ViewModels.Dialogs;
 using RetailTradeServer.Views.Dialogs;
+using SalePageServer.Properties;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Windows;
+using System.Windows.Controls;
 
 namespace RetailTradeServer.ViewModels.Menus
 {
@@ -21,6 +24,7 @@ namespace RetailTradeServer.ViewModels.Menus
         #region Private Members
 
         private readonly IProductService _productService;
+        private readonly IBarcodeService _barcodeService;
         private readonly ITypeProductService _typeProductService;
         private readonly IDataService<Unit> _unitService;
         private readonly ILabelPriceTagService _labelPriceTagService;
@@ -33,7 +37,7 @@ namespace RetailTradeServer.ViewModels.Menus
         private IEnumerable<Product> _products;
         private IEnumerable<Unit> _units;
         private IEnumerable<LabelPriceTag> _labelPriceTags;
-        private IEnumerable<LabelPriceTag> _labels;
+        private ObservableCollection<LabelPriceTag> _labels = new();
         private ObservableCollection<LabelPrinting> _productBarcodePrintings = new();
         private ProductDialogFormModel _productDialogFormModel;
 
@@ -68,7 +72,7 @@ namespace RetailTradeServer.ViewModels.Menus
                 OnPropertyChanged(nameof(LabelPriceTags));
             }
         }
-        public IEnumerable<LabelPriceTag> Labels
+        public ObservableCollection<LabelPriceTag> Labels
         {
             get => _labels;
             set
@@ -109,7 +113,8 @@ namespace RetailTradeServer.ViewModels.Menus
             IDataService<TypeLabelPriceTag> typeLabelPriceTagService,
             ILabelPrintingService labelPrintingService,
             IReportService reportService,
-            ILabelPriceTagSizeService labelPriceTagSizeService)
+            ILabelPriceTagSizeService labelPriceTagSizeService,
+            IBarcodeService barcodeService)
         {
             _productService = productService;
             _typeProductService = typeProductService;
@@ -119,17 +124,47 @@ namespace RetailTradeServer.ViewModels.Menus
             _labelPrintingService = labelPrintingService;
             _reportService = reportService;
             _labelPriceTagSizeService = labelPriceTagSizeService;
+            _barcodeService = barcodeService;
 
             _productDialogFormModel = new(_typeProductService);
 
             Header = "Ценники и этикетки (Штрих-код)";
 
             _productDialogFormModel.OnProductsSelected += ProductDialogFormModel_OnProductsSelected;
+            _labelPriceTagService.OnCreated += LabelPriceTagService_OnCreated;
         }
 
         #endregion
 
         #region Private Voids
+
+        private async void BarcodeService_OnBarcodeEvent(string barcode)
+        {
+            try
+            {
+                Product product = await _productService.GetByBarcodeAsync(barcode);
+                if (product != null)
+                {
+
+                }
+            }
+            catch (Exception)
+            {
+                //ignore
+            }
+        }
+
+        private void LabelPriceTagService_OnCreated(LabelPriceTag labelPriceTag)
+        {
+            try
+            {
+                Labels.Add(labelPriceTag);
+            }
+            catch (Exception)
+            {
+                //ignore
+            }
+        }
 
         private void ProductDialogFormModel_OnProductsSelected(IEnumerable<Product> products)
         {
@@ -145,9 +180,9 @@ namespace RetailTradeServer.ViewModels.Menus
                         UnitId = item.UnitId,
                         SalePrice = item.SalePrice,
                         QuantityInStock = item.Quantity,
+                        Quantity = 1,
                         LabelId = 1
                     });
-                    
                 }
                 catch (Exception)
                 {
@@ -173,6 +208,7 @@ namespace RetailTradeServer.ViewModels.Menus
                             UnitId = product.UnitId,
                             SalePrice = product.SalePrice,
                             QuantityInStock = product.Quantity,
+                            Quantity = 1,
                             LabelId = 1
                         });
                     }
@@ -189,9 +225,24 @@ namespace RetailTradeServer.ViewModels.Menus
             _labelPrintingService.Clear();
         }
 
+        private void UserControl_Unloaded(object sender, RoutedEventArgs e)
+        {
+            _barcodeService.OnBarcodeEvent -= AddProductToPrint;
+            _barcodeService.Close(BarcodeDevice.Com);
+        }
+
         #endregion
 
         #region Public Voids
+
+        [Command]
+        public void DeleteSelectedLabelPrinting()
+        {
+            if (SelectedLabelPrinting != null)
+            {
+                _labelPrintingService.Delete(SelectedLabelPrinting);
+            }
+        }
 
         [Command]
         public void ShowLabel(int labelId)
@@ -236,14 +287,23 @@ namespace RetailTradeServer.ViewModels.Menus
         }
 
         [Command]
-        public async void UserControlLoaded()
+        public async void UserControlLoaded(object sender)
         {
-            Products = await _productService.GetAllAsync();
-            Units = await _unitService.GetAllAsync();
             try
             {
+                if (sender is RoutedEventArgs e)
+                {
+                    if (e.Source is UserControl userControl)
+                    {
+                        userControl.Unloaded += UserControl_Unloaded;
+                    }
+                }
+                _barcodeService.Open(BarcodeDevice.Com, Settings.Default.BarcodeCom, Settings.Default.BarcodeSpeed);
+                _barcodeService.OnBarcodeEvent += AddProductToPrint;
+                Products = await _productService.GetAllAsync();
+                Units = await _unitService.GetAllAsync();
                 LabelPriceTags = await _labelPriceTagService.GetAllAsync();
-                Labels = LabelPriceTags.Where(l => l.TypeLabelPriceTagId == 1).ToList();
+                Labels = new(LabelPriceTags.Where(l => l.TypeLabelPriceTagId == 1).ToList());
             }
             catch (Exception)
             {

@@ -74,17 +74,6 @@ namespace RetailTradeServer.ViewModels.Dialogs
             Title = "Создание размера для этикеток и ценников";
 
             CloseCommand = new RelayCommand(() => CurrentWindowService.Close());
-
-            _labelPriceTagSizeService.OnCreated += LabelPriceTagSizeService_OnCreated;
-        }
-
-        #endregion
-
-        #region Private Voids
-
-        private void LabelPriceTagSizeService_OnCreated(LabelPriceTagSize labelPriceTagSize)
-        {
-            
         }
 
         #endregion
@@ -106,6 +95,7 @@ namespace RetailTradeServer.ViewModels.Dialogs
                             Width = Width.Value,
                             Height = Height.Value
                         });
+                        CurrentWindowService.Close();
                     }
                     else
                     {

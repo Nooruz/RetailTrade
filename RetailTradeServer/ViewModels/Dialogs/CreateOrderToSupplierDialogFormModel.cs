@@ -252,10 +252,32 @@ namespace RetailTradeServer.ViewModels.Dialogs
             }
         }
 
+        private void ProductDialogFormModel_OnProductsSelected(IEnumerable<Product> products)
+        {
+            products.ToList().ForEach(product =>
+            {
+                try
+                {
+                    if (OrderProducts.FirstOrDefault(r => r.ProductId == product.Id) == null)
+                    {
+                        SelectedOrderProduct.ProductId = product.Id;
+                        SelectedOrderProduct.Product = product;
+                        SelectedOrderProduct.ArrivalPrice = product.ArrivalPrice;
+                        SelectedOrderProduct.Quantity = 1;
+                    }
+                }
+                catch (Exception)
+                {
+                    //ignore
+                }
+            });
+        }
+
         private void OpenProductDialog()
         {
             ProductDialogFormModel viewModel = new(_typeProductService) { Products = new(Products) };
             viewModel.OnProductSelected += ProductDialogFormModel_OnProductSelected;
+            viewModel.OnProductsSelected += ProductDialogFormModel_OnProductsSelected;
             WindowService.Show(nameof(ProductDialogForm), viewModel);
         }
 

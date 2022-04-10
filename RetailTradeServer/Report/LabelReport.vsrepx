@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<XtraReportsLayoutSerializer SerializerVersion="21.2.3.0" Ref="1" ControlType="DevExpress.XtraReports.UI.XtraReport, DevExpress.XtraReports.v21.2, Version=21.2.3.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a" Name="LabelReport" SnapGridSize="25" ReportUnit="TenthsOfAMillimeter" Margins="0, 0, 0, 0" PaperKind="Custom" PageWidth="460" PageHeight="250" Version="21.2" RequestParameters="false" DataSource="#Ref-0" Dpi="254">
+<XtraReportsLayoutSerializer SerializerVersion="21.2.6.0" Ref="1" ControlType="DevExpress.XtraReports.UI.XtraReport, DevExpress.XtraReports.v21.2, Version=21.2.6.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a" Name="LabelReport" SnapGridSize="25" ReportUnit="TenthsOfAMillimeter" Margins="0, 0, 0, 0" PaperKind="Custom" PageWidth="460" PageHeight="250" Version="21.2" RequestParameters="false" DataSource="#Ref-0" Dpi="254">
   <Extensions>
     <Item1 Ref="2" Key="VSReportExtInfo" Value=".vsrepx" />
   </Extensions>
@@ -8,21 +8,22 @@
     <Item2 Ref="4" ControlType="DetailBand" Name="detailBand1" HeightF="254" Dpi="254">
       <HierarchyPrintOptions Ref="5" Indent="50.8" />
       <Controls>
-        <Item1 Ref="6" ControlType="XRBarCode" Name="barCode1" Module="5.08" AutoModule="true" Text="2000000000001" SizeF="410,129.680878" LocationFloat="25.0000076,103.399132" Dpi="254" Padding="26,26,0,0,254">
+        <Item1 Ref="6" ControlType="XRBarCode" Name="barCode1" Module="5.08" AutoModule="true" Alignment="MiddleJustify" TextAlignment="MiddleJustify" Text="2000000000001" SizeF="410,129.680878" LocationFloat="25.0000076,103.399132" Dpi="254" Padding="26,26,0,0,254">
           <Symbology Ref="7" Name="Code128" />
           <ExpressionBindings>
             <Item1 Ref="8" EventName="BeforePrint" PropertyName="Text" Expression="[Barcode]" />
           </ExpressionBindings>
+          <StylePriority Ref="9" UseTextAlignment="false" />
         </Item1>
-        <Item2 Ref="9" ControlType="XRLabel" Name="label1" Multiline="true" Text="Наименование товара" TextAlignment="MiddleLeft" WordWrap="false" SizeF="410,58.42" LocationFloat="25.0000076,0" Dpi="254" Padding="5,5,0,0,254">
+        <Item2 Ref="10" ControlType="XRLabel" Name="lbName" Multiline="true" AutoWidth="true" Text="Наименование товара" TextAlignment="MiddleLeft" WordWrap="false" SizeF="410,58.42" LocationFloat="25.0000076,0" Dpi="254" Padding="5,5,0,0,254">
           <ExpressionBindings>
-            <Item1 Ref="10" EventName="BeforePrint" PropertyName="Text" Expression="[Name]" />
+            <Item1 Ref="11" EventName="BeforePrint" PropertyName="Text" Expression="[Name]" />
           </ExpressionBindings>
-          <StylePriority Ref="11" UseTextAlignment="false" />
+          <StylePriority Ref="12" UseTextAlignment="false" />
         </Item2>
       </Controls>
     </Item2>
-    <Item3 Ref="12" ControlType="BottomMarginBand" Name="bottomMarginBand1" HeightF="0" Dpi="254" />
+    <Item3 Ref="13" ControlType="BottomMarginBand" Name="bottomMarginBand1" HeightF="0" Dpi="254" />
   </Bands>
   <ComponentStorage>
     <Item1 Ref="0" ObjectType="DevExpress.DataAccess.ObjectBinding.ObjectDataSource,DevExpress.DataAccess.v21.2" Name="objectDataSource1" Base64="PE9iamVjdERhdGFTb3VyY2UgTmFtZT0ib2JqZWN0RGF0YVNvdXJjZTEiPjxDb25zdHJ1Y3RvciAvPjwvT2JqZWN0RGF0YVNvdXJjZT4=" />

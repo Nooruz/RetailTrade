@@ -40,6 +40,8 @@
                 <dxmvvm:EventToCommand EventName="Loaded"
                                        Command="{Binding GridControlLoadedCommand}"
                                        PassEventArgsToCommand="True"/>
+                <dxmvvm:KeyToCommand KeyGesture="Delete"
+                                     Command="{Binding DeleteSelectedLabelPrintingCommand}"/>
             </dxmvvm:Interaction.Behaviors>
 
             <dxg:GridControl.View>
@@ -67,7 +69,7 @@
                     <dxe:TextEditSettings MaskUseAsDisplayFormat="True" MaskType="Numeric" Mask="n"/>
                 </dxg:GridColumn.EditSettings>
             </dxg:GridColumn>
-            <dxg:GridColumn Header="Шаблон ценника"
+            <!--<dxg:GridColumn Header="Шаблон ценника"
                             FieldName="PriceTagId">
                 <dxg:GridColumn.EditSettings>
                     <dxe:ComboBoxEditSettings ItemsSource="{Binding PriceTags}"
@@ -82,7 +84,7 @@
                                           MaxValue="100" 
                                           Mask="n0"/>
                 </dxg:GridColumn.EditSettings>
-            </dxg:GridColumn>
+            </dxg:GridColumn>-->
             <dxg:GridColumn Header="Шаблон этикеток"
                             FieldName="LabelId"
                             AllowEditing="True">
@@ -105,18 +107,15 @@
                     </dxe:ComboBoxEditSettings>
                 </dxg:GridColumn.EditSettings>
             </dxg:GridColumn>
-            <dxg:GridColumn Header="Кол. этикеток (шт)">
+            <dxg:GridColumn Header="Кол. этикеток (шт)"
+                            AllowEditing="True"
+                            FieldName="Quantity">
                 <dxg:GridColumn.EditSettings>
-                    <dxe:SpinEditSettings MinValue="1" 
+                    <dxe:SpinEditSettings MinValue="1"
+                                          SelectAllOnMouseUp="True"
                                           MaskUseAsDisplayFormat="True" 
                                           MaxValue="100" 
                                           Mask="n0"/>
-                </dxg:GridColumn.EditSettings>
-            </dxg:GridColumn>
-            <dxg:GridColumn Header="Количество"
-                            FieldName="Quantity">
-                <dxg:GridColumn.EditSettings>
-                    <dxe:SpinEditSettings SelectAllOnMouseUp="True"/>
                 </dxg:GridColumn.EditSettings>
             </dxg:GridColumn>
 
