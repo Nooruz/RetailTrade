@@ -1,5 +1,6 @@
 ﻿using DevExpress.Xpf.Grid;
 using RetailTradeClient.Views.Dialogs;
+using System.Windows.Input;
 
 namespace RetailTradeClient.Views
 {
@@ -16,6 +17,11 @@ namespace RetailTradeClient.Views
         private void TableView_InvalidRowException(object sender, InvalidRowExceptionEventArgs e)
         {
             e.ExceptionMode = ExceptionMode.NoAction;
+        }
+
+        private void CommandBinding_Executed(object sender, ExecutedRoutedEventArgs e)
+        {
+
         }
     }
 }

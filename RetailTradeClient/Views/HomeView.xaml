@@ -6,6 +6,7 @@
              xmlns:dxg="http://schemas.devexpress.com/winfx/2008/xaml/grid"
              xmlns:dxlc="http://schemas.devexpress.com/winfx/2008/xaml/layoutcontrol"
              xmlns:dx="http://schemas.devexpress.com/winfx/2008/xaml/core"
+             xmlns:hotKey="clr-namespace:RetailTradeClient.HotKey"
              x:Class="RetailTradeClient.Views.HomeView"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
@@ -13,324 +14,190 @@
              d:DesignWidth="800"
              Focusable="True">
 
+    <UserControl.CommandBindings>
+        <CommandBinding Command="{x:Static hotKey:HotKey.CashlessPaymentCommand}"
+                        Executed="CommandBinding_Executed"/>
+    </UserControl.CommandBindings>
+
     <dxmvvm:Interaction.Behaviors>
-        <dxmvvm:FocusBehavior />
-        <dxmvvm:KeyToCommand KeyGesture="Add"
-                             EventName="PreviewKeyDown"
-                             Command="{Binding PaymentCashCommand}"/>
-        <dxmvvm:KeyToCommand KeyGesture="F6"
-                             EventName="PreviewKeyDown"
-                             Command="{Binding PaymentComplexCommand}"/>
-        <dxmvvm:KeyToCommand KeyGesture="Subtract"
-                             EventName="PreviewKeyDown"
-                             Command="{Binding ReturnGoodsCommand}"/>
-        <dxmvvm:KeyToCommand KeyGesture="Alt+F5"
-                             EventName="PreviewKeyDown"
-                             Command="{Binding PostponeReceiptCommand}"/>
-        <dxmvvm:KeyToCommand KeyGesture="Ctrl+F5"
-                             EventName="PreviewKeyDown"
-                             Command="{Binding OpenPostponeReceiptCommand}"/>
-        <dxmvvm:KeyToCommand KeyGesture="Escape"
-                             EventName="PreviewKeyDown"
-                             Command="{Binding CancelCommand}"/>
-        <dxmvvm:KeyToCommand KeyGesture="Delete"
-                             EventName="PreviewKeyDown"
-                             Command="{Binding DeleteSelectedRowCommand}"/>
         <dxmvvm:EventToCommand EventName="Loaded"
                                Command="{Binding LoadedHomeViewCommand}"
                                PassEventArgsToCommand="True"/>
     </dxmvvm:Interaction.Behaviors>
 
-    <dxlc:LayoutControl Orientation="Vertical"
-                        Padding="0">
+    <dxlc:LayoutControl Orientation="Vertical">
 
-        <dxlc:LayoutGroup VerticalAlignment="Top">
+        <dxlc:LayoutGroup Orientation="Horizontal"
+                                      VerticalAlignment="Top">
 
-            <Menu VerticalAlignment="Top"
-                  HorizontalAlignment="Left">
-                <MenuItem Header="Файл">
-                    <MenuItem Header="Закрыть приложение"/>
-                </MenuItem>
-                <MenuItem Header="Смена">
-                    <MenuItem Header="Печатать Х отчет"
-                              Command="{Binding PrintXReportCommand}"/>
-                    <MenuItem Header="Закрыть смену Z отчет"
-                              Command="{Binding ClosingShiftCommand}"/>
-                </MenuItem>
-                <MenuItem Header="ККМ">
-                    <MenuItem Header="Отчет без гашения (Х отчет)"
-                              Command="{Binding PrintReportWithoutCleaningCommand}"/>
-                    <MenuItem Header="Анулировать чек"
-                              Command="{Binding CancelCheckCommand}"/>
-                    <MenuItem Header="Состояние ККМ (ФР)"
-                              Command="{Binding GetShortECRStatusCommand}"/>
-                    <MenuItem Header="Настройки ККМ"
-                              Command="{Binding CRMSettingsCommand}"/>
-                    <MenuItem Header="Дополнительно">
-                        <MenuItem Header="Открыть смену ККМ (ФР)"
-                                  Command="{Binding OpenSessionCommand}"/>
-                        <MenuItem Header="Закрыть смену ККМ (ФР)"
-                                  Command="{Binding PrintReportWithCleaningCommand}"/>
-                        <Separator/>
-                        <MenuItem Header="Установить текущее время ККМ (ФР)"
-                                  Command="{Binding SetTimeCommand}"/>
-                        <Separator/>
-                        <MenuItem Header="Отрезать чек"
-                                  Command="{Binding CutCheckCommand}"/>
-                    </MenuItem>
-                </MenuItem>
-                <MenuItem Header="Настройки">
-                    <MenuItem Header="Принтеры"
-                          Command="{Binding PrinterSettingsCommand}"/>
-                </MenuItem>
-            </Menu>
+            <Button Content="Наличными (+)"
+                    Style="{StaticResource ButtonWithIcon}"
+                    Tag="{StaticResource faMoneyBillAlt}"
+                    Command="{Binding PaymentCashCommand}"/>
 
-            <TextBlock Text="{Binding Info}"
-                       VerticalAlignment="Center"
-                       HorizontalAlignment="Center"/>
+            <Button Content="Безнал. (F6)"
+                    Style="{StaticResource ButtonWithIcon}"
+                    Tag="{StaticResource faCreditCard}"
+                    ToolTip="Оплата безналичными"
+                    Command="{Binding PaymentComplexCommand}"/>
+
+            <Button Content="Возврат (-)"
+                    Style="{StaticResource ButtonWithIcon}"
+                    Tag="{StaticResource faUndoAlt}"
+                    Command="{Binding ReturnGoodsCommand}"/>
+
+            <Button Content="Отложить чек (Alt + F5)"
+                    Style="{StaticResource ButtonWithIcon}"
+                    Tag="{StaticResource faUserClock}"
+                    Command="{Binding PostponeReceiptCommand}"/>
+
+            <Button Content="Отлож.ые чеки (Ctrl + F5)"
+                    Style="{StaticResource ButtonWithIcon}"
+                    Tag="{StaticResource faUserClock}"
+                    Command="{Binding OpenPostponeReceiptCommand}"/>
+
+            <Button Content="Отменить (Esc)"
+                    Style="{StaticResource ButtonWithIcon}"
+                    Tag="{StaticResource faTimesCircle}"
+                    Command="{Binding CancelCommand}"/>
+
+            <Button Content="Выход (Esc)"
+                    Style="{StaticResource ButtonWithIcon}"
+                    Tag="{StaticResource faSignOutAlt}"
+                    Command="{Binding LogoutCommand}"/>
 
         </dxlc:LayoutGroup>
 
-        <dxlc:LayoutGroup Orientation="Horizontal">
+        <dxlc:LayoutGroup>
 
-            <Grid>
-                
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="2*"/>
-                    <ColumnDefinition Width="3*"/>
-                </Grid.ColumnDefinitions>
-
-                <dxlc:LayoutGroup Orientation="Vertical"
-                                  Grid.Column="0"
-                                  Margin="5">
-
-                    <dxlc:LayoutGroup Orientation="Vertical"
-                                      VerticalAlignment="Top">
-
-                        <dxlc:LayoutItem Label="Всего:"
-                                         LabelPosition="Left"
-                                         Style="{StaticResource liCash}"
-                                         FontSize="38">
-                            <dxe:TextEdit Text="{Binding Sum, UpdateSourceTrigger=PropertyChanged}"
-                                          Style="{StaticResource teCash}"
-                                          IsReadOnly="True"
-                                          FontSize="46"
-                                          BorderBrush="Transparent"
-                                          BorderThickness="0"/>
-                        </dxlc:LayoutItem>
-
-                        <dxlc:LayoutItem Label="К оплате:"
-                                         LabelPosition="Left"
-                                         Style="{StaticResource liCash}"
-                                         FontSize="38">
-                            <dxe:TextEdit Text="{Binding Sum, UpdateSourceTrigger=PropertyChanged}"
-                                          Style="{StaticResource teCash}"
-                                          IsReadOnly="True"
-                                          FontSize="46"
-                                          BorderBrush="Transparent"
-                                          BorderThickness="0"/>
-                        </dxlc:LayoutItem>
-
-                        <dxlc:LayoutItem Label="Сдача:"
-                                         LabelPosition="Left"
-                                         Style="{StaticResource liCash}"
-                                         FontSize="38">
-                            <dxe:TextEdit Text="{Binding Change, UpdateSourceTrigger=PropertyChanged}"
-                                          Style="{StaticResource teCash}"
-                                          IsReadOnly="True"
-                                          FontSize="46"
-                                          BorderBrush="Transparent"
-                                          BorderThickness="0"/>
-                        </dxlc:LayoutItem>
-
-                    </dxlc:LayoutGroup>
-
-                    <ContentControl Content="{Binding ProductsWithoutBarcodeViewModel}">
+            <dxg:GridControl ItemsSource="{Binding SaleProductsCollectionView}"                                 
+                             SelectedItem="{Binding SelectedProductSale}"
+                             SelectionMode="Cell"
+                             Focusable="False">
+                <dxg:GridControl.View>
+                    <dxg:TableView AutoWidth="True"
+                                   ShowGroupPanel="False" 
+                                   AllowSorting="False"
+                                   AllowDrop="False"
+                                   Focusable="False"
+                                   NavigationStyle="Cell"
+                                   FocusedRowHandle="{Binding FocusedRowHandle}"
+                                   InvalidRowException="TableView_InvalidRowException"
+                                   AllowDragDrop="False"
+                                   AllowGrouping="False"
+                                   IsSynchronizedWithCurrentItem="True">
+                        <dxg:TableView.FormatConditions>
+                            <dxg:FormatCondition FieldName="QuantityInStock" ValueRule="Less" Value1="10">
+                                <dx:Format Foreground="#FFFF0000"/>
+                            </dxg:FormatCondition>
+                        </dxg:TableView.FormatConditions>
                         <dxmvvm:Interaction.Behaviors>
-                            <dxmvvm:FocusBehavior/>
+                            <dxmvvm:EventToCommand EventName="Loaded"
+                                                   Command="{Binding SaleTableViewLoadedCommand}"
+                                                   PassEventArgsToCommand="True"/>
                         </dxmvvm:Interaction.Behaviors>
-                    </ContentControl>
-
-                </dxlc:LayoutGroup>
-
-                <dxlc:LayoutGroup Orientation="Vertical"
-                                  Grid.Column="1"
-                                  Margin="5">
-
-                    <dxlc:LayoutGroup Orientation="Horizontal"
-                                      VerticalAlignment="Top">
-
-                        <Button Content="Наличными (+)"
-                                Style="{StaticResource ButtonWithIcon}"
-                                Tag="{StaticResource faMoneyBillAlt}"
-                                Command="{Binding PaymentCashCommand}"/>
-
-                        <Button Content="Безнал. (F6)"
-                                Style="{StaticResource ButtonWithIcon}"
-                                Tag="{StaticResource faCreditCard}"
-                                ToolTip="Оплата безналичными"
-                                Command="{Binding PaymentComplexCommand}"/>
-
-                        <Button Content="Возврат (-)"
-                                Style="{StaticResource ButtonWithIcon}"
-                                Tag="{StaticResource faUndoAlt}"
-                                Command="{Binding ReturnGoodsCommand}"/>
-
-                        <Button Content="Отложить чек (Alt + F5)"
-                                Style="{StaticResource ButtonWithIcon}"
-                                Tag="{StaticResource faUserClock}"
-                                Command="{Binding PostponeReceiptCommand}"/>
-
-                        <Button Content="Отлож.ые чеки (Ctrl + F5)"
-                                Style="{StaticResource ButtonWithIcon}"
-                                Tag="{StaticResource faUserClock}"
-                                Command="{Binding OpenPostponeReceiptCommand}"/>
-
-                        <Button Content="Отменить (Esc)"
-                                Style="{StaticResource ButtonWithIcon}"
-                                Tag="{StaticResource faTimesCircle}"
-                                Command="{Binding CancelCommand}"/>
-
-                        <Button Content="Выход (Esc)"
-                                Style="{StaticResource ButtonWithIcon}"
-                                Tag="{StaticResource faSignOutAlt}"
-                                Command="{Binding LogoutCommand}"/>
-
-                    </dxlc:LayoutGroup>
-
-                    <dxg:GridControl ItemsSource="{Binding SaleProductsCollectionView}"                                 
-                                     SelectedItem="{Binding SelectedProductSale}"
-                                     SelectionMode="Cell"
-                                     Focusable="False">
-                        <dxg:GridControl.View>
-                            <dxg:TableView AutoWidth="True"
-                                           ShowGroupPanel="False" 
-                                           AllowSorting="False"
-                                           AllowDrop="False"
-                                           Focusable="False"
-                                           NavigationStyle="Cell"
-                                           FocusedRowHandle="{Binding FocusedRowHandle}"
-                                           InvalidRowException="TableView_InvalidRowException"
-                                           AllowDragDrop="False"
-                                           AllowGrouping="False"
-                                           IsSynchronizedWithCurrentItem="True">
-                                <dxg:TableView.FormatConditions>
-                                    <dxg:FormatCondition FieldName="QuantityInStock" ValueRule="Less" Value1="10">
-                                        <dx:Format Foreground="#FFFF0000"/>
-                                    </dxg:FormatCondition>
-                                </dxg:TableView.FormatConditions>
-                                <dxmvvm:Interaction.Behaviors>
-                                    <dxmvvm:EventToCommand EventName="Loaded"
-                                                           Command="{Binding SaleTableViewLoadedCommand}"
-                                                           PassEventArgsToCommand="True"/>
-                                </dxmvvm:Interaction.Behaviors>
-                            </dxg:TableView>
-                        </dxg:GridControl.View>
-                        <dxg:GridColumn Header="Код" 
-                                        AllowColumnFiltering="False"
-                                        FieldName="Id"
-                                        AllowEditing="False">
-                            <dxg:GridColumn.EditSettings>
-                                <dxe:TextEditSettings DisplayFormat="D6"/>
-                            </dxg:GridColumn.EditSettings>
-                        </dxg:GridColumn>
-                        <dxg:GridColumn Header="Номенклатура" 
-                                        FieldName="Name"
-                                        AllowColumnFiltering="False"
-                                        AllowEditing="False"/>
-                        <dxg:GridColumn Header="Количество" 
-                                        IsSmart="True"                          
-                                        AllowColumnFiltering="False"
-                                        Focusable="False"
-                                        Binding="{Binding Quantity, Mode=TwoWay}">
+                    </dxg:TableView>
+                </dxg:GridControl.View>
+                <dxg:GridColumn Header="Код" 
+                                AllowColumnFiltering="False"
+                                FieldName="Id"
+                                AllowEditing="False">
+                    <dxg:GridColumn.EditSettings>
+                        <dxe:TextEditSettings DisplayFormat="D6"/>
+                    </dxg:GridColumn.EditSettings>
+                </dxg:GridColumn>
+                <dxg:GridColumn Header="Номенклатура" 
+                                FieldName="Name"
+                                AllowColumnFiltering="False"
+                                AllowEditing="False"/>
+                <dxg:GridColumn Header="Количество" 
+                                IsSmart="True"                          
+                                AllowColumnFiltering="False"
+                                Focusable="False"
+                                Binding="{Binding Quantity, Mode=TwoWay}">
+                    <dxmvvm:Interaction.Behaviors>
+                        <dxmvvm:EventToCommand EventName="Validate"
+                                               Command="{Binding QuantityValidateCommand}"
+                                               PassEventArgsToCommand="True"/>
+                    </dxmvvm:Interaction.Behaviors>
+                    <dxg:GridColumn.EditSettings>
+                        <dxe:SpinEditSettings SelectAllOnMouseUp="True">
                             <dxmvvm:Interaction.Behaviors>
-                                <dxmvvm:EventToCommand EventName="Validate"
-                                                       Command="{Binding QuantityValidateCommand}"
+                                <dxmvvm:EventToCommand EventName="FocusableChanged"
+                                                       Command="{Binding QuantityCellLoadedCommand}"
                                                        PassEventArgsToCommand="True"/>
                             </dxmvvm:Interaction.Behaviors>
-                            <dxg:GridColumn.EditSettings>
-                                <dxe:SpinEditSettings SelectAllOnMouseUp="True">
-                                    <dxmvvm:Interaction.Behaviors>
-                                        <dxmvvm:EventToCommand EventName="FocusableChanged"
-                                                               Command="{Binding QuantityCellLoadedCommand}"
-                                                               PassEventArgsToCommand="True"/>
-                                    </dxmvvm:Interaction.Behaviors>
-                                </dxe:SpinEditSettings>
-                            </dxg:GridColumn.EditSettings>
-                            <dxg:GridColumn.InputBindings>
-                                <KeyBinding Key="Escape"
-                                            Command="{Binding LogoutCommand}"/>
+                        </dxe:SpinEditSettings>
+                    </dxg:GridColumn.EditSettings>
+                </dxg:GridColumn>
+                <dxg:GridColumn Header="Цена" 
+                                FieldName="SalePrice"
+                                AllowColumnFiltering="False"
+                                AllowEditing="False">
+                    <dxg:GridColumn.EditSettings>
+                        <dxe:TextEditSettings DisplayFormat="N2"/>
+                    </dxg:GridColumn.EditSettings>
+                </dxg:GridColumn>
+                <dxg:GridColumn Header="Сумма" 
+                                FieldName="Sum"
+                                IsSmart="True"
+                                AllowColumnFiltering="False"
+                                AllowEditing="False">
+                    <dxg:GridColumn.EditSettings>
+                        <dxe:TextEditSettings DisplayFormat="N2"/>
+                    </dxg:GridColumn.EditSettings>
+                </dxg:GridColumn>
+                <dxg:GridColumn Header="Остаток"
+                                Visible="{Binding IsKeepRecords}"
+                                FieldName="QuantityInStock"
+                                AllowColumnFiltering="False"
+                                AllowEditing="False">
+                    <dxg:GridColumn.EditSettings>
+                        <dxe:SpinEditSettings/>
+                    </dxg:GridColumn.EditSettings>
+                </dxg:GridColumn>
+            </dxg:GridControl>
 
-                                <KeyBinding Key="F5"
-                                            Command="{Binding PaymentCashCommand}"/>
+            <dxlc:LayoutGroup Orientation="Vertical"
+                              VerticalAlignment="Top">
 
-                                <KeyBinding Key="F6"
-                                            Command="{Binding PaymentCashlessCommand}"/>
+                <dxlc:LayoutItem Label="Всего:"
+                                 LabelPosition="Left"
+                                 Style="{StaticResource liCash}"
+                                 FontSize="38">
+                    <dxe:TextEdit Text="{Binding Sum, UpdateSourceTrigger=PropertyChanged}"
+                                  Style="{StaticResource teCash}"
+                                  IsReadOnly="True"
+                                  FontSize="46"
+                                  BorderBrush="Transparent"
+                                  BorderThickness="0"/>
+                </dxlc:LayoutItem>
 
-                                <KeyBinding Key="F5" 
-                                            Modifiers="Alt"
-                                            Command="{Binding PostponeReceiptCommand}"/>
+                <dxlc:LayoutItem Label="К оплате:"
+                                 LabelPosition="Left"
+                                 Style="{StaticResource liCash}"
+                                 FontSize="38">
+                    <dxe:TextEdit Text="{Binding Sum, UpdateSourceTrigger=PropertyChanged}"
+                                  Style="{StaticResource teCash}"
+                                  IsReadOnly="True"
+                                  FontSize="46"
+                                  BorderBrush="Transparent"
+                                  BorderThickness="0"/>
+                </dxlc:LayoutItem>
 
-                                <KeyBinding Key="F5" 
-                                            Modifiers="Ctrl"
-                                            Command="{Binding OpenPostponeReceiptCommand}"/>
+                <dxlc:LayoutItem Label="Сдача:"
+                                 LabelPosition="Left"
+                                 Style="{StaticResource liCash}"
+                                 FontSize="38">
+                    <dxe:TextEdit Text="{Binding Change, UpdateSourceTrigger=PropertyChanged}"
+                                  Style="{StaticResource teCash}"
+                                  IsReadOnly="True"
+                                  FontSize="46"
+                                  BorderBrush="Transparent"
+                                  BorderThickness="0"/>
+                </dxlc:LayoutItem>
 
-                                <KeyBinding Key="Delete"
-                                            Command="{Binding DeleteSelectedRowCommand}"/>
-                            </dxg:GridColumn.InputBindings>
-                        </dxg:GridColumn>
-                        <dxg:GridColumn Header="Цена" 
-                                        FieldName="SalePrice"
-                                        AllowColumnFiltering="False"
-                                        AllowEditing="False">
-                            <dxg:GridColumn.EditSettings>
-                                <dxe:TextEditSettings DisplayFormat="N2"/>
-                            </dxg:GridColumn.EditSettings>
-                        </dxg:GridColumn>
-                        <dxg:GridColumn Header="Сумма" 
-                                        FieldName="Sum"
-                                        IsSmart="True"
-                                        AllowColumnFiltering="False"
-                                        AllowEditing="False">
-                            <dxg:GridColumn.EditSettings>
-                                <dxe:TextEditSettings DisplayFormat="N2"/>
-                            </dxg:GridColumn.EditSettings>
-                        </dxg:GridColumn>
-                        <dxg:GridColumn Header="Остаток"
-                                        Visible="{Binding IsKeepRecords}"
-                                        FieldName="QuantityInStock"
-                                        AllowColumnFiltering="False"
-                                        AllowEditing="False">
-                            <dxg:GridColumn.EditSettings>
-                                <dxe:SpinEditSettings/>
-                            </dxg:GridColumn.EditSettings>
-                        </dxg:GridColumn>
-                        <dxg:GridControl.InputBindings>
-                            <KeyBinding Key="Escape"
-                                        Command="{Binding LogoutCommand}"/>
-
-                            <KeyBinding Key="F5"
-                                        Command="{Binding PaymentCashCommand}"/>
-
-                            <KeyBinding Key="F6"
-                                        Command="{Binding PaymentCashlessCommand}"/>
-
-                            <KeyBinding Key="F5" 
-                                        Modifiers="Alt"
-                                        Command="{Binding PostponeReceiptCommand}"/>
-
-                            <KeyBinding Key="F5" 
-                                        Modifiers="Ctrl"
-                                        Command="{Binding OpenPostponeReceiptCommand}"/>
-
-                            <KeyBinding Key="Delete"
-                                        Command="{Binding DeleteSelectedRowCommand}"/>
-                        </dxg:GridControl.InputBindings>
-                    </dxg:GridControl>
-
-                </dxlc:LayoutGroup>
-
-            </Grid>
+            </dxlc:LayoutGroup>
 
         </dxlc:LayoutGroup>
 
