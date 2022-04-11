@@ -12,6 +12,10 @@ namespace RetailTradeClient.Views
         public HomeView()
         {
             InitializeComponent();
+
+            RoutedCommand firstSettings = new RoutedCommand();
+            firstSettings.InputGestures.Add(new KeyGesture(Key.F, ModifierKeys.Control));
+            CommandBindings.Add(new CommandBinding(firstSettings, CommandBinding_Executed));
         }
 
         private void TableView_InvalidRowException(object sender, InvalidRowExceptionEventArgs e)

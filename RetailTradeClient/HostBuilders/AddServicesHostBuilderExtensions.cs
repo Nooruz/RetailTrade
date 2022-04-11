@@ -23,6 +23,7 @@ namespace RetailTradeClient.HostBuilders
                 _ = services.AddSingleton<IShiftService, ShiftService>();
                 _ = services.AddSingleton<IRefundService, RefundService>();
                 _ = services.AddSingleton<IReceiptService, ReceiptService>();
+                _ = services.AddSingleton<ITypeProductService, TypeProductService>();
             });
         }
     }

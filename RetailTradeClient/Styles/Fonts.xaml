@@ -19,5 +19,8 @@
     <system:String x:Key="faFileAlt">&#xf15c;</system:String>
     <system:String x:Key="faCashRegister">&#xf788;</system:String>
     <system:String x:Key="faTimesCircle">&#xf057;</system:String>
+    <system:String x:Key="faMagnifyingGlass">&#xf002;</system:String>
+    <system:String x:Key="faFolder">&#xf07b;</system:String>
+    <system:String x:Key="faMinus">&#xf068;</system:String>
 
 </ResourceDictionary>

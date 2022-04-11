@@ -19,4 +19,13 @@
     <Color x:Key="TextBoxHover">#1E9DD8</Color>
     <SolidColorBrush x:Key="TextBoxHoverBrush" Color="{StaticResource TextBoxHover}"/>
 
+    <Color x:Key="GreenColor">#009F6B</Color>
+    <SolidColorBrush x:Key="GreenColorBrush" Color="{StaticResource GreenColor}"/>
+
+    <Color x:Key="RedColor">#C40233</Color>
+    <SolidColorBrush x:Key="RedColorBrush" Color="{StaticResource RedColor}"/>
+
+    <Color x:Key="FolderColor">#F6D775</Color>
+    <SolidColorBrush x:Key="FolderColorBrush" Color="{StaticResource FolderColor}"/>
+
 </ResourceDictionary>

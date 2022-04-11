@@ -1,4 +1,5 @@
 ﻿using DevExpress.Mvvm;
+using DevExpress.Mvvm.DataAnnotations;
 using DevExpress.Xpf.Grid;
 using RetailTrade.Barcode.Services;
 using RetailTrade.CashRegisterMachine;
@@ -19,9 +20,11 @@ using System;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Linq;
+using System.Runtime.InteropServices;
 using System.Windows;
 using System.Windows.Data;
 using System.Windows.Input;
+using System.Windows.Interop;
 
 namespace RetailTradeClient.ViewModels
 {
@@ -40,6 +43,41 @@ namespace RetailTradeClient.ViewModels
         private string _barcode;
         private Sale _selectedProductSale;
         private object _syncLock = new();
+        private MainWindow _mainWindow;
+
+        private const int HOTKEY_F5 = 1;
+        private const int HOTKEY_F6 = 2;
+        private const int HOTKEY_F7 = 3;
+        private const int HOTKEY_ALT_F5 = 4;
+        private const int HOTKEY_CTRL_F5 = 5;
+        private const int HOTKEY_CTRL_F = 6;
+        private const int HOTKEY_ESC = 7;
+        private const int HOTKEY_CTRL_Z = 8;
+        //Modifiers:
+        private const uint MOD_NONE = 0x0000; //(none)
+        private const uint MOD_ALT = 0x0001; //ALT
+        private const uint MOD_CONTROL = 0x0002; //CTRL
+        private const uint MOD_SHIFT = 0x0004; //SHIFT
+        private const uint MOD_WIN = 0x0008; //WINDOWS
+        //CAPS LOCK:
+        private const uint VK_F5 = 0x74;
+        private const uint VK_F6 = 0x75;
+        private const uint VK_F7 = 0x76;
+        private const uint VK_CTRL_F = 0x46;
+        private const uint VK_ESCAPE = 0x1B;
+        private const uint VK_CTRL_Z = 0x5A;
+        private IntPtr _windowHandle;
+        private HwndSource _source;
+
+        #endregion
+
+        #region Static
+
+        [DllImport("user32.dll")]
+        private static extern bool RegisterHotKey(IntPtr hWnd, int id, uint fsModifiers, uint vk);
+
+        [DllImport("user32.dll")]
+        private static extern bool UnregisterHotKey(IntPtr hWnd, int id);
 
         #endregion
 
@@ -186,7 +224,8 @@ namespace RetailTradeClient.ViewModels
             IBarcodeService barcodeService,
             ProductsWithoutBarcodeViewModel productsWithoutBarcodeViewModel,
             PaymentCashViewModel paymentCashViewModel,
-            PaymentComplexViewModel paymentComplexViewModel)
+            PaymentComplexViewModel paymentComplexViewModel, 
+            MainWindow mainWindow)
         {
             _userStore = userStore;
             _receiptService = receiptService;
@@ -196,6 +235,7 @@ namespace RetailTradeClient.ViewModels
             _barcodeService = barcodeService;
             _paymentCashViewModel = paymentCashViewModel;
             _paymentComplexViewModel = paymentComplexViewModel;
+            _mainWindow = mainWindow;
 
             ProductsWithoutBarcodeViewModel = productsWithoutBarcodeViewModel;
 
@@ -307,11 +347,114 @@ namespace RetailTradeClient.ViewModels
             {
                 if (e.Source is HomeView homeView)
                 {
-                    homeView.Focus();
-                    Keyboard.Focus(homeView);
+                    homeView.Unloaded += HomeView_Unloaded;
+                    _windowHandle = new WindowInteropHelper(_mainWindow).Handle;
+                    _source = HwndSource.FromHwnd(_windowHandle);
+                    _source.AddHook(HwndHook);
+
+                    RegisterHotKey(_windowHandle, HOTKEY_F5, MOD_NONE, VK_F5); //+
+                    RegisterHotKey(_windowHandle, HOTKEY_F6, MOD_NONE, VK_F6); //+
+                    RegisterHotKey(_windowHandle, HOTKEY_F7, MOD_NONE, VK_F7); //+
+                    RegisterHotKey(_windowHandle, HOTKEY_ALT_F5, MOD_ALT, VK_F5); //+
+                    RegisterHotKey(_windowHandle, HOTKEY_CTRL_F5, MOD_CONTROL, VK_F5); //+
+                    RegisterHotKey(_windowHandle, HOTKEY_CTRL_F, MOD_CONTROL, VK_CTRL_F); //+
+                    RegisterHotKey(_windowHandle, HOTKEY_ESC, MOD_NONE, VK_ESCAPE); //+
+                    RegisterHotKey(_windowHandle, HOTKEY_CTRL_Z, MOD_CONTROL, VK_CTRL_Z); //+
                 }
             }
+
             BarcodeOpen();
+        }
+
+        private void HomeView_Unloaded(object sender, RoutedEventArgs e)
+        {
+            _source.RemoveHook(HwndHook);
+            UnregisterHotKey(_windowHandle, HOTKEY_F5);
+            UnregisterHotKey(_windowHandle, HOTKEY_F6);
+            UnregisterHotKey(_windowHandle, HOTKEY_F7);
+            UnregisterHotKey(_windowHandle, HOTKEY_ALT_F5);
+            UnregisterHotKey(_windowHandle, HOTKEY_CTRL_F5);
+            UnregisterHotKey(_windowHandle, HOTKEY_CTRL_F);
+            UnregisterHotKey(_windowHandle, HOTKEY_ESC);
+            UnregisterHotKey(_windowHandle, HOTKEY_CTRL_Z);
+        }
+
+        private IntPtr HwndHook(IntPtr hwnd, int msg, IntPtr wParam, IntPtr lParam, ref bool handled)
+        {
+            try
+            {
+                const int WM_HOTKEY = 0x0312;
+                switch (msg)
+                {
+                    case WM_HOTKEY:
+                        int vkey = ((int)lParam >> 16) & 0xFFFF;
+                        switch (wParam.ToInt32())
+                        {
+                            case HOTKEY_F5:                                
+                                if (vkey == VK_F5)
+                                {
+                                    PaymentCash();
+                                }
+                                handled = true;
+                                break;
+                            case HOTKEY_F6:
+                                if (vkey == VK_F6)
+                                {
+                                    PaymentComplex();
+                                }
+                                handled = true;
+                                break;
+                            case HOTKEY_F7:
+                                if (vkey == VK_F7)
+                                {
+                                    ReturnGoods();
+                                }
+                                handled = true;
+                                break;
+                            case HOTKEY_ALT_F5:
+                                if (vkey == VK_F5)
+                                {
+                                    _productSaleStore.CreatePostponeReceipt();
+                                }
+                                handled = true;
+                                break;
+                            case HOTKEY_CTRL_F5:
+                                if (vkey == VK_F5)
+                                {
+                                    OpenPostponeReceipt();
+                                }
+                                handled = true;
+                                break;
+                            case HOTKEY_CTRL_F:
+                                if (vkey == VK_CTRL_F)
+                                {
+                                    Search();
+                                }
+                                handled = true;
+                                break;
+                            case HOTKEY_ESC:
+                                if (vkey == VK_ESCAPE)
+                                {
+                                    Logout();
+                                }
+                                handled = true;
+                                break;
+                            case HOTKEY_CTRL_Z:
+                                if (vkey == VK_CTRL_Z)
+                                {
+                                    Cancel();
+                                }
+                                handled = true;
+                                break;
+                        }
+                        break;
+                }
+            }
+            catch (Exception)
+            {
+                //ignore
+            }
+            return IntPtr.Zero;
         }
 
         private static void QuantityValidate(object parameter)
@@ -405,6 +548,16 @@ namespace RetailTradeClient.ViewModels
         private void Cancel()
         {
             _productSaleStore.Sales.Clear();            
+        }
+
+        #endregion
+
+        #region Public Voids
+
+        [Command]
+        public void Search()
+        {
+            WindowService.Show(nameof(ProductView), _productSaleStore.SearchProduct());
         }
 
         #endregion

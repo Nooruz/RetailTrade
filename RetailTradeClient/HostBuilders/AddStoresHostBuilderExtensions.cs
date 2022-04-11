@@ -2,6 +2,7 @@
 using Microsoft.Extensions.Hosting;
 using RetailTrade.Barcode.Services;
 using RetailTrade.CashRegisterMachine.Services;
+using RetailTrade.Domain.Services;
 using RetailTradeClient.Report;
 using RetailTradeClient.State.Authenticators;
 using RetailTradeClient.State.Messages;
@@ -10,6 +11,7 @@ using RetailTradeClient.State.ProductSales;
 using RetailTradeClient.State.Reports;
 using RetailTradeClient.State.Shifts;
 using RetailTradeClient.State.Users;
+using RetailTradeClient.ViewModels.Dialogs;
 using System;
 
 namespace RetailTradeClient.HostBuilders
@@ -30,8 +32,15 @@ namespace RetailTradeClient.HostBuilders
                 _ = services.AddSingleton(CreateXReport);
                 _ = services.AddSingleton(CreateProductSaleReport);
                 _ = services.AddSingleton<IReportService, ReportService>();
+                _ = services.AddTransient(CreateProductViewModel);
                 _ = services.AddSingleton<IProductSaleStore, ProductSaleStore>();
             });
+        }
+
+        private static ProductViewModel CreateProductViewModel(IServiceProvider services)
+        {
+            return new ProductViewModel(services.GetRequiredService<ITypeProductService>(),
+                services.GetRequiredService<IProductService>());
         }
 
         private static XReport CreateXReport(IServiceProvider serviceProvider)

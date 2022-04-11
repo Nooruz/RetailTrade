@@ -1,4 +1,5 @@
 ﻿using RetailTrade.Domain.Models;
+using RetailTradeClient.ViewModels.Dialogs;
 using System;
 using System.Collections.ObjectModel;
 using System.Threading.Tasks;
@@ -18,6 +19,7 @@ namespace RetailTradeClient.State.ProductSales
         event Action<bool> OnProductSale;
         event Action OnPostponeReceiptChanged;
 
+        ProductViewModel SearchProduct();
         Task AddProduct(string barcode);
         Task AddProduct(int id);
         void DeleteProduct(int id);

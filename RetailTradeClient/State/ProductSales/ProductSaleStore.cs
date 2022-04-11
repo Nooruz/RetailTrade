@@ -8,7 +8,9 @@ using RetailTradeClient.Properties;
 using RetailTradeClient.Report;
 using RetailTradeClient.State.Reports;
 using RetailTradeClient.State.Shifts;
+using RetailTradeClient.ViewModels.Dialogs;
 using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Linq;
@@ -26,6 +28,7 @@ namespace RetailTradeClient.State.ProductSales
         private readonly IBarcodeService _barcodeService;
         private readonly ICashRegisterMachineService _cashRegisterMachineService;
         private readonly IShiftStore _shiftStore;
+        private readonly ProductViewModel _productViewModel;
         private ObservableCollection<Sale> _sales = new();
         private ObservableCollection<PostponeReceipt> _postponeReceipts = new();
         private ObservableCollection<PaymentType> _paymentTypes = new();
@@ -103,7 +106,8 @@ namespace RetailTradeClient.State.ProductSales
             IReceiptService receiptService,
             IShiftStore shiftStore,
             IBarcodeService barcodeService,
-            ICashRegisterMachineService cashRegisterMachineService)
+            ICashRegisterMachineService cashRegisterMachineService,
+            ProductViewModel productViewModel)
         {
             _productService = productService;
             _reportService = reportService;
@@ -111,8 +115,10 @@ namespace RetailTradeClient.State.ProductSales
             _shiftStore = shiftStore;
             _barcodeService = barcodeService;
             _cashRegisterMachineService = cashRegisterMachineService;
+            _productViewModel = productViewModel;
 
             _barcodeService.OnBarcodeEvent += BarcodeService_OnBarcodeEvent;
+            _productViewModel.OnProductsSelected += ProductViewModel_OnProductsSelected;
         }
 
         #endregion
@@ -256,6 +262,50 @@ namespace RetailTradeClient.State.ProductSales
 
         #region Private Voids
 
+        private void ProductViewModel_OnProductsSelected(IEnumerable<Product> products)
+        {
+            try
+            {
+                products.ToList().ForEach(p =>
+                {
+                    if (Sales.Any())
+                    {
+                        Sale sale = Sales.FirstOrDefault(s => s.Id == p.Id);
+                        if (sale != null)
+                        {
+                            if (Settings.Default.IsKeepRecords)
+                            {
+                                if (sale.QuantityInStock < sale.Quantity + 1)
+                                {
+                                    //_ = MessageBox.Show("Количество превышает остаток.", "", MessageBoxButton.OK, MessageBoxImage.Information);
+                                }
+                                else
+                                {
+                                    sale.Quantity++;
+                                }
+                            }
+                            else
+                            {
+                                sale.Quantity++;
+                            }
+                        }
+                        else
+                        {
+                            AddProductToCart(p);
+                        }
+                    }
+                    else
+                    {
+                        AddProductToCart(p);
+                    }                    
+                });
+            }
+            catch (Exception)
+            {
+                //ignore
+            }
+        }
+
         private async void BarcodeService_OnBarcodeEvent(string barcode)
         {
             await AddProduct(barcode);
@@ -308,6 +358,11 @@ namespace RetailTradeClient.State.ProductSales
                     //ignore
                 }
             }
+        }
+
+        public ProductViewModel SearchProduct()
+        {
+            return _productViewModel;
         }
 
         #endregion

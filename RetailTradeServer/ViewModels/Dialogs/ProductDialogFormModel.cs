@@ -1,5 +1,4 @@
 ﻿using DevExpress.Data.Filtering;
-using DevExpress.Xpf.Grid;
 using RetailTrade.Domain.Models;
 using RetailTrade.Domain.Services;
 using RetailTradeServer.Commands;

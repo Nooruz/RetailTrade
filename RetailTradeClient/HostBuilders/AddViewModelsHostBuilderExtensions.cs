@@ -23,24 +23,24 @@ namespace RetailTradeClient.HostBuilders
         {
             return host.ConfigureServices(services =>
             {
-                services.AddSingleton(s => new MainWindow());
+                _ = services.AddSingleton(s => new MainWindow());
 
-                services.AddTransient(CreateMainWindowViewModel);
-                services.AddTransient(CreateHomeViewModel);
-                services.AddTransient(CreateLoginViewModel);
-                services.AddTransient(CreateGlobalMessageViewModel);
-                services.AddTransient(CreateProductsWithoutBarcodeViewModel);
-                services.AddTransient(CreatePaymentCashViewModel);
-                services.AddTransient(CreatePaymentComplexViewModel);
+                _ = services.AddTransient(CreateMainWindowViewModel);
+                _ = services.AddTransient(CreateHomeViewModel);
+                _ = services.AddTransient(CreateLoginViewModel);
+                _ = services.AddTransient(CreateGlobalMessageViewModel);
+                _ = services.AddTransient(CreateProductsWithoutBarcodeViewModel);
+                _ = services.AddTransient(CreatePaymentCashViewModel);
+                _ = services.AddTransient(CreatePaymentComplexViewModel);
 
-                services.AddSingleton<CreateViewModel<HomeViewModel>>(servicesProvider => () => CreateHomeViewModel(servicesProvider));
-                services.AddSingleton<CreateViewModel<LoginViewModel>>(servicesProvider => () => CreateLoginViewModel(servicesProvider));
-                services.AddSingleton<CreateViewModel<ProductsWithoutBarcodeViewModel>>(servicesProvider => () => CreateProductsWithoutBarcodeViewModel(servicesProvider));
+                _ = services.AddSingleton<CreateViewModel<HomeViewModel>>(servicesProvider => () => CreateHomeViewModel(servicesProvider));
+                _ = services.AddSingleton<CreateViewModel<LoginViewModel>>(servicesProvider => () => CreateLoginViewModel(servicesProvider));
+                _ = services.AddSingleton<CreateViewModel<ProductsWithoutBarcodeViewModel>>(servicesProvider => () => CreateProductsWithoutBarcodeViewModel(servicesProvider));
 
-                services.AddSingleton<IViewModelFactory, ViewModelFactory>();
+                _ = services.AddSingleton<IViewModelFactory, ViewModelFactory>();
 
-                services.AddSingleton<ViewModelDelegateRenavigator<LoginViewModel>>();
-                services.AddSingleton<ViewModelDelegateRenavigator<HomeViewModel>>();
+                _ = services.AddSingleton<ViewModelDelegateRenavigator<LoginViewModel>>();
+                _ = services.AddSingleton<ViewModelDelegateRenavigator<HomeViewModel>>();
             });
         }
 
@@ -78,7 +78,8 @@ namespace RetailTradeClient.HostBuilders
                 services.GetRequiredService<IBarcodeService>(),
                 services.GetRequiredService<ProductsWithoutBarcodeViewModel>(),
                 services.GetRequiredService<PaymentCashViewModel>(),
-                services.GetRequiredService<PaymentComplexViewModel>());
+                services.GetRequiredService<PaymentComplexViewModel>(),
+                services.GetRequiredService<MainWindow>());
         }
 
         private static LoginViewModel CreateLoginViewModel(IServiceProvider services)

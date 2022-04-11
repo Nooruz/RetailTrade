@@ -30,7 +30,7 @@
         <dxlc:LayoutGroup Orientation="Horizontal"
                                       VerticalAlignment="Top">
 
-            <Button Content="Наличными (+)"
+            <Button Content="Наличными (F5)"
                     Style="{StaticResource ButtonWithIcon}"
                     Tag="{StaticResource faMoneyBillAlt}"
                     Command="{Binding PaymentCashCommand}"/>
@@ -41,7 +41,7 @@
                     ToolTip="Оплата безналичными"
                     Command="{Binding PaymentComplexCommand}"/>
 
-            <Button Content="Возврат (-)"
+            <Button Content="Возврат (F7)"
                     Style="{StaticResource ButtonWithIcon}"
                     Tag="{StaticResource faUndoAlt}"
                     Command="{Binding ReturnGoodsCommand}"/>
@@ -56,7 +56,12 @@
                     Tag="{StaticResource faUserClock}"
                     Command="{Binding OpenPostponeReceiptCommand}"/>
 
-            <Button Content="Отменить (Esc)"
+            <Button Content="Поиск (Ctrl + F)"
+                    Style="{StaticResource ButtonWithIcon}"
+                    Tag="{StaticResource faMagnifyingGlass}"
+                    Command="{Binding SearchCommand}"/>
+
+            <Button Content="Отменить (Ctrl + Z)"
                     Style="{StaticResource ButtonWithIcon}"
                     Tag="{StaticResource faTimesCircle}"
                     Command="{Binding CancelCommand}"/>
