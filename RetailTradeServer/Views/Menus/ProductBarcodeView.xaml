@@ -32,7 +32,7 @@
 
         </dxlc:LayoutGroup>
 
-        <dxg:GridControl ItemsSource="{Binding LabelPrintings}"
+        <dxg:GridControl ItemsSource="{Binding ProductBarcodeCollectionView}"
                          SelectedItem="{Binding SelectedLabelPrinting}"
                          AutoGenerateColumns="None">
 

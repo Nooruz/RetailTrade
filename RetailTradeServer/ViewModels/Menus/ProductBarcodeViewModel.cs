@@ -13,9 +13,11 @@ using SalePageServer.Properties;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.ComponentModel;
 using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Data;
 
 namespace RetailTradeServer.ViewModels.Menus
 {
@@ -32,6 +34,7 @@ namespace RetailTradeServer.ViewModels.Menus
         private readonly ILabelPrintingService _labelPrintingService;
         private readonly IReportService _reportService;
         private readonly ILabelPriceTagSizeService _labelPriceTagSizeService;
+        private object _syncLock = new();
         private Product _selectedProduct;
         private LabelPrinting _selectedLabelPrinting;
         private IEnumerable<Product> _products;
@@ -101,6 +104,7 @@ namespace RetailTradeServer.ViewModels.Menus
             }
         }
         public GridControl BarcodeGridControl { get; set; }
+        public ICollectionView ProductBarcodeCollectionView => CollectionViewSource.GetDefaultView(LabelPrintings);
 
         #endregion
 
@@ -129,6 +133,8 @@ namespace RetailTradeServer.ViewModels.Menus
             _productDialogFormModel = new(_typeProductService);
 
             Header = "Ценники и этикетки (Штрих-код)";
+
+            BindingOperations.EnableCollectionSynchronization(LabelPrintings, _syncLock);
 
             _productDialogFormModel.OnProductsSelected += ProductDialogFormModel_OnProductsSelected;
             _labelPriceTagService.OnCreated += LabelPriceTagService_OnCreated;
