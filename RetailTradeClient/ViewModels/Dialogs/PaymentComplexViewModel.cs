@@ -125,18 +125,11 @@ namespace RetailTradeClient.ViewModels.Dialogs
             _productSaleStore = productSaleStore;
 
             PaymentTypes.CollectionChanged += PaymentTypes_CollectionChanged;
-            _productSaleStore.OnProductSale += ProductSaleStore_OnProductSale;
         }
 
         #endregion
 
         #region Private Voids
-
-        private void ProductSaleStore_OnProductSale(bool obj)
-        {
-            CurrentWindowService.Close();
-            _productSaleStore.Change = 0;
-        }
 
         private void Cleare()
         {

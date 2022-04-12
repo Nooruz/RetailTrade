@@ -164,6 +164,8 @@
             </dxg:GridControl>
 
             <dxlc:LayoutGroup Orientation="Vertical"
+                              HorizontalAlignment="Right"
+                              MinWidth="600"
                               VerticalAlignment="Top">
 
                 <dxlc:LayoutItem Label="Всего:"

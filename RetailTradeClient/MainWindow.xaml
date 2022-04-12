@@ -3,11 +3,10 @@
     xmlns:dxc="http://schemas.devexpress.com/winfx/2008/xaml/core"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     x:Class="RetailTradeClient.MainWindow"
-    Title="Управление розничной торговлей"
+    Title="Sale Page: Касса"
     WindowState="Maximized"
     Height="450" 
-    Width="800"
-    WindowStyle="None">
+    Width="800">
 
     <dxc:DXWindow.InputBindings>
 

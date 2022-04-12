@@ -44,6 +44,7 @@ namespace RetailTradeClient.ViewModels
         private Sale _selectedProductSale;
         private object _syncLock = new();
         private MainWindow _mainWindow;
+        private decimal _change;
 
         private const int HOTKEY_F5 = 1;
         private const int HOTKEY_F6 = 2;
@@ -93,8 +94,12 @@ namespace RetailTradeClient.ViewModels
         }
         public decimal Change
         {
-            get => _productSaleStore.Change;
-            set { }
+            get => _change;
+            set
+            {
+                _change = value;
+                OnPropertyChanged(nameof(Change));
+            }
         }
         public decimal ToBePaid => Sum;
         public string Barcode
@@ -258,14 +263,11 @@ namespace RetailTradeClient.ViewModels
             OnPropertyChanged(nameof(Sum));            
         }
 
-        private void ProductSaleStore_OnProductSale(bool obj)
+        private void ProductSaleStore_OnProductSale(decimal change)
         {
-            if (!obj)
-            {
-                _ = MessageBoxService.ShowMessage("Что-то пошло не так.", "Sale Page", MessageButton.OK, MessageIcon.Error);
-            }
+            Change = change;
+            OnPropertyChanged(nameof(ToBePaid));
             OnPropertyChanged(nameof(Sum));
-            OnPropertyChanged(nameof(Change));
         }
 
         private void BarcodeOpen()

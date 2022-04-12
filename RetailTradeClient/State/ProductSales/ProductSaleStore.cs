@@ -126,7 +126,7 @@ namespace RetailTradeClient.State.ProductSales
         #region Public Events
 
         public event Action OnProductSalesChanged;
-        public event Action<bool> OnProductSale;
+        public event Action<decimal> OnProductSale;
         public event Action OnPostponeReceiptChanged;
 
         #endregion
@@ -231,22 +231,6 @@ namespace RetailTradeClient.State.ProductSales
             }
         }
 
-        public void ProductSale(bool success)
-        {
-            Change = Entered - ToBePaid;
-            Sales.Clear();
-            OnPropertyChanged(nameof(ToBePaid));
-            OnProductSale?.Invoke(success);
-        }
-
-        public void ProductSaleCashless(bool success)
-        {
-            Sales.Clear();
-            PaymentTypes.Clear();
-            OnPropertyChanged(nameof(ToBePaid));
-            OnProductSale?.Invoke(success);
-        }
-
         public void ResumeReceipt(Guid guid)
         {
             PostponeReceipt postponeReceipt = PostponeReceipts.FirstOrDefault(p => p.Id == guid);
@@ -299,6 +283,8 @@ namespace RetailTradeClient.State.ProductSales
                         AddProductToCart(p);
                     }                    
                 });
+                OnProductSalesChanged?.Invoke();
+                OnPropertyChanged(nameof(ToBePaid));
             }
             catch (Exception)
             {
@@ -404,6 +390,10 @@ namespace RetailTradeClient.State.ProductSales
                 await PrintReceipt(receipt);
 
                 await _receiptService.CreateAsync(receipt);
+
+                OnProductSale?.Invoke(Change);
+                Sales.Clear();
+                OnPropertyChanged(nameof(ToBePaid));
             }
             catch (Exception)
             {
@@ -432,44 +422,51 @@ namespace RetailTradeClient.State.ProductSales
 
         private void PrintCashRegisterMachine()
         {
-            if (_cashRegisterMachineService.ECRMode() == ECRModeEnum.Mode2 || _cashRegisterMachineService.ECRMode() == ECRModeEnum.Mode0)
+            try
             {
-                _cashRegisterMachineService.Connect();
-                _cashRegisterMachineService.CheckType = 0;
-
-                if (Sales.Any())
+                if (_cashRegisterMachineService.ECRMode() == ECRModeEnum.Mode2 || _cashRegisterMachineService.ECRMode() == ECRModeEnum.Mode0)
                 {
-                    foreach (Sale item in Sales)
+                    _cashRegisterMachineService.Connect();
+                    _cashRegisterMachineService.CheckType = 0;
+
+                    if (Sales.Any())
                     {
-                        _cashRegisterMachineService.Quantity = Convert.ToDouble(item.Quantity);
-                        _cashRegisterMachineService.Price = item.SalePrice;
+                        foreach (Sale item in Sales)
+                        {
+                            _cashRegisterMachineService.Quantity = Convert.ToDouble(item.Quantity);
+                            _cashRegisterMachineService.Price = item.SalePrice;
 
-                        var sum1NSP = Math.Round(item.SalePrice * 1 / 102, 2);
-                        string sumNSP = Math.Round(sum1NSP * 100, 0).ToString();
+                            var sum1NSP = Math.Round(item.SalePrice * 1 / 102, 2);
+                            string sumNSP = Math.Round(sum1NSP * 100, 0).ToString();
 
-                        _cashRegisterMachineService.StringForPrinting =
-                            string.Join(";", new string[] { "", item.TNVED, "", "", "0", "0", "4", sumNSP + "\n" + item.Name });
-                        _cashRegisterMachineService.Tax1 = 4;
-                        _cashRegisterMachineService.Tax2 = 0;
-                        _cashRegisterMachineService.Tax3 = 0;
-                        _cashRegisterMachineService.Tax4 = 0;
-                        string result = _cashRegisterMachineService.Sale();
+                            _cashRegisterMachineService.StringForPrinting =
+                                string.Join(";", new string[] { "", item.TNVED, "", "", "0", "0", "4", sumNSP + "\n" + item.Name });
+                            _cashRegisterMachineService.Tax1 = 4;
+                            _cashRegisterMachineService.Tax2 = 0;
+                            _cashRegisterMachineService.Tax3 = 0;
+                            _cashRegisterMachineService.Tax4 = 0;
+                            string result = _cashRegisterMachineService.Sale();
+                        }
+
+                        _cashRegisterMachineService.Summ1 = Sales.Sum(s => s.SalePrice);
+                        _cashRegisterMachineService.StringForPrinting = "";
+                        _cashRegisterMachineService.CloseCheck();
+                        _cashRegisterMachineService.CutCheck();
+                        _cashRegisterMachineService.Disconnect();
+
+                        //_cashRegisterMachineService.RegisterNumber = 148;
+                        //_cashRegisterMachineService.GetOperationReg();
+                        //string d = _cashRegisterMachineService.GetOperationReg();
+                        //int f = _cashRegisterMachineService.ContentsOfOperationRegister;
+                        //string df = _cashRegisterMachineService.NameOperationReg;
+
                     }
 
-                    _cashRegisterMachineService.Summ1 = Sales.Sum(s => s.SalePrice);
-                    _cashRegisterMachineService.StringForPrinting = "";
-                    _cashRegisterMachineService.CloseCheck();
-                    _cashRegisterMachineService.CutCheck();
-                    _cashRegisterMachineService.Disconnect();
-
-                    //_cashRegisterMachineService.RegisterNumber = 148;
-                    //_cashRegisterMachineService.GetOperationReg();
-                    //string d = _cashRegisterMachineService.GetOperationReg();
-                    //int f = _cashRegisterMachineService.ContentsOfOperationRegister;
-                    //string df = _cashRegisterMachineService.NameOperationReg;
-
                 }
-
+            }
+            catch (Exception)
+            {
+                //ignore
             }
         }
 

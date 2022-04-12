@@ -16,15 +16,13 @@ namespace RetailTradeClient.State.ProductSales
         decimal Change { get; set; }
         public bool SaleCompleted { get; set; }
         event Action OnProductSalesChanged;
-        event Action<bool> OnProductSale;
+        event Action<decimal> OnProductSale;
         event Action OnPostponeReceiptChanged;
 
         ProductViewModel SearchProduct();
         Task AddProduct(string barcode);
         Task AddProduct(int id);
         void DeleteProduct(int id);
-        void ProductSale(bool success);
-        void ProductSaleCashless(bool success);
         Task CashPayment();
         Task CashlessPayment();
         /// <summary>

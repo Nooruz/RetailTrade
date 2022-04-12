@@ -119,13 +119,10 @@ namespace RetailTradeClient.Commands
                     //tool.PrinterSettings.PrinterName = Settings.Default.DefaultReceiptPrinter;
                     //tool.PrintingSystem.EndPrint += PrintingSystem_EndPrint;
                     //tool.Print();
-
-                    _productSaleStore.ProductSale(true);
                 }
                 catch (Exception)
                 {
                     //ignore
-                    _productSaleStore.ProductSale(false);
                 }
                 finally
                 {

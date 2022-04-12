@@ -149,8 +149,8 @@ namespace RetailTradeClient.ViewModels.Dialogs
         [Command]
         public async void UserControlLoaded()
         {
-            Products = Settings.Default.IsKeepRecords ? await _productService.PredicateSelect(p => p.Quantity > 0 && p.DeleteMark == false, p => new Product { Id = p.Id, Name = p.Name, Barcode = p.Barcode, TypeProductId = p.TypeProductId }) :
-                await _productService.PredicateSelect(p => p.DeleteMark == false, p => new Product { Id = p.Id, Name = p.Name, Barcode = p.Barcode, TypeProductId = p.TypeProductId });
+            Products = Settings.Default.IsKeepRecords ? await _productService.PredicateSelect(p => p.Quantity > 0 && p.DeleteMark == false, p => new Product { Id = p.Id, Name = p.Name, Barcode = p.Barcode, TypeProductId = p.TypeProductId, SalePrice = p.SalePrice, Quantity = p.Quantity }) :
+                await _productService.PredicateSelect(p => p.DeleteMark == false, p => new Product { Id = p.Id, Name = p.Name, Barcode = p.Barcode, TypeProductId = p.TypeProductId, SalePrice = p.SalePrice });
             TypeProducts = await _typeProductService.GetAllAsync();
         }
 

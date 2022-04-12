@@ -83,7 +83,7 @@ namespace RetailTradeClient.Commands
                 }
                 catch (Exception)
                 {
-                    _productSaleStore.ProductSaleCashless(false);
+                    
                 }
             }
             else
@@ -94,7 +94,7 @@ namespace RetailTradeClient.Commands
 
         private void PrintingSystem_EndPrint(object sender, EventArgs e)
         {
-            _productSaleStore.ProductSaleCashless(true);
+            
         }
     }
 }
