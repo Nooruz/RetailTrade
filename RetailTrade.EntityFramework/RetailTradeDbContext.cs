@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using RetailTrade.Domain.Models;
+using System;
 
 namespace RetailTrade.EntityFramework
 {
@@ -117,6 +118,12 @@ namespace RetailTrade.EntityFramework
         /// </summary>
         public DbSet<LabelPriceTagSize> LabelPriceTagSizes { get; set; }
 
+        public DbSet<ContractorType> ContractorTypes { get; set; }
+
+        public DbSet<Customer> Customers { get; set; }
+
+        public DbSet<Contractor> Contractors { get; set; }
+
         #region Employee
 
         /// <summary>
@@ -195,6 +202,17 @@ namespace RetailTrade.EntityFramework
                     .IsRequired(false)
                     .OnDelete(DeleteBehavior.Restrict);
             });
+
+            modelBuilder.Entity<Gender>().HasData(
+                new Gender { Id = 1, Name = "Мужской" },
+                new Gender { Id = 2, Name = "Женский" });
+
+            modelBuilder.Entity<ContractorType>().HasData(
+                new ContractorType { Id = 1, Name = "Юридическое лицо" },
+                new ContractorType { Id = 2, Name = "Физическое лицо" });
+
+            modelBuilder.Entity<Contractor>().HasData(
+                new Contractor { Id = 1, FullName = "Розничный покупатель", WorkName = "Розничный покупатель", Created = new DateTime(1995,3,21), ContractorTypeId = 2 });
 
             modelBuilder.Entity<TypeProduct>(entity =>
             {

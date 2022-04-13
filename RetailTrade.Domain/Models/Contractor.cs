@@ -1,17 +1,20 @@
-﻿namespace RetailTrade.Domain.Models
+﻿using System;
+
+namespace RetailTrade.Domain.Models
 {
     public class Contractor : DomainObject
     {
         #region Private Members
 
         private string _fullName;
-        private string _shortName;
+        private string _workName;
         private string _tIN;
         private string _oKPO;
         private string _email;
         private string _phone;
-        private int? _consumerId;
         private int _contractorTypeId;
+        private DateTime _created;
+        private string _comment;
 
         #endregion
 
@@ -27,13 +30,13 @@
             }
         }
 
-        public string ShortName
+        public string WorkName
         {
-            get => _shortName;
+            get => _workName;
             set
             {
-                _shortName = value;
-                OnPropertyChanged(nameof(ShortName));
+                _workName = value;
+                OnPropertyChanged(nameof(WorkName));
             }
         }
 
@@ -54,6 +57,58 @@
             {
                 _oKPO = value;
                 OnPropertyChanged(nameof(OKPO));
+            }
+        }
+
+        public string Email
+        {
+            get => _email;
+            set
+            {
+                _email = value;
+                OnPropertyChanged(nameof(Email));
+            }
+        }
+
+        public string Phone
+        {
+            get => _phone;
+            set
+            {
+                _phone = value;
+                OnPropertyChanged(nameof(Phone));
+            }
+        }
+
+        public int ContractorTypeId
+        {
+            get => _contractorTypeId;
+            set
+            {
+                _contractorTypeId = value;
+                OnPropertyChanged(nameof(ContractorTypeId));
+            }
+        }
+
+        public DateTime Created
+        {
+            get => _created;
+            set
+            {
+                _created = value;
+                OnPropertyChanged(nameof(Created));
+            }
+        }
+
+        public ContractorType ContractorType { get; set; }
+
+        public string Comment
+        {
+            get => _comment;
+            set
+            {
+                _comment = value;
+                OnPropertyChanged(nameof(Comment));
             }
         }
 

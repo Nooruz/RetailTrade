@@ -2,17 +2,16 @@
 
 namespace RetailTrade.Domain.Models
 {
-    public class Customer : DomainObject
+    public class Customer : Contractor
     {
         #region Private Members
 
         private string _surname;
         private string _name;
         private string _patronymic;
-        private string _phone;
-        private string _email;
-        private DateTime _created;
-        private string _tIN;
+        private DateTime? _birthdate;
+        private int? _genderId;
+        private string _address;
 
         #endregion
 
@@ -48,43 +47,35 @@ namespace RetailTrade.Domain.Models
             }
         }
 
-        public string Phone
+        public DateTime? Birthdate
         {
-            get => _phone;
+            get => _birthdate;
             set
             {
-                _phone = value;
-                OnPropertyChanged(nameof(Phone));
+                _birthdate = value;
+                OnPropertyChanged(nameof(Birthdate));
             }
         }
 
-        public string Email
+        public int? GenderId
         {
-            get => _email;
+            get => _genderId;
             set
             {
-                _email = value;
-                OnPropertyChanged(nameof(Email));
+                _genderId = value;
+                OnPropertyChanged(nameof(GenderId));
             }
         }
 
-        public DateTime Created
-        {
-            get => _created;
-            set
-            {
-                _created = value;
-                OnPropertyChanged(nameof(Created));
-            }
-        }
+        public Gender Gender { get; set; }
 
-        public string TIN
+        public string Address
         {
-            get => _tIN;
+            get => _address;
             set
             {
-                _tIN = value;
-                OnPropertyChanged(nameof(TIN));
+                _address = value;
+                OnPropertyChanged(nameof(Address));
             }
         }
 
