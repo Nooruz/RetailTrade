@@ -248,10 +248,6 @@ namespace RetailTrade.EntityFramework
                 new OrderStatus { Id = 2, Name = "Закрыт" },
                 new OrderStatus { Id = 3, Name = "Не выполнено" });
 
-            modelBuilder.Entity<Gender>().HasData(
-                new Gender { Id = 1, Name = "Мужской" },
-                new Gender { Id = 2, Name = "Женский" });
-
             modelBuilder.Entity<GroupEmployee>().HasData(
                 new GroupEmployee { Id = 1, Name = "Сотрудники" },
                 new GroupEmployee { Id = 2, Name = "Руководство", SubGroupId = 1 },

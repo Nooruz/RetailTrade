@@ -89,7 +89,12 @@ namespace RetailTradeServer.State.Navigators
         /// <summary>
         /// Возвраты товаров от клиентов
         /// </summary>
-        ReturnProductFromCustomerView
+        ReturnProductFromCustomerView,
+
+        /// <summary>
+        /// Клиенты
+        /// </summary>
+        Customers
     }
 
     public interface IMenuNavigator

@@ -1,0 +1,21 @@
+﻿<local:BaseMenuView xmlns:dxg="http://schemas.devexpress.com/winfx/2008/xaml/grid"    x:Class="SalePageServer.Views.Menus.CustomerView"
+                      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                      xmlns:dxlc="http://schemas.devexpress.com/winfx/2008/xaml/layoutcontrol"
+                      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                      xmlns:local="clr-namespace:RetailTradeServer.Views.Menus">
+
+    <dxlc:LayoutControl Orientation="Vertical">
+
+        <dxlc:LayoutGroup HorizontalAlignment="Left"
+                          VerticalAlignment="Top">
+
+            <Button Content="Создать"/>
+            <Button Content="Создать"/>
+
+        </dxlc:LayoutGroup>
+
+        <dxg:GridControl />
+
+    </dxlc:LayoutControl>
+    
+</local:BaseMenuView>

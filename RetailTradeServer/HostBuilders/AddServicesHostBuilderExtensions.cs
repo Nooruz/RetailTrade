@@ -48,6 +48,10 @@ namespace RetailTradeServer.HostBuilders
                 services.AddSingleton<IWareHouseService, WareHouseService>();
                 services.AddSingleton<IRevaluationService, RevaluationService>();
                 services.AddSingleton<IRevaluationProductService, RevaluationProductService>();
+                services.AddSingleton<IDataService<Gender>, GenericService<Gender>>();
+                services.AddSingleton<IDataService<ContractorType>, GenericService<ContractorType>>();
+                services.AddSingleton<IContractorService, ContractorService>();
+                services.AddSingleton<ICustomerService, CustomerService>();
             });
         }
     }

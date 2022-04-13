@@ -36,7 +36,8 @@
                                 Style="{StaticResource DefaultHamburgerSubMenu}">
 
             <dxwui:HamburgerSubMenuNavigationButton Content="Панель продаж"
-                                                    Command="{Binding SaleDashboardCommand}"/>
+                                                    Command="{Binding RenavigateCommand}"
+                                                    CommandParameter="SaleDashboard"/>
 
         </dxwui:HamburgerSubMenu>
 
@@ -45,13 +46,20 @@
                                 Tag="{StaticResource faShoppingCart}">
 
             <dxwui:HamburgerSubMenuNavigationButton Content="Товары"
-                                                    Command="{Binding ProductsCommand}"/>
+                                                    Command="{Binding RenavigateCommand}"
+                                                    CommandParameter="Products"/>
 
             <dxwui:HamburgerSubMenuNavigationButton Content="Цены (переоценка)"
-                                                    Command="{Binding RevaluationCommand}"/>
+                                                    Command="{Binding RenavigateCommand}"
+                                                    CommandParameter="RevaluationView"/>
             
             <dxwui:HamburgerSubMenuNavigationButton Content="Возвраты товаров от клиентов"
-                                                    Command="{Binding ReturnProductFromCustomerCommand}"/>
+                                                    Command="{Binding RenavigateCommand}"
+                                                    CommandParameter="ReturnProductFromCustomerView"/>
+
+            <dxwui:HamburgerSubMenuNavigationButton Content="Клиенты"
+                                                    Command="{Binding RenavigateCommand}"
+                                                    CommandParameter="Customers"/>
 
         </dxwui:HamburgerSubMenu>
 
@@ -60,10 +68,12 @@
                                 Tag="{StaticResource faCartArrowDown}">
 
             <dxwui:HamburgerSubMenuNavigationButton Content="Заказы поставщикам"
-                                                    Command="{Binding OrderProductCommand}"/>
+                                                    Command="{Binding RenavigateCommand}"
+                                                    CommandParameter="OrderProduct"/>
 
             <dxwui:HamburgerSubMenuNavigationButton Content="Возвраты поставщикам"
-                                                    Command="{Binding RefundToSupplierCommand}"/>
+                                                    Command="{Binding RenavigateCommand}"
+                                                    CommandParameter="RefundToSupplier"/>
 
         </dxwui:HamburgerSubMenu>
 
@@ -72,15 +82,18 @@
                                 Tag="{StaticResource faWarehouse}">
 
             <dxwui:HamburgerSubMenuNavigationButton Content="Склады"
-                                                    Command="{Binding WareHouseCommand}"
+                                                    Command="{Binding RenavigateCommand}"
+                                                    CommandParameter="WareHouseView"
                                                     Focusable="False"/>
 
             <dxwui:HamburgerSubMenuNavigationButton Content="Приход товаров"
-                                                    Command="{Binding ArrivalProductCommand}"
+                                                    Command="{Binding RenavigateCommand}"
+                                                    CommandParameter="ArrivalProduct"
                                                     Focusable="False"/>
 
             <dxwui:HamburgerSubMenuNavigationButton Content="Списание товаров"
-                                                    Command="{Binding WriteDownProductCommand}"
+                                                    Command="{Binding RenavigateCommand}"
+                                                    CommandParameter="WriteDownProduct"
                                                     Focusable="False"/>
 
         </dxwui:HamburgerSubMenu>
@@ -89,7 +102,8 @@
                                 Style="{StaticResource DefaultHamburgerSubMenu}"
                                 Tag="{StaticResource faCopy}">
             <dxwui:HamburgerSubMenuNavigationButton Content="Кассовые смены"
-                                                    Command="{Binding CashiersViewCommand}"/>
+                                                    Command="{Binding RenavigateCommand}"
+                                                    CommandParameter="CashierView"/>
             <dxwui:HamburgerSubMenuNavigationButton Content="Протокол событий"/>
             <dxwui:HamburgerSubMenuNavigationButton Content="Выручка за период"
                                                     Command="{Binding RevenueForPeriodCommand}"/>
@@ -101,20 +115,23 @@
                                 Style="{StaticResource DefaultHamburgerSubMenu}"
                                 Tag="{StaticResource faClipboardList}">
             <dxwui:HamburgerSubMenuNavigationButton Content="Пользователи"
-                                                    Command="{Binding UserCommand}"/>
+                                                    Command="{Binding RenavigateCommand}"
+                                                    CommandParameter="User"/>
             <dxwui:HamburgerSubMenuNavigationButton Content="Поставщики"
-                                                    Command="{Binding SupplierCommand}"/>
+                                                    Command="{Binding RenavigateCommand}"
+                                                    CommandParameter="Supplier"/>
             <dxwui:HamburgerSubMenuNavigationButton Content="Ценники и этикетки (Штрих-код)"
-                                                    Command="{Binding BarcodeCommand}"/>
-            <dxwui:HamburgerSubMenuNavigationButton Content="Экспорт/Импорт товара"
-                                                    Command="{Binding ExportImportCommand}"/>
+                                                    Command="{Binding RenavigateCommand}"
+                                                    CommandParameter="ProductBarcode"/>
+            <dxwui:HamburgerSubMenuNavigationButton Content="Экспорт/Импорт товара"/>
         </dxwui:HamburgerSubMenu>
 
         <dxwui:HamburgerSubMenu Content="Настройки"
                                 Style="{StaticResource DefaultHamburgerSubMenu}"
                                 Tag="{StaticResource faSlidersH}">
             <dxwui:HamburgerSubMenuNavigationButton Content="Подключение и настройка оборудования"
-                                                    Command="{Binding ConnectingAndConfiguringEquipmentCommand}"/>
+                                                    Command="{Binding RenavigateCommand}"
+                                                    CommandParameter="ConnectingAndConfiguringEquipment"/>
         </dxwui:HamburgerSubMenu>
 
     </custom:CustomHamburgerMenu>

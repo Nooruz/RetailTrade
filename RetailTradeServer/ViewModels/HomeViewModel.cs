@@ -9,6 +9,7 @@ using RetailTradeServer.ViewModels.Base;
 using RetailTradeServer.ViewModels.Dialogs;
 using RetailTradeServer.ViewModels.Factories;
 using RetailTradeServer.Views.Dialogs;
+using System;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Windows.Input;
@@ -40,60 +41,6 @@ namespace RetailTradeServer.ViewModels
         #region Commands
 
         public ICommand UpdateCurrentMenuViewModelCommand => new UpdateCurrentMenuViewModelCommand(_menuNavigator, _menuViewModelFactory);
-
-        #region Моя организация
-
-        public ICommand EmployeeCommand => new RelayCommand(() => UpdateCurrentMenuViewModelCommand.Execute(MenuViewType.Employee));
-
-        #endregion
-
-        #region Информационная панель
-
-        public ICommand SaleDashboardCommand => new RelayCommand(() => UpdateCurrentMenuViewModelCommand.Execute(MenuViewType.SaleDashboard));
-
-        #endregion
-
-        #region Продажи
-
-        public ICommand ProductsCommand => new RelayCommand(() => UpdateCurrentMenuViewModelCommand.Execute(MenuViewType.Products));
-        public ICommand RevaluationCommand => new RelayCommand(() => UpdateCurrentMenuViewModelCommand.Execute(MenuViewType.RevaluationView));
-        public ICommand ReturnProductFromCustomerCommand => new RelayCommand(() => UpdateCurrentMenuViewModelCommand.Execute(MenuViewType.ReturnProductFromCustomerView));
-        public ICommand ArrivalProductCommand => new RelayCommand(() => UpdateCurrentMenuViewModelCommand.Execute(MenuViewType.ArrivalProduct));
-        public ICommand WriteDownProductCommand => new RelayCommand(() => UpdateCurrentMenuViewModelCommand.Execute(MenuViewType.WriteDownProduct));
-        public ICommand OrderProductCommand => new RelayCommand(() => UpdateCurrentMenuViewModelCommand.Execute(MenuViewType.OrderProduct));
-        public ICommand RefundToSupplierCommand => new RelayCommand(() => UpdateCurrentMenuViewModelCommand.Execute(MenuViewType.RefundToSupplier));
-
-        #endregion
-
-        #region Склады
-
-        public ICommand WareHouseCommand => new RelayCommand(() => UpdateCurrentMenuViewModelCommand.Execute(MenuViewType.WareHouseView));
-
-        #endregion
-
-        #region Справочники и инструменты
-
-        public ICommand BarcodeCommand => new RelayCommand(() => UpdateCurrentMenuViewModelCommand.Execute(MenuViewType.ProductBarcode));
-        public ICommand UserCommand => new RelayCommand(() => UpdateCurrentMenuViewModelCommand.Execute(MenuViewType.User));
-        public ICommand BranchCommand => new RelayCommand(() => UpdateCurrentMenuViewModelCommand.Execute(MenuViewType.Branch));
-        public ICommand SupplierCommand => new RelayCommand(() => UpdateCurrentMenuViewModelCommand.Execute(MenuViewType.Supplier));
-
-        #endregion
-
-        #region Отчеты
-
-        public ICommand CashShiftsCommand => new RelayCommand(CashShifts);
-        public ICommand RevenueForPeriodCommand => new RelayCommand(RevenueForPeriod);
-        public ICommand CashiersViewCommand => new RelayCommand(() => UpdateCurrentMenuViewModelCommand.Execute(MenuViewType.CashierView));
-
-        #endregion
-
-        #region Настройки
-
-        public ICommand PrinterCommand => new RelayCommand(Printer);
-        public ICommand ConnectingAndConfiguringEquipmentCommand => new RelayCommand(() => WindowService.Show(nameof(EquipmentView), new EquipmentViewModel() { SelectedTypeEquipment = TypeEquipment.BarcodeScanner, Title = "Настройки оборудования" }));
-
-        #endregion
 
         #endregion
 
@@ -129,17 +76,8 @@ namespace RetailTradeServer.ViewModels
         private void MenuNavigator_StateChanged(BaseViewModel obj)
         {
             OnPropertyChanged(nameof(CurrentMenuViewModels));
-            //BaseViewModel viewModel = CurrentMenuViewModels.FirstOrDefault(v => v.ToString() == obj.ToString());
-            //if (viewModel == null)
-            //{
-            //    obj.IsSelected = true;
-            //    CurrentMenuViewModels.Add(obj);
-            //}
-            //else
-            //{
-            //    viewModel.IsSelected = true;
-            //}
         }
+
         private void Close(object parameter)
         {
             BaseViewModel viewModel = CurrentMenuViewModels.FirstOrDefault(v => v.ToString() == parameter.ToString());
@@ -149,17 +87,37 @@ namespace RetailTradeServer.ViewModels
                 _ = CurrentMenuViewModels.Remove(viewModel);
             }            
         }
-        private void Printer()
+        
+
+        #endregion
+
+        #region Public Voids
+
+        [Command]
+        public void Renavigate(object parameter)
+        {
+            if (Enum.TryParse(parameter.ToString(), out MenuViewType menuViewType))
+            {
+                UpdateCurrentMenuViewModelCommand.Execute(menuViewType);
+            }
+        }
+
+        [Command]
+        public void RevenueForPeriod()
+        {
+            WindowService.Show(nameof(ReportRevenueForPeriodDialogForm), new ReportRevenueForPeriodDialogFormModel(_receiptService, _userStore) { Title = "Выручка за период" });
+        }
+
+        [Command]
+        public void Printer()
         {
             WindowService.Show(nameof(PrinterDialogForm), new PrinterDialogFormModel(_messageStore) { Title = "Настройки принтеров" });
         }
-        private void CashShifts()
+
+        [Command]
+        public void CashShifts()
         {
             WindowService.Show(nameof(ReportClosingShiftsDialogForm), new ReportClosingShiftsDialogFormModel(_shiftService) { Title = "Закрытие смены" });
-        }
-        private void RevenueForPeriod()
-        {
-            WindowService.Show(nameof(ReportRevenueForPeriodDialogForm), new ReportRevenueForPeriodDialogFormModel(_receiptService, _userStore) { Title = "Выручка за период" });
         }
 
         #endregion
