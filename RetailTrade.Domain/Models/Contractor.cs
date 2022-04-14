@@ -15,6 +15,7 @@ namespace RetailTrade.Domain.Models
         private int _contractorTypeId;
         private DateTime _created;
         private string _comment;
+        private bool _isDelete;
 
         #endregion
 
@@ -109,6 +110,16 @@ namespace RetailTrade.Domain.Models
             {
                 _comment = value;
                 OnPropertyChanged(nameof(Comment));
+            }
+        }
+
+        public bool IsDeleted
+        {
+            get => _isDelete;
+            set
+            {
+                _isDelete = value;
+                OnPropertyChanged(nameof(IsDeleted));
             }
         }
 

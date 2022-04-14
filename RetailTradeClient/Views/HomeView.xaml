@@ -7,17 +7,19 @@
              xmlns:dxlc="http://schemas.devexpress.com/winfx/2008/xaml/layoutcontrol"
              xmlns:dx="http://schemas.devexpress.com/winfx/2008/xaml/core"
              xmlns:hotKey="clr-namespace:RetailTradeClient.HotKey"
-             x:Class="RetailTradeClient.Views.HomeView"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:customs="clr-namespace:RetailTradeClient.Customs"
+             x:Class="RetailTradeClient.Views.HomeView"
              mc:Ignorable="d"
-             d:DesignWidth="800"
+             d:DesignWidth="1200"
+             d:DesignHeight="500"
              Focusable="True">
 
-    <UserControl.CommandBindings>
+    <local:BaseUserControl.CommandBindings>
         <CommandBinding Command="{x:Static hotKey:HotKey.CashlessPaymentCommand}"
                         Executed="CommandBinding_Executed"/>
-    </UserControl.CommandBindings>
+    </local:BaseUserControl.CommandBindings>
 
     <dxmvvm:Interaction.Behaviors>
         <dxmvvm:EventToCommand EventName="Loaded"
@@ -75,119 +77,215 @@
 
         <dxlc:LayoutGroup>
 
-            <dxg:GridControl ItemsSource="{Binding SaleProductsCollectionView}"                                 
-                             SelectedItem="{Binding SelectedProductSale}"
-                             SelectionMode="Cell"
-                             Focusable="False">
-                <dxg:GridControl.View>
-                    <dxg:TableView AutoWidth="True"
-                                   ShowGroupPanel="False" 
-                                   AllowSorting="False"
-                                   AllowDrop="False"
-                                   Focusable="False"
-                                   NavigationStyle="Cell"
-                                   FocusedRowHandle="{Binding FocusedRowHandle}"
-                                   InvalidRowException="TableView_InvalidRowException"
-                                   AllowDragDrop="False"
-                                   AllowGrouping="False"
-                                   IsSynchronizedWithCurrentItem="True">
-                        <dxg:TableView.FormatConditions>
-                            <dxg:FormatCondition FieldName="QuantityInStock" ValueRule="Less" Value1="10">
-                                <dx:Format Foreground="#FFFF0000"/>
-                            </dxg:FormatCondition>
-                        </dxg:TableView.FormatConditions>
-                        <dxmvvm:Interaction.Behaviors>
-                            <dxmvvm:EventToCommand EventName="Loaded"
-                                                   Command="{Binding SaleTableViewLoadedCommand}"
-                                                   PassEventArgsToCommand="True"/>
-                        </dxmvvm:Interaction.Behaviors>
-                    </dxg:TableView>
-                </dxg:GridControl.View>
-                <dxg:GridColumn Header="Код" 
-                                AllowColumnFiltering="False"
-                                FieldName="Id"
-                                AllowEditing="False">
-                    <dxg:GridColumn.EditSettings>
-                        <dxe:TextEditSettings DisplayFormat="D6"/>
-                    </dxg:GridColumn.EditSettings>
-                </dxg:GridColumn>
-                <dxg:GridColumn Header="Номенклатура" 
-                                FieldName="Name"
-                                AllowColumnFiltering="False"
-                                AllowEditing="False"/>
-                <dxg:GridColumn Header="Количество" 
-                                IsSmart="True"                          
-                                AllowColumnFiltering="False"
-                                Focusable="False"
-                                Binding="{Binding Quantity, Mode=TwoWay}">
+            <dxlc:LayoutGroup Orientation="Vertical">
+
+                <dxlc:LayoutGroup VerticalAlignment="Top">
+
+                    <Label Content="{Binding SelectedProductSale.Name, FallbackValue=Товар}"
+                           FontSize="20"/>
+
+                    <Button Style="{StaticResource IconicButton}"
+                            HorizontalAlignment="Right"
+                            Content="{StaticResource faTrashAlt}"/>
+
+                </dxlc:LayoutGroup>
+
+                <dxlc:LayoutGroup VerticalAlignment="Top"
+                                  ItemSpace="15"
+                                  Height="30">
+
+                    <dxe:TextEdit IsReadOnly="True"
+                                  Width="120"
+                                  HorizontalAlignment="Left"
+                                  MaskUseAsDisplayFormat="True" 
+                                  MaskType="Numeric"
+                                  EditValue="50000" Mask="n"/>
+
+                    <dxlc:LayoutGroup HorizontalAlignment="Left">
+                        <Button Style="{StaticResource IconicButton}"
+                                Content="{StaticResource faMinus}"/>
+                        <customs:TextEditCustom Width="120"
+                                                FontSize="18"
+                                                EditValue="500"
+                                                MaskUseAsDisplayFormat="True"
+                                                MaskType="Numeric"
+                                                UnitName="шт"
+                                                Mask="n"/>
+                        <Button Style="{StaticResource IconicButton}"
+                                Content="{StaticResource faPlus}"/>
+                    </dxlc:LayoutGroup>
+
+                    <dxlc:LayoutGroup>
+                        <dxlc:LayoutItem HorizontalAlignment="Left"
+                                         Label="Скидка"
+                                         Height="30">
+                            <dxlc:LayoutItem.LabelStyle>
+                                <Style TargetType="{x:Type dxlc:LayoutItemLabel}">
+                                    <Setter Property="Foreground" Value="#444444"/>
+                                    <Setter Property="FontSize" Value="14"/>
+                                </Style>
+                            </dxlc:LayoutItem.LabelStyle>
+                            <dxe:SpinEdit MaskUseAsDisplayFormat="True" 
+                                          Mask="n"
+                                          FontSize="18"
+                                          MinWidth="120"
+                                          MinValue="0"
+                                          MaxValue="{Binding MaximumPercentage}"/>
+                        </dxlc:LayoutItem>
+
+                        <Button Command="{Binding DiscountTypeCommand}">
+                            <Button.Style>
+                                <Style TargetType="{x:Type Button}" BasedOn="{StaticResource IconicButton}">
+                                    <Setter Property="Content" Value="{StaticResource faPercent}"/>
+                                    <Style.Triggers>
+                                        <DataTrigger Binding="{Binding DataContext.IsDiscountPercent, RelativeSource={RelativeSource AncestorType={x:Type UserControl}, Mode=FindAncestor}}" Value="False">
+                                            <Setter Property="Content" Value="{StaticResource faMoneyBillAlt}"/>
+                                        </DataTrigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </Button.Style>
+                        </Button>
+                    </dxlc:LayoutGroup>
+
+                </dxlc:LayoutGroup>
+
+                <dxg:GridControl ItemsSource="{Binding SaleProductsCollectionView}"                                 
+                                 SelectedItem="{Binding SelectedProductSale}"
+                                 Focusable="False">
                     <dxmvvm:Interaction.Behaviors>
-                        <dxmvvm:EventToCommand EventName="Validate"
-                                               Command="{Binding QuantityValidateCommand}"
-                                               PassEventArgsToCommand="True"/>
+                        <dxmvvm:FocusBehavior/>
                     </dxmvvm:Interaction.Behaviors>
-                    <dxg:GridColumn.EditSettings>
-                        <dxe:SpinEditSettings SelectAllOnMouseUp="True">
+                    <dxg:GridControl.View>
+                        <dxg:TableView AutoWidth="True"
+                                       ShowGroupPanel="False" 
+                                       AllowSorting="False"
+                                       AllowDrop="False"
+                                       Focusable="False"
+                                       NavigationStyle="Cell"
+                                       FocusedRowHandle="{Binding FocusedRowHandle}"
+                                       InvalidRowException="TableView_InvalidRowException"
+                                       AllowDragDrop="False"
+                                       AllowGrouping="False"
+                                       IsSynchronizedWithCurrentItem="True">
+                            <dxg:TableView.FormatConditions>
+                                <dxg:FormatCondition FieldName="QuantityInStock" ValueRule="Less" Value1="10">
+                                    <dx:Format Foreground="#FFFF0000"/>
+                                </dxg:FormatCondition>
+                            </dxg:TableView.FormatConditions>
                             <dxmvvm:Interaction.Behaviors>
-                                <dxmvvm:EventToCommand EventName="FocusableChanged"
-                                                       Command="{Binding QuantityCellLoadedCommand}"
+                                <dxmvvm:EventToCommand EventName="Loaded"
+                                                       Command="{Binding SaleTableViewLoadedCommand}"
                                                        PassEventArgsToCommand="True"/>
                             </dxmvvm:Interaction.Behaviors>
-                        </dxe:SpinEditSettings>
-                    </dxg:GridColumn.EditSettings>
-                </dxg:GridColumn>
-                <dxg:GridColumn Header="Цена" 
-                                FieldName="SalePrice"
-                                AllowColumnFiltering="False"
-                                AllowEditing="False">
-                    <dxg:GridColumn.EditSettings>
-                        <dxe:TextEditSettings DisplayFormat="N2"/>
-                    </dxg:GridColumn.EditSettings>
-                </dxg:GridColumn>
-                <dxg:GridColumn Header="Сумма" 
-                                FieldName="Sum"
-                                IsSmart="True"
-                                AllowColumnFiltering="False"
-                                AllowEditing="False">
-                    <dxg:GridColumn.EditSettings>
-                        <dxe:TextEditSettings DisplayFormat="N2"/>
-                    </dxg:GridColumn.EditSettings>
-                </dxg:GridColumn>
-                <dxg:GridColumn Header="Остаток"
-                                Visible="{Binding IsKeepRecords}"
-                                FieldName="QuantityInStock"
-                                AllowColumnFiltering="False"
-                                AllowEditing="False">
-                    <dxg:GridColumn.EditSettings>
-                        <dxe:SpinEditSettings/>
-                    </dxg:GridColumn.EditSettings>
-                </dxg:GridColumn>
-            </dxg:GridControl>
+                        </dxg:TableView>
+                    </dxg:GridControl.View>
+                    <dxg:GridColumn Header="Код" 
+                                    AllowColumnFiltering="False"
+                                    FieldName="Id"
+                                    AllowEditing="False">
+                        <dxg:GridColumn.EditSettings>
+                            <dxe:TextEditSettings DisplayFormat="D6"/>
+                        </dxg:GridColumn.EditSettings>
+                    </dxg:GridColumn>
+                    <dxg:GridColumn Header="Номенклатура" 
+                                    FieldName="Name"
+                                    AllowColumnFiltering="False"
+                                    AllowEditing="False"/>
+                    <dxg:GridColumn Header="Количество" 
+                                    IsSmart="True"                          
+                                    AllowColumnFiltering="False"
+                                    Focusable="False"
+                                    Binding="{Binding Quantity, Mode=TwoWay}">
+                        <dxmvvm:Interaction.Behaviors>
+                            <dxmvvm:EventToCommand EventName="Validate"
+                                                   Command="{Binding QuantityValidateCommand}"
+                                                   PassEventArgsToCommand="True"/>
+                        </dxmvvm:Interaction.Behaviors>
+                        <dxg:GridColumn.EditSettings>
+                            <dxe:SpinEditSettings SelectAllOnMouseUp="True">
+                                <dxmvvm:Interaction.Behaviors>
+                                    <dxmvvm:EventToCommand EventName="FocusableChanged"
+                                                           Command="{Binding QuantityCellLoadedCommand}"
+                                                           PassEventArgsToCommand="True"/>
+                                </dxmvvm:Interaction.Behaviors>
+                            </dxe:SpinEditSettings>
+                        </dxg:GridColumn.EditSettings>
+                    </dxg:GridColumn>
+                    <dxg:GridColumn Header="Цена" 
+                                    FieldName="SalePrice"
+                                    AllowColumnFiltering="False"
+                                    AllowEditing="False">
+                        <dxg:GridColumn.EditSettings>
+                            <dxe:TextEditSettings DisplayFormat="N2"/>
+                        </dxg:GridColumn.EditSettings>
+                    </dxg:GridColumn>
+                    <dxg:GridColumn Header="Сумма" 
+                                    FieldName="Sum"
+                                    IsSmart="True"
+                                    AllowColumnFiltering="False"
+                                    AllowEditing="False">
+                        <dxg:GridColumn.EditSettings>
+                            <dxe:TextEditSettings DisplayFormat="N2"/>
+                        </dxg:GridColumn.EditSettings>
+                    </dxg:GridColumn>
+                    <dxg:GridColumn Header="Остаток"
+                                    Visible="{Binding IsKeepRecords}"
+                                    FieldName="QuantityInStock"
+                                    AllowColumnFiltering="False"
+                                    AllowEditing="False">
+                        <dxg:GridColumn.EditSettings>
+                            <dxe:SpinEditSettings/>
+                        </dxg:GridColumn.EditSettings>
+                    </dxg:GridColumn>
+                </dxg:GridControl>
+
+            </dxlc:LayoutGroup>
 
             <dxlc:LayoutGroup Orientation="Vertical"
                               HorizontalAlignment="Right"
-                              MinWidth="600"
-                              VerticalAlignment="Top">
+                              MinWidth="400">
 
-                <dxlc:LayoutItem Label="Всего:"
+                <dxlc:LayoutGroup HorizontalAlignment="Center"
+                                  VerticalAlignment="Top">
+                    <TextBlock Style="{StaticResource IconicBold}"
+                               Text="{StaticResource faUser}"
+                               FontSize="22"/>
+                    <TextBlock Text="{Binding UserName, FallbackValue=User}"
+                               FontSize="22"/>
+                </dxlc:LayoutGroup>
+
+                <Border VerticalAlignment="Top" Background="{StaticResource DarkSilverBrush}" Height="2"/>
+
+                <dxlc:LayoutItem Label="Без скидки:"
                                  LabelPosition="Left"
-                                 Style="{StaticResource liCash}"
-                                 FontSize="38">
+                                 FontSize="28">
                     <dxe:TextEdit Text="{Binding Sum, UpdateSourceTrigger=PropertyChanged}"
                                   Style="{StaticResource teCash}"
                                   IsReadOnly="True"
-                                  FontSize="46"
+                                  FontSize="32"
+                                  BorderBrush="Transparent"
+                                  BorderThickness="0"/>
+                </dxlc:LayoutItem>
+                
+                <dxlc:LayoutItem Label="Скидка:"
+                                 LabelPosition="Left"
+                                 FontSize="28">
+                    <dxe:TextEdit Text="{Binding Sum, UpdateSourceTrigger=PropertyChanged}"
+                                  Style="{StaticResource teCash}"
+                                  IsReadOnly="True"
+                                  FontSize="32"
                                   BorderBrush="Transparent"
                                   BorderThickness="0"/>
                 </dxlc:LayoutItem>
 
-                <dxlc:LayoutItem Label="К оплате:"
+                <dxlc:LayoutItem Label="Итого:"
                                  LabelPosition="Left"
                                  Style="{StaticResource liCash}"
-                                 FontSize="38">
+                                 FontSize="28">
                     <dxe:TextEdit Text="{Binding Sum, UpdateSourceTrigger=PropertyChanged}"
                                   Style="{StaticResource teCash}"
                                   IsReadOnly="True"
-                                  FontSize="46"
+                                  FontSize="32"
                                   BorderBrush="Transparent"
                                   BorderThickness="0"/>
                 </dxlc:LayoutItem>
@@ -195,11 +293,11 @@
                 <dxlc:LayoutItem Label="Сдача:"
                                  LabelPosition="Left"
                                  Style="{StaticResource liCash}"
-                                 FontSize="38">
+                                 FontSize="28">
                     <dxe:TextEdit Text="{Binding Change, UpdateSourceTrigger=PropertyChanged}"
                                   Style="{StaticResource teCash}"
                                   IsReadOnly="True"
-                                  FontSize="46"
+                                  FontSize="32"
                                   BorderBrush="Transparent"
                                   BorderThickness="0"/>
                 </dxlc:LayoutItem>

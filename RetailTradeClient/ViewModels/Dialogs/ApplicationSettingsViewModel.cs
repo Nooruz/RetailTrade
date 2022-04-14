@@ -87,6 +87,15 @@ namespace RetailTradeClient.ViewModels.Dialogs
                 OnPropertyChanged(nameof(IsKeepRecords));
             }
         }
+        public bool IsUseManualDiscounts
+        {
+            get => Settings.Default.IsUseManualDiscounts;
+            set
+            {
+                Settings.Default.IsUseManualDiscounts = value;
+                OnPropertyChanged(nameof(IsUseManualDiscounts));
+            }
+        }
         public Visibility ComSettingsVisibility => SelectedBarcodeDevice == BarcodeDevice.Com ? Visibility.Visible : Visibility.Collapsed;
         public BarcodeDevice SelectedBarcodeDevice
         {
@@ -96,6 +105,15 @@ namespace RetailTradeClient.ViewModels.Dialogs
                 _selectedBarcodeDevice = value;
                 OnPropertyChanged(nameof(SelectedBarcodeDevice));
                 OnPropertyChanged(nameof(ComSettingsVisibility));
+            }
+        }
+        public double MaximumPercentage
+        {
+            get => Settings.Default.MaximumPercentage;
+            set
+            {
+                Settings.Default.MaximumPercentage = value;
+                OnPropertyChanged(nameof(MaximumPercentage));
             }
         }
 

@@ -1,8 +1,9 @@
-﻿<local:BaseMenuView xmlns:dxg="http://schemas.devexpress.com/winfx/2008/xaml/grid"    x:Class="SalePageServer.Views.Menus.CustomerView"
-                      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-                      xmlns:dxlc="http://schemas.devexpress.com/winfx/2008/xaml/layoutcontrol"
-                      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-                      xmlns:local="clr-namespace:RetailTradeServer.Views.Menus">
+﻿<local:BaseMenuView     x:Class="SalePageServer.Views.Menus.CustomerView"
+                        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                        xmlns:dxg="http://schemas.devexpress.com/winfx/2008/xaml/grid"
+                        xmlns:dxlc="http://schemas.devexpress.com/winfx/2008/xaml/layoutcontrol"
+                        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                        xmlns:local="clr-namespace:RetailTradeServer.Views.Menus">
 
     <dxlc:LayoutControl Orientation="Vertical">
 
@@ -10,11 +11,27 @@
                           VerticalAlignment="Top">
 
             <Button Content="Создать"/>
-            <Button Content="Создать"/>
+            
+            <Button ToolTip="Удалить"
+                    Style="{StaticResource FAButton}"
+                    Command="{Binding DeleteArrivalCommand}"
+                    Content="{StaticResource faTrashAlt}"/>
+
+            <Button Command="{Binding EditArrivalCommand}"
+                    ToolTip="Редактировать приход"
+                    Style="{StaticResource FAButton}"
+                    Content="{StaticResource faEdit}"/>
 
         </dxlc:LayoutGroup>
 
-        <dxg:GridControl />
+        <dxg:GridControl >
+            <dxg:GridControl.View>
+                <dxg:TableView />
+            </dxg:GridControl.View>
+            <dxg:GridColumn Header="Наименование"/>
+            <dxg:GridColumn Header="Дата регистрации"/>
+            <dxg:GridColumn Header="Телефон"/>
+        </dxg:GridControl>
 
     </dxlc:LayoutControl>
     

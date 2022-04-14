@@ -9,7 +9,7 @@
 
     <dxlc:LayoutControl Orientation="Vertical">
         
-        <dxlc:LayoutItem Label="ККМ">
+        <dxlc:LayoutItem Label="ККМ:">
             <dxe:ComboBoxEdit ItemsSource="{Binding KKMs}"
                               SelectedItem="{Binding SelectedKKM}" 
                               AutoComplete="True" 
@@ -21,13 +21,13 @@
             </dxe:ComboBoxEdit>
         </dxlc:LayoutItem>
         
-        <dxlc:LayoutItem Label="Принтер чеков">
+        <dxlc:LayoutItem Label="Принтер чеков:">
             <dxe:ComboBoxEdit ItemsSource="{Binding LocalPrinters}"
                               DisplayMember="Name"
                               SelectedItem="{Binding SelectedReceiptPrinter}"/>
         </dxlc:LayoutItem>
 
-        <dxlc:LayoutItem Label="Сканер штрихкода">
+        <dxlc:LayoutItem Label="Сканер штрихкода:">
             <dxe:ComboBoxEdit ItemsSource="{Binding BarcodeDevices}"
                               SelectedItem="{Binding SelectedBarcodeDevice}"/>
         </dxlc:LayoutItem>
@@ -39,14 +39,27 @@
                               EditValue="{Binding SelectedComPort}"/>
             </dxlc:LayoutItem>
 
-            <dxlc:LayoutItem Label="Скорость сканера штрихкода">
+            <dxlc:LayoutItem Label="Скорость сканера штрихкода:">
                 <dxe:ComboBoxEdit ItemsSource="{Binding BarcodeSpeed}"
                               EditValue="{Binding SelectedBarcodeSpeed}"/>
             </dxlc:LayoutItem>
         </dxlc:LayoutGroup>
 
-        <dxlc:LayoutItem Label="Вести учет">
-            <dxe:CheckEdit IsChecked="{Binding IsKeepRecords}"/>
+        <dxlc:LayoutItem Label="Вести учет:">
+            <dxe:CheckEdit IsChecked="{Binding IsKeepRecords}"
+                           HorizontalAlignment="Left"/>
+        </dxlc:LayoutItem>
+
+        <dxlc:LayoutItem Label="Использовать ручные скидки:">
+            <dxe:CheckEdit IsChecked="{Binding IsUseManualDiscounts}"
+                           HorizontalAlignment="Left"/>
+        </dxlc:LayoutItem>
+
+        <dxlc:LayoutItem Label="Максимальный процент ручной скидки:">
+            <dxe:SpinEdit MaskUseAsDisplayFormat="True" 
+                          Mask="p"
+                          MinValue="0"
+                          EditValue="{Binding MaximumPercentage}"/>
         </dxlc:LayoutItem>
 
         <dxlc:LayoutGroup Orientation="Horizontal"

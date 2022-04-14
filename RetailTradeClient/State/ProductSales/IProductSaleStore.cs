@@ -18,6 +18,7 @@ namespace RetailTradeClient.State.ProductSales
         event Action OnProductSalesChanged;
         event Action<decimal> OnProductSale;
         event Action OnPostponeReceiptChanged;
+        event Action<Sale> OnCreated;
 
         ProductViewModel SearchProduct();
         Task AddProduct(string barcode);

@@ -8,6 +8,7 @@
 
     <system:String x:Key="faSignOutAlt">&#xf2f5;</system:String>
     <system:String x:Key="faUserClock">&#xf4fd;</system:String>
+    <system:String x:Key="faUser">&#xf007;</system:String>
     <system:String x:Key="faInfoCircle">&#xf05a;</system:String>
     <system:String x:Key="faExclamationTriangle">&#xf071;</system:String>
     <system:String x:Key="faCheckCircle">&#xf058;</system:String>
@@ -22,5 +23,8 @@
     <system:String x:Key="faMagnifyingGlass">&#xf002;</system:String>
     <system:String x:Key="faFolder">&#xf07b;</system:String>
     <system:String x:Key="faMinus">&#xf068;</system:String>
+    <system:String x:Key="faTrashAlt">&#xf2ed;</system:String>
+    <system:String x:Key="faPlus">&#xf067;</system:String>
+    <system:String x:Key="faPercent">&#xf295;</system:String>
 
 </ResourceDictionary>

@@ -45,6 +45,7 @@ namespace RetailTradeClient.ViewModels
         private object _syncLock = new();
         private MainWindow _mainWindow;
         private decimal _change;
+        private bool _isDiscountPercent = true;
 
         private const int HOTKEY_F5 = 1;
         private const int HOTKEY_F6 = 2;
@@ -54,6 +55,7 @@ namespace RetailTradeClient.ViewModels
         private const int HOTKEY_CTRL_F = 6;
         private const int HOTKEY_ESC = 7;
         private const int HOTKEY_CTRL_Z = 8;
+        private const int HOTKEY_DEL = 9;
         //Modifiers:
         private const uint MOD_NONE = 0x0000; //(none)
         private const uint MOD_ALT = 0x0001; //ALT
@@ -67,6 +69,7 @@ namespace RetailTradeClient.ViewModels
         private const uint VK_CTRL_F = 0x46;
         private const uint VK_ESCAPE = 0x1B;
         private const uint VK_CTRL_Z = 0x5A;
+        private const uint VK_DEL = 0x2E;
         private IntPtr _windowHandle;
         private HwndSource _source;
 
@@ -125,6 +128,15 @@ namespace RetailTradeClient.ViewModels
         public int FocusedRowHandle => ProductSales.Count - 1;
         public TableView SaleTableView { get; set; }
         public ProductsWithoutBarcodeViewModel ProductsWithoutBarcodeViewModel { get; }
+        public bool IsDiscountPercent
+        {
+            get => _isDiscountPercent;
+            set
+            {
+                _isDiscountPercent = value;
+                OnPropertyChanged(nameof(IsDiscountPercent));
+            }
+        }
 
         #endregion
 
@@ -250,11 +262,24 @@ namespace RetailTradeClient.ViewModels
             _productSaleStore.OnProductSalesChanged += () => OnPropertyChanged(nameof(Sum));
             _productSaleStore.OnProductSale += ProductSaleStore_OnProductSale;
             _productSaleStore.OnPostponeReceiptChanged += ProductSaleStore_OnPostponeReceiptChanged;
+            _productSaleStore.OnCreated += ProductSaleStore_OnCreated;
         }
 
         #endregion
 
         #region Private Voids
+
+        private void ProductSaleStore_OnCreated(Sale sale)
+        {
+            try
+            {
+                SelectedProductSale = sale;
+            }
+            catch (Exception)
+            {
+                //ignore
+            }
+        }
 
         private void ProductSaleStore_OnPostponeReceiptChanged()
         {
@@ -362,6 +387,7 @@ namespace RetailTradeClient.ViewModels
                     RegisterHotKey(_windowHandle, HOTKEY_CTRL_F, MOD_CONTROL, VK_CTRL_F); //+
                     RegisterHotKey(_windowHandle, HOTKEY_ESC, MOD_NONE, VK_ESCAPE); //+
                     RegisterHotKey(_windowHandle, HOTKEY_CTRL_Z, MOD_CONTROL, VK_CTRL_Z); //+
+                    RegisterHotKey(_windowHandle, HOTKEY_DEL, MOD_NONE, VK_DEL); //+
                 }
             }
 
@@ -379,6 +405,7 @@ namespace RetailTradeClient.ViewModels
             UnregisterHotKey(_windowHandle, HOTKEY_CTRL_F);
             UnregisterHotKey(_windowHandle, HOTKEY_ESC);
             UnregisterHotKey(_windowHandle, HOTKEY_CTRL_Z);
+            UnregisterHotKey(_windowHandle, HOTKEY_DEL);
         }
 
         private IntPtr HwndHook(IntPtr hwnd, int msg, IntPtr wParam, IntPtr lParam, ref bool handled)
@@ -445,6 +472,13 @@ namespace RetailTradeClient.ViewModels
                                 if (vkey == VK_CTRL_Z)
                                 {
                                     Cancel();
+                                }
+                                handled = true;
+                                break;
+                            case HOTKEY_DEL:
+                                if (vkey == VK_DEL)
+                                {
+                                    DeleteSelectedRow();
                                 }
                                 handled = true;
                                 break;
@@ -530,10 +564,6 @@ namespace RetailTradeClient.ViewModels
             {
                 _productSaleStore.DeleteProduct(SelectedProductSale.Id);                
             }
-            else if (ProductSales.Count > 0)
-            {
-                _productSaleStore.DeleteProduct(ProductSales.LastOrDefault().Id);
-            }
         }
 
         /// <summary>
@@ -560,6 +590,12 @@ namespace RetailTradeClient.ViewModels
         public void Search()
         {
             WindowService.Show(nameof(ProductView), _productSaleStore.SearchProduct());
+        }
+
+        [Command]
+        public void DiscountType()
+        {
+            IsDiscountPercent = !IsDiscountPercent;
         }
 
         #endregion

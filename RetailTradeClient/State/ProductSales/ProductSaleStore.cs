@@ -128,6 +128,7 @@ namespace RetailTradeClient.State.ProductSales
         public event Action OnProductSalesChanged;
         public event Action<decimal> OnProductSale;
         public event Action OnPostponeReceiptChanged;
+        public event Action<Sale> OnCreated;
 
         #endregion
 
@@ -338,6 +339,7 @@ namespace RetailTradeClient.State.ProductSales
                         Quantity = 1,
                         Barcode = product.Barcode
                     });
+                    OnCreated?.Invoke(Sales.FirstOrDefault(s => s.Id == product.Id));
                 }
                 catch (Exception)
                 {
