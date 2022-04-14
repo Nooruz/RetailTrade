@@ -8,7 +8,7 @@ namespace RetailTradeClient.Customs
         #region Dependency Properties
 
         public static readonly DependencyProperty UnitNameProperty =
-            DependencyProperty.Register(nameof(UnitName), typeof(string), typeof(TextEditCustom), new PropertyMetadata(string.Empty), new FrameworkPropertyMetadata(), new ValidateValueCallback(ValidateUnitName));
+            DependencyProperty.Register(nameof(UnitName), typeof(string), typeof(TextEditCustom), new PropertyMetadata(string.Empty, new PropertyChangedCallback(OnUnitNameChanged)));
 
         #endregion
 
@@ -33,9 +33,9 @@ namespace RetailTradeClient.Customs
 
         #region Private Voids
 
-        public static void ValidateUnitName(string value)
+        private static void OnUnitNameChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
-
+            
         }
 
         #endregion
