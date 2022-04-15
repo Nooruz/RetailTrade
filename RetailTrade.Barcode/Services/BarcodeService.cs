@@ -259,7 +259,7 @@ namespace RetailTrade.Barcode.Services
     {
         #region Private Members
 
-        private SerialPort _serialPort;
+        private SerialPort? _serialPort;
 
         #endregion
 
@@ -329,13 +329,8 @@ namespace RetailTrade.Barcode.Services
         {
             try
             {
-                if (!_serialPort.IsOpen)
+                if (_serialPort != null)
                 {
-                    _serialPort.Open();
-                }
-                else
-                {
-                    Thread.Sleep(100);
                     OnBarcodeEvent?.Invoke(Replace(_serialPort.ReadExisting()));
                     _serialPort.DiscardInBuffer();
                 }

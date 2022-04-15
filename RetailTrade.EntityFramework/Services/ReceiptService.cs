@@ -134,7 +134,7 @@ namespace RetailTrade.EntityFramework.Services
                     ProductRefunds = receipt.ProductSales.Select(p => new ProductRefund
                     {
                         Quantity = p.Quantity,
-                        Sum = p.Sum,
+                        Sum = p.Total,
                         SalePrice = p.SalePrice,
                         ProductId = p.ProductId
                     }).ToList()

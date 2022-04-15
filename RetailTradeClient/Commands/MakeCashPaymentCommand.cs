@@ -67,7 +67,7 @@ namespace RetailTradeClient.Commands
                             {
                                 ProductId = s.Id,
                                 Quantity = s.Quantity,
-                                Sum = s.Sum,
+                                Total = s.Total,
                                 SalePrice = s.SalePrice,
                                 ArrivalPrice = s.ArrivalPrice
                             }).ToList()

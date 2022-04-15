@@ -598,6 +598,32 @@ namespace RetailTradeClient.ViewModels
             IsDiscountPercent = !IsDiscountPercent;
         }
 
+        [Command]
+        public void ReducedQuantity()
+        {
+            try
+            {
+                _productSaleStore.ReducedQuantity(SelectedProductSale.Id);
+            }
+            catch (Exception)
+            {
+                //ignore
+            }
+        }
+
+        [Command]
+        public void IncreaseQuantity()
+        {
+            try
+            {
+                _productSaleStore.IncreaseQuantity(SelectedProductSale.Id);
+            }
+            catch (Exception)
+            {
+                //ignore
+            }
+        }
+
         #endregion
 
         #region Dispose

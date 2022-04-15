@@ -36,6 +36,5 @@ namespace RetailTrade.CashRegisterMachine.Services
         string ReturnSale();
         string GetOperationReg();
         ECRModeEnum ECRMode();
-        event Action CashRegisterEvent;
     }
 }

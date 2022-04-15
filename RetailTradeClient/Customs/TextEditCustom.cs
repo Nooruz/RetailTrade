@@ -1,4 +1,5 @@
 ﻿using DevExpress.Xpf.Editors;
+using System;
 using System.Windows;
 
 namespace RetailTradeClient.Customs
@@ -35,7 +36,18 @@ namespace RetailTradeClient.Customs
 
         private static void OnUnitNameChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
-            
+            try
+            {
+                if (d is TextEdit textEdit)
+                {
+                    
+                    textEdit.DisplayFormatString = new string(textEdit.Text);
+                }
+            }
+            catch (Exception)
+            {
+                //ignore
+            }
         }
 
         #endregion

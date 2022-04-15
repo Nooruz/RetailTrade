@@ -10,7 +10,7 @@ namespace RetailTrade.Domain.Models
     {
         public Guid Id { get; set; }
         public DateTime DateTime { get; set; }
-        public decimal Sum { get; set; }
+        public decimal Total { get; set; }
         public List<Sale> Sales { get; set; }
     }
 }

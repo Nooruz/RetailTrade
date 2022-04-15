@@ -78,7 +78,7 @@ namespace RetailTradeClient.ViewModels.Dialogs
 
                     ShtrihM.ReturnSale();
                 }
-                ShtrihM.Summ1 = SelectedReceipt.ProductSales.Sum(ps => ps.Sum);
+                ShtrihM.Summ1 = SelectedReceipt.ProductSales.Sum(ps => ps.Total);
                 ShtrihM.StringForPrinting = ReceiptNumber.ToString();
                 ShtrihM.CloseCheck();
                 ShtrihM.CutCheck();

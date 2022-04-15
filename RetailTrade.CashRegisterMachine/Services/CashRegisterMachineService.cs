@@ -5,14 +5,6 @@ namespace RetailTrade.CashRegisterMachine.Services
 
     public class CashRegisterMachineService : ICashRegisterMachineService
     {
-        #region Actions
-
-        public event Action CashRegisterEvent;
-
-        #endregion
-
-
-
         #region Public Properties
 
         public string ErrorMessage { get; private set; }

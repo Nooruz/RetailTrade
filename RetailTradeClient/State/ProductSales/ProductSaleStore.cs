@@ -58,7 +58,7 @@ namespace RetailTradeClient.State.ProductSales
                 OnPropertyChanged(nameof(Sales));
             }
         }
-        public decimal ToBePaid => Sales.Sum(p => p.Sum);
+        public decimal ToBePaid => Sales.Sum(p => p.Total);
         public decimal Entered
         {
             get => _entered;
@@ -216,6 +216,38 @@ namespace RetailTradeClient.State.ProductSales
             OnProductSalesChanged?.Invoke();
         }
 
+        public void ReducedQuantity(int id)
+        {
+            Sale sale = Sales.FirstOrDefault(s => s.Id == id);
+            if (sale != null)
+            {
+                if (sale.Quantity > 1)
+                {
+                    sale.Quantity--;
+                }
+            }
+            OnProductSalesChanged?.Invoke();
+        }
+
+        public void IncreaseQuantity(int id)
+        {
+            Sale sale = Sales.FirstOrDefault(s => s.Id == id);
+            if (sale != null)
+            {
+                if (Settings.Default.IsKeepRecords)
+                {
+                    if (sale.Quantity < sale.QuantityInStock)
+                    {
+                        sale.Quantity++;
+                    }
+                }
+                else
+                {
+                    sale.Quantity++;
+                }
+            }
+        }
+
         public void CreatePostponeReceipt()
         {
             if (Sales.Any())
@@ -224,7 +256,7 @@ namespace RetailTradeClient.State.ProductSales
                 {
                     Id = Guid.NewGuid(),
                     DateTime = DateTime.Now,
-                    Sum = Sales.Sum(sp => sp.Sum),
+                    Total = Sales.Sum(sp => sp.Total),
                     Sales = Sales.ToList()
                 });
                 Sales.Clear();
@@ -383,7 +415,8 @@ namespace RetailTradeClient.State.ProductSales
                         {
                             ProductId = s.Id,
                             Quantity = s.Quantity,
-                            Sum = s.Sum,
+                            Total = s.Total,
+                            DiscountAmount = s.DiscountAmount,
                             SalePrice = s.SalePrice,
                             ArrivalPrice = s.ArrivalPrice
                         }).ToList()

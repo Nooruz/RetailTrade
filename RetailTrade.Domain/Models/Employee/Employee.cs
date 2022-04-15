@@ -13,7 +13,6 @@ namespace RetailTrade.Domain.Models
         private int _genderId;
         private DateTime _birthDate;
         private string _inn;
-        private int _groupEmployeeId;
 
         #endregion
 

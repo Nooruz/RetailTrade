@@ -10,10 +10,16 @@ namespace RetailTrade.Domain.Models
         public double Quantity { get; set; }
 
         /// <summary>
-        /// Сумма
+        /// Итого
         /// </summary>
         [Column(TypeName = "decimal(18,2)")]
-        public decimal Sum { get; set; }
+        public decimal Total { get; set; }
+
+        /// <summary>
+        /// Сумма скидки
+        /// </summary>
+        [Column(TypeName = "decimal(18,2)")]
+        public decimal DiscountAmount { get; set; }
 
         /// <summary>
         /// Цена продажи

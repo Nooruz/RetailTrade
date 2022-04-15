@@ -99,20 +99,24 @@
                                   HorizontalAlignment="Left"
                                   MaskUseAsDisplayFormat="True" 
                                   MaskType="Numeric"
-                                  EditValue="50000" Mask="n"/>
+                                  FontSize="18"
+                                  EditValue="{Binding SelectedProductSale.SalePrice}"
+                                  Mask="n"/>
 
                     <dxlc:LayoutGroup HorizontalAlignment="Left">
                         <Button Style="{StaticResource IconicButton}"
-                                Content="{StaticResource faMinus}"/>
-                        <customs:TextEditCustom Width="120"
-                                                FontSize="18"
-                                                EditValue="500"
-                                                MaskUseAsDisplayFormat="True"
-                                                MaskType="Numeric"
-                                                UnitName="шт"
-                                                Mask="n"/>
+                                Content="{StaticResource faMinus}"
+                                Command="{Binding ReducedQuantityCommand}"/>
+                        <dxe:SpinEdit MaskUseAsDisplayFormat="True" 
+                                      Mask="n"
+                                      FontSize="18"
+                                      MinWidth="120"
+                                      MinValue="0"
+                                      EditValue="{Binding SelectedProductSale.Quantity}"
+                                      ShowEditorButtons="False"/>
                         <Button Style="{StaticResource IconicButton}"
-                                Content="{StaticResource faPlus}"/>
+                                Content="{StaticResource faPlus}"
+                                Command="{Binding IncreaseQuantityCommand}"/>
                     </dxlc:LayoutGroup>
 
                     <dxlc:LayoutGroup>
@@ -259,7 +263,7 @@
                 <dxlc:LayoutItem Label="Без скидки:"
                                  LabelPosition="Left"
                                  FontSize="28">
-                    <dxe:TextEdit Text="{Binding Sum, UpdateSourceTrigger=PropertyChanged}"
+                    <dxe:TextEdit Text="{Binding AmountWithoutDiscount, UpdateSourceTrigger=PropertyChanged}"
                                   Style="{StaticResource teCash}"
                                   IsReadOnly="True"
                                   FontSize="32"
@@ -270,7 +274,7 @@
                 <dxlc:LayoutItem Label="Скидка:"
                                  LabelPosition="Left"
                                  FontSize="28">
-                    <dxe:TextEdit Text="{Binding Sum, UpdateSourceTrigger=PropertyChanged}"
+                    <dxe:TextEdit Text="{Binding DiscountAmount, UpdateSourceTrigger=PropertyChanged}"
                                   Style="{StaticResource teCash}"
                                   IsReadOnly="True"
                                   FontSize="32"
@@ -282,7 +286,7 @@
                                  LabelPosition="Left"
                                  Style="{StaticResource liCash}"
                                  FontSize="28">
-                    <dxe:TextEdit Text="{Binding Sum, UpdateSourceTrigger=PropertyChanged}"
+                    <dxe:TextEdit Text="{Binding Total, UpdateSourceTrigger=PropertyChanged}"
                                   Style="{StaticResource teCash}"
                                   IsReadOnly="True"
                                   FontSize="32"

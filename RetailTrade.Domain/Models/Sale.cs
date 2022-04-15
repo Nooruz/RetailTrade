@@ -12,7 +12,9 @@ namespace RetailTrade.Domain.Models
         private decimal _salePrice;
         private decimal _arrivalPrice;
         private double _quantityInStock;
-        private decimal _sum;
+        private decimal _amountWithoutDiscount;
+        private decimal _discountAmount;
+        private decimal _total;
         private string _tnved;
         private string _barcode;
 
@@ -57,7 +59,7 @@ namespace RetailTrade.Domain.Models
                 if (value > 0)
                 {
                     _quantity = value;
-                    Sum = SalePrice * (decimal)_quantity;
+                    AmountWithoutDiscount = SalePrice * (decimal)_quantity;
                 }
                 OnPropertyChanged(nameof(Quantity));
             }
@@ -90,15 +92,15 @@ namespace RetailTrade.Domain.Models
         }
 
         /// <summary>
-        /// Сумма покупки
+        /// Итого
         /// </summary>
-        public decimal Sum
+        public decimal Total
         {
-            get => _sum;
+            get => _total;
             set
             {
-                _sum = value;
-                OnPropertyChanged(nameof(Sum));
+                _total = value;
+                OnPropertyChanged(nameof(Total));
             }
         }
 
@@ -112,6 +114,34 @@ namespace RetailTrade.Domain.Models
             {
                 _quantityInStock = value;
                 OnPropertyChanged(nameof(QuantityInStock));
+            }
+        }
+
+        /// <summary>
+        /// Сумма без скидки
+        /// </summary>
+        public decimal AmountWithoutDiscount
+        {
+            get => _amountWithoutDiscount;
+            set
+            {
+                _amountWithoutDiscount = value;
+                Total = _amountWithoutDiscount;
+                OnPropertyChanged(nameof(AmountWithoutDiscount));
+            }
+        }
+
+        /// <summary>
+        /// Сумма скидки
+        /// </summary>
+        public decimal DiscountAmount
+        {
+            get => _discountAmount;
+            set
+            {
+                _discountAmount = value;
+                Total -= _discountAmount;
+                OnPropertyChanged(nameof(DiscountAmount));
             }
         }
 

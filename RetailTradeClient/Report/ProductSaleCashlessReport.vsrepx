@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<XtraReportsLayoutSerializer SerializerVersion="21.2.6.0" Ref="1" ControlType="DevExpress.XtraReports.UI.XtraReport, DevExpress.XtraReports.v21.2, Version=21.2.6.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a" Name="ProductSaleReport" RollPaper="true" Margins="20, 20, 9, 103" PaperKind="Custom" PageWidth="302" PageHeight="1200" Version="21.2" DataSource="#Ref-0" Font="Arial, 9.75pt, charSet=204">
+<XtraReportsLayoutSerializer SerializerVersion="21.2.3.0" Ref="1" ControlType="DevExpress.XtraReports.UI.XtraReport, DevExpress.XtraReports.v21.2, Version=21.2.3.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a" Name="ProductSaleReport" RollPaper="true" Margins="20, 20, 9, 103" PaperKind="Custom" PageWidth="302" PageHeight="1200" Version="21.2" DataSource="#Ref-0" Font="Arial, 9.75pt, charSet=204">
   <Extensions>
     <Item1 Ref="2" Key="VSReportExtInfo" Value=".vsrepx" />
   </Extensions>
@@ -33,7 +33,7 @@
                 </Item4>
                 <Item5 Ref="15" ControlType="XRTableCell" Name="tableCell4" Weight="1.0393237382011873" TextFormatString="{0:N2}" Multiline="true" Text="Сумма">
                   <ExpressionBindings>
-                    <Item1 Ref="16" EventName="BeforePrint" PropertyName="Text" Expression="[Sum]" />
+                    <Item1 Ref="16" EventName="BeforePrint" PropertyName="Text" Expression="[Total]" />
                   </ExpressionBindings>
                 </Item5>
               </Cells>
@@ -54,7 +54,7 @@
         <Item3 Ref="23" ControlType="XRLabel" Name="label6" Multiline="true" Text="Сдача:" TextAlignment="MiddleLeft" SizeF="107.986221,20" LocationFloat="0.000114440918,53.949398" Padding="2,2,0,0,100">
           <StylePriority Ref="24" UseTextAlignment="false" />
         </Item3>
-        <Item4 Ref="25" ControlType="XRLabel" Name="label4" Multiline="true" Text="Внесено:" TextAlignment="MiddleLeft" SizeF="107.986221,20" LocationFloat="0.000111262,33.9493752" Padding="2,2,0,0,100">
+        <Item4 Ref="25" ControlType="XRLabel" Name="label4" Multiline="true" Text="Оплата:" TextAlignment="MiddleLeft" SizeF="107.986221,20" LocationFloat="0.000111262,33.9493752" Padding="2,2,0,0,100">
           <StylePriority Ref="26" UseTextAlignment="false" />
         </Item4>
         <Item5 Ref="27" ControlType="XRLine" Name="line2" LineWidth="2" LineStyle="Dash" SizeF="261.999573,6.000023" LocationFloat="0,0" />
@@ -63,11 +63,11 @@
         </Item6>
         <Item7 Ref="30" ControlType="XRLabel" Name="label2" TextFormatString="{0:N2} сом" Multiline="true" Text="label2" TextAlignment="MiddleRight" SizeF="154.013672,20" LocationFloat="107.986336,13.9493628" Font="Arial, 9.75pt, style=Bold, charSet=204" Padding="2,2,0,0,100">
           <ExpressionBindings>
-            <Item1 Ref="31" EventName="BeforePrint" PropertyName="Text" Expression="Sum([Sum])" />
+            <Item1 Ref="31" EventName="BeforePrint" PropertyName="Text" Expression="Sum([Total])" />
           </ExpressionBindings>
           <StylePriority Ref="32" UseFont="false" UseTextAlignment="false" />
         </Item7>
-        <Item8 Ref="33" ControlType="XRLabel" Name="label1" Multiline="true" Text="Итого к оплате:" TextAlignment="MiddleLeft" SizeF="107.986229,20" LocationFloat="0.000106811523,13.9493465" Font="Arial, 9.75pt, style=Bold, charSet=204" Padding="2,2,0,0,100">
+        <Item8 Ref="33" ControlType="XRLabel" Name="label1" Multiline="true" Text="Итого:" TextAlignment="MiddleLeft" SizeF="107.986229,20" LocationFloat="0.000106811523,13.9493465" Font="Arial, 9.75pt, style=Bold, charSet=204" Padding="2,2,0,0,100">
           <StylePriority Ref="34" UseFont="false" UseTextAlignment="false" />
         </Item8>
       </Controls>

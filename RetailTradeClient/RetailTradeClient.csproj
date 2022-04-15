@@ -30,6 +30,7 @@
     <None Remove="Fonts\fa-brands-400.ttf" />
     <None Remove="Fonts\fa-regular-400.ttf" />
     <None Remove="Fonts\fa-solid-900.ttf" />
+    <None Remove="Report\DiscountReceiptReport.vsrepx" />
     <None Remove="Report\ProductSaleCashlessReport.vsrepx" />
     <None Remove="Report\ProductSaleReport.vsrepx" />
     <None Remove="Report\XReport.vsrepx" />
@@ -37,6 +38,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <EmbeddedResource Include="Report\DiscountReceiptReport.vsrepx" />
     <EmbeddedResource Include="Report\ProductSaleCashlessReport.vsrepx" />
     <EmbeddedResource Include="Report\ProductSaleReport.vsrepx" />
     <EmbeddedResource Include="Report\XReport.vsrepx" />
@@ -97,6 +99,12 @@
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
       <AutoGen>True</AutoGen>
       <DependentUpon>Settings.settings</DependentUpon>
+    </Compile>
+    <Compile Update="Report\DiscountReceiptReport.cs">
+      <DependentUpon>DiscountReceiptReport.vsrepx</DependentUpon>
+    </Compile>
+    <Compile Update="Report\DiscountReceiptReport.Designer.cs">
+      <DependentUpon>DiscountReceiptReport.vsrepx</DependentUpon>
     </Compile>
     <Compile Update="Report\ProductSaleCashlessReport.cs">
       <DependentUpon>ProductSaleCashlessReport.vsrepx</DependentUpon>
