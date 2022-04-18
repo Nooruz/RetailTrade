@@ -39,6 +39,7 @@
                 <ResourceDictionary Source="/Styles/UserControlStyle.xaml"/>
                 <ResourceDictionary Source="/Styles/TreeListColumnStyle.xaml"/>
                 <ResourceDictionary Source="/Styles/CheckBoxStyle.xaml"/>
+                <ResourceDictionary Source="/Styles/SpinEditStyle.xaml"/>
 
             </ResourceDictionary.MergedDictionaries>
 

@@ -1,19 +1,19 @@
 ﻿<local:BaseUserControl xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-             xmlns:dxmvvm="http://schemas.devexpress.com/winfx/2008/xaml/mvvm"
-             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             xmlns:local="clr-namespace:RetailTradeClient.Views.Dialogs"
-             xmlns:dxe="http://schemas.devexpress.com/winfx/2008/xaml/editors"
-             xmlns:dxg="http://schemas.devexpress.com/winfx/2008/xaml/grid"
-             xmlns:dxlc="http://schemas.devexpress.com/winfx/2008/xaml/layoutcontrol"
-             xmlns:dx="http://schemas.devexpress.com/winfx/2008/xaml/core"
-             xmlns:hotKey="clr-namespace:RetailTradeClient.HotKey"
-             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-             xmlns:customs="clr-namespace:RetailTradeClient.Customs"
-             x:Class="RetailTradeClient.Views.HomeView"
+                       xmlns:dx="http://schemas.devexpress.com/winfx/2008/xaml/core"
+                       xmlns:dxe="http://schemas.devexpress.com/winfx/2008/xaml/editors"
+                       xmlns:dxg="http://schemas.devexpress.com/winfx/2008/xaml/grid"
+                       xmlns:dxlc="http://schemas.devexpress.com/winfx/2008/xaml/layoutcontrol"
+                       xmlns:dxmvvm="http://schemas.devexpress.com/winfx/2008/xaml/mvvm"
+                       xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+                       xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                       xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+                       xmlns:hotKey="clr-namespace:RetailTradeClient.HotKey"
+                       xmlns:local="clr-namespace:RetailTradeClient.Views.Dialogs"
+                       xmlns:customs="clr-namespace:RetailTradeClient.Customs"
+                       x:Class="RetailTradeClient.Views.HomeView"
              mc:Ignorable="d"
              d:DesignWidth="1200"
-             d:DesignHeight="500"
+             d:DesignHeight="700"
              Focusable="True">
 
     <local:BaseUserControl.CommandBindings>
@@ -32,17 +32,6 @@
         <dxlc:LayoutGroup Orientation="Horizontal"
                                       VerticalAlignment="Top">
 
-            <Button Content="Наличными (F5)"
-                    Style="{StaticResource ButtonWithIcon}"
-                    Tag="{StaticResource faMoneyBillAlt}"
-                    Command="{Binding PaymentCashCommand}"/>
-
-            <Button Content="Безнал. (F6)"
-                    Style="{StaticResource ButtonWithIcon}"
-                    Tag="{StaticResource faCreditCard}"
-                    ToolTip="Оплата безналичными"
-                    Command="{Binding PaymentComplexCommand}"/>
-
             <Button Content="Возврат (F7)"
                     Style="{StaticResource ButtonWithIcon}"
                     Tag="{StaticResource faUndoAlt}"
@@ -58,6 +47,11 @@
                     Tag="{StaticResource faUserClock}"
                     Command="{Binding OpenPostponeReceiptCommand}"/>
 
+            <Button Content="Скидка (Ctrl + D)"
+                    Style="{StaticResource ButtonWithIcon}"
+                    Tag="{StaticResource faPercent}"
+                    Command="{Binding SearchCommand}"/>
+            
             <Button Content="Поиск (Ctrl + F)"
                     Style="{StaticResource ButtonWithIcon}"
                     Tag="{StaticResource faMagnifyingGlass}"
@@ -137,19 +131,11 @@
                                           MaxValue="{Binding MaximumPercentage}"/>
                         </dxlc:LayoutItem>
 
-                        <Button Command="{Binding DiscountTypeCommand}">
-                            <Button.Style>
-                                <Style TargetType="{x:Type Button}" BasedOn="{StaticResource IconicButton}">
-                                    <Setter Property="Content" Value="{StaticResource faPercent}"/>
-                                    <Style.Triggers>
-                                        <DataTrigger Binding="{Binding DataContext.IsDiscountPercent, RelativeSource={RelativeSource AncestorType={x:Type UserControl}, Mode=FindAncestor}}" Value="False">
-                                            <Setter Property="Content" Value="{StaticResource faMoneyBillAlt}"/>
-                                        </DataTrigger>
-                                    </Style.Triggers>
-                                </Style>
-                            </Button.Style>
-                        </Button>
+                        <Button Command="{Binding DiscountTypeCommand}"
+                                Style="{StaticResource TwoContent}"/>
                     </dxlc:LayoutGroup>
+
+                    <customs:UnitSpinEdit/>
 
                 </dxlc:LayoutGroup>
 
@@ -223,8 +209,19 @@
                             <dxe:TextEditSettings DisplayFormat="N2"/>
                         </dxg:GridColumn.EditSettings>
                     </dxg:GridColumn>
+                    <dxg:GridColumn Header="Скидка" 
+                                    FieldName="DiscountAmount"
+                                    AllowColumnFiltering="False"
+                                    AllowEditing="False">
+                        <dxg:GridColumn.EditSettings>
+                            <dxe:SpinEditSettings MaskUseAsDisplayFormat="True" 
+                                                  Mask="n"
+                                                  MinValue="0"
+                                                  MaxValue="{Binding MaximumPercentage}"/>
+                        </dxg:GridColumn.EditSettings>
+                    </dxg:GridColumn>
                     <dxg:GridColumn Header="Сумма" 
-                                    FieldName="Sum"
+                                    FieldName="Total"
                                     IsSmart="True"
                                     AllowColumnFiltering="False"
                                     AllowEditing="False">
@@ -263,48 +260,72 @@
                 <dxlc:LayoutItem Label="Без скидки:"
                                  LabelPosition="Left"
                                  FontSize="28">
-                    <dxe:TextEdit Text="{Binding AmountWithoutDiscount, UpdateSourceTrigger=PropertyChanged}"
-                                  Style="{StaticResource teCash}"
-                                  IsReadOnly="True"
-                                  FontSize="32"
-                                  BorderBrush="Transparent"
-                                  BorderThickness="0"/>
+                    <TextBlock Text="{Binding AmountWithoutDiscount, UpdateSourceTrigger=PropertyChanged}"
+                               TextAlignment="Right"
+                               FontSize="32"/>
                 </dxlc:LayoutItem>
                 
                 <dxlc:LayoutItem Label="Скидка:"
                                  LabelPosition="Left"
                                  FontSize="28">
-                    <dxe:TextEdit Text="{Binding DiscountAmount, UpdateSourceTrigger=PropertyChanged}"
-                                  Style="{StaticResource teCash}"
-                                  IsReadOnly="True"
-                                  FontSize="32"
-                                  BorderBrush="Transparent"
-                                  BorderThickness="0"/>
+                    <TextBlock Text="{Binding DiscountAmount, UpdateSourceTrigger=PropertyChanged}"
+                               TextAlignment="Right"
+                               FontSize="32"/>
                 </dxlc:LayoutItem>
 
                 <dxlc:LayoutItem Label="Итого:"
                                  LabelPosition="Left"
                                  Style="{StaticResource liCash}"
                                  FontSize="28">
-                    <dxe:TextEdit Text="{Binding Total, UpdateSourceTrigger=PropertyChanged}"
-                                  Style="{StaticResource teCash}"
-                                  IsReadOnly="True"
-                                  FontSize="32"
-                                  BorderBrush="Transparent"
-                                  BorderThickness="0"/>
+                    <TextBlock Text="{Binding Total, UpdateSourceTrigger=PropertyChanged}"
+                               TextAlignment="Right"
+                               FontSize="32"/>
                 </dxlc:LayoutItem>
+
+                <dxlc:LayoutGroup VerticalAlignment="Top">
+                    <Button Content="Наличные (F6)"
+                            Command="{Binding CashPayCommand}"
+                            FontSize="22"/>
+                    <dxe:TextEdit FontSize="32"
+                                  EditValue="{Binding CashPaySum, UpdateSourceTrigger=PropertyChanged}" MaskUseAsDisplayFormat="True" MaskType="Numeric" Mask="n"
+                                  SelectAllOnMouseUp="True">
+                        <dxmvvm:Interaction.Behaviors>
+                            <dxmvvm:EventToCommand EventName="Loaded"
+                                                   Command="{Binding CashPayLoadedCommand}"
+                                                   PassEventArgsToCommand="True"/>
+                        </dxmvvm:Interaction.Behaviors>
+                    </dxe:TextEdit>
+                </dxlc:LayoutGroup>
+
+                <dxlc:LayoutGroup VerticalAlignment="Top">
+                    <Button Content="Карта (F7)"
+                            FontSize="22"
+                            Command="{Binding CashlessPayCommand}"/>
+                    <dxe:TextEdit FontSize="32"
+                                  EditValue="{Binding CashlessPaySum}" MaskUseAsDisplayFormat="True" MaskType="Numeric" Mask="n"
+                                  SelectAllOnMouseUp="True">
+                        <dxmvvm:Interaction.Behaviors>
+                            <dxmvvm:EventToCommand EventName="Loaded"
+                                                   Command="{Binding CashlessPayLoadedCommand}"
+                                                   PassEventArgsToCommand="True"/>
+                        </dxmvvm:Interaction.Behaviors>
+                    </dxe:TextEdit>
+                </dxlc:LayoutGroup>
 
                 <dxlc:LayoutItem Label="Сдача:"
                                  LabelPosition="Left"
                                  Style="{StaticResource liCash}"
                                  FontSize="28">
-                    <dxe:TextEdit Text="{Binding Change, UpdateSourceTrigger=PropertyChanged}"
-                                  Style="{StaticResource teCash}"
-                                  IsReadOnly="True"
-                                  FontSize="32"
-                                  BorderBrush="Transparent"
-                                  BorderThickness="0"/>
+                    <TextBlock Text="{Binding Change, UpdateSourceTrigger=PropertyChanged}"
+                               TextAlignment="Right"
+                               FontSize="32"/>
                 </dxlc:LayoutItem>
+
+                <Button Content="Пробить чек (F8)"
+                        FontSize="22"
+                        Height="50"
+                        VerticalAlignment="Top"
+                        Command="{Binding PunchReceiptCommand}"/>
 
             </dxlc:LayoutGroup>
 

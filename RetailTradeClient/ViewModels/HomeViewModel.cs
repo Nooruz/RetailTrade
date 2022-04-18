@@ -1,5 +1,6 @@
 ﻿using DevExpress.Mvvm;
 using DevExpress.Mvvm.DataAnnotations;
+using DevExpress.Xpf.Editors;
 using DevExpress.Xpf.Grid;
 using RetailTrade.Barcode.Services;
 using RetailTrade.CashRegisterMachine;
@@ -18,6 +19,7 @@ using RetailTradeClient.Views;
 using RetailTradeClient.Views.Dialogs;
 using System;
 using System.Collections.ObjectModel;
+using System.Collections.Specialized;
 using System.ComponentModel;
 using System.Linq;
 using System.Runtime.InteropServices;
@@ -46,6 +48,8 @@ namespace RetailTradeClient.ViewModels
         private MainWindow _mainWindow;
         private decimal _change;
         private bool _isDiscountPercent = true;
+        private decimal _cashPaySum;
+        private decimal _cashlessPaySum;
 
         private const int HOTKEY_F5 = 1;
         private const int HOTKEY_F6 = 2;
@@ -90,11 +94,9 @@ namespace RetailTradeClient.ViewModels
         public ObservableCollection<Sale> ProductSales => _productSaleStore.Sales;
         public ICollectionView SaleProductsCollectionView { get; set; }
         public bool IsKeepRecords => Settings.Default.IsKeepRecords;
-        public decimal Sum
-        {
-            get => _productSaleStore.ToBePaid;
-            set { }
-        }
+        public decimal AmountWithoutDiscount => ProductSales.Sum(s => s.AmountWithoutDiscount);
+        public decimal DiscountAmount => ProductSales.Sum(s => s.DiscountAmount);
+        public decimal Total => ProductSales.Sum(s => s.Total);
         public decimal Change
         {
             get => _change;
@@ -104,7 +106,6 @@ namespace RetailTradeClient.ViewModels
                 OnPropertyChanged(nameof(Change));
             }
         }
-        public decimal ToBePaid => Sum;
         public string Barcode
         {
             get => _barcode;
@@ -135,6 +136,26 @@ namespace RetailTradeClient.ViewModels
             {
                 _isDiscountPercent = value;
                 OnPropertyChanged(nameof(IsDiscountPercent));
+            }
+        }
+        public TextEdit CashPayTextEdit { get; set; }
+        public TextEdit CashlessPayTextEdit { get; set; }
+        public decimal CashPaySum
+        {
+            get => _cashPaySum;
+            set
+            {
+                _cashPaySum = value;
+                OnPropertyChanged(nameof(CashPaySum));
+            }
+        }
+        public decimal CashlessPaySum
+        {
+            get => _cashlessPaySum;
+            set
+            {
+                _cashlessPaySum = value;
+                OnPropertyChanged(nameof(CashlessPaySum));
             }
         }
 
@@ -258,8 +279,8 @@ namespace RetailTradeClient.ViewModels
 
             SaleProductsCollectionView = CollectionViewSource.GetDefaultView(ProductSales);
             BindingOperations.EnableCollectionSynchronization(ProductSales, _syncLock);
+            SaleProductsCollectionView.CollectionChanged += SaleProductsCollectionView_CollectionChanged;
 
-            _productSaleStore.OnProductSalesChanged += () => OnPropertyChanged(nameof(Sum));
             _productSaleStore.OnProductSale += ProductSaleStore_OnProductSale;
             _productSaleStore.OnPostponeReceiptChanged += ProductSaleStore_OnPostponeReceiptChanged;
             _productSaleStore.OnCreated += ProductSaleStore_OnCreated;
@@ -268,6 +289,40 @@ namespace RetailTradeClient.ViewModels
         #endregion
 
         #region Private Voids
+
+        private void SaleProductsCollectionView_CollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
+        {
+            OnPropertyChanged(nameof(AmountWithoutDiscount));
+            OnPropertyChanged(nameof(DiscountAmount));
+            OnPropertyChanged(nameof(Total));
+            if (e.NewItems != null)
+            {
+                foreach (var item in e.NewItems)
+                {
+                    if (item is Sale sale)
+                    {
+                        sale.PropertyChanged += Sale_PropertyChanged;
+                    }
+                }
+            }
+            if (e.OldItems != null)
+            {
+                foreach (var item in e.NewItems)
+                {
+                    if (item is Sale sale)
+                    {
+                        sale.PropertyChanged -= Sale_PropertyChanged;
+                    }
+                }
+            }
+        }
+
+        private void Sale_PropertyChanged(object sender, PropertyChangedEventArgs e)
+        {
+            OnPropertyChanged(nameof(AmountWithoutDiscount));
+            OnPropertyChanged(nameof(DiscountAmount));
+            OnPropertyChanged(nameof(Total));
+        }
 
         private void ProductSaleStore_OnCreated(Sale sale)
         {
@@ -285,14 +340,11 @@ namespace RetailTradeClient.ViewModels
         {
             OnPropertyChanged(nameof(ProductSales));
             OnPropertyChanged(nameof(PostponeReceipts));
-            OnPropertyChanged(nameof(Sum));            
         }
 
         private void ProductSaleStore_OnProductSale(decimal change)
         {
             Change = change;
-            OnPropertyChanged(nameof(ToBePaid));
-            OnPropertyChanged(nameof(Sum));
         }
 
         private void BarcodeOpen()
@@ -582,6 +634,11 @@ namespace RetailTradeClient.ViewModels
             _productSaleStore.Sales.Clear();            
         }
 
+        private void CashPayTextEdit_EditValueChanged(object sender, EditValueChangedEventArgs e)
+        {
+            Change = CashPaySum - Total;
+        }
+
         #endregion
 
         #region Public Voids
@@ -622,6 +679,88 @@ namespace RetailTradeClient.ViewModels
             {
                 //ignore
             }
+        }
+
+        [Command]
+        public void CashPayLoaded(object sender)
+        {
+            try
+            {
+                if (sender is RoutedEventArgs e)
+                {
+                    if (e.Source is TextEdit textEdit)
+                    {
+                        CashPayTextEdit = textEdit;
+                        CashPayTextEdit.EditValueChanged += CashPayTextEdit_EditValueChanged;
+                    }
+                }
+            }
+            catch (Exception)
+            {
+                //ignore
+            }
+        }
+
+        [Command]
+        public void CashlessPayLoaded(object sender)
+        {
+            try
+            {
+                if (sender is RoutedEventArgs e)
+                {
+                    if (e.Source is TextEdit textEdit)
+                    {
+                        CashlessPayTextEdit = textEdit;
+                    }
+                }
+            }
+            catch (Exception)
+            {
+                //ignore
+            }
+        }
+
+        [Command]
+        public void CashPay()
+        {
+            try
+            {
+                if (CashPayTextEdit != null)
+                {
+                    CashPayTextEdit.EditValueChanged -= CashPayTextEdit_EditValueChanged;
+                    _ = CashPayTextEdit.Focus();
+                    CashPayTextEdit.Text = Total.ToString();
+                    CashPayTextEdit.SelectAll();
+                    CashPayTextEdit.EditValueChanged += CashPayTextEdit_EditValueChanged;
+                }
+            }
+            catch (Exception)
+            {
+                //ignore
+            }
+        }
+
+        [Command]
+        public void CashlessPay()
+        {
+            try
+            {
+                if (CashlessPayTextEdit != null)
+                {
+                    _ = CashlessPayTextEdit.Focus();
+                    CashlessPayTextEdit.SelectAll();
+                }
+            }
+            catch (Exception)
+            {
+                //ignore
+            }
+        }
+
+        [Command]
+        public void PunchReceipt()
+        {
+
         }
 
         #endregion
