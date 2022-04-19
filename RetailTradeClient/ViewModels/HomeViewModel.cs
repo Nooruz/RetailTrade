@@ -739,16 +739,13 @@ namespace RetailTradeClient.ViewModels
         }
 
         [Command]
-        public void EditValueChanged(object sender)
+        public void EditValueChanging(object value)
         {
             try
             {
-                if (sender is EditValueChangedEventArgs e)
+                if (double.TryParse(value.ToString(), out double quantity))
                 {
-                    if (e.Source is UnitSpinEdit spinEdit)
-                    {
-                        _productSaleStore.ChangingQuantity(SelectedProductSale.Id, Convert.ToDouble(spinEdit.Text));
-                    }
+                    _productSaleStore.ChangingQuantity(SelectedProductSale.Id, quantity);
                 }
             }
             catch (Exception)

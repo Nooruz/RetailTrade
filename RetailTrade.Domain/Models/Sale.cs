@@ -56,12 +56,9 @@ namespace RetailTrade.Domain.Models
         {
             get => _quantity;
             set
-            {                
-                if (value > 0)
-                {
-                    _quantity = value;
-                    AmountWithoutDiscount = SalePrice * (decimal)_quantity;
-                }
+            {
+                _quantity = value;
+                AmountWithoutDiscount = SalePrice * (decimal)_quantity;
                 OnPropertyChanged(nameof(Quantity));
             }
         }
