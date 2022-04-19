@@ -6,6 +6,7 @@
     Title="Sale Page: Касса"
     WindowState="Maximized"
     Height="450" 
+    Icon="Resources/Images/logo.png"
     Width="800">
     
     <ContentControl Content="{Binding CurrentViewModel, UpdateSourceTrigger=PropertyChanged}"/>

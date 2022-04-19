@@ -34,7 +34,8 @@
                                 </dxe:ButtonsControl.Items>
                             </dxe:ButtonsControl>
                             <dxe:EditorControl x:Name="PART_Content" VerticalAlignment="Stretch" Grid.Column="2" dx:FocusHelper2.Focusable="False" Template="{TemplateBinding ActualEditorControlTemplate}" />
-                            <TextBlock IsHitTestVisible="False"
+                            <TextBlock x:Name="UnitTextBlock"
+                                       IsHitTestVisible="False"
                                        Text="{TemplateBinding UnitName}"
                                        Padding="2 0"
                                        Grid.Column="3"
@@ -54,6 +55,15 @@
                             </dxe:ButtonsControl>
                         </Grid>
                     </ContentControl>
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="ShowEditorButtons" Value="False">
+                            <Setter TargetName="PART_LeftButtons" Property="Visibility" Value="Collapsed"/>
+                            <Setter TargetName="PART_RightButtons" Property="Visibility" Value="Collapsed"/>
+                        </Trigger>
+                        <Trigger Property="Mask" Value="p">
+                            <Setter TargetName="UnitTextBlock" Property="Visibility" Value="Collapsed"/>
+                        </Trigger>
+                    </ControlTemplate.Triggers>
                 </ControlTemplate>
             </Setter.Value>
         </Setter>

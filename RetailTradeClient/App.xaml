@@ -12,6 +12,7 @@
         <ResourceDictionary>
 
             <converters:BooleanReverseConverter x:Key="BooleanReverseConverter"/>
+            <converters:PercentageOrSomConverter x:Key="PercentageOrSomConverter"/>
             
             <DataTemplate DataType="{x:Type viewModels:LoginViewModel}">
                 <views:LoginView/>

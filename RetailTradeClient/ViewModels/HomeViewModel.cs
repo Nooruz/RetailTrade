@@ -19,6 +19,7 @@ using RetailTradeClient.ViewModels.Dialogs;
 using RetailTradeClient.Views;
 using RetailTradeClient.Views.Dialogs;
 using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Collections.Specialized;
 using System.ComponentModel;
@@ -39,16 +40,17 @@ namespace RetailTradeClient.ViewModels
         private readonly IReceiptService _receiptService;
         private readonly IAuthenticator _authenticator;
         private readonly IShiftStore _shiftStore;
-        private readonly IProductSaleStore _productSaleStore;
         private readonly IBarcodeService _barcodeService;
         private readonly PaymentCashViewModel _paymentCashViewModel;
         private readonly PaymentComplexViewModel _paymentComplexViewModel;
+        private readonly ProductViewModel _productViewModel;
+        private readonly MainWindow _mainWindow;
+        private ObservableCollection<Sale> _productSales = new();
+        private ObservableCollection<PostponeReceipt> _postponeReceipts = new();
         private string _barcode;
         private Sale _selectedProductSale;
         private object _syncLock = new();
-        private MainWindow _mainWindow;
         private decimal _change;
-        private bool _isDiscountPercent = true;
         private decimal _cashPaySum;
         private decimal _cashlessPaySum;
 
@@ -92,8 +94,8 @@ namespace RetailTradeClient.ViewModels
 
         #region Public Properties
 
-        public ObservableCollection<Sale> ProductSales => _productSaleStore.Sales;
-        public ICollectionView SaleProductsCollectionView { get; set; }
+        public ObservableCollection<Sale> ProductSales => _productSales;
+        public ICollectionView SaleProductsCollectionView => CollectionViewSource.GetDefaultView(ProductSales);
         public bool IsKeepRecords => Settings.Default.IsKeepRecords;
         public decimal AmountWithoutDiscount => ProductSales.Sum(s => s.AmountWithoutDiscount);
         public decimal DiscountAmount => ProductSales.Sum(s => s.DiscountAmount);
@@ -117,7 +119,15 @@ namespace RetailTradeClient.ViewModels
             }
         }
         public string Info => $"РМК: {(_userStore.CurrentUser != null ? _userStore.CurrentUser.FullName : string.Empty)}";
-        public ObservableCollection<PostponeReceipt> PostponeReceipts => _productSaleStore.PostponeReceipts;
+        public ObservableCollection<PostponeReceipt> PostponeReceipts
+        {
+            get => _postponeReceipts;
+            set
+            {
+                _postponeReceipts = value;
+                OnPropertyChanged(nameof(PostponeReceipts));
+            }
+        }
         public Sale SelectedProductSale
         {
             get => _selectedProductSale;
@@ -129,16 +139,6 @@ namespace RetailTradeClient.ViewModels
         }
         public int FocusedRowHandle => ProductSales.Count - 1;
         public TableView SaleTableView { get; set; }
-        public ProductsWithoutBarcodeViewModel ProductsWithoutBarcodeViewModel { get; }
-        public bool IsDiscountPercent
-        {
-            get => _isDiscountPercent;
-            set
-            {
-                _isDiscountPercent = value;
-                OnPropertyChanged(nameof(IsDiscountPercent));
-            }
-        }
         public TextEdit CashPayTextEdit { get; set; }
         public TextEdit CashlessPayTextEdit { get; set; }
         public decimal CashPaySum
@@ -165,91 +165,14 @@ namespace RetailTradeClient.ViewModels
         #region Commands
 
         /// <summary>
-        /// Выход из аккаунта
-        /// </summary>
-        public ICommand LogoutCommand => new RelayCommand(Logout);
-        /// <summary>
-        /// Настройки принтера
-        /// </summary>
-        public ICommand PrinterSettingsCommand => new RelayCommand(PrinterSettings);
-        /// <summary>
-        /// Отложить чек
-        /// </summary>
-        public ICommand PostponeReceiptCommand => new RelayCommand(() => _productSaleStore.CreatePostponeReceipt());
-        /// <summary>
-        /// Просмотр отложенных чеков
-        /// </summary>
-        public ICommand OpenPostponeReceiptCommand => new RelayCommand(OpenPostponeReceipt);
-        /// <summary>
-        /// Оплата наличными
-        /// </summary>
-        public ICommand PaymentCashCommand => new RelayCommand(PaymentCash);
-        /// <summary>
-        /// Сложаня оплата
-        /// </summary>
-        public ICommand PaymentComplexCommand => new RelayCommand(PaymentComplex);
-        /// <summary>
-        /// Удалить выбранную из корзина товара
-        /// </summary>
-        public ICommand DeleteSelectedRowCommand => new RelayCommand(DeleteSelectedRow);
-        /// <summary>
         /// Закрыть смену
         /// </summary>
         public ICommand ClosingShiftCommand { get; }
+
         /// <summary>
         /// Распечатать х-отчет
         /// </summary>
         public ICommand PrintXReportCommand => new PrintXReportCommand();
-        /// <summary>
-        /// Настройки ККМ
-        /// </summary>
-        public ICommand CRMSettingsCommand => new RelayCommand(CRMSettings);
-        /// <summary>
-        /// Снять отчет без гашения
-        /// </summary>
-        public static ICommand PrintReportWithoutCleaningCommand => new RelayCommand(() => ShtrihM.PrintReportWithoutCleaning());
-        /// <summary>
-        /// Снять отчет с гашнием
-        /// </summary>
-        public static ICommand PrintReportWithCleaningCommand => new RelayCommand(() => ShtrihM.PrintReportWithCleaning());
-        /// <summary>
-        /// Открыть смену ККМ
-        /// </summary>
-        public static ICommand OpenSessionCommand => new RelayCommand(() => ShtrihM.OpenSession());
-        /// <summary>
-        /// Краткий запрос
-        /// </summary>
-        public ICommand GetShortECRStatusCommand => new RelayCommand(GetShortECRStatus);
-        /// <summary>
-        /// Анулировать чек
-        /// </summary>
-        public static ICommand CancelCheckCommand => new RelayCommand(() => ShtrihM.SysAdminCancelCheck());
-        /// <summary>
-        /// Установить текущее время ККМ
-        /// </summary>
-        public ICommand SetTimeCommand = new RelayCommand(() => ShtrihM.SetTime());
-        /// <summary>
-        /// Отрезать чек
-        /// </summary>
-        public static ICommand CutCheckCommand => new RelayCommand(() => ShtrihM.CutCheck());
-        /// <summary>
-        /// 
-        /// </summary>
-        public ICommand LoadedHomeViewCommand => new ParameterCommand(parameter => LoadedHomeView(parameter));
-        /// <summary>
-        /// Проверка ввода количестов товаров для продажи
-        /// </summary>
-        public static ICommand QuantityValidateCommand => new ParameterCommand(parameter => QuantityValidate(parameter));
-        /// <summary>
-        /// Возврат товаров
-        /// </summary>
-        public ICommand ReturnGoodsCommand => new RelayCommand(ReturnGoods);
-        /// <summary>
-        /// Отменить
-        /// </summary>
-        public ICommand CancelCommand => new RelayCommand(Cancel);
-        public ICommand SaleTableViewLoadedCommand => new ParameterCommand(parameter => SaleTableViewLoaded(parameter));
-        public ICommand MultiplyCommand => new RelayCommand(Multiply);
 
         #endregion        
 
@@ -259,43 +182,95 @@ namespace RetailTradeClient.ViewModels
             IReceiptService receiptService,
             IAuthenticator authenticator,
             IShiftStore shiftStore,
-            IProductSaleStore productSaleStore,
             IBarcodeService barcodeService,
-            ProductsWithoutBarcodeViewModel productsWithoutBarcodeViewModel,
             PaymentCashViewModel paymentCashViewModel,
-            PaymentComplexViewModel paymentComplexViewModel, 
+            PaymentComplexViewModel paymentComplexViewModel,
+            ProductViewModel productViewModel,
             MainWindow mainWindow)
         {
             _userStore = userStore;
             _receiptService = receiptService;
             _authenticator = authenticator;
             _shiftStore = shiftStore;
-            _productSaleStore = productSaleStore;
             _barcodeService = barcodeService;
             _paymentCashViewModel = paymentCashViewModel;
             _paymentComplexViewModel = paymentComplexViewModel;
+            _productViewModel = productViewModel;
             _mainWindow = mainWindow;
 
-            ProductsWithoutBarcodeViewModel = productsWithoutBarcodeViewModel;
-
-            SaleProductsCollectionView = CollectionViewSource.GetDefaultView(ProductSales);
             BindingOperations.EnableCollectionSynchronization(ProductSales, _syncLock);
-            SaleProductsCollectionView.CollectionChanged += SaleProductsCollectionView_CollectionChanged;
 
-            _productSaleStore.OnProductSale += ProductSaleStore_OnProductSale;
-            _productSaleStore.OnPostponeReceiptChanged += ProductSaleStore_OnPostponeReceiptChanged;
-            _productSaleStore.OnCreated += ProductSaleStore_OnCreated;
+            SaleProductsCollectionView.CollectionChanged += SaleProductsCollectionView_CollectionChanged;
+            _productViewModel.OnProductsSelected += ProductViewModel_OnProductsSelected;
         }
 
         #endregion
 
         #region Private Voids
 
+        private void ProductViewModel_OnProductsSelected(IEnumerable<Product> products)
+        {
+            try
+            {
+                foreach (Product product in products)
+                {
+                    Sale sale = ProductSales.FirstOrDefault(s => s.Id == product.Id);
+                    if (sale != null)
+                    {
+                        if (Settings.Default.IsKeepRecords)
+                        {
+                            if (sale.QuantityInStock < sale.Quantity + 1)
+                            {
+                                //_ = MessageBox.Show("Количество превышает остаток.", "", MessageBoxButton.OK, MessageBoxImage.Information);
+                            }
+                            else
+                            {
+                                sale.Quantity++;
+                            }
+                        }
+                    }
+                    else
+                    {
+                        AddProductSale(new Sale
+                        {
+                            Id = product.Id,
+                            Name = product.Name,
+                            SalePrice = product.SalePrice,
+                            ArrivalPrice = product.ArrivalPrice,
+                            QuantityInStock = IsKeepRecords ? product.Quantity : 0,
+                            TNVED = product.TNVED,
+                            Quantity = 1,
+                            Barcode = product.Barcode,
+                            UnitName = string.Empty
+                        });
+                    }
+                }
+            }
+            catch (Exception)
+            {
+                //ignore
+            }
+        }
+
+        private void AddProductSale(Sale sale)
+        {
+            try
+            {
+                ProductSales.Add(sale);
+                SelectedProductSale = sale;
+            }
+            catch (Exception)
+            {
+                //ignore
+            }
+        }
+
         private void SaleProductsCollectionView_CollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
         {
             OnPropertyChanged(nameof(AmountWithoutDiscount));
             OnPropertyChanged(nameof(DiscountAmount));
             OnPropertyChanged(nameof(Total));
+            OnPropertyChanged(nameof(ProductSales));
             if (e.NewItems != null)
             {
                 foreach (var item in e.NewItems)
@@ -323,29 +298,7 @@ namespace RetailTradeClient.ViewModels
             OnPropertyChanged(nameof(AmountWithoutDiscount));
             OnPropertyChanged(nameof(DiscountAmount));
             OnPropertyChanged(nameof(Total));
-        }
-
-        private void ProductSaleStore_OnCreated(Sale sale)
-        {
-            try
-            {
-                SelectedProductSale = sale;
-            }
-            catch (Exception)
-            {
-                //ignore
-            }
-        }
-
-        private void ProductSaleStore_OnPostponeReceiptChanged()
-        {
             OnPropertyChanged(nameof(ProductSales));
-            OnPropertyChanged(nameof(PostponeReceipts));
-        }
-
-        private void ProductSaleStore_OnProductSale(decimal change)
-        {
-            Change = change;
         }
 
         private void BarcodeOpen()
@@ -360,29 +313,6 @@ namespace RetailTradeClient.ViewModels
             }
         }
 
-        private void GetShortECRStatus()
-        {
-            ShtrihM.GetShortECRStatus();
-
-            KKMStatusViewModel viewModel = new();
-
-            viewModel.Title = "Краткий запрос состояния";
-
-            viewModel.Status += "----------------------------------------\r";
-            viewModel.Status += "Режим:\r";
-            viewModel.Status += ShtrihM.GetECRMode() + "\r";
-            viewModel.Status += "----------------------------------------\r";
-
-            
-
-            WindowService.Show(nameof(KKMStatusView), viewModel);
-        }
-
-        private void ReturnGoods()
-        {
-            WindowService.Show(nameof(RefundView), new RefundViewModel(_receiptService, _shiftStore) { Title = "Возврат товаров" });
-        }
-
         private void Multiply()
         {
             if (SaleTableView != null)
@@ -391,14 +321,14 @@ namespace RetailTradeClient.ViewModels
                 {
                     SaleTableView.Grid.CurrentItem = ProductSales.LastOrDefault();
                 }
-                SaleTableView.Grid.CurrentColumn = SaleTableView.Grid.Columns[2];                
+                SaleTableView.Grid.CurrentColumn = SaleTableView.Grid.Columns[2];
                 SaleTableView.Grid.View.ShowEditor();
             }
         }
 
         private void SaleTableView_ShownEditor(object sender, EditorEventArgs e)
         {
-            SaleTableView.Grid.View.ActiveEditor.SelectAll();            
+            SaleTableView.Grid.View.ActiveEditor.SelectAll();
         }
 
         private void SaleTableView_CellValueChanged(object sender, CellValueChangedEventArgs e)
@@ -406,45 +336,6 @@ namespace RetailTradeClient.ViewModels
             SaleTableView.Grid.CurrentColumn = null;
             SaleTableView.Grid.CurrentItem = null;
             SelectedProductSale = null;
-        }
-
-        private void SaleTableViewLoaded(object parameter)
-        {
-            if (parameter is RoutedEventArgs e)
-            {
-                if (e.Source is TableView tableView)
-                {
-                    SaleTableView = tableView;
-                    SaleTableView.ShownEditor += SaleTableView_ShownEditor;
-                    SaleTableView.CellValueChanged += SaleTableView_CellValueChanged;
-                }
-            }
-        }
-
-        private void LoadedHomeView(object parameter)
-        {
-            if (parameter is RoutedEventArgs e)
-            {
-                if (e.Source is HomeView homeView)
-                {
-                    homeView.Unloaded += HomeView_Unloaded;
-                    _windowHandle = new WindowInteropHelper(_mainWindow).Handle;
-                    _source = HwndSource.FromHwnd(_windowHandle);
-                    _source.AddHook(HwndHook);
-
-                    RegisterHotKey(_windowHandle, HOTKEY_F5, MOD_NONE, VK_F5); //+
-                    RegisterHotKey(_windowHandle, HOTKEY_F6, MOD_NONE, VK_F6); //+
-                    RegisterHotKey(_windowHandle, HOTKEY_F7, MOD_NONE, VK_F7); //+
-                    RegisterHotKey(_windowHandle, HOTKEY_ALT_F5, MOD_ALT, VK_F5); //+
-                    RegisterHotKey(_windowHandle, HOTKEY_CTRL_F5, MOD_CONTROL, VK_F5); //+
-                    RegisterHotKey(_windowHandle, HOTKEY_CTRL_F, MOD_CONTROL, VK_CTRL_F); //+
-                    RegisterHotKey(_windowHandle, HOTKEY_ESC, MOD_NONE, VK_ESCAPE); //+
-                    RegisterHotKey(_windowHandle, HOTKEY_CTRL_Z, MOD_CONTROL, VK_CTRL_Z); //+
-                    RegisterHotKey(_windowHandle, HOTKEY_DEL, MOD_NONE, VK_DEL); //+
-                }
-            }
-
-            BarcodeOpen();
         }
 
         private void HomeView_Unloaded(object sender, RoutedEventArgs e)
@@ -472,17 +363,17 @@ namespace RetailTradeClient.ViewModels
                         int vkey = ((int)lParam >> 16) & 0xFFFF;
                         switch (wParam.ToInt32())
                         {
-                            case HOTKEY_F5:                                
+                            case HOTKEY_F5:
                                 if (vkey == VK_F5)
                                 {
-                                    PaymentCash();
+                                    //PaymentCash();
                                 }
                                 handled = true;
                                 break;
                             case HOTKEY_F6:
                                 if (vkey == VK_F6)
                                 {
-                                    PaymentComplex();
+                                    //PaymentComplex();
                                 }
                                 handled = true;
                                 break;
@@ -496,7 +387,7 @@ namespace RetailTradeClient.ViewModels
                             case HOTKEY_ALT_F5:
                                 if (vkey == VK_F5)
                                 {
-                                    _productSaleStore.CreatePostponeReceipt();
+                                    //_productSaleStore.CreatePostponeReceipt();
                                 }
                                 handled = true;
                                 break;
@@ -546,95 +437,6 @@ namespace RetailTradeClient.ViewModels
             return IntPtr.Zero;
         }
 
-        private static void QuantityValidate(object parameter)
-        {
-            if (parameter is GridCellValidationEventArgs e)
-            {
-                if (((Sale)e.Row).QuantityInStock < Convert.ToDouble(e.Value))
-                {
-                    _ = MessageBox.Show("Количество превышает остаток.", "", MessageBoxButton.OK, MessageBoxImage.Information);
-                    e.ErrorContent = "Количество превышает остаток.";
-                    e.IsValid = false;
-                }
-            }
-        }
-
-        /// <summary>
-        /// Принтерлерди настройкалоо
-        /// </summary>
-        private void PrinterSettings()
-        {
-            WindowService.Show(nameof(PrinterView), new PrinterViewModel() { Title = "Настройка принтеров" });
-        }
-
-        /// <summary>
-        /// Просмотр отложенных чеков
-        /// </summary>
-        private void OpenPostponeReceipt()
-        {
-            if (PostponeReceipts.Any() && !ProductSales.Any())
-            {
-                WindowService.Show(nameof(PostponeReceiptView), new PostponeReceiptViewModel(_productSaleStore) { Title = "Выбор чека" });
-            }            
-        }
-
-        /// <summary>
-        /// Оплата наличными
-        /// </summary>
-        private void PaymentCash()
-        {
-            if (ProductSales.Count > 0)
-            {
-                WindowService.Show(nameof(PaymentCashView), _paymentCashViewModel);
-            }
-        }
-
-        private void PaymentComplex()
-        {
-            if (ProductSales.Count > 0)
-            {
-                WindowService.Show(nameof(PaymentComplexView), _paymentComplexViewModel);
-            }
-        }
-
-        /// <summary>
-        /// Выйти из аккаунта
-        /// </summary>
-        private void Logout()
-        {
-            if (MessageBoxService.ShowMessage("Выйти?", "Sale Page", MessageButton.YesNo, MessageIcon.Question) == MessageResult.Yes)
-            {
-                _authenticator.Logout();
-            }
-        }
-
-        /// <summary>
-        /// Удалить выбранный товар из корзины
-        /// </summary>
-        private void DeleteSelectedRow()
-        {
-            if (SelectedProductSale != null)
-            {
-                _productSaleStore.DeleteProduct(SelectedProductSale.Id);                
-            }
-        }
-
-        /// <summary>
-        /// Настройки ККМ
-        /// </summary>
-        private void CRMSettings()
-        {
-            ShtrihM.ShowProperties();
-        }
-
-        /// <summary>
-        /// Отменить
-        /// </summary>
-        private void Cancel()
-        {
-            _productSaleStore.Sales.Clear();            
-        }
-
         private void CashPayTextEdit_EditValueChanged(object sender, EditValueChangedEventArgs e)
         {
             Change = CashPaySum - Total;
@@ -647,13 +449,20 @@ namespace RetailTradeClient.ViewModels
         [Command]
         public void Search()
         {
-            WindowService.Show(nameof(ProductView), _productSaleStore.SearchProduct());
+            WindowService.Show(nameof(ProductView), _productViewModel);
         }
 
         [Command]
         public void DiscountType()
         {
-            IsDiscountPercent = !IsDiscountPercent;
+            try
+            {
+                SelectedProductSale.IsDiscountPercentage = !SelectedProductSale.IsDiscountPercentage;
+            }
+            catch (Exception)
+            {
+                //ignore
+            }
         }
 
         [Command]
@@ -739,13 +548,256 @@ namespace RetailTradeClient.ViewModels
         }
 
         [Command]
-        public void EditValueChanging(object value)
+        public void EditValueChanged(object value)
         {
             try
             {
                 if (double.TryParse(value.ToString(), out double quantity))
                 {
-                    _productSaleStore.ChangingQuantity(SelectedProductSale.Id, quantity);
+                    SelectedProductSale.Quantity = quantity;
+                }
+            }
+            catch (Exception)
+            {
+                //ignore
+            }
+        }
+
+        /// <summary>
+        /// Выйти из аккаунта
+        /// </summary>
+        [Command]
+        public void Logout()
+        {
+            if (MessageBoxService.ShowMessage("Выйти?", "Sale Page", MessageButton.YesNo, MessageIcon.Question) == MessageResult.Yes)
+            {
+                _authenticator.Logout();
+            }
+        }
+
+        /// <summary>
+        /// Принтерлерди настройкалоо
+        /// </summary>
+        [Command]
+        public void PrinterSettings()
+        {
+            WindowService.Show(nameof(PrinterView), new PrinterViewModel() { Title = "Настройка принтеров" });
+        }
+
+        /// <summary>
+        /// Просмотр отложенных чеков
+        /// </summary>
+        [Command]
+        public void OpenPostponeReceipt()
+        {
+            if (PostponeReceipts.Any() && !ProductSales.Any())
+            {
+                //WindowService.Show(nameof(PostponeReceiptView), new PostponeReceiptViewModel(_productSaleStore) { Title = "Выбор чека" });
+            }
+        }
+
+        /// <summary>
+        /// Удалить выбранный товар из корзины
+        /// </summary>
+        [Command]
+        public void DeleteSelectedRow()
+        {
+            try
+            {
+                if (SelectedProductSale != null)
+                {
+                    ProductSales.Remove(SelectedProductSale);
+                }
+            }
+            catch (Exception)
+            {
+                //ignore
+            }
+        }
+
+        /// <summary>
+        /// Настройки ККМ
+        /// </summary>
+        [Command]
+        public void CRMSettings()
+        {
+            try
+            {
+                ShtrihM.ShowProperties();
+            }
+            catch (Exception)
+            {
+                //ignore
+            }
+        }
+
+        [Command]
+        public void PrintReportWithoutCleaning()
+        {
+            try
+            {
+                _ = ShtrihM.PrintReportWithoutCleaning();
+            }
+            catch (Exception)
+            {
+                //ignore
+            }
+        }
+
+        [Command]
+        public void PrintReportWithCleaning()
+        {
+            try
+            {
+                _ = ShtrihM.PrintReportWithCleaning();
+            }
+            catch (Exception)
+            {
+                //ignore
+            }
+        }
+
+        [Command]
+        public void OpenSession()
+        {
+            try
+            {
+                _ = ShtrihM.OpenSession();
+            }
+            catch (Exception)
+            {
+                //ignore
+            }
+        }
+
+        [Command]
+        public void CancelCheck()
+        {
+            try
+            {
+                _ = ShtrihM.SysAdminCancelCheck();
+            }
+            catch (Exception)
+            {
+                //ignore
+            }
+        }
+
+        [Command]
+        public void SetTime()
+        {
+            try
+            {
+                ShtrihM.SetTime();
+            }
+            catch (Exception)
+            {
+                //ignore
+            }
+        }
+
+        [Command]
+        public void CutCheck()
+        {
+            try
+            {
+                _ = ShtrihM.CutCheck();
+            }
+            catch (Exception)
+            {
+                //ignore
+            }
+        }
+
+        [Command]
+        public void LoadedHomeView(object parameter)
+        {
+            if (parameter is RoutedEventArgs e)
+            {
+                if (e.Source is HomeView homeView)
+                {
+                    homeView.Unloaded += HomeView_Unloaded;
+                    _windowHandle = new WindowInteropHelper(_mainWindow).Handle;
+                    _source = HwndSource.FromHwnd(_windowHandle);
+                    _source.AddHook(HwndHook);
+
+                    RegisterHotKey(_windowHandle, HOTKEY_F5, MOD_NONE, VK_F5); //+
+                    RegisterHotKey(_windowHandle, HOTKEY_F6, MOD_NONE, VK_F6); //+
+                    RegisterHotKey(_windowHandle, HOTKEY_F7, MOD_NONE, VK_F7); //+
+                    RegisterHotKey(_windowHandle, HOTKEY_ALT_F5, MOD_ALT, VK_F5); //+
+                    RegisterHotKey(_windowHandle, HOTKEY_CTRL_F5, MOD_CONTROL, VK_F5); //+
+                    RegisterHotKey(_windowHandle, HOTKEY_CTRL_F, MOD_CONTROL, VK_CTRL_F); //+
+                    RegisterHotKey(_windowHandle, HOTKEY_ESC, MOD_NONE, VK_ESCAPE); //+
+                    RegisterHotKey(_windowHandle, HOTKEY_CTRL_Z, MOD_CONTROL, VK_CTRL_Z); //+
+                    RegisterHotKey(_windowHandle, HOTKEY_DEL, MOD_NONE, VK_DEL); //+
+                }
+            }
+
+            BarcodeOpen();
+        }
+
+        [Command]
+        public void QuantityValidate(object parameter)
+        {
+            if (parameter is GridCellValidationEventArgs e)
+            {
+                if (((Sale)e.Row).QuantityInStock < Convert.ToDouble(e.Value))
+                {
+                    _ = MessageBox.Show("Количество превышает остаток.", "", MessageBoxButton.OK, MessageBoxImage.Information);
+                    e.ErrorContent = "Количество превышает остаток.";
+                    e.IsValid = false;
+                }
+            }
+        }
+
+        [Command]
+        public void ReturnGoods()
+        {
+            WindowService.Show(nameof(RefundView), new RefundViewModel(_receiptService, _shiftStore) { Title = "Возврат товаров" });
+        }
+
+        /// <summary>
+        /// Отменить
+        /// </summary>
+        [Command]
+        public void Cancel()
+        {
+            try
+            {
+                ProductSales.Clear();
+            }
+            catch (Exception)
+            {
+                //ignore
+            }
+        }
+
+        [Command]
+        public void SaleTableViewLoaded(object parameter)
+        {
+            if (parameter is RoutedEventArgs e)
+            {
+                if (e.Source is TableView tableView)
+                {
+                    SaleTableView = tableView;
+                    SaleTableView.ShownEditor += SaleTableView_ShownEditor;
+                    SaleTableView.CellValueChanged += SaleTableView_CellValueChanged;
+                }
+            }
+        }
+
+        [Command]
+        public void DiscountEditValueChanged()
+        {
+            try
+            {
+                if (SelectedProductSale.IsDiscountPercentage)
+                {
+                    SelectedProductSale.DiscountAmount = decimal.Round(SelectedProductSale.SalePrice * (decimal)SelectedProductSale.DiscountPercent, 2, MidpointRounding.AwayFromZero);
+                }
+                else
+                {
+                    SelectedProductSale.DiscountPercent = (double)SelectedProductSale.DiscountAmount / (double)SelectedProductSale.SalePrice;
                 }
             }
             catch (Exception)

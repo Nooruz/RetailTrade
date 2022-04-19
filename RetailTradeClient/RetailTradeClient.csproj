@@ -9,6 +9,7 @@
     <FileVersion>1.0.0.190</FileVersion>
     <BaseOutputPath>C:\Publish</BaseOutputPath>
 	<RuntimeIdentifier>win-x86</RuntimeIdentifier>
+	<ApplicationIcon>logo.ico</ApplicationIcon>
   </PropertyGroup>
 
 	<PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
@@ -35,6 +36,11 @@
     <None Remove="Report\ProductSaleReport.vsrepx" />
     <None Remove="Report\XReport.vsrepx" />
     <None Remove="Report\ZReport.vsrepx" />
+    <None Remove="Resources\Images\logo.png" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Include="logo.ico" />
   </ItemGroup>
 
   <ItemGroup>
@@ -92,6 +98,7 @@
     <Resource Include="Fonts\fa-solid-900.ttf">
       <CopyToOutputDirectory>Never</CopyToOutputDirectory>
     </Resource>
+    <Resource Include="Resources\Images\logo.png" />
   </ItemGroup>
 
   <ItemGroup>

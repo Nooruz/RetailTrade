@@ -74,11 +74,10 @@ namespace RetailTradeClient.HostBuilders
                 services.GetRequiredService<IReceiptService>(),
                 services.GetRequiredService<IAuthenticator>(),
                 services.GetRequiredService<IShiftStore>(),
-                services.GetRequiredService<IProductSaleStore>(),
                 services.GetRequiredService<IBarcodeService>(),
-                services.GetRequiredService<ProductsWithoutBarcodeViewModel>(),
                 services.GetRequiredService<PaymentCashViewModel>(),
                 services.GetRequiredService<PaymentComplexViewModel>(),
+                services.GetRequiredService<ProductViewModel>(),
                 services.GetRequiredService<MainWindow>());
         }
 

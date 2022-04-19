@@ -1,4 +1,5 @@
-﻿using System.ComponentModel;
+﻿using System;
+using System.ComponentModel;
 
 namespace RetailTrade.Domain.Models
 {
@@ -14,10 +15,12 @@ namespace RetailTrade.Domain.Models
         private double _quantityInStock;
         private decimal _amountWithoutDiscount;
         private decimal _discountAmount;
+        private double _discountPercent;
         private decimal _total;
         private string _tnved;
         private string _barcode;
         private string _unitName;
+        private bool _isDiscountPercentage = true;
 
         #endregion
 
@@ -138,8 +141,33 @@ namespace RetailTrade.Domain.Models
             set
             {
                 _discountAmount = value;
-                Total -= _discountAmount;
                 OnPropertyChanged(nameof(DiscountAmount));
+            }
+        }
+
+        /// <summary>
+        /// Сумма скидки
+        /// </summary>
+        public double DiscountPercent
+        {
+            get => _discountPercent;
+            set
+            {
+                _discountPercent = value;
+                OnPropertyChanged(nameof(DiscountPercent));
+            }
+        }
+
+        /// <summary>
+        /// Процент скидки
+        /// </summary>
+        public bool IsDiscountPercentage
+        {
+            get => _isDiscountPercentage;
+            set
+            {
+                _isDiscountPercentage = value;
+                OnPropertyChanged(nameof(IsDiscountPercentage));
             }
         }
 
