@@ -135,6 +135,7 @@ namespace RetailTradeClient.ViewModels
             {
                 _selectedProductSale = value;
                 OnPropertyChanged(nameof(SelectedProductSale));
+                OnPropertyChanged(nameof(MaximumDiscount));
             }
         }
         public int FocusedRowHandle => ProductSales.Count - 1;
@@ -159,6 +160,8 @@ namespace RetailTradeClient.ViewModels
                 OnPropertyChanged(nameof(CashlessPaySum));
             }
         }
+        public double MaximumPercentage => Settings.Default.MaximumPercentage;
+        public decimal MaximumDiscount => GetMaximumDiscount();
 
         #endregion
 
@@ -440,6 +443,19 @@ namespace RetailTradeClient.ViewModels
         private void CashPayTextEdit_EditValueChanged(object sender, EditValueChangedEventArgs e)
         {
             Change = CashPaySum - Total;
+        }
+
+        private decimal GetMaximumDiscount()
+        {
+            try
+            {
+                return (decimal)MaximumPercentage * SelectedProductSale.SalePrice;
+            }
+            catch (Exception)
+            {
+                //ignore
+            }
+            return 0;
         }
 
         #endregion
@@ -803,6 +819,18 @@ namespace RetailTradeClient.ViewModels
             catch (Exception)
             {
                 //ignore
+            }
+        }
+
+        [Command]
+        public void DiscountValidate(object sender)
+        {
+            if (sender is ValidationEventArgs e)
+            {
+                if (!e.IsValid)
+                {
+
+                }
             }
         }
 

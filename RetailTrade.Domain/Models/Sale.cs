@@ -95,15 +95,7 @@ namespace RetailTrade.Domain.Models
         /// <summary>
         /// Итого
         /// </summary>
-        public decimal Total
-        {
-            get => _total;
-            set
-            {
-                _total = value;
-                OnPropertyChanged(nameof(Total));
-            }
-        }
+        public decimal Total => AmountWithoutDiscount - DiscountAmount;
 
         /// <summary>
         /// Количество на складе
@@ -127,8 +119,8 @@ namespace RetailTrade.Domain.Models
             set
             {
                 _amountWithoutDiscount = value;
-                Total = _amountWithoutDiscount;
                 OnPropertyChanged(nameof(AmountWithoutDiscount));
+                OnPropertyChanged(nameof(Total));
             }
         }
 
@@ -142,6 +134,7 @@ namespace RetailTrade.Domain.Models
             {
                 _discountAmount = value;
                 OnPropertyChanged(nameof(DiscountAmount));
+                OnPropertyChanged(nameof(Total));
             }
         }
 

@@ -134,18 +134,19 @@
                                                   FontSize="18"
                                                   MinWidth="120"
                                                   SelectAllOnMouseUp="True"
-                                                  UnitName="{Binding SelectedProductSale.IsDiscountPercentage, Converter={StaticResource PercentageOrSomConverter}}"
-                                                  MaxValue="{Binding MaximumPercentage}">
+                                                  UnitName="{Binding SelectedProductSale.IsDiscountPercentage, Converter={StaticResource PercentageOrSomConverter}}">
                                 <customs:UnitSpinEdit.Style>
                                     <Style TargetType="{x:Type customs:UnitSpinEdit}" BasedOn="{StaticResource Unit}">
                                         <Setter Property="EditValueType" Value="{x:Type sys:Double}"/>
                                         <Setter Property="Mask" Value="p"/>
                                         <Setter Property="EditValue" Value="{Binding SelectedProductSale.DiscountPercent, UpdateSourceTrigger=PropertyChanged}"/>
+                                        <Setter Property="MaxValue" Value="{Binding MaximumPercentage}"/>
                                         <Style.Triggers>
                                             <DataTrigger Binding="{Binding SelectedProductSale.IsDiscountPercentage}" Value="False">
                                                 <Setter Property="EditValueType" Value="{x:Type sys:Decimal}"/>
                                                 <Setter Property="Mask" Value="n"/>
                                                 <Setter Property="EditValue" Value="{Binding SelectedProductSale.DiscountAmount, UpdateSourceTrigger=PropertyChanged}"/>
+                                                <Setter Property="MaxValue" Value="{Binding MaximumDiscount}"/>
                                             </DataTrigger>
                                         </Style.Triggers>
                                     </Style>
@@ -153,6 +154,9 @@
                                 <dxmvvm:Interaction.Behaviors>
                                     <dxmvvm:EventToCommand EventName="EditValueChanged"
                                                            Command="{Binding DiscountEditValueChangedCommand}"/>
+                                    <dxmvvm:EventToCommand EventName="Validate"
+                                                           Command="{Binding DiscountValidateCommand}"
+                                                           PassEventArgsToCommand="True"/>
                                 </dxmvvm:Interaction.Behaviors>
                             </customs:UnitSpinEdit>
                         </dxlc:LayoutItem>
@@ -237,31 +241,36 @@
                     <dxg:GridColumn Header="Скидка"
                                     AllowColumnFiltering="False"
                                     AllowEditing="False">
-                        <dxg:GridColumn.EditSettings>
-                            <dxe:SpinEditSettings MaskUseAsDisplayFormat="True"
-                                                  MinValue="0">
-                                <dxe:SpinEditSettings.Style>
-                                    <Style TargetType="{x:Type dxe:SpinEditSettings}">
-                                        <Setter Property="Mask" Value="p"/>
-                                        <Style.Triggers>
-                                            <DataTrigger Binding="{Binding RowData.Row.IsDiscountPercentage}" Value="False">
-                                                <Setter Property="Mask" Value="n"/>
-                                            </DataTrigger>
-                                        </Style.Triggers>
-                                    </Style>
-                                </dxe:SpinEditSettings.Style>
-                            </dxe:SpinEditSettings>
-                        </dxg:GridColumn.EditSettings>
-                        <dxg:GridColumn.Style>
-                            <Style TargetType="{x:Type dxg:GridColumn}">
-                                <Setter Property="FieldName" Value="DiscountAmount"/>
-                                <Style.Triggers>
-                                    <DataTrigger Binding="{Binding Path=RowData.Row.IsDiscountPercentage}" Value="True">
-                                        <Setter Property="FieldName" Value="DiscountPercent"/>
-                                    </DataTrigger>
-                                </Style.Triggers>
-                            </Style>
-                        </dxg:GridColumn.Style>
+                        <dxg:GridColumn.CellDisplayTemplate>
+                            <DataTemplate>
+                                <customs:UnitSpinEdit MaskUseAsDisplayFormat="True"
+                                                      ShowEditorButtons="False"
+                                                      BorderThickness="0"
+                                                      UnitName="{Binding RowData.Row.IsDiscountPercentage, Converter={StaticResource PercentageOrSomConverter}}">
+                                    <customs:UnitSpinEdit.Style>
+                                        <Style TargetType="{x:Type customs:UnitSpinEdit}" BasedOn="{StaticResource Unit}">
+                                            <Setter Property="EditValueType" Value="{x:Type sys:Double}"/>
+                                            <Setter Property="Mask" Value="p"/>
+                                            <Setter Property="EditValue" Value="{Binding RowData.Row.DiscountPercent}"/>
+                                            <Setter Property="BorderTemplate">
+                                                <Setter.Value>
+                                                    <ControlTemplate TargetType="{x:Type ContentControl}">
+                                                        <ContentPresenter/>
+                                                    </ControlTemplate>
+                                                </Setter.Value>
+                                            </Setter>
+                                            <Style.Triggers>
+                                                <DataTrigger Binding="{Binding RowData.Row.IsDiscountPercentage}" Value="False">
+                                                    <Setter Property="EditValueType" Value="{x:Type sys:Decimal}"/>
+                                                    <Setter Property="Mask" Value="n"/>
+                                                    <Setter Property="EditValue" Value="{Binding RowData.Row.DiscountAmount}"/>
+                                                </DataTrigger>
+                                            </Style.Triggers>
+                                        </Style>
+                                    </customs:UnitSpinEdit.Style>
+                                </customs:UnitSpinEdit>
+                            </DataTemplate>
+                        </dxg:GridColumn.CellDisplayTemplate>
                     </dxg:GridColumn>
                     <dxg:GridColumn Header="Сумма" 
                                     FieldName="Total"
