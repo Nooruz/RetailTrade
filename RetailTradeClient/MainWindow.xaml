@@ -7,14 +7,7 @@
     WindowState="Maximized"
     Height="450" 
     Width="800">
-
-    <dxc:DXWindow.InputBindings>
-
-        <KeyBinding Command="{Binding LogoutCommand}"
-                    Key="Escape"/>
-
-    </dxc:DXWindow.InputBindings>
-
+    
     <ContentControl Content="{Binding CurrentViewModel, UpdateSourceTrigger=PropertyChanged}"/>
 
 </dxc:DXWindow>

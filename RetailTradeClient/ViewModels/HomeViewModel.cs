@@ -7,6 +7,7 @@ using RetailTrade.CashRegisterMachine;
 using RetailTrade.Domain.Models;
 using RetailTrade.Domain.Services;
 using RetailTradeClient.Commands;
+using RetailTradeClient.Customs;
 using RetailTradeClient.Properties;
 using RetailTradeClient.State.Authenticators;
 using RetailTradeClient.State.ProductSales;
@@ -307,7 +308,7 @@ namespace RetailTradeClient.ViewModels
             }
             if (e.OldItems != null)
             {
-                foreach (var item in e.NewItems)
+                foreach (var item in e.OldItems)
                 {
                     if (item is Sale sale)
                     {
@@ -656,32 +657,6 @@ namespace RetailTradeClient.ViewModels
         }
 
         [Command]
-        public void ReducedQuantity()
-        {
-            try
-            {
-                _productSaleStore.ReducedQuantity(SelectedProductSale.Id);
-            }
-            catch (Exception)
-            {
-                //ignore
-            }
-        }
-
-        [Command]
-        public void IncreaseQuantity()
-        {
-            try
-            {
-                _productSaleStore.IncreaseQuantity(SelectedProductSale.Id);
-            }
-            catch (Exception)
-            {
-                //ignore
-            }
-        }
-
-        [Command]
         public void CashPayLoaded(object sender)
         {
             try
@@ -761,6 +736,25 @@ namespace RetailTradeClient.ViewModels
         public void PunchReceipt()
         {
 
+        }
+
+        [Command]
+        public void EditValueChanged(object sender)
+        {
+            try
+            {
+                if (sender is EditValueChangedEventArgs e)
+                {
+                    if (e.Source is UnitSpinEdit spinEdit)
+                    {
+                        _productSaleStore.ChangingQuantity(SelectedProductSale.Id, Convert.ToDouble(spinEdit.Text));
+                    }
+                }
+            }
+            catch (Exception)
+            {
+                //ignore
+            }
         }
 
         #endregion

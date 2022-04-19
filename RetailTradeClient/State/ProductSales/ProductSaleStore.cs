@@ -28,6 +28,7 @@ namespace RetailTradeClient.State.ProductSales
         private readonly IBarcodeService _barcodeService;
         private readonly ICashRegisterMachineService _cashRegisterMachineService;
         private readonly IShiftStore _shiftStore;
+        private readonly IDataService<Unit> _unitService;
         private readonly ProductViewModel _productViewModel;
         private ObservableCollection<Sale> _sales = new();
         private ObservableCollection<PostponeReceipt> _postponeReceipts = new();
@@ -96,6 +97,7 @@ namespace RetailTradeClient.State.ProductSales
                 OnPropertyChanged(nameof(PaymentTypes));
             }
         }
+        public IEnumerable<Unit> Units { get; set; }
 
         #endregion
 
@@ -105,6 +107,7 @@ namespace RetailTradeClient.State.ProductSales
             IReportService reportService,
             IReceiptService receiptService,
             IShiftStore shiftStore,
+            IDataService<Unit> unitService,
             IBarcodeService barcodeService,
             ICashRegisterMachineService cashRegisterMachineService,
             ProductViewModel productViewModel)
@@ -116,9 +119,12 @@ namespace RetailTradeClient.State.ProductSales
             _barcodeService = barcodeService;
             _cashRegisterMachineService = cashRegisterMachineService;
             _productViewModel = productViewModel;
+            _unitService = unitService;
 
             _barcodeService.OnBarcodeEvent += BarcodeService_OnBarcodeEvent;
             _productViewModel.OnProductsSelected += ProductViewModel_OnProductsSelected;
+
+            Loaded();
         }
 
         #endregion
@@ -216,36 +222,14 @@ namespace RetailTradeClient.State.ProductSales
             OnProductSalesChanged?.Invoke();
         }
 
-        public void ReducedQuantity(int id)
+        public void ChangingQuantity(int id, double quantity)
         {
             Sale sale = Sales.FirstOrDefault(s => s.Id == id);
             if (sale != null)
             {
-                if (sale.Quantity > 1)
-                {
-                    sale.Quantity--;
-                }
+                sale.Quantity = quantity;
             }
             OnProductSalesChanged?.Invoke();
-        }
-
-        public void IncreaseQuantity(int id)
-        {
-            Sale sale = Sales.FirstOrDefault(s => s.Id == id);
-            if (sale != null)
-            {
-                if (Settings.Default.IsKeepRecords)
-                {
-                    if (sale.Quantity < sale.QuantityInStock)
-                    {
-                        sale.Quantity++;
-                    }
-                }
-                else
-                {
-                    sale.Quantity++;
-                }
-            }
         }
 
         public void CreatePostponeReceipt()
@@ -279,11 +263,11 @@ namespace RetailTradeClient.State.ProductSales
 
         #region Private Voids
 
-        private void ProductViewModel_OnProductsSelected(IEnumerable<Product> products)
+        private async void ProductViewModel_OnProductsSelected(IEnumerable<Product> products)
         {
             try
             {
-                products.ToList().ForEach(p =>
+                products.ToList().ForEach(async p =>
                 {
                     if (Sales.Any())
                     {
@@ -308,12 +292,12 @@ namespace RetailTradeClient.State.ProductSales
                         }
                         else
                         {
-                            AddProductToCart(p);
+                            AddProductToCart(await GetProduct(p.Id));
                         }
                     }
                     else
                     {
-                        AddProductToCart(p);
+                        AddProductToCart(await GetProduct(p.Id));
                     }                    
                 });
                 OnProductSalesChanged?.Invoke();
@@ -334,11 +318,11 @@ namespace RetailTradeClient.State.ProductSales
         {
             if (IsKeepRecords)
             {
-                return await _productService.Predicate(p => p.Barcode == barcode && p.DeleteMark == false && p.Quantity > 0, p => new Product { Id = p.Id, Name = p.Name, Quantity = p.Quantity, SalePrice = p.SalePrice, ArrivalPrice = p.ArrivalPrice, TNVED = p.TNVED, Barcode = p.Barcode });
+                return await _productService.Predicate(p => p.Barcode == barcode && p.DeleteMark == false && p.Quantity > 0, p => new Product { Id = p.Id, Name = p.Name, Quantity = p.Quantity, SalePrice = p.SalePrice, ArrivalPrice = p.ArrivalPrice, TNVED = p.TNVED, Barcode = p.Barcode, UnitId = p.UnitId });
             }
             else
             {
-                return await _productService.Predicate(p => p.Barcode == barcode && p.DeleteMark == false, p => new Product { Id = p.Id, Name = p.Name, SalePrice = p.SalePrice, ArrivalPrice = p.ArrivalPrice, TNVED = p.TNVED, Barcode = p.Barcode });
+                return await _productService.Predicate(p => p.Barcode == barcode && p.DeleteMark == false, p => new Product { Id = p.Id, Name = p.Name, SalePrice = p.SalePrice, ArrivalPrice = p.ArrivalPrice, TNVED = p.TNVED, Barcode = p.Barcode, UnitId = p.UnitId });
             }
         }
 
@@ -346,11 +330,11 @@ namespace RetailTradeClient.State.ProductSales
         {
             if (IsKeepRecords)
             {
-                return await _productService.Predicate(p => p.Id == id && p.DeleteMark == false && p.Quantity > 0, p => new Product { Id = p.Id, Name = p.Name, Quantity = p.Quantity, SalePrice = p.SalePrice, ArrivalPrice = p.ArrivalPrice, TNVED = p.TNVED, Barcode = p.Barcode });
+                return await _productService.Predicate(p => p.Id == id && p.DeleteMark == false && p.Quantity > 0, p => new Product { Id = p.Id, Name = p.Name, Quantity = p.Quantity, SalePrice = p.SalePrice, ArrivalPrice = p.ArrivalPrice, TNVED = p.TNVED, Barcode = p.Barcode, UnitId = p.UnitId });
             }
             else
             {
-                return await _productService.Predicate(p => p.Id == id && p.DeleteMark == false, p => new Product { Id = p.Id, Name = p.Name, SalePrice = p.SalePrice, ArrivalPrice = p.ArrivalPrice, TNVED = p.TNVED, Barcode = p.Barcode });
+                return await _productService.Predicate(p => p.Id == id && p.DeleteMark == false, p => new Product { Id = p.Id, Name = p.Name, SalePrice = p.SalePrice, ArrivalPrice = p.ArrivalPrice, TNVED = p.TNVED, Barcode = p.Barcode, UnitId = p.UnitId });
             }
         }
 
@@ -360,6 +344,7 @@ namespace RetailTradeClient.State.ProductSales
             {
                 try
                 {
+                    Unit unit = Units.FirstOrDefault(u => u.Id == product.UnitId);
                     Sales.Add(new Sale
                     {
                         Id = product.Id,
@@ -369,7 +354,8 @@ namespace RetailTradeClient.State.ProductSales
                         QuantityInStock = IsKeepRecords ? product.Quantity : 0,
                         TNVED = product.TNVED,
                         Quantity = 1,
-                        Barcode = product.Barcode
+                        Barcode = product.Barcode,
+                        UnitName = unit != null ? unit.ShortName : string.Empty
                     });
                     OnCreated?.Invoke(Sales.FirstOrDefault(s => s.Id == product.Id));
                 }
@@ -383,6 +369,11 @@ namespace RetailTradeClient.State.ProductSales
         public ProductViewModel SearchProduct()
         {
             return _productViewModel;
+        }
+
+        private async void Loaded()
+        {
+            Units = await _unitService.GetAllAsync();
         }
 
         #endregion

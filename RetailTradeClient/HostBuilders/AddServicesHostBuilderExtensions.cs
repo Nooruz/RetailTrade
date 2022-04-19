@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNet.Identity;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using RetailTrade.Domain.Models;
 using RetailTrade.Domain.Services;
 using RetailTrade.Domain.Services.AuthenticationServices;
 using RetailTrade.EntityFramework.Services;
@@ -24,6 +25,7 @@ namespace RetailTradeClient.HostBuilders
                 _ = services.AddSingleton<IRefundService, RefundService>();
                 _ = services.AddSingleton<IReceiptService, ReceiptService>();
                 _ = services.AddSingleton<ITypeProductService, TypeProductService>();
+                _ = services.AddSingleton<IDataService<Unit>, GenericService<Unit>>();
             });
         }
     }

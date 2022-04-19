@@ -8,7 +8,7 @@ namespace RetailTradeClient.Customs
         #region Dependency Properties
 
         public static readonly DependencyProperty UnitNameProperty =
-            DependencyProperty.Register(nameof(UnitName), typeof(string), typeof(UnitTextEdit), new PropertyMetadata(string.Empty));
+            DependencyProperty.Register(nameof(UnitName), typeof(string), typeof(UnitSpinEdit), new PropertyMetadata(string.Empty));
 
         #endregion
 

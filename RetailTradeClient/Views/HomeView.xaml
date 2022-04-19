@@ -98,19 +98,23 @@
                                   Mask="n"/>
 
                     <dxlc:LayoutGroup HorizontalAlignment="Left">
-                        <Button Style="{StaticResource IconicButton}"
-                                Content="{StaticResource faMinus}"
-                                Command="{Binding ReducedQuantityCommand}"/>
-                        <dxe:SpinEdit MaskUseAsDisplayFormat="True" 
-                                      Mask="n"
-                                      FontSize="18"
-                                      MinWidth="120"
-                                      MinValue="0"
-                                      EditValue="{Binding SelectedProductSale.Quantity}"
-                                      ShowEditorButtons="False"/>
-                        <Button Style="{StaticResource IconicButton}"
-                                Content="{StaticResource faPlus}"
-                                Command="{Binding IncreaseQuantityCommand}"/>
+                        <customs:UnitSpinEdit MaskUseAsDisplayFormat="True"
+                                              Style="{StaticResource Unit}"
+                                              Mask="n"
+                                              SelectAllOnMouseUp="True"
+                                              FontSize="18"
+                                              EditValue="{Binding SelectedProductSale.Quantity}"
+                                              UnitName="{Binding SelectedProductSale.UnitName}"
+                                              MinWidth="150"
+                                              MinValue="0"
+                                              MaxValue="{Binding SelectedProductSale.QuantityInStock}"
+                                              Text="500">
+                            <dxmvvm:Interaction.Behaviors>
+                                <dxmvvm:EventToCommand EventName="EditValueChanged"
+                                                       Command="{Binding EditValueChangedCommand}"
+                                                       PassEventArgsToCommand="True"/>
+                            </dxmvvm:Interaction.Behaviors>
+                        </customs:UnitSpinEdit>
                     </dxlc:LayoutGroup>
 
                     <dxlc:LayoutGroup>
@@ -134,8 +138,6 @@
                         <Button Command="{Binding DiscountTypeCommand}"
                                 Style="{StaticResource TwoContent}"/>
                     </dxlc:LayoutGroup>
-
-                    <customs:UnitSpinEdit/>
 
                 </dxlc:LayoutGroup>
 

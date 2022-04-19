@@ -17,6 +17,7 @@ namespace RetailTrade.Domain.Models
         private decimal _total;
         private string _tnved;
         private string _barcode;
+        private string _unitName;
 
         #endregion
 
@@ -162,6 +163,16 @@ namespace RetailTrade.Domain.Models
             {
                 _barcode = value;
                 OnPropertyChanged(nameof(Barcode));
+            }
+        }
+
+        public string UnitName
+        {
+            get => _unitName;
+            set
+            {
+                _unitName = value;
+                OnPropertyChanged(nameof(UnitName));
             }
         }
 

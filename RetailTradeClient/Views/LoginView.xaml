@@ -5,6 +5,7 @@
                  xmlns:dxmvvm="http://schemas.devexpress.com/winfx/2008/xaml/mvvm"
                  xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
                  xmlns:local="clr-namespace:RetailTradeClient.Views.Dialogs"
+                 xmlns:customs="clr-namespace:RetailTradeClient.Customs"
                  xmlns:components="clr-namespace:RetailTradeClient.Components"
                  Width="450"
                  HorizontalAlignment="Center"

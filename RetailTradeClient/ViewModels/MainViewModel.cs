@@ -1,9 +1,11 @@
-﻿using RetailTrade.Domain.Services;
+﻿using DevExpress.Mvvm.DataAnnotations;
+using RetailTrade.Domain.Services;
 using RetailTradeClient.Commands;
 using RetailTradeClient.State.Navigators;
 using RetailTradeClient.State.Users;
 using RetailTradeClient.ViewModels.Base;
 using RetailTradeClient.ViewModels.Factories;
+using System.Windows;
 using System.Windows.Input;
 
 namespace RetailTradeClient.ViewModels

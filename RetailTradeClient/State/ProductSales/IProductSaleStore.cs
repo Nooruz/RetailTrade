@@ -24,8 +24,7 @@ namespace RetailTradeClient.State.ProductSales
         Task AddProduct(string barcode);
         Task AddProduct(int id);
         void DeleteProduct(int id);
-        void ReducedQuantity(int id);
-        void IncreaseQuantity(int id);
+        void ChangingQuantity(int id, double quantity);
         Task CashPayment();
         Task CashlessPayment();
         /// <summary>
