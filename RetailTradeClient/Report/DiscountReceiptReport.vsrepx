@@ -38,7 +38,7 @@
                 </Item5>
                 <Item6 Ref="17" ControlType="XRTableCell" Name="tableCell12" Weight="0.80490104452844846" Multiline="true" Text="tableCell12">
                   <ExpressionBindings>
-                    <Item1 Ref="18" EventName="BeforePrint" PropertyName="Text" Expression="[DiscountAmount]" />
+                    <Item1 Ref="18" EventName="BeforePrint" PropertyName="Text" Expression="Round([DiscountAmount], 2)" />
                   </ExpressionBindings>
                 </Item6>
               </Cells>
