@@ -16,11 +16,10 @@ namespace RetailTrade.Domain.Models
         private decimal _amountWithoutDiscount;
         private decimal _discountAmount;
         private double _discountPercent;
-        private decimal _total;
         private string _tnved;
         private string _barcode;
         private string _unitName;
-        private bool _isDiscountPercentage = true;
+        private bool _isDiscountPercentage;
 
         #endregion
 

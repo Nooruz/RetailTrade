@@ -680,6 +680,11 @@ namespace RetailTradeClient.ViewModels
                 if (double.TryParse(value.ToString(), out double quantity))
                 {
                     SelectedProductSale.Quantity = quantity;
+                    if (SelectedProductSale.DiscountAmount > 0)
+                    {
+                        decimal dsd = SelectedProductSale.DiscountAmount * (decimal)quantity;
+                        SelectedProductSale.DiscountAmount = dsd;
+                    }
                 }
             }
             catch (Exception)
@@ -918,11 +923,11 @@ namespace RetailTradeClient.ViewModels
             {
                 if (SelectedProductSale.IsDiscountPercentage)
                 {
-                    SelectedProductSale.DiscountAmount = decimal.Round(SelectedProductSale.SalePrice * (decimal)SelectedProductSale.DiscountPercent, 2, MidpointRounding.AwayFromZero);
+                    SelectedProductSale.DiscountAmount = decimal.Round(SelectedProductSale.AmountWithoutDiscount * (decimal)SelectedProductSale.DiscountPercent, 2, MidpointRounding.AwayFromZero);
                 }
                 else
                 {
-                    SelectedProductSale.DiscountPercent = (double)SelectedProductSale.DiscountAmount / (double)SelectedProductSale.SalePrice;
+                    SelectedProductSale.DiscountPercent = (double)SelectedProductSale.DiscountAmount / (double)SelectedProductSale.AmountWithoutDiscount;
                 }
             }
             catch (Exception)
