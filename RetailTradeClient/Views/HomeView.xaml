@@ -41,7 +41,7 @@
             <Button Content="Отложить чек (Alt + F5)"
                     Style="{StaticResource ButtonWithIcon}"
                     Tag="{StaticResource faUserClock}"
-                    Command="{Binding PostponeReceiptCommand}"/>
+                    Command="{Binding CreatePostponeReceiptCommand}"/>
 
             <Button Content="Отлож.ые чеки (Ctrl + F5)"
                     Style="{StaticResource ButtonWithIcon}"

@@ -1,6 +1,5 @@
 ﻿using RetailTrade.Domain.Models;
 using RetailTradeClient.Commands;
-using RetailTradeClient.State.ProductSales;
 using System;
 using System.Collections.ObjectModel;
 using System.Windows.Input;
@@ -11,14 +10,13 @@ namespace RetailTradeClient.ViewModels.Dialogs
     {
         #region Private Members
 
-        private readonly IProductSaleStore _productSaleStore;
         private PostponeReceipt _selectedPostponeReceipt;
 
         #endregion
 
         #region Public Properties
 
-        public ObservableCollection<PostponeReceipt> PostponeReceipts => _productSaleStore.PostponeReceipts;
+        public ObservableCollection<PostponeReceipt> PostponeReceipts { get; set; }
         public PostponeReceipt SelectedPostponeReceipt
         {
             get => _selectedPostponeReceipt;
@@ -31,6 +29,8 @@ namespace RetailTradeClient.ViewModels.Dialogs
 
         #endregion
 
+        public event Action<PostponeReceipt> OnResume;
+
         #region Commands
 
         public ICommand ResumeReceiptCommand => new RelayCommand(ResumeReceipt);
@@ -40,9 +40,9 @@ namespace RetailTradeClient.ViewModels.Dialogs
 
         #region Constructor
 
-        public PostponeReceiptViewModel(IProductSaleStore productSaleStore)
+        public PostponeReceiptViewModel()
         {
-            _productSaleStore = productSaleStore;
+
         }
 
         #endregion
@@ -55,8 +55,9 @@ namespace RetailTradeClient.ViewModels.Dialogs
             {
                 try
                 {
-                    _productSaleStore.ResumeReceipt(SelectedPostponeReceipt.Id);
+                    OnResume?.Invoke(SelectedPostponeReceipt);
                     CurrentWindowService.Close();
+                    PostponeReceipts.Remove(SelectedPostponeReceipt);
                 }
                 catch (Exception)
                 {

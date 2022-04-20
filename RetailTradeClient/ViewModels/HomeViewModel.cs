@@ -46,6 +46,7 @@ namespace RetailTradeClient.ViewModels
         private readonly IProductService _productService;
         private readonly PaymentCashViewModel _paymentCashViewModel;
         private readonly PaymentComplexViewModel _paymentComplexViewModel;
+        private readonly PostponeReceiptViewModel _postponeReceiptViewModel;
         private readonly ProductViewModel _productViewModel;
         private readonly MainWindow _mainWindow;
         private ObservableCollection<Sale> _productSales = new();
@@ -167,7 +168,7 @@ namespace RetailTradeClient.ViewModels
         public double MaximumPercentage => Settings.Default.MaximumPercentage;
         public decimal MaximumDiscount => GetMaximumDiscount();
         public bool IsSelectedProductSale => SelectedProductSale != null;
-        public string UserName => GetUserName();
+        public string UserName => GetUserName();        
 
         #endregion
 
@@ -210,16 +211,34 @@ namespace RetailTradeClient.ViewModels
             _mainWindow = mainWindow;
             _productService = productService;
             _reportService = reportService;
+            _postponeReceiptViewModel = new() { Title = "Выбор чека" };
 
             BindingOperations.EnableCollectionSynchronization(ProductSales, _syncLock);
 
             SaleProductsCollectionView.CollectionChanged += SaleProductsCollectionView_CollectionChanged;
             _productViewModel.OnProductsSelected += ProductViewModel_OnProductsSelected;
+            _postponeReceiptViewModel.OnResume += PostponeReceiptViewModel_OnResume;
         }
 
         #endregion
 
         #region Private Voids
+
+        private void PostponeReceiptViewModel_OnResume(PostponeReceipt postponeReceipt)
+        {
+            try
+            {
+                ProductSales.Clear();
+                postponeReceipt.Sales.ForEach(sale =>
+                {
+                    AddProductSale(sale);
+                });
+            }
+            catch (Exception)
+            {
+                //ignore
+            }
+        }
 
         private string GetUserName()
         {
@@ -480,7 +499,7 @@ namespace RetailTradeClient.ViewModels
                             case HOTKEY_ALT_F5:
                                 if (vkey == VK_F5)
                                 {
-                                    //_productSaleStore.CreatePostponeReceipt();
+                                    CreatePostponeReceipt();
                                 }
                                 handled = true;
                                 break;
@@ -546,6 +565,28 @@ namespace RetailTradeClient.ViewModels
         #endregion
 
         #region Public Voids
+
+        [Command]
+        public void CreatePostponeReceipt()
+        {
+            try
+            {
+                PostponeReceipts.Add(new PostponeReceipt
+                {
+                    Id = Guid.NewGuid(),
+                    DateTime = DateTime.Now,
+                    Total = ProductSales.Sum(sp => sp.Total),
+                    Sales = ProductSales.ToList()
+                });
+                ProductSales.Clear();
+                CashlessPaySum = 0;
+                CashPaySum = 0;
+            }
+            catch (Exception)
+            {
+                //ignore
+            }
+        }
 
         [Command]
         public void Search()
@@ -731,7 +772,8 @@ namespace RetailTradeClient.ViewModels
         {
             if (PostponeReceipts.Any() && !ProductSales.Any())
             {
-                //WindowService.Show(nameof(PostponeReceiptView), new PostponeReceiptViewModel(_productSaleStore) { Title = "Выбор чека" });
+                _postponeReceiptViewModel.PostponeReceipts = PostponeReceipts;
+                WindowService.Show(nameof(PostponeReceiptView), _postponeReceiptViewModel);
             }
         }
 
