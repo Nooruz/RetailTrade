@@ -247,6 +247,7 @@
                             <DataTemplate>
                                 <customs:UnitSpinEdit MaskUseAsDisplayFormat="True"
                                                       ShowEditorButtons="False"
+                                                      IsReadOnly="True"
                                                       BorderThickness="0"
                                                       UnitName="{Binding RowData.Row.IsDiscountPercentage, Converter={StaticResource PercentageOrSomConverter}}">
                                     <customs:UnitSpinEdit.Style>
@@ -342,15 +343,13 @@
                                   EditValueType="{x:Type sys:Decimal}"
                                   EditValue="{Binding CashPaySum, UpdateSourceTrigger=PropertyChanged}" 
                                   MaskUseAsDisplayFormat="True"
-                                  MaskType="Numeric" 
+                                  MaskType="Numeric"
                                   Mask="n"
                                   SelectAllOnMouseUp="True">
                         <dxmvvm:Interaction.Behaviors>
                             <dxmvvm:EventToCommand EventName="Loaded"
                                                    Command="{Binding CashPayLoadedCommand}"
                                                    PassEventArgsToCommand="True"/>
-                            <dxmvvm:EventToCommand EventName="MouseEnter"
-                                                   Command="{Binding CashPayCommand}"/>
                         </dxmvvm:Interaction.Behaviors>
                     </dxe:TextEdit>
                 </dxlc:LayoutGroup>
@@ -370,8 +369,6 @@
                             <dxmvvm:EventToCommand EventName="Loaded"
                                                    Command="{Binding CashlessPayLoadedCommand}"
                                                    PassEventArgsToCommand="True"/>
-                            <dxmvvm:EventToCommand EventName="MouseEnter"
-                                                   Command="{Binding CashlessPayCommand}"/>
                         </dxmvvm:Interaction.Behaviors>
                     </dxe:TextEdit>
                 </dxlc:LayoutGroup>

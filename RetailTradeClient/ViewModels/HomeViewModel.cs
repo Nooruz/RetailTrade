@@ -167,6 +167,7 @@ namespace RetailTradeClient.ViewModels
         public double MaximumPercentage => Settings.Default.MaximumPercentage;
         public decimal MaximumDiscount => GetMaximumDiscount();
         public bool IsSelectedProductSale => SelectedProductSale != null;
+        public string UserName => GetUserName();
 
         #endregion
 
@@ -219,6 +220,19 @@ namespace RetailTradeClient.ViewModels
         #endregion
 
         #region Private Voids
+
+        private string GetUserName()
+        {
+            try
+            {
+                return _userStore.CurrentUser.FullName;
+            }
+            catch (Exception)
+            {
+                //ignore
+            }
+            return string.Empty;
+        }
 
         private void ProductViewModel_OnProductsSelected(IEnumerable<Product> products)
         {
