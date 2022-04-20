@@ -395,9 +395,7 @@ namespace RetailTradeClient.State.ProductSales
 
                 Receipt receipt = await _receiptService.CreateAsync(new Receipt()
                 {
-                    DateOfPurchase = DateTime.Now,
-                    Sum = ToBePaid,
-                    Deposited = Entered,
+                    DateOfPurchase = DateTime.Now,                    
                     PaidInCash = ToBePaid,
                     ShiftId = _shiftStore.CurrentShift.Id,
                     Change = Change,

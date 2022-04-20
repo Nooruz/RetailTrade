@@ -9,5 +9,6 @@ namespace RetailTradeClient.State.Reports
     {
         Task<XReport> CreateXReport();
         Task<ProductSaleReport> CreateProductSaleReport(Receipt receipt, IEnumerable<Sale> sales);
+        Task<DiscountReceiptReport> CreateDiscountReceiptReport(Receipt receipt, IEnumerable<Sale> sales);
     }
 }

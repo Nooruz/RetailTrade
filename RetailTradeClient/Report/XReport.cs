@@ -32,8 +32,8 @@ namespace RetailTradeClient.Report
             lbCashSum.Text = $"{receipts?.Sum(r => r.PaidInCash)} сом";
             lbCashlessSum.Text = $"{receipts?.Sum(r => r.PaidInCashless)} сом";
             lbReceiptCount.Text = $"#{receipts?.Count:00000}";
-            lbCashOnHand.Text = $"{receipts?.Sum(r => r.Sum)} сом";
-            lbShiftTotal.Text = $"{receipts?.Sum(r => r.Sum)} сом";
+            //lbCashOnHand.Text = $"{receipts?.Sum(r => r.Sum)} сом";
+            //lbShiftTotal.Text = $"{receipts?.Sum(r => r.Sum)} сом";
         }
     }
 }

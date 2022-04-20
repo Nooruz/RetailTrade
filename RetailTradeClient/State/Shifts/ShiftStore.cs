@@ -17,7 +17,6 @@ namespace RetailTradeClient.State.Shifts
         private readonly IShiftService _shiftService;
         private readonly IReceiptService _receiptService;
         private readonly IUserStore _userStore;
-        private readonly ICashRegisterMachineService _cashRegisterMachineService;
         private bool _isShiftOpen;
         private Shift _currentShift;
 
@@ -31,13 +30,11 @@ namespace RetailTradeClient.State.Shifts
 
         public ShiftStore(IShiftService shiftService,
             IReceiptService receiptService,
-            IUserStore userStore,
-            ICashRegisterMachineService cashRegisterMachineService)
+            IUserStore userStore)
         {
             _shiftService = shiftService;
             _receiptService = receiptService;
             _userStore = userStore;
-            _cashRegisterMachineService = cashRegisterMachineService;
         }
 
         #endregion
@@ -60,36 +57,7 @@ namespace RetailTradeClient.State.Shifts
         {
             try
             {
-                CurrentShiftChanged.Invoke(await Check());
-                ECRModeEnum eCRModeEnum = _cashRegisterMachineService.ECRMode();
-                if (eCRModeEnum == ECRModeEnum.Mode3)
-                {
-                    if (MessageBoxService.ShowMessage($"{eCRModeEnum.GetStringValue()} Закрыть смену ККМ?", "Sale Page", MessageButton.YesNo, MessageIcon.Question) == MessageResult.Yes)
-                    {
-                        if (!string.IsNullOrEmpty(_cashRegisterMachineService.CloseShift()))
-                        {
-                            //_ = MessageBoxService.ShowMessage(_cashRegisterMachineService.ErrorMessage, "Sale Page", MessageButton.YesNo, MessageIcon.Question);
-                            CurrentShiftChanged?.Invoke(CheckingResult.UnknownErrorWhenClosing);
-                            return;
-                        }
-                    }
-                }
-                if (eCRModeEnum == ECRModeEnum.Mode4)
-                {
-                    if (MessageBoxService.ShowMessage($"{eCRModeEnum.GetStringValue()} Открыть смену ККМ?", "Sale Page", MessageButton.YesNo, MessageIcon.Question) == MessageResult.Yes)
-                    {
-                        if (!string.IsNullOrEmpty(_cashRegisterMachineService.OpenShift()))
-                        {
-                            //_ = MessageBoxService.ShowMessage($"Устройство ККМ. {_cashRegisterMachineService.ErrorMessage}", "Sale Page", MessageButton.OK, MessageIcon.Error);
-                            CurrentShiftChanged?.Invoke(CheckingResult.UnknownErrorWhenClosing);
-                            return;
-                        }
-                    }
-                }
-                if (eCRModeEnum != ECRModeEnum.Mode3 && eCRModeEnum != ECRModeEnum.Mode4)
-                {
-                    _ = MessageBoxService.ShowMessage($"Устройство ККМ. {eCRModeEnum.GetStringValue()}", "Sale Page", MessageButton.OK, MessageIcon.Information);
-                }
+                CurrentShiftChanged.Invoke(await Check());                
             }
             catch (Exception e)
             {
@@ -102,15 +70,7 @@ namespace RetailTradeClient.State.Shifts
             var result = await _shiftService.GetOpenShiftAsync();
             if (result != null)
             {
-                CurrentShiftChanged.Invoke(await Closing());
-                ECRModeEnum eCRModeEnum = _cashRegisterMachineService.ECRMode();
-                if (eCRModeEnum != ECRModeEnum.Mode4)
-                {
-                    if (!string.IsNullOrEmpty(_cashRegisterMachineService.CloseShift()))
-                    {
-                        _ = MessageBoxService.ShowMessage($"Устройство ККМ. {_cashRegisterMachineService.ErrorMessage}", "Sale Page", MessageButton.OK, MessageIcon.Error);
-                    }
-                }
+                CurrentShiftChanged.Invoke(await Closing());                
                 return;
             }
             CurrentShiftChanged.Invoke(CheckingResult.NoOpenShift);
@@ -123,14 +83,6 @@ namespace RetailTradeClient.State.Shifts
             if (result == null)
             {
                 CurrentShiftChanged.Invoke(await Opening());
-                ECRModeEnum eCRModeEnum = _cashRegisterMachineService.ECRMode();
-                if (eCRModeEnum != ECRModeEnum.Mode2)
-                {
-                    if (!string.IsNullOrEmpty(_cashRegisterMachineService.OpenShift()))
-                    {
-                        _ = MessageBoxService.ShowMessage($"Устройство ККМ. {_cashRegisterMachineService.ErrorMessage}", "Sale Page", MessageButton.OK, MessageIcon.Error);
-                    }
-                }
                 return;
             }
             if (DateTime.Now.Subtract(result.OpeningDate).Days > 0)

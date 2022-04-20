@@ -52,9 +52,7 @@ namespace RetailTradeClient.Commands
                     //Создания чека
                     newReceipt = await _receiptService.CreateAsync(new Receipt
                     {
-                        DateOfPurchase = DateTime.Now,
-                        Sum = _productSaleStore.ToBePaid,
-                        Deposited = _productSaleStore.ToBePaid,
+                        DateOfPurchase = DateTime.Now,                        
                         PaidInCash = _productSaleStore.PaymentTypes.Where(pt => pt.Id == 1).Sum(pt => pt.Sum),
                         PaidInCashless = _productSaleStore.PaymentTypes.Where(pt => pt.Id == 2).Sum(pt => pt.Sum),
                         ShiftId = _shiftStore.CurrentShift.Id,

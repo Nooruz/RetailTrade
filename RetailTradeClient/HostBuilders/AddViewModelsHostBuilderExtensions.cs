@@ -6,6 +6,7 @@ using RetailTradeClient.State.Authenticators;
 using RetailTradeClient.State.Messages;
 using RetailTradeClient.State.Navigators;
 using RetailTradeClient.State.ProductSales;
+using RetailTradeClient.State.Reports;
 using RetailTradeClient.State.Shifts;
 using RetailTradeClient.State.Users;
 using RetailTradeClient.ViewModels;
@@ -75,6 +76,7 @@ namespace RetailTradeClient.HostBuilders
                 services.GetRequiredService<IAuthenticator>(),
                 services.GetRequiredService<IShiftStore>(),
                 services.GetRequiredService<IBarcodeService>(),
+                services.GetRequiredService<IReportService>(),
                 services.GetRequiredService<PaymentCashViewModel>(),
                 services.GetRequiredService<PaymentComplexViewModel>(),
                 services.GetRequiredService<ProductViewModel>(),

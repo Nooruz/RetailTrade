@@ -111,7 +111,7 @@ namespace RetailTrade.EntityFramework.Services
                 if (result != null)
                 {
                     result.ClosingDate = DateTime.Now;
-                    result.Sum = result.Receipts.Any() ? result.Receipts.Sum(r => r.Sum) : 0;
+                    result.Sum = result.Receipts.Any() ? result.Receipts.Sum(r => r.Total) : 0;
                     await UpdateAsync(result.Id, result);
                     return true;
                 }
@@ -129,7 +129,7 @@ namespace RetailTrade.EntityFramework.Services
             return await context.Shifts.Where(s => s.ClosingDate != null && s.ClosingDate.Value.Date <= startDate.Date && s.ClosingDate.Value.Date >= endDate.Date)
                 .Include(s => s.Receipts)
                 .Select(s => new Shift { Id = s.Id, ClosingDate = s.ClosingDate, Receipts = 
-                    s.Receipts.Select(r => new Receipt { Sum = r.Sum, PaidInCash = r.PaidInCash, PaidInCashless = r.PaidInCashless }) })
+                    s.Receipts.Select(r => new Receipt { Total = r.Total, PaidInCash = r.PaidInCash, PaidInCashless = r.PaidInCashless})})
                 .ToListAsync();
         }
 

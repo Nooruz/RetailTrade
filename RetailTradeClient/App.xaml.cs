@@ -3,6 +3,7 @@ using Microsoft.Extensions.Hosting;
 using RetailTradeClient.HostBuilders;
 using RetailTradeClient.ViewModels;
 using System;
+using System.Globalization;
 using System.IO.Ports;
 using System.Linq;
 using System.Management;

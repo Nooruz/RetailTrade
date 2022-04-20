@@ -57,8 +57,7 @@ namespace RetailTradeClient.Commands
                     newReceipt = await _receiptService.CreateAsync(new Receipt
                     {
                         DateOfPurchase = DateTime.Now,
-                        Sum = _productSaleStore.ToBePaid,
-                        Deposited = _productSaleStore.Entered,
+                        
                         PaidInCash = _productSaleStore.ToBePaid,
                         ShiftId = _shiftStore.CurrentShift.Id,
                         Change = _productSaleStore.Change,
@@ -104,7 +103,7 @@ namespace RetailTradeClient.Commands
 
                                 ShtrihM.Sale();
                             }
-                            ShtrihM.Summ1 = newReceipt.Sum;
+                            //ShtrihM.Summ1 = newReceipt.Sum;
                             ShtrihM.StringForPrinting = "";
                             ShtrihM.CloseCheck();
                             ShtrihM.CutCheck();

@@ -255,30 +255,19 @@ namespace RetailTrade.EntityFramework.Services
             return false;
         }
 
-        public async Task<double> Sale(int id, double quantity, bool isKeepRecrods)
+        public async Task Sale(int id, double quantity)
         {
             try
             {
                 await using var context = _contextFactory.CreateDbContext();
-                Product editProduct = await context.Products
-                                               .Where(p => p.Id == id)
-                                               .FirstOrDefaultAsync();
-                if (isKeepRecrods)
-                {
-                    editProduct.Quantity -= quantity;
-                }
-
-                Product result = await UpdateAsync(id, editProduct);
-
-                OnProductSaleOrRefund?.Invoke(result.Id, result.Quantity);
-
-                return quantity;
+                Product editProduct = await context.Products.FirstOrDefaultAsync(p => p.Id == id);
+                editProduct.Quantity -= quantity;
+                _ = await UpdateAsync(id, editProduct);
             }
             catch (Exception)
             {
                 //ignore
             }
-            return 0;
         }
 
         public async Task<bool> Refunds(IEnumerable<ProductRefund> productRefunds)

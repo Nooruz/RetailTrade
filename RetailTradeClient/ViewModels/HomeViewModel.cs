@@ -2,19 +2,19 @@
 using DevExpress.Mvvm.DataAnnotations;
 using DevExpress.Xpf.Editors;
 using DevExpress.Xpf.Grid;
+using DevExpress.XtraPrinting;
 using RetailTrade.Barcode.Services;
 using RetailTrade.CashRegisterMachine;
 using RetailTrade.Domain.Models;
 using RetailTrade.Domain.Services;
 using RetailTradeClient.Commands;
-using RetailTradeClient.Customs;
 using RetailTradeClient.Properties;
+using RetailTradeClient.Report;
 using RetailTradeClient.State.Authenticators;
-using RetailTradeClient.State.ProductSales;
+using RetailTradeClient.State.Reports;
 using RetailTradeClient.State.Shifts;
 using RetailTradeClient.State.Users;
 using RetailTradeClient.ViewModels.Base;
-using RetailTradeClient.ViewModels.Components;
 using RetailTradeClient.ViewModels.Dialogs;
 using RetailTradeClient.Views;
 using RetailTradeClient.Views.Dialogs;
@@ -23,6 +23,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Collections.Specialized;
 using System.ComponentModel;
+using System.Drawing;
 using System.Linq;
 using System.Runtime.InteropServices;
 using System.Windows;
@@ -41,6 +42,7 @@ namespace RetailTradeClient.ViewModels
         private readonly IAuthenticator _authenticator;
         private readonly IShiftStore _shiftStore;
         private readonly IBarcodeService _barcodeService;
+        private readonly IReportService _reportService;
         private readonly PaymentCashViewModel _paymentCashViewModel;
         private readonly PaymentComplexViewModel _paymentComplexViewModel;
         private readonly ProductViewModel _productViewModel;
@@ -62,7 +64,7 @@ namespace RetailTradeClient.ViewModels
         private const int HOTKEY_CTRL_F = 6;
         private const int HOTKEY_ESC = 7;
         private const int HOTKEY_CTRL_Z = 8;
-        private const int HOTKEY_DEL = 9;
+        private const int HOTKEY_F8 = 9;
         //Modifiers:
         private const uint MOD_NONE = 0x0000; //(none)
         private const uint MOD_ALT = 0x0001; //ALT
@@ -76,7 +78,7 @@ namespace RetailTradeClient.ViewModels
         private const uint VK_CTRL_F = 0x46;
         private const uint VK_ESCAPE = 0x1B;
         private const uint VK_CTRL_Z = 0x5A;
-        private const uint VK_DEL = 0x2E;
+        private const uint VK_F8 = 0x77;
         private IntPtr _windowHandle;
         private HwndSource _source;
 
@@ -100,15 +102,7 @@ namespace RetailTradeClient.ViewModels
         public decimal AmountWithoutDiscount => ProductSales.Sum(s => s.AmountWithoutDiscount);
         public decimal DiscountAmount => ProductSales.Sum(s => s.DiscountAmount);
         public decimal Total => ProductSales.Sum(s => s.Total);
-        public decimal Change
-        {
-            get => _change;
-            set
-            {
-                _change = value;
-                OnPropertyChanged(nameof(Change));
-            }
-        }
+        public decimal Change => (Total - CashPaySum - CashlessPaySum) < 0 ? (Total - CashPaySum - CashlessPaySum) * -1 : (Total - CashPaySum - CashlessPaySum);
         public string Barcode
         {
             get => _barcode;
@@ -142,6 +136,8 @@ namespace RetailTradeClient.ViewModels
         public TableView SaleTableView { get; set; }
         public TextEdit CashPayTextEdit { get; set; }
         public TextEdit CashlessPayTextEdit { get; set; }
+        public string ChangeLabel => CashPaySum + CashlessPaySum - Total < 0 ? "Осталось доплатить:" : "Сдача:";
+        public Brush ChangeForeground => CashPaySum + CashlessPaySum - Total < 0 ? Brushes.Red : Brushes.Green;
         public decimal CashPaySum
         {
             get => _cashPaySum;
@@ -149,6 +145,9 @@ namespace RetailTradeClient.ViewModels
             {
                 _cashPaySum = value;
                 OnPropertyChanged(nameof(CashPaySum));
+                OnPropertyChanged(nameof(Change));
+                OnPropertyChanged(nameof(ChangeLabel));
+                OnPropertyChanged(nameof(ChangeForeground));
             }
         }
         public decimal CashlessPaySum
@@ -158,6 +157,9 @@ namespace RetailTradeClient.ViewModels
             {
                 _cashlessPaySum = value;
                 OnPropertyChanged(nameof(CashlessPaySum));
+                OnPropertyChanged(nameof(Change));
+                OnPropertyChanged(nameof(ChangeLabel));
+                OnPropertyChanged(nameof(ChangeForeground));
             }
         }
         public double MaximumPercentage => Settings.Default.MaximumPercentage;
@@ -186,6 +188,7 @@ namespace RetailTradeClient.ViewModels
             IAuthenticator authenticator,
             IShiftStore shiftStore,
             IBarcodeService barcodeService,
+            IReportService reportService,
             PaymentCashViewModel paymentCashViewModel,
             PaymentComplexViewModel paymentComplexViewModel,
             ProductViewModel productViewModel,
@@ -200,6 +203,7 @@ namespace RetailTradeClient.ViewModels
             _paymentComplexViewModel = paymentComplexViewModel;
             _productViewModel = productViewModel;
             _mainWindow = mainWindow;
+            _reportService = reportService;
 
             BindingOperations.EnableCollectionSynchronization(ProductSales, _syncLock);
 
@@ -352,7 +356,7 @@ namespace RetailTradeClient.ViewModels
             UnregisterHotKey(_windowHandle, HOTKEY_CTRL_F);
             UnregisterHotKey(_windowHandle, HOTKEY_ESC);
             UnregisterHotKey(_windowHandle, HOTKEY_CTRL_Z);
-            UnregisterHotKey(_windowHandle, HOTKEY_DEL);
+            UnregisterHotKey(_windowHandle, HOTKEY_F8);
         }
 
         private IntPtr HwndHook(IntPtr hwnd, int msg, IntPtr wParam, IntPtr lParam, ref bool handled)
@@ -376,14 +380,14 @@ namespace RetailTradeClient.ViewModels
                             case HOTKEY_F6:
                                 if (vkey == VK_F6)
                                 {
-                                    //PaymentComplex();
+                                    CashPay();
                                 }
                                 handled = true;
                                 break;
                             case HOTKEY_F7:
                                 if (vkey == VK_F7)
                                 {
-                                    ReturnGoods();
+                                    CashlessPay();
                                 }
                                 handled = true;
                                 break;
@@ -422,10 +426,10 @@ namespace RetailTradeClient.ViewModels
                                 }
                                 handled = true;
                                 break;
-                            case HOTKEY_DEL:
-                                if (vkey == VK_DEL)
+                            case HOTKEY_F8:
+                                if (vkey == VK_F8)
                                 {
-                                    DeleteSelectedRow();
+                                    PunchReceipt();
                                 }
                                 handled = true;
                                 break;
@@ -438,11 +442,6 @@ namespace RetailTradeClient.ViewModels
                 //ignore
             }
             return IntPtr.Zero;
-        }
-
-        private void CashPayTextEdit_EditValueChanged(object sender, EditValueChangedEventArgs e)
-        {
-            Change = CashPaySum - Total;
         }
 
         private decimal GetMaximumDiscount()
@@ -491,7 +490,6 @@ namespace RetailTradeClient.ViewModels
                     if (e.Source is TextEdit textEdit)
                     {
                         CashPayTextEdit = textEdit;
-                        CashPayTextEdit.EditValueChanged += CashPayTextEdit_EditValueChanged;
                     }
                 }
             }
@@ -527,11 +525,9 @@ namespace RetailTradeClient.ViewModels
             {
                 if (CashPayTextEdit != null)
                 {
-                    CashPayTextEdit.EditValueChanged -= CashPayTextEdit_EditValueChanged;
-                    _ = CashPayTextEdit.Focus();
-                    CashPayTextEdit.Text = Total.ToString();
+                    CashPaySum = Total - CashlessPaySum;
+                    _ = CashPayTextEdit.Focus();                    
                     CashPayTextEdit.SelectAll();
-                    CashPayTextEdit.EditValueChanged += CashPayTextEdit_EditValueChanged;
                 }
             }
             catch (Exception)
@@ -547,6 +543,7 @@ namespace RetailTradeClient.ViewModels
             {
                 if (CashlessPayTextEdit != null)
                 {
+                    CashlessPaySum = Total - CashPaySum;
                     _ = CashlessPayTextEdit.Focus();
                     CashlessPayTextEdit.SelectAll();
                 }
@@ -558,9 +555,49 @@ namespace RetailTradeClient.ViewModels
         }
 
         [Command]
-        public void PunchReceipt()
+        public async void PunchReceipt()
         {
+            try
+            {
+                if (CashPaySum + CashlessPaySum - Total >= 0)
+                {
+                    Receipt receipt = await _receiptService.CreateAsync(new Receipt()
+                    {
+                        DateOfPurchase = DateTime.Now,
+                        AmountWithoutDiscount = AmountWithoutDiscount,
+                        Total = Total,
+                        PaidInCash = CashPaySum,
+                        PaidInCashless = CashlessPaySum,
+                        ShiftId = _shiftStore.CurrentShift.Id,
+                        Change = Change,
+                        ProductSales = ProductSales.Select(s =>
+                            new ProductSale
+                            {
+                                ProductId = s.Id,
+                                Quantity = s.Quantity,
+                                Total = s.Total,
+                                DiscountAmount = s.DiscountAmount,
+                                SalePrice = s.SalePrice,
+                                ArrivalPrice = s.ArrivalPrice
+                            }).ToList()
+                    }, Settings.Default.IsKeepRecords);
 
+                    DiscountReceiptReport report = await _reportService.CreateDiscountReceiptReport(receipt, ProductSales);
+
+                    ProductSales.Clear();
+
+                    PrintToolBase tool = new(report.PrintingSystem);
+                    tool.PrinterSettings.PrinterName = Settings.Default.DefaultReceiptPrinter;
+                    tool.Print();
+
+                    CashPaySum = 0;
+                    CashlessPaySum = 0;
+                }
+            }
+            catch (Exception)
+            {
+                //ignore
+            }
         }
 
         [Command]
@@ -745,7 +782,7 @@ namespace RetailTradeClient.ViewModels
                     RegisterHotKey(_windowHandle, HOTKEY_CTRL_F, MOD_CONTROL, VK_CTRL_F); //+
                     RegisterHotKey(_windowHandle, HOTKEY_ESC, MOD_NONE, VK_ESCAPE); //+
                     RegisterHotKey(_windowHandle, HOTKEY_CTRL_Z, MOD_CONTROL, VK_CTRL_Z); //+
-                    RegisterHotKey(_windowHandle, HOTKEY_DEL, MOD_NONE, VK_DEL); //+
+                    RegisterHotKey(_windowHandle, HOTKEY_F7, MOD_NONE, VK_F8); //+
                 }
             }
 
@@ -823,14 +860,31 @@ namespace RetailTradeClient.ViewModels
         }
 
         [Command]
-        public void DiscountValidate(object sender)
+        public void DiscountEditValueChanging(object sender)
         {
-            if (sender is ValidationEventArgs e)
+            try
             {
-                if (!e.IsValid)
+                if (sender is EditValueChangingEventArgs e)
                 {
-
+                    if (SelectedProductSale.IsDiscountPercentage)
+                    {
+                        if (MaximumPercentage < (double)e.NewValue)
+                        {
+                            SelectedProductSale.DiscountPercent = MaximumPercentage;
+                        }
+                    }
+                    else
+                    {
+                        if (MaximumDiscount < (decimal)e.NewValue)
+                        {
+                            SelectedProductSale.DiscountAmount = MaximumDiscount;
+                        }
+                    }
                 }
+            }
+            catch (Exception)
+            {
+                //ignore
             }
         }
 

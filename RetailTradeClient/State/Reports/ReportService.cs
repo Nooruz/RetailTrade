@@ -11,16 +11,19 @@ namespace RetailTradeClient.State.Reports
 
         private readonly XReport _xReport;
         private readonly ProductSaleReport _productSaleReport;
+        private readonly DiscountReceiptReport _discountReceiptReport;
 
         #endregion
 
         #region Constructor
 
         public ReportService(XReport xReport,
-            ProductSaleReport productSaleReport)
+            ProductSaleReport productSaleReport, 
+            DiscountReceiptReport discountReceiptReport)
         {
             _xReport = xReport;
             _productSaleReport = productSaleReport;
+            _discountReceiptReport = discountReceiptReport;
         }
 
         #endregion
@@ -39,6 +42,13 @@ namespace RetailTradeClient.State.Reports
             _productSaleReport.SetValues(receipt, sales);
             await _productSaleReport.CreateDocumentAsync();
             return _productSaleReport;
+        }
+
+        public async Task<DiscountReceiptReport> CreateDiscountReceiptReport(Receipt receipt, IEnumerable<Sale> sales)
+        {
+            _discountReceiptReport.SetValues(receipt, sales);
+            await _discountReceiptReport.CreateDocumentAsync();
+            return _discountReceiptReport;
         }
 
         #endregion

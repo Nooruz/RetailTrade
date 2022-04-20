@@ -14,11 +14,12 @@ namespace RetailTrade.Domain.Models
 
         private DateTime _dateOfPurchase;
         private int _shiftId;
-        private decimal _sum;
+        private decimal _amountWithoutDiscount;
+        private decimal _total;
         private decimal _paidInCash;
         private decimal _paidInCashless;
         private decimal _change;
-        private decimal _deposited;
+        private decimal _discountAmount;
         private string _kKMCheckNumber;
         private bool _isRefund;
         private Shift _shift;
@@ -55,16 +56,44 @@ namespace RetailTrade.Domain.Models
         }
 
         /// <summary>
-        /// Сумма квитанции
+        /// Сумма без скидки
         /// </summary>
         [Column(TypeName = "decimal(18,2)")]
-        public decimal Sum
+        public decimal AmountWithoutDiscount
         {
-            get => _sum;
+            get => _amountWithoutDiscount;
             set
             {
-                _sum = value;
-                OnPropertyChanged(nameof(Sum));
+                _amountWithoutDiscount = value;
+                OnPropertyChanged(nameof(AmountWithoutDiscount));
+            }
+        }
+
+        /// <summary>
+        /// Итого к оплате
+        /// </summary>
+        [Column(TypeName = "decimal(18,2)")]
+        public decimal Total
+        {
+            get => _total;
+            set
+            {
+                _total = value;
+                OnPropertyChanged(nameof(Total));
+            }
+        }
+
+        /// <summary>
+        /// Сумма скидки
+        /// </summary>
+        [Column(TypeName = "decimal(18,2)")]
+        public decimal DiscountAmount
+        {
+            get => _discountAmount;
+            set
+            {
+                _discountAmount = value;
+                OnPropertyChanged(nameof(DiscountAmount));
             }
         }
 
@@ -79,20 +108,6 @@ namespace RetailTrade.Domain.Models
             {
                 _paidInCash = value;
                 OnPropertyChanged(nameof(PaidInCash));
-            }
-        }
-
-        /// <summary>
-        /// Внесено
-        /// </summary>
-        [Column(TypeName = "decimal(18,2)")]
-        public decimal Deposited
-        {
-            get => _deposited;
-            set
-            {
-                _deposited = value;
-                OnPropertyChanged(nameof(Deposited));
             }
         }
 

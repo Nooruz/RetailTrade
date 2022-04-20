@@ -72,7 +72,7 @@ namespace RetailTradeServer.ViewModels.Dialogs
             RevenueForPeriodReport revenueForPeriodReport = new(_userStore.CurrentOrganization, SelectedStartDate, SelectedEndDate)
             {
                 DataSource = await _receiptService.Predicate(r => r.DateOfPurchase.Date >= SelectedStartDate && r.DateOfPurchase.Date <= SelectedEndDate,
-                    r => new Receipt { Sum = r.Sum, ProductSales =
+                    r => new Receipt { Total = r.Total, ProductSales =
                     r.ProductSales.Select(p => new ProductSale { ArrivalPrice = p.ArrivalPrice, SalePrice = p.SalePrice, Quantity = p.Quantity }).ToList(),
                         Shift = r.Shift
                     })

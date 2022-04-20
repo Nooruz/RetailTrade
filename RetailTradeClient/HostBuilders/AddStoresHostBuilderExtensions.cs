@@ -31,6 +31,7 @@ namespace RetailTradeClient.HostBuilders
                 _ = services.AddSingleton<IShiftStore, ShiftStore>();
                 _ = services.AddSingleton(CreateXReport);
                 _ = services.AddSingleton(CreateProductSaleReport);
+                _ = services.AddSingleton(CreateDiscountReceiptReport);
                 _ = services.AddSingleton<IReportService, ReportService>();
                 _ = services.AddTransient(CreateProductViewModel);
                 _ = services.AddSingleton<IProductSaleStore, ProductSaleStore>();
@@ -52,6 +53,11 @@ namespace RetailTradeClient.HostBuilders
         private static ProductSaleReport CreateProductSaleReport(IServiceProvider serviceProvider)
         {
             return new ProductSaleReport(serviceProvider.GetRequiredService<IUserStore>());
+        }
+
+        private static DiscountReceiptReport CreateDiscountReceiptReport(IServiceProvider serviceProvider)
+        {
+            return new DiscountReceiptReport(serviceProvider.GetRequiredService<IUserStore>());
         }
     }
 }

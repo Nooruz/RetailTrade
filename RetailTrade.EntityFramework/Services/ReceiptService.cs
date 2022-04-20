@@ -35,10 +35,6 @@ namespace RetailTrade.EntityFramework.Services
             try
             {
                 var result = await _nonQueryDataService.Create(entity);
-                foreach (var productSale in entity.ProductSales)
-                {
-                    _ = await _productService.Sale(productSale.ProductId, productSale.Quantity, true);
-                }
                 if (result != null)
                     OnProductSale?.Invoke(entity.ProductSales);
                 return result;
@@ -130,7 +126,7 @@ namespace RetailTrade.EntityFramework.Services
                 {
                     DateOfRefund = DateTime.Now,
                     ShiftId = receipt.ShiftId,
-                    Sum = receipt.Sum,
+                    Sum = receipt.Total,
                     ProductRefunds = receipt.ProductSales.Select(p => new ProductRefund
                     {
                         Quantity = p.Quantity,
@@ -248,7 +244,7 @@ namespace RetailTrade.EntityFramework.Services
                 await using var context = _contextFactory.CreateDbContext();
                 return await context.Receipts
                     .Where(r => r.IsRefund == false && r.DateOfPurchase.Date >= firstDayOfLastMonth && r.DateOfPurchase <= firstDayOfLastMonth.AddMonths(1).AddDays(-1))
-                    .SumAsync(s => s.Sum);
+                    .SumAsync(s => s.Total);
             }
             catch (Exception)
             {
@@ -265,7 +261,7 @@ namespace RetailTrade.EntityFramework.Services
                 await using var context = _contextFactory.CreateDbContext();
                 return await context.Receipts
                     .Where(r => r.IsRefund == false && r.DateOfPurchase.Date >= beginningYear)
-                    .SumAsync(s => s.Sum);
+                    .SumAsync(s => s.Total);
             }
             catch (Exception)
             {
@@ -307,21 +303,13 @@ namespace RetailTrade.EntityFramework.Services
             try
             {
                 var result = await _nonQueryDataService.Create(receipt);
-                foreach (var productSale in receipt.ProductSales)
+                if (isKeepRecords)
                 {
-                    _ = await _productService.Sale(productSale.ProductId, productSale.Quantity, isKeepRecords);
-                }
-                if (result != null)
-                {
-                    if (isKeepRecords)
+                    foreach (var productSale in receipt.ProductSales)
                     {
-                        OnProductSale?.Invoke(receipt.ProductSales);
+                        await _productService.Sale(productSale.ProductId, productSale.Quantity);
                     }
-                    else
-                    {
-                        PropertiesChanged?.Invoke();
-                    }
-                }
+                }                
                 return result;
             }
             catch (Exception)

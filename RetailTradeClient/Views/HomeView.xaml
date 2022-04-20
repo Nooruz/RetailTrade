@@ -33,7 +33,7 @@
         <dxlc:LayoutGroup Orientation="Horizontal"
                                       VerticalAlignment="Top">
 
-            <Button Content="Возврат (F7)"
+            <Button Content="Возврат (F9)"
                     Style="{StaticResource ButtonWithIcon}"
                     Tag="{StaticResource faUndoAlt}"
                     Command="{Binding ReturnGoodsCommand}"/>
@@ -132,6 +132,7 @@
                             <customs:UnitSpinEdit MaskUseAsDisplayFormat="True"
                                                   ShowEditorButtons="False"
                                                   FontSize="18"
+                                                  InvalidValueBehavior="AllowLeaveEditor"
                                                   MinWidth="120"
                                                   SelectAllOnMouseUp="True"
                                                   UnitName="{Binding SelectedProductSale.IsDiscountPercentage, Converter={StaticResource PercentageOrSomConverter}}">
@@ -140,13 +141,11 @@
                                         <Setter Property="EditValueType" Value="{x:Type sys:Double}"/>
                                         <Setter Property="Mask" Value="p"/>
                                         <Setter Property="EditValue" Value="{Binding SelectedProductSale.DiscountPercent, UpdateSourceTrigger=PropertyChanged}"/>
-                                        <Setter Property="MaxValue" Value="{Binding MaximumPercentage}"/>
                                         <Style.Triggers>
                                             <DataTrigger Binding="{Binding SelectedProductSale.IsDiscountPercentage}" Value="False">
                                                 <Setter Property="EditValueType" Value="{x:Type sys:Decimal}"/>
                                                 <Setter Property="Mask" Value="n"/>
                                                 <Setter Property="EditValue" Value="{Binding SelectedProductSale.DiscountAmount, UpdateSourceTrigger=PropertyChanged}"/>
-                                                <Setter Property="MaxValue" Value="{Binding MaximumDiscount}"/>
                                             </DataTrigger>
                                         </Style.Triggers>
                                     </Style>
@@ -154,8 +153,8 @@
                                 <dxmvvm:Interaction.Behaviors>
                                     <dxmvvm:EventToCommand EventName="EditValueChanged"
                                                            Command="{Binding DiscountEditValueChangedCommand}"/>
-                                    <dxmvvm:EventToCommand EventName="Validate"
-                                                           Command="{Binding DiscountValidateCommand}"
+                                    <dxmvvm:EventToCommand EventName="EditValueChanging"
+                                                           Command="{Binding DiscountEditValueChangingCommand}"
                                                            PassEventArgsToCommand="True"/>
                                 </dxmvvm:Interaction.Behaviors>
                             </customs:UnitSpinEdit>
@@ -178,6 +177,7 @@
                         <dxg:TableView AutoWidth="True"
                                        ShowGroupPanel="False" 
                                        AllowSorting="False"
+                                       AllowEditing="False"
                                        AllowDrop="False"
                                        Focusable="False"
                                        NavigationStyle="Cell"
@@ -195,6 +195,9 @@
                                 <dxmvvm:EventToCommand EventName="Loaded"
                                                        Command="{Binding SaleTableViewLoadedCommand}"
                                                        PassEventArgsToCommand="True"/>
+                                <dxmvvm:KeyToCommand EventName="PreviewKeyDown"
+                                                     KeyGesture="Delete"
+                                                     Command="{Binding DeleteSelectedRowCommand}"/>
                             </dxmvvm:Interaction.Behaviors>
                         </dxg:TableView>
                     </dxg:GridControl.View>
@@ -208,8 +211,7 @@
                     </dxg:GridColumn>
                     <dxg:GridColumn Header="Номенклатура" 
                                     FieldName="Name"
-                                    AllowColumnFiltering="False"
-                                    AllowEditing="False"/>
+                                    AllowColumnFiltering="False"/>
                     <dxg:GridColumn Header="Количество" 
                                     IsSmart="True"                          
                                     AllowColumnFiltering="False"
@@ -232,15 +234,13 @@
                     </dxg:GridColumn>
                     <dxg:GridColumn Header="Цена" 
                                     FieldName="SalePrice"
-                                    AllowColumnFiltering="False"
-                                    AllowEditing="False">
+                                    AllowColumnFiltering="False">
                         <dxg:GridColumn.EditSettings>
                             <dxe:TextEditSettings DisplayFormat="N2"/>
                         </dxg:GridColumn.EditSettings>
                     </dxg:GridColumn>
                     <dxg:GridColumn Header="Скидка"
-                                    AllowColumnFiltering="False"
-                                    AllowEditing="False">
+                                    AllowColumnFiltering="False">
                         <dxg:GridColumn.CellDisplayTemplate>
                             <DataTemplate>
                                 <customs:UnitSpinEdit MaskUseAsDisplayFormat="True"
@@ -275,8 +275,7 @@
                     <dxg:GridColumn Header="Сумма" 
                                     FieldName="Total"
                                     IsSmart="True"
-                                    AllowColumnFiltering="False"
-                                    AllowEditing="False">
+                                    AllowColumnFiltering="False">
                         <dxg:GridColumn.EditSettings>
                             <dxe:TextEditSettings DisplayFormat="N2"/>
                         </dxg:GridColumn.EditSettings>
@@ -284,8 +283,7 @@
                     <dxg:GridColumn Header="Остаток"
                                     Visible="{Binding IsKeepRecords}"
                                     FieldName="QuantityInStock"
-                                    AllowColumnFiltering="False"
-                                    AllowEditing="False">
+                                    AllowColumnFiltering="False">
                         <dxg:GridColumn.EditSettings>
                             <dxe:SpinEditSettings/>
                         </dxg:GridColumn.EditSettings>
@@ -296,7 +294,7 @@
 
             <dxlc:LayoutGroup Orientation="Vertical"
                               HorizontalAlignment="Right"
-                              MinWidth="400">
+                              MinWidth="470">
 
                 <dxlc:LayoutGroup HorizontalAlignment="Center"
                                   VerticalAlignment="Top">
@@ -312,7 +310,7 @@
                 <dxlc:LayoutItem Label="Без скидки:"
                                  LabelPosition="Left"
                                  FontSize="28">
-                    <TextBlock Text="{Binding AmountWithoutDiscount, UpdateSourceTrigger=PropertyChanged}"
+                    <TextBlock Text="{Binding AmountWithoutDiscount, UpdateSourceTrigger=PropertyChanged, StringFormat={}{0:N2}}"
                                TextAlignment="Right"
                                FontSize="32"/>
                 </dxlc:LayoutItem>
@@ -320,7 +318,7 @@
                 <dxlc:LayoutItem Label="Скидка:"
                                  LabelPosition="Left"
                                  FontSize="28">
-                    <TextBlock Text="{Binding DiscountAmount, UpdateSourceTrigger=PropertyChanged}"
+                    <TextBlock Text="{Binding DiscountAmount, UpdateSourceTrigger=PropertyChanged, StringFormat={}{0:N2}}"
                                TextAlignment="Right"
                                FontSize="32"/>
                 </dxlc:LayoutItem>
@@ -329,7 +327,7 @@
                                  LabelPosition="Left"
                                  Style="{StaticResource liCash}"
                                  FontSize="28">
-                    <TextBlock Text="{Binding Total, UpdateSourceTrigger=PropertyChanged}"
+                    <TextBlock Text="{Binding Total, UpdateSourceTrigger=PropertyChanged, StringFormat={}{0:N2}}"
                                TextAlignment="Right"
                                FontSize="32"/>
                 </dxlc:LayoutItem>
@@ -339,12 +337,18 @@
                             Command="{Binding CashPayCommand}"
                             FontSize="22"/>
                     <dxe:TextEdit FontSize="32"
-                                  EditValue="{Binding CashPaySum, UpdateSourceTrigger=PropertyChanged}" MaskUseAsDisplayFormat="True" MaskType="Numeric" Mask="n"
+                                  EditValueType="{x:Type sys:Decimal}"
+                                  EditValue="{Binding CashPaySum, UpdateSourceTrigger=PropertyChanged}" 
+                                  MaskUseAsDisplayFormat="True"
+                                  MaskType="Numeric" 
+                                  Mask="n"
                                   SelectAllOnMouseUp="True">
                         <dxmvvm:Interaction.Behaviors>
                             <dxmvvm:EventToCommand EventName="Loaded"
                                                    Command="{Binding CashPayLoadedCommand}"
                                                    PassEventArgsToCommand="True"/>
+                            <dxmvvm:EventToCommand EventName="MouseEnter"
+                                                   Command="{Binding CashPayCommand}"/>
                         </dxmvvm:Interaction.Behaviors>
                     </dxe:TextEdit>
                 </dxlc:LayoutGroup>
@@ -354,28 +358,37 @@
                             FontSize="22"
                             Command="{Binding CashlessPayCommand}"/>
                     <dxe:TextEdit FontSize="32"
-                                  EditValue="{Binding CashlessPaySum}" MaskUseAsDisplayFormat="True" MaskType="Numeric" Mask="n"
+                                  EditValueType="{x:Type sys:Decimal}"
+                                  EditValue="{Binding CashlessPaySum, UpdateSourceTrigger=PropertyChanged}"
+                                  MaskUseAsDisplayFormat="True" 
+                                  MaskType="Numeric" 
+                                  Mask="n"
                                   SelectAllOnMouseUp="True">
                         <dxmvvm:Interaction.Behaviors>
                             <dxmvvm:EventToCommand EventName="Loaded"
                                                    Command="{Binding CashlessPayLoadedCommand}"
                                                    PassEventArgsToCommand="True"/>
+                            <dxmvvm:EventToCommand EventName="MouseEnter"
+                                                   Command="{Binding CashlessPayCommand}"/>
                         </dxmvvm:Interaction.Behaviors>
                     </dxe:TextEdit>
                 </dxlc:LayoutGroup>
 
-                <dxlc:LayoutItem Label="Сдача:"
+                <dxlc:LayoutItem Label="{Binding ChangeLabel}"
                                  LabelPosition="Left"
+                                 Foreground="{Binding ChangeForeground}"
                                  Style="{StaticResource liCash}"
                                  FontSize="28">
-                    <TextBlock Text="{Binding Change, UpdateSourceTrigger=PropertyChanged}"
+                    <TextBlock Text="{Binding Change, UpdateSourceTrigger=PropertyChanged, StringFormat={}{0:N2}}"
                                TextAlignment="Right"
+                               Foreground="{Binding ChangeForeground}"
                                FontSize="32"/>
                 </dxlc:LayoutItem>
 
                 <Button Content="Пробить чек (F8)"
                         FontSize="22"
                         Height="50"
+                        IsDefault="True"
                         VerticalAlignment="Top"
                         Command="{Binding PunchReceiptCommand}"/>
 
