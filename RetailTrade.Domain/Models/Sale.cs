@@ -61,6 +61,7 @@ namespace RetailTrade.Domain.Models
             {
                 _quantity = value;
                 AmountWithoutDiscount = SalePrice * (decimal)_quantity;
+                DiscountAmount = DiscountAmount * (decimal)_quantity;
                 OnPropertyChanged(nameof(Quantity));
             }
         }

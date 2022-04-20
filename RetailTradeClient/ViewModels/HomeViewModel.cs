@@ -520,7 +520,7 @@ namespace RetailTradeClient.ViewModels
         {
             try
             {
-                return (decimal)MaximumPercentage * SelectedProductSale.SalePrice;
+                return (decimal)MaximumPercentage * SelectedProductSale.AmountWithoutDiscount;
             }
             catch (Exception)
             {
@@ -680,11 +680,6 @@ namespace RetailTradeClient.ViewModels
                 if (double.TryParse(value.ToString(), out double quantity))
                 {
                     SelectedProductSale.Quantity = quantity;
-                    if (SelectedProductSale.DiscountAmount > 0)
-                    {
-                        decimal dsd = SelectedProductSale.DiscountAmount * (decimal)quantity;
-                        SelectedProductSale.DiscountAmount = dsd;
-                    }
                 }
             }
             catch (Exception)
