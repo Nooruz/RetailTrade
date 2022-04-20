@@ -43,6 +43,7 @@ namespace RetailTradeClient.ViewModels
         private readonly IShiftStore _shiftStore;
         private readonly IBarcodeService _barcodeService;
         private readonly IReportService _reportService;
+        private readonly IProductService _productService;
         private readonly PaymentCashViewModel _paymentCashViewModel;
         private readonly PaymentComplexViewModel _paymentComplexViewModel;
         private readonly ProductViewModel _productViewModel;
@@ -130,6 +131,7 @@ namespace RetailTradeClient.ViewModels
                 _selectedProductSale = value;
                 OnPropertyChanged(nameof(SelectedProductSale));
                 OnPropertyChanged(nameof(MaximumDiscount));
+                OnPropertyChanged(nameof(IsSelectedProductSale));
             }
         }
         public int FocusedRowHandle => ProductSales.Count - 1;
@@ -164,6 +166,7 @@ namespace RetailTradeClient.ViewModels
         }
         public double MaximumPercentage => Settings.Default.MaximumPercentage;
         public decimal MaximumDiscount => GetMaximumDiscount();
+        public bool IsSelectedProductSale => SelectedProductSale != null;
 
         #endregion
 
@@ -189,6 +192,7 @@ namespace RetailTradeClient.ViewModels
             IShiftStore shiftStore,
             IBarcodeService barcodeService,
             IReportService reportService,
+            IProductService productService,
             PaymentCashViewModel paymentCashViewModel,
             PaymentComplexViewModel paymentComplexViewModel,
             ProductViewModel productViewModel,
@@ -203,6 +207,7 @@ namespace RetailTradeClient.ViewModels
             _paymentComplexViewModel = paymentComplexViewModel;
             _productViewModel = productViewModel;
             _mainWindow = mainWindow;
+            _productService = productService;
             _reportService = reportService;
 
             BindingOperations.EnableCollectionSynchronization(ProductSales, _syncLock);
@@ -357,6 +362,73 @@ namespace RetailTradeClient.ViewModels
             UnregisterHotKey(_windowHandle, HOTKEY_ESC);
             UnregisterHotKey(_windowHandle, HOTKEY_CTRL_Z);
             UnregisterHotKey(_windowHandle, HOTKEY_F8);
+            _barcodeService.OnBarcodeEvent -= BarcodeService_OnBarcodeEvent;
+        }
+
+        private async void BarcodeService_OnBarcodeEvent(string barcode)
+        {
+            try
+            {
+                if (Settings.Default.IsKeepRecords)
+                {
+                    Product product = await _productService.Predicate(p => p.Barcode == barcode && p.DeleteMark == false && p.Quantity > 0, p => new Product { Id = p.Id, Name = p.Name, Quantity = p.Quantity, SalePrice = p.SalePrice, ArrivalPrice = p.ArrivalPrice, TNVED = p.TNVED, Barcode = p.Barcode, UnitId = p.UnitId });
+                    Sale sale = ProductSales.FirstOrDefault(s => s.Id == product.Id);
+                    if (sale != null)
+                    {
+                        if (sale.QuantityInStock < sale.Quantity + 1)
+                        {
+                            //_ = MessageBox.Show("Количество превышает остаток.", "", MessageBoxButton.OK, MessageBoxImage.Information);
+                        }
+                        else
+                        {
+                            sale.Quantity++;
+                        }
+                    }
+                    else
+                    {
+                        AddProductSale(new Sale
+                        {
+                            Id = product.Id,
+                            Name = product.Name,
+                            SalePrice = product.SalePrice,
+                            ArrivalPrice = product.ArrivalPrice,
+                            QuantityInStock = IsKeepRecords ? product.Quantity : 0,
+                            TNVED = product.TNVED,
+                            Quantity = 1,
+                            Barcode = product.Barcode,
+                            UnitName = string.Empty
+                        });
+                    }
+                }
+                else
+                {
+                    Product product = await _productService.Predicate(p => p.Barcode == barcode && p.DeleteMark == false, p => new Product { Id = p.Id, Name = p.Name, SalePrice = p.SalePrice, ArrivalPrice = p.ArrivalPrice, TNVED = p.TNVED, Barcode = p.Barcode, UnitId = p.UnitId });
+                    Sale sale = ProductSales.FirstOrDefault(s => s.Id == product.Id);
+                    if (sale != null)
+                    {
+                        sale.Quantity++;
+                    }
+                    else
+                    {
+                        AddProductSale(new Sale
+                        {
+                            Id = product.Id,
+                            Name = product.Name,
+                            SalePrice = product.SalePrice,
+                            ArrivalPrice = product.ArrivalPrice,
+                            QuantityInStock = IsKeepRecords ? product.Quantity : 0,
+                            TNVED = product.TNVED,
+                            Quantity = 1,
+                            Barcode = product.Barcode,
+                            UnitName = string.Empty
+                        });
+                    }
+                }
+            }
+            catch (Exception)
+            {
+                //ignore
+            }
         }
 
         private IntPtr HwndHook(IntPtr hwnd, int msg, IntPtr wParam, IntPtr lParam, ref bool handled)
@@ -785,7 +857,7 @@ namespace RetailTradeClient.ViewModels
                     RegisterHotKey(_windowHandle, HOTKEY_F7, MOD_NONE, VK_F8); //+
                 }
             }
-
+            _barcodeService.OnBarcodeEvent += BarcodeService_OnBarcodeEvent;
             BarcodeOpen();
         }
 

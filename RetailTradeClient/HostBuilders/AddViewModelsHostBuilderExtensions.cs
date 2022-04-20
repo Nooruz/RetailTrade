@@ -77,6 +77,7 @@ namespace RetailTradeClient.HostBuilders
                 services.GetRequiredService<IShiftStore>(),
                 services.GetRequiredService<IBarcodeService>(),
                 services.GetRequiredService<IReportService>(),
+                services.GetRequiredService<IProductService>(),
                 services.GetRequiredService<PaymentCashViewModel>(),
                 services.GetRequiredService<PaymentComplexViewModel>(),
                 services.GetRequiredService<ProductViewModel>(),

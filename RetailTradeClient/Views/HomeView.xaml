@@ -81,12 +81,14 @@
 
                     <Button Style="{StaticResource IconicButton}"
                             HorizontalAlignment="Right"
+                            Command="{Binding DeleteSelectedRowCommand}"
                             Content="{StaticResource faTrashAlt}"/>
 
                 </dxlc:LayoutGroup>
 
                 <dxlc:LayoutGroup VerticalAlignment="Top"
                                   ItemSpace="15"
+                                  IsEnabled="{Binding IsSelectedProductSale}"
                                   Height="30">
 
                     <dxe:TextEdit IsReadOnly="True"
