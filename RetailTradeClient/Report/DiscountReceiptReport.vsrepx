@@ -1,13 +1,13 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<XtraReportsLayoutSerializer SerializerVersion="21.2.3.0" Ref="1" ControlType="DevExpress.XtraReports.UI.XtraReport, DevExpress.XtraReports.v21.2, Version=21.2.3.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a" Name="DiscountReceiptReport" RollPaper="true" Margins="20, 20, 11, 140" PaperKind="Custom" PageWidth="302" PageHeight="1100" Version="21.2" DataSource="#Ref-0">
+<XtraReportsLayoutSerializer SerializerVersion="21.2.6.0" Ref="1" ControlType="DevExpress.XtraReports.UI.XtraReport, DevExpress.XtraReports.v21.2, Version=21.2.6.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a" Name="DiscountReceiptReport" RollPaper="true" Margins="10, 10, 11, 140" PaperKind="Custom" PageWidth="302" PageHeight="1100" Version="21.2" DataSource="#Ref-0">
   <Extensions>
     <Item1 Ref="2" Key="VSReportExtInfo" Value=".vsrepx" />
   </Extensions>
   <Bands>
-    <Item1 Ref="3" ControlType="TopMarginBand" Name="topMarginBand1" HeightF="11.458333" />
+    <Item1 Ref="3" ControlType="TopMarginBand" Name="topMarginBand1" HeightF="11" />
     <Item2 Ref="4" ControlType="DetailBand" Name="detailBand1" HeightF="21.875">
       <Controls>
-        <Item1 Ref="5" ControlType="XRTable" Name="table1" TextAlignment="MiddleLeft" SizeF="261.999878,20" LocationFloat="0.000106811523,0" Font="Microsoft Sans Serif, 8.25pt, charSet=204" Padding="2,2,0,0,96">
+        <Item1 Ref="5" ControlType="XRTable" Name="table1" TextAlignment="MiddleLeft" SizeF="281.999878,20" LocationFloat="0.000106811523,0" Font="Microsoft Sans Serif, 6.75pt, charSet=204" Padding="2,2,0,0,96">
           <Rows>
             <Item1 Ref="6" ControlType="XRTableRow" Name="tableRow1" Weight="1">
               <Cells>
@@ -31,105 +31,111 @@
                     <Item1 Ref="14" EventName="BeforePrint" PropertyName="Text" Expression="[SalePrice]" />
                   </ExpressionBindings>
                 </Item4>
-                <Item5 Ref="15" ControlType="XRTableCell" Name="tableCell4" Weight="1.0393237382011873" TextFormatString="{0:N2}" Multiline="true" Text="Сумма">
+                <Item5 Ref="15" ControlType="XRTableCell" Name="tableCell4" Weight="1.2737464318739262" TextFormatString="{0:N2}" Multiline="true" Text="Сумма">
                   <ExpressionBindings>
-                    <Item1 Ref="16" EventName="BeforePrint" PropertyName="Text" Expression="[Total]" />
+                    <Item1 Ref="16" EventName="BeforePrint" PropertyName="Text" Expression="[Total]+[DiscountAmount]" />
                   </ExpressionBindings>
                 </Item5>
+                <Item6 Ref="17" ControlType="XRTableCell" Name="tableCell12" Weight="0.80490104452844846" Multiline="true" Text="tableCell12">
+                  <ExpressionBindings>
+                    <Item1 Ref="18" EventName="BeforePrint" PropertyName="Text" Expression="[DiscountAmount]" />
+                  </ExpressionBindings>
+                </Item6>
               </Cells>
             </Item1>
           </Rows>
-          <StylePriority Ref="17" UseFont="false" UseTextAlignment="false" />
+          <StylePriority Ref="19" UseFont="false" UseTextAlignment="false" />
         </Item1>
       </Controls>
     </Item2>
-    <Item3 Ref="18" ControlType="BottomMarginBand" Name="bottomMarginBand1" HeightF="140.5">
+    <Item3 Ref="20" ControlType="BottomMarginBand" Name="bottomMarginBand1" HeightF="140">
       <Controls>
-        <Item1 Ref="19" ControlType="XRLabel" Name="label7" Multiline="true" Text="Сдача:" TextAlignment="MiddleLeft" SizeF="107.986221,20" LocationFloat="0.000111262,93.94934" Font="Arial, 9.75pt, charSet=204" Padding="2,2,0,0,100">
-          <StylePriority Ref="20" UseFont="false" UseTextAlignment="false" />
-        </Item1>
-        <Item2 Ref="21" ControlType="XRLabel" Name="lbChange" TextFormatString="{0:N2} сом" Multiline="true" TextAlignment="MiddleRight" SizeF="154.013672,20" LocationFloat="107.986336,93.94931" Font="Arial, 9.75pt, charSet=204" Padding="2,2,0,0,100">
+        <Item1 Ref="21" ControlType="XRLabel" Name="label7" Multiline="true" Text="Сдача:" TextAlignment="MiddleLeft" SizeF="107.986221,20" LocationFloat="0.000111262,93.94934" Font="Arial, 9.75pt, charSet=204" Padding="2,2,0,0,100">
           <StylePriority Ref="22" UseFont="false" UseTextAlignment="false" />
-        </Item2>
-        <Item3 Ref="23" ControlType="XRLabel" Name="label5" Multiline="true" Text="Оплата:" TextAlignment="MiddleLeft" SizeF="107.986221,20" LocationFloat="0.000111262,73.94937" Font="Arial, 9.75pt, style=Bold, charSet=204" Padding="2,2,0,0,100">
+        </Item1>
+        <Item2 Ref="23" ControlType="XRLabel" Name="lbChange" TextFormatString="{0:N2} сом" Multiline="true" TextAlignment="MiddleRight" SizeF="174.013672,20" LocationFloat="107.986328,93.94932" Font="Arial, 9.75pt, charSet=204" Padding="2,2,0,0,100">
           <StylePriority Ref="24" UseFont="false" UseTextAlignment="false" />
-        </Item3>
-        <Item4 Ref="25" ControlType="XRLabel" Name="lbToBePaid" TextFormatString="{0:N2} сом" Multiline="true" TextAlignment="MiddleRight" SizeF="154.013672,20" LocationFloat="107.986336,73.94934" Font="Arial, 9.75pt, style=Bold, charSet=204" Padding="2,2,0,0,100">
+        </Item2>
+        <Item3 Ref="25" ControlType="XRLabel" Name="label5" Multiline="true" Text="Оплата:" TextAlignment="MiddleLeft" SizeF="107.986221,20" LocationFloat="0.000111262,73.94937" Font="Arial, 9.75pt, style=Bold, charSet=204" Padding="2,2,0,0,100">
           <StylePriority Ref="26" UseFont="false" UseTextAlignment="false" />
-        </Item4>
-        <Item5 Ref="27" ControlType="XRLabel" Name="label1" Multiline="true" Text="Итого:" TextAlignment="MiddleLeft" SizeF="107.986229,20" LocationFloat="0.000106811523,13.9493465" Font="Arial, 9.75pt, charSet=204" Padding="2,2,0,0,100">
+        </Item3>
+        <Item4 Ref="27" ControlType="XRLabel" Name="lbToBePaid" TextFormatString="{0:N2} сом" Multiline="true" TextAlignment="MiddleRight" SizeF="174.013672,20" LocationFloat="107.986328,73.94934" Font="Arial, 9.75pt, style=Bold, charSet=204" Padding="2,2,0,0,100">
           <StylePriority Ref="28" UseFont="false" UseTextAlignment="false" />
+        </Item4>
+        <Item5 Ref="29" ControlType="XRLabel" Name="label1" Multiline="true" Text="Итого:" TextAlignment="MiddleLeft" SizeF="107.986229,20" LocationFloat="0.000106811523,13.9493465" Font="Arial, 9.75pt, charSet=204" Padding="2,2,0,0,100">
+          <StylePriority Ref="30" UseFont="false" UseTextAlignment="false" />
         </Item5>
-        <Item6 Ref="29" ControlType="XRLabel" Name="label2" TextFormatString="{0:N2} сом" Multiline="true" Text="label2" TextAlignment="MiddleRight" SizeF="154.013672,20" LocationFloat="107.986336,13.9493628" Font="Arial, 9.75pt, charSet=204" Padding="2,2,0,0,100">
+        <Item6 Ref="31" ControlType="XRLabel" Name="label2" TextFormatString="{0:N2} сом" Multiline="true" Text="label2" TextAlignment="MiddleRight" SizeF="174.013672,20" LocationFloat="107.986328,13.9493628" Font="Arial, 9.75pt, charSet=204" Padding="2,2,0,0,100">
           <ExpressionBindings>
-            <Item1 Ref="30" EventName="BeforePrint" PropertyName="Text" Expression="Sum([Total])+Sum([DiscountAmount])" />
+            <Item1 Ref="32" EventName="BeforePrint" PropertyName="Text" Expression="Sum([Total])+Sum([DiscountAmount])" />
           </ExpressionBindings>
-          <StylePriority Ref="31" UseFont="false" UseTextAlignment="false" />
-        </Item6>
-        <Item7 Ref="32" ControlType="XRLabel" Name="label4" Multiline="true" Text="Скидка:" TextAlignment="MiddleLeft" SizeF="107.986221,20" LocationFloat="0.000111262,33.9493752" Font="Arial, 9.75pt, charSet=204" Padding="2,2,0,0,100">
           <StylePriority Ref="33" UseFont="false" UseTextAlignment="false" />
+        </Item6>
+        <Item7 Ref="34" ControlType="XRLabel" Name="label4" Multiline="true" Text="Скидка:" TextAlignment="MiddleLeft" SizeF="107.986221,20" LocationFloat="0.000111262,33.9493752" Font="Arial, 9.75pt, charSet=204" Padding="2,2,0,0,100">
+          <StylePriority Ref="35" UseFont="false" UseTextAlignment="false" />
         </Item7>
-        <Item8 Ref="34" ControlType="XRLabel" Name="lbDeposited" TextFormatString="{0:N2} сом" Multiline="true" TextAlignment="MiddleRight" SizeF="154.013672,20" LocationFloat="107.986336,33.94935" Font="Arial, 9.75pt, charSet=204" Padding="2,2,0,0,100">
+        <Item8 Ref="36" ControlType="XRLabel" Name="lbDeposited" TextFormatString="{0:N2} сом" Multiline="true" TextAlignment="MiddleRight" SizeF="174.013672,20" LocationFloat="107.986328,33.9493446" Font="Arial, 9.75pt, charSet=204" Padding="2,2,0,0,100">
           <ExpressionBindings>
-            <Item1 Ref="35" EventName="BeforePrint" PropertyName="Text" Expression="Sum([DiscountAmount])" />
+            <Item1 Ref="37" EventName="BeforePrint" PropertyName="Text" Expression="Sum([DiscountAmount])" />
           </ExpressionBindings>
-          <StylePriority Ref="36" UseFont="false" UseTextAlignment="false" />
-        </Item8>
-        <Item9 Ref="37" ControlType="XRLabel" Name="label6" Multiline="true" Text="Всего:" TextAlignment="MiddleLeft" SizeF="107.986221,20" LocationFloat="0.000114440918,53.949398" Font="Arial, 9.75pt, style=Bold, charSet=204" Padding="2,2,0,0,100">
           <StylePriority Ref="38" UseFont="false" UseTextAlignment="false" />
+        </Item8>
+        <Item9 Ref="39" ControlType="XRLabel" Name="label6" Multiline="true" Text="Всего:" TextAlignment="MiddleLeft" SizeF="107.986221,20" LocationFloat="0.000114440918,53.949398" Font="Arial, 9.75pt, style=Bold, charSet=204" Padding="2,2,0,0,100">
+          <StylePriority Ref="40" UseFont="false" UseTextAlignment="false" />
         </Item9>
-        <Item10 Ref="39" ControlType="XRLabel" Name="label10" TextFormatString="{0:N2} сом" Multiline="true" TextAlignment="MiddleRight" SizeF="154.013672,20" LocationFloat="107.986336,53.9493752" Font="Arial, 9.75pt, style=Bold, charSet=204" Padding="2,2,0,0,100">
+        <Item10 Ref="41" ControlType="XRLabel" Name="label10" TextFormatString="{0:N2} сом" Multiline="true" TextAlignment="MiddleRight" SizeF="174.013672,20" LocationFloat="107.986328,53.9493866" Font="Arial, 9.75pt, style=Bold, charSet=204" Padding="2,2,0,0,100">
           <ExpressionBindings>
-            <Item1 Ref="40" EventName="BeforePrint" PropertyName="Text" Expression="Sum([Total])" />
+            <Item1 Ref="42" EventName="BeforePrint" PropertyName="Text" Expression="Sum([Total])" />
           </ExpressionBindings>
-          <StylePriority Ref="41" UseFont="false" UseTextAlignment="false" />
-        </Item10>
-        <Item11 Ref="42" ControlType="XRLabel" Name="label3" Multiline="true" Text="Спасибо за покупку!" TextAlignment="MiddleCenter" SizeF="261.999878,23.0000038" LocationFloat="0.000106811523,113.949341" Font="Arial, 12pt, style=Bold, charSet=204" Padding="2,2,0,0,100">
           <StylePriority Ref="43" UseFont="false" UseTextAlignment="false" />
+        </Item10>
+        <Item11 Ref="44" ControlType="XRLabel" Name="label3" Multiline="true" Text="Спасибо за покупку!" TextAlignment="MiddleCenter" SizeF="281.9999,23.0000076" LocationFloat="0.000111262,113.949333" Font="Arial, 12pt, style=Bold, charSet=204" Padding="2,2,0,0,100">
+          <StylePriority Ref="45" UseFont="false" UseTextAlignment="false" />
         </Item11>
-        <Item12 Ref="44" ControlType="XRLine" Name="line2" LineWidth="2" LineStyle="Dash" SizeF="261.999573,6.000023" LocationFloat="0,0" />
+        <Item12 Ref="46" ControlType="XRLine" Name="line2" LineWidth="2" LineStyle="Dash" SizeF="261.999573,6.000023" LocationFloat="0,0" />
       </Controls>
     </Item3>
-    <Item4 Ref="45" ControlType="ReportHeaderBand" Name="ReportHeader" HeightF="53.125">
+    <Item4 Ref="47" ControlType="ReportHeaderBand" Name="ReportHeader" HeightF="53.125">
       <SubBands>
-        <Item1 Ref="46" ControlType="SubBand" Name="SubBand1" HeightF="101.041664">
+        <Item1 Ref="48" ControlType="SubBand" Name="SubBand1" HeightF="101.041664">
           <Controls>
-            <Item1 Ref="47" ControlType="XRTable" Name="table2" TextAlignment="MiddleLeft" SizeF="262,17" LocationFloat="0,81.26798" Font="Microsoft Sans Serif, 8.25pt, charSet=204" Padding="2,2,0,0,96">
+            <Item1 Ref="49" ControlType="XRTable" Name="table2" TextAlignment="MiddleLeft" SizeF="282,17" LocationFloat="0,81.26798" Font="Microsoft Sans Serif, 6.75pt, charSet=204" Padding="2,2,0,0,96">
               <Rows>
-                <Item1 Ref="48" ControlType="XRTableRow" Name="tableRow2" Weight="1">
+                <Item1 Ref="50" ControlType="XRTableRow" Name="tableRow2" Weight="1">
                   <Cells>
-                    <Item1 Ref="49" ControlType="XRTableCell" Name="tableCell6" Weight="0.34755923752329637" Multiline="true" Text="№" />
-                    <Item2 Ref="50" ControlType="XRTableCell" Name="tableCell7" Weight="1.8765974497457041" Multiline="true" Text="Наименование" />
-                    <Item3 Ref="51" ControlType="XRTableCell" Name="tableCell8" Weight="0.67886156643191509" Multiline="true" Text="Ко-во" />
-                    <Item4 Ref="52" ControlType="XRTableCell" Name="tableCell9" Weight="0.78773603416111282" TextFormatString="{0:N2}" Multiline="true" Text="Цена" />
-                    <Item5 Ref="53" ControlType="XRTableCell" Name="tableCell10" Weight="1.039325942027034" TextFormatString="{0:N2}" Multiline="true" Text="Сумма" />
+                    <Item1 Ref="51" ControlType="XRTableCell" Name="tableCell6" Weight="0.34755923752329637" Multiline="true" Text="№" />
+                    <Item2 Ref="52" ControlType="XRTableCell" Name="tableCell7" Weight="1.8765974497457041" Multiline="true" Text="Наименование" />
+                    <Item3 Ref="53" ControlType="XRTableCell" Name="tableCell8" Weight="0.67886156643191509" Multiline="true" Text="Ко-во" />
+                    <Item4 Ref="54" ControlType="XRTableCell" Name="tableCell9" Weight="0.78773603416111282" TextFormatString="{0:N2}" Multiline="true" Text="Цена" />
+                    <Item5 Ref="55" ControlType="XRTableCell" Name="tableCell10" Weight="1.2737505863833745" TextFormatString="{0:N2}" Multiline="true" Text="Сумма" />
+                    <Item6 Ref="56" ControlType="XRTableCell" Name="tableCell11" Weight="0.80490129767069352" Multiline="true" Text="Скид." />
                   </Cells>
                 </Item1>
               </Rows>
-              <StylePriority Ref="54" UseFont="false" UseTextAlignment="false" />
-            </Item1>
-            <Item2 Ref="55" ControlType="XRLine" Name="line1" LineWidth="2" LineStyle="Dash" SizeF="261.999573,6.000023" LocationFloat="0.000106811523,74.26796" />
-            <Item3 Ref="56" ControlType="XRLabel" Name="CashReceipt" Multiline="true" Text="Товарный чек №" TextAlignment="MiddleLeft" SizeF="193.111115,23.0000076" LocationFloat="0,3.267971" Font="Arial, 9.75pt, style=Bold, charSet=204" Padding="2,2,0,0,100">
               <StylePriority Ref="57" UseFont="false" UseTextAlignment="false" />
+            </Item1>
+            <Item2 Ref="58" ControlType="XRLine" Name="line1" LineWidth="2" LineStyle="Dash" SizeF="261.999573,6.000023" LocationFloat="0.000106811523,74.26796" />
+            <Item3 Ref="59" ControlType="XRLabel" Name="CashReceipt" Multiline="true" Text="Товарный чек №" TextAlignment="MiddleLeft" SizeF="233.736115,23.0000076" LocationFloat="0,3.26797175" Font="Arial, 9.75pt, style=Bold, charSet=204" Padding="2,2,0,0,100">
+              <StylePriority Ref="60" UseFont="false" UseTextAlignment="false" />
             </Item3>
-            <Item4 Ref="58" ControlType="XRLabel" Name="CashDate" Multiline="true" Text="Дата:" TextAlignment="MiddleLeft" SizeF="193.111008,23" LocationFloat="0,26.2679749" Font="Arial, 9.75pt, charSet=204" Padding="2,2,0,0,100">
-              <StylePriority Ref="59" UseFont="false" UseTextAlignment="false" />
+            <Item4 Ref="61" ControlType="XRLabel" Name="CashDate" Multiline="true" Text="Дата:" TextAlignment="MiddleLeft" SizeF="233.736008,23.0000019" LocationFloat="0,26.2679729" Font="Arial, 9.75pt, charSet=204" Padding="2,2,0,0,100">
+              <StylePriority Ref="62" UseFont="false" UseTextAlignment="false" />
             </Item4>
-            <Item5 Ref="60" ControlType="XRLabel" Name="CashTime" Multiline="true" Text="Время:" TextAlignment="MiddleLeft" SizeF="97.12886,23" LocationFloat="0,49.2679977" Font="Arial, 9.75pt, charSet=204" Padding="2,2,0,0,100">
-              <StylePriority Ref="61" UseFont="false" UseTextAlignment="false" />
+            <Item5 Ref="63" ControlType="XRLabel" Name="CashTime" Multiline="true" Text="Время:" TextAlignment="MiddleLeft" SizeF="97.12886,23" LocationFloat="0,49.2679977" Font="Arial, 9.75pt, charSet=204" Padding="2,2,0,0,100">
+              <StylePriority Ref="64" UseFont="false" UseTextAlignment="false" />
             </Item5>
-            <Item6 Ref="62" ControlType="XRLabel" Name="lbUserFullName" Multiline="true" Text="Асанов Асан" TextAlignment="MiddleRight" SizeF="164.871033,22.9999924" LocationFloat="97.1286545,49.2679977" Font="Arial, 9.75pt, charSet=204" Padding="2,2,0,0,100">
-              <StylePriority Ref="63" UseFont="false" UseTextAlignment="false" />
+            <Item6 Ref="65" ControlType="XRLabel" Name="lbUserFullName" Multiline="true" Text="Асанов Асан" TextAlignment="MiddleRight" SizeF="184.871338,22.9999924" LocationFloat="97.1286545,49.26799" Font="Arial, 9.75pt, charSet=204" Padding="2,2,0,0,100">
+              <StylePriority Ref="66" UseFont="false" UseTextAlignment="false" />
             </Item6>
           </Controls>
         </Item1>
       </SubBands>
       <Controls>
-        <Item1 Ref="64" ControlType="XRLabel" Name="OrganizationName" Multiline="true" TextAlignment="MiddleCenter" SizeF="262,23" LocationFloat="0,3.267971" Font="Arial, 12pt, style=Bold, charSet=204" Padding="2,2,0,0,100">
-          <StylePriority Ref="65" UseFont="false" UseTextAlignment="false" />
+        <Item1 Ref="67" ControlType="XRLabel" Name="OrganizationName" Multiline="true" TextAlignment="MiddleCenter" SizeF="282.000031,23" LocationFloat="0,3.26797175" Font="Arial, 12pt, style=Bold, charSet=204" Padding="2,2,0,0,100">
+          <StylePriority Ref="68" UseFont="false" UseTextAlignment="false" />
         </Item1>
-        <Item2 Ref="66" ControlType="XRLabel" Name="Address" Multiline="true" TextAlignment="MiddleCenter" SizeF="262,23" LocationFloat="0,26.26797" Font="Arial, 9.75pt, charSet=204" Padding="2,2,0,0,100">
-          <StylePriority Ref="67" UseFont="false" UseTextAlignment="false" />
+        <Item2 Ref="69" ControlType="XRLabel" Name="Address" Multiline="true" TextAlignment="MiddleCenter" SizeF="282.000031,22.9999981" LocationFloat="0,26.2679729" Font="Arial, 9.75pt, charSet=204" Padding="2,2,0,0,100">
+          <StylePriority Ref="70" UseFont="false" UseTextAlignment="false" />
         </Item2>
       </Controls>
     </Item4>
