@@ -1,0 +1,179 @@
+﻿<UserControl x:Class="RetailTradeClient.Components.ManualDiscount"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:dx="http://schemas.devexpress.com/winfx/2008/xaml/core"
+             xmlns:dxe="http://schemas.devexpress.com/winfx/2008/xaml/editors"
+             xmlns:dxg="http://schemas.devexpress.com/winfx/2008/xaml/grid"
+             xmlns:dxlc="http://schemas.devexpress.com/winfx/2008/xaml/layoutcontrol"
+             xmlns:dxmvvm="http://schemas.devexpress.com/winfx/2008/xaml/mvvm"
+             xmlns:sys="clr-namespace:System;assembly=mscorlib"
+             xmlns:customs="clr-namespace:RetailTradeClient.Customs">
+
+    <dxlc:LayoutControl Orientation="Vertical">
+
+        <dxlc:LayoutGroup Orientation="Vertical"
+                          Visibility="{Binding ManualVisibility}">
+
+            <dxlc:LayoutGroup VerticalAlignment="Top">
+
+                <Label Content="Скидка на чек"
+                       FontSize="20"/>
+
+                <Button Style="{StaticResource IconicButton}"
+                        HorizontalAlignment="Right"
+                        Command="{Binding ManualDiscountCloseCommand}"
+                        Content="{StaticResource faClose}"/>
+
+            </dxlc:LayoutGroup>
+
+            <dxlc:LayoutGroup>
+
+                <dxlc:LayoutItem HorizontalAlignment="Left"
+                                 Height="30">
+                    <customs:UnitSpinEdit MaskUseAsDisplayFormat="True"
+                                          ShowEditorButtons="False"
+                                          FontSize="18"
+                                          InvalidValueBehavior="AllowLeaveEditor"
+                                          MinWidth="120"
+                                          SelectAllOnMouseUp="True"
+                                          UnitName="{Binding SelectedProductSale.IsDiscountPercentage, Converter={StaticResource PercentageOrSomConverter}}">
+                        <customs:UnitSpinEdit.Style>
+                            <Style TargetType="{x:Type customs:UnitSpinEdit}" BasedOn="{StaticResource Unit}">
+                                <Setter Property="EditValueType" Value="{x:Type sys:Double}"/>
+                                <Setter Property="Mask" Value="p"/>
+                                <Setter Property="EditValue" Value="{Binding SelectedProductSale.DiscountPercent, UpdateSourceTrigger=PropertyChanged}"/>
+                                <Style.Triggers>
+                                    <DataTrigger Binding="{Binding SelectedProductSale.IsDiscountPercentage}" Value="False">
+                                        <Setter Property="EditValueType" Value="{x:Type sys:Decimal}"/>
+                                        <Setter Property="Mask" Value="n"/>
+                                        <Setter Property="EditValue" Value="{Binding SelectedProductSale.DiscountAmount, UpdateSourceTrigger=PropertyChanged}"/>
+                                    </DataTrigger>
+                                </Style.Triggers>
+                            </Style>
+                        </customs:UnitSpinEdit.Style>
+                        <dxmvvm:Interaction.Behaviors>
+                            <dxmvvm:EventToCommand EventName="EditValueChanged"
+                                                   Command="{Binding DiscountEditValueChangedCommand}"/>
+                            <dxmvvm:EventToCommand EventName="EditValueChanging"
+                                                   Command="{Binding DiscountEditValueChangingCommand}"
+                                                   PassEventArgsToCommand="True"/>
+                        </dxmvvm:Interaction.Behaviors>
+                    </customs:UnitSpinEdit>
+                </dxlc:LayoutItem>
+
+                <Button Command="{Binding DiscountTypeCommand}"
+                        Width="40"
+                        Style="{StaticResource TwoContent}"/>
+
+                <Button Content="Применить"
+                        HorizontalAlignment="Left"/>
+
+            </dxlc:LayoutGroup>
+
+        </dxlc:LayoutGroup>
+        
+        <dxlc:LayoutGroup Orientation="Vertical"
+                          Visibility="{Binding ProductVisibility}">
+
+            <dxlc:LayoutGroup VerticalAlignment="Top">
+
+                <Label Content="{Binding SelectedProductSale.Name, FallbackValue=Товар}"
+                       FontSize="20"/>
+
+                <Button Style="{StaticResource IconicButton}"
+                        HorizontalAlignment="Right"
+                        Command="{Binding DeleteSelectedRowCommand}"
+                        Content="{StaticResource faTrashAlt}"/>
+
+            </dxlc:LayoutGroup>
+
+            <dxlc:LayoutGroup VerticalAlignment="Top"
+                              ItemSpace="15"
+                              IsEnabled="{Binding IsSelectedProductSale}"
+                              Height="30">
+
+                <dxe:TextEdit IsReadOnly="True"
+                              Width="120"
+                              HorizontalAlignment="Left"
+                              MaskUseAsDisplayFormat="True" 
+                              MaskType="Numeric"
+                              FontSize="18"
+                              EditValue="{Binding SelectedProductSale.SalePrice}"
+                              Mask="n"/>
+
+                <dxlc:LayoutGroup HorizontalAlignment="Left">
+                    <customs:UnitSpinEdit MaskUseAsDisplayFormat="True"
+                                          Style="{StaticResource Unit}"
+                                          Mask="n"
+                                          EditValueType="{x:Type sys:Double}"
+                                          SelectAllOnMouseUp="True"
+                                          FontSize="18"
+                                          EditValue="{Binding SelectedProductSale.Quantity}"
+                                          UnitName="{Binding SelectedProductSale.UnitName}"
+                                          MinWidth="150"
+                                          MinValue="0"
+                                          MaxValue="{Binding SelectedProductSale.QuantityInStock}"
+                                          Text="500">
+                        <dxmvvm:Interaction.Behaviors>
+                            <dxmvvm:EventToCommand EventName="EditValueChanged"
+                                                   Command="{Binding EditValueChangedCommand}"
+                                                   CommandParameter="{Binding Path=Text, RelativeSource={RelativeSource AncestorType={x:Type customs:UnitSpinEdit}, Mode=FindAncestor}}"/>
+                        </dxmvvm:Interaction.Behaviors>
+                    </customs:UnitSpinEdit>
+                </dxlc:LayoutGroup>
+
+                <dxlc:LayoutGroup>
+                    
+                    <dxlc:LayoutItem HorizontalAlignment="Left"
+                                     Label="Скидка"
+                                     Height="30">
+                        <dxlc:LayoutItem.LabelStyle>
+                            <Style TargetType="{x:Type dxlc:LayoutItemLabel}">
+                                <Setter Property="Foreground" Value="#444444"/>
+                                <Setter Property="FontSize" Value="14"/>
+                            </Style>
+                        </dxlc:LayoutItem.LabelStyle>
+                        <customs:UnitSpinEdit MaskUseAsDisplayFormat="True"
+                                              ShowEditorButtons="False"
+                                              FontSize="18"
+                                              InvalidValueBehavior="AllowLeaveEditor"
+                                              MinWidth="120"
+                                              SelectAllOnMouseUp="True"
+                                              UnitName="{Binding SelectedProductSale.IsDiscountPercentage, Converter={StaticResource PercentageOrSomConverter}}">
+                            <customs:UnitSpinEdit.Style>
+                                <Style TargetType="{x:Type customs:UnitSpinEdit}" BasedOn="{StaticResource Unit}">
+                                    <Setter Property="EditValueType" Value="{x:Type sys:Double}"/>
+                                    <Setter Property="Mask" Value="p"/>
+                                    <Setter Property="EditValue" Value="{Binding SelectedProductSale.DiscountPercent, UpdateSourceTrigger=PropertyChanged}"/>
+                                    <Style.Triggers>
+                                        <DataTrigger Binding="{Binding SelectedProductSale.IsDiscountPercentage}" Value="False">
+                                            <Setter Property="EditValueType" Value="{x:Type sys:Decimal}"/>
+                                            <Setter Property="Mask" Value="n"/>
+                                            <Setter Property="EditValue" Value="{Binding SelectedProductSale.DiscountAmount, UpdateSourceTrigger=PropertyChanged}"/>
+                                        </DataTrigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </customs:UnitSpinEdit.Style>
+                            <dxmvvm:Interaction.Behaviors>
+                                <dxmvvm:EventToCommand EventName="EditValueChanged"
+                                                       Command="{Binding DiscountEditValueChangedCommand}"/>
+                                <dxmvvm:EventToCommand EventName="EditValueChanging"
+                                                       Command="{Binding DiscountEditValueChangingCommand}"
+                                                       PassEventArgsToCommand="True"/>
+                            </dxmvvm:Interaction.Behaviors>
+                        </customs:UnitSpinEdit>
+                    </dxlc:LayoutItem>
+
+                    <Button Command="{Binding DiscountTypeCommand}"
+                            Width="40"
+                            Style="{StaticResource TwoContent}"/>
+                    
+                </dxlc:LayoutGroup>
+
+            </dxlc:LayoutGroup>
+
+        </dxlc:LayoutGroup>
+        
+    </dxlc:LayoutControl>
+    
+</UserControl>

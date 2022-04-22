@@ -51,6 +51,7 @@ namespace RetailTradeClient.ViewModels
         private readonly MainWindow _mainWindow;
         private ObservableCollection<Sale> _productSales = new();
         private ObservableCollection<PostponeReceipt> _postponeReceipts = new();
+        private Visibility _manualDiscountVisibility;
         private string _barcode;
         private Sale _selectedProductSale;
         private object _syncLock = new();
@@ -98,6 +99,15 @@ namespace RetailTradeClient.ViewModels
 
         #region Public Properties
 
+        public Visibility ManualDiscountVisibility
+        {
+            get => _manualDiscountVisibility;
+            set
+            {
+                _manualDiscountVisibility = value;
+                OnPropertyChanged(nameof(ManualDiscountVisibility));
+            }
+        }
         public ObservableCollection<Sale> ProductSales => _productSales;
         public ICollectionView SaleProductsCollectionView => CollectionViewSource.GetDefaultView(ProductSales);
         public bool IsKeepRecords => Settings.Default.IsKeepRecords;
@@ -565,6 +575,12 @@ namespace RetailTradeClient.ViewModels
         #endregion
 
         #region Public Voids
+
+        [Command]
+        public void ManualDiscountVisible()
+        {
+            ManualDiscountVisibility = Visibility.Visible;
+        }
 
         [Command]
         public void CreatePostponeReceipt()
