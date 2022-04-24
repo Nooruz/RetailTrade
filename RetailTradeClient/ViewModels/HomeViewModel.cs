@@ -58,7 +58,6 @@ namespace RetailTradeClient.ViewModels
         private decimal _change;
         private decimal _cashPaySum;
         private decimal _cashlessPaySum;
-        private 
 
         private const int HOTKEY_F5 = 1;
         private const int HOTKEY_F6 = 2;
