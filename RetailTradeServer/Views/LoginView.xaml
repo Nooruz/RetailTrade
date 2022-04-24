@@ -20,15 +20,10 @@
 
         <dxlc:LayoutGroup View="GroupBox"
                           Header="Войти в систему">
-            
-            <Image Source="../Resources/Images/newlogo.png"
-                   VerticalAlignment="Top"
-                   Width="50"
-                   Margin="0 0 10 0"/>
 
             <dxlc:LayoutGroup Orientation="Vertical">
 
-                <TextBlock Text="SP Магазин (ОсОО Мастер)"
+                <TextBlock Text="SP Магазин (Сервер)"
                            FontWeight="DemiBold"
                            FontSize="16"
                            Margin="0 0 0 10"/>

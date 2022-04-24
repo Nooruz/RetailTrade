@@ -23,7 +23,6 @@ namespace SalePageServer.Report {
 
             // Data Sources
             this.objectDataSource1 = reportInitializer.GetDataSource<DevExpress.DataAccess.ObjectBinding.ObjectDataSource>("objectDataSource1");
-            this.objectDataSource1.DataSource = typeof(RetailTrade.Domain.Models.LabelPrinting);
         }
         private DevExpress.XtraReports.UI.TopMarginBand topMarginBand1;
         private DevExpress.XtraReports.UI.DetailBand detailBand1;

@@ -8,8 +8,8 @@
     <Item2 Ref="4" ControlType="DetailBand" Name="detailBand1" HeightF="254" Dpi="254">
       <HierarchyPrintOptions Ref="5" Indent="50.8" />
       <Controls>
-        <Item1 Ref="6" ControlType="XRBarCode" Name="barCode1" Module="5.08" AutoModule="true" Alignment="MiddleJustify" TextAlignment="MiddleJustify" Text="2000000000001" SizeF="410,129.680878" LocationFloat="25.0000076,103.399132" Dpi="254" Padding="26,26,0,0,254">
-          <Symbology Ref="7" Name="Code128" />
+        <Item1 Ref="6" ControlType="XRBarCode" Name="barCode1" Module="5.08" AutoModule="true" Alignment="MiddleJustify" TextAlignment="MiddleJustify" Text="20000000004584" SizeF="410,129.680878" LocationFloat="25.0000076,103.399132" Dpi="254" Padding="26,26,0,0,254">
+          <Symbology Ref="7" Name="ITF14" WideNarrowRatio="3" />
           <ExpressionBindings>
             <Item1 Ref="8" EventName="BeforePrint" PropertyName="Text" Expression="[Barcode]" />
           </ExpressionBindings>

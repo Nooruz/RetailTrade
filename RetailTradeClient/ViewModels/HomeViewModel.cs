@@ -58,6 +58,7 @@ namespace RetailTradeClient.ViewModels
         private decimal _change;
         private decimal _cashPaySum;
         private decimal _cashlessPaySum;
+        private 
 
         private const int HOTKEY_F5 = 1;
         private const int HOTKEY_F6 = 2;
@@ -349,11 +350,15 @@ namespace RetailTradeClient.ViewModels
         }
 
         private void Sale_PropertyChanged(object sender, PropertyChangedEventArgs e)
-        {
+        {            
             OnPropertyChanged(nameof(AmountWithoutDiscount));
             OnPropertyChanged(nameof(DiscountAmount));
             OnPropertyChanged(nameof(Total));
             OnPropertyChanged(nameof(ProductSales));
+            if (e.PropertyName == nameof(Sale.Quantity))
+            {
+
+            }
         }
 
         private void BarcodeOpen()
@@ -704,42 +709,46 @@ namespace RetailTradeClient.ViewModels
             {
                 if (CashPaySum + CashlessPaySum - Total >= 0)
                 {
-                    Receipt receipt = await _receiptService.CreateAsync(new Receipt()
+                    if (ProductSales.Any())
                     {
-                        DateOfPurchase = DateTime.Now,
-                        AmountWithoutDiscount = AmountWithoutDiscount,
-                        Total = Total,
-                        PaidInCash = CashPaySum,
-                        PaidInCashless = CashlessPaySum,
-                        ShiftId = _shiftStore.CurrentShift.Id,
-                        Change = Change,
-                        ProductSales = ProductSales.Select(s =>
-                            new ProductSale
-                            {
-                                ProductId = s.Id,
-                                Quantity = s.Quantity,
-                                Total = s.Total,
-                                DiscountAmount = s.DiscountAmount,
-                                SalePrice = s.SalePrice,
-                                ArrivalPrice = s.ArrivalPrice
-                            }).ToList()
-                    }, Settings.Default.IsKeepRecords);
+                        Receipt receipt = await _receiptService.CreateAsync(new Receipt()
+                        {
+                            DateOfPurchase = DateTime.Now,
+                            AmountWithoutDiscount = AmountWithoutDiscount,
+                            Total = Total,
+                            PaidInCash = CashPaySum,
+                            PaidInCashless = CashlessPaySum,
+                            ShiftId = _shiftStore.CurrentShift.Id,
+                            Change = Change,
+                            ProductSales = ProductSales.Select(s =>
+                                new ProductSale
+                                {
+                                    ProductId = s.Id,
+                                    Quantity = s.Quantity,
+                                    Total = s.Total,
+                                    DiscountAmount = s.DiscountAmount,
+                                    SalePrice = s.SalePrice,
+                                    ArrivalPrice = s.ArrivalPrice
+                                }).ToList()
+                        }, Settings.Default.IsKeepRecords);
 
-                    DiscountReceiptReport report = await _reportService.CreateDiscountReceiptReport(receipt, ProductSales);
+                        DiscountReceiptReport report = await _reportService.CreateDiscountReceiptReport(receipt, ProductSales);
 
-                    ProductSales.Clear();
-
-                    PrintToolBase tool = new(report.PrintingSystem);
-                    tool.PrinterSettings.PrinterName = Settings.Default.DefaultReceiptPrinter;
-                    tool.Print();
-
-                    CashPaySum = 0;
-                    CashlessPaySum = 0;
+                        PrintToolBase tool = new(report.PrintingSystem);
+                        tool.PrinterSettings.PrinterName = Settings.Default.DefaultReceiptPrinter;
+                        tool.Print();
+                    }
                 }
-            }
+            }            
             catch (Exception)
             {
                 //ignore
+            }
+            finally
+            {
+                ProductSales.Clear();
+                CashPaySum = 0;
+                CashlessPaySum = 0;
             }
         }
 

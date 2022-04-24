@@ -10,12 +10,12 @@
     <Version>1.0.24-beta1</Version>
     <AssemblyVersion>1.0.1.218</AssemblyVersion>
     <FileVersion>1.0.1.218</FileVersion>
-    <ApplicationIcon>Resources\Icons\newlogo.ico</ApplicationIcon>
+    <ApplicationIcon>logo.ico</ApplicationIcon>
 	<RuntimeIdentifier>win-x64</RuntimeIdentifier>
-	<AssemblyName>SalePageServer</AssemblyName>
+	<AssemblyName>RetailTradeServer</AssemblyName>
 	<Product>SP Магазин</Product>
 	<PackageIcon>newlogo.png</PackageIcon>
-	<RootNamespace>SalePageServer</RootNamespace>
+	<RootNamespace>RetailTradeServer</RootNamespace>
 	<BaseOutputPath></BaseOutputPath>
   </PropertyGroup>
 
@@ -54,6 +54,7 @@
     <None Remove="Resources\Images\background5.png" />
     <None Remove="Resources\Images\background6.png" />
     <None Remove="Resources\Images\background7.png" />
+    <None Remove="Resources\Images\logo.png" />
     <None Remove="Resources\Images\newlogo.png" />
     <None Remove="Views\HomeView.xaml~RF1dc6ec.TMP" />
   </ItemGroup>
@@ -96,7 +97,7 @@
 
   <ItemGroup>
     <Content Include="Resources\Icons\lgog.ico" />
-    <Content Include="Resources\Icons\newlogo.ico" />
+    <Content Include="logo.ico" />
     <Reference Include="RetailTrade.Barcode">
       <HintPath>..\RetailTrade.Barcode\bin\Release\net6.0\publish\RetailTrade.Barcode.dll</HintPath>
     </Reference>
@@ -119,6 +120,7 @@
     <Resource Include="Resources\Images\background5.png" />
     <Resource Include="Resources\Images\background6.png" />
     <Resource Include="Resources\Images\background7.png" />
+    <Resource Include="Resources\Images\logo.png" />
     <Resource Include="Resources\Images\newlogo.png" />
   </ItemGroup>
 
