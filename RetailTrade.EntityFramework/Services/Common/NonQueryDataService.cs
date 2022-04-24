@@ -23,7 +23,7 @@ namespace RetailTrade.EntityFramework.Services.Common
                 await context.SaveChangesAsync();
                 return createdResult.Entity;
             }
-            catch (Exception e)
+            catch (Exception)
             {
                 //ignore
             }

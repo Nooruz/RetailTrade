@@ -5,7 +5,7 @@ using RetailTradeServer.State.Authenticators;
 using RetailTradeServer.State.Messages;
 using RetailTradeServer.State.Navigators;
 using RetailTradeServer.ViewModels;
-using SalePageServer.Properties;
+using RetailTradeServer.Properties;
 using System;
 using System.ComponentModel;
 using System.Threading.Tasks;

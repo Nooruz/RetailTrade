@@ -9,7 +9,7 @@ using RetailTradeServer.State.Reports;
 using RetailTradeServer.ViewModels.Base;
 using RetailTradeServer.ViewModels.Dialogs;
 using RetailTradeServer.Views.Dialogs;
-using SalePageServer.Properties;
+using RetailTradeServer.Properties;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;

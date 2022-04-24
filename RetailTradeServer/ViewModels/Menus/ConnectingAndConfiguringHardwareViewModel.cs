@@ -3,7 +3,7 @@ using RetailTradeServer.Commands;
 using RetailTradeServer.ViewModels.Base;
 using RetailTradeServer.ViewModels.Dialogs;
 using RetailTradeServer.Views.Dialogs;
-using SalePageServer.Properties;
+using RetailTradeServer.Properties;
 using System.Collections.Generic;
 using System.Linq;
 using System.Windows.Input;

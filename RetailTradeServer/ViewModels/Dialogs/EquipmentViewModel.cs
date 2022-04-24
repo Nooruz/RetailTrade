@@ -1,7 +1,7 @@
 ﻿using DevExpress.Mvvm;
 using RetailTradeServer.Commands;
 using RetailTradeServer.ViewModels.Dialogs.Base;
-using SalePageServer.Properties;
+using RetailTradeServer.Properties;
 using System.Collections.Generic;
 using System.Drawing.Printing;
 using System.IO.Ports;

@@ -70,6 +70,9 @@
                         <dxmvvm:EventToCommand EventName="ValidateCell"
                                                Command="{Binding ValidateCellCommand}"
                                                PassEventArgsToCommand="True"/>
+                        <dxmvvm:KeyToCommand EventName="PreviewKeyDown"
+                                             KeyGesture="Delete"
+                                             Command="{Binding DeleteSelectedRowCommand}"/>
                     </dxmvvm:Interaction.Behaviors>
                 </dxg:TableView>
             </dxg:GridControl.View>
@@ -159,8 +162,8 @@
                                        Command="{Binding GridControlLoadedCommand}"
                                        PassEventArgsToCommand="True"/>
                 <dxmvvm:KeyToCommand KeyGesture="Delete"
-                             EventName="PreviewKeyDown"
-                             Command="{Binding DeleteSelectedRowCommand}"/>
+                                     EventName="PreviewKeyDown"
+                                     Command="{Binding DeleteSelectedRowCommand}"/>
             </dxmvvm:Interaction.Behaviors>
 
         </dxg:GridControl>

@@ -7,7 +7,7 @@ using RetailTrade.SQLServerConnectionDialog;
 using RetailTradeServer.HostBuilders;
 using RetailTradeServer.ViewModels;
 using RetailTradeServer.ViewModels.Dialogs;
-using SalePageServer.Properties;
+using RetailTradeServer.Properties;
 using System;
 using System.Data.SqlClient;
 using System.IO;

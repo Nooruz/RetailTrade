@@ -7,7 +7,7 @@ using RetailTradeServer.State.Messages;
 using RetailTradeServer.State.Navigators;
 using RetailTradeServer.ViewModels.Base;
 using SalePageServer.Commands;
-using SalePageServer.Properties;
+using RetailTradeServer.Properties;
 using System;
 using System.Collections.Generic;
 using System.Linq;

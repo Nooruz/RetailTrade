@@ -4,7 +4,7 @@ using RetailTrade.Domain.Services;
 using RetailTradeServer.Commands;
 using RetailTradeServer.State.Messages;
 using RetailTradeServer.ViewModels.Dialogs.Base;
-using SalePageServer.Properties;
+using RetailTradeServer.Properties;
 using System.Collections.Generic;
 using System.Windows;
 using System.Windows.Controls;

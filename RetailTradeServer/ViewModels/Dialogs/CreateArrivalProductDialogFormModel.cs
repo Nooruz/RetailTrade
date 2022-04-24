@@ -8,7 +8,7 @@ using RetailTrade.Domain.Services;
 using RetailTradeServer.Commands;
 using RetailTradeServer.ViewModels.Dialogs.Base;
 using RetailTradeServer.Views.Dialogs;
-using SalePageServer.Properties;
+using RetailTradeServer.Properties;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -226,7 +226,6 @@ namespace RetailTradeServer.ViewModels.Dialogs
             ArrivalProducts.Add(new ArrivalProduct
             {
                 ProductId = product.Id,
-                Product = product,
                 ArrivalPrice = product.ArrivalPrice,
                 Quantity = 1
             });
@@ -312,9 +311,26 @@ namespace RetailTradeServer.ViewModels.Dialogs
         {
             if (SelectedSupplierId != null)
             {
-                ArrivalProducts.Add(new ArrivalProduct());
-                SelectedArrivalProduct = EmptyArrivalProduct;
-                ShowEditor(0);
+                if (ArrivalProducts.Any())
+                {
+                    SelectedArrivalProduct = ArrivalProducts.FirstOrDefault(a => a.ProductId == 0);
+                    if (SelectedArrivalProduct == null)
+                    {
+                        ArrivalProducts.Add(new ArrivalProduct());
+                        SelectedArrivalProduct = EmptyArrivalProduct;
+                        ShowEditor(0);
+                    }
+                    else
+                    {
+                        ShowEditor(0);
+                    }
+                }
+                else
+                {
+                    ArrivalProducts.Add(new ArrivalProduct());
+                    SelectedArrivalProduct = EmptyArrivalProduct;
+                    ShowEditor(0);
+                }
             }
             else
             {

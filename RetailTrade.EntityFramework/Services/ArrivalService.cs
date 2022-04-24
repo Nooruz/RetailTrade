@@ -57,10 +57,10 @@ namespace RetailTrade.EntityFramework.Services
 
         public async Task<Arrival> CreateAsync(Arrival entity)
         {
-            var result = await _nonQueryDataService.Create(entity);
-            if (result != null)
+            if (entity.ArrivalProducts.Any())
             {
-                if (entity.ArrivalProducts.Count > 0)
+                var result = await _nonQueryDataService.Create(entity);
+                if (result != null)
                 {
                     foreach (var item in entity.ArrivalProducts)
                     {
@@ -68,10 +68,10 @@ namespace RetailTrade.EntityFramework.Services
                         product.Quantity += item.Quantity;
                         await _productService.UpdateAsync(product.Id, product);
                     }
+                    OnCreated?.Invoke(await GetByIncludAsync(result.Id));
                 }
-                OnCreated?.Invoke(await GetByIncludAsync(result.Id));
-            }
-            return result;
+            }                       
+            return null;
         }
 
         public async Task<bool> DeleteAsync(int id)

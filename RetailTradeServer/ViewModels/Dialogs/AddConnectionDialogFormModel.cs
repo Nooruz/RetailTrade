@@ -3,7 +3,7 @@ using Microsoft.Win32;
 using Newtonsoft.Json;
 using RetailTradeServer.Commands;
 using RetailTradeServer.ViewModels.Dialogs.Base;
-using SalePageServer.Properties;
+using RetailTradeServer.Properties;
 using SalePageServer.Utilities;
 using System;
 using System.Collections.Generic;

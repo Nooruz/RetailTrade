@@ -1,7 +1,7 @@
 ﻿using RetailTradeServer.Commands;
 using RetailTradeServer.State.Messages;
 using RetailTradeServer.ViewModels.Dialogs.Base;
-using SalePageServer.Properties;
+using RetailTradeServer.Properties;
 using System.Collections.ObjectModel;
 using System.Collections.Specialized;
 using System.ComponentModel;
