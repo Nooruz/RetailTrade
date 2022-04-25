@@ -1,6 +1,4 @@
 ﻿using DevExpress.Mvvm;
-using RetailTrade.CashRegisterMachine;
-using RetailTrade.CashRegisterMachine.Services;
 using RetailTrade.Domain.Models;
 using RetailTrade.Domain.Services;
 using RetailTradeClient.State.Users;
@@ -127,6 +125,10 @@ namespace RetailTradeClient.State.Shifts
             {
                 IsShiftOpen = false;
                 CurrentShift = null;
+                //XReport xReport = await _reportService.CreateXReport();
+                //PrintToolBase tool = new(xReport.PrintingSystem);
+                //tool.PrinterSettings.PrinterName = Settings.Default.DefaultReceiptPrinter;
+                //tool.Print();
                 return CheckingResult.Close;
             }
             return CheckingResult.ErrorClosing;

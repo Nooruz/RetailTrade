@@ -189,11 +189,6 @@ namespace RetailTradeClient.ViewModels
         /// </summary>
         public ICommand ClosingShiftCommand { get; }
 
-        /// <summary>
-        /// Распечатать х-отчет
-        /// </summary>
-        public ICommand PrintXReportCommand => new PrintXReportCommand();
-
         #endregion        
 
         #region Constructor
@@ -203,12 +198,12 @@ namespace RetailTradeClient.ViewModels
             IAuthenticator authenticator,
             IShiftStore shiftStore,
             IBarcodeService barcodeService,
-            IReportService reportService,
             IProductService productService,
             PaymentCashViewModel paymentCashViewModel,
             PaymentComplexViewModel paymentComplexViewModel,
             ProductViewModel productViewModel,
-            MainWindow mainWindow)
+            MainWindow mainWindow,
+            IReportService reportService)
         {
             _userStore = userStore;
             _receiptService = receiptService;
@@ -579,6 +574,22 @@ namespace RetailTradeClient.ViewModels
         #endregion
 
         #region Public Voids
+
+        [Command]
+        public async void PrintXReport()
+        {
+            try
+            {
+                XReport xReport = await _reportService.CreateXReport();
+                PrintToolBase tool = new(xReport.PrintingSystem);
+                tool.PrinterSettings.PrinterName = Settings.Default.DefaultReceiptPrinter;
+                tool.Print();
+            }
+            catch (Exception)
+            {
+                //ignore
+            }
+        }
 
         [Command]
         public void ManualDiscountVisible()

@@ -1,11 +1,7 @@
-﻿using DevExpress.Mvvm.DataAnnotations;
-using RetailTrade.Domain.Services;
-using RetailTradeClient.Commands;
+﻿using RetailTradeClient.Commands;
 using RetailTradeClient.State.Navigators;
-using RetailTradeClient.State.Users;
 using RetailTradeClient.ViewModels.Base;
 using RetailTradeClient.ViewModels.Factories;
-using System.Windows;
 using System.Windows.Input;
 
 namespace RetailTradeClient.ViewModels
@@ -33,9 +29,7 @@ namespace RetailTradeClient.ViewModels
         #region Constructor
 
         public MainViewModel(INavigator navigator,
-            IViewModelFactory viewModelFactory,
-            IUserStore userStore,
-            IOrganizationService organizationService)
+            IViewModelFactory viewModelFactory)
         {
             _navigator = navigator;
 

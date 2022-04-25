@@ -64,9 +64,7 @@ namespace RetailTradeClient.HostBuilders
         private static MainViewModel CreateMainWindowViewModel(IServiceProvider services)
         {
             return new MainViewModel(services.GetRequiredService<INavigator>(),
-                services.GetRequiredService<IViewModelFactory>(),
-                services.GetRequiredService<IUserStore>(),
-                services.GetRequiredService<IOrganizationService>());
+                services.GetRequiredService<IViewModelFactory>());
         }
 
         private static HomeViewModel CreateHomeViewModel(IServiceProvider services)
@@ -76,12 +74,12 @@ namespace RetailTradeClient.HostBuilders
                 services.GetRequiredService<IAuthenticator>(),
                 services.GetRequiredService<IShiftStore>(),
                 services.GetRequiredService<IBarcodeService>(),
-                services.GetRequiredService<IReportService>(),
                 services.GetRequiredService<IProductService>(),
                 services.GetRequiredService<PaymentCashViewModel>(),
                 services.GetRequiredService<PaymentComplexViewModel>(),
                 services.GetRequiredService<ProductViewModel>(),
-                services.GetRequiredService<MainWindow>());
+                services.GetRequiredService<MainWindow>(),
+                services.GetRequiredService<IReportService>());
         }
 
         private static LoginViewModel CreateLoginViewModel(IServiceProvider services)
