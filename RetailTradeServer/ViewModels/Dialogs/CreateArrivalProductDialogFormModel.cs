@@ -170,16 +170,26 @@ namespace RetailTradeServer.ViewModels.Dialogs
 
         private void UserControlLoaded(object parameter)
         {
-            if (parameter is RoutedEventArgs e)
+            try
             {
-                if (e.Source is UserControl userControl)
+                if (parameter is RoutedEventArgs e)
                 {
-                    userControl.Unloaded += UserControl_Unloaded;
+                    if (e.Source is UserControl userControl)
+                    {
+                        userControl.Unloaded += UserControl_Unloaded;
+                    }
                 }
+                GetSupplier();
+                if (Enum.IsDefined(typeof(BarcodeDevice), Settings.Default.BarcodeDefaultDevice))
+                {
+                    _barcodeService.Open(Enum.Parse<BarcodeDevice>(Settings.Default.BarcodeDefaultDevice));
+                }
+                _barcodeService.OnBarcodeEvent += BarcodeService_OnBarcodeEvent;
             }
-            GetSupplier();
-            _barcodeService.Open(BarcodeDevice.Com, Settings.Default.BarcodeCom, Settings.Default.BarcodeSpeed);
-            _barcodeService.OnBarcodeEvent += BarcodeService_OnBarcodeEvent;
+            catch (Exception)
+            {
+                //ignore
+            }
         }
 
         private void BarcodeService_OnBarcodeEvent(string barcode)
@@ -234,8 +244,18 @@ namespace RetailTradeServer.ViewModels.Dialogs
 
         private void UserControl_Unloaded(object sender, RoutedEventArgs e)
         {
-            _barcodeService.OnBarcodeEvent -= BarcodeService_OnBarcodeEvent;
-            _barcodeService.Close(BarcodeDevice.Com);
+            try
+            {
+                _barcodeService.OnBarcodeEvent -= BarcodeService_OnBarcodeEvent;
+                if (Enum.IsDefined(typeof(BarcodeDevice), Settings.Default.BarcodeDefaultDevice))
+                {
+                    _barcodeService.Close(Enum.Parse<BarcodeDevice>(Settings.Default.BarcodeDefaultDevice));
+                }
+            }
+            catch (Exception)
+            {
+                //ignore
+            }
         }
 
         private void OpenProductDialog()

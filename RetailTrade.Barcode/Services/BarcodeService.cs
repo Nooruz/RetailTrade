@@ -1,4 +1,6 @@
-﻿using System.IO.Ports;
+﻿using CoreScanner;
+using System.IO.Ports;
+using System.Management;
 using System.Text;
 using System.Xml.Linq;
 
@@ -260,6 +262,13 @@ namespace RetailTrade.Barcode.Services
         #region Private Members
 
         private SerialPort? _serialPort;
+        private CCoreScanner _scanner;
+
+        #endregion
+
+        #region Public Properties
+
+        public string? ComBarcode => SearchBarcodeScaner();
 
         #endregion
 
@@ -296,6 +305,7 @@ namespace RetailTrade.Barcode.Services
             switch (barcodeDevice)
             {
                 case BarcodeDevice.Com:
+                    OpenComBarcode();
                     break;
                 case BarcodeDevice.Zebra:
                     OpenZebra();
@@ -304,14 +314,6 @@ namespace RetailTrade.Barcode.Services
                     break;
                 default:
                     break;
-            }
-        }
-
-        public void Open(BarcodeDevice barcodeDevice, string comPortName, int speed)
-        {
-            if (barcodeDevice == BarcodeDevice.Com)
-            {
-                OpenComBarcode(comPortName, speed);
             }
         }
 
@@ -333,6 +335,7 @@ namespace RetailTrade.Barcode.Services
                 {
                     OnBarcodeEvent?.Invoke(Replace(_serialPort.ReadExisting()));
                     _serialPort.DiscardInBuffer();
+                    Thread.Sleep(1000);
                 }
             }
             catch (Exception)
@@ -361,33 +364,41 @@ namespace RetailTrade.Barcode.Services
 
         #region ComBarcode
 
-        private void OpenComBarcode(string comPortName, int speed)
+        private string? SearchBarcodeScaner()
+        {
+            using var searcher = new ManagementObjectSearcher("SELECT * FROM Win32_PnPEntity WHERE Caption like '%COM%'");
+            var portNmaes = SerialPort.GetPortNames();
+            var ports = searcher.Get().Cast<ManagementBaseObject>().ToList().Select(p => p["Caption"].ToString());
+
+            var portList = portNmaes.Select(n => n + " - " + ports.FirstOrDefault(s => s.Contains(n))).ToList();
+
+            foreach (string s in portList)
+            {
+                if (s.Contains("Barcode"))
+                {
+                    return s.Substring(0, s.IndexOf(" "));
+                }
+            }
+
+            return null;
+        }
+
+        private void OpenComBarcode()
         {
             try
             {
-                if (!string.IsNullOrEmpty(comPortName))
+                if (!string.IsNullOrEmpty(ComBarcode))
                 {
-                    if (_serialPort != null)
+                    var sd = ComBarcode;
+                    _serialPort = new()
                     {
-                        if (!_serialPort.IsOpen)
-                        {
-                            _serialPort.Open();
-                            _serialPort.DiscardInBuffer();
-                            _serialPort.DataReceived += SerialPort_DataReceived;
-                        }
-                    }
-                    else
-                    {
-                        _serialPort = new()
-                        {
-                            PortName = comPortName,
-                            BaudRate = speed,
-                            ReadTimeout = 1000
-                        };
-                        _serialPort.Open();
-                        _serialPort.DiscardInBuffer();
-                        _serialPort.DataReceived += SerialPort_DataReceived;
-                    }
+                        PortName = ComBarcode,
+                        BaudRate = 115200,
+                        ReadTimeout = 5000
+                    };
+                    _serialPort.Open();
+                    _serialPort.DiscardInBuffer();
+                    _serialPort.DataReceived += SerialPort_DataReceived;
                 }
             }
             catch (Exception)
@@ -421,38 +432,38 @@ namespace RetailTrade.Barcode.Services
 
         private void OpenZebra()
         {
-            //try
-            //{
-            //    if (_scanner == null)
-            //    {
-            //        _scanner = new();
-            //    }
+            try
+            {
+                if (_scanner == null)
+                {
+                    _scanner = new();
+                }
 
-            //    int appHandle = 0;
-            //    short[] scannerTypes = new short[1];
-            //    scannerTypes[0] = 1;
-            //    short numberOfScannerTypes = 1;
+                int appHandle = 0;
+                short[] scannerTypes = new short[1];
+                scannerTypes[0] = 1;
+                short numberOfScannerTypes = 1;
 
-            //    _scanner.Open(appHandle, scannerTypes, numberOfScannerTypes, out int status);
+                _scanner.Open(appHandle, scannerTypes, numberOfScannerTypes, out int status);
 
-            //    string inXML = "<inArgs>" +
-            //                       "<cmdArgs>" +
-            //                           "<arg-int>6</arg-int>" + // Number of events you want to subscribe
-            //                           "<arg-int>1,2,4,8,16,32</arg-int>" + // Comma separated event IDs
-            //                       "</cmdArgs>" +
-            //                   "</inArgs>";
+                string inXML = "<inArgs>" +
+                                   "<cmdArgs>" +
+                                       "<arg-int>6</arg-int>" + // Number of events you want to subscribe
+                                       "<arg-int>1,2,4,8,16,32</arg-int>" + // Comma separated event IDs
+                                   "</cmdArgs>" +
+                               "</inArgs>";
 
-            //    _scanner.ExecCommand((int)Opcode.RegisterForEvents, ref inXML, out string outXML, out status);
+                _scanner.ExecCommand((int)Opcode.RegisterForEvents, ref inXML, out string outXML, out status);
 
-            //    if (status == (int)Status.Success)
-            //    {
-            //        _scanner.BarcodeEvent += new _ICoreScannerEvents_BarcodeEventEventHandler(OnZebraBarcodeEvent);
-            //    }
-            //}
-            //catch (Exception)
-            //{
-            //    //ignore
-            //}
+                if (status == (int)Status.Success)
+                {
+                    _scanner.BarcodeEvent += new _ICoreScannerEvents_BarcodeEventEventHandler(OnZebraBarcodeEvent);
+                }
+            }
+            catch (Exception)
+            {
+                //ignore
+            }
         }
         private void OnZebraBarcodeEvent(short eventType, ref string pscanData)
         {
@@ -469,7 +480,7 @@ namespace RetailTrade.Barcode.Services
         }
         private void CloseZebra()
         {
-            //_scanner.Close(0, out _);
+            _scanner.Close(0, out _);
         }
 
         #endregion

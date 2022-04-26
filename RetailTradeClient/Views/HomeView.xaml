@@ -24,7 +24,7 @@
 
     <dxmvvm:Interaction.Behaviors>
         <dxmvvm:EventToCommand EventName="Loaded"
-                               Command="{Binding LoadedHomeViewCommand}"
+                               Command="{Binding UserControlLoadedCommand}"
                                PassEventArgsToCommand="True"/>
     </dxmvvm:Interaction.Behaviors>
 

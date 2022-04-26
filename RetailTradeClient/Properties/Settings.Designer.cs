@@ -119,30 +119,6 @@ namespace RetailTradeClient.Properties {
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("")]
-        public string BarcodeCom {
-            get {
-                return ((string)(this["BarcodeCom"]));
-            }
-            set {
-                this["BarcodeCom"] = value;
-            }
-        }
-        
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("9600")]
-        public int BarcodeSpeed {
-            get {
-                return ((int)(this["BarcodeSpeed"]));
-            }
-            set {
-                this["BarcodeSpeed"] = value;
-            }
-        }
-        
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("")]
         public string BarcodeDefaultDevice {
             get {
                 return ((string)(this["BarcodeDefaultDevice"]));

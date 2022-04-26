@@ -1,5 +1,5 @@
 ﻿<?xml version='1.0' encoding='utf-8'?>
-<SettingsFile xmlns="http://schemas.microsoft.com/VisualStudio/2004/01/settings" CurrentProfile="(Default)" GeneratedClassNamespace="SalePageServer.Properties" GeneratedClassName="Settings">
+<SettingsFile xmlns="http://schemas.microsoft.com/VisualStudio/2004/01/settings" CurrentProfile="(Default)" GeneratedClassNamespace="RetailTradeServer.Properties" GeneratedClassName="Settings">
   <Profiles />
   <Settings>
     <Setting Name="AdminCreated" Type="System.Boolean" Scope="User">
@@ -27,13 +27,10 @@
   &lt;string&gt;Принтер этикеток&lt;/string&gt;
 &lt;/ArrayOfString&gt;</Value>
     </Setting>
-    <Setting Name="BarcodeCom" Type="System.String" Scope="User">
+    <Setting Name="DefaultUserName" Type="System.String" Scope="User">
       <Value Profile="(Default)" />
     </Setting>
-    <Setting Name="BarcodeSpeed" Type="System.Int32" Scope="User">
-      <Value Profile="(Default)">0</Value>
-    </Setting>
-    <Setting Name="DefaultUserName" Type="System.String" Scope="User">
+    <Setting Name="BarcodeDefaultDevice" Type="System.String" Scope="User">
       <Value Profile="(Default)" />
     </Setting>
   </Settings>

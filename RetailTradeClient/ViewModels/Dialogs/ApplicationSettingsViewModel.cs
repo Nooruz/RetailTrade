@@ -27,25 +27,7 @@ namespace RetailTradeClient.ViewModels.Dialogs
         #endregion
 
         #region Public Properties
-
-        public int SelectedBarcodeSpeed
-        {
-            get => Settings.Default.BarcodeSpeed;
-            set
-            {
-                Settings.Default.BarcodeSpeed = value;
-                OnPropertyChanged(nameof(SelectedBarcodeSpeed));
-            }
-        }
-        public string SelectedComPort
-        {
-            get => Settings.Default.BarcodeCom;
-            set
-            {
-                Settings.Default.BarcodeCom = value;
-                OnPropertyChanged(nameof(SelectedComPort));
-            }
-        }
+        
         public IEnumerable<string> ComPorts => SerialPort.GetPortNames();
         public IEnumerable<BarcodeDevice> BarcodeDevices => Enum.GetValues(typeof(BarcodeDevice)).Cast<BarcodeDevice>();
         public IEnumerable<int> BarcodeSpeed => new List<int>() { 2400, 4800, 7200, 9600, 14400, 19200, 38400 };

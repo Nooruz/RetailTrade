@@ -16,14 +16,10 @@
 
         <dxlc:LayoutGroup Orientation="Vertical"
                           Visibility="{Binding BarcodeSettings}">
-            
-            <dxlc:LayoutItem Label="COM порт:">
-                <dxe:ComboBoxEdit ItemsSource="{Binding ComPorts}"
-                                  EditValue="{Binding SelectedComPort}"/>
-            </dxlc:LayoutItem>
-            <dxlc:LayoutItem Label="Скорость:">
-                <dxe:ComboBoxEdit ItemsSource="{Binding BarcodeSpeed}"
-                                  EditValue="{Binding SelectedBarcodeSpeed}"/>
+
+            <dxlc:LayoutItem Label="Сканер штрихкода:">
+                <dxe:ComboBoxEdit ItemsSource="{Binding BarcodeDevices}"
+                                  SelectedItem="{Binding SelectedBarcodeDevice}"/>
             </dxlc:LayoutItem>
 
         </dxlc:LayoutGroup>

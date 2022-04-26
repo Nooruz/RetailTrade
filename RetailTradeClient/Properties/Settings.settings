@@ -26,12 +26,6 @@
     <Setting Name="DefaultKKMName" Type="System.String" Scope="User">
       <Value Profile="(Default)" />
     </Setting>
-    <Setting Name="BarcodeCom" Type="System.String" Scope="User">
-      <Value Profile="(Default)" />
-    </Setting>
-    <Setting Name="BarcodeSpeed" Type="System.Int32" Scope="User">
-      <Value Profile="(Default)">9600</Value>
-    </Setting>
     <Setting Name="BarcodeDefaultDevice" Type="System.String" Scope="User">
       <Value Profile="(Default)" />
     </Setting>

@@ -89,6 +89,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\RetailTrade.Barcode\RetailTrade.Barcode.csproj" />
     <ProjectReference Include="..\RetailTrade.Domain\RetailTrade.Domain.csproj" />
     <ProjectReference Include="..\RetailTrade.EntityFramework\RetailTrade.EntityFramework.csproj" />
     <ProjectReference Include="..\RetailTrade.LoadingPanelControl\RetailTrade.LoadingPanelControl.csproj" />
@@ -98,9 +99,6 @@
   <ItemGroup>
     <Content Include="Resources\Icons\lgog.ico" />
     <Content Include="logo.ico" />
-    <Reference Include="RetailTrade.Barcode">
-      <HintPath>..\RetailTrade.Barcode\bin\Release\net6.0\publish\RetailTrade.Barcode.dll</HintPath>
-    </Reference>
     <Reference Include="RetailTrade.CashRegisterMachine">
       <HintPath>..\RetailTrade.CashRegisterMachine\bin\Release\net6.0-windows\publish\RetailTrade.CashRegisterMachine.dll</HintPath>
     </Reference>

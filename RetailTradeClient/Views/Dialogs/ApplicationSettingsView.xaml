@@ -32,19 +32,6 @@
                               SelectedItem="{Binding SelectedBarcodeDevice}"/>
         </dxlc:LayoutItem>
 
-        <dxlc:LayoutGroup Orientation="Vertical"
-                          Visibility="{Binding ComSettingsVisibility}">
-            <dxlc:LayoutItem Label="COM порт:">
-                <dxe:ComboBoxEdit ItemsSource="{Binding ComPorts}"
-                              EditValue="{Binding SelectedComPort}"/>
-            </dxlc:LayoutItem>
-
-            <dxlc:LayoutItem Label="Скорость сканера штрихкода:">
-                <dxe:ComboBoxEdit ItemsSource="{Binding BarcodeSpeed}"
-                              EditValue="{Binding SelectedBarcodeSpeed}"/>
-            </dxlc:LayoutItem>
-        </dxlc:LayoutGroup>
-
         <dxlc:LayoutItem Label="Вести учет:">
             <dxe:CheckEdit IsChecked="{Binding IsKeepRecords}"
                            HorizontalAlignment="Left"/>

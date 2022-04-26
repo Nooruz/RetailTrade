@@ -8,6 +8,8 @@ using System.IO.Ports;
 using System.Linq;
 using System.Windows;
 using System.Windows.Input;
+using RetailTrade.Barcode.Services;
+using System;
 
 namespace RetailTradeServer.ViewModels.Dialogs
 {
@@ -22,9 +24,8 @@ namespace RetailTradeServer.ViewModels.Dialogs
         #region Private Members
 
         private string _selectedTypeEquipment;
-        private string _selectedComPort = Settings.Default.BarcodeCom;
-        private int _selectedBarcodeSpeed = Settings.Default.BarcodeSpeed;
         private string _selectedPrinter = Settings.Default.DefaultLabelPrinter;
+        private BarcodeDevice _selectedBarcodeDevice = Enum.TryParse(Settings.Default.BarcodeDefaultDevice, out BarcodeDevice barcodeDevice) ? barcodeDevice : BarcodeDevice.Com;
 
         #endregion
 
@@ -47,24 +48,6 @@ namespace RetailTradeServer.ViewModels.Dialogs
                 OnPropertyChanged(nameof(LabelPrinterSettings));
             }
         }
-        public string SelectedComPort
-        {
-            get => _selectedComPort;
-            set
-            {
-                _selectedComPort = value;
-                OnPropertyChanged(nameof(SelectedComPort));
-            }
-        }
-        public int SelectedBarcodeSpeed
-        {
-            get => _selectedBarcodeSpeed;
-            set
-            {
-                _selectedBarcodeSpeed = value;
-                OnPropertyChanged(nameof(SelectedBarcodeSpeed));
-            }
-        }
         public string SelectedPrinter
         {
             get => _selectedPrinter;
@@ -72,6 +55,16 @@ namespace RetailTradeServer.ViewModels.Dialogs
             {
                 _selectedPrinter = value;
                 OnPropertyChanged(nameof(SelectedPrinter));
+            }
+        }
+        public IEnumerable<BarcodeDevice> BarcodeDevices => Enum.GetValues(typeof(BarcodeDevice)).Cast<BarcodeDevice>();
+        public BarcodeDevice SelectedBarcodeDevice
+        {
+            get => _selectedBarcodeDevice;
+            set
+            {
+                _selectedBarcodeDevice = value;
+                OnPropertyChanged(nameof(SelectedBarcodeDevice));
             }
         }
 
@@ -98,17 +91,9 @@ namespace RetailTradeServer.ViewModels.Dialogs
         {
             if (SelectedTypeEquipment == TypeEquipment.BarcodeScanner)
             {
-                if (!string.IsNullOrEmpty(SelectedComPort))
-                {
-                    Settings.Default.BarcodeCom = SelectedComPort;
-                    Settings.Default.BarcodeSpeed = SelectedBarcodeSpeed;
-                    Settings.Default.Save();
-                    CurrentWindowService.Close();
-                }
-                else
-                {
-                    _ = MessageBoxService.ShowMessage("Выберите СОМ порт!", "Sale Page", MessageButton.OK, MessageIcon.Exclamation);
-                }
+                Settings.Default.BarcodeDefaultDevice = SelectedBarcodeDevice.ToString();
+                Settings.Default.Save();
+                CurrentWindowService.Close();
             }
             else
             {

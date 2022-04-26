@@ -13,6 +13,7 @@ using System.Collections.ObjectModel;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
+using System;
 
 namespace RetailTradeServer.ViewModels.Dialogs
 {
@@ -217,19 +218,29 @@ namespace RetailTradeServer.ViewModels.Dialogs
 
         private async void UserControlLoaded(object parameter)
         {
-            if (parameter is RoutedEventArgs e)
+            try
             {
-                if (e.Source is UserControl userControl)
+                if (parameter is RoutedEventArgs e)
                 {
-                    userControl.Unloaded += UserControl_Unloaded;
+                    if (e.Source is UserControl userControl)
+                    {
+                        userControl.Unloaded += UserControl_Unloaded;
+                    }
                 }
-            }
-            Suppliers = new(await _supplierService.GetAllAsync());
-            Units = await _unitService.GetAllAsync();
-            TypeProducts = new(await _typeProductService.GetTypesAsync());
+                Suppliers = new(await _supplierService.GetAllAsync());
+                Units = await _unitService.GetAllAsync();
+                TypeProducts = new(await _typeProductService.GetTypesAsync());
 
-            _barcodeService.Open(BarcodeDevice.Com, Settings.Default.BarcodeCom, Settings.Default.BarcodeSpeed);
-            _barcodeService.OnBarcodeEvent += BarcodeService_OnBarcodeEvent;
+                if (Enum.IsDefined(typeof(BarcodeDevice), Settings.Default.BarcodeDefaultDevice))
+                {
+                    _barcodeService.Open(Enum.Parse<BarcodeDevice>(Settings.Default.BarcodeDefaultDevice));
+                }
+                _barcodeService.OnBarcodeEvent += BarcodeService_OnBarcodeEvent;
+            }
+            catch (Exception)
+            {
+                //ignore
+            }
         }
 
         private void UserControl_Unloaded(object sender, RoutedEventArgs e)
@@ -237,7 +248,11 @@ namespace RetailTradeServer.ViewModels.Dialogs
             _supplierService.OnSupplierCreated -= SupplierService_OnSupplierCreated;
             _typeProductService.OnTypeProductCreated -= TypeProductService_OnTypeProductCreated;
             _barcodeService.OnBarcodeEvent -= BarcodeService_OnBarcodeEvent;
-            _barcodeService.Close(BarcodeDevice.Com);
+            if (Enum.IsDefined(typeof(BarcodeDevice), Settings.Default.BarcodeDefaultDevice))
+            {
+                _barcodeService.Close(Enum.Parse<BarcodeDevice>(Settings.Default.BarcodeDefaultDevice));
+            }
+            _barcodeService.OnBarcodeEvent -= BarcodeService_OnBarcodeEvent;
         }
 
         private void BarcodeService_OnBarcodeEvent(string barcode)

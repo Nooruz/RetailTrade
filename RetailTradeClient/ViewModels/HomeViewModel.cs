@@ -7,7 +7,6 @@ using RetailTrade.Barcode.Services;
 using RetailTrade.CashRegisterMachine;
 using RetailTrade.Domain.Models;
 using RetailTrade.Domain.Services;
-using RetailTradeClient.Commands;
 using RetailTradeClient.Properties;
 using RetailTradeClient.Report;
 using RetailTradeClient.State.Authenticators;
@@ -357,13 +356,16 @@ namespace RetailTradeClient.ViewModels
 
         private void BarcodeOpen()
         {
-            if (Enum.IsDefined(typeof(BarcodeDevice), Settings.Default.BarcodeDefaultDevice))
+            try
             {
-                BarcodeDevice barcodeDevice = Enum.Parse<BarcodeDevice>(Settings.Default.BarcodeDefaultDevice);
-                if (barcodeDevice == BarcodeDevice.Com)
+                if (Enum.IsDefined(typeof(BarcodeDevice), Settings.Default.BarcodeDefaultDevice))
                 {
-                    _barcodeService.Open(barcodeDevice, Settings.Default.BarcodeCom, Settings.Default.BarcodeSpeed);
+                    _barcodeService.Open(Enum.Parse<BarcodeDevice>(Settings.Default.BarcodeDefaultDevice));
                 }
+            }
+            catch (Exception)
+            {
+                //ignore
             }
         }
 
@@ -394,17 +396,28 @@ namespace RetailTradeClient.ViewModels
 
         private void HomeView_Unloaded(object sender, RoutedEventArgs e)
         {
-            _source.RemoveHook(HwndHook);
-            UnregisterHotKey(_windowHandle, HOTKEY_F5);
-            UnregisterHotKey(_windowHandle, HOTKEY_F6);
-            UnregisterHotKey(_windowHandle, HOTKEY_F7);
-            UnregisterHotKey(_windowHandle, HOTKEY_ALT_F5);
-            UnregisterHotKey(_windowHandle, HOTKEY_CTRL_F5);
-            UnregisterHotKey(_windowHandle, HOTKEY_CTRL_F);
-            UnregisterHotKey(_windowHandle, HOTKEY_ESC);
-            UnregisterHotKey(_windowHandle, HOTKEY_CTRL_Z);
-            UnregisterHotKey(_windowHandle, HOTKEY_F8);
-            _barcodeService.OnBarcodeEvent -= BarcodeService_OnBarcodeEvent;
+            try
+            {
+                _source.RemoveHook(HwndHook);
+                UnregisterHotKey(_windowHandle, HOTKEY_F5);
+                UnregisterHotKey(_windowHandle, HOTKEY_F6);
+                UnregisterHotKey(_windowHandle, HOTKEY_F7);
+                UnregisterHotKey(_windowHandle, HOTKEY_ALT_F5);
+                UnregisterHotKey(_windowHandle, HOTKEY_CTRL_F5);
+                UnregisterHotKey(_windowHandle, HOTKEY_CTRL_F);
+                UnregisterHotKey(_windowHandle, HOTKEY_ESC);
+                UnregisterHotKey(_windowHandle, HOTKEY_CTRL_Z);
+                UnregisterHotKey(_windowHandle, HOTKEY_F8);
+                _barcodeService.OnBarcodeEvent -= BarcodeService_OnBarcodeEvent;
+                if (Enum.IsDefined(typeof(BarcodeDevice), Settings.Default.BarcodeDefaultDevice))
+                {
+                    _barcodeService.Close(Enum.Parse<BarcodeDevice>(Settings.Default.BarcodeDefaultDevice));
+                }
+            }
+            catch (Exception)
+            {
+                //ignore
+            }
         }
 
         private async void BarcodeService_OnBarcodeEvent(string barcode)
@@ -926,7 +939,7 @@ namespace RetailTradeClient.ViewModels
         }
 
         [Command]
-        public void LoadedHomeView(object parameter)
+        public void UserControlLoaded(object parameter)
         {
             if (parameter is RoutedEventArgs e)
             {
@@ -948,8 +961,8 @@ namespace RetailTradeClient.ViewModels
                     RegisterHotKey(_windowHandle, HOTKEY_F7, MOD_NONE, VK_F8); //+
                 }
             }
-            _barcodeService.OnBarcodeEvent += BarcodeService_OnBarcodeEvent;
             BarcodeOpen();
+            _barcodeService.OnBarcodeEvent += BarcodeService_OnBarcodeEvent;
         }
 
         [Command]

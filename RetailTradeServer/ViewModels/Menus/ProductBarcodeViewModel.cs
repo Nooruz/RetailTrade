@@ -233,8 +233,18 @@ namespace RetailTradeServer.ViewModels.Menus
 
         private void UserControl_Unloaded(object sender, RoutedEventArgs e)
         {
-            _barcodeService.OnBarcodeEvent -= AddProductToPrint;
-            _barcodeService.Close(BarcodeDevice.Com);
+            try
+            {
+                _barcodeService.OnBarcodeEvent -= AddProductToPrint;
+                if (Enum.IsDefined(typeof(BarcodeDevice), Settings.Default.BarcodeDefaultDevice))
+                {
+                    _barcodeService.Close(Enum.Parse<BarcodeDevice>(Settings.Default.BarcodeDefaultDevice));
+                }
+            }
+            catch (Exception)
+            {
+                //ignore
+            }
         }
 
         #endregion
@@ -304,7 +314,10 @@ namespace RetailTradeServer.ViewModels.Menus
                         userControl.Unloaded += UserControl_Unloaded;
                     }
                 }
-                _barcodeService.Open(BarcodeDevice.Com, Settings.Default.BarcodeCom, Settings.Default.BarcodeSpeed);
+                if (Enum.IsDefined(typeof(BarcodeDevice), Settings.Default.BarcodeDefaultDevice))
+                {
+                    _barcodeService.Open(Enum.Parse<BarcodeDevice>(Settings.Default.BarcodeDefaultDevice));
+                }
                 _barcodeService.OnBarcodeEvent += AddProductToPrint;
                 Products = await _productService.GetAllAsync();
                 Units = await _unitService.GetAllAsync();
