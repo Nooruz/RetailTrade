@@ -87,6 +87,17 @@ namespace RetailTrade.CashRegisterMachine.Services
                 return e.Message;
             }
         }
+        public string CancelReceipt()
+        {
+            try
+            {
+                return Result(ShtrihM.SysAdminCancelCheck());
+            }
+            catch (Exception e)
+            {
+                return e.Message;
+            }
+        }
         public string Connect()
         {
             try

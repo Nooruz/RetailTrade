@@ -36,6 +36,20 @@
                 <MenuItem Header="X-отчет"
                           Command="{Binding PrintXReportCommand}"/>
             </MenuItem>
+            <MenuItem Header="ККМ">
+                <MenuItem Header="Открыть смену"
+                          Command="{Binding OpenShiftKKMCommand}"/>
+                <MenuItem Header="Закрыть смену"
+                          Command="{Binding CloseShiftKKM}"/>
+                <MenuItem Header="Аннулировать чек"
+                          Command="{Binding CancelReceiptKKMCommand}"/>
+                <Separator/>
+                <MenuItem Header="X отчет"
+                          Command="{Binding PrintXReportKKMCommand}"/>
+                <Separator/>
+                <MenuItem Header="Настройки"
+                          Command="{Binding SettingsKKMCommand}"/>
+            </MenuItem>
         </Menu>
 
         <dxlc:LayoutGroup Orientation="Horizontal"
@@ -434,7 +448,7 @@
                     <Button Content="Карта (F7)"
                             FontSize="22"
                             Command="{Binding CashlessPayCommand}"/>
-                    <dxe:TextEdit FontSize="32"
+                    <dxe:PopupCalcEdit FontSize="32"
                                   EditValueType="{x:Type sys:Decimal}"
                                   EditValue="{Binding CashlessPaySum, UpdateSourceTrigger=PropertyChanged}"
                                   MaskUseAsDisplayFormat="True" 
@@ -446,7 +460,7 @@
                                                    Command="{Binding CashlessPayLoadedCommand}"
                                                    PassEventArgsToCommand="True"/>
                         </dxmvvm:Interaction.Behaviors>
-                    </dxe:TextEdit>
+                    </dxe:PopupCalcEdit>
                 </dxlc:LayoutGroup>
 
                 <dxlc:LayoutItem Label="{Binding ChangeLabel}"

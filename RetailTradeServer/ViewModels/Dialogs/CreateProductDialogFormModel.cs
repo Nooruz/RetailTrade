@@ -245,14 +245,21 @@ namespace RetailTradeServer.ViewModels.Dialogs
 
         private void UserControl_Unloaded(object sender, RoutedEventArgs e)
         {
-            _supplierService.OnSupplierCreated -= SupplierService_OnSupplierCreated;
-            _typeProductService.OnTypeProductCreated -= TypeProductService_OnTypeProductCreated;
-            _barcodeService.OnBarcodeEvent -= BarcodeService_OnBarcodeEvent;
-            if (Enum.IsDefined(typeof(BarcodeDevice), Settings.Default.BarcodeDefaultDevice))
+            try
             {
-                _barcodeService.Close(Enum.Parse<BarcodeDevice>(Settings.Default.BarcodeDefaultDevice));
+                _supplierService.OnSupplierCreated -= SupplierService_OnSupplierCreated;
+                _typeProductService.OnTypeProductCreated -= TypeProductService_OnTypeProductCreated;
+                _barcodeService.OnBarcodeEvent -= BarcodeService_OnBarcodeEvent;
+                if (Enum.IsDefined(typeof(BarcodeDevice), Settings.Default.BarcodeDefaultDevice))
+                {
+                    _barcodeService.Close(Enum.Parse<BarcodeDevice>(Settings.Default.BarcodeDefaultDevice));
+                }
+                _barcodeService.OnBarcodeEvent -= BarcodeService_OnBarcodeEvent;
             }
-            _barcodeService.OnBarcodeEvent -= BarcodeService_OnBarcodeEvent;
+            catch (Exception)
+            {
+                //ignore
+            }
         }
 
         private void BarcodeService_OnBarcodeEvent(string barcode)

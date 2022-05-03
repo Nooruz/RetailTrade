@@ -151,5 +151,17 @@ namespace RetailTradeClient.Properties {
                 this["MaximumPercentage"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        public bool IsKKMShiftOpen {
+            get {
+                return ((bool)(this["IsKKMShiftOpen"]));
+            }
+            set {
+                this["IsKKMShiftOpen"] = value;
+            }
+        }
     }
 }

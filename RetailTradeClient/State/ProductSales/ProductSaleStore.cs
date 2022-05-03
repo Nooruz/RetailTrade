@@ -391,8 +391,6 @@ namespace RetailTradeClient.State.ProductSales
         {
             try
             {
-                PrintCashRegisterMachine();
-
                 Receipt receipt = await _receiptService.CreateAsync(new Receipt()
                 {
                     DateOfPurchase = DateTime.Now,                    
@@ -444,7 +442,7 @@ namespace RetailTradeClient.State.ProductSales
             tool.Print();
         }
 
-        private void PrintCashRegisterMachine()
+        private void PrintCashRegisterMachine(IEnumerable<Sale> sales)
         {
             try
             {
@@ -453,9 +451,9 @@ namespace RetailTradeClient.State.ProductSales
                     _cashRegisterMachineService.Connect();
                     _cashRegisterMachineService.CheckType = 0;
 
-                    if (Sales.Any())
+                    if (sales.Any())
                     {
-                        foreach (Sale item in Sales)
+                        foreach (Sale item in sales)
                         {
                             _cashRegisterMachineService.Quantity = Convert.ToDouble(item.Quantity);
                             _cashRegisterMachineService.Price = item.SalePrice;

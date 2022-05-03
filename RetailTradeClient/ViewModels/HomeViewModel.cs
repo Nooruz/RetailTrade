@@ -5,6 +5,7 @@ using DevExpress.Xpf.Grid;
 using DevExpress.XtraPrinting;
 using RetailTrade.Barcode.Services;
 using RetailTrade.CashRegisterMachine;
+using RetailTrade.CashRegisterMachine.Services;
 using RetailTrade.Domain.Models;
 using RetailTrade.Domain.Services;
 using RetailTradeClient.Properties;
@@ -43,6 +44,7 @@ namespace RetailTradeClient.ViewModels
         private readonly IBarcodeService _barcodeService;
         private readonly IReportService _reportService;
         private readonly IProductService _productService;
+        private readonly ICashRegisterMachineService _cashRegisterMachineService;
         private readonly PaymentCashViewModel _paymentCashViewModel;
         private readonly PaymentComplexViewModel _paymentComplexViewModel;
         private readonly PostponeReceiptViewModel _postponeReceiptViewModel;
@@ -198,6 +200,7 @@ namespace RetailTradeClient.ViewModels
             IShiftStore shiftStore,
             IBarcodeService barcodeService,
             IProductService productService,
+            ICashRegisterMachineService cashRegisterMachineService,
             PaymentCashViewModel paymentCashViewModel,
             PaymentComplexViewModel paymentComplexViewModel,
             ProductViewModel productViewModel,
@@ -215,6 +218,7 @@ namespace RetailTradeClient.ViewModels
             _mainWindow = mainWindow;
             _productService = productService;
             _reportService = reportService;
+            _cashRegisterMachineService = cashRegisterMachineService;
             _postponeReceiptViewModel = new() { Title = "Выбор чека" };
 
             BindingOperations.EnableCollectionSynchronization(ProductSales, _syncLock);
@@ -584,9 +588,144 @@ namespace RetailTradeClient.ViewModels
             return 0;
         }
 
+        private void PrintCashRegisterMachine()
+        {
+            try
+            {
+                if (_cashRegisterMachineService.ECRMode() == ECRModeEnum.Mode2 || _cashRegisterMachineService.ECRMode() == ECRModeEnum.Mode0)
+                {
+                    _cashRegisterMachineService.Connect();
+                    _cashRegisterMachineService.CheckType = 0;
+
+                    if (ProductSales.Any())
+                    {
+                        foreach (Sale item in ProductSales)
+                        {
+                            _cashRegisterMachineService.Quantity = Convert.ToDouble(item.Quantity);
+                            _cashRegisterMachineService.Price = item.SalePrice;
+
+                            var sum1NSP = Math.Round(item.SalePrice * 1 / 102, 2);
+                            string sumNSP = Math.Round(sum1NSP * 100, 0).ToString();
+
+                            _cashRegisterMachineService.StringForPrinting =
+                                string.Join(";", new string[] { "", item.TNVED, "", "", "0", "0", "4", sumNSP + "\n" + item.Name });
+                            _cashRegisterMachineService.Tax1 = 4;
+                            _cashRegisterMachineService.Tax2 = 0;
+                            _cashRegisterMachineService.Tax3 = 0;
+                            _cashRegisterMachineService.Tax4 = 0;
+                            string result = _cashRegisterMachineService.Sale();
+                        }
+
+                        _cashRegisterMachineService.Summ1 = ProductSales.Sum(s => s.SalePrice);
+                        _cashRegisterMachineService.StringForPrinting = "";
+                        _cashRegisterMachineService.CloseCheck();
+                        _cashRegisterMachineService.CutCheck();
+                        _cashRegisterMachineService.Disconnect();
+
+                        //_cashRegisterMachineService.RegisterNumber = 148;
+                        //_cashRegisterMachineService.GetOperationReg();
+                        //string d = _cashRegisterMachineService.GetOperationReg();
+                        //int f = _cashRegisterMachineService.ContentsOfOperationRegister;
+                        //string df = _cashRegisterMachineService.NameOperationReg;
+
+                    }
+
+                }
+            }
+            catch (Exception)
+            {
+                //ignore
+            }
+        }
+
         #endregion
 
         #region Public Voids
+
+        [Command]
+        public void SettingsKKM()
+        {
+            try
+            {
+                _cashRegisterMachineService.ShowProperties();
+            }
+            catch (Exception)
+            {
+                //ignore
+            }
+        }
+
+        [Command]
+        public void OpenShiftKKM()
+        {
+            try
+            {
+                string result = _cashRegisterMachineService.OpenShift();
+                if (!string.IsNullOrEmpty(result))
+                {
+                    MessageBoxService.ShowMessage(result, "ККМ", MessageButton.OK, MessageIcon.Information);
+                }
+                Settings.Default.IsKKMShiftOpen = true;
+                Settings.Default.Save();
+            }
+            catch (Exception)
+            {
+                //ignore
+            }
+        }
+
+        [Command]
+        public void CloseShiftKKM()
+        {
+            try
+            {
+                string result = _cashRegisterMachineService.CloseShift();
+                if (!string.IsNullOrEmpty(result))
+                {
+                    MessageBoxService.ShowMessage(result, "ККМ", MessageButton.OK, MessageIcon.Information);
+                }
+                Settings.Default.IsKKMShiftOpen = false;
+                Settings.Default.Save();
+            }
+            catch (Exception)
+            {
+                //ignore
+            }
+        }
+
+        [Command]
+        public void PrintXReportKKM()
+        {
+            try
+            {
+                string result = _cashRegisterMachineService.PrintReportWithoutCleaning();
+                if (!string.IsNullOrEmpty(result))
+                {
+                    MessageBoxService.ShowMessage(result, "ККМ", MessageButton.OK, MessageIcon.Information);
+                }
+            }
+            catch (Exception)
+            {
+                //ignore
+            }
+        }
+
+        [Command]
+        public void CancelReceiptKKM()
+        {
+            try
+            {
+                string result = _cashRegisterMachineService.CancelReceipt();
+                if (!string.IsNullOrEmpty(result))
+                {
+                    MessageBoxService.ShowMessage(result, "ККМ", MessageButton.OK, MessageIcon.Information);
+                }
+            }
+            catch (Exception)
+            {
+                //ignore
+            }
+        }
 
         [Command]
         public async void PrintXReport()
@@ -760,6 +899,11 @@ namespace RetailTradeClient.ViewModels
                         PrintToolBase tool = new(report.PrintingSystem);
                         tool.PrinterSettings.PrinterName = Settings.Default.DefaultReceiptPrinter;
                         tool.Print();
+
+                        if (Settings.Default.IsKKMShiftOpen)
+                        {
+                            PrintCashRegisterMachine();
+                        }
                     }
                 }
             }            

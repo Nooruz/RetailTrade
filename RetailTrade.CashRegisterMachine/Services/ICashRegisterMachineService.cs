@@ -35,6 +35,7 @@ namespace RetailTrade.CashRegisterMachine.Services
         string Disconnect();
         string ReturnSale();
         string GetOperationReg();
+        string CancelReceipt();
         ECRModeEnum ECRMode();
     }
 }

@@ -1,6 +1,7 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using RetailTrade.Barcode.Services;
+using RetailTrade.CashRegisterMachine.Services;
 using RetailTrade.Domain.Services;
 using RetailTradeClient.State.Authenticators;
 using RetailTradeClient.State.Messages;
@@ -75,6 +76,7 @@ namespace RetailTradeClient.HostBuilders
                 services.GetRequiredService<IShiftStore>(),
                 services.GetRequiredService<IBarcodeService>(),
                 services.GetRequiredService<IProductService>(),
+                services.GetRequiredService<ICashRegisterMachineService>(),
                 services.GetRequiredService<PaymentCashViewModel>(),
                 services.GetRequiredService<PaymentComplexViewModel>(),
                 services.GetRequiredService<ProductViewModel>(),
