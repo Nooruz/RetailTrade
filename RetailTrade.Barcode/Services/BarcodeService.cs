@@ -335,7 +335,7 @@ namespace RetailTrade.Barcode.Services
                 {
                     OnBarcodeEvent?.Invoke(Replace(_serialPort.ReadExisting()));
                     _serialPort.DiscardInBuffer();
-                    Thread.Sleep(1000);
+                    Thread.Sleep(2000);
                 }
             }
             catch (Exception)

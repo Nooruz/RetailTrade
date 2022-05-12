@@ -30,6 +30,7 @@ using System.Windows;
 using System.Windows.Data;
 using System.Windows.Input;
 using System.Windows.Interop;
+using System.Windows.Threading;
 
 namespace RetailTradeClient.ViewModels
 {
@@ -311,6 +312,7 @@ namespace RetailTradeClient.ViewModels
             {
                 ProductSales.Add(sale);
                 SelectedProductSale = sale;
+                ShowEditor(2);
             }
             catch (Exception)
             {
@@ -441,6 +443,8 @@ namespace RetailTradeClient.ViewModels
                         else
                         {
                             sale.Quantity++;
+                            SelectedProductSale = sale;
+                            ShowEditor(2);
                         }
                     }
                     else
@@ -636,6 +640,16 @@ namespace RetailTradeClient.ViewModels
             {
                 //ignore
             }
+        }
+
+        private void ShowEditor(int column)
+        {
+            SaleTableView.FocusedRowHandle = ProductSales.IndexOf(SelectedProductSale);
+            SaleTableView.Grid.CurrentColumn = SaleTableView.Grid.Columns[column];
+            _ = SaleTableView.Dispatcher.BeginInvoke(new Action(() =>
+            {
+                SaleTableView.ShowEditor();
+            }), DispatcherPriority.Render);
         }
 
         #endregion
