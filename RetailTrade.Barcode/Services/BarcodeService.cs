@@ -333,9 +333,10 @@ namespace RetailTrade.Barcode.Services
             {
                 if (_serialPort != null)
                 {
-                    OnBarcodeEvent?.Invoke(Replace(_serialPort.ReadExisting()));
+                    Thread.Sleep(500);
+                    string barcode = _serialPort.ReadExisting();
+                    OnBarcodeEvent?.Invoke(Replace(barcode));
                     _serialPort.DiscardInBuffer();
-                    Thread.Sleep(2000);
                 }
             }
             catch (Exception)
@@ -390,15 +391,12 @@ namespace RetailTrade.Barcode.Services
                 if (!string.IsNullOrEmpty(ComBarcode))
                 {
                     var sd = ComBarcode;
-                    _serialPort = new()
-                    {
-                        PortName = ComBarcode,
-                        BaudRate = 115200,
-                        ReadTimeout = 5000
-                    };
-                    _serialPort.Open();
-                    _serialPort.DiscardInBuffer();
+                    _serialPort = new(ComBarcode, 9600, Parity.None, 8, StopBits.One);
+                    _serialPort.Handshake = Handshake.None;
                     _serialPort.DataReceived += SerialPort_DataReceived;
+                    _serialPort.ReadTimeout = 500;
+                    _serialPort.WriteTimeout = 500;
+                    _serialPort.Open();
                 }
             }
             catch (Exception)

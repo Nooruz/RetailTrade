@@ -115,7 +115,7 @@ namespace RetailTrade.EntityFramework.Services
             {
                 await using var context = _contextFactory.CreateDbContext();
                 return await context.Products
-                    .FirstOrDefaultAsync(p => p.Barcode == barcode);
+                    .FirstOrDefaultAsync(p => p.DeleteMark == false && p.Barcode == barcode);
             }
             catch (Exception)
             {

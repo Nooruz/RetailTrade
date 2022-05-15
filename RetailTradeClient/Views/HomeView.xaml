@@ -260,11 +260,7 @@
                 </dxlc:LayoutGroup>
 
                 <dxg:GridControl ItemsSource="{Binding SaleProductsCollectionView}"                                 
-                                 SelectedItem="{Binding SelectedProductSale}"
-                                 Focusable="False">
-                    <dxmvvm:Interaction.Behaviors>
-                        <dxmvvm:FocusBehavior/>
-                    </dxmvvm:Interaction.Behaviors>
+                                 SelectedItem="{Binding SelectedProductSale}">
                     <dxg:GridControl.View>
                         <dxg:TableView AutoWidth="True"
                                        ShowGroupPanel="False" 
@@ -295,8 +291,7 @@
                     </dxg:GridControl.View>
                     <dxg:GridColumn Header="Код" 
                                     AllowColumnFiltering="False"
-                                    FieldName="Id"
-                                    AllowEditing="False">
+                                    FieldName="Id">
                         <dxg:GridColumn.EditSettings>
                             <dxe:TextEditSettings DisplayFormat="D6"/>
                         </dxg:GridColumn.EditSettings>
@@ -308,6 +303,7 @@
                                     IsSmart="True"                          
                                     AllowColumnFiltering="False"
                                     Focusable="False"
+                                    AllowEditing="True"
                                     Binding="{Binding Quantity, Mode=TwoWay}">
                         <dxmvvm:Interaction.Behaviors>
                             <dxmvvm:EventToCommand EventName="Validate"

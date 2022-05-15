@@ -432,23 +432,18 @@ namespace RetailTradeClient.ViewModels
             {
                 if (Settings.Default.IsKeepRecords)
                 {
-                    Product product = await _productService.Predicate(p => p.Barcode == barcode && p.DeleteMark == false && p.Quantity > 0, p => new Product { Id = p.Id, Name = p.Name, Quantity = p.Quantity, SalePrice = p.SalePrice, ArrivalPrice = p.ArrivalPrice, TNVED = p.TNVED, Barcode = p.Barcode, UnitId = p.UnitId });
-                    Sale sale = ProductSales.FirstOrDefault(s => s.Id == product.Id);
-                    if (sale != null)
+                    SelectedProductSale = ProductSales.FirstOrDefault(s => s.Barcode == barcode);
+                    if (SelectedProductSale != null)
                     {
-                        if (sale.QuantityInStock < sale.Quantity + 1)
+                        if (SelectedProductSale.QuantityInStock > SelectedProductSale.Quantity + 1)
                         {
-                            //_ = MessageBox.Show("Количество превышает остаток.", "", MessageBoxButton.OK, MessageBoxImage.Information);
-                        }
-                        else
-                        {
-                            sale.Quantity++;
-                            SelectedProductSale = sale;
+                            SelectedProductSale.Quantity++;
                             ShowEditor(2);
                         }
                     }
                     else
                     {
+                        Product product = await _productService.GetByBarcodeAsync(barcode);
                         AddProductSale(new Sale
                         {
                             Id = product.Id,
@@ -465,21 +460,21 @@ namespace RetailTradeClient.ViewModels
                 }
                 else
                 {
-                    Product product = await _productService.Predicate(p => p.Barcode == barcode && p.DeleteMark == false, p => new Product { Id = p.Id, Name = p.Name, SalePrice = p.SalePrice, ArrivalPrice = p.ArrivalPrice, TNVED = p.TNVED, Barcode = p.Barcode, UnitId = p.UnitId });
-                    Sale sale = ProductSales.FirstOrDefault(s => s.Id == product.Id);
-                    if (sale != null)
+                    SelectedProductSale = ProductSales.FirstOrDefault(s => s.Barcode == barcode);
+                    if (SelectedProductSale != null)
                     {
-                        sale.Quantity++;
+                        SelectedProductSale.Quantity++;
+                        ShowEditor(2);
                     }
                     else
                     {
+                        Product product = await _productService.GetByBarcodeAsync(barcode);
                         AddProductSale(new Sale
                         {
                             Id = product.Id,
                             Name = product.Name,
                             SalePrice = product.SalePrice,
                             ArrivalPrice = product.ArrivalPrice,
-                            QuantityInStock = IsKeepRecords ? product.Quantity : 0,
                             TNVED = product.TNVED,
                             Quantity = 1,
                             Barcode = product.Barcode,
@@ -644,10 +639,10 @@ namespace RetailTradeClient.ViewModels
 
         private void ShowEditor(int column)
         {
-            SaleTableView.FocusedRowHandle = ProductSales.IndexOf(SelectedProductSale);
-            SaleTableView.Grid.CurrentColumn = SaleTableView.Grid.Columns[column];
             _ = SaleTableView.Dispatcher.BeginInvoke(new Action(() =>
             {
+                SaleTableView.FocusedRowHandle = ProductSales.IndexOf(SelectedProductSale);
+                SaleTableView.Grid.CurrentColumn = SaleTableView.Grid.Columns[column];
                 SaleTableView.ShowEditor();
             }), DispatcherPriority.Render);
         }
