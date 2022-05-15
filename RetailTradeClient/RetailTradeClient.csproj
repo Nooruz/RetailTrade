@@ -7,7 +7,7 @@
     <UserSecretsId>e17f6f34-ec0a-49b6-b92d-1745a39f188e</UserSecretsId>
     <AssemblyVersion>1.0.0.190</AssemblyVersion>
     <FileVersion>1.0.0.190</FileVersion>
-    <BaseOutputPath>C:\Publish</BaseOutputPath>
+    <BaseOutputPath></BaseOutputPath>
 	<RuntimeIdentifier>win-x86</RuntimeIdentifier>
 	<ApplicationIcon>logo.ico</ApplicationIcon>
   </PropertyGroup>
@@ -57,12 +57,12 @@
     <PackageReference Include="devexpress.wpf.pivotgrid" Version="21.2.3" />
     <PackageReference Include="DevExpress.Wpf.Printing.ru" Version="21.2.3" />
     <PackageReference Include="Microsoft.AspNet.Identity.Core" Version="2.2.3" />
-    <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="6.0.3">
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="6.0.5">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
-    <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="6.0.3" />
-    <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="6.0.3" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="6.0.5" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="6.0.5" />
     <PackageReference Include="Microsoft.Extensions.Hosting" Version="6.0.1" />
     <PackageReference Include="System.Data.SQLite" Version="1.0.115.5" />
     <PackageReference Include="System.IO.Ports" Version="6.0.0" />
