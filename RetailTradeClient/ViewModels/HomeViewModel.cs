@@ -591,43 +591,39 @@ namespace RetailTradeClient.ViewModels
         {
             try
             {
-                if (_cashRegisterMachineService.ECRMode() == ECRModeEnum.Mode2 || _cashRegisterMachineService.ECRMode() == ECRModeEnum.Mode0)
+                _cashRegisterMachineService.Connect();
+                _cashRegisterMachineService.CheckType = 0;
+
+                if (ProductSales.Any())
                 {
-                    _cashRegisterMachineService.Connect();
-                    _cashRegisterMachineService.CheckType = 0;
-
-                    if (ProductSales.Any())
+                    foreach (Sale item in ProductSales)
                     {
-                        foreach (Sale item in ProductSales)
-                        {
-                            _cashRegisterMachineService.Quantity = Convert.ToDouble(item.Quantity);
-                            _cashRegisterMachineService.Price = item.SalePrice;
+                        _cashRegisterMachineService.Quantity = Convert.ToDouble(item.Quantity);
+                        _cashRegisterMachineService.Price = item.SalePrice;
 
-                            var sum1NSP = Math.Round(item.SalePrice * 1 / 102, 2);
-                            string sumNSP = Math.Round(sum1NSP * 100, 0).ToString();
+                        var sum1NSP = Math.Round(item.AmountWithoutDiscount * 1 / 102, 2);
+                        string sumNSP = Math.Round(sum1NSP * 100, 0).ToString();
 
-                            _cashRegisterMachineService.StringForPrinting =
-                                string.Join(";", new string[] { "", item.TNVED, "", "", "0", "0", "4", sumNSP + "\n" + item.Name });
-                            _cashRegisterMachineService.Tax1 = 4;
-                            _cashRegisterMachineService.Tax2 = 0;
-                            _cashRegisterMachineService.Tax3 = 0;
-                            _cashRegisterMachineService.Tax4 = 0;
-                            string result = _cashRegisterMachineService.Sale();
-                        }
-
-                        _cashRegisterMachineService.Summ1 = ProductSales.Sum(s => s.SalePrice);
-                        _cashRegisterMachineService.StringForPrinting = "";
-                        _cashRegisterMachineService.CloseCheck();
-                        _cashRegisterMachineService.CutCheck();
-                        _cashRegisterMachineService.Disconnect();
-
-                        //_cashRegisterMachineService.RegisterNumber = 148;
-                        //_cashRegisterMachineService.GetOperationReg();
-                        //string d = _cashRegisterMachineService.GetOperationReg();
-                        //int f = _cashRegisterMachineService.ContentsOfOperationRegister;
-                        //string df = _cashRegisterMachineService.NameOperationReg;
-
+                        _cashRegisterMachineService.StringForPrinting =
+                            string.Join(";", new string[] { "", item.TNVED, "", "", "0", "0", "4", sumNSP + "\n" + item.Name });
+                        _cashRegisterMachineService.Tax1 = 4;
+                        _cashRegisterMachineService.Tax2 = 0;
+                        _cashRegisterMachineService.Tax3 = 0;
+                        _cashRegisterMachineService.Tax4 = 0;
+                        string result = _cashRegisterMachineService.Sale();
                     }
+
+                    _cashRegisterMachineService.Summ1 = ProductSales.Sum(s => s.AmountWithoutDiscount);
+                    _cashRegisterMachineService.StringForPrinting = "";
+                    _cashRegisterMachineService.CloseCheck();
+                    _cashRegisterMachineService.CutCheck();
+                    _cashRegisterMachineService.Disconnect();
+
+                    //_cashRegisterMachineService.RegisterNumber = 148;
+                    //_cashRegisterMachineService.GetOperationReg();
+                    //string d = _cashRegisterMachineService.GetOperationReg();
+                    //int f = _cashRegisterMachineService.ContentsOfOperationRegister;
+                    //string df = _cashRegisterMachineService.NameOperationReg;
 
                 }
             }
@@ -645,6 +641,19 @@ namespace RetailTradeClient.ViewModels
                 SaleTableView.Grid.CurrentColumn = SaleTableView.Grid.Columns[column];
                 SaleTableView.ShowEditor();
             }), DispatcherPriority.Render);
+        }
+
+        private void PrintReport(PrintToolBase tool)
+        {
+            try
+            {
+                tool.PrinterSettings.PrinterName = Settings.Default.DefaultReceiptPrinter;
+                tool.Print();
+            }
+            catch (Exception)
+            {
+                //ignore
+            }
         }
 
         #endregion
@@ -905,9 +914,7 @@ namespace RetailTradeClient.ViewModels
 
                         DiscountReceiptReport report = await _reportService.CreateDiscountReceiptReport(receipt, ProductSales);
 
-                        PrintToolBase tool = new(report.PrintingSystem);
-                        tool.PrinterSettings.PrinterName = Settings.Default.DefaultReceiptPrinter;
-                        tool.Print();
+                        PrintReport(new(report.PrintingSystem));
 
                         if (Settings.Default.IsKKMShiftOpen)
                         {
