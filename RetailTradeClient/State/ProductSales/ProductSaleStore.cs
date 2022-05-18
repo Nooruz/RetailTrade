@@ -263,50 +263,50 @@ namespace RetailTradeClient.State.ProductSales
 
         #region Private Voids
 
-        private async void ProductViewModel_OnProductsSelected(IEnumerable<Product> products)
+        private async void ProductViewModel_OnProductsSelected(IEnumerable<Sale> products)
         {
-            try
-            {
-                products.ToList().ForEach(async p =>
-                {
-                    if (Sales.Any())
-                    {
-                        Sale sale = Sales.FirstOrDefault(s => s.Id == p.Id);
-                        if (sale != null)
-                        {
-                            if (Settings.Default.IsKeepRecords)
-                            {
-                                if (sale.QuantityInStock < sale.Quantity + 1)
-                                {
-                                    //_ = MessageBox.Show("Количество превышает остаток.", "", MessageBoxButton.OK, MessageBoxImage.Information);
-                                }
-                                else
-                                {
-                                    sale.Quantity++;
-                                }
-                            }
-                            else
-                            {
-                                sale.Quantity++;
-                            }
-                        }
-                        else
-                        {
-                            AddProductToCart(await GetProduct(p.Id));
-                        }
-                    }
-                    else
-                    {
-                        AddProductToCart(await GetProduct(p.Id));
-                    }                    
-                });
-                OnProductSalesChanged?.Invoke();
-                OnPropertyChanged(nameof(ToBePaid));
-            }
-            catch (Exception)
-            {
-                //ignore
-            }
+            //try
+            //{
+            //    products.ToList().ForEach(async p =>
+            //    {
+            //        if (Sales.Any())
+            //        {
+            //            Sale sale = Sales.FirstOrDefault(s => s.Id == p.Id);
+            //            if (sale != null)
+            //            {
+            //                if (Settings.Default.IsKeepRecords)
+            //                {
+            //                    if (sale.QuantityInStock < sale.Quantity + 1)
+            //                    {
+            //                        //_ = MessageBox.Show("Количество превышает остаток.", "", MessageBoxButton.OK, MessageBoxImage.Information);
+            //                    }
+            //                    else
+            //                    {
+            //                        sale.Quantity++;
+            //                    }
+            //                }
+            //                else
+            //                {
+            //                    sale.Quantity++;
+            //                }
+            //            }
+            //            else
+            //            {
+            //                AddProductToCart(await GetProduct(p.Id));
+            //            }
+            //        }
+            //        else
+            //        {
+            //            AddProductToCart(await GetProduct(p.Id));
+            //        }                    
+            //    });
+            //    OnProductSalesChanged?.Invoke();
+            //    OnPropertyChanged(nameof(ToBePaid));
+            //}
+            //catch (Exception)
+            //{
+            //    //ignore
+            //}
         }
 
         private async void BarcodeService_OnBarcodeEvent(string barcode)

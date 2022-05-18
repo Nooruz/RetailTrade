@@ -259,39 +259,29 @@ namespace RetailTradeClient.ViewModels
             return string.Empty;
         }
 
-        private void ProductViewModel_OnProductsSelected(IEnumerable<Product> products)
+        private void ProductViewModel_OnProductsSelected(IEnumerable<Sale> sales)
         {
             try
             {
-                foreach (Product product in products)
+                foreach (Sale item in sales)
                 {
-                    Sale sale = ProductSales.FirstOrDefault(s => s.Id == product.Id);
+                    Sale sale = ProductSales.FirstOrDefault(s => s.Id == item.Id);
                     if (sale != null)
                     {
-                        if (Settings.Default.IsKeepRecords)
-                        {
-                            if (sale.QuantityInStock < sale.Quantity + 1)
-                            {
-                                //_ = MessageBox.Show("Количество превышает остаток.", "", MessageBoxButton.OK, MessageBoxImage.Information);
-                            }
-                            else
-                            {
-                                sale.Quantity++;
-                            }
-                        }
+                        sale.Quantity = item.Quantity;
                     }
                     else
                     {
                         AddProductSale(new Sale
                         {
-                            Id = product.Id,
-                            Name = product.Name,
-                            SalePrice = product.SalePrice,
-                            ArrivalPrice = product.ArrivalPrice,
-                            QuantityInStock = IsKeepRecords ? product.Quantity : 0,
-                            TNVED = product.TNVED,
-                            Quantity = 1,
-                            Barcode = product.Barcode,
+                            Id = item.Id,
+                            Name = item.Name,
+                            SalePrice = item.SalePrice,
+                            ArrivalPrice = item.ArrivalPrice,
+                            QuantityInStock = IsKeepRecords ? item.QuantityInStock : 0,
+                            TNVED = item.TNVED,
+                            Quantity = item.Quantity,
+                            Barcode = item.Barcode,
                             UnitName = string.Empty
                         });
                     }
@@ -319,10 +309,6 @@ namespace RetailTradeClient.ViewModels
 
         private void SaleProductsCollectionView_CollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
         {
-            OnPropertyChanged(nameof(AmountWithoutDiscount));
-            OnPropertyChanged(nameof(DiscountAmount));
-            OnPropertyChanged(nameof(Total));
-            OnPropertyChanged(nameof(ProductSales));
             if (e.NewItems != null)
             {
                 foreach (var item in e.NewItems)
@@ -343,6 +329,10 @@ namespace RetailTradeClient.ViewModels
                     }
                 }
             }
+            OnPropertyChanged(nameof(AmountWithoutDiscount));
+            OnPropertyChanged(nameof(DiscountAmount));
+            OnPropertyChanged(nameof(Total));
+            OnPropertyChanged(nameof(ProductSales));
         }
 
         private void Sale_PropertyChanged(object sender, PropertyChangedEventArgs e)
@@ -429,9 +419,10 @@ namespace RetailTradeClient.ViewModels
             {
                 if (Settings.Default.IsKeepRecords)
                 {
-                    SelectedProductSale = ProductSales.FirstOrDefault(s => s.Barcode == barcode);
-                    if (SelectedProductSale != null)
+                    Sale sale = ProductSales.FirstOrDefault(s => s.Barcode == barcode);
+                    if (sale != null)
                     {
+                        SelectedProductSale = sale;
                         if (SelectedProductSale.QuantityInStock > SelectedProductSale.Quantity + 1)
                         {
                             SelectedProductSale.Quantity++;
@@ -457,9 +448,10 @@ namespace RetailTradeClient.ViewModels
                 }
                 else
                 {
-                    SelectedProductSale = ProductSales.FirstOrDefault(s => s.Barcode == barcode);
-                    if (SelectedProductSale != null)
+                    Sale sale = ProductSales.FirstOrDefault(s => s.Barcode == barcode);
+                    if (sale != null)
                     {
+                        SelectedProductSale = sale;
                         SelectedProductSale.Quantity++;
                         ShowEditor(2);
                     }
@@ -573,15 +565,14 @@ namespace RetailTradeClient.ViewModels
 
         private decimal GetMaximumDiscount()
         {
-            try
+            if (SelectedProductSale != null)
             {
                 return (decimal)MaximumPercentage * SelectedProductSale.AmountWithoutDiscount;
             }
-            catch (Exception)
+            else
             {
-                //ignore
+                return 0;
             }
-            return 0;
         }
 
         private void PrintCashRegisterMachine()

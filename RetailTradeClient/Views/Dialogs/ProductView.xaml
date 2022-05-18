@@ -1,14 +1,17 @@
-﻿<local:BaseUserControl x:Class="RetailTradeClient.Views.Dialogs.ProductView"
-                       xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-                       xmlns:dxe="http://schemas.devexpress.com/winfx/2008/xaml/editors"
-                       xmlns:dxg="http://schemas.devexpress.com/winfx/2008/xaml/grid"
-                       xmlns:dxlc="http://schemas.devexpress.com/winfx/2008/xaml/layoutcontrol"
-                       xmlns:dxmvvm="http://schemas.devexpress.com/winfx/2008/xaml/mvvm"
-                       xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-                       xmlns:components="clr-namespace:RetailTradeClient.Components"
-                       xmlns:local="clr-namespace:RetailTradeClient.Views.Dialogs"
-                       Height="500"
-                       Width="950">
+﻿<local:BaseUserControl
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:dx="http://schemas.devexpress.com/winfx/2008/xaml/core"
+    xmlns:dxe="http://schemas.devexpress.com/winfx/2008/xaml/editors"
+    xmlns:dxg="http://schemas.devexpress.com/winfx/2008/xaml/grid"
+    xmlns:dxlc="http://schemas.devexpress.com/winfx/2008/xaml/layoutcontrol"
+    xmlns:dxmvvm="http://schemas.devexpress.com/winfx/2008/xaml/mvvm"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:components="clr-namespace:RetailTradeClient.Components"
+    xmlns:local="clr-namespace:RetailTradeClient.Views.Dialogs"
+    x:Class="RetailTradeClient.Views.Dialogs.ProductView"
+    xmlns:sys="clr-namespace:System;assembly=mscorlib"
+    Height="500"
+    Width="950">
 
     <dxmvvm:Interaction.Behaviors>
         <dxmvvm:EventToCommand EventName="Loaded"
@@ -56,13 +59,13 @@
                 <dxe:ButtonEdit Width="350"
                                 AllowDefaultButton="False"
                                 Text="{Binding SearchText, UpdateSourceTrigger=PropertyChanged}">
-                    <dxe:ButtonInfo GlyphKind="Cancel"
-                                    Command="{Binding CleareSearchTextCommand}"/>
                     <dxmvvm:Interaction.Behaviors>
                         <dxmvvm:FocusBehavior/>
                         <dxmvvm:EventToCommand EventName="EditValueChanged"
                                                Command="{Binding EditValueChangedCommand}"/>
                     </dxmvvm:Interaction.Behaviors>
+                    <dxe:ButtonInfo GlyphKind="Cancel"
+                                    Command="{Binding CleareSearchTextCommand}"/>
                 </dxe:ButtonEdit>
 
             </dxlc:LayoutGroup>
@@ -76,30 +79,64 @@
 
             </dxlc:LayoutGroup>
 
-            <components:CustomGridControl ItemsSource="{Binding Products}" 
+            <components:CustomGridControl ItemsSource="{Binding Nomenclatures}" 
                                           SelectionMode="MultipleRow"
-                                          SelectedItem="{Binding SelectedProduct}">
+                                          SelectedItem="{Binding SelectedNomenclature}">
                 <dxmvvm:Interaction.Behaviors>
-                    <dxmvvm:EventToCommand Event="Loaded"
+                    <dxmvvm:EventToCommand Event="FrameworkElement.Loaded"
                                            Command="{Binding GridControlLoadedCommand}"
                                            PassEventArgsToCommand="True"/>
                 </dxmvvm:Interaction.Behaviors>
-                <dxg:GridControl.View>
-                    <dxg:TableView AllowEditing="False"
-                                   ShowCheckBoxSelectorColumn="True"
-                                   ShowGroupPanel="False" 
+                <components:CustomGridControl.View>
+                    <dxg:TableView ShowGroupPanel="False" 
                                    ShowFilterPanelMode="Never"
+                                   EditorShowMode="MouseDown"
+                                   EditorButtonShowMode="ShowAlways"
                                    AutoWidth="True">
-                        <dxmvvm:Interaction.Behaviors>
-                            <dxmvvm:EventToCommand EventName="RowDoubleClick"
-                                                   Command="{Binding SelectCommand}"/>
-                        </dxmvvm:Interaction.Behaviors>
+                        <dxg:TableView.FormatConditions>
+                            <dxg:FormatCondition ApplyToRow="true" FieldName="Quantity" ValueRule="Greater" Value1="0">
+                                <dx:Format Background="#FF90EE90"/>
+                            </dxg:FormatCondition>
+                        </dxg:TableView.FormatConditions>
                     </dxg:TableView>
-                </dxg:GridControl.View>
+                </components:CustomGridControl.View>
+                <dxg:GridColumn Header="Количество" 
+                                Width="80" EditFormVisible="True"
+                                FieldName="Quantity">
+                    <dxg:GridColumn.CellTemplate>
+                        <DataTemplate>
+                            <dxe:SpinEdit Name="PART_Editor" 
+                                          SelectAllOnMouseUp="True" 
+                                          EditValueType="{x:Type sys:Double}"
+                                          MaskUseAsDisplayFormat="True" 
+                                          Mask="n">
+                                <dxe:SpinEdit.Style>
+                                    <Style TargetType="{x:Type dxe:SpinEdit}">
+                                        <Style.Triggers>
+                                            <DataTrigger Binding="{Binding Path=DataContext.IsKeepRecords, RelativeSource={RelativeSource AncestorType={x:Type local:BaseUserControl}, Mode=FindAncestor}}" Value="True">
+                                                <Setter Property="MaxValue" Value="{Binding Path=RowData.Row.QuantityInStock}"/>
+                                            </DataTrigger>
+                                        </Style.Triggers>
+                                    </Style>
+                                </dxe:SpinEdit.Style>
+                            </dxe:SpinEdit>
+                        </DataTemplate>
+                    </dxg:GridColumn.CellTemplate>
+                </dxg:GridColumn>
                 <dxg:GridColumn FieldName="Name"
+                                AllowEditing="False"
                                 Header="Наименование"/>
                 <dxg:GridColumn FieldName="Barcode"
+                                AllowEditing="False"
                                 Header="Штрихкод"/>
+                <dxg:GridColumn Header="Количество на складе"
+                                AllowEditing="False"
+                                Visible="{Binding IsKeepRecords}"
+                                FieldName="QuantityInStock">
+                    <dxg:GridColumn.EditSettings>
+                        <dxe:TextEditSettings MaskUseAsDisplayFormat="True" MaskType="Numeric" Mask="n"/>
+                    </dxg:GridColumn.EditSettings>
+                </dxg:GridColumn>
             </components:CustomGridControl>
 
         </dxlc:LayoutGroup>

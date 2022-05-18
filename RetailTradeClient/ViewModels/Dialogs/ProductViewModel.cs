@@ -19,10 +19,10 @@ namespace RetailTradeClient.ViewModels.Dialogs
 
         private readonly IProductService _productService;
         private readonly ITypeProductService _typeProductService;
-        private IEnumerable<Product> _products;
+        private ObservableCollection<Nomenclature> _nomenclatures = new();
         private IEnumerable<TypeProduct> _typeProducts;
         private TypeProduct _selectedTypeProduct;
-        private Product _selectedProduct;
+        private Nomenclature _selectedNomenclature;
         private bool _isTypesAndProperties;
         private bool _isByExactMatch;
         private string _searchText;
@@ -67,23 +67,22 @@ namespace RetailTradeClient.ViewModels.Dialogs
                 OnPropertyChanged(nameof(IsTypesAndProperties));
             }
         }
-        public IEnumerable<Product> Products
+        public ObservableCollection<Nomenclature> Nomenclatures
         {
-            get => _products;
+            get => _nomenclatures;
             set
             {
-                _products = value;
-                OnPropertyChanged(nameof(Products));
+                _nomenclatures = value;
+                OnPropertyChanged(nameof(Nomenclatures));
             }
         }
-        public ObservableCollection<Product> SelectedProducts { get; } = new();
-        public Product SelectedProduct
+        public Nomenclature SelectedNomenclature
         {
-            get => _selectedProduct;
+            get => _selectedNomenclature;
             set
             {
-                _selectedProduct = value;
-                OnPropertyChanged(nameof(SelectedProduct));
+                _selectedNomenclature = value;
+                OnPropertyChanged(nameof(SelectedNomenclature));
             }
         }
         public IEnumerable<TypeProduct> TypeProducts
@@ -114,12 +113,13 @@ namespace RetailTradeClient.ViewModels.Dialogs
         }
         public CriteriaOperator NameFilter => ProductGridControl.GetColumnFilterCriteria("Name");
         public CriteriaOperator TypeProductIdFilter => ProductGridControl.GetColumnFilterCriteria("TypeProductId");
+        public bool IsKeepRecords => Settings.Default.IsKeepRecords;
 
         #endregion
 
         #region Event Action
 
-        public event Action<IEnumerable<Product>> OnProductsSelected;
+        public event Action<IEnumerable<Sale>> OnProductsSelected;
 
         #endregion
 
@@ -149,8 +149,9 @@ namespace RetailTradeClient.ViewModels.Dialogs
         [Command]
         public async void UserControlLoaded()
         {
-            Products = Settings.Default.IsKeepRecords ? await _productService.PredicateSelect(p => p.Quantity > 0 && p.DeleteMark == false, p => new Product { Id = p.Id, Name = p.Name, Barcode = p.Barcode, TypeProductId = p.TypeProductId, SalePrice = p.SalePrice, Quantity = p.Quantity }) :
-                await _productService.PredicateSelect(p => p.DeleteMark == false, p => new Product { Id = p.Id, Name = p.Name, Barcode = p.Barcode, TypeProductId = p.TypeProductId, SalePrice = p.SalePrice });
+            IEnumerable<Product> products = Settings.Default.IsKeepRecords ? await _productService.PredicateSelect(p => p.Quantity > 0 && p.DeleteMark == false, p => new Product { Id = p.Id, Name = p.Name, Barcode = p.Barcode, TypeProductId = p.TypeProductId, SalePrice = p.SalePrice, Quantity = p.Quantity, ArrivalPrice = p.ArrivalPrice }) :
+                await _productService.PredicateSelect(p => p.DeleteMark == false, p => new Product { Id = p.Id, Name = p.Name, Barcode = p.Barcode, TypeProductId = p.TypeProductId, SalePrice = p.SalePrice, ArrivalPrice = p.ArrivalPrice });
+            Nomenclatures = new(products.Select(p => new Nomenclature { Id = p.Id, Name = p.Name, Barcode = p.Barcode, TypeProductId = p.TypeProductId, SalePrice = p.SalePrice, QuantityInStock = p.Quantity, ArrivalPrice = p.ArrivalPrice }));
             TypeProducts = await _typeProductService.GetAllAsync();
         }
 
@@ -175,19 +176,34 @@ namespace RetailTradeClient.ViewModels.Dialogs
         }
 
         [Command]
+        public void Plus()
+        {
+            if (SelectedNomenclature != null)
+            {
+                SelectedNomenclature.Quantity++;
+            }
+        }
+
+        [Command]
+        public void Minus()
+        {
+            if (SelectedNomenclature != null && SelectedNomenclature.Quantity > 0)
+            {
+                SelectedNomenclature.Quantity--;
+            }
+        }
+
+        [Command]
         public void Select()
         {
-            if (SelectedProduct != null)
+            try
             {
-                try
-                {
-                    OnProductsSelected?.Invoke(ProductGridControl.MySelectedItems.Cast<Product>().ToList());
-                    CurrentWindowService.Close();
-                }
-                catch (Exception)
-                {
-                    //ignore
-                }
+                OnProductsSelected?.Invoke(Nomenclatures.Where(n => n.Quantity > 0).Select(n => new Sale { Id = n.Id, Name = n.Name, Barcode = n.Barcode, Quantity = n.Quantity, QuantityInStock = n.QuantityInStock, SalePrice = n.SalePrice, ArrivalPrice = n.ArrivalPrice}).ToList());
+                CurrentWindowService.Close();
+            }
+            catch (Exception)
+            {
+                //ignore
             }
         }
 
@@ -265,4 +281,28 @@ namespace RetailTradeClient.ViewModels.Dialogs
 
         #endregion
     }
+
+    public class Nomenclature : Sale
+    {
+        #region Private Members
+
+        private int _typeProductId;
+
+        #endregion
+
+        #region Public Properties
+
+        public int TypeProductId
+        {
+            get => _typeProductId;
+            set
+            {
+                _typeProductId = value;
+                OnPropertyChanged(nameof(TypeProductId));
+            }
+        }
+
+        #endregion
+    }
+
 }
