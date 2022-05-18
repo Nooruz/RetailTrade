@@ -109,6 +109,7 @@
                                                     Command="{Binding RevenueForPeriodCommand}"/>
             <dxwui:HamburgerSubMenuNavigationButton Content="Прибыль от продаж"/>
             <dxwui:HamburgerSubMenuNavigationButton Content="Продажи по кассирам"/>
+            <dxwui:HamburgerSubMenuNavigationButton Content="Остатки и наличие товаров"/>
         </dxwui:HamburgerSubMenu>
 
         <dxwui:HamburgerSubMenu Content="Справочники"
