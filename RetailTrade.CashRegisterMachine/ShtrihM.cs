@@ -191,7 +191,7 @@ namespace RetailTrade.CashRegisterMachine
                 Timeout = Settings.Default.Timeout
             };
 
-            drvFR.dis
+            
 
             _ = drvFR.ResultCode;
         }
