@@ -8,6 +8,7 @@ using RetailTrade.CashRegisterMachine;
 using RetailTrade.CashRegisterMachine.Services;
 using RetailTrade.Domain.Models;
 using RetailTrade.Domain.Services;
+using RetailTradeClient.Customs;
 using RetailTradeClient.Properties;
 using RetailTradeClient.Report;
 using RetailTradeClient.State.Authenticators;
@@ -53,7 +54,6 @@ namespace RetailTradeClient.ViewModels
         private readonly MainWindow _mainWindow;
         private ObservableCollection<Sale> _productSales = new();
         private ObservableCollection<PostponeReceipt> _postponeReceipts = new();
-        private Visibility _manualDiscountVisibility;
         private string _barcode;
         private Sale _selectedProductSale;
         private object _syncLock = new();
@@ -101,15 +101,7 @@ namespace RetailTradeClient.ViewModels
 
         #region Public Properties
 
-        public Visibility ManualDiscountVisibility
-        {
-            get => _manualDiscountVisibility;
-            set
-            {
-                _manualDiscountVisibility = value;
-                OnPropertyChanged(nameof(ManualDiscountVisibility));
-            }
-        }
+        public Visibility ManualDiscountVisibility => Settings.Default.IsUseManualDiscounts ? Visibility.Visible : Visibility.Collapsed;
         public ObservableCollection<Sale> ProductSales => _productSales;
         public ICollectionView SaleProductsCollectionView => CollectionViewSource.GetDefaultView(ProductSales);
         public bool IsKeepRecords => Settings.Default.IsKeepRecords;
@@ -145,12 +137,14 @@ namespace RetailTradeClient.ViewModels
                 OnPropertyChanged(nameof(SelectedProductSale));
                 OnPropertyChanged(nameof(MaximumDiscount));
                 OnPropertyChanged(nameof(IsSelectedProductSale));
+                QuantitySpin();
             }
         }
         public int FocusedRowHandle => ProductSales.Count - 1;
         public TableView SaleTableView { get; set; }
         public TextEdit CashPayTextEdit { get; set; }
         public TextEdit CashlessPayTextEdit { get; set; }
+        public UnitSpinEdit QuantitySpinEdit { get; set; }
         public string ChangeLabel => CashPaySum + CashlessPaySum - Total < 0 ? "Осталось доплатить:" : "Сдача:";
         public Brush ChangeForeground => CashPaySum + CashlessPaySum - Total < 0 ? Brushes.Red : Brushes.Green;
         public decimal CashPaySum
@@ -163,6 +157,7 @@ namespace RetailTradeClient.ViewModels
                 OnPropertyChanged(nameof(Change));
                 OnPropertyChanged(nameof(ChangeLabel));
                 OnPropertyChanged(nameof(ChangeForeground));
+                OnPropertyChanged(nameof(CanPunchReceipt));
             }
         }
         public decimal CashlessPaySum
@@ -175,12 +170,14 @@ namespace RetailTradeClient.ViewModels
                 OnPropertyChanged(nameof(Change));
                 OnPropertyChanged(nameof(ChangeLabel));
                 OnPropertyChanged(nameof(ChangeForeground));
+                OnPropertyChanged(nameof(CanPunchReceipt));
             }
         }
         public double MaximumPercentage => Settings.Default.MaximumPercentage;
         public decimal MaximumDiscount => GetMaximumDiscount();
         public bool IsSelectedProductSale => SelectedProductSale != null;
-        public string UserName => GetUserName();        
+        public string UserName => GetUserName();
+        public bool CanPunchReceipt => (CashPaySum + CashlessPaySum) > 0 && CashPaySum + CashlessPaySum - Total >= 0;
 
         #endregion
 
@@ -312,7 +309,7 @@ namespace RetailTradeClient.ViewModels
             {
                 ProductSales.Add(sale);
                 SelectedProductSale = sale;
-                ShowEditor(2);
+                QuantitySpin();
             }
             catch (Exception)
             {
@@ -656,6 +653,22 @@ namespace RetailTradeClient.ViewModels
             }
         }
 
+        private void QuantitySpin()
+        {
+            try
+            {
+                if (QuantitySpinEdit != null)
+                {
+                    _ = QuantitySpinEdit.Focus();
+                    QuantitySpinEdit.SelectAll();
+                }
+            }
+            catch (Exception)
+            {
+                //ignore
+            }
+        }
+
         #endregion
 
         #region Public Voids
@@ -759,12 +772,6 @@ namespace RetailTradeClient.ViewModels
             {
                 //ignore
             }
-        }
-
-        [Command]
-        public void ManualDiscountVisible()
-        {
-            ManualDiscountVisibility = Visibility.Visible;
         }
 
         [Command]
@@ -887,9 +894,9 @@ namespace RetailTradeClient.ViewModels
         {
             try
             {
-                if (CashPaySum + CashlessPaySum - Total >= 0)
+                if (CanPunchReceipt)
                 {
-                    if (ProductSales.Any())
+                    if (ProductSales.Any(p => p.Quantity != 0))
                     {
                         Receipt receipt = await _receiptService.CreateAsync(new Receipt()
                         {
@@ -920,18 +927,44 @@ namespace RetailTradeClient.ViewModels
                         {
                             PrintCashRegisterMachine();
                         }
+
+                        ProductSales.Clear();
+                        CashPaySum = 0;
+                        CashlessPaySum = 0;
                     }
+                    else
+                    {
+                        SelectedProductSale = ProductSales.FirstOrDefault(p => p.Quantity == 0);
+                    }
+                }
+                else
+                {
+                    CashPaySum = Total;
+                    CashPay();
                 }
             }            
             catch (Exception)
             {
                 //ignore
             }
-            finally
+        }
+
+        [Command]
+        public void QuantitySpinEditLoaded(object sender)
+        {
+            try
             {
-                ProductSales.Clear();
-                CashPaySum = 0;
-                CashlessPaySum = 0;
+                if (sender is RoutedEventArgs e)
+                {
+                    if (e.Source is UnitSpinEdit unitSpinEdit)
+                    {
+                        QuantitySpinEdit = unitSpinEdit;
+                    }
+                }
+            }
+            catch (Exception)
+            {
+                //ignore
             }
         }
 
@@ -1180,13 +1213,16 @@ namespace RetailTradeClient.ViewModels
         {
             try
             {
-                if (SelectedProductSale.IsDiscountPercentage)
+                if (SelectedProductSale != null)
                 {
-                    SelectedProductSale.DiscountAmount = decimal.Round(SelectedProductSale.AmountWithoutDiscount * (decimal)SelectedProductSale.DiscountPercent, 2, MidpointRounding.AwayFromZero);
-                }
-                else
-                {
-                    SelectedProductSale.DiscountPercent = (double)SelectedProductSale.DiscountAmount / (double)SelectedProductSale.AmountWithoutDiscount;
+                    if (SelectedProductSale.IsDiscountPercentage)
+                    {
+                        SelectedProductSale.DiscountAmount = decimal.Round(SelectedProductSale.AmountWithoutDiscount * (decimal)SelectedProductSale.DiscountPercent, 2, MidpointRounding.AwayFromZero);
+                    }
+                    else
+                    {
+                        SelectedProductSale.DiscountPercent = (double)SelectedProductSale.DiscountAmount / (double)SelectedProductSale.AmountWithoutDiscount;
+                    }
                 }
             }
             catch (Exception)
@@ -1202,7 +1238,7 @@ namespace RetailTradeClient.ViewModels
             {
                 if (sender is EditValueChangingEventArgs e)
                 {
-                    if (SelectedProductSale.IsDiscountPercentage)
+                    if (SelectedProductSale != null && SelectedProductSale.IsDiscountPercentage)
                     {
                         if (MaximumPercentage < (double)e.NewValue)
                         {

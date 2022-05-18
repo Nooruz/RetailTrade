@@ -201,13 +201,16 @@
                                               Text="500">
                                     <dxmvvm:Interaction.Behaviors>
                                         <dxmvvm:EventToCommand EventName="EditValueChanged"
-                                                       Command="{Binding EditValueChangedCommand}"
-                                                       CommandParameter="{Binding Path=Text, RelativeSource={RelativeSource AncestorType={x:Type customs:UnitSpinEdit}, Mode=FindAncestor}}"/>
+                                                               Command="{Binding EditValueChangedCommand}"
+                                                               CommandParameter="{Binding Path=Text, RelativeSource={RelativeSource AncestorType={x:Type customs:UnitSpinEdit}, Mode=FindAncestor}}"/>
+                                        <dxmvvm:EventToCommand EventName="Loaded"
+                                                               Command="{Binding QuantitySpinEditLoadedCommand}"
+                                                               PassEventArgsToCommand="True"/>
                                     </dxmvvm:Interaction.Behaviors>
                                 </customs:UnitSpinEdit>
                             </dxlc:LayoutGroup>
 
-                            <dxlc:LayoutGroup>
+                            <dxlc:LayoutGroup Visibility="{Binding ManualDiscountVisibility}">
                                 <dxlc:LayoutItem HorizontalAlignment="Left"
                                          Label="Скидка"
                                          Height="30">
@@ -303,7 +306,7 @@
                                     IsSmart="True"                          
                                     AllowColumnFiltering="False"
                                     Focusable="False"
-                                    AllowEditing="True"
+                                    AllowEditing="False"
                                     Binding="{Binding Quantity, Mode=TwoWay}">
                         <dxmvvm:Interaction.Behaviors>
                             <dxmvvm:EventToCommand EventName="Validate"
@@ -470,7 +473,7 @@
                                FontSize="32"/>
                 </dxlc:LayoutItem>
 
-                <Button Content="Пробить чек (F8)"
+                <Button Content="Пробить чек (Enter)"
                         FontSize="22"
                         Height="50"
                         IsDefault="True"
