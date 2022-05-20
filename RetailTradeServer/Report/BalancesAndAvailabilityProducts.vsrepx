@@ -5,11 +5,44 @@
   </Extensions>
   <Bands>
     <Item1 Ref="2" ControlType="TopMarginBand" Name="topMarginBand1" />
-    <Item2 Ref="3" ControlType="DetailBand" Name="detailBand1" />
-    <Item3 Ref="4" ControlType="BottomMarginBand" Name="bottomMarginBand1" />
-    <Item4 Ref="5" ControlType="ReportHeaderBand" Name="ReportHeader">
+    <Item2 Ref="3" ControlType="DetailBand" Name="detailBand1" HeightF="25">
       <Controls>
-        <Item1 Ref="6" ControlType="XRLabel" Name="label1" Multiline="true" Text="Остатки товаров" SizeF="629.9999,23" LocationFloat="10.0000067,10.0000067" Padding="2,2,0,0,96" />
+        <Item1 Ref="4" ControlType="XRTable" Name="table1" TextAlignment="MiddleLeft" SizeF="629.9999,25" LocationFloat="10.0000076,0" Font="Times New Roman, 12pt, charSet=204" Padding="2,2,0,0,96" Borders="Left, Right, Bottom">
+          <Rows>
+            <Item1 Ref="5" ControlType="XRTableRow" Name="tableRow1" Weight="1">
+              <Cells>
+                <Item1 Ref="6" ControlType="XRTableCell" Name="tableCell1" Weight="0.55208335876464842" Multiline="true" Text="tableCell1" />
+                <Item2 Ref="7" ControlType="XRTableCell" Name="tableCell2" Weight="3.2854166412353516" Multiline="true" Text="tableCell2" />
+                <Item3 Ref="8" ControlType="XRTableCell" Name="tableCell3" Weight="1.19375" Multiline="true" Text="tableCell3" />
+                <Item4 Ref="9" ControlType="XRTableCell" Name="tableCell8" Weight="1.268748779296875" Multiline="true" Text="tableCell8" TextAlignment="MiddleRight">
+                  <StylePriority Ref="10" UseTextAlignment="false" />
+                </Item4>
+              </Cells>
+            </Item1>
+          </Rows>
+          <StylePriority Ref="11" UseFont="false" UseBorders="false" UseTextAlignment="false" />
+        </Item1>
+      </Controls>
+    </Item2>
+    <Item3 Ref="12" ControlType="BottomMarginBand" Name="bottomMarginBand1" />
+    <Item4 Ref="13" ControlType="ReportHeaderBand" Name="ReportHeader" HeightF="78.125">
+      <Controls>
+        <Item1 Ref="14" ControlType="XRTable" Name="table2" TextAlignment="MiddleCenter" SizeF="629.9999,25" LocationFloat="10.0000067,53.125" Font="Times New Roman, 12pt, style=Bold, charSet=204" Padding="2,2,0,0,96" Borders="Left, Top, Right">
+          <Rows>
+            <Item1 Ref="15" ControlType="XRTableRow" Name="tableRow2" Weight="1">
+              <Cells>
+                <Item1 Ref="16" ControlType="XRTableCell" Name="tableCell4" Weight="0.55208335876464842" Multiline="true" Text="Код" />
+                <Item2 Ref="17" ControlType="XRTableCell" Name="tableCell5" Weight="3.2854166412353516" Multiline="true" Text="Наименование" />
+                <Item3 Ref="18" ControlType="XRTableCell" Name="tableCell6" Weight="1.19375" Multiline="true" Text="Ед. изм." />
+                <Item4 Ref="19" ControlType="XRTableCell" Name="tableCell7" Weight="1.268748779296875" Multiline="true" Text="В наличии" />
+              </Cells>
+            </Item1>
+          </Rows>
+          <StylePriority Ref="20" UseFont="false" UseBorders="false" UseTextAlignment="false" />
+        </Item1>
+        <Item2 Ref="21" ControlType="XRLabel" Name="label1" Multiline="true" Text="Остатки товаров" TextAlignment="MiddleCenter" SizeF="629.9999,23" LocationFloat="10.0000067,10.0000067" Font="Times New Roman, 15.75pt, style=Bold, charSet=204" Padding="2,2,0,0,100">
+          <StylePriority Ref="22" UseFont="false" UseTextAlignment="false" />
+        </Item2>
       </Controls>
     </Item4>
   </Bands>
