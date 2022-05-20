@@ -1,4 +1,5 @@
 ﻿using DevExpress.Mvvm;
+using DevExpress.Mvvm.DataAnnotations;
 using DevExpress.Xpf.Grid;
 using RetailTrade.Barcode.Services;
 using RetailTrade.Domain.Models;
@@ -267,6 +268,16 @@ namespace RetailTradeServer.ViewModels.Menus
         private void ProductService_OnProductCreated(Product product)
         {
             GetProducts.Add(product);
+        }
+
+        #endregion
+
+        #region Public Voids
+
+        [Command]
+        public void ReportProduct()
+        {
+
         }
 
         #endregion

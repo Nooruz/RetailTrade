@@ -106,6 +106,10 @@
                 <Button Content="Пометить на удаление / Снять пометку"
                         Command="{Binding DeleteMarkingProductCommand}"/>
 
+                <Button Style="{StaticResource FAButton}"
+                        Content="{StaticResource faPrint}"
+                        Command="{Binding ReportProductCommand}"/>
+
             </dxlc:LayoutGroup>
 
             <dxg:GridControl ItemsSource="{Binding GetProducts}"
