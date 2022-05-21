@@ -1,6 +1,7 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using RetailTrade.Barcode.Services;
+using RetailTradeServer.Report;
 using RetailTradeServer.State.Authenticators;
 using RetailTradeServer.State.Messages;
 using RetailTradeServer.State.Navigators;
@@ -26,6 +27,7 @@ namespace RetailTradeServer.HostBuilders
                 _ = services.AddSingleton<IBarcodeService, BarcodeService>();
                 _ = services.AddSingleton<ILabelPrintingService, LabelPrintingService>();
                 _ = services.AddSingleton(CreateXReport);
+                _ = services.AddSingleton(CreateBalancesAndAvailabilityProducts);
                 _ = services.AddSingleton<IReportService, ReportService>();
             });
         }
@@ -33,6 +35,11 @@ namespace RetailTradeServer.HostBuilders
         private static LabelReport CreateXReport(IServiceProvider serviceProvider)
         {
             return new LabelReport();
+        }
+
+        private static BalancesAndAvailabilityProducts CreateBalancesAndAvailabilityProducts(IServiceProvider serviceProvider)
+        {
+            return new BalancesAndAvailabilityProducts();
         }
     }
 }

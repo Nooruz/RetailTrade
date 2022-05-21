@@ -1,4 +1,6 @@
 ﻿using RetailTrade.Domain.Models;
+using RetailTrade.Domain.Services;
+using RetailTradeServer.Report;
 using RetailTradeServer.State.Printing;
 using SalePageServer.Report;
 using System;
@@ -14,16 +16,22 @@ namespace RetailTradeServer.State.Reports
 
         private readonly LabelReport _labelReport;
         private readonly ILabelPrintingService _labelPrintingService;
+        private readonly BalancesAndAvailabilityProducts _balancesAndAvailabilityProducts;
+        private readonly IProductService _productService;
 
         #endregion
 
         #region Constructor
 
         public ReportService(LabelReport labelReport,
-            ILabelPrintingService labelPrintingService)
+            ILabelPrintingService labelPrintingService,
+            BalancesAndAvailabilityProducts balancesAndAvailabilityProducts,
+            IProductService productService)
         {
             _labelReport = labelReport;
             _labelPrintingService = labelPrintingService;
+            _balancesAndAvailabilityProducts = balancesAndAvailabilityProducts;
+            _productService = productService;
         }
 
         #endregion
@@ -99,6 +107,21 @@ namespace RetailTradeServer.State.Reports
                 _labelReport.DataSource = labelPrintings;
                 await _labelReport.CreateDocumentAsync();
                 return _labelReport;
+            }
+            catch (Exception)
+            {
+                //ignore
+            }
+            return null;
+        }
+
+        public async Task<BalancesAndAvailabilityProducts> CreateBalancesAndAvailabilityProducts()
+        {
+            try
+            {
+                _balancesAndAvailabilityProducts.DataSource = await _productService.Report();
+                await _balancesAndAvailabilityProducts.CreateDocumentAsync();
+                return _balancesAndAvailabilityProducts;
             }
             catch (Exception)
             {

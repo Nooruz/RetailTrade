@@ -21,6 +21,7 @@ namespace RetailTrade.Domain.Services
         Task<bool> MarkingForDeletion(Product product);
         Task<bool> SearchByBarcode(string barcode);
         Task<IEnumerable<Product>> GetAllUnmarkedAsync();
+        Task<IEnumerable<Product>> Report();
 
         event Action<Product> OnProductCreated;
         event Action<Product> OnProductEdited;

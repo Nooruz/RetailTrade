@@ -6,9 +6,11 @@ using RetailTrade.Domain.Models;
 using RetailTrade.Domain.Services;
 using RetailTradeServer.Commands;
 using RetailTradeServer.State.Messages;
+using RetailTradeServer.State.Reports;
 using RetailTradeServer.ViewModels.Base;
 using RetailTradeServer.ViewModels.Dialogs;
 using RetailTradeServer.Views.Dialogs;
+using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
@@ -27,6 +29,7 @@ namespace RetailTradeServer.ViewModels.Menus
         private readonly ISupplierService _supplierService;
         private readonly IMessageStore _messageStore;
         private readonly IBarcodeService _barcodeService;
+        private readonly IReportService _reportService;
         private TypeProduct _selectedTypeProduct;
         private ObservableCollection<Product> _getProducts;
         private ObservableCollection<TypeProduct> _typeProducts;
@@ -141,7 +144,8 @@ namespace RetailTradeServer.ViewModels.Menus
             IDataService<Unit> unitService,
             ISupplierService supplierService,
             IMessageStore messageStore,
-            IBarcodeService barcodeService)
+            IBarcodeService barcodeService,
+            IReportService reportService)
         {
             _typeProductService = typeProductService;
             _productService = productService;
@@ -150,6 +154,7 @@ namespace RetailTradeServer.ViewModels.Menus
             _messageStore = messageStore;
             _barcodeService = barcodeService;
             _typeProductService = typeProductService;
+            _reportService = reportService;
 
             Header = "Товары";
 
@@ -275,9 +280,16 @@ namespace RetailTradeServer.ViewModels.Menus
         #region Public Voids
 
         [Command]
-        public void ReportProduct()
+        public async void ReportProduct()
         {
-
+            try
+            {
+                DocumentViewerService.Show(nameof(DocumentViewerView), new DocumentViewerViewModel() { PrintingDocument = await _reportService.CreateBalancesAndAvailabilityProducts() });
+            }
+            catch (Exception)
+            {
+                //ignore
+            }
         }
 
         #endregion

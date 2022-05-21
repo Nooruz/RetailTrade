@@ -325,5 +325,22 @@ namespace RetailTrade.EntityFramework.Services
             }
             return null;
         }
+
+        public async Task<IEnumerable<Product>> Report()
+        {
+            try
+            {
+                await using var context = _contextFactory.CreateDbContext();
+                return await context.Products
+                    .Where(p => p.DeleteMark == false)
+                    .Include(p => p.Unit)
+                    .ToListAsync();
+            }
+            catch (Exception)
+            {
+                //ignore
+            }
+            return null;
+        }
     }
 }

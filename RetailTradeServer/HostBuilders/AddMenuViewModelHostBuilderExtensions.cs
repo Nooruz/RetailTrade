@@ -88,7 +88,8 @@ namespace RetailTradeServer.HostBuilders
                 services.GetRequiredService<IDataService<Unit>>(),
                 services.GetRequiredService<ISupplierService>(),
                 services.GetRequiredService<IMessageStore>(),
-                services.GetRequiredService<IBarcodeService>());
+                services.GetRequiredService<IBarcodeService>(),
+                services.GetRequiredService<IReportService>());
         }
 
         private static ArrivalProductViewModel CreateArrivalProductViewModel(IServiceProvider services)

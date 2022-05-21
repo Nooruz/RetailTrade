@@ -634,7 +634,7 @@ namespace RetailTradeClient.ViewModels
         private void PrintReport(PrintToolBase tool)
         {
             try
-            {
+            {                
                 tool.PrinterSettings.PrinterName = Settings.Default.DefaultReceiptPrinter;
                 tool.Print();
             }
@@ -889,7 +889,7 @@ namespace RetailTradeClient.ViewModels
                 {
                     if (ProductSales.Any(p => p.Quantity != 0))
                     {
-                        Receipt receipt = await _receiptService.CreateAsync(new Receipt()
+                        DiscountReceiptReport report = await _reportService.CreateDiscountReceiptReport(await _receiptService.CreateAsync(new Receipt()
                         {
                             DateOfPurchase = DateTime.Now,
                             AmountWithoutDiscount = AmountWithoutDiscount,
@@ -908,9 +908,11 @@ namespace RetailTradeClient.ViewModels
                                     SalePrice = s.SalePrice,
                                     ArrivalPrice = s.ArrivalPrice
                                 }).ToList()
-                        }, Settings.Default.IsKeepRecords);
+                        }, Settings.Default.IsKeepRecords), ProductSales);
 
-                        DiscountReceiptReport report = await _reportService.CreateDiscountReceiptReport(receipt, ProductSales);
+                        ProductSales.Clear();
+                        CashPaySum = 0;
+                        CashlessPaySum = 0;
 
                         PrintReport(new(report.PrintingSystem));
 
@@ -918,10 +920,6 @@ namespace RetailTradeClient.ViewModels
                         {
                             PrintCashRegisterMachine();
                         }
-
-                        ProductSales.Clear();
-                        CashPaySum = 0;
-                        CashlessPaySum = 0;
                     }
                     else
                     {
