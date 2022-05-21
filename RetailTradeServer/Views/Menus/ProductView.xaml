@@ -54,6 +54,11 @@
                         Style="{StaticResource FAButton}"
                         Command="{Binding EditTypeProductCommand}"/>
 
+                <Button Content="{StaticResource faTrashAlt}"
+                        ToolTip="Удалить выбранный элемент"
+                        Style="{StaticResource FAButton}"
+                        Command="{Binding DeleteTypeProductCommand}"/>
+
             </dxlc:LayoutGroup>
 
             <dxg:TreeListControl ItemsSource="{Binding TypeProducts}"

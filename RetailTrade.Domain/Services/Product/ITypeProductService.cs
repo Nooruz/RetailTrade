@@ -19,6 +19,8 @@ namespace RetailTrade.Domain.Services
         /// <returns></returns>
         Task<IEnumerable<TypeProduct>> GetTypesAsync();
 
+        Task<bool> CanDelete(TypeProduct typeProduct);
+
         event Action<TypeProduct> OnTypeProductCreated;
         event Action<TypeProduct> OnTypeProductEdited;
     }

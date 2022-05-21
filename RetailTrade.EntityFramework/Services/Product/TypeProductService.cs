@@ -24,6 +24,29 @@ namespace RetailTrade.EntityFramework.Services
         public event Action<TypeProduct> OnTypeProductCreated;
         public event Action<TypeProduct> OnTypeProductEdited;
 
+        public async Task<bool> CanDelete(TypeProduct typeProduct)
+        {
+            try
+            {
+                await using var context = _contextFactory.CreateDbContext();
+                if (typeProduct.IsGroup)
+                {
+                    IEnumerable<TypeProduct> typeProducts = await context.TypeProducts.Where(t => t.SubGroupId == typeProduct.Id).ToListAsync();
+                    return typeProducts != null && typeProducts.Any() ? false : true;
+                }
+                else
+                {
+                    IEnumerable<Product> products = await context.Products.Where(p => p.TypeProductId == typeProduct.Id).ToListAsync();
+                    return products != null && products.Any() ? false : true;
+                }
+            }
+            catch (Exception)
+            {
+                //ignore
+            }
+            return false;
+        }
+
         public async Task<TypeProduct> CreateAsync(TypeProduct entity)
         {
             var result = await _nonQueryDataService.Create(entity);
@@ -47,7 +70,7 @@ namespace RetailTrade.EntityFramework.Services
                 return context.TypeProducts
                     .ToList();
             }
-            catch (Exception e)
+            catch (Exception)
             {
                 //ignore
             }
@@ -62,7 +85,7 @@ namespace RetailTrade.EntityFramework.Services
                 return await context.TypeProducts
                     .ToListAsync();
             }
-            catch (Exception e)
+            catch (Exception)
             {
                 //ignore
             }

@@ -292,6 +292,39 @@ namespace RetailTradeServer.ViewModels.Menus
             }
         }
 
+        [Command]
+        public async void DeleteTypeProduct()
+        {
+            try
+            {
+                if (SelectedTypeProduct != null)
+                {
+                    if (await _typeProductService.CanDelete(SelectedTypeProduct))
+                    {
+                        if (MessageBoxService.ShowMessage($"Удалить \"{SelectedTypeProduct.Name}\"?", "Sale Page", MessageButton.YesNo, MessageIcon.Question) == MessageResult.Yes)
+                        {
+                            if (await _typeProductService.DeleteAsync(SelectedTypeProduct.Id))
+                            {
+                                _ = TypeProducts.Remove(SelectedTypeProduct);
+                            }
+                        }
+                    }
+                    else
+                    {
+                        MessageBoxService.ShowMessage("Не удается удалить связанный Вид товара или Группу видова товара. Удалите связанные элементы!", "Sale Page", MessageButton.OK, MessageIcon.Exclamation);
+                    }
+                }
+                else
+                {
+                    MessageBoxService.ShowMessage("Выберите Вид товара или Группу видов товара!", "Sale Page", MessageButton.OK, MessageIcon.Exclamation);
+                }
+            }
+            catch (Exception)
+            {
+                //ignore
+            }
+        }
+
         #endregion
 
         #region Dispose

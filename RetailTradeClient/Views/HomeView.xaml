@@ -40,7 +40,7 @@
                 <MenuItem Header="Открыть смену"
                           Command="{Binding OpenShiftKKMCommand}"/>
                 <MenuItem Header="Закрыть смену"
-                          Command="{Binding CloseShiftKKM}"/>
+                          Command="{Binding CloseShiftKKMCommand}"/>
                 <MenuItem Header="Аннулировать чек"
                           Command="{Binding CancelReceiptKKMCommand}"/>
                 <Separator/>
@@ -188,7 +188,6 @@
 
                             <dxlc:LayoutGroup HorizontalAlignment="Left">
                                 <customs:UnitSpinEdit MaskUseAsDisplayFormat="True"
-                                              Style="{StaticResource Unit}"
                                               Mask="n"
                                               EditValueType="{x:Type sys:Double}"
                                               SelectAllOnMouseUp="True"
@@ -197,8 +196,16 @@
                                               UnitName="{Binding SelectedProductSale.UnitName}"
                                               MinWidth="150"
                                               MinValue="0"
-                                              MaxValue="{Binding SelectedProductSale.QuantityInStock}"
                                               Text="500">
+                                    <customs:UnitSpinEdit.Style>
+                                        <Style TargetType="{x:Type customs:UnitSpinEdit}" BasedOn="{StaticResource Unit}">
+                                            <Style.Triggers>
+                                                <DataTrigger Binding="{Binding Path=DataContext.IsKeepRecords, RelativeSource={RelativeSource AncestorType={x:Type local:BaseUserControl}, Mode=FindAncestor}}" Value="True">
+                                                    <Setter Property="MaxValue" Value="{Binding SelectedProductSale.QuantityInStock}"/>
+                                                </DataTrigger>
+                                            </Style.Triggers>
+                                        </Style>
+                                    </customs:UnitSpinEdit.Style>
                                     <dxmvvm:Interaction.Behaviors>
                                         <dxmvvm:EventToCommand EventName="EditValueChanged"
                                                                Command="{Binding EditValueChangedCommand}"
