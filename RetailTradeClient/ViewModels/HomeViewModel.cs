@@ -910,16 +910,16 @@ namespace RetailTradeClient.ViewModels
                                 }).ToList()
                         }, Settings.Default.IsKeepRecords), ProductSales);
 
-                        ProductSales.Clear();
-                        CashPaySum = 0;
-                        CashlessPaySum = 0;
-
                         PrintReport(new(report.PrintingSystem));
 
                         if (Settings.Default.IsKKMShiftOpen)
                         {
                             PrintCashRegisterMachine();
                         }
+
+                        ProductSales.Clear();
+                        CashPaySum = 0;
+                        CashlessPaySum = 0;
                     }
                     else
                     {

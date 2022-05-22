@@ -113,7 +113,7 @@ namespace RetailTrade.EntityFramework.Services
                 return await context.Organizations
                     .FirstOrDefaultAsync();
             }
-            catch (Exception e)
+            catch (Exception)
             {
                 //ignore
             }
