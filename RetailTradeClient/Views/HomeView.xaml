@@ -166,16 +166,16 @@
                            FontSize="20"/>
 
                             <Button Style="{StaticResource IconicButton}"
-                            HorizontalAlignment="Right"
-                            Command="{Binding DeleteSelectedRowCommand}"
-                            Content="{StaticResource faTrashAlt}"/>
+                                    HorizontalAlignment="Right"
+                                    Command="{Binding DeleteSelectedRowCommand}"
+                                    Content="{StaticResource faTrashAlt}"/>
 
                         </dxlc:LayoutGroup>
 
                         <dxlc:LayoutGroup VerticalAlignment="Top"
-                                  ItemSpace="15"
-                                  IsEnabled="{Binding IsSelectedProductSale}"
-                                  Height="30">
+                                          ItemSpace="15"
+                                          Visibility="{Binding SelectedProductEditorVisibility}"
+                                          Height="30">
 
                             <dxe:TextEdit IsReadOnly="True"
                                   Width="120"
@@ -277,7 +277,6 @@
                                        AllowSorting="False"
                                        AllowEditing="False"
                                        AllowDrop="False"
-                                       Focusable="False"
                                        NavigationStyle="Cell"
                                        FocusedRowHandle="{Binding FocusedRowHandle}"
                                        InvalidRowException="TableView_InvalidRowException"

@@ -4,7 +4,8 @@
     {
         Com,
         Zebra,
-        USB
+        USB,
+        Honeywell
     }
     public interface IBarcodeService
     {

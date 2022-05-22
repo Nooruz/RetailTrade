@@ -27,6 +27,7 @@ using System.ComponentModel;
 using System.Drawing;
 using System.Linq;
 using System.Runtime.InteropServices;
+using System.Threading;
 using System.Windows;
 using System.Windows.Data;
 using System.Windows.Input;
@@ -136,8 +137,7 @@ namespace RetailTradeClient.ViewModels
                 _selectedProductSale = value;
                 OnPropertyChanged(nameof(SelectedProductSale));
                 OnPropertyChanged(nameof(MaximumDiscount));
-                OnPropertyChanged(nameof(IsSelectedProductSale));
-                QuantitySpin();
+                OnPropertyChanged(nameof(SelectedProductEditorVisibility));
             }
         }
         public int FocusedRowHandle => ProductSales.Count - 1;
@@ -175,7 +175,7 @@ namespace RetailTradeClient.ViewModels
         }
         public double MaximumPercentage => Settings.Default.MaximumPercentage;
         public decimal MaximumDiscount => GetMaximumDiscount();
-        public bool IsSelectedProductSale => SelectedProductSale != null;
+        public Visibility SelectedProductEditorVisibility => SelectedProductSale != null ? Visibility.Visible : Visibility.Hidden;
         public string UserName => GetUserName();
         public bool CanPunchReceipt => (CashPaySum + CashlessPaySum) > 0 && CashPaySum + CashlessPaySum - Total >= 0;
 
@@ -269,6 +269,7 @@ namespace RetailTradeClient.ViewModels
                     if (sale != null)
                     {
                         sale.Quantity = item.Quantity;
+                        QuantitySpin();
                     }
                     else
                     {
@@ -426,7 +427,6 @@ namespace RetailTradeClient.ViewModels
                         if (SelectedProductSale.QuantityInStock > SelectedProductSale.Quantity + 1)
                         {
                             SelectedProductSale.Quantity++;
-                            ShowEditor(2);
                         }
                     }
                     else
@@ -453,7 +453,6 @@ namespace RetailTradeClient.ViewModels
                     {
                         SelectedProductSale = sale;
                         SelectedProductSale.Quantity++;
-                        ShowEditor(2);
                     }
                     else
                     {
@@ -648,11 +647,12 @@ namespace RetailTradeClient.ViewModels
         {
             try
             {
-                if (QuantitySpinEdit != null)
+                Thread.Sleep(200);
+                _ = QuantitySpinEdit.Dispatcher.BeginInvoke(new Action(() =>
                 {
                     _ = QuantitySpinEdit.Focus();
                     QuantitySpinEdit.SelectAll();
-                }
+                }), DispatcherPriority.Render);
             }
             catch (Exception)
             {
@@ -1236,9 +1236,12 @@ namespace RetailTradeClient.ViewModels
                     }
                     else
                     {
-                        if (MaximumDiscount < (decimal)e.NewValue)
+                        if (e.NewValue != null)
                         {
-                            SelectedProductSale.DiscountAmount = MaximumDiscount;
+                            if (MaximumDiscount < (decimal)e.NewValue)
+                            {
+                                SelectedProductSale.DiscountAmount = MaximumDiscount;
+                            }
                         }
                     }
                 }

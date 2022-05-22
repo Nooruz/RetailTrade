@@ -269,6 +269,7 @@ namespace RetailTrade.Barcode.Services
         #region Public Properties
 
         public string? ComBarcode => SearchBarcodeScaner();
+        public string? Honeywell => SearchHoneywell();
 
         #endregion
 
@@ -295,6 +296,9 @@ namespace RetailTrade.Barcode.Services
                     break;
                 case BarcodeDevice.USB:
                     break;
+                case BarcodeDevice.Honeywell:
+                    CloseHoneywell();
+                    break;
                 default:
                     break;
             }
@@ -311,6 +315,9 @@ namespace RetailTrade.Barcode.Services
                     OpenZebra();
                     break;
                 case BarcodeDevice.USB:
+                    break;
+                case BarcodeDevice.Honeywell:
+                    OpenHoneywell();
                     break;
                 default:
                     break;
@@ -406,6 +413,69 @@ namespace RetailTrade.Barcode.Services
         }
 
         private void CloseComBarcode()
+        {
+            try
+            {
+                if (_serialPort != null)
+                {
+                    if (_serialPort.IsOpen)
+                    {
+                        _serialPort.DataReceived -= SerialPort_DataReceived;
+                        _serialPort.Close();
+                    }
+                }
+            }
+            catch (Exception)
+            {
+                //ignore
+            }
+        }
+
+        #endregion
+
+        #region Honeywell
+
+        private string? SearchHoneywell()
+        {
+            using var searcher = new ManagementObjectSearcher("SELECT * FROM Win32_PnPEntity WHERE Caption like '%COM%'");
+            var portNmaes = SerialPort.GetPortNames();
+            var ports = searcher.Get().Cast<ManagementBaseObject>().ToList().Select(p => p["Caption"].ToString());
+
+            var portList = portNmaes.Select(n => n + " - " + ports.FirstOrDefault(s => s.Contains(n))).ToList();
+
+            foreach (string s in portList)
+            {
+                if (s.Contains("Honeywell"))
+                {
+                    return s.Substring(0, s.IndexOf(" "));
+                }
+            }
+
+            return null;
+        }
+
+        private void OpenHoneywell()
+        {
+            try
+            {
+                if (!string.IsNullOrEmpty(Honeywell))
+                {
+                    var sd = Honeywell;
+                    _serialPort = new(Honeywell, 9600, Parity.None, 8, StopBits.One);
+                    _serialPort.Handshake = Handshake.None;
+                    _serialPort.DataReceived += SerialPort_DataReceived;
+                    _serialPort.ReadTimeout = 500;
+                    _serialPort.WriteTimeout = 500;
+                    _serialPort.Open();
+                }
+            }
+            catch (Exception)
+            {
+                //ignore
+            }
+        }
+
+        private void CloseHoneywell()
         {
             try
             {

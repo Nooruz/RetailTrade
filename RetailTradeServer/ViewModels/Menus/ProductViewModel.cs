@@ -118,7 +118,10 @@ namespace RetailTradeServer.ViewModels.Menus
             set
             {
                 _selectedTypeProduct = value;
-                ProductGridControl.FilterString = _selectedTypeProduct.Id == 1 ? string.Empty : $"[TypeProductId] = {_selectedTypeProduct.Id}";
+                if (_selectedTypeProduct != null)
+                {
+                    ProductGridControl.FilterString = _selectedTypeProduct.Id == 1 ? string.Empty : $"[TypeProductId] = {_selectedTypeProduct.Id}";
+                }
                 OnPropertyChanged(nameof(SelectedTypeProduct));
                 OnPropertyChanged(nameof(SelectedGroupTypeProduct));
             }
