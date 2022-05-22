@@ -28,7 +28,7 @@
             <dxe:ComboBoxEdit ItemsSource="{Binding TypeProducts}"
                               DisplayMember="Name"
                               ValueMember="Id"
-                              EditValue="{Binding SelectedTypeProductId}"/>
+                              EditValue="{Binding SelectedGroupTypeProductId}"/>
         </dxlc:LayoutItem>
 
         <dxlc:LayoutGroup Orientation="Horizontal"

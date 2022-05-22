@@ -1,5 +1,6 @@
 ﻿<local:BaseMenuView
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:dxb="http://schemas.devexpress.com/winfx/2008/xaml/bars"
     xmlns:dx="http://schemas.devexpress.com/winfx/2008/xaml/core"
     xmlns:dxe="http://schemas.devexpress.com/winfx/2008/xaml/editors"
     xmlns:dxg="http://schemas.devexpress.com/winfx/2008/xaml/grid"
@@ -7,7 +8,7 @@
     xmlns:dxmvvm="http://schemas.devexpress.com/winfx/2008/xaml/mvvm"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:components="clr-namespace:RetailTradeServer.Components"
-    xmlns:local="clr-namespace:RetailTradeServer.Views.Menus" xmlns:dxb="http://schemas.devexpress.com/winfx/2008/xaml/bars"
+    xmlns:local="clr-namespace:RetailTradeServer.Views.Menus"
     x:Class="RetailTradeServer.Views.Menus.ProductView"
     Title="{Binding Header}">
 
@@ -86,17 +87,17 @@
                     <dxb:PopupMenu>
                         <dxb:PopupMenu.Items>
                             <dxb:BarButtonItem Glyph="{dx:DXImage SvgImages/Icon Builder/Actions_AddCircled.svg}" 
-                                               Content="Создать"
-                                               Command="{Binding CreateProductCommand}"/>
+                                               Content="Вид товара"
+                                               Command="{Binding CreateTypeProductCommand}"/>
+                            <dxb:BarButtonItem Glyph="{dx:DXImage SvgImages/Icon Builder/Actions_FolderClose.svg}" 
+                                               Content="Гурппу видов товары"
+                                               Command="{Binding CreateGroupTypeProductCommand}"/>
                             <dxb:BarButtonItem Glyph="{dx:DXImage SvgImages/Icon Builder/Actions_Edit.svg}" 
                                                Content="Изменить"
-                                               Command="{Binding EditProductCommand}"/>
+                                               Command="{Binding EditTypeProductCommand}"/>
                             <dxb:BarButtonItem Glyph="{dx:DXImage SvgImages/HybridDemoIcons/BottomPanel/HybridDemo_Delete.svg}" 
                                                Content="Удалить"
-                                               Command="{Binding DeleteMarkingProductCommand}"/>
-                            <dxb:BarButtonItem Glyph="{dx:DXImage SvgImages/RichEdit/TrackingChanges_Next.svg}" 
-                                               Content="Переместить в группу"
-                                               Command="{Binding MoveToGroupCommand}"/>
+                                               Command="{Binding DeleteTypeProductCommand}"/>
                         </dxb:PopupMenu.Items>
                     </dxb:PopupMenu>
                 </dxb:BarManager.DXContextMenu>
@@ -108,25 +109,6 @@
         <dxlc:LayoutGroup Orientation="Vertical"
                           Grid.Column="2">
 
-            <dxlc:LayoutGroup HorizontalAlignment="Stretch"
-                              VerticalAlignment="Top">
-
-                <dxe:ButtonEdit AllowDefaultButton="False"
-                                NullText="Поиск">
-                    <dxe:ButtonEdit.Buttons>
-                        <dxe:ButtonInfo GlyphKind="Cancel"
-                                        />
-                        <dxe:ButtonInfo GlyphKind="Search"
-                                        />
-                    </dxe:ButtonEdit.Buttons>
-                </dxe:ButtonEdit>
-
-                <CheckBox Content="По точному соответствию"
-                          IsChecked="{Binding ByExactMatch}"
-                          HorizontalAlignment="Left"/>
-
-            </dxlc:LayoutGroup>
-            
             <dxlc:LayoutGroup Orientation="Horizontal"
                               VerticalAlignment="Top"
                               HorizontalAlignment="Left">
@@ -166,8 +148,8 @@
                                    AllowEditing="False" 
                                    IsColumnMenuEnabled="True"
                                    AutoWidth="True"
-                                   AllowPaging="True"
                                    PageSize="500"
+                                   ShowGroupPanel="True"                                   
                                    ShowFilterPanelMode="Never"/>
                 </dxg:GridControl.View>
                 <dxg:GridControl.TotalSummary>

@@ -3,7 +3,10 @@ using RetailTrade.Domain.Models;
 using RetailTrade.Domain.Services;
 using RetailTradeServer.Commands;
 using RetailTradeServer.ViewModels.Dialogs.Base;
+using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System.Linq;
 using System.Windows.Input;
 
 namespace RetailTradeServer.ViewModels.Dialogs
@@ -15,8 +18,8 @@ namespace RetailTradeServer.ViewModels.Dialogs
         private readonly ITypeProductService _typeProductService;
         private string _name;
         private TypeProduct _typeProduct;
-        private int? _selectedTypeProductId;
-        private IEnumerable<TypeProduct> _typeProducts;
+        private int? _selectedGroupTypeProductId;
+        private ObservableCollection<TypeProduct> _typeProducts = new();
 
         #endregion
 
@@ -40,20 +43,20 @@ namespace RetailTradeServer.ViewModels.Dialogs
             {
                 _typeProduct = value;
                 Name = _typeProduct.Name;
-                SelectedTypeProductId = _typeProduct.SubGroupId;
+                SelectedGroupTypeProductId = _typeProduct.SubGroupId;
                 OnPropertyChanged(nameof(TypeProduct));
             }
         }
-        public int? SelectedTypeProductId
+        public int? SelectedGroupTypeProductId
         {
-            get => _selectedTypeProductId;
+            get => _selectedGroupTypeProductId;
             set
             {
-                _selectedTypeProductId = value;
-                OnPropertyChanged(nameof(SelectedTypeProductId));
+                _selectedGroupTypeProductId = value;
+                OnPropertyChanged(nameof(SelectedGroupTypeProductId));
             }
         }
-        public IEnumerable<TypeProduct> TypeProducts
+        public ObservableCollection<TypeProduct> TypeProducts
         {
             get => _typeProducts;
             set
@@ -88,7 +91,24 @@ namespace RetailTradeServer.ViewModels.Dialogs
 
         private async void UserControlLoaded()
         {
-            TypeProducts = await _typeProductService.GetGroupsAsync();
+            try
+            {
+                TypeProducts = new(await _typeProductService.GetGroupsAsync());
+                if (IsEditMode)
+                {
+                    if (TypeProduct.IsGroup)
+                    {
+                        if (TypeProducts.Any())
+                        {
+                            TypeProducts.Remove(TypeProduct);
+                        }
+                    }
+                }
+            }
+            catch (Exception)
+            {
+                //ignore
+            }
         }
 
         private async void Create()
@@ -102,7 +122,7 @@ namespace RetailTradeServer.ViewModels.Dialogs
             {
                 Name = Name,
                 IsGroup = IsGroup,
-                SubGroupId = SelectedTypeProductId == null ? 1 : SelectedTypeProductId.Value
+                SubGroupId = SelectedGroupTypeProductId == null ? 1 : SelectedGroupTypeProductId.Value
             });
             CurrentWindowService.Close();
         }
@@ -114,7 +134,9 @@ namespace RetailTradeServer.ViewModels.Dialogs
                 _ = MessageBoxService.ShowMessage("Введите наименование!", "", MessageButton.OK, MessageIcon.Exclamation);
                 return;
             }
-            _ = await _typeProductService.UpdateAsync(TypeProduct.Id, new TypeProduct { Name = Name, SubGroupId = SelectedTypeProductId.Value });
+            TypeProduct.Name = Name;
+            TypeProduct.SubGroupId = SelectedGroupTypeProductId.Value;
+            _ = await _typeProductService.UpdateAsync(TypeProduct.Id, TypeProduct);
             CurrentWindowService.Close();
         }
 

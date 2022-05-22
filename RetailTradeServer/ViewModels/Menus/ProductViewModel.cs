@@ -1,4 +1,5 @@
-﻿using DevExpress.Mvvm;
+﻿using DevExpress.Data.Filtering;
+using DevExpress.Mvvm;
 using DevExpress.Mvvm.DataAnnotations;
 using DevExpress.Xpf.Grid;
 using RetailTrade.Barcode.Services;
@@ -64,6 +65,7 @@ namespace RetailTradeServer.ViewModels.Menus
             {
                 _isUseFilter = value;
                 OnPropertyChanged(nameof(IsUseFilter));
+                FilterProductGridControl();
             }
         }
         public IEnumerable<Unit> Units
@@ -103,6 +105,7 @@ namespace RetailTradeServer.ViewModels.Menus
             }
         }
         public GridControl ProductGridControl { get; set; }
+        public TableView ProductTableView { get; set; }
         public bool CanShowLoadingPanel
         {
             get => _canShowLoadingPanel;
@@ -118,34 +121,14 @@ namespace RetailTradeServer.ViewModels.Menus
             set
             {
                 _selectedTypeProduct = value;
-                if (_selectedTypeProduct != null)
-                {
-                    ProductGridControl.FilterString = _selectedTypeProduct.Id == 1 ? string.Empty : $"[TypeProductId] = {_selectedTypeProduct.Id}";
-                }
                 OnPropertyChanged(nameof(SelectedTypeProduct));
-                OnPropertyChanged(nameof(SelectedGroupTypeProduct));
+                FilterProductGridControl();
             }
         }
-        public TypeProduct SelectedGroupTypeProduct
+        public CriteriaOperator FilterCriteria
         {
-            get
-            {
-                if (SelectedTypeProduct != null)
-                {
-                    if (SelectedTypeProduct.IsGroup)
-                    {
-                        return SelectedTypeProduct;
-                    }
-                    else
-                    {
-                        return null;
-                    }
-                }
-                else
-                {
-                    return null;
-                }
-            }
+            get => ProductGridControl.FilterCriteria;
+            set => ProductGridControl.FilterCriteria = value;
         }
 
         #endregion
@@ -181,6 +164,32 @@ namespace RetailTradeServer.ViewModels.Menus
 
         #region Private Voids
 
+        private void FilterProductGridControl()
+        {
+            try
+            {
+                if (IsUseFilter)
+                {
+                    if (SelectedTypeProduct != null && SelectedTypeProduct.Id != 1)
+                    {
+                        FilterCriteria = new BinaryOperator("TypeProductId", SelectedTypeProduct.Id, BinaryOperatorType.Equal);
+                    }
+                    else
+                    {
+                        ProductGridControl.FilterString = string.Empty;
+                    }
+                }
+                else
+                {
+                    ProductGridControl.FilterString = string.Empty;
+                }
+            }
+            catch (Exception)
+            {
+                //ignore
+            }
+        }
+
         private void ProductService_OnProductEdited(Product obj)
         {
             Product product = GetProducts.FirstOrDefault(p => p.Id == obj.Id);
@@ -189,17 +198,48 @@ namespace RetailTradeServer.ViewModels.Menus
 
         private void CreateTypeProduct()
         {
-            WindowService.Show(nameof(TypeProductDialogForm), new TypeProductDialogFormModel(_typeProductService) { Title = "Виды товаров (создание)", SelectedTypeProductId = SelectedGroupTypeProduct != null ? SelectedGroupTypeProduct.Id : 1 });
+            WindowService.Show(nameof(TypeProductDialogForm), new TypeProductDialogFormModel(_typeProductService) { Title = "Виды товаров (создание)", SelectedGroupTypeProductId = GetGroupTypeProductId() });
         }
 
         private void CreateGroupTypeProduct()
         {
-            WindowService.Show(nameof(TypeProductDialogForm), new TypeProductDialogFormModel(_typeProductService) { Title = "Виды товаров (создание группы)", IsGroup = true, SelectedTypeProductId = SelectedGroupTypeProduct != null ? SelectedGroupTypeProduct.Id : 1 });
+            WindowService.Show(nameof(TypeProductDialogForm), new TypeProductDialogFormModel(_typeProductService) { Title = "Виды товаров (создание группы)", IsGroup = true, SelectedGroupTypeProductId = GetGroupTypeProductId() });
+        }
+
+        private int? GetGroupTypeProductId()
+        {
+            if (SelectedTypeProduct != null)
+            {
+                return SelectedTypeProduct.IsGroup ? SelectedTypeProduct.Id : SelectedTypeProduct.SubGroupId;
+            }
+            else
+            {
+                return null;
+            }
+        }
+
+        private int? GetTypeProductId()
+        {
+            if (SelectedTypeProduct != null)
+            {
+                if (!SelectedTypeProduct.IsGroup)
+                {
+                    return SelectedTypeProduct.Id;
+                }
+                else
+                {
+                    return null;
+                }
+            }
+            else
+            {
+                return null;
+            }
         }
 
         private void CreateProduct()
         {
-            WindowService.Show(nameof(CreateProductDialogForm), new CreateProductDialogFormModel(_typeProductService, _unitService, _productService, _supplierService, _messageStore, _barcodeService) { Title = "Товаровы (Создать)", SelectedTypeProductId = SelectedTypeProduct?.Id });
+            WindowService.Show(nameof(CreateProductDialogForm), new CreateProductDialogFormModel(_typeProductService, _unitService, _productService, _supplierService, _messageStore, _barcodeService) { Title = "Товаровы (Создать)", SelectedTypeProductId = GetTypeProductId() });
         }
 
         private void EditTypeProduct()
@@ -211,7 +251,7 @@ namespace RetailTradeServer.ViewModels.Menus
             }
             if (SelectedTypeProduct.Id != 1)
             {
-                WindowService.Show(nameof(TypeProductDialogForm), new TypeProductDialogFormModel(_typeProductService) { Title = $"{SelectedTypeProduct.Name} (Виды товаров)", IsEditMode = true, TypeProduct = SelectedTypeProduct });
+                WindowService.Show(nameof(TypeProductDialogForm), new TypeProductDialogFormModel(_typeProductService) { Title = $"{SelectedTypeProduct.Name} (Виды товаров)", TypeProduct = SelectedTypeProduct, IsEditMode = true });
             }            
         }
 
@@ -258,6 +298,7 @@ namespace RetailTradeServer.ViewModels.Menus
                 if (e.Source is GridControl gridControl)
                 {
                     ProductGridControl = gridControl;
+                    ProductTableView = gridControl.View as TableView;
                 }
             }
         }
