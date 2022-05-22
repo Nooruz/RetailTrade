@@ -36,6 +36,7 @@ namespace RetailTradeServer.ViewModels.Menus
         private IEnumerable<Unit> _units;
         private bool _canShowLoadingPanel = true;
         private Product _selectedProduct;
+        private bool _isUseFilter = true;
 
         #endregion
 
@@ -56,6 +57,15 @@ namespace RetailTradeServer.ViewModels.Menus
 
         #region Public Properties
 
+        public bool IsUseFilter
+        {
+            get => _isUseFilter;
+            set
+            {
+                _isUseFilter = value;
+                OnPropertyChanged(nameof(IsUseFilter));
+            }
+        }
         public IEnumerable<Unit> Units
         {
             get => _units;

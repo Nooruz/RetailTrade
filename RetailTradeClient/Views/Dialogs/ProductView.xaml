@@ -30,7 +30,7 @@
                               VerticalAlignment="Top"
                               ItemSpace="10">
 
-                <CheckBox Content="Виды и свойства"
+                <CheckBox Content="Виды"
                           IsChecked="{Binding IsTypesAndProperties}"/>
 
             </dxlc:LayoutGroup>

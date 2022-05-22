@@ -7,7 +7,7 @@
     xmlns:dxmvvm="http://schemas.devexpress.com/winfx/2008/xaml/mvvm"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:components="clr-namespace:RetailTradeServer.Components"
-    xmlns:local="clr-namespace:RetailTradeServer.Views.Menus"
+    xmlns:local="clr-namespace:RetailTradeServer.Views.Menus" xmlns:dxb="http://schemas.devexpress.com/winfx/2008/xaml/bars"
     x:Class="RetailTradeServer.Views.Menus.ProductView"
     Title="{Binding Header}">
 
@@ -29,67 +29,77 @@
                               VerticalAlignment="Top"
                               HorizontalAlignment="Left">
 
-                <dx:DropDownButton Content="{StaticResource faPlus}"
-                                   Foreground="{StaticResource GreenColorBrush}"
-                                   Style="{StaticResource DropDownButtonIconic}">
-                    <StackPanel Orientation="Vertical">
-                        <components:CustomButton Icon="{StaticResource faPlus}" 
-                                                 Style="{StaticResource InPopupButton}"
-                                                 Content="Вид товара"
-                                                 HotKey="Ins"
-                                                 IconColor="{StaticResource GreenColorBrush}"
-                                                 Command="{Binding CreateTypeProductCommand}"/>
+                <dxe:CheckEdit Content="Виды"
+                               IsChecked="{Binding IsUseFilter}"/>
 
-                        <components:CustomButton Content="Группу видов товара"
-                                                 Icon="{StaticResource faFolderPlus}" 
-                                                 Style="{StaticResource InPopupButton}"
-                                                 IconColor="{StaticResource FolderColorBrush}"
-                                                 HotKey="Ctrl+F9"
-                                                 Command="{Binding CreateGroupTypeProductCommand}"/>
-                    </StackPanel>
-                </dx:DropDownButton>
+                <dxlc:LayoutGroup VerticalAlignment="Top"
+                                  IsEnabled="{Binding IsUseFilter}">
+                    
+                    <dx:DropDownButton Content="{StaticResource faPlus}"
+                                       Foreground="{StaticResource GreenColorBrush}"
+                                       Style="{StaticResource DropDownButtonIconic}">
+                        <StackPanel Orientation="Vertical">
+                            <components:CustomButton Icon="{StaticResource faPlus}" 
+                                                     Style="{StaticResource InPopupButton}"
+                                                     Content="Вид товара"
+                                                     HotKey="Ins"
+                                                     IconColor="{StaticResource GreenColorBrush}"
+                                                     Command="{Binding CreateTypeProductCommand}"/>
 
-                <Button Content="{StaticResource faEdit}"
-                        ToolTip="Изменить выбранный элемент"
-                        Style="{StaticResource FAButton}"
-                        Command="{Binding EditTypeProductCommand}"/>
+                            <components:CustomButton Content="Группу видов товара"
+                                                     Icon="{StaticResource faFolderPlus}" 
+                                                     Style="{StaticResource InPopupButton}"
+                                                     IconColor="{StaticResource FolderColorBrush}"
+                                                     HotKey="Ctrl+F9"
+                                                     Command="{Binding CreateGroupTypeProductCommand}"/>
+                        </StackPanel>
+                    </dx:DropDownButton>
 
-                <Button Content="{StaticResource faTrashAlt}"
-                        ToolTip="Удалить выбранный элемент"
-                        Style="{StaticResource FAButton}"
-                        Command="{Binding DeleteTypeProductCommand}"/>
+                    <Button Content="{StaticResource faEdit}"
+                            ToolTip="Изменить выбранный элемент"
+                            Style="{StaticResource FAButton}"
+                            Command="{Binding EditTypeProductCommand}"/>
+
+                    <Button Content="{StaticResource faTrashAlt}"
+                            ToolTip="Удалить выбранный элемент"
+                            Style="{StaticResource FAButton}"
+                            Command="{Binding DeleteTypeProductCommand}"/>
+                    
+                </dxlc:LayoutGroup>
 
             </dxlc:LayoutGroup>
 
             <dxg:TreeListControl ItemsSource="{Binding TypeProducts}"
+                                 IsEnabled="{Binding IsUseFilter}"
                                  SelectedItem="{Binding SelectedTypeProduct}">
                 <dxg:TreeListControl.View>
                     <dxg:TreeListView AutoWidth="True"
                                       KeyFieldName="Id"
-                                      ParentFieldName="SubGroupId">
-                        <dxg:TreeListView.RowCellMenuCustomizations>
-                            <!--<components:CustomBarButtonItem Style="{StaticResource CustomBarButtonItem}"
-                                                            Icon="{StaticResource faPlus}"
-                                                            IconColor="{StaticResource GreenColorBrush}"
-                                                            Command="{Binding CreateTypeProductCommand}"
-                                                            Content="Вид товара"
-                                                            HotKey="Ins"/>
-                            <components:CustomBarButtonItem Style="{StaticResource CustomBarButtonItem}"
-                                                            Icon="{StaticResource faPlus}"
-                                                            IconColor="{StaticResource GreenColorBrush}"
-                                                            Command="{Binding CreateGroupTypeProductCommand}"
-                                                            Content="Группа видов товара"/>
-                            <components:CustomBarButtonItem Style="{StaticResource CustomBarButtonItem}"
-                                                            Icon="{StaticResource faPlus}"
-                                                            IconColor="{StaticResource GreenColorBrush}"
-                                                            Command="{Binding EditTypeProductCommand}"
-                                                            Content="Изменить выбранный элемент"/>-->
-                        </dxg:TreeListView.RowCellMenuCustomizations>
+                                      ParentFieldName="SubGroupId" 
+                                      AutoExpandAllNodes="True">
                     </dxg:TreeListView>
                 </dxg:TreeListControl.View>
                 <dxg:TreeListColumn FieldName="Name"
                                     Header=""
                                     Style="{StaticResource GroupTreeListColumnWithIcon}"/>
+                <dxb:BarManager.DXContextMenu>
+                    <dxb:PopupMenu>
+                        <dxb:PopupMenu.Items>
+                            <dxb:BarButtonItem Glyph="{dx:DXImage SvgImages/Icon Builder/Actions_AddCircled.svg}" 
+                                               Content="Создать"
+                                               Command="{Binding CreateProductCommand}"/>
+                            <dxb:BarButtonItem Glyph="{dx:DXImage SvgImages/Icon Builder/Actions_Edit.svg}" 
+                                               Content="Изменить"
+                                               Command="{Binding EditProductCommand}"/>
+                            <dxb:BarButtonItem Glyph="{dx:DXImage SvgImages/HybridDemoIcons/BottomPanel/HybridDemo_Delete.svg}" 
+                                               Content="Удалить"
+                                               Command="{Binding DeleteMarkingProductCommand}"/>
+                            <dxb:BarButtonItem Glyph="{dx:DXImage SvgImages/RichEdit/TrackingChanges_Next.svg}" 
+                                               Content="Переместить в группу"
+                                               Command="{Binding MoveToGroupCommand}"/>
+                        </dxb:PopupMenu.Items>
+                    </dxb:PopupMenu>
+                </dxb:BarManager.DXContextMenu>
             </dxg:TreeListControl>
 
 
@@ -98,11 +108,30 @@
         <dxlc:LayoutGroup Orientation="Vertical"
                           Grid.Column="2">
 
+            <dxlc:LayoutGroup HorizontalAlignment="Stretch"
+                              VerticalAlignment="Top">
+
+                <dxe:ButtonEdit AllowDefaultButton="False"
+                                NullText="Поиск">
+                    <dxe:ButtonEdit.Buttons>
+                        <dxe:ButtonInfo GlyphKind="Cancel"
+                                        />
+                        <dxe:ButtonInfo GlyphKind="Search"
+                                        />
+                    </dxe:ButtonEdit.Buttons>
+                </dxe:ButtonEdit>
+
+                <CheckBox Content="По точному соответствию"
+                          IsChecked="{Binding ByExactMatch}"
+                          HorizontalAlignment="Left"/>
+
+            </dxlc:LayoutGroup>
+            
             <dxlc:LayoutGroup Orientation="Horizontal"
                               VerticalAlignment="Top"
                               HorizontalAlignment="Left">
 
-                <Button Content="Создать новый товар"
+                <Button Content="Создать"
                         Command="{Binding CreateProductCommand}"/>
 
                 <Button Content="Редактировать товар"
@@ -135,6 +164,7 @@
                 <dxg:GridControl.View>
                     <dxg:TableView ShowTotalSummary="True" 
                                    AllowEditing="False" 
+                                   IsColumnMenuEnabled="True"
                                    AutoWidth="True"
                                    AllowPaging="True"
                                    PageSize="500"
@@ -150,7 +180,25 @@
                                            Command="{Binding GridControlLoadedCommand}"
                                            PassEventArgsToCommand="True"/>
                 </dxmvvm:Interaction.Behaviors>
-
+                <dxb:BarManager.DXContextMenu>
+                    <dxb:PopupMenu>
+                        <dxb:PopupMenu.Items>
+                            <dxb:BarButtonItem Glyph="{dx:DXImage SvgImages/Icon Builder/Actions_AddCircled.svg}" 
+                                               Content="Создать"
+                                               Command="{Binding CreateProductCommand}"/>
+                            <dxb:BarButtonItem Glyph="{dx:DXImage SvgImages/Icon Builder/Actions_Edit.svg}" 
+                                               Content="Изменить"
+                                               Command="{Binding EditProductCommand}"/>
+                            <dxb:BarButtonItem Glyph="{dx:DXImage SvgImages/Snap/SnapDeleteList.svg}" 
+                                               Content="Пометить на удаление / Снять пометку"
+                                               Command="{Binding DeleteMarkingProductCommand}"/>
+                            <dxb:BarButtonItem Glyph="{dx:DXImage SvgImages/RichEdit/TrackingChanges_Next.svg}" 
+                                               Content="Переместить в группу"
+                                               Command="{Binding MoveToGroupCommand}"/>
+                        </dxb:PopupMenu.Items>
+                    </dxb:PopupMenu>
+                </dxb:BarManager.DXContextMenu>
+                
                 <dxg:GridColumn Header="Код товара"
                                 Style="{StaticResource GridColumnWithMark}" 
                                 FieldName="Id">
