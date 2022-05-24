@@ -25,7 +25,7 @@ namespace RetailTrade.EntityFramework.Services
         {
             _contextFactory = contextFactory;
             _nonQueryDataService = new NonQueryDataService<RevaluationProduct>(_contextFactory);
-            _productService = new ProductService(_contextFactory);
+            //_productService = new ProductService(_contextFactory);
         }
 
         #endregion

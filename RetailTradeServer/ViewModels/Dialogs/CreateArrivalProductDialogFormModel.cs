@@ -419,18 +419,18 @@ namespace RetailTradeServer.ViewModels.Dialogs
             {
                 try
                 {
-                    _ = await _arrivalService.CreateAsync(new Arrival
+                    Arrival arrival = await _arrivalService.CreateAsync(new Arrival
                     {
                         ArrivalDate = DateTime.Now,
                         InvoiceNumber = InvoiceNumber,
                         InvoiceDate = InvoiceDate,
                         SupplierId = SelectedSupplierId.Value,
                         Comment = Comment,
-                        Sum = ArrivalProducts.Sum(ap => ap.ArrivalSum),
-                        ArrivalProducts = ArrivalProducts.ToList()
+                        Sum = ArrivalProducts.Sum(ap => ap.ArrivalSum)
                     });
+                    _ = await _arrivalProductService.CreateRangeAsync(arrival.Id, ArrivalProducts);
                 }
-                catch (Exception e)
+                catch (Exception)
                 {
                     //ignore
                 }

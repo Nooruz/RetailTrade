@@ -57,20 +57,12 @@ namespace RetailTrade.EntityFramework.Services
 
         public async Task<Arrival> CreateAsync(Arrival entity)
         {
-            if (entity.ArrivalProducts.Any())
+            var result = await _nonQueryDataService.Create(entity);
+            if (result != null)
             {
-                var result = await _nonQueryDataService.Create(entity);
-                if (result != null)
-                {
-                    foreach (var item in entity.ArrivalProducts)
-                    {
-                        Product product = await _productService.GetByIdAsync(item.ProductId);
-                        product.Quantity += item.Quantity;
-                        await _productService.UpdateAsync(product.Id, product);
-                    }
-                    OnCreated?.Invoke(await GetByIncludAsync(result.Id));
-                }
-            }                       
+                OnCreated?.Invoke(result);
+                return result;
+            }
             return null;
         }
 

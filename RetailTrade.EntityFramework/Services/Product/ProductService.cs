@@ -15,6 +15,7 @@ namespace RetailTrade.EntityFramework.Services
     {
         private readonly RetailTradeDbContextFactory _contextFactory;
         private readonly NonQueryDataService<Product> _nonQueryDataService;
+        private readonly IArrivalProductService _arrivalProductService;
 
         public event Action PropertiesChanged;
         public event Action<Product> OnProductCreated;
@@ -22,10 +23,28 @@ namespace RetailTrade.EntityFramework.Services
         public event Action<Product> OnProductEdited;
         public event Action<int, double> OnProductSaleOrRefund;
 
-        public ProductService(RetailTradeDbContextFactory contextFactory)
+        public ProductService(RetailTradeDbContextFactory contextFactory,
+            IArrivalProductService arrivalProductService)
         {
             _contextFactory = contextFactory;
+            _arrivalProductService = arrivalProductService;
             _nonQueryDataService = new NonQueryDataService<Product>(_contextFactory);
+
+            _arrivalProductService.OnCreated += ArrivalProductService_OnCreated;
+        }
+
+        private async void ArrivalProductService_OnCreated(ArrivalProduct arrivalProduct)
+        {
+            try
+            {
+                Product product = await GetAsync(arrivalProduct.ProductId);
+                product.Quantity += arrivalProduct.Quantity;
+                _ = await UpdateAsync(product.Id, product);
+            }
+            catch (Exception)
+            {
+                //ignore
+            }
         }
 
         public async Task<Product> CreateAsync(Product entity)

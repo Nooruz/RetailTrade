@@ -116,7 +116,7 @@ namespace RetailTradeServer.ViewModels.Menus
                 Arrival arrival = Arrivals.FirstOrDefault(a => a.Id == arrivalProduct.ArrivalId);
                 if (arrival != null)
                 {
-                    arrival.ArrivalProducts.Add(arrivalProduct);
+                    //arrival.ArrivalProducts.Add(arrivalProduct);
                 }
             }
             catch (Exception)

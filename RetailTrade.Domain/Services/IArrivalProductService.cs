@@ -12,5 +12,6 @@ namespace RetailTrade.Domain.Services
         Task<bool> AddRangeAsync(List<ArrivalProduct> arrivalProducts);
         Task<bool> EditAsync(ArrivalProduct newArrivalProduct);
         Task<ArrivalProduct> GetByInclude(int id);
+        Task<bool> CreateRangeAsync(int arrivalId, IEnumerable<ArrivalProduct> arrivalProducts);
     }
 }

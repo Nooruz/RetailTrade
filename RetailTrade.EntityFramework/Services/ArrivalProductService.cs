@@ -13,17 +13,15 @@ namespace RetailTrade.EntityFramework.Services
     {
         private readonly RetailTradeDbContextFactory _contextFactory;
         private readonly NonQueryDataService<ArrivalProduct> _nonQueryDataService;
-        private readonly IProductService _productService;
 
         public event Action PropertiesChanged;
         public event Action<ArrivalProduct> OnEdited;
         public event Action<ArrivalProduct> OnCreated;
 
-        public ArrivalProductService(RetailTradeDbContextFactory contextFactory, 
-            IProductService productService)
+        public ArrivalProductService(RetailTradeDbContextFactory contextFactory)
         {
             _contextFactory = contextFactory;
-            _productService = productService;
+            //_productService = productService;
             _nonQueryDataService = new NonQueryDataService<ArrivalProduct>(_contextFactory);
         }
 
@@ -34,13 +32,13 @@ namespace RetailTrade.EntityFramework.Services
             {
                 try
                 {
-                    OnCreated?.Invoke(await GetByInclude(result.Id));
-                    Product product = await _productService.GetAsync(entity.ProductId);
-                    if (product != null)
-                    {
-                        product.Quantity += result.Quantity;
-                        _ = await _productService.UpdateAsync(product.Id, product);
-                    }
+                    //OnCreated?.Invoke(await GetByInclude(result.Id));
+                    //Product product = await _productService.GetAsync(entity.ProductId);
+                    //if (product != null)
+                    //{
+                    //    product.Quantity += result.Quantity;
+                    //    _ = await _productService.UpdateAsync(product.Id, product);
+                    //}
                 }
                 catch (Exception)
                 {
@@ -123,9 +121,9 @@ namespace RetailTrade.EntityFramework.Services
                         ProductId = item.ProductId,
                         Quantity = item.Quantity
                     });
-                    Product product = await _productService.GetByIdAsync(item.ProductId);
-                    product.Quantity += item.Quantity;
-                    await _productService.UpdateAsync(product.Id, product);
+                    //Product product = await _productService.GetByIdAsync(item.ProductId);
+                    //product.Quantity += item.Quantity;
+                    //await _productService.UpdateAsync(product.Id, product);
                 }
                 return true;
             }
@@ -141,12 +139,12 @@ namespace RetailTrade.EntityFramework.Services
             try
             {
                 ArrivalProduct oldArrivalProduct = await GetAsync(newArrivalProduct.Id);
-                Product product = await _productService.GetByIdAsync(oldArrivalProduct.ProductId);
-                if (product != null)
-                {
-                    product.Quantity += newArrivalProduct.Quantity - oldArrivalProduct.Quantity;
-                    _ = await _productService.UpdateAsync(product.Id, product);
-                }
+                //Product product = await _productService.GetByIdAsync(oldArrivalProduct.ProductId);
+                //if (product != null)
+                //{
+                //    product.Quantity += newArrivalProduct.Quantity - oldArrivalProduct.Quantity;
+                //    _ = await _productService.UpdateAsync(product.Id, product);
+                //}
                 oldArrivalProduct.Quantity = newArrivalProduct.Quantity;
                 oldArrivalProduct.ArrivalPrice = newArrivalProduct.ArrivalPrice;
                 oldArrivalProduct.SalePrice = newArrivalProduct.SalePrice;
@@ -175,6 +173,24 @@ namespace RetailTrade.EntityFramework.Services
                 //ignore
             }
             return null;
+        }
+
+        public async Task<bool> CreateRangeAsync(int arrivalId, IEnumerable<ArrivalProduct> arrivalProducts)
+        {
+            try
+            {
+                foreach (ArrivalProduct arrivalProduct in arrivalProducts)
+                {
+                    arrivalProduct.ArrivalId = arrivalId;
+                    var result = await _nonQueryDataService.Create(arrivalProduct);
+                    OnCreated?.Invoke(result);
+                }
+                return true;
+            }
+            catch (Exception)
+            {
+                return false;
+            }
         }
     }
 }

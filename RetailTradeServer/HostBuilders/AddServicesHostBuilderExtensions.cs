@@ -20,6 +20,7 @@ namespace RetailTradeServer.HostBuilders
                 services.AddSingleton<IUserService, UserService>();
                 services.AddSingleton<IRoleService, RoleService>();
                 services.AddSingleton<IOrganizationService, OrganizationService>();
+                services.AddSingleton<IArrivalProductService, ArrivalProductService>();
                 services.AddSingleton<IProductService, ProductService>();
                 services.AddSingleton<IDataService<Unit>, GenericService<Unit>>();
                 services.AddSingleton<IDataService<Branch>, GenericService<Branch>>();
@@ -27,7 +28,6 @@ namespace RetailTradeServer.HostBuilders
                 services.AddSingleton<ISupplierService, SupplierService>();
                 services.AddSingleton<IReceiptService, ReceiptService>();
                 services.AddSingleton<IShiftService, ShiftService>();
-                services.AddSingleton<IArrivalProductService, ArrivalProductService>();
                 services.AddSingleton<IWriteDownProductService, WriteDownProductService>();
                 services.AddSingleton<IRefundToSupplierServiceProduct, RefundToSupplierServiceProduct>();
                 services.AddSingleton<IOrderStatusService, OrderStatusService>();
