@@ -10,7 +10,7 @@
 
     <dxmvvm:Interaction.Behaviors>
         <dxmvvm:EventToCommand EventName="Loaded" 
-                               Command="{Binding LoadedCommand}"/>
+                               Command="{Binding UserControlLoadedCommand}"/>
     </dxmvvm:Interaction.Behaviors>
 
     <dxlc:LayoutControl ItemSpace="10"
@@ -40,56 +40,36 @@
                     Style="{StaticResource FAButton}"
                     Content="{StaticResource faEdit}"/>
 
+            <dxlc:LayoutItem Label="Поставщик:">
+                <dxe:ComboBoxEdit Width="200"
+                                  ItemsSource="{Binding Suppliers}"
+                                  DisplayMember="ShortName"
+                                  ValueMember="Id"
+                                  EditValue="{Binding SelectedSupplierId, UpdateSourceTrigger=PropertyChanged}">
+                    <dxe:ComboBoxEdit.Buttons>
+                        <dxe:ButtonInfo GlyphKind="Cancel"
+                                        Command="{Binding ClearSelectedSupplierCommand}"/>
+                    </dxe:ComboBoxEdit.Buttons>
+                </dxe:ComboBoxEdit>
+            </dxlc:LayoutItem>
+
         </dxlc:LayoutGroup>
 
-        <dxg:GridControl SelectionMode="Row"
+        <dxg:GridControl SelectionMode="Row" 
+                         AllowLiveDataShaping="True"
                          ItemsSource="{Binding Arrivals}"
                          SelectedItem="{Binding SelectedArrival}">
 
+            <dxmvvm:Interaction.Behaviors>
+                <dxmvvm:EventToCommand Event="Loaded"
+                                       Command="{Binding GridControlLoadedCommand}"
+                                       PassEventArgsToCommand="True"/>
+            </dxmvvm:Interaction.Behaviors>
+            
             <dxg:GridControl.View>
                 <dxg:TableView AutoWidth="True"
                                AllowEditing="False"/>
             </dxg:GridControl.View>
-
-            <dxg:GridControl.DetailDescriptor>
-                <dxg:TabViewDetailDescriptor>
-                    <dxg:DataControlDetailDescriptor ItemsSourcePath="ArrivalProducts">
-                        <dxg:GridControl AutoGenerateColumns="None">
-                            <dxg:GridControl.View>
-                                <dxg:TableView DetailHeaderContent="Товары"
-                                               AllowEditing="False"
-                                               ShowGroupPanel="False"/>
-                            </dxg:GridControl.View>
-                            <dxg:GridColumn Header="Наименование" 
-                                            FieldName="Product.Name"/>
-                            <dxg:GridColumn Header="Количество" 
-                                            FieldName="Quantity">
-                                <dxg:GridColumn.EditSettings>
-                                    <dxe:TextEditSettings MaskUseAsDisplayFormat="True" 
-                                                          MaskType="Numeric" 
-                                                          Mask="n"/>
-                                </dxg:GridColumn.EditSettings>
-                            </dxg:GridColumn>
-                            <dxg:GridColumn Header="Цена"
-                                            FieldName="ArrivalPrice">
-                                <dxg:GridColumn.EditSettings>
-                                    <dxe:TextEditSettings MaskUseAsDisplayFormat="True" 
-                                                          MaskType="Numeric" 
-                                                          Mask="n"/>
-                                </dxg:GridColumn.EditSettings>
-                            </dxg:GridColumn>
-                            <dxg:GridColumn Header="Сумма"
-                                            FieldName="ArrivalSum">
-                                <dxg:GridColumn.EditSettings>
-                                    <dxe:TextEditSettings MaskUseAsDisplayFormat="True" 
-                                                          MaskType="Numeric" 
-                                                          Mask="n"/>
-                                </dxg:GridColumn.EditSettings>
-                            </dxg:GridColumn>
-                        </dxg:GridControl>
-                    </dxg:DataControlDetailDescriptor>
-                </dxg:TabViewDetailDescriptor>
-            </dxg:GridControl.DetailDescriptor>
 
             <dxg:GridColumn Header="Дата"
                             FieldName="ArrivalDate"/>
@@ -99,7 +79,13 @@
                             Width="50"/>
 
             <dxg:GridColumn Header="Поставщик" 
-                            FieldName="Supplier.ShortName"/>
+                            FieldName="SupplierId">
+                <dxg:GridColumn.EditSettings>
+                    <dxe:ComboBoxEditSettings ItemsSource="{Binding Suppliers}" 
+                                              DisplayMember="ShortName"
+                                              ValueMember="Id"/>
+                </dxg:GridColumn.EditSettings>
+            </dxg:GridColumn>
 
             <dxg:GridColumn Header="Сумма"
                             FieldName="Sum">

@@ -1,9 +1,10 @@
-﻿using DevExpress.Mvvm;
+﻿using DevExpress.Data.Filtering;
+using DevExpress.Mvvm;
 using DevExpress.Mvvm.DataAnnotations;
+using DevExpress.Xpf.Grid;
 using RetailTrade.Barcode.Services;
 using RetailTrade.Domain.Models;
 using RetailTrade.Domain.Services;
-using RetailTradeServer.Commands;
 using RetailTradeServer.Report;
 using RetailTradeServer.ViewModels.Base;
 using RetailTradeServer.ViewModels.Dialogs;
@@ -11,7 +12,7 @@ using RetailTradeServer.Views.Dialogs;
 using System;
 using System.Collections.ObjectModel;
 using System.Linq;
-using System.Windows.Input;
+using System.Windows;
 
 namespace RetailTradeServer.ViewModels.Menus
 {
@@ -26,7 +27,9 @@ namespace RetailTradeServer.ViewModels.Menus
         private readonly IArrivalProductService _arrivalProductService;
         private readonly IBarcodeService _barcodeService;
         private Arrival _selectedArrival;
-        private ObservableCollection<Arrival> _arrivals;
+        private ObservableCollection<Arrival> _arrivals = new();
+        private ObservableCollection<Supplier> _suppliers = new();
+        private int? _selectedSupplierId;
 
         #endregion
 
@@ -41,6 +44,15 @@ namespace RetailTradeServer.ViewModels.Menus
                 OnPropertyChanged(nameof(Arrivals));
             }
         }
+        public ObservableCollection<Supplier> Suppliers
+        {
+            get => _suppliers;
+            set
+            {
+                _suppliers = value;
+                OnPropertyChanged(nameof(Suppliers));
+            }
+        }
         public Arrival SelectedArrival
         {
             get => _selectedArrival;
@@ -50,12 +62,22 @@ namespace RetailTradeServer.ViewModels.Menus
                 OnPropertyChanged(nameof(SelectedArrival));
             }
         }
-
-        #endregion
-
-        #region Commands
-
-        public ICommand LoadedCommand => new RelayCommand(GetArrivalsAsync);
+        public int? SelectedSupplierId
+        {
+            get => _selectedSupplierId;
+            set
+            {
+                _selectedSupplierId = value;
+                OnPropertyChanged(nameof(SelectedSupplierId));
+                Filter();
+            }
+        }
+        public GridControl ArrivalGridControl { get; set; }
+        public CriteriaOperator FilterCriteria
+        {
+            get => ArrivalGridControl.FilterCriteria;
+            set => ArrivalGridControl.FilterCriteria = value;
+        }
 
         #endregion
 
@@ -79,28 +101,22 @@ namespace RetailTradeServer.ViewModels.Menus
 
             _arrivalService.OnCreated += ArrivalService_OnCreated;
             _arrivalService.OnEdited += ArrivalService_OnEdited;
-            _arrivalProductService.OnCreated += ArrivalProductService_OnCreated;
-            _arrivalProductService.OnEdited += ArrivalProductService_OnEdited;
+            _supplierService.OnSupplierCreated += SupplierService_OnSupplierCreated;
+            _supplierService.OnSupplierUpdated += SupplierService_OnSupplierUpdated;
         }
 
         #endregion
 
         #region Private Voids
 
-        private void ArrivalProductService_OnEdited(ArrivalProduct arrivalProduct)
+        private void SupplierService_OnSupplierUpdated(Supplier supplier)
         {
             try
             {
-                Arrival arrival = Arrivals.FirstOrDefault(a => a.Id == arrivalProduct.ArrivalId);
-                if (arrival != null)
+                Supplier? editSupplier = Suppliers.FirstOrDefault(s => s.Id == supplier.Id);
+                if (editSupplier != null)
                 {
-                    ArrivalProduct editArrivalProduct = arrival.ArrivalProducts.FirstOrDefault(a => a.Id == arrivalProduct.Id);
-                    if (editArrivalProduct != null)
-                    {
-                        editArrivalProduct.Quantity = arrivalProduct.Quantity;
-                        editArrivalProduct.SalePrice = arrivalProduct.SalePrice;
-                        editArrivalProduct.ArrivalPrice = arrivalProduct.ArrivalPrice;
-                    }
+                    editSupplier.ShortName = supplier.ShortName;
                 }
             }
             catch (Exception)
@@ -108,23 +124,17 @@ namespace RetailTradeServer.ViewModels.Menus
                 //ignore
             }
         }
-
-        private void ArrivalProductService_OnCreated(ArrivalProduct arrivalProduct)
+        private void SupplierService_OnSupplierCreated(Supplier supplier)
         {
             try
             {
-                Arrival arrival = Arrivals.FirstOrDefault(a => a.Id == arrivalProduct.ArrivalId);
-                if (arrival != null)
-                {
-                    //arrival.ArrivalProducts.Add(arrivalProduct);
-                }
+                Suppliers.Add(supplier);
             }
             catch (Exception)
             {
                 //ignore
             }
         }
-
         private void ArrivalService_OnEdited(Arrival arrival)
         {
             try
@@ -143,7 +153,6 @@ namespace RetailTradeServer.ViewModels.Menus
                 //ignore
             }
         }
-
         private void ArrivalService_OnCreated(Arrival arrival)
         {
             try
@@ -163,13 +172,6 @@ namespace RetailTradeServer.ViewModels.Menus
                 //ignore
             }
         }
-
-        private async void GetArrivalsAsync()
-        {
-            Arrivals = new(await _arrivalService.GetAllAsync());
-            ShowLoadingPanel = false;
-        }
-
         private bool CheckSelectedArrival()
         {
             if (SelectedArrival == null)
@@ -179,10 +181,54 @@ namespace RetailTradeServer.ViewModels.Menus
             }
             return true;
         }
+        private void Filter()
+        {
+            try
+            {
+                if (SelectedSupplierId != null)
+                {
+                    FilterCriteria = new BinaryOperator("SupplierId", SelectedSupplierId.Value, BinaryOperatorType.Equal);
+                }
+                else
+                {
+                    FilterCriteria = null;
+                }
+            }
+            catch (Exception)
+            {
+                //ignore
+            }
+        }
 
         #endregion
 
         #region Public Voids
+
+        [Command]
+        public void GridControlLoaded(object sender)
+        {
+            if (sender is RoutedEventArgs e)
+            {
+                if (e.Source is GridControl gridControl)
+                {
+                    ArrivalGridControl = gridControl;
+                }
+            }
+        }
+
+        [Command]
+        public void ClearSelectedSupplier()
+        {
+            SelectedSupplierId = null;
+        }
+
+        [Command]
+        public async void UserControlLoaded()
+        {
+            Arrivals = new(await _arrivalService.GetAllAsync());
+            Suppliers = new(await _supplierService.GetAllAsync());
+            ShowLoadingPanel = false;
+        }
 
         [Command]
         public void EditArrival()

@@ -123,10 +123,6 @@ namespace RetailTrade.EntityFramework.Services
             {
                 await using var context = _contextFactory.CreateDbContext();
                 return await context.Arrivals
-                    .Include(o => o.ArrivalProducts)
-                    .ThenInclude(o => o.Product)
-                    .ThenInclude(o => o.Unit)
-                    .Include(o => o.Supplier)
                     .ToListAsync();
             }
             catch (Exception)

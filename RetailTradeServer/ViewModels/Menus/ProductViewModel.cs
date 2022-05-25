@@ -5,7 +5,6 @@ using DevExpress.Xpf.Grid;
 using RetailTrade.Barcode.Services;
 using RetailTrade.Domain.Models;
 using RetailTrade.Domain.Services;
-using RetailTradeServer.Commands;
 using RetailTradeServer.State.Messages;
 using RetailTradeServer.State.Reports;
 using RetailTradeServer.ViewModels.Base;
@@ -16,7 +15,6 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Windows;
-using System.Windows.Input;
 
 namespace RetailTradeServer.ViewModels.Menus
 {
@@ -38,21 +36,6 @@ namespace RetailTradeServer.ViewModels.Menus
         private bool _canShowLoadingPanel = true;
         private Product _selectedProduct;
         private bool _isUseFilter = true;
-
-        #endregion
-
-        #region Command
-
-        public ICommand UserControlLoadedCommand => new RelayCommand(UserControlLoaded);
-        public ICommand CreateProductCommand => new RelayCommand(CreateProduct);
-        public ICommand EditProductCommand => new RelayCommand(EditProduct);
-        public ICommand EditTypeProductCommand => new RelayCommand(EditTypeProduct);
-        public ICommand SelectedItemChangedCommand { get; }
-        public ICommand OnShowNodeMenuCommand { get; }
-        public ICommand GridControlLoadedCommand => new ParameterCommand(sender => GridControlLoaded(sender));
-        public ICommand DeleteMarkingProductCommand => new RelayCommand(DeleteMarkingProduct);
-        public ICommand CreateGroupTypeProductCommand => new RelayCommand(CreateGroupTypeProduct);
-        public ICommand CreateTypeProductCommand => new RelayCommand(CreateTypeProduct);
 
         #endregion
 
@@ -189,23 +172,11 @@ namespace RetailTradeServer.ViewModels.Menus
                 //ignore
             }
         }
-
         private void ProductService_OnProductEdited(Product obj)
         {
             Product product = GetProducts.FirstOrDefault(p => p.Id == obj.Id);
             product.Barcode = obj.Barcode;
         }
-
-        private void CreateTypeProduct()
-        {
-            WindowService.Show(nameof(TypeProductDialogForm), new TypeProductDialogFormModel(_typeProductService) { Title = "Виды товаров (создание)", SelectedGroupTypeProductId = GetGroupTypeProductId() });
-        }
-
-        private void CreateGroupTypeProduct()
-        {
-            WindowService.Show(nameof(TypeProductDialogForm), new TypeProductDialogFormModel(_typeProductService) { Title = "Виды товаров (создание группы)", IsGroup = true, SelectedGroupTypeProductId = GetGroupTypeProductId() });
-        }
-
         private int? GetGroupTypeProductId()
         {
             if (SelectedTypeProduct != null)
@@ -217,7 +188,6 @@ namespace RetailTradeServer.ViewModels.Menus
                 return null;
             }
         }
-
         private int? GetTypeProductId()
         {
             if (SelectedTypeProduct != null)
@@ -236,25 +206,6 @@ namespace RetailTradeServer.ViewModels.Menus
                 return null;
             }
         }
-
-        private void CreateProduct()
-        {
-            WindowService.Show(nameof(CreateProductDialogForm), new CreateProductDialogFormModel(_typeProductService, _unitService, _productService, _supplierService, _messageStore, _barcodeService) { Title = "Товаровы (Создать)", SelectedTypeProductId = GetTypeProductId() });
-        }
-
-        private void EditTypeProduct()
-        {
-            if (SelectedTypeProduct == null)
-            {
-                _ = MessageBoxService.Show("Выберите группу видов или вид товара!", "", MessageBoxButton.OK, MessageBoxImage.Exclamation);
-                return;
-            }
-            if (SelectedTypeProduct.Id != 1)
-            {
-                WindowService.Show(nameof(TypeProductDialogForm), new TypeProductDialogFormModel(_typeProductService) { Title = $"{SelectedTypeProduct.Name} (Виды товаров)", TypeProduct = SelectedTypeProduct, IsEditMode = true });
-            }            
-        }
-
         private void TypeProductService_OnTypeProductEdited(TypeProduct obj)
         {
             if (obj != null)
@@ -267,8 +218,43 @@ namespace RetailTradeServer.ViewModels.Menus
         {
             TypeProducts.Add(obj);
         }
+        private void ProductService_OnProductCreated(Product product)
+        {
+            GetProducts.Add(product);
+        }
 
-        private async void UserControlLoaded()
+        #endregion
+
+        #region Public Voids
+
+        [Command]
+        public void CreateGroupTypeProduct()
+        {
+            WindowService.Show(nameof(TypeProductDialogForm), new TypeProductDialogFormModel(_typeProductService) { Title = "Виды товаров (создание группы)", IsGroup = true, SelectedGroupTypeProductId = GetGroupTypeProductId() });
+        }
+
+        [Command]
+        public void CreateProduct()
+        {
+            WindowService.Show(nameof(CreateProductDialogForm), new CreateProductDialogFormModel(_typeProductService, _unitService, _productService, _supplierService, _messageStore, _barcodeService) { Title = "Товаровы (Создать)", SelectedTypeProductId = GetTypeProductId() });
+        }
+
+        [Command]
+        public void EditTypeProduct()
+        {
+            if (SelectedTypeProduct == null)
+            {
+                _ = MessageBoxService.Show("Выберите группу видов или вид товара!", "", MessageBoxButton.OK, MessageBoxImage.Exclamation);
+                return;
+            }
+            if (SelectedTypeProduct.Id != 1)
+            {
+                WindowService.Show(nameof(TypeProductDialogForm), new TypeProductDialogFormModel(_typeProductService) { Title = $"{SelectedTypeProduct.Name} (Виды товаров)", TypeProduct = SelectedTypeProduct, IsEditMode = true });
+            }
+        }
+
+        [Command]
+        public async void UserControlLoaded()
         {
             TypeProducts = new(await _typeProductService.GetAllAsync());
             GetProducts = new(await _productService.GetAllAsync());
@@ -276,7 +262,8 @@ namespace RetailTradeServer.ViewModels.Menus
             ShowLoadingPanel = false;
         }
 
-        private async void DeleteMarkingProduct()
+        [Command]
+        public async void DeleteMarkingProduct()
         {
             if (SelectedProduct != null)
             {
@@ -291,7 +278,8 @@ namespace RetailTradeServer.ViewModels.Menus
             }
         }
 
-        private void GridControlLoaded(object sender)
+        [Command]
+        public void GridControlLoaded(object sender)
         {
             if (sender is RoutedEventArgs e)
             {
@@ -303,7 +291,8 @@ namespace RetailTradeServer.ViewModels.Menus
             }
         }
 
-        private void EditProduct()
+        [Command]
+        public void EditProduct()
         {
             if (SelectedProduct != null)
             {
@@ -324,14 +313,11 @@ namespace RetailTradeServer.ViewModels.Menus
             }
         }
 
-        private void ProductService_OnProductCreated(Product product)
+        [Command]
+        public void CreateTypeProduct()
         {
-            GetProducts.Add(product);
+            WindowService.Show(nameof(TypeProductDialogForm), new TypeProductDialogFormModel(_typeProductService) { Title = "Виды товаров (создание)", SelectedGroupTypeProductId = GetGroupTypeProductId() });
         }
-
-        #endregion
-
-        #region Public Voids
 
         [Command]
         public async void ReportProduct()
