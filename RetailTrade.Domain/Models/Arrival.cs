@@ -58,7 +58,7 @@ namespace RetailTrade.Domain.Models
                 _supplierId = value;
                 OnPropertyChanged(nameof(SupplierId));
             }
-        }         
+        }
         public int? WareHouseId
         {
             get => _wareHouseId;
