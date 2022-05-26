@@ -10,6 +10,7 @@ using RetailTradeServer.ViewModels.Base;
 using RetailTradeServer.ViewModels.Dialogs;
 using RetailTradeServer.Views.Dialogs;
 using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Windows;
@@ -26,9 +27,12 @@ namespace RetailTradeServer.ViewModels.Menus
         private readonly ITypeProductService _typeProductService;
         private readonly IArrivalProductService _arrivalProductService;
         private readonly IBarcodeService _barcodeService;
+        private readonly IDataService<Unit> _unitService;
+        private readonly IWareHouseService _warehouseService;
         private Arrival _selectedArrival;
         private ObservableCollection<Arrival> _arrivals = new();
         private ObservableCollection<Supplier> _suppliers = new();
+        private IEnumerable<WareHouse> _warehouses;
         private int? _selectedSupplierId;
 
         #endregion
@@ -51,6 +55,15 @@ namespace RetailTradeServer.ViewModels.Menus
             {
                 _suppliers = value;
                 OnPropertyChanged(nameof(Suppliers));
+            }
+        }
+        public IEnumerable<WareHouse> Warehouses
+        {
+            get => _warehouses;
+            set
+            {
+                _warehouses = value;
+                OnPropertyChanged(nameof(Warehouses));
             }
         }
         public Arrival SelectedArrival
@@ -88,7 +101,9 @@ namespace RetailTradeServer.ViewModels.Menus
             ISupplierService supplierService,
             ITypeProductService typeProductService,
             IBarcodeService barcodeService,
-            IArrivalProductService arrivalProductService)
+            IArrivalProductService arrivalProductService,
+            IDataService<Unit> unitService,
+            IWareHouseService warehouseService)
         {
             _productService = productService;
             _arrivalService = arrivalService;
@@ -96,6 +111,8 @@ namespace RetailTradeServer.ViewModels.Menus
             _typeProductService = typeProductService;
             _barcodeService = barcodeService;
             _arrivalProductService = arrivalProductService;
+            _unitService = unitService;
+            _warehouseService = warehouseService;
 
             Header = "Приход товара";
 
@@ -227,6 +244,7 @@ namespace RetailTradeServer.ViewModels.Menus
         {
             Arrivals = new(await _arrivalService.GetAllAsync());
             Suppliers = new(await _supplierService.GetAllAsync());
+            Warehouses = await _warehouseService.GetAllAsync();
             ShowLoadingPanel = false;
         }
 
@@ -237,7 +255,7 @@ namespace RetailTradeServer.ViewModels.Menus
             {
                 try
                 {
-                    CreateArrivalProductDialogFormModel viewModel = new(_productService, _supplierService, _arrivalService, _typeProductService, _barcodeService, _arrivalProductService)
+                    CreateArrivalProductDialogFormModel viewModel = new(_productService, _supplierService, _arrivalService, _typeProductService, _barcodeService, _arrivalProductService, _unitService, _warehouseService)
                     {
                         Title = $"Приход товаров №{SelectedArrival.Id} от {SelectedArrival.ArrivalDate}",
                         Arrival = SelectedArrival
@@ -259,7 +277,7 @@ namespace RetailTradeServer.ViewModels.Menus
                 if (MessageBoxService.ShowMessage("Дублировать выбранный приход?", "", MessageButton.YesNo, MessageIcon.Question) == MessageResult.Yes)
                 {
                     WindowService.Show(nameof(CreateArrivalProductDialogForm),
-                        new CreateArrivalProductDialogFormModel(_productService, _supplierService, _arrivalService, _typeProductService, _barcodeService, _arrivalProductService)
+                        new CreateArrivalProductDialogFormModel(_productService, _supplierService, _arrivalService, _typeProductService, _barcodeService, _arrivalProductService, _unitService, _warehouseService)
                         {
                             Title = "Приход товаров (дублирование)",
                             SelectedSupplierId = SelectedArrival.Supplier.Id,
@@ -284,7 +302,7 @@ namespace RetailTradeServer.ViewModels.Menus
         [Command]
         public void CreateArrival()
         {
-            WindowService.Show(nameof(CreateArrivalProductDialogForm), new CreateArrivalProductDialogFormModel(_productService, _supplierService, _arrivalService, _typeProductService, _barcodeService, _arrivalProductService) { Title = "Приход товаров (новый)" });
+            WindowService.Show(nameof(CreateArrivalProductDialogForm), new CreateArrivalProductDialogFormModel(_productService, _supplierService, _arrivalService, _typeProductService, _barcodeService, _arrivalProductService, _unitService, _warehouseService) { Title = "Приход товаров (новый)" });
         }
 
         [Command]

@@ -22,6 +22,7 @@ namespace RetailTrade.EntityFramework.Services
 
         public event Action PropertiesChanged;
         public event Action<WareHouse> OnWareHouseCreated;
+        public event Action<WareHouse> OnWareHouseEdited;
 
         public async Task<WareHouse> CreateAsync(WareHouse entity)
         {
@@ -46,7 +47,7 @@ namespace RetailTrade.EntityFramework.Services
                 return context.WareHouses
                     .ToList();
             }
-            catch (Exception e)
+            catch (Exception)
             {
                 //ignore
             }
@@ -61,7 +62,7 @@ namespace RetailTrade.EntityFramework.Services
                 return await context.WareHouses
                     .ToListAsync();
             }
-            catch (Exception e)
+            catch (Exception)
             {
                 //ignore
             }
@@ -76,18 +77,31 @@ namespace RetailTrade.EntityFramework.Services
                 return await context.WareHouses
                     .FirstOrDefaultAsync((e) => e.Id == id);
             }
-            catch (Exception e)
+            catch (Exception)
             {
                 //ignore
             }
             return null;
         }
 
+        public async Task MarkingForDeletion(WareHouse wareHouse)
+        {
+            try
+            {
+                wareHouse.DeleteMark = !wareHouse.DeleteMark;
+                _ = await UpdateAsync(wareHouse.Id, wareHouse);
+            }
+            catch (Exception)
+            {
+                //ignore
+            }
+        }
+
         public async Task<WareHouse> UpdateAsync(int id, WareHouse entity)
         {
             var result = await _nonQueryDataService.Update(id, entity);
             if (result != null)
-                PropertiesChanged?.Invoke();
+                OnWareHouseEdited?.Invoke(result);
             return result;
         }
     }

@@ -32,11 +32,16 @@ namespace RetailTradeServer.ViewModels.Dialogs
         private readonly IArrivalProductService _arrivalProductService;
         private readonly ITypeProductService _typeProductService;
         private readonly IBarcodeService _barcodeService;
+        private readonly IDataService<Unit> _unitService;
+        private readonly IWareHouseService _warehouseService;
         private int? _selectedSupplierId;
+        private int? _selectedWareHouseId;
         private ArrivalProduct _selectedArrivalProduct;
         private string _comment;
         private IEnumerable<Supplier> _suppliers;
         private IEnumerable<Product> _products;
+        private IEnumerable<Unit> _units;
+        private IEnumerable<WareHouse> _wareHouses;
         private ObservableCollection<ArrivalProduct> _arrivalProducts = new();
         private object _syncLock = new();
         private Arrival _arrival;
@@ -73,6 +78,24 @@ namespace RetailTradeServer.ViewModels.Dialogs
                 OnPropertyChanged(nameof(Suppliers));
             }
         }
+        public IEnumerable<Unit> Units
+        {
+            get => _units;
+            set
+            {
+                _units = value;
+                OnPropertyChanged(nameof(Units));
+            }
+        }
+        public IEnumerable<WareHouse> WareHouses
+        {
+            get => _wareHouses;
+            set
+            {
+                _wareHouses = value;
+                OnPropertyChanged(nameof(WareHouses));
+            }
+        }
         public int? SelectedSupplierId
         {
             get => _selectedSupplierId;
@@ -83,6 +106,15 @@ namespace RetailTradeServer.ViewModels.Dialogs
                 OnPropertyChanged(nameof(Products));
                 Cleare();
                 GetProducts();
+            }
+        }
+        public int? SelectedWareHouseId
+        {
+            get => _selectedWareHouseId;
+            set
+            {
+                _selectedWareHouseId = value;
+                OnPropertyChanged(nameof(SelectedWareHouseId));
             }
         }
         public string Comment
@@ -137,9 +169,6 @@ namespace RetailTradeServer.ViewModels.Dialogs
         public ICommand ClearCommand => new RelayCommand(Cleare);
         public ICommand CellValueChangedCommand => new ParameterCommand(p => CellValueChanged(p));
         public ICommand AddProductToArrivalCommand => new RelayCommand(AddProductToArrival);
-        public ICommand GridControlLoadedCommand => new ParameterCommand((object p) => GridControlLoaded(p));
-        public ICommand ProductCommand => new RelayCommand(OpenProductDialog);
-        public ICommand UserControlLoadedCommand => new ParameterCommand(sender => UserControlLoaded(sender));
 
         #endregion
 
@@ -150,7 +179,9 @@ namespace RetailTradeServer.ViewModels.Dialogs
             IArrivalService arrivalService,
             ITypeProductService typeProductService,
             IBarcodeService barcodeService,
-            IArrivalProductService arrivalProductService)
+            IArrivalProductService arrivalProductService,
+            IDataService<Unit> unitService,
+            IWareHouseService warehouseService)
         {
             _productService = productService;
             _supplierService = supplierService;
@@ -158,6 +189,8 @@ namespace RetailTradeServer.ViewModels.Dialogs
             _typeProductService = typeProductService;
             _barcodeService = barcodeService;
             _arrivalProductService = arrivalProductService;
+            _unitService = unitService;
+            _warehouseService = warehouseService;
 
             BindingOperations.EnableCollectionSynchronization(ArrivalProducts, _syncLock);
 
@@ -167,30 +200,6 @@ namespace RetailTradeServer.ViewModels.Dialogs
         #endregion
 
         #region Private Voids
-
-        private void UserControlLoaded(object parameter)
-        {
-            try
-            {
-                if (parameter is RoutedEventArgs e)
-                {
-                    if (e.Source is UserControl userControl)
-                    {
-                        userControl.Unloaded += UserControl_Unloaded;
-                    }
-                }
-                GetSupplier();
-                if (Enum.IsDefined(typeof(BarcodeDevice), Settings.Default.BarcodeDefaultDevice))
-                {
-                    _barcodeService.Open(Enum.Parse<BarcodeDevice>(Settings.Default.BarcodeDefaultDevice));
-                }
-                _barcodeService.OnBarcodeEvent += BarcodeService_OnBarcodeEvent;
-            }
-            catch (Exception)
-            {
-                //ignore
-            }
-        }
 
         private void BarcodeService_OnBarcodeEvent(string barcode)
         {
@@ -258,14 +267,6 @@ namespace RetailTradeServer.ViewModels.Dialogs
             }
         }
 
-        private void OpenProductDialog()
-        {
-            ProductDialogFormModel viewModel = new(_typeProductService) { Products = new(Products) };
-            viewModel.OnProductSelected += ProductDialogFormModel_OnProductSelected;
-            viewModel.OnProductsSelected += ProductDialogFormModel_OnProductsSelected;
-            WindowService.Show(nameof(ProductDialogForm), viewModel);
-        }
-
         private void ProductDialogFormModel_OnProductSelected(Product product)
         {
             if (product != null)
@@ -309,19 +310,6 @@ namespace RetailTradeServer.ViewModels.Dialogs
             });
         }
 
-        private void GridControlLoaded(object parameter)
-        {
-            if (parameter is RoutedEventArgs e)
-            {
-                if (e.Source is GridControl gridControl)
-                {
-                    ArrivalGridControl = gridControl;
-                    ArrivalTableView = ArrivalGridControl.View as TableView;
-                    ArrivalTableView.ShownEditor += ArrivalTableView_ShownEditor;
-                }
-            }
-        }
-
         private void ArrivalTableView_ShownEditor(object sender, EditorEventArgs e)
         {
             ArrivalTableView.Grid.View.ActiveEditor.SelectAll();
@@ -360,20 +348,29 @@ namespace RetailTradeServer.ViewModels.Dialogs
 
         private void CellValueChanged(object parameter)
         {
-            if (parameter is CellValueChangedEventArgs e)
+            try
             {
-                if (e.Cell.Property == "ProductId")
+                if (parameter is CellValueChangedEventArgs e)
                 {
-                    if (SelectedArrivalProduct != null)
+                    if (e.Cell.Property == "ProductId")
                     {
-                        SelectedArrivalProduct.ArrivalPrice = Products.FirstOrDefault(p => p.Id == (int)e.Value).ArrivalPrice;
-                        ShowEditor(1);
+                        if (SelectedArrivalProduct != null && e.Value != null)
+                        {
+                            Product product = Products.FirstOrDefault(p => p.Id == (int)e.Value);
+                            SelectedArrivalProduct.ArrivalPrice = product.ArrivalPrice;
+                            SelectedArrivalProduct.Product = product;
+                            ShowEditor(1);
+                        }
                     }
+                    ArrivalTableView.PostEditor();
+                    ArrivalTableView.Grid.UpdateGroupSummary();
                 }
-                ArrivalTableView.PostEditor();
-                ArrivalTableView.Grid.UpdateGroupSummary();
-            }            
-            OnPropertyChanged(nameof(CanArrivalProduct));
+                OnPropertyChanged(nameof(CanArrivalProduct));
+            }
+            catch (Exception)
+            {
+                //ignore
+            }
         }
 
         private void ValidateCell(object parameter)
@@ -457,18 +454,76 @@ namespace RetailTradeServer.ViewModels.Dialogs
         {
             if (SelectedSupplierId != null)
             {
-                Products = await _productService.PredicateSelect(p => p.SupplierId == SelectedSupplierId.Value && p.DeleteMark == false, p => new Product { Id = p.Id, Name = p.Name, ArrivalPrice = p.ArrivalPrice, TypeProductId = p.TypeProductId, Barcode = p.Barcode });
+                Products = await _productService.PredicateSelect(p => p.SupplierId == SelectedSupplierId.Value && p.DeleteMark == false, p => new Product { Id = p.Id, Name = p.Name, ArrivalPrice = p.ArrivalPrice, TypeProductId = p.TypeProductId, Barcode = p.Barcode, UnitId = p.UnitId });
             }
         }
 
         private async void GetSupplier()
         {
             Suppliers = await _supplierService.GetAllAsync();
+            Units = await _unitService.GetAllAsync();
+        }
+
+        private void ArrivalGridControl_PreviewKeyDown(object sender, KeyEventArgs e)
+        {
+            if (SelectedArrivalProduct != null && e.Key == Key.Delete && ArrivalTableView.ActiveEditor == null)
+            {
+                ArrivalProducts.Remove(SelectedArrivalProduct);
+            }
         }
 
         #endregion
 
         #region Public Voids
+
+        [Command]
+        public void GridControlLoaded(object parameter)
+        {
+            if (parameter is RoutedEventArgs e)
+            {
+                if (e.Source is GridControl gridControl)
+                {
+                    ArrivalGridControl = gridControl;
+                    ArrivalTableView = ArrivalGridControl.View as TableView;
+                    ArrivalTableView.ShownEditor += ArrivalTableView_ShownEditor;
+                    ArrivalGridControl.PreviewKeyDown += ArrivalGridControl_PreviewKeyDown;
+                }
+            }
+        }
+
+        [Command]
+        public void OpenProductDialog()
+        {
+            ProductDialogFormModel viewModel = new(_typeProductService) { Products = new(Products) };
+            viewModel.OnProductSelected += ProductDialogFormModel_OnProductSelected;
+            viewModel.OnProductsSelected += ProductDialogFormModel_OnProductsSelected;
+            WindowService.Show(nameof(ProductDialogForm), viewModel);
+        }
+
+        [Command]
+        public void UserControlLoaded(object parameter)
+        {
+            try
+            {
+                if (parameter is RoutedEventArgs e)
+                {
+                    if (e.Source is UserControl userControl)
+                    {
+                        userControl.Unloaded += UserControl_Unloaded;
+                    }
+                }
+                GetSupplier();
+                if (Enum.IsDefined(typeof(BarcodeDevice), Settings.Default.BarcodeDefaultDevice))
+                {
+                    _barcodeService.Open(Enum.Parse<BarcodeDevice>(Settings.Default.BarcodeDefaultDevice));
+                }
+                _barcodeService.OnBarcodeEvent += BarcodeService_OnBarcodeEvent;
+            }
+            catch (Exception)
+            {
+                //ignore
+            }
+        }
 
         [Command]
         public async void SaveArrivalProduct()

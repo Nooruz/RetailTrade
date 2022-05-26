@@ -9,6 +9,7 @@ namespace RetailTrade.Domain.Models
         private string _name;
         private string _address;
         private int _typeWareHouseId;
+        private bool _deleteMark;
 
         #endregion
 
@@ -52,8 +53,23 @@ namespace RetailTrade.Domain.Models
                 OnPropertyChanged(nameof(TypeWareHouseId));
             }
         }
+
+        /// <summary>
+        /// Пометка на удаление по умолчанию false
+        /// </summary>
+        public bool DeleteMark
+        {
+            get => _deleteMark;
+            set
+            {
+                _deleteMark = value;
+                OnPropertyChanged(nameof(DeleteMark));
+            }
+        }
+
         public TypeWareHouse TypeWareHouse { get; set; }
         public ICollection<Product> Products { get; set; }
+        public ICollection<Arrival> Arrivals { get; set; }
 
         #endregion        
     }

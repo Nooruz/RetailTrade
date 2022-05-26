@@ -8,12 +8,13 @@ namespace RetailTradeServer.Converters
     {
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
-            return (int)value;
+            int id = (int)value;
+            return id == int.Parse(parameter.ToString());
         }
 
         public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
         {
-            return true;
+            return parameter;
         }
     }
 }

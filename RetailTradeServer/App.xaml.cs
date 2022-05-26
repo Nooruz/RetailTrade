@@ -12,6 +12,7 @@ using System;
 using System.Data.SqlClient;
 using System.IO;
 using System.Windows;
+using RetailTrade.Domain.Models;
 
 namespace RetailTradeServer
 {
@@ -109,7 +110,28 @@ namespace RetailTradeServer
                 return;
             }
 
+            UpdateDataBase(contextFactory);
+
             base.OnStartup(e);
+        }
+
+        private static async void UpdateDataBase(RetailTradeDbContextFactory contextFactory)
+        {
+            try
+            {
+                var context = contextFactory.CreateDbContext();
+                TypeWareHouse typeWareHouse = await context.TypeWareHouses.FirstOrDefaultAsync(t => t.Name == "Оптовый склад");
+                if (typeWareHouse != null)
+                {
+                    typeWareHouse.Name = "Склад";
+                    context.TypeWareHouses.Update(typeWareHouse);
+                    _ = await context.SaveChangesAsync();
+                }
+            }
+            catch (Exception)
+            {
+                //ignore
+            }
         }
 
         private void Window_Loaded(object sender, RoutedEventArgs e)

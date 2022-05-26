@@ -4,20 +4,25 @@
     xmlns:dxlc="http://schemas.devexpress.com/winfx/2008/xaml/layoutcontrol"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:local="clr-namespace:RetailTradeServer.Views.Dialogs"
+    xmlns:dxmvvm="http://schemas.devexpress.com/winfx/2008/xaml/mvvm"
     x:Class="RetailTradeServer.Views.Dialogs.WareHouseDialogForm"
     Width="450">
 
     <dxlc:LayoutControl Orientation="Vertical">
 
         <dxlc:LayoutGroup>
-            <RadioButton Content="Оптовый склад"
-                         IsChecked="{Binding TypeWareHouseId, Converter={StaticResource TypeWareHouseIdConverter}, ConverterParameter=1}"/>
+            <RadioButton Content="Склад"
+                         IsChecked="{Binding TypeWareHouseId, ConverterParameter=1, Converter={StaticResource TypeWareHouseIdConverter}}"/>
             <RadioButton Content="Рознычный магазин"
-                         IsChecked="{Binding TypeWareHouseId, Converter={StaticResource TypeWareHouseIdConverter}, ConverterParameter=2}"/>
+                         IsChecked="{Binding TypeWareHouseId, ConverterParameter=2, Converter={StaticResource TypeWareHouseIdConverter}}"/>
         </dxlc:LayoutGroup>
-        
+
         <dxlc:LayoutItem Label="Наименование:">
-            <dxe:TextEdit Text="{Binding Name, UpdateSourceTrigger=PropertyChanged}"/>
+            <dxe:TextEdit Text="{Binding Name, UpdateSourceTrigger=PropertyChanged}">
+                <dxmvvm:Interaction.Behaviors>
+                    <dxmvvm:FocusBehavior/>
+                </dxmvvm:Interaction.Behaviors>
+            </dxe:TextEdit>
         </dxlc:LayoutItem>
 
         <dxlc:LayoutItem Label="Адресс:">
@@ -27,9 +32,14 @@
         <dxlc:LayoutGroup HorizontalAlignment="Right"
                           VerticalAlignment="Top">
 
-            <Button Content="Сохранить"
+            <Button Content="Создать"
                     Command="{Binding CreateCommand}"
-                    IsEnabled="{Binding CanCreate}"/>
+                    IsEnabled="{Binding CanCreate}"
+                    Visibility="{Binding CreateButtonVisibility}"/>
+            <Button Content="Сохранить"
+                    Command="{Binding SaveCommand}"
+                    IsEnabled="{Binding CanCreate}"
+                    Visibility="{Binding SaveButtonVisibility}"/>
             <Button Content="Отменить"
                     Command="{Binding CloseCommand}"/>
 

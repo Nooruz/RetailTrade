@@ -1,8 +1,11 @@
-﻿using RetailTrade.Domain.Models;
+﻿using DevExpress.Mvvm.DataAnnotations;
+using RetailTrade.Domain.Models;
 using RetailTrade.Domain.Services;
 using RetailTradeServer.Commands;
 using RetailTradeServer.ViewModels.Dialogs.Base;
+using System;
 using System.Collections.Generic;
+using System.Windows;
 
 namespace RetailTradeServer.ViewModels.Dialogs
 {
@@ -14,11 +17,29 @@ namespace RetailTradeServer.ViewModels.Dialogs
         private string _name;
         private string _address;
         private int _typeWareHouseId;
+        private WareHouse _editebleWareHouse;
 
         #endregion
 
         #region Public Properties
 
+        public WareHouse EditableWareHouse
+        {
+            get => _editebleWareHouse;
+            set
+            {
+                _editebleWareHouse = value;
+                if (_editebleWareHouse != null)
+                {
+                    Name = _editebleWareHouse.Name;
+                    Address = _editebleWareHouse.Address;
+                    TypeWareHouseId = _editebleWareHouse.TypeWareHouseId;
+                }
+                OnPropertyChanged(nameof(EditableWareHouse));
+            }
+        }
+        public Visibility CreateButtonVisibility => IsEditMode ? Visibility.Collapsed : Visibility.Visible;
+        public Visibility SaveButtonVisibility => IsEditMode ? Visibility.Visible : Visibility.Collapsed;
         public string Name
         {
             get => _name;
@@ -45,16 +66,13 @@ namespace RetailTradeServer.ViewModels.Dialogs
             set
             {
                 _typeWareHouseId = value;
+                TitleChange();
                 OnPropertyChanged(nameof(TypeWareHouseId));
             }
         }
         public IEnumerable<TypeWareHouse> TypeWareHouses { get; set; }
-        public bool CanCreate => !string.IsNullOrEmpty(Name) && !string.IsNullOrEmpty(Address);
-
-        #endregion
-
-        #region Commands
-
+        public bool CanCreate => !string.IsNullOrEmpty(Name);
+        public bool IsEditMode { get; set; }
 
 
         #endregion
@@ -64,8 +82,9 @@ namespace RetailTradeServer.ViewModels.Dialogs
         public WareHouseDialogFormModel(IWareHouseService wareHouseService)
         {
             _wareHouseService = wareHouseService;
-
+            
             CreateCommand = new RelayCommand(Create);
+            CloseCommand = new RelayCommand(() => CurrentWindowService.Close());
         }
 
         #endregion
@@ -80,10 +99,38 @@ namespace RetailTradeServer.ViewModels.Dialogs
                 {
                     Name = Name,
                     Address = Address,
-                    TypeWareHouseId = 1
+                    TypeWareHouseId = TypeWareHouseId
                 });
             }
             CurrentWindowService.Close();
+        }
+        private void TitleChange()
+        {
+            try
+            {
+                Title = TypeWareHouseId == 1 ? "Склад (создание)" : "Розничный магазин (создание)";
+            }
+            catch (Exception)
+            {
+                //ignore
+            }
+        }
+
+        #endregion
+
+        #region Public Voids
+
+        [Command]
+        public async void Save()
+        {
+            if (CanCreate)
+            {
+                EditableWareHouse.Name = Name;
+                EditableWareHouse.Address = Address;
+                EditableWareHouse.TypeWareHouseId = TypeWareHouseId;
+                await _wareHouseService.UpdateAsync(EditableWareHouse.Id, EditableWareHouse);
+                CurrentWindowService.Close();
+            }
         }
 
         #endregion

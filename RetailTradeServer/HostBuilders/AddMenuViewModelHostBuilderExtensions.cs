@@ -99,7 +99,9 @@ namespace RetailTradeServer.HostBuilders
                 services.GetRequiredService<ISupplierService>(),
                 services.GetRequiredService<ITypeProductService>(),
                 services.GetRequiredService<IBarcodeService>(),
-                services.GetRequiredService<IArrivalProductService>());
+                services.GetRequiredService<IArrivalProductService>(),
+                services.GetRequiredService<IDataService<Unit>>(),
+                services.GetRequiredService<IWareHouseService>());
         }
 
         private static WriteDownProductViewModel CreateWriteDownProductViewModel(IServiceProvider services)

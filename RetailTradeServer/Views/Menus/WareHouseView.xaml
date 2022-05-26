@@ -25,22 +25,37 @@
                                              IconColor="{StaticResource GreenColorBrush}"
                                              Content="Создать">
                 <StackPanel Orientation="Vertical">
-                    <components:CustomButton Content="Оптовый склад"
+                    <components:CustomButton Content="Склад"
                                              Command="{Binding CreateWareHouseCommand}"
                                              Style="{StaticResource InPopupButton}"/>
                     <components:CustomButton Content="Розничный магазин"
+                                             Command="{Binding CreateRetailTradeCommand}"
                                              Style="{StaticResource InPopupButton}"/>
                 </StackPanel>
             </components:CustomDropDownButton>
 
+            <Button Style="{StaticResource FAButton}"
+                    Content="{StaticResource faEdit}"
+                    Command="{Binding EditCommand}"
+                    ToolTip="Изменить"/>
+
+            <Button Style="{StaticResource FAButton}"
+                    Content="{StaticResource faTrashAlt}"
+                    Command="{Binding DeleteMarkingProductCommand}"
+                    Foreground="{StaticResource RedColorBrush}"
+                    ToolTip="Пометить на удаление / Снять пометку"/>
+
         </dxlc:LayoutGroup>
 
-        <dxg:GridControl ItemsSource="{Binding WareHouses}">
+        <dxg:GridControl ItemsSource="{Binding WareHouses}"
+                         SelectedItem="{Binding SelectedWareHouse}">
             <dxg:GridControl.View>
-                <dxg:TableView AutoWidth="True"/>
+                <dxg:TableView AutoWidth="True"
+                               AllowEditing="False"/>
             </dxg:GridControl.View>
             <dxg:GridColumn Header="Наименование"
-                            FieldName="Name"/>
+                            FieldName="Name"
+                            Style="{StaticResource GridColumnWithMark}"/>
             <dxg:GridColumn Header="Склад / Магазин"
                             FieldName="TypeWareHouseId">
                 <dxg:GridColumn.EditSettings>
@@ -49,6 +64,8 @@
                                               ValueMember="Id"/>
                 </dxg:GridColumn.EditSettings>
             </dxg:GridColumn>
+            <dxg:GridColumn Header="Адрес"
+                            FieldName="Address"/>
         </dxg:GridControl>
 
     </dxlc:LayoutControl>
