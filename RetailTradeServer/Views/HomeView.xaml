@@ -67,6 +67,10 @@
                                 Style="{StaticResource DefaultHamburgerSubMenu}"
                                 Tag="{StaticResource faCartArrowDown}">
 
+            <dxwui:HamburgerSubMenuNavigationButton Content="Документы закупки"
+                                                    Command="{Binding RenavigateCommand}"
+                                                    CommandParameter="PurchaseDocuments"/>
+            
             <dxwui:HamburgerSubMenuNavigationButton Content="Заказы поставщикам"
                                                     Command="{Binding RenavigateCommand}"
                                                     CommandParameter="OrderProduct"/>

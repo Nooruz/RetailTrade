@@ -11,6 +11,7 @@ namespace RetailTrade.Domain.Models
         private int _wareHouseId;
         private double _quantity;
         private decimal _arrivalPrice;
+        private decimal _salePrice;
 
         #endregion
 
@@ -51,6 +52,16 @@ namespace RetailTrade.Domain.Models
             {
                 _arrivalPrice = value;
                 OnPropertyChanged(nameof(ArrivalPrice));
+            }
+        }
+        [Column(TypeName = "decimal(18,2)")]
+        public decimal SalePrice
+        {
+            get => _salePrice;
+            set
+            {
+                _salePrice = value;
+                OnPropertyChanged(nameof(SalePrice));
             }
         }
         public Product Product { get; set; }

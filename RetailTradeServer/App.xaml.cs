@@ -130,7 +130,7 @@ namespace RetailTradeServer
                     _ = await context.SaveChangesAsync();
                 }
 
-                IEnumerable<User> users = await context.Users.Where(u => u.RoleId == 2).ToListAsync();
+                IEnumerable<User> users = await context.Users.Where(u => u.RoleId == 2 && u.WareHouseId == null).ToListAsync();
 
                 if (users != null && users.Any())
                 {
@@ -147,7 +147,7 @@ namespace RetailTradeServer
 
                 IEnumerable<Product> products = await context.Products
                     .Include(p => p.WareHouses)
-                    .Where(p => p.DeleteMark == false && p.Quantity > 0)
+                    .Where(p => p.DeleteMark == false)
                     .ToListAsync();
                 WareHouse wareHouse = await context.WareHouses.FirstOrDefaultAsync(w => w.Id == 2);
 
@@ -155,9 +155,27 @@ namespace RetailTradeServer
                 {
                     foreach (Product product in products)
                     {
-                        if (product.WareHouses == null)
+                        if (!product.WareHouses.Any())
                         {
-                            product.WareHouses = new List<WareHouse>() { new WareHouse { } };
+                            if (product.WareHouses.FirstOrDefault() == null)
+                            {
+                                product.WareHouses.Add(wareHouse);
+                                context.Products.Update(product);
+                                _ = await context.SaveChangesAsync();
+                                ProductWareHouse productWareHouse = await context.ProductsWareHouses.FirstOrDefaultAsync(p => p.ProductId == product.Id && p.WareHouseId == wareHouse.Id);
+                                if (productWareHouse != null)
+                                {
+                                    productWareHouse.Quantity = product.Quantity;
+                                    productWareHouse.ArrivalPrice = product.ArrivalPrice;
+                                    productWareHouse.SalePrice = product.SalePrice;
+                                    context.ProductsWareHouses.Update(productWareHouse);
+                                    product.Quantity = 0;
+                                    product.ArrivalPrice = 0;
+                                    product.SalePrice = 0;
+                                    context.Products.Update(product);
+                                    _ = await context.SaveChangesAsync();
+                                }
+                            }
                         }
                     }
                 }

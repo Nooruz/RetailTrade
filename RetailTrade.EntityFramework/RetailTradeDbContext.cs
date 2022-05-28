@@ -123,6 +123,7 @@ namespace RetailTrade.EntityFramework
         public DbSet<Customer> Customers { get; set; }
 
         public DbSet<Contractor> Contractors { get; set; }
+        public DbSet<ProductWareHouse> ProductsWareHouses { get; set; }
 
         #region Employee
 
