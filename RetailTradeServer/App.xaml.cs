@@ -13,6 +13,8 @@ using System.Data.SqlClient;
 using System.IO;
 using System.Windows;
 using RetailTrade.Domain.Models;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace RetailTradeServer
 {
@@ -127,6 +129,39 @@ namespace RetailTradeServer
                     context.TypeWareHouses.Update(typeWareHouse);
                     _ = await context.SaveChangesAsync();
                 }
+
+                IEnumerable<User> users = await context.Users.Where(u => u.RoleId == 2).ToListAsync();
+
+                if (users != null && users.Any())
+                {
+                    foreach (User user in users)
+                    {
+                        if (user.WareHouseId == null)
+                        {
+                            user.WareHouseId = 2;
+                            context.Users.Update(user);
+                            _ = await context.SaveChangesAsync();
+                        }
+                    }
+                }
+
+                IEnumerable<Product> products = await context.Products
+                    .Include(p => p.WareHouses)
+                    .Where(p => p.DeleteMark == false && p.Quantity > 0)
+                    .ToListAsync();
+                WareHouse wareHouse = await context.WareHouses.FirstOrDefaultAsync(w => w.Id == 2);
+
+                if (wareHouse != null && products != null && products.Any())
+                {
+                    foreach (Product product in products)
+                    {
+                        if (product.WareHouses == null)
+                        {
+                            product.WareHouses = new List<WareHouse>() { new WareHouse { } };
+                        }
+                    }
+                }
+
             }
             catch (Exception)
             {

@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using RetailTrade.EntityFramework;
 
@@ -11,9 +12,10 @@ using RetailTrade.EntityFramework;
 namespace RetailTrade.EntityFramework.Migrations
 {
     [DbContext(typeof(RetailTradeDbContext))]
-    partial class RetailTradeDbContextModelSnapshot : ModelSnapshot
+    [Migration("20220527051943_UserWareHouse")]
+    partial class UserWareHouse
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -1099,7 +1101,9 @@ namespace RetailTrade.EntityFramework.Migrations
 
                     b.HasIndex("RoleId");
 
-                    b.HasIndex("WareHouseId");
+                    b.HasIndex("WareHouseId")
+                        .IsUnique()
+                        .HasFilter("[WareHouseId] IS NOT NULL");
 
                     b.ToTable("Users");
                 });
@@ -1124,6 +1128,9 @@ namespace RetailTrade.EntityFramework.Migrations
                     b.Property<int>("TypeWareHouseId")
                         .HasColumnType("int");
 
+                    b.Property<int>("UserId")
+                        .HasColumnType("int");
+
                     b.HasKey("Id");
 
                     b.HasIndex("TypeWareHouseId");
@@ -1136,14 +1143,16 @@ namespace RetailTrade.EntityFramework.Migrations
                             Id = 1,
                             DeleteMark = false,
                             Name = "Розничный магазин",
-                            TypeWareHouseId = 0
+                            TypeWareHouseId = 0,
+                            UserId = 0
                         },
                         new
                         {
                             Id = 2,
                             DeleteMark = false,
                             Name = "Основной склад",
-                            TypeWareHouseId = 0
+                            TypeWareHouseId = 0,
+                            UserId = 0
                         });
                 });
 
@@ -1559,8 +1568,8 @@ namespace RetailTrade.EntityFramework.Migrations
                         .IsRequired();
 
                     b.HasOne("RetailTrade.Domain.Models.WareHouse", "WareHouse")
-                        .WithMany("Users")
-                        .HasForeignKey("WareHouseId");
+                        .WithOne("User")
+                        .HasForeignKey("RetailTrade.Domain.Models.User", "WareHouseId");
 
                     b.Navigation("Role");
 
@@ -1749,7 +1758,7 @@ namespace RetailTrade.EntityFramework.Migrations
 
                     b.Navigation("ProductsWareHouses");
 
-                    b.Navigation("Users");
+                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("RetailTrade.Domain.Models.WriteDown", b =>

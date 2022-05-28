@@ -462,19 +462,25 @@ namespace RetailTradeServer.ViewModels.Dialogs
         {
             Suppliers = await _supplierService.GetAllAsync();
             Units = await _unitService.GetAllAsync();
-        }
-
-        private void ArrivalGridControl_PreviewKeyDown(object sender, KeyEventArgs e)
-        {
-            if (SelectedArrivalProduct != null && e.Key == Key.Delete && ArrivalTableView.ActiveEditor == null)
-            {
-                ArrivalProducts.Remove(SelectedArrivalProduct);
-            }
+            WareHouses = await _warehouseService.GetAllAsync();
         }
 
         #endregion
 
         #region Public Voids
+
+        [Command]
+        public void RemoveSelectedArrivalProduct()
+        {
+            if (ArrivalTableView != null && ArrivalTableView.ActiveEditor == null)
+            {
+                ArrivalProducts.Remove(SelectedArrivalProduct);
+                if (ArrivalProducts != null && ArrivalProducts.Any())
+                {
+                    SelectedArrivalProduct = ArrivalProducts.LastOrDefault();
+                }
+            }
+        }
 
         [Command]
         public void GridControlLoaded(object parameter)
@@ -486,7 +492,6 @@ namespace RetailTradeServer.ViewModels.Dialogs
                     ArrivalGridControl = gridControl;
                     ArrivalTableView = ArrivalGridControl.View as TableView;
                     ArrivalTableView.ShownEditor += ArrivalTableView_ShownEditor;
-                    ArrivalGridControl.PreviewKeyDown += ArrivalGridControl_PreviewKeyDown;
                 }
             }
         }

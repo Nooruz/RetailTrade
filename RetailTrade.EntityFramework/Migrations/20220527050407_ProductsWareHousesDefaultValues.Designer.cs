@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using RetailTrade.EntityFramework;
 
@@ -11,9 +12,10 @@ using RetailTrade.EntityFramework;
 namespace RetailTrade.EntityFramework.Migrations
 {
     [DbContext(typeof(RetailTradeDbContext))]
-    partial class RetailTradeDbContextModelSnapshot : ModelSnapshot
+    [Migration("20220527050407_ProductsWareHousesDefaultValues")]
+    partial class ProductsWareHousesDefaultValues
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -1092,14 +1094,9 @@ namespace RetailTrade.EntityFramework.Migrations
                     b.Property<string>("Username")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int?>("WareHouseId")
-                        .HasColumnType("int");
-
                     b.HasKey("Id");
 
                     b.HasIndex("RoleId");
-
-                    b.HasIndex("WareHouseId");
 
                     b.ToTable("Users");
                 });
@@ -1558,13 +1555,7 @@ namespace RetailTrade.EntityFramework.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("RetailTrade.Domain.Models.WareHouse", "WareHouse")
-                        .WithMany("Users")
-                        .HasForeignKey("WareHouseId");
-
                     b.Navigation("Role");
-
-                    b.Navigation("WareHouse");
                 });
 
             modelBuilder.Entity("RetailTrade.Domain.Models.WareHouse", b =>
@@ -1748,8 +1739,6 @@ namespace RetailTrade.EntityFramework.Migrations
                     b.Navigation("Arrivals");
 
                     b.Navigation("ProductsWareHouses");
-
-                    b.Navigation("Users");
                 });
 
             modelBuilder.Entity("RetailTrade.Domain.Models.WriteDown", b =>

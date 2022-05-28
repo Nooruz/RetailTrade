@@ -167,6 +167,26 @@ namespace RetailTrade.EntityFramework
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+            modelBuilder.Entity<Product>()
+                .HasMany(p => p.WareHouses)
+                .WithMany(w => w.Products)
+                .UsingEntity<ProductWareHouse>(
+                j => j
+                    .HasOne(pt => pt.WareHouse)
+                    .WithMany(t => t.ProductsWareHouses)
+                    .HasForeignKey(pt => pt.WareHouseId),
+                j => j
+                    .HasOne(pt => pt.Product)
+                    .WithMany(p => p.ProductsWareHouses)
+                    .HasForeignKey(pt => pt.ProductId),
+                j =>
+                    {
+                        j.Property(pt => pt.Quantity).HasDefaultValue(0);
+                        j.Property(pt => pt.ArrivalPrice).HasDefaultValue(0);
+                        j.HasKey(t => new { t.ProductId, t.WareHouseId });
+                        j.ToTable("ProductsWareHouses");
+                    });
+
             modelBuilder.Entity<OrderToSupplier>()
                 .HasMany(o => o.OrderProducts)
                 .WithOne(o => o.OrderToSupplier)

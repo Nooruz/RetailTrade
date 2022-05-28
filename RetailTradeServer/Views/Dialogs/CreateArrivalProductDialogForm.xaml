@@ -67,7 +67,7 @@
                     </dxlc:LayoutItem>
 
                     <dxlc:LayoutItem Label="Склад:">
-                        <dxe:ComboBoxEdit ItemsSource="{Binding Warehouses}"
+                        <dxe:ComboBoxEdit ItemsSource="{Binding WareHouses}"
                                           DisplayMember="Name"
                                           ValueMember="Id"
                                           EditValue="{Binding SelectedWareHouseId}"/>
@@ -76,7 +76,8 @@
                     <dxlc:LayoutItem Label="Комментарий:"
                                      LabelVerticalAlignment="Top"
                                      VerticalAlignment="Top">
-                        <dxe:TextEdit Text="{Binding Comment, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" 
+                        <dxe:TextEdit Text="{Binding Comment, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                      VerticalContentAlignment="Top"
                                       TextWrapping="WrapWithOverflow"
                                       Height="150"/>
                     </dxlc:LayoutItem>
@@ -119,6 +120,9 @@
                                     <dxmvvm:EventToCommand EventName="ValidateCell"
                                                            Command="{Binding ValidateCellCommand}"
                                                            PassEventArgsToCommand="True"/>
+                                    <dxmvvm:KeyToCommand EventName="PreviewKeyDown"
+                                                         KeyGesture="Delete"
+                                                         Command="{Binding RemoveSelectedArrivalProductCommand}"/>
                                 </dxmvvm:Interaction.Behaviors>
                             </dxg:TableView>
                         </dxg:GridControl.View>
@@ -171,6 +175,7 @@
                             </dxg:GridColumn.EditSettings>
                         </dxg:GridColumn>
                         <dxg:GridColumn Header="Ед. изм."
+                                        AllowEditing="False"
                                         FieldName="Product.UnitId">
                             <dxg:GridColumn.EditSettings>
                                 <dxe:ComboBoxEditSettings ItemsSource="{Binding Units}"

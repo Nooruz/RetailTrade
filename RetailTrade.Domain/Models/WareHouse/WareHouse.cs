@@ -68,8 +68,10 @@ namespace RetailTrade.Domain.Models
         }
 
         public TypeWareHouse TypeWareHouse { get; set; }
+        public ICollection<User> Users { get; set; }
         public ICollection<Product> Products { get; set; }
         public ICollection<Arrival> Arrivals { get; set; }
+        public ICollection<ProductWareHouse> ProductsWareHouses { get; set; }
 
         #endregion        
     }
