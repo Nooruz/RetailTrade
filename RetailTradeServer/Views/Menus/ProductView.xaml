@@ -129,7 +129,8 @@
             </dxlc:LayoutGroup>
 
             <dxg:GridControl ItemsSource="{Binding GetProducts}"
-                             AutoGenerateColumns="None"
+                             AutoGenerateColumns="None" 
+                             AllowLiveDataShaping="True"
                              SelectedItem="{Binding SelectedProduct}">
                 <dxg:GridControl.Style>
                     <Style TargetType="{x:Type dxg:GridControl}">

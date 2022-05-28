@@ -172,10 +172,23 @@ namespace RetailTradeServer.ViewModels.Menus
                 //ignore
             }
         }
-        private void ProductService_OnProductEdited(Product obj)
+
+        private void ProductService_OnProductEdited(Product product)
         {
-            Product product = GetProducts.FirstOrDefault(p => p.Id == obj.Id);
-            product.Barcode = obj.Barcode;
+            //try
+            //{
+            //    SelectedProduct.Name = product.Name;
+            //    SelectedProduct.TypeProductId = product.TypeProductId;
+            //    SelectedProduct.SupplierId = product.SupplierId;
+            //    SelectedProduct.UnitId = product.UnitId;
+            //    SelectedProduct.TNVED = product.TNVED;
+            //    SelectedProduct.Barcode = product.Barcode;
+            //    FilterProductGridControl();
+            //}
+            //catch (Exception)
+            //{
+            //    //ignore
+            //}
         }
         private int? GetGroupTypeProductId()
         {

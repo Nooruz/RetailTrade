@@ -65,7 +65,12 @@ namespace RetailTrade.EntityFramework.Services
 
         public async Task<Product> UpdateAsync(int id, Product entity)
         {
-            return await _nonQueryDataService.Update(id, entity); ;
+            Product product = await _nonQueryDataService.Update(id, entity);
+            if (product != null)
+            {
+                OnProductEdited?.Invoke(product);
+            }
+            return product;
         }
 
         public async Task<Product> GetAsync(int id)
