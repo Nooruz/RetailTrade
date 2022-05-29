@@ -1,6 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using RetailTrade.Domain.Models;
 using RetailTrade.Domain.Services;
+using RetailTrade.Domain.Views;
 using RetailTrade.EntityFramework.Services.Common;
 using System;
 using System.Collections.Generic;
@@ -301,7 +302,7 @@ namespace RetailTrade.EntityFramework.Services
             {
                 await using var context = _contextFactory.CreateDbContext();
                 Product editProduct = await context.Products.FirstOrDefaultAsync(p => p.Id == id);
-                editProduct.ProductsWareHouses
+                //editProduct.ProductsWareHouses
                 editProduct.Quantity -= quantity;
                 _ = await UpdateAsync(id, editProduct);
             }
@@ -382,6 +383,19 @@ namespace RetailTrade.EntityFramework.Services
                 //ignore
             }
             return null;
+        }
+
+        public async Task<IEnumerable<ProductWareHouseView>> GetProducts()
+        {
+            try
+            {
+                await using var context = _contextFactory.CreateDbContext();
+                return await context.ProductWareHouseViews.ToListAsync();
+            }
+            catch (Exception)
+            {
+                return null;
+            }
         }
     }
 }

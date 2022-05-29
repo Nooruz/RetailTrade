@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using RetailTrade.Domain.Models;
+using RetailTrade.Domain.Views;
 using System;
 
 namespace RetailTrade.EntityFramework
@@ -117,13 +118,11 @@ namespace RetailTrade.EntityFramework
         /// Размеры ценников и этикеток
         /// </summary>
         public DbSet<LabelPriceTagSize> LabelPriceTagSizes { get; set; }
-
         public DbSet<ContractorType> ContractorTypes { get; set; }
-
         public DbSet<Customer> Customers { get; set; }
-
         public DbSet<Contractor> Contractors { get; set; }
         public DbSet<ProductWareHouse> ProductsWareHouses { get; set; }
+        public DbSet<ProductWareHouseView> ProductWareHouseViews { get; set; }
 
         #region Employee
 
@@ -168,6 +167,10 @@ namespace RetailTrade.EntityFramework
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+            modelBuilder.Entity<ProductWareHouseView>()
+                .ToView(nameof(ProductWareHouseView))
+                .HasNoKey();
+
             modelBuilder.Entity<Product>()
                 .HasMany(p => p.WareHouses)
                 .WithMany(w => w.Products)

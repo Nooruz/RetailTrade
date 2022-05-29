@@ -39,6 +39,11 @@ namespace RetailTrade.Domain.Models
         public int ProductId { get; set; }
 
         /// <summary>
+        /// Код склада
+        /// </summary>
+        public int? WareHouseId { get; set; }
+
+        /// <summary>
         /// Код чека
         /// </summary>
         public int ReceiptId { get; set; }
@@ -52,5 +57,7 @@ namespace RetailTrade.Domain.Models
         /// Товар
         /// </summary>
         public Product Product { get; set; }
+
+        public WareHouse WareHouse { get; set; }
     }
 }

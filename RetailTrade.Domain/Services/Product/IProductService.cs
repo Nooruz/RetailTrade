@@ -1,4 +1,5 @@
 ﻿using RetailTrade.Domain.Models;
+using RetailTrade.Domain.Views;
 using System;
 using System.Collections.Generic;
 using System.Linq.Expressions;
@@ -22,6 +23,7 @@ namespace RetailTrade.Domain.Services
         Task<bool> SearchByBarcode(string barcode);
         Task<IEnumerable<Product>> GetAllUnmarkedAsync();
         Task<IEnumerable<Product>> Report();
+        Task<IEnumerable<ProductWareHouseView>> GetProducts();
 
         event Action<Product> OnProductCreated;
         event Action<Product> OnProductEdited;

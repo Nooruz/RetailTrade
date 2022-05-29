@@ -3,6 +3,7 @@ using DevExpress.Mvvm.DataAnnotations;
 using DevExpress.Xpf.Grid;
 using RetailTrade.Domain.Models;
 using RetailTrade.Domain.Services;
+using RetailTrade.Domain.Views;
 using RetailTradeClient.Components;
 using RetailTradeClient.Properties;
 using RetailTradeClient.State.ProductSales;
@@ -153,9 +154,10 @@ namespace RetailTradeClient.ViewModels.Dialogs
         [Command]
         public async void UserControlLoaded()
         {
-            IEnumerable<Product> products = Settings.Default.IsKeepRecords ? await _productWareHouseService.GetProducts() :
-                await _productService.PredicateSelect(p => p.DeleteMark == false, p => new Product { Id = p.Id, Name = p.Name, Barcode = p.Barcode, TypeProductId = p.TypeProductId, SalePrice = p.SalePrice, ArrivalPrice = p.ArrivalPrice });
-            Nomenclatures = new(products.Select(p => new Nomenclature { Id = p.Id, Name = p.Name, Barcode = p.Barcode, TypeProductId = p.TypeProductId, SalePrice = p.SalePrice, QuantityInStock = p.Quantity, ArrivalPrice = p.ArrivalPrice }));
+            IEnumerable<ProductWareHouseView> productWareHouseViews = await _productService.GetProducts();
+            //IEnumerable<Product> products = Settings.Default.IsKeepRecords ? await _productWareHouseService.GetProducts() :
+            //    await _productService.PredicateSelect(p => p.DeleteMark == false, p => new Product { Id = p.Id, Name = p.Name, Barcode = p.Barcode, TypeProductId = p.TypeProductId, SalePrice = p.SalePrice, ArrivalPrice = p.ArrivalPrice });
+            Nomenclatures = new(productWareHouseViews.Select(p => new Nomenclature { Id = p.Id, Name = p.Name, Barcode = p.Barcode, SalePrice = p.SalePrice, QuantityInStock = p.Quantity, ArrivalPrice = p.ArrivalPrice }));
             TypeProducts = await _typeProductService.GetAllAsync();
         }
 

@@ -1,5 +1,4 @@
 ﻿using RetailTrade.Domain.Models;
-using System.Collections;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
@@ -9,6 +8,6 @@ namespace RetailTradeClient.State.ProductSales
     {
         Task<Product> GetProductByBarcode(string barcode);
         Task<IEnumerable<Product>> GetProducts();
-        Task<bool> Sale(IEnumerable<ProductSale> productSales);
+        //Task<bool> Sale(IEnumerable<ProductSale> productSales);
     }
 }
