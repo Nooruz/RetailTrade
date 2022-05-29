@@ -19,9 +19,8 @@ namespace RetailTrade.EntityFramework.Services
         private readonly IArrivalProductService _arrivalProductService;
 
         public event Action PropertiesChanged;
-        public event Action<Product> OnProductCreated;
-        public event Action<double> OnProductRefunded;
-        public event Action<Product> OnProductEdited;
+        public event Action<ProductView> OnProductCreated;
+        public event Action<ProductView> OnProductUpdated;
         public event Action<int, double> OnProductSaleOrRefund;
 
         public ProductService(RetailTradeDbContextFactory contextFactory,
@@ -68,7 +67,7 @@ namespace RetailTrade.EntityFramework.Services
         {
             var result = await _nonQueryDataService.Create(entity);
             if (result != null)
-                OnProductCreated?.Invoke(await GetAsync(result.Id));
+                OnProductCreated?.Invoke(await GetProductViewByIdAsync(result.Id));
             return result;
         }
 
@@ -85,7 +84,7 @@ namespace RetailTrade.EntityFramework.Services
             Product product = await _nonQueryDataService.Update(id, entity);
             if (product != null)
             {
-                OnProductEdited?.Invoke(product);
+                OnProductUpdated?.Invoke(await GetProductViewByIdAsync(product.Id));
             }
             return product;
         }
@@ -266,7 +265,7 @@ namespace RetailTrade.EntityFramework.Services
                 Product product = await GetAsync(productId);
                 product.Barcode = $"2{new('0', 13 - product.Id.ToString().Length)}{product.Id}";
                 Product updateProduct = await UpdateAsync(productId, product);
-                OnProductEdited?.Invoke(updateProduct);
+                OnProductUpdated?.Invoke(await GetProductViewByIdAsync(updateProduct.Id));
                 return updateProduct.Barcode;
             }
             catch (Exception)
@@ -276,16 +275,17 @@ namespace RetailTrade.EntityFramework.Services
             return "";
         }
 
-        public async Task<bool> MarkingForDeletion(Product product)
+        public async Task<bool> MarkingForDeletion(int id)
         {
             try
             {
                 await using var context = _contextFactory.CreateDbContext();
+                Product product = await GetAsync(id);
                 product.DeleteMark = !product.DeleteMark;
                 Product result = await UpdateAsync(product.Id, product);
                 if (result != null)
                 {
-                    OnProductEdited?.Invoke(result);
+                    OnProductUpdated?.Invoke(await GetProductViewByIdAsync(result.Id));
                     return true;
                 }
             }
@@ -391,6 +391,32 @@ namespace RetailTrade.EntityFramework.Services
             {
                 await using var context = _contextFactory.CreateDbContext();
                 return await context.ProductWareHouseViews.ToListAsync();
+            }
+            catch (Exception)
+            {
+                return null;
+            }
+        }
+
+        public async Task<IEnumerable<ProductView>> GetProductViewsAsync()
+        {
+            try
+            {
+                await using var context = _contextFactory.CreateDbContext();
+                return await context.ProductViews.ToListAsync();
+            }
+            catch (Exception)
+            {
+                return null;
+            }
+        }
+
+        public async Task<ProductView> GetProductViewByIdAsync(int id)
+        {
+            try
+            {
+                await using var context = _contextFactory.CreateDbContext();
+                return await context.ProductViews.FirstOrDefaultAsync(p => p.Id == id);
             }
             catch (Exception)
             {

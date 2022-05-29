@@ -13,7 +13,7 @@
     Title="{Binding Header}">
 
     <dxmvvm:Interaction.Behaviors>
-        <dxmvvm:EventToCommand EventName="Loaded" Command="{Binding UserControlLoadedCommand}"/>
+        <dxmvvm:EventToCommand EventName="Loaded" Command="{Binding FilterProductGridControlCommand}"/>
     </dxmvvm:Interaction.Behaviors>
 
     <dxlc:LayoutControl ItemSpace="10"
@@ -128,10 +128,10 @@
 
             </dxlc:LayoutGroup>
 
-            <dxg:GridControl ItemsSource="{Binding GetProducts}"
+            <dxg:GridControl ItemsSource="{Binding ProductViews}"
                              AutoGenerateColumns="None" 
                              AllowLiveDataShaping="True"
-                             SelectedItem="{Binding SelectedProduct}">
+                             SelectedItem="{Binding SelectedProductView}">
                 <dxg:GridControl.Style>
                     <Style TargetType="{x:Type dxg:GridControl}">
                         <Style.Triggers>
@@ -148,7 +148,7 @@
                     <dxg:TableView ShowTotalSummary="True" 
                                    AllowEditing="False" 
                                    IsColumnMenuEnabled="True"
-                                   AutoWidth="True"
+                                   AutoWidth="True" ShowAutoFilterRow="True"
                                    PageSize="500"
                                    ShowGroupPanel="True"                                   
                                    ShowFilterPanelMode="Never"/>
@@ -163,6 +163,7 @@
                                            Command="{Binding GridControlLoadedCommand}"
                                            PassEventArgsToCommand="True"/>
                 </dxmvvm:Interaction.Behaviors>
+                
                 <dxb:BarManager.DXContextMenu>
                     <dxb:PopupMenu>
                         <dxb:PopupMenu.Items>
@@ -190,13 +191,7 @@
                     </dxg:GridColumn.EditSettings>
                 </dxg:GridColumn>
                 <dxg:GridColumn FieldName="Name" Header="Наименование"/>
-                <dxg:GridColumn FieldName="UnitId" Header="Ед. изм.">
-                    <dxg:GridColumn.EditSettings>
-                        <dxe:ComboBoxEditSettings ItemsSource="{Binding Units}"
-                                                  DisplayMember="ShortName"
-                                                  ValueMember="Id"/>
-                    </dxg:GridColumn.EditSettings>
-                </dxg:GridColumn>
+                <dxg:GridColumn FieldName="Unit" Header="Ед. изм."/>
                 <dxg:GridColumn FieldName="Barcode" Header="Штрих код"/>
                 <dxg:GridColumn FieldName="ArrivalPrice" Header="Цена приход">
                     <dxg:GridColumn.EditSettings>
@@ -204,11 +199,6 @@
                     </dxg:GridColumn.EditSettings>
                 </dxg:GridColumn>
                 <dxg:GridColumn FieldName="SalePrice" Header="Цена продажа">
-                    <dxg:GridColumn.EditSettings>
-                        <dxe:TextEditSettings MaskUseAsDisplayFormat="True" MaskType="Numeric" Mask="n"/>
-                    </dxg:GridColumn.EditSettings>
-                </dxg:GridColumn>
-                <dxg:GridColumn FieldName="Quantity" Header="Количество">
                     <dxg:GridColumn.EditSettings>
                         <dxe:TextEditSettings MaskUseAsDisplayFormat="True" MaskType="Numeric" Mask="n"/>
                     </dxg:GridColumn.EditSettings>

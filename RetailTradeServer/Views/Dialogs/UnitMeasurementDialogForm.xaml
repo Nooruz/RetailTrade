@@ -1,0 +1,36 @@
+﻿<local:BaseDialogUserControl     x:Class="RetailTradeServer.Views.Dialogs.UnitMeasurementDialogForm"
+                                 xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                                 xmlns:dxg="http://schemas.devexpress.com/winfx/2008/xaml/grid"
+                                 xmlns:dxlc="http://schemas.devexpress.com/winfx/2008/xaml/layoutcontrol"
+                                 xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                                 xmlns:local="clr-namespace:RetailTradeServer.Views.Dialogs"
+                                 Width="550"
+                                 Height="400">
+
+    <dxlc:LayoutControl Orientation="Vertical">
+
+        <dxlc:LayoutGroup HorizontalAlignment="Left"
+                          VerticalAlignment="Top">
+
+            <Button Content="Выбрать"/>
+            <Button Content="Создать"/>
+
+        </dxlc:LayoutGroup>
+
+        <dxg:GridControl ItemsSource="{Binding Units}"
+                         SelectedItem="{Binding SelectedUnit}">
+            <dxg:GridControl.View>
+                <dxg:TableView ShowGroupPanel="False"/>
+            </dxg:GridControl.View>
+            
+            <dxg:GridColumn Header="Наименование"
+                            FieldName="ShortName"/>
+
+            <dxg:GridColumn Header="Полное наименование"
+                            FieldName="LongName"/>
+
+        </dxg:GridControl>
+        
+    </dxlc:LayoutControl>
+    
+</local:BaseDialogUserControl>

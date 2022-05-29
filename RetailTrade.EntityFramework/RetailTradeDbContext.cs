@@ -7,6 +7,8 @@ namespace RetailTrade.EntityFramework
 {
     public class RetailTradeDbContext : DbContext
     {
+        #region Domains
+
         /// <summary>
         /// Организация
         /// </summary>
@@ -122,7 +124,8 @@ namespace RetailTrade.EntityFramework
         public DbSet<Customer> Customers { get; set; }
         public DbSet<Contractor> Contractors { get; set; }
         public DbSet<ProductWareHouse> ProductsWareHouses { get; set; }
-        public DbSet<ProductWareHouseView> ProductWareHouseViews { get; set; }
+
+        #endregion
 
         #region Employee
 
@@ -163,10 +166,21 @@ namespace RetailTrade.EntityFramework
 
         #endregion
 
+        #region Views
+
+        public DbSet<ProductWareHouseView> ProductWareHouseViews { get; set; }
+        public DbSet<ProductView> ProductViews { get; set; }
+
+        #endregion
+
         public RetailTradeDbContext(DbContextOptions<RetailTradeDbContext> options) : base(options) { }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+            modelBuilder.Entity<ProductView>()
+                .ToView(nameof(ProductView))
+                .HasNoKey();
+
             modelBuilder.Entity<ProductWareHouseView>()
                 .ToView(nameof(ProductWareHouseView))
                 .HasNoKey();

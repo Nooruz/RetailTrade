@@ -69,8 +69,6 @@ namespace RetailTradeServer.ViewModels.Menus
 
             CreateCommand = new RelayCommand(Create);
             DeleteCommand = new RelayCommand(Delete);
-
-            _refundToSupplierService.PropertiesChanged += GetRefundToSuppliersAsync;
         }
 
         #endregion
@@ -109,7 +107,6 @@ namespace RetailTradeServer.ViewModels.Menus
         {
             RefundsToSuppliers = null;
             SelectedRefundToSupplier = null;
-            _refundToSupplierService.PropertiesChanged -= GetRefundToSuppliersAsync;
             base.Dispose();
         }
     }

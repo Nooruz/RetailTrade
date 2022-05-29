@@ -34,7 +34,6 @@ namespace RetailTradeServer.ViewModels.Dialogs
             _supplierService = supplierService;
 
             CreateSupplierProductCommand = new RelayCommand(CreateSupplier);
-            _supplierService.PropertiesChanged += SupplierService_PropertiesChanged;
         }
 
         #endregion
@@ -61,7 +60,6 @@ namespace RetailTradeServer.ViewModels.Dialogs
 
         public override void Dispose()
         {
-            _supplierService.PropertiesChanged -= SupplierService_PropertiesChanged;
             base.Dispose();
         }
 

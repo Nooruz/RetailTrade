@@ -19,15 +19,16 @@ namespace RetailTrade.Domain.Services
         Task<bool> Refunds(IEnumerable<ProductRefund> productRefunds);
         Task Sale(int id, double quantity);
         Task<string> GenerateBarcode(int productId);
-        Task<bool> MarkingForDeletion(Product product);
+        Task<bool> MarkingForDeletion(int id);
         Task<bool> SearchByBarcode(string barcode);
         Task<IEnumerable<Product>> GetAllUnmarkedAsync();
         Task<IEnumerable<Product>> Report();
         Task<IEnumerable<ProductWareHouseView>> GetProducts();
+        Task<IEnumerable<ProductView>> GetProductViewsAsync();
+        Task<ProductView> GetProductViewByIdAsync(int id);
 
-        event Action<Product> OnProductCreated;
-        event Action<Product> OnProductEdited;
-        event Action<double> OnProductRefunded;
+        event Action<ProductView> OnProductCreated;
+        event Action<ProductView> OnProductUpdated;
         event Action<int, double> OnProductSaleOrRefund;
     }
 }

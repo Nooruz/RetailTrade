@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using RetailTrade.EntityFramework;
 
@@ -11,9 +12,10 @@ using RetailTrade.EntityFramework;
 namespace RetailTrade.EntityFramework.Migrations
 {
     [DbContext(typeof(RetailTradeDbContext))]
-    partial class RetailTradeDbContextModelSnapshot : ModelSnapshot
+    [Migration("20220529133349_CreateTriggerForProductSaleArrivalProduct")]
+    partial class CreateTriggerForProductSaleArrivalProduct
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -1200,38 +1202,6 @@ namespace RetailTrade.EntityFramework.Migrations
                     b.HasIndex("WriteDownId");
 
                     b.ToTable("WriteDownProducts");
-                });
-
-            modelBuilder.Entity("RetailTrade.Domain.Views.ProductView", b =>
-                {
-                    b.Property<decimal>("ArrivalPrice")
-                        .HasColumnType("decimal(18,2)");
-
-                    b.Property<string>("Barcode")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<bool>("DeleteMark")
-                        .HasColumnType("bit");
-
-                    b.Property<int>("Id")
-                        .HasColumnType("int");
-
-                    b.Property<string>("Name")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<decimal>("SalePrice")
-                        .HasColumnType("decimal(18,2)");
-
-                    b.Property<string>("TNVED")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("TypeProduct")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Unit")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.ToView("ProductView");
                 });
 
             modelBuilder.Entity("RetailTrade.Domain.Views.ProductWareHouseView", b =>

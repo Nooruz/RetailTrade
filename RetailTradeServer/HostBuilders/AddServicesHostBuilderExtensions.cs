@@ -22,7 +22,7 @@ namespace RetailTradeServer.HostBuilders
                 services.AddSingleton<IOrganizationService, OrganizationService>();
                 services.AddSingleton<IArrivalProductService, ArrivalProductService>();
                 services.AddSingleton<IProductService, ProductService>();
-                services.AddSingleton<IDataService<Unit>, GenericService<Unit>>();
+                services.AddSingleton<IUnitService, UnitService>();
                 services.AddSingleton<IDataService<Branch>, GenericService<Branch>>();
                 services.AddSingleton<IDataService<TypeWareHouse>, GenericService<TypeWareHouse>>();
                 services.AddSingleton<ISupplierService, SupplierService>();

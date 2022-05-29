@@ -241,13 +241,21 @@ namespace RetailTradeServer.ViewModels.Dialogs
 
         private void Add(Product product)
         {
-            ArrivalProducts.Add(new ArrivalProduct
+            if (SelectedSupplierId != null)
             {
-                ProductId = product.Id,
-                ArrivalPrice = product.ArrivalPrice,
-                Quantity = 1
-            });
-            ShowEditor(1);
+                ArrivalProducts.Add(new ArrivalProduct
+                {
+                    ProductId = product.Id,
+                    ArrivalPrice = product.ArrivalPrice,
+                    WareHouseId = SelectedSupplierId.Value,
+                    Quantity = 1
+                });
+                ShowEditor(1);
+            }
+            else
+            {
+                MessageBoxService.ShowMessage("Выберите склад или розничный магазин!", "Sale Page", MessageButton.OK, MessageIcon.Exclamation);
+            }
         }
 
         private void UserControl_Unloaded(object sender, RoutedEventArgs e)
@@ -455,6 +463,7 @@ namespace RetailTradeServer.ViewModels.Dialogs
             {
                 try
                 {
+                    //ArrivalProducts.ToList().ForEach((a) => a.Product = null);
                     Arrival arrival = await _arrivalService.CreateAsync(new Arrival
                     {
                         ArrivalDate = DateTime.Now,
@@ -463,7 +472,8 @@ namespace RetailTradeServer.ViewModels.Dialogs
                         SupplierId = SelectedSupplierId.Value,
                         WareHouseId = SelectedWareHouseId.Value,
                         Comment = Comment,
-                        Sum = ArrivalProducts.Sum(ap => ap.ArrivalSum)
+                        Sum = ArrivalProducts.Sum(ap => ap.ArrivalSum),
+                        //ArrivalProducts = //ArrivalProducts.ToList().ForEach((a) => a.Product = null)
                     });
                     _ = await _arrivalProductService.CreateRangeAsync(SelectedWareHouseId.Value, arrival.Id, ArrivalProducts);
                 }

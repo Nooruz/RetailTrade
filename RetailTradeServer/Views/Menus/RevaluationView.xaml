@@ -28,8 +28,7 @@
                          SelectedItem="{Binding SelectedRevaluation}">
             
             <dxg:GridControl.View>
-                <dxg:TableView AllowEditing="False"
-                               AutoWidth="True"/>
+                <dxg:TableView AllowEditing="False"/>
             </dxg:GridControl.View>
 
             <dxg:GridColumn Header="Код"

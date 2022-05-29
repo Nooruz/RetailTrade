@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using RetailTrade.EntityFramework;
 
@@ -11,9 +12,10 @@ using RetailTrade.EntityFramework;
 namespace RetailTrade.EntityFramework.Migrations
 {
     [DbContext(typeof(RetailTradeDbContext))]
-    partial class RetailTradeDbContextModelSnapshot : ModelSnapshot
+    [Migration("20220529141050_CreateProductView")]
+    partial class CreateProductView
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -1223,9 +1225,6 @@ namespace RetailTrade.EntityFramework.Migrations
                         .HasColumnType("decimal(18,2)");
 
                     b.Property<string>("TNVED")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("TypeProduct")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Unit")

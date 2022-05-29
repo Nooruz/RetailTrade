@@ -14,7 +14,6 @@ namespace RetailTrade.EntityFramework.Services
         private readonly RetailTradeDbContextFactory _contextFactory;
         private readonly NonQueryDataService<ArrivalProduct> _nonQueryDataService;
 
-        public event Action PropertiesChanged;
         public event Action<ArrivalProduct> OnEdited;
         public event Action<ArrivalProduct> OnCreated;
 
@@ -50,10 +49,7 @@ namespace RetailTrade.EntityFramework.Services
 
         public async Task<bool> DeleteAsync(int id)
         {
-            var result = await _nonQueryDataService.Delete(id);
-            if (result)
-                PropertiesChanged?.Invoke();
-            return result;
+            return await _nonQueryDataService.Delete(id);
         }
 
         public async Task<ArrivalProduct> UpdateAsync(int id, ArrivalProduct entity)

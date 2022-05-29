@@ -77,7 +77,6 @@ namespace RetailTradeServer.ViewModels.Menus
             DeleteCommand = new RelayCommand(DeleteUser);
             EditCommand = new RelayCommand(EditUser);
 
-            _userService.PropertiesChanged += UserService_PropertiesChanged;
             _userService.OnUserCreated += UserService_OnUserCreated;
         }
 
@@ -151,7 +150,6 @@ namespace RetailTradeServer.ViewModels.Menus
 
         public override void Dispose()
         {
-            _userService.PropertiesChanged -= UserService_PropertiesChanged;
             _userService.OnUserCreated -= UserService_OnUserCreated;
             base.Dispose();
         }

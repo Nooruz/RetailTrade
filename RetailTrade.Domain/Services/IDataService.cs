@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace RetailTrade.Domain.Services
@@ -16,7 +15,5 @@ namespace RetailTrade.Domain.Services
         Task<T> UpdateAsync(int id, T entity);
 
         Task<bool> DeleteAsync(int id);
-
-        event Action PropertiesChanged;
     }
 }

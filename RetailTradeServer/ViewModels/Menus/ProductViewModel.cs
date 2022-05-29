@@ -5,15 +5,14 @@ using DevExpress.Xpf.Grid;
 using RetailTrade.Barcode.Services;
 using RetailTrade.Domain.Models;
 using RetailTrade.Domain.Services;
+using RetailTrade.Domain.Views;
 using RetailTradeServer.State.Messages;
 using RetailTradeServer.State.Reports;
 using RetailTradeServer.ViewModels.Base;
 using RetailTradeServer.ViewModels.Dialogs;
 using RetailTradeServer.Views.Dialogs;
 using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Linq;
 using System.Windows;
 
 namespace RetailTradeServer.ViewModels.Menus
@@ -30,61 +29,41 @@ namespace RetailTradeServer.ViewModels.Menus
         private readonly IBarcodeService _barcodeService;
         private readonly IReportService _reportService;
         private TypeProduct _selectedTypeProduct;
-        private ObservableCollection<Product> _getProducts;
-        private ObservableCollection<TypeProduct> _typeProducts;
-        private IEnumerable<Unit> _units;
+        private ObservableCollection<TypeProduct> _typeProducts = new();
+        private ObservableCollection<ProductView> _productViews = new();
         private bool _canShowLoadingPanel = true;
-        private Product _selectedProduct;
+        private ProductView _selectedProductView;
         private bool _isUseFilter = true;
 
         #endregion
 
         #region Public Properties
 
-        public bool IsUseFilter
+        public ObservableCollection<ProductView> ProductViews
         {
-            get => _isUseFilter;
+            get => _productViews;
             set
             {
-                _isUseFilter = value;
-                OnPropertyChanged(nameof(IsUseFilter));
-                FilterProductGridControl();
-            }
-        }
-        public IEnumerable<Unit> Units
-        {
-            get => _units;
-            set
-            {
-                _units = value;
-                OnPropertyChanged(nameof(Units));
-            }
-        }
-        public ObservableCollection<Product> GetProducts
-        {
-            get => _getProducts ?? new();
-            set
-            {
-                _getProducts = value;
-                OnPropertyChanged(nameof(GetProducts));
+                _productViews = value;
+                OnPropertyChanged(nameof(ProductViews));
             }
         }
         public ObservableCollection<TypeProduct> TypeProducts
         {
-            get => _typeProducts ?? new();
+            get => _typeProducts;
             set
             {
                 _typeProducts = value;
                 OnPropertyChanged(nameof(TypeProducts));
             }
         }
-        public Product SelectedProduct
+        public ProductView SelectedProductView
         {
-            get => _selectedProduct;
+            get => _selectedProductView;
             set
             {
-                _selectedProduct = value;
-                OnPropertyChanged(nameof(SelectedProduct));
+                _selectedProductView = value;
+                OnPropertyChanged(nameof(SelectedProductView));
             }
         }
         public GridControl ProductGridControl { get; set; }
@@ -113,6 +92,16 @@ namespace RetailTradeServer.ViewModels.Menus
             get => ProductGridControl.FilterCriteria;
             set => ProductGridControl.FilterCriteria = value;
         }
+        public bool IsUseFilter
+        {
+            get => _isUseFilter;
+            set
+            {
+                _isUseFilter = value;
+                OnPropertyChanged(nameof(IsUseFilter));
+                FilterProductGridControl();
+            }
+        }
 
         #endregion
 
@@ -138,57 +127,33 @@ namespace RetailTradeServer.ViewModels.Menus
             Header = "Товары";
 
             _productService.OnProductCreated += ProductService_OnProductCreated;
-            _productService.OnProductEdited += ProductService_OnProductEdited;
+            _productService.OnProductUpdated += ProductService_OnProductUpdated;
             _typeProductService.OnTypeProductCreated += TypeProductService_OnTypeProductCreated;
             _typeProductService.OnTypeProductEdited += TypeProductService_OnTypeProductEdited;
+
+            ViewmodelLoaded();
         }
 
         #endregion
 
         #region Private Voids
 
-        private void FilterProductGridControl()
+        private void ProductService_OnProductUpdated(ProductView productView)
         {
             try
             {
-                if (IsUseFilter)
-                {
-                    if (SelectedTypeProduct != null && SelectedTypeProduct.Id != 1)
-                    {
-                        FilterCriteria = new BinaryOperator("TypeProductId", SelectedTypeProduct.Id, BinaryOperatorType.Equal);
-                    }
-                    else
-                    {
-                        ProductGridControl.FilterString = string.Empty;
-                    }
-                }
-                else
-                {
-                    ProductGridControl.FilterString = string.Empty;
-                }
+                SelectedProductView.Name = productView.Name;
+                SelectedProductView.TypeProduct = productView.TypeProduct;
+                SelectedProductView.Unit = productView.Unit;
+                SelectedProductView.TNVED = productView.TNVED;
+                SelectedProductView.Barcode = productView.Barcode;
+                SelectedProductView.DeleteMark = productView.DeleteMark;
+                FilterProductGridControl();
             }
             catch (Exception)
             {
                 //ignore
             }
-        }
-
-        private void ProductService_OnProductEdited(Product product)
-        {
-            //try
-            //{
-            //    SelectedProduct.Name = product.Name;
-            //    SelectedProduct.TypeProductId = product.TypeProductId;
-            //    SelectedProduct.SupplierId = product.SupplierId;
-            //    SelectedProduct.UnitId = product.UnitId;
-            //    SelectedProduct.TNVED = product.TNVED;
-            //    SelectedProduct.Barcode = product.Barcode;
-            //    FilterProductGridControl();
-            //}
-            //catch (Exception)
-            //{
-            //    //ignore
-            //}
         }
         private int? GetGroupTypeProductId()
         {
@@ -231,14 +196,41 @@ namespace RetailTradeServer.ViewModels.Menus
         {
             TypeProducts.Add(obj);
         }
-        private void ProductService_OnProductCreated(Product product)
+        private void ProductService_OnProductCreated(ProductView productView)
         {
-            GetProducts.Add(product);
+            ProductViews.Add(productView);
+        }
+        private async void ViewmodelLoaded()
+        {
+            TypeProducts = new(await _typeProductService.GetAllAsync());
+            ProductViews = new(await _productService.GetProductViewsAsync());
+            ShowLoadingPanel = false;
         }
 
         #endregion
 
         #region Public Voids
+
+        [Command]
+        public void FilterProductGridControl()
+        {
+            try
+            {
+                if (IsUseFilter)
+                {
+                    if (SelectedTypeProduct != null && !SelectedTypeProduct.IsGroup)
+                    {
+                        FilterCriteria = new BinaryOperator("TypeProduct", SelectedTypeProduct.Name, BinaryOperatorType.Equal);
+                        return;
+                    }
+                }
+                ProductGridControl.FilterString = string.Empty;
+            }
+            catch (Exception)
+            {
+                //ignore
+            }
+        }
 
         [Command]
         public void CreateGroupTypeProduct()
@@ -267,22 +259,13 @@ namespace RetailTradeServer.ViewModels.Menus
         }
 
         [Command]
-        public async void UserControlLoaded()
-        {
-            TypeProducts = new(await _typeProductService.GetAllAsync());
-            GetProducts = new(await _productService.GetAllAsync());
-            Units = await _unitService.GetAllAsync();
-            ShowLoadingPanel = false;
-        }
-
-        [Command]
         public async void DeleteMarkingProduct()
         {
-            if (SelectedProduct != null)
+            if (SelectedProductView != null)
             {
-                if (MessageBoxService.Show(SelectedProduct.DeleteMark ? $"Снять пометку \"{SelectedProduct.Name}\"?" : $"Пометить \"{SelectedProduct.Name}\" на удаление?", "", MessageBoxButton.YesNo, MessageBoxImage.Question) == MessageBoxResult.Yes)
+                if (MessageBoxService.Show(SelectedProductView.DeleteMark ? $"Снять пометку \"{SelectedProductView.Name}\"?" : $"Пометить \"{SelectedProductView.Name}\" на удаление?", "", MessageBoxButton.YesNo, MessageBoxImage.Question) == MessageBoxResult.Yes)
                 {
-                    await _productService.MarkingForDeletion(SelectedProduct);
+                    await _productService.MarkingForDeletion(SelectedProductView.Id);
                 }
             }
             else
@@ -305,9 +288,9 @@ namespace RetailTradeServer.ViewModels.Menus
         }
 
         [Command]
-        public void EditProduct()
+        public async void EditProduct()
         {
-            if (SelectedProduct != null)
+            if (SelectedProductView != null)
             {
                 WindowService.Show(nameof(EditProductWithBarcodeDialogForm), new EditProductWithBarcodeDialogFormModel(_typeProductService,
                 _unitService,
@@ -316,8 +299,8 @@ namespace RetailTradeServer.ViewModels.Menus
                 _messageStore,
                 _barcodeService)
                 {
-                    Title = $"{SelectedProduct.Name} (Товары)",
-                    EditProduct = SelectedProduct
+                    Title = $"{SelectedProductView.Name} (Товары)",
+                    EditProduct = await _productService.GetAsync(SelectedProductView.Id)
                 });
             }
             else
@@ -378,18 +361,6 @@ namespace RetailTradeServer.ViewModels.Menus
             }
         }
 
-        #endregion
-
-        #region Dispose
-
-        public override void Dispose()
-        {
-            _productService.OnProductCreated -= ProductService_OnProductCreated;
-            _typeProductService.OnTypeProductCreated -= TypeProductService_OnTypeProductCreated;
-            _typeProductService.OnTypeProductEdited -= TypeProductService_OnTypeProductEdited;
-            base.Dispose();
-        }
-
-        #endregion        
+        #endregion      
     }
 }

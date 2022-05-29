@@ -72,8 +72,6 @@ namespace RetailTradeServer.ViewModels.Menus
             CreateCommand = new RelayCommand(Create);
             DeleteCommand = new RelayCommand(Delete);
             //DuplicateCommand = new RelayCommand(DuplicateArrival);
-
-            _writeDownService.PropertiesChanged += GetWriteDownsAsync;
         }
 
         #endregion
@@ -140,7 +138,6 @@ namespace RetailTradeServer.ViewModels.Menus
         {
             WriteDowns = null;
             SelectedWriteDown = null;
-            _writeDownService.PropertiesChanged -= GetWriteDownsAsync;
             base.Dispose();
         }
     }
