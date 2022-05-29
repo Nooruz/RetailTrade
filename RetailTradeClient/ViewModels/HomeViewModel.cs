@@ -911,20 +911,32 @@ namespace RetailTradeClient.ViewModels
                             PaidInCash = CashPaySum,
                             PaidInCashless = CashlessPaySum,
                             ShiftId = _shiftStore.CurrentShift.Id,
-                            Change = Change,
-                            ProductSales = ProductSales.Select(s =>
-                                new ProductSale
-                                {
-                                    ProductId = s.Id,
-                                    Quantity = s.Quantity,
-                                    Total = s.Total,
-                                    DiscountAmount = s.DiscountAmount,
-                                    SalePrice = s.SalePrice,
-                                    ArrivalPrice = s.ArrivalPrice
-                                }).ToList()
+                            Change = Change
                         }, Settings.Default.IsKeepRecords), ProductSales);
 
+                        //ProductSales.Select(s =>
+                        //       new ProductSale
+                        //       {
+                        //           ProductId = s.Id,
+                        //           Quantity = s.Quantity,
+                        //           Total = s.Total,
+                        //           DiscountAmount = s.DiscountAmount,
+                        //           SalePrice = s.SalePrice,
+                        //           ArrivalPrice = s.ArrivalPrice
+                        //       }).ToList()
+
                         PrintReport(new(report.PrintingSystem));
+
+                        await _productWareHouseService.Sale(ProductSales.Select(s =>
+                               new ProductSale
+                               {
+                                   ProductId = s.Id,
+                                   Quantity = s.Quantity,
+                                   Total = s.Total,
+                                   DiscountAmount = s.DiscountAmount,
+                                   SalePrice = s.SalePrice,
+                                   ArrivalPrice = s.ArrivalPrice
+                               }).ToList());
 
                         if (Settings.Default.IsKKMShiftOpen)
                         {

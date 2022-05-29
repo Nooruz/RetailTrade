@@ -54,8 +54,8 @@ namespace RetailTradeClient.State.ProductSales
                 await using var context = _contextFactory.CreateDbContext();
 
                 return await context.Products                    
-                    .Include(w => w.ProductsWareHouses.Where(pw => pw.WareHouseId == _userStore.CurrentUser.WareHouseId && pw.Quantity > 0))
-                    .Where(p => p.DeleteMark == false && p.ProductsWareHouses.FirstOrDefault(pw => pw.Quantity > 0) != null)
+                    .Include(w => w.ProductsWareHouses)
+                    .Where(p => p.DeleteMark == false && p.ProductsWareHouses.FirstOrDefault(pw => pw.WareHouseId == _userStore.CurrentUser.WareHouseId && pw.Quantity > 0) != null)
                     .ToListAsync();
             }
             catch (Exception)

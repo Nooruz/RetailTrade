@@ -301,6 +301,7 @@ namespace RetailTrade.EntityFramework.Services
             {
                 await using var context = _contextFactory.CreateDbContext();
                 Product editProduct = await context.Products.FirstOrDefaultAsync(p => p.Id == id);
+                editProduct.ProductsWareHouses
                 editProduct.Quantity -= quantity;
                 _ = await UpdateAsync(id, editProduct);
             }
