@@ -175,13 +175,15 @@ namespace RetailTrade.EntityFramework.Services
             return null;
         }
 
-        public async Task<bool> CreateRangeAsync(int arrivalId, IEnumerable<ArrivalProduct> arrivalProducts)
+        public async Task<bool> CreateRangeAsync(int wareHouseId, int arrivalId, IEnumerable<ArrivalProduct> arrivalProducts)
         {
             try
             {
                 foreach (ArrivalProduct arrivalProduct in arrivalProducts)
                 {
+                    arrivalProduct.Product = null;
                     arrivalProduct.ArrivalId = arrivalId;
+                    arrivalProduct.WareHouseId = wareHouseId;
                     var result = await _nonQueryDataService.Create(arrivalProduct);
                     OnCreated?.Invoke(result);
                 }

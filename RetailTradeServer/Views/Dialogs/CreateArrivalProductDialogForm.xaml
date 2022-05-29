@@ -24,7 +24,7 @@
             <Button Content="Провести и закрыть">
                 <Button.Style>
                     <Style TargetType="Button">
-                        <Setter Property="Command" Value="{Binding ArrivalProductCommand}"/>
+                        <Setter Property="Command" Value="{Binding CreateArrivalCommand}"/>
                         <Style.Triggers>
                             <DataTrigger Binding="{Binding IsEditMode}" Value="True">
                                 <Setter Property="Command" Value="{Binding SaveArrivalProductCommand}"/>

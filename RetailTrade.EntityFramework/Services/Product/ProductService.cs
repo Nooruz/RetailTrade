@@ -37,9 +37,25 @@ namespace RetailTrade.EntityFramework.Services
         {
             try
             {
-                Product product = await GetAsync(arrivalProduct.ProductId);
-                product.Quantity += arrivalProduct.Quantity;
-                _ = await UpdateAsync(product.Id, product);
+                await using var context = _contextFactory.CreateDbContext();
+                ProductWareHouse productWareHouse = await context.ProductsWareHouses
+                    .FirstOrDefaultAsync(p => p.ProductId == arrivalProduct.ProductId && p.WareHouseId == arrivalProduct.WareHouseId);
+                if (productWareHouse != null)
+                {
+                    productWareHouse.Quantity += arrivalProduct.Quantity;
+                    context.ProductsWareHouses.Update(productWareHouse);
+                }
+                else
+                {
+                    productWareHouse = new ProductWareHouse
+                    {
+                        WareHouseId = arrivalProduct.WareHouseId.Value,
+                        ProductId = arrivalProduct.ProductId,
+                        Quantity = arrivalProduct.Quantity
+                    };
+                    await context.ProductsWareHouses.AddAsync(productWareHouse);
+                }
+                _ = await context.SaveChangesAsync();
             }
             catch (Exception)
             {

@@ -5,6 +5,7 @@ using RetailTrade.Domain.Models;
 using RetailTrade.Domain.Services;
 using RetailTradeClient.Components;
 using RetailTradeClient.Properties;
+using RetailTradeClient.State.ProductSales;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -19,6 +20,7 @@ namespace RetailTradeClient.ViewModels.Dialogs
 
         private readonly IProductService _productService;
         private readonly ITypeProductService _typeProductService;
+        private readonly IProductWareHouseService _productWareHouseService;
         private ObservableCollection<Nomenclature> _nomenclatures = new();
         private IEnumerable<TypeProduct> _typeProducts;
         private TypeProduct _selectedTypeProduct;
@@ -126,10 +128,12 @@ namespace RetailTradeClient.ViewModels.Dialogs
         #region Constructor
 
         public ProductViewModel(ITypeProductService typeProductService,
-            IProductService productService)
+            IProductService productService,
+            IProductWareHouseService productWareHouseService)
         {
             _typeProductService = typeProductService;
             _productService = productService;
+            _productWareHouseService = productWareHouseService;
             Title = "Товары";
         }
 
@@ -149,7 +153,7 @@ namespace RetailTradeClient.ViewModels.Dialogs
         [Command]
         public async void UserControlLoaded()
         {
-            IEnumerable<Product> products = Settings.Default.IsKeepRecords ? await _productService.PredicateSelect(p => p.Quantity > 0 && p.DeleteMark == false, p => new Product { Id = p.Id, Name = p.Name, Barcode = p.Barcode, TypeProductId = p.TypeProductId, SalePrice = p.SalePrice, Quantity = p.Quantity, ArrivalPrice = p.ArrivalPrice }) :
+            IEnumerable<Product> products = Settings.Default.IsKeepRecords ? await _productWareHouseService.GetProducts() :
                 await _productService.PredicateSelect(p => p.DeleteMark == false, p => new Product { Id = p.Id, Name = p.Name, Barcode = p.Barcode, TypeProductId = p.TypeProductId, SalePrice = p.SalePrice, ArrivalPrice = p.ArrivalPrice });
             Nomenclatures = new(products.Select(p => new Nomenclature { Id = p.Id, Name = p.Name, Barcode = p.Barcode, TypeProductId = p.TypeProductId, SalePrice = p.SalePrice, QuantityInStock = p.Quantity, ArrivalPrice = p.ArrivalPrice }));
             TypeProducts = await _typeProductService.GetAllAsync();

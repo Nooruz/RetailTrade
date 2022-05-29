@@ -13,13 +13,33 @@ namespace RetailTrade.Domain.Models
         private decimal _arrivalPrice;
         private decimal _arrivalSum;
         private int _productId;
+        private int _arrivalId;
+        private int? _wareHouseId;
         private Product _product;
 
         #endregion
 
         #region Public Properties
 
-        public int ArrivalId { get; set; }
+        public int ArrivalId
+        {
+            get => _arrivalId;
+            set
+            {
+                _arrivalId = value;
+                OnPropertyChanged(nameof(ArrivalId));
+            }
+        }
+
+        public int? WareHouseId
+        {
+            get => _wareHouseId;
+            set
+            {
+                _wareHouseId = value;
+                OnPropertyChanged(nameof(WareHouseId));
+            }
+        }
 
         /// <summary>
         /// Код товара
@@ -96,6 +116,8 @@ namespace RetailTrade.Domain.Models
         }
 
         public Arrival Arrival { get; set; }
+
+        public WareHouse WareHouse { get; set; }
 
         #endregion
     }

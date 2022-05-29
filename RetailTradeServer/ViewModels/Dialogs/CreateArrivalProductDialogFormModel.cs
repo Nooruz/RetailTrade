@@ -165,7 +165,6 @@ namespace RetailTradeServer.ViewModels.Dialogs
         #region Commands
 
         public ICommand ValidateCellCommand => new ParameterCommand(parameter => ValidateCell(parameter));
-        public ICommand ArrivalProductCommand => new RelayCommand(CreateArrival);
         public ICommand ClearCommand => new RelayCommand(Cleare);
         public ICommand CellValueChangedCommand => new ParameterCommand(p => CellValueChanged(p));
         public ICommand AddProductToArrivalCommand => new RelayCommand(AddProductToArrival);
@@ -410,31 +409,6 @@ namespace RetailTradeServer.ViewModels.Dialogs
             }
         }
 
-        private async void CreateArrival()
-        {
-            if (CanArrivalProduct)
-            {
-                try
-                {
-                    Arrival arrival = await _arrivalService.CreateAsync(new Arrival
-                    {
-                        ArrivalDate = DateTime.Now,
-                        InvoiceNumber = InvoiceNumber,
-                        InvoiceDate = InvoiceDate,
-                        SupplierId = SelectedSupplierId.Value,
-                        Comment = Comment,
-                        Sum = ArrivalProducts.Sum(ap => ap.ArrivalSum)
-                    });
-                    _ = await _arrivalProductService.CreateRangeAsync(arrival.Id, ArrivalProducts);
-                }
-                catch (Exception)
-                {
-                    //ignore
-                }
-                CurrentWindowService.Close();
-            }
-        }
-
         private void ShowEditor(int column)
         {
             ArrivalTableView.FocusedRowHandle = ArrivalProducts.IndexOf(SelectedArrivalProduct);
@@ -468,6 +442,38 @@ namespace RetailTradeServer.ViewModels.Dialogs
         #endregion
 
         #region Public Voids
+
+        [Command]
+        public async void CreateArrival()
+        {
+            if (SelectedWareHouseId == null)
+            {
+                MessageBoxService.ShowMessage("Выберите склад или точку продажи.", "Sale Page", MessageButton.OK);
+                return;
+            }
+            if (CanArrivalProduct)
+            {
+                try
+                {
+                    Arrival arrival = await _arrivalService.CreateAsync(new Arrival
+                    {
+                        ArrivalDate = DateTime.Now,
+                        InvoiceNumber = InvoiceNumber,
+                        InvoiceDate = InvoiceDate,
+                        SupplierId = SelectedSupplierId.Value,
+                        WareHouseId = SelectedWareHouseId.Value,
+                        Comment = Comment,
+                        Sum = ArrivalProducts.Sum(ap => ap.ArrivalSum)
+                    });
+                    _ = await _arrivalProductService.CreateRangeAsync(SelectedWareHouseId.Value, arrival.Id, ArrivalProducts);
+                }
+                catch (Exception)
+                {
+                    //ignore
+                }
+                CurrentWindowService.Close();
+            }
+        }
 
         [Command]
         public void RemoveSelectedArrivalProduct()

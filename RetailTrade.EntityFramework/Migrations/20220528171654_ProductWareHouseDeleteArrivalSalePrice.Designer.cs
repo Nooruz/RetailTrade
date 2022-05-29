@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using RetailTrade.EntityFramework;
 
@@ -11,9 +12,10 @@ using RetailTrade.EntityFramework;
 namespace RetailTrade.EntityFramework.Migrations
 {
     [DbContext(typeof(RetailTradeDbContext))]
-    partial class RetailTradeDbContextModelSnapshot : ModelSnapshot
+    [Migration("20220528171654_ProductWareHouseDeleteArrivalSalePrice")]
+    partial class ProductWareHouseDeleteArrivalSalePrice
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -86,16 +88,11 @@ namespace RetailTrade.EntityFramework.Migrations
                     b.Property<decimal>("SalePrice")
                         .HasColumnType("decimal(18,2)");
 
-                    b.Property<int?>("WareHouseId")
-                        .HasColumnType("int");
-
                     b.HasKey("Id");
 
                     b.HasIndex("ArrivalId");
 
                     b.HasIndex("ProductId");
-
-                    b.HasIndex("WareHouseId");
 
                     b.ToTable("ArrivalProducts");
                 });
@@ -1255,15 +1252,9 @@ namespace RetailTrade.EntityFramework.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("RetailTrade.Domain.Models.WareHouse", "WareHouse")
-                        .WithMany("ArrivalProducts")
-                        .HasForeignKey("WareHouseId");
-
                     b.Navigation("Arrival");
 
                     b.Navigation("Product");
-
-                    b.Navigation("WareHouse");
                 });
 
             modelBuilder.Entity("RetailTrade.Domain.Models.Branch", b =>
@@ -1751,8 +1742,6 @@ namespace RetailTrade.EntityFramework.Migrations
 
             modelBuilder.Entity("RetailTrade.Domain.Models.WareHouse", b =>
                 {
-                    b.Navigation("ArrivalProducts");
-
                     b.Navigation("Arrivals");
 
                     b.Navigation("ProductsWareHouses");

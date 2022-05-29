@@ -12,6 +12,7 @@ using RetailTradeClient.Customs;
 using RetailTradeClient.Properties;
 using RetailTradeClient.Report;
 using RetailTradeClient.State.Authenticators;
+using RetailTradeClient.State.ProductSales;
 using RetailTradeClient.State.Reports;
 using RetailTradeClient.State.Shifts;
 using RetailTradeClient.State.Users;
@@ -48,6 +49,7 @@ namespace RetailTradeClient.ViewModels
         private readonly IReportService _reportService;
         private readonly IProductService _productService;
         private readonly ICashRegisterMachineService _cashRegisterMachineService;
+        private readonly IProductWareHouseService _productWareHouseService;
         private readonly PaymentCashViewModel _paymentCashViewModel;
         private readonly PaymentComplexViewModel _paymentComplexViewModel;
         private readonly PostponeReceiptViewModel _postponeReceiptViewModel;
@@ -178,6 +180,7 @@ namespace RetailTradeClient.ViewModels
         public Visibility SelectedProductEditorVisibility => SelectedProductSale != null ? Visibility.Visible : Visibility.Hidden;
         public string UserName => GetUserName();
         public bool CanPunchReceipt => (CashPaySum + CashlessPaySum) > 0 && CashPaySum + CashlessPaySum - Total >= 0;
+        public User CurrentUser => _userStore.CurrentUser;
 
         #endregion
 
@@ -203,7 +206,8 @@ namespace RetailTradeClient.ViewModels
             PaymentComplexViewModel paymentComplexViewModel,
             ProductViewModel productViewModel,
             MainWindow mainWindow,
-            IReportService reportService)
+            IReportService reportService,
+            IProductWareHouseService productWareHouseService)
         {
             _userStore = userStore;
             _receiptService = receiptService;
@@ -217,6 +221,7 @@ namespace RetailTradeClient.ViewModels
             _productService = productService;
             _reportService = reportService;
             _cashRegisterMachineService = cashRegisterMachineService;
+            _productWareHouseService = productWareHouseService;
             _postponeReceiptViewModel = new() { Title = "Выбор чека" };
 
             BindingOperations.EnableCollectionSynchronization(ProductSales, _syncLock);
@@ -224,11 +229,17 @@ namespace RetailTradeClient.ViewModels
             SaleProductsCollectionView.CollectionChanged += SaleProductsCollectionView_CollectionChanged;
             _productViewModel.OnProductsSelected += ProductViewModel_OnProductsSelected;
             _postponeReceiptViewModel.OnResume += PostponeReceiptViewModel_OnResume;
+            _userStore.CurrentUserChanged += UserStore_CurrentUserChanged;
         }
 
         #endregion
 
         #region Private Voids
+
+        private void UserStore_CurrentUserChanged()
+        {
+            OnPropertyChanged(nameof(CurrentUser));
+        }
 
         private void PostponeReceiptViewModel_OnResume(PostponeReceipt postponeReceipt)
         {
@@ -418,7 +429,7 @@ namespace RetailTradeClient.ViewModels
         {
             try
             {
-                if (Settings.Default.IsKeepRecords)
+                if (IsKeepRecords)
                 {
                     Sale sale = ProductSales.FirstOrDefault(s => s.Barcode == barcode);
                     if (sale != null)
@@ -431,19 +442,22 @@ namespace RetailTradeClient.ViewModels
                     }
                     else
                     {
-                        Product product = await _productService.GetByBarcodeAsync(barcode);
-                        AddProductSale(new Sale
+                        Product product = await _productWareHouseService.GetProductByBarcode(barcode);
+                        if (product != null)
                         {
-                            Id = product.Id,
-                            Name = product.Name,
-                            SalePrice = product.SalePrice,
-                            ArrivalPrice = product.ArrivalPrice,
-                            QuantityInStock = IsKeepRecords ? product.Quantity : 0,
-                            TNVED = product.TNVED,
-                            Quantity = 1,
-                            Barcode = product.Barcode,
-                            UnitName = string.Empty
-                        });
+                            AddProductSale(new Sale
+                            {
+                                Id = product.Id,
+                                Name = product.Name,
+                                SalePrice = product.SalePrice,
+                                ArrivalPrice = product.ArrivalPrice,
+                                QuantityInStock = product.Quantity,
+                                TNVED = product.TNVED,
+                                Quantity = 1,
+                                Barcode = product.Barcode,
+                                UnitName = string.Empty
+                            });
+                        }
                     }
                 }
                 else

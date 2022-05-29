@@ -183,7 +183,6 @@ namespace RetailTrade.EntityFramework
                 j =>
                     {
                         j.Property(pt => pt.Quantity).HasDefaultValue(0);
-                        j.Property(pt => pt.ArrivalPrice).HasDefaultValue(0);
                         j.HasKey(t => new { t.ProductId, t.WareHouseId });
                         j.ToTable("ProductsWareHouses");
                     });

@@ -1,5 +1,4 @@
 ﻿using System.ComponentModel;
-using System.ComponentModel.DataAnnotations.Schema;
 
 namespace RetailTrade.Domain.Models
 {
@@ -10,8 +9,6 @@ namespace RetailTrade.Domain.Models
         private int _productId;
         private int _wareHouseId;
         private double _quantity;
-        private decimal _arrivalPrice;
-        private decimal _salePrice;
 
         #endregion
 
@@ -42,26 +39,6 @@ namespace RetailTrade.Domain.Models
             {
                 _quantity = value;
                 OnPropertyChanged(nameof(Quantity));
-            }
-        }
-        [Column(TypeName = "decimal(18,2)")]
-        public decimal ArrivalPrice
-        {
-            get => _arrivalPrice;
-            set
-            {
-                _arrivalPrice = value;
-                OnPropertyChanged(nameof(ArrivalPrice));
-            }
-        }
-        [Column(TypeName = "decimal(18,2)")]
-        public decimal SalePrice
-        {
-            get => _salePrice;
-            set
-            {
-                _salePrice = value;
-                OnPropertyChanged(nameof(SalePrice));
             }
         }
         public Product Product { get; set; }

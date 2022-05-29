@@ -18,6 +18,7 @@ namespace RetailTradeClient.HostBuilders
 
                 _ = services.AddSingleton<IAuthenticationService, AuthenticationService>();
                 _ = services.AddSingleton<IUserService, UserService>();
+                _ = services.AddSingleton<IArrivalProductService, ArrivalProductService>();
                 _ = services.AddSingleton<IProductService, ProductService>();
                 _ = services.AddSingleton<IOrganizationService, OrganizationService>();
                 _ = services.AddSingleton<IProductSaleService, ProductSaleService>();

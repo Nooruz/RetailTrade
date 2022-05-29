@@ -25,7 +25,8 @@ namespace RetailTradeClient.HostBuilders
                 _ = services.AddSingleton<INavigator, Navigator>();
                 _ = services.AddSingleton<IAuthenticator, Authenticator>();
                 _ = services.AddSingleton<IUserStore, UserStore>();
-                _ = services.AddSingleton<IMessageStore, MessageStore>();                
+                _ = services.AddSingleton<IMessageStore, MessageStore>();
+                _ = services.AddSingleton<IProductWareHouseService, ProductWareHouseService>();
                 _ = services.AddSingleton<IBarcodeService, BarcodeService>();
                 _ = services.AddSingleton<ICashRegisterMachineService, CashRegisterMachineService>();
                 _ = services.AddSingleton<IShiftStore, ShiftStore>();
@@ -41,7 +42,8 @@ namespace RetailTradeClient.HostBuilders
         private static ProductViewModel CreateProductViewModel(IServiceProvider services)
         {
             return new ProductViewModel(services.GetRequiredService<ITypeProductService>(),
-                services.GetRequiredService<IProductService>());
+                services.GetRequiredService<IProductService>(),
+                services.GetRequiredService<IProductWareHouseService>());
         }
 
         private static XReport CreateXReport(IServiceProvider serviceProvider)

@@ -81,7 +81,8 @@ namespace RetailTradeClient.HostBuilders
                 services.GetRequiredService<PaymentComplexViewModel>(),
                 services.GetRequiredService<ProductViewModel>(),
                 services.GetRequiredService<MainWindow>(),
-                services.GetRequiredService<IReportService>());
+                services.GetRequiredService<IReportService>(),
+                services.GetRequiredService<IProductWareHouseService>());
         }
 
         private static LoginViewModel CreateLoginViewModel(IServiceProvider services)

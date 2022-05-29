@@ -130,6 +130,24 @@ namespace RetailTradeServer
                     _ = await context.SaveChangesAsync();
                 }
 
+                if (!await context.WareHouses.AnyAsync())
+                {
+                    await context.WareHouses.AddRangeAsync(new WareHouse
+                    {
+                        Name = "Основной склад",
+                        Address = "",
+                        TypeWareHouseId = 1
+                    }, new WareHouse
+                    {
+                        Name = "Розничный магазин",
+                        Address = "",
+                        TypeWareHouseId = 2
+                    });
+                    await context.SaveChangesAsync();
+                }
+
+                WareHouse wareHouse = await context.WareHouses.FirstOrDefaultAsync(w => w.Id == 2);
+
                 IEnumerable<User> users = await context.Users.Where(u => u.RoleId == 2 && u.WareHouseId == null).ToListAsync();
 
                 if (users != null && users.Any())
@@ -149,7 +167,6 @@ namespace RetailTradeServer
                     .Include(p => p.WareHouses)
                     .Where(p => p.DeleteMark == false)
                     .ToListAsync();
-                WareHouse wareHouse = await context.WareHouses.FirstOrDefaultAsync(w => w.Id == 2);
 
                 if (wareHouse != null && products != null && products.Any())
                 {
@@ -166,12 +183,8 @@ namespace RetailTradeServer
                                 if (productWareHouse != null)
                                 {
                                     productWareHouse.Quantity = product.Quantity;
-                                    productWareHouse.ArrivalPrice = product.ArrivalPrice;
-                                    productWareHouse.SalePrice = product.SalePrice;
                                     context.ProductsWareHouses.Update(productWareHouse);
                                     product.Quantity = 0;
-                                    product.ArrivalPrice = 0;
-                                    product.SalePrice = 0;
                                     context.Products.Update(product);
                                     _ = await context.SaveChangesAsync();
                                 }
@@ -179,11 +192,11 @@ namespace RetailTradeServer
                         }
                     }
                 }
-
+                MessageBox.Show("Обновление данных успешно выполнено!");
             }
-            catch (Exception)
+            catch (Exception e)
             {
-                //ignore
+                MessageBox.Show(e.Message);
             }
         }
 
