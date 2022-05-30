@@ -192,6 +192,7 @@ namespace RetailTrade.Domain.Models
         public ICollection<WareHouse> WareHouses { get; set; }
         public ICollection<RevaluationProduct> RevaluationProducts { get; set; }
         public ICollection<ProductWareHouse> ProductsWareHouses { get; set; }
+        public ICollection<PriceProduct> PriceProducts { get; set; }
 
         #endregion
     }

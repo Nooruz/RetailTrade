@@ -22,7 +22,7 @@ namespace RetailTradeServer.ViewModels.Menus
         private readonly IMenuNavigator _menuNavigator;
         private readonly IProductService _productService;
         private readonly ITypeProductService _typeProductService;
-        private readonly IDataService<Unit> _unitService;
+        private readonly IUnitService _unitService;
         private readonly IRevaluationProductService _revaluationProductService;
         private ObservableCollection<Revaluation> _revaluations = new();
         private ObservableCollection<RevaluationProduct> _revaluationProducts = new();
@@ -85,7 +85,7 @@ namespace RetailTradeServer.ViewModels.Menus
             ITypeProductService typeProductService,
             IRevaluationService revaluationService,
             IMenuNavigator menuNavigator,
-            IDataService<Unit> unitService,
+            IUnitService unitService,
             IRevaluationProductService revaluationProductService)
         {
             _revaluationService = revaluationService;

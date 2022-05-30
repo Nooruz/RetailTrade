@@ -89,7 +89,12 @@
                                               ValueMember="Id"
                                               IncrementalSearch="True"
                                               AutoComplete="True"
-                                              EditValue="{Binding SelectedUnitId, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+                                              EditValue="{Binding SelectedUnitId, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
+                                <dxe:ComboBoxEdit.Buttons>
+                                    <dxe:ButtonInfo GlyphKind="Regular"
+                                                    Command="{Binding UnitDialogFormCommand}"/>
+                                </dxe:ComboBoxEdit.Buttons>
+                            </dxe:ComboBoxEdit>
                         </dxlc:LayoutItem>
 
                         <dxlc:LayoutItem Label="Цена приход:">
@@ -375,7 +380,12 @@
                                           ValueMember="Id"
                                           IncrementalSearch="True"
                                           AutoComplete="True"
-                                          EditValue="{Binding SelectedUnitId, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+                                          EditValue="{Binding SelectedUnitId, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
+                                <dxe:ComboBoxEdit.Buttons>
+                                    <dxe:ButtonInfo GlyphKind="Regular"
+                                                    Command="{Binding UnitDialogFormCommand}"/>
+                                </dxe:ComboBoxEdit.Buttons>
+                            </dxe:ComboBoxEdit>
                         </dxlc:LayoutItem>
 
                         <dxlc:LayoutItem Label="Цена приход:">

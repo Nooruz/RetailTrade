@@ -3,7 +3,7 @@
                                  xmlns:dxg="http://schemas.devexpress.com/winfx/2008/xaml/grid"
                                  xmlns:dxlc="http://schemas.devexpress.com/winfx/2008/xaml/layoutcontrol"
                                  xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-                                 xmlns:local="clr-namespace:RetailTradeServer.Views.Dialogs"
+                                 xmlns:local="clr-namespace:RetailTradeServer.Views.Dialogs" xmlns:dxmvvm="http://schemas.devexpress.com/winfx/2008/xaml/mvvm"
                                  Width="550"
                                  Height="400">
 
@@ -12,15 +12,26 @@
         <dxlc:LayoutGroup HorizontalAlignment="Left"
                           VerticalAlignment="Top">
 
-            <Button Content="Выбрать"/>
-            <Button Content="Создать"/>
+            <Button Content="Выбрать"
+                    Command="{Binding SelectCommand}"/>
+            <Button Content="Создать"
+                    Command="{Binding CreateCommand}"/>
+            <Button Content="{StaticResource faEdit}" 
+                    Style="{StaticResource FAButton}"
+                    Command="{Binding EditCommand}"/>
 
         </dxlc:LayoutGroup>
 
         <dxg:GridControl ItemsSource="{Binding Units}"
                          SelectedItem="{Binding SelectedUnit}">
             <dxg:GridControl.View>
-                <dxg:TableView ShowGroupPanel="False"/>
+                <dxg:TableView ShowGroupPanel="False"
+                               AllowEditing="False">
+                    <dxmvvm:Interaction.Behaviors>
+                        <dxmvvm:EventToCommand EventName="RowDoubleClick"
+                                               Command="{Binding SelectCommand}"/>
+                    </dxmvvm:Interaction.Behaviors>
+                </dxg:TableView>
             </dxg:GridControl.View>
             
             <dxg:GridColumn Header="Наименование"

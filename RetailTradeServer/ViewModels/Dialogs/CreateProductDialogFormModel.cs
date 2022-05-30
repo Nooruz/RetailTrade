@@ -14,6 +14,8 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 using System;
+using DevExpress.Mvvm.DataAnnotations;
+using System.Linq;
 
 namespace RetailTradeServer.ViewModels.Dialogs
 {
@@ -21,7 +23,7 @@ namespace RetailTradeServer.ViewModels.Dialogs
     {
         #region Private Members
 
-        private readonly IDataService<Unit> _unitService;
+        private readonly IUnitService _unitService;
         private readonly ISupplierService _supplierService;
         private readonly IProductService _productService;
         private readonly ITypeProductService _typeProductService;
@@ -35,16 +37,16 @@ namespace RetailTradeServer.ViewModels.Dialogs
         private decimal _arrivalPrice;
         private decimal _salePrice;
         private string _tnved;
-        private IEnumerable<Unit> _units;
-        private ObservableCollection<Supplier> _suppliers;
-        private ObservableCollection<TypeProduct> _typeProducts;
+        private ObservableCollection<Unit> _units = new();
+        private ObservableCollection<Supplier> _suppliers = new();
+        private ObservableCollection<TypeProduct> _typeProducts = new();
 
         #endregion
 
         #region Public Properties
 
         public GlobalMessageViewModel GlobalMessageViewModel { get; }
-        public IEnumerable<Unit> Units
+        public ObservableCollection<Unit> Units
         {
             get => _units;
             set
@@ -55,7 +57,7 @@ namespace RetailTradeServer.ViewModels.Dialogs
         }
         public ObservableCollection<Supplier> Suppliers
         {
-            get => _suppliers ?? new();
+            get => _suppliers;
             set
             {
                 _suppliers = value;
@@ -64,7 +66,7 @@ namespace RetailTradeServer.ViewModels.Dialogs
         }
         public ObservableCollection<TypeProduct> TypeProducts
         {
-            get => _typeProducts ?? new();
+            get => _typeProducts;
             set
             {
                 _typeProducts = value;
@@ -178,7 +180,7 @@ namespace RetailTradeServer.ViewModels.Dialogs
         #region Constructor
 
         public CreateProductDialogFormModel(ITypeProductService typeProductService,
-            IDataService<Unit> unitService,
+            IUnitService unitService,
             IProductService productService,
             ISupplierService supplierService,
             IMessageStore messageStore,
@@ -198,11 +200,39 @@ namespace RetailTradeServer.ViewModels.Dialogs
 
             _supplierService.OnSupplierCreated += SupplierService_OnSupplierCreated;
             _typeProductService.OnTypeProductCreated += TypeProductService_OnTypeProductCreated;
+            _unitService.OnCreated += UnitService_OnCreated;
+            _unitService.OnEdited += UnitService_OnEdited;
         }
 
         #endregion
 
         #region Private Voids
+
+        private void UnitService_OnEdited(Unit unit)
+        {
+            try
+            {
+                Unit editedUnit = Units.FirstOrDefault(u => u.Id == unit.Id);
+                editedUnit.ShortName = unit.ShortName;
+                editedUnit.LongName = unit.LongName;
+            }
+            catch (Exception)
+            {
+                //ignore
+            }
+        }
+
+        private void UnitService_OnCreated(Unit unit)
+        {
+            try
+            {
+                Units.Add(unit);
+            }
+            catch (Exception)
+            {
+                //ignore
+            }
+        }
 
         private void TypeProductService_OnTypeProductCreated(TypeProduct obj)
         {
@@ -228,7 +258,7 @@ namespace RetailTradeServer.ViewModels.Dialogs
                     }
                 }
                 Suppliers = new(await _supplierService.GetAllAsync());
-                Units = await _unitService.GetAllAsync();
+                Units = new(await _unitService.GetAllAsync());
                 TypeProducts = new(await _typeProductService.GetTypesAsync());
 
                 if (Enum.IsDefined(typeof(BarcodeDevice), Settings.Default.BarcodeDefaultDevice))
@@ -433,10 +463,41 @@ namespace RetailTradeServer.ViewModels.Dialogs
             }
         }
 
+        private void UnitMeasurementDialogFormModel_OnSelected(Unit unit)
+        {
+            try
+            {
+                SelectedUnitId = unit.Id;
+            }
+            catch (Exception)
+            {
+                //ignore
+            }
+        }
+
+        #endregion
+
+        #region Public Voids
+
+        [Command]
+        public void UnitDialogForm()
+        {
+            try
+            {
+                UnitMeasurementDialogFormModel viewModel = new(_unitService);
+                viewModel.OnSelected += UnitMeasurementDialogFormModel_OnSelected;
+                WindowService.Show(nameof(UnitMeasurementDialogForm), viewModel);
+            }
+            catch (Exception)
+            {
+                //ignore
+            }
+        }
+
         #endregion
 
         #region Dispose
-        
+
         public override void Dispose()
         {
             base.Dispose();

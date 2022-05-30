@@ -23,7 +23,7 @@ namespace RetailTradeServer.ViewModels.Menus
 
         private readonly ITypeProductService _typeProductService;        
         private readonly IProductService _productService;
-        private readonly IDataService<Unit> _unitService;
+        private readonly IUnitService _unitService;
         private readonly ISupplierService _supplierService;
         private readonly IMessageStore _messageStore;
         private readonly IBarcodeService _barcodeService;
@@ -109,7 +109,7 @@ namespace RetailTradeServer.ViewModels.Menus
 
         public ProductViewModel(ITypeProductService typeProductService,
             IProductService productService,
-            IDataService<Unit> unitService,
+            IUnitService unitService,
             ISupplierService supplierService,
             IMessageStore messageStore,
             IBarcodeService barcodeService,
@@ -198,7 +198,15 @@ namespace RetailTradeServer.ViewModels.Menus
         }
         private void ProductService_OnProductCreated(ProductView productView)
         {
-            ProductViews.Add(productView);
+            try
+            {
+                ProductViews.Add(productView);
+                SelectedProductView = productView;
+            }
+            catch (Exception)
+            {
+                //ignore
+            }
         }
         private async void ViewmodelLoaded()
         {

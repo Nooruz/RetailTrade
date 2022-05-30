@@ -49,7 +49,7 @@
                                                     Command="{Binding RenavigateCommand}"
                                                     CommandParameter="Products"/>
 
-            <dxwui:HamburgerSubMenuNavigationButton Content="Цены (переоценка)"
+            <dxwui:HamburgerSubMenuNavigationButton Content="Цены (прайс-лист)"
                                                     Command="{Binding RenavigateCommand}"
                                                     CommandParameter="RevaluationView"/>
             
