@@ -25,6 +25,7 @@ namespace RetailTradeServer.ViewModels.Factories
         private readonly CreateMenuViewModel<WareHouseViewModel> _createWareHouseViewModel;
         private readonly CreateMenuViewModel<RevaluationViewModel> _createRevaluationViewModel;
         private readonly CreateMenuViewModel<ReturnProductFromCustomerViewModel> _createReturnProductFromCustomerViewModel;
+        private readonly CreateMenuViewModel<PriceListViewModel> _createPriceListViewModel;
 
         #endregion
 
@@ -45,7 +46,8 @@ namespace RetailTradeServer.ViewModels.Factories
             CreateMenuViewModel<CashShiftsViewModel> createCashShiftsViewModel,
             CreateMenuViewModel<WareHouseViewModel> createWareHouseViewModel,
             CreateMenuViewModel<RevaluationViewModel> createRevaluationViewModel,
-            CreateMenuViewModel<ReturnProductFromCustomerViewModel> createReturnProductFromCustomerViewModel)
+            CreateMenuViewModel<ReturnProductFromCustomerViewModel> createReturnProductFromCustomerViewModel,
+            CreateMenuViewModel<PriceListViewModel> createPriceListViewModel)
         {
             _createProductViewModel = createProductViewModel;
             _createArrivalProductViewModel = createArrivalProductViewModel;
@@ -63,6 +65,7 @@ namespace RetailTradeServer.ViewModels.Factories
             _createWareHouseViewModel = createWareHouseViewModel;
             _createRevaluationViewModel = createRevaluationViewModel;
             _createReturnProductFromCustomerViewModel = createReturnProductFromCustomerViewModel;
+            _createPriceListViewModel = createPriceListViewModel;
         }
 
         #endregion
@@ -87,6 +90,7 @@ namespace RetailTradeServer.ViewModels.Factories
                 MenuViewType.WareHouseView => _createWareHouseViewModel(),
                 MenuViewType.RevaluationView => _createRevaluationViewModel(),
                 MenuViewType.ReturnProductFromCustomerView => _createReturnProductFromCustomerViewModel(),
+                MenuViewType.PriceListView => _createPriceListViewModel(),
                 _ => throw new ArgumentException("The ViewType does not have a ViewModel.", "viewType"),
             };
         }

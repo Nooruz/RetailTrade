@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations.Schema;
+﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace RetailTrade.Domain.Models
 {
@@ -14,6 +15,8 @@ namespace RetailTrade.Domain.Models
 
         #region Public Properties
 
+        [Key]
+        [ForeignKey("TypePrice")]
         public int TypePriceId
         {
             get => _typePriceId;
@@ -42,7 +45,7 @@ namespace RetailTrade.Domain.Models
                 OnPropertyChanged(nameof(Price));
             }
         }
-        public TypePrice TypePrice { get; set; }
+        public virtual TypePrice TypePrice { get; set; }
         public Product Product { get; set; }
 
         #endregion

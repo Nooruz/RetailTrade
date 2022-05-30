@@ -10,7 +10,7 @@
     x:Class="RetailTradeServer.Views.Menus.PriceListView"
     mc:Ignorable="d" 
     d:DesignHeight="450" 
-    d:DesignWidth="800"
+    d:DesignWidth="1800"
     Title="{Binding Header}">
 
     <dxlc:LayoutControl Orientation="Vertical">
@@ -38,8 +38,48 @@
                 <dxg:TableView AllowEditing="False"
                                ShowGroupPanel="False"/>
             </dxg:GridControl.View>
-            <dxg:GridColumn Header="Наименование товара"/>
+            <dxg:GridControl.Bands>
+                <dxg:GridControlBand VisibleIndex="0"
+                                     OverlayHeaderByChildren="True">
+                    <dxg:GridColumn Header="Наименование товара"/>
+                    
+                </dxg:GridControlBand>
+                <dxg:GridControlBand Header="Розничная">
+                    <dxg:GridColumn Header="Цена"/>
+                    <dxg:GridColumn Header="Ед. изм."/>
+                </dxg:GridControlBand>
+                <dxg:GridControlBand Header="Себестоимость">
+                    <dxg:GridColumn Header="Цена"/>
+                    <dxg:GridColumn Header="Ед. изм."/>
+                </dxg:GridControlBand>
+                <dxg:GridControlBand Header="Оптовая">
+                    <dxg:GridColumn Header="Цена"/>
+                    <dxg:GridColumn Header="Ед. изм."/>
+                </dxg:GridControlBand>
+                <dxg:GridControlBand Header="Мелкооптовая">
+                    <dxg:GridColumn Header="Цена"/>
+                    <dxg:GridColumn Header="Ед. изм."/>
+                </dxg:GridControlBand>
+                <dxg:GridControlBand Header="Максимальная">
+                    <dxg:GridColumn Header="Цена"/>
+                    <dxg:GridColumn Header="Ед. изм."/>
+                </dxg:GridControlBand>
+                <dxg:GridControlBand Header="Минимальная">
+                    <dxg:GridColumn Header="Цена"/>
+                    <dxg:GridColumn Header="Ед. изм."/>
+                </dxg:GridControlBand>
+            </dxg:GridControl.Bands>
         </dxg:GridControl>
+
+        <dxlc:LayoutGroup VerticalAlignment="Bottom"
+                          HorizontalAlignment="Left">
+            
+            <dxe:HyperlinkEdit Text="История изменения цен"
+                               Command=""/>
+            <dxe:HyperlinkEdit Text="Прайс-лист"
+                               Command=""/>
+            
+        </dxlc:LayoutGroup>
 
     </dxlc:LayoutControl>
 

@@ -41,6 +41,10 @@
 
             <!--#region Меню-->
 
+            <DataTemplate DataType="{x:Type menuViewModels:PriceListViewModel}">
+                <menuViews:PriceListView/>
+            </DataTemplate>
+            
             <DataTemplate DataType="{x:Type menuViewModels:ProductViewModel}">
                 <menuViews:ProductView/>
             </DataTemplate>

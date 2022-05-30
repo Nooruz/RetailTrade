@@ -39,6 +39,7 @@ namespace RetailTradeServer.HostBuilders
                 services.AddTransient(CreateWareHouseViewModel);
                 services.AddTransient(CreateRevaluationViewModel);
                 services.AddTransient(CreateReturnProductFromCustomerViewModel);
+                services.AddTransient(CreatePriceListViewModel);
 
                 services.AddSingleton<CreateMenuViewModel<ProductViewModel>>(servicesProvider => () => CreateProductViewModel(servicesProvider));
                 services.AddSingleton<CreateMenuViewModel<ArrivalProductViewModel>>(servicesProvider => () => CreateArrivalProductViewModel(servicesProvider));
@@ -56,9 +57,15 @@ namespace RetailTradeServer.HostBuilders
                 services.AddSingleton<CreateMenuViewModel<WareHouseViewModel>>(servicesProvider => () => CreateWareHouseViewModel(servicesProvider));
                 services.AddSingleton<CreateMenuViewModel<RevaluationViewModel>>(servicesProvider => () => CreateRevaluationViewModel(servicesProvider));
                 services.AddSingleton<CreateMenuViewModel<ReturnProductFromCustomerViewModel>>(servicesProvider => () => CreateReturnProductFromCustomerViewModel(servicesProvider));
+                services.AddSingleton<CreateMenuViewModel<PriceListViewModel>>(servicesProvider => () => CreatePriceListViewModel(servicesProvider));
 
                 services.AddSingleton<IMenuViewModelFactory, MenuViewModelFactory>();
             });
+        }
+
+        private static PriceListViewModel CreatePriceListViewModel(IServiceProvider services)
+        {
+            return new PriceListViewModel();
         }
 
         private static ReturnProductFromCustomerViewModel CreateReturnProductFromCustomerViewModel(IServiceProvider services)

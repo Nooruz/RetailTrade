@@ -94,7 +94,12 @@ namespace RetailTradeServer.State.Navigators
         /// <summary>
         /// Клиенты
         /// </summary>
-        Customers
+        Customers,
+
+        /// <summary>
+        /// Цены (прайс-лист)
+        /// </summary>
+        PriceListView
     }
 
     public interface IMenuNavigator
