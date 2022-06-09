@@ -8,7 +8,8 @@ using RetailTradeServer.Commands;
 using RetailTradeServer.Components;
 using RetailTradeServer.Properties;
 using RetailTradeServer.State.Messages;
-using RetailTradeServer.ViewModels.Dialogs.Base;
+using RetailTradeServer.ViewModels.Base;
+using RetailTradeServer.ViewModels.Dialogs;
 using RetailTradeServer.Views.Dialogs;
 using System;
 using System.Collections.ObjectModel;
@@ -18,9 +19,9 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 
-namespace RetailTradeServer.ViewModels.Dialogs
+namespace RetailTradeServer.ViewModels.Menus
 {
-    public class CreateProductDialogFormModel : BaseDialogViewModel
+    public class CreateProductViewModel : BaseViewModel
     {
         #region Private Members
 
@@ -139,7 +140,7 @@ namespace RetailTradeServer.ViewModels.Dialogs
 
         #region Constructor
 
-        public CreateProductDialogFormModel(ITypeProductService typeProductService,
+        public CreateProductViewModel(ITypeProductService typeProductService,
             IUnitService unitService,
             IProductService productService,
             ISupplierService supplierService,

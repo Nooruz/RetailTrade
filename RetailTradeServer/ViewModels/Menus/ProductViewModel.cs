@@ -6,14 +6,18 @@ using RetailTrade.Barcode.Services;
 using RetailTrade.Domain.Models;
 using RetailTrade.Domain.Services;
 using RetailTrade.Domain.Views;
+using RetailTradeServer.Commands;
 using RetailTradeServer.State.Messages;
+using RetailTradeServer.State.Navigators;
 using RetailTradeServer.State.Reports;
 using RetailTradeServer.ViewModels.Base;
 using RetailTradeServer.ViewModels.Dialogs;
+using RetailTradeServer.ViewModels.Factories;
 using RetailTradeServer.Views.Dialogs;
 using System;
 using System.Collections.ObjectModel;
 using System.Windows;
+using System.Windows.Input;
 
 namespace RetailTradeServer.ViewModels.Menus
 {
@@ -23,11 +27,9 @@ namespace RetailTradeServer.ViewModels.Menus
 
         private readonly ITypeProductService _typeProductService;        
         private readonly IProductService _productService;
-        private readonly IUnitService _unitService;
-        private readonly ISupplierService _supplierService;
-        private readonly IMessageStore _messageStore;
-        private readonly IBarcodeService _barcodeService;
         private readonly IReportService _reportService;
+        private readonly IMenuNavigator _menuNavigator;
+        private readonly IMenuViewModelFactory _menuViewModelFactory;
         private TypeProduct _selectedTypeProduct;
         private ObservableCollection<TypeProduct> _typeProducts = new();
         private ObservableCollection<ProductView> _productViews = new();
@@ -105,24 +107,26 @@ namespace RetailTradeServer.ViewModels.Menus
 
         #endregion
 
+        #region Commands
+
+        public ICommand UpdateCurrentMenuViewModelCommand => new UpdateCurrentMenuViewModelCommand(_menuNavigator, _menuViewModelFactory);
+
+        #endregion
+
         #region Constructor
 
         public ProductViewModel(ITypeProductService typeProductService,
             IProductService productService,
-            IUnitService unitService,
-            ISupplierService supplierService,
-            IMessageStore messageStore,
-            IBarcodeService barcodeService,
-            IReportService reportService)
-        {
+            IReportService reportService,
+            IMenuNavigator menuNavigator,
+            IMenuViewModelFactory menuViewModelFactory)
+        { 
             _typeProductService = typeProductService;
             _productService = productService;
-            _unitService = unitService;
-            _supplierService = supplierService;            
-            _messageStore = messageStore;
-            _barcodeService = barcodeService;
             _typeProductService = typeProductService;
             _reportService = reportService;
+            _menuNavigator = menuNavigator;
+            _menuViewModelFactory = menuViewModelFactory;
 
             Header = "Товары";
 
@@ -224,15 +228,18 @@ namespace RetailTradeServer.ViewModels.Menus
         {
             try
             {
-                if (IsUseFilter)
+                if (ProductGridControl != null)
                 {
-                    if (SelectedTypeProduct != null && !SelectedTypeProduct.IsGroup)
+                    if (IsUseFilter)
                     {
-                        FilterCriteria = new BinaryOperator("TypeProduct", SelectedTypeProduct.Name, BinaryOperatorType.Equal);
-                        return;
+                        if (SelectedTypeProduct != null && !SelectedTypeProduct.IsGroup)
+                        {
+                            FilterCriteria = new BinaryOperator("TypeProduct", SelectedTypeProduct.Name, BinaryOperatorType.Equal);
+                            return;
+                        }
                     }
+                    ProductGridControl.FilterString = string.Empty;
                 }
-                ProductGridControl.FilterString = string.Empty;
             }
             catch (Exception)
             {
@@ -249,7 +256,7 @@ namespace RetailTradeServer.ViewModels.Menus
         [Command]
         public void CreateProduct()
         {
-            WindowService.Show(nameof(CreateProductDialogForm), new CreateProductDialogFormModel(_typeProductService, _unitService, _productService, _supplierService, _messageStore, _barcodeService) { Title = "Товаровы (Создать)", SelectedTypeProductId = GetTypeProductId() });
+            UpdateCurrentMenuViewModelCommand.Execute(MenuViewType.CreateProductView);
         }
 
         [Command]
@@ -298,23 +305,23 @@ namespace RetailTradeServer.ViewModels.Menus
         [Command]
         public async void EditProduct()
         {
-            if (SelectedProductView != null)
-            {
-                WindowService.Show(nameof(EditProductWithBarcodeDialogForm), new EditProductWithBarcodeDialogFormModel(_typeProductService,
-                _unitService,
-                _productService,
-                _supplierService,
-                _messageStore,
-                _barcodeService)
-                {
-                    Title = $"{SelectedProductView.Name} (Товары)",
-                    EditProduct = await _productService.GetAsync(SelectedProductView.Id)
-                });
-            }
-            else
-            {
-                _ = MessageBoxService.Show("Выберите товар", "", MessageBoxButton.OK, MessageBoxImage.Exclamation);
-            }
+            //if (SelectedProductView != null)
+            //{
+            //    WindowService.Show(nameof(EditProductWithBarcodeDialogForm), new EditProductWithBarcodeDialogFormModel(_typeProductService,
+            //    _unitService,
+            //    _productService,
+            //    _supplierService,
+            //    _messageStore,
+            //    _barcodeService)
+            //    {
+            //        Title = $"{SelectedProductView.Name} (Товары)",
+            //        EditProduct = await _productService.GetAsync(SelectedProductView.Id)
+            //    });
+            //}
+            //else
+            //{
+            //    _ = MessageBoxService.Show("Выберите товар", "", MessageBoxButton.OK, MessageBoxImage.Exclamation);
+            //}
         }
 
         [Command]

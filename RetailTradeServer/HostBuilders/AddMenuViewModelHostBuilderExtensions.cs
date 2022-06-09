@@ -40,6 +40,7 @@ namespace RetailTradeServer.HostBuilders
                 services.AddTransient(CreateRevaluationViewModel);
                 services.AddTransient(CreateReturnProductFromCustomerViewModel);
                 services.AddTransient(CreatePriceListViewModel);
+                services.AddTransient(CreateCreateProductViewModel);
 
                 services.AddSingleton<CreateMenuViewModel<ProductViewModel>>(servicesProvider => () => CreateProductViewModel(servicesProvider));
                 services.AddSingleton<CreateMenuViewModel<ArrivalProductViewModel>>(servicesProvider => () => CreateArrivalProductViewModel(servicesProvider));
@@ -58,9 +59,20 @@ namespace RetailTradeServer.HostBuilders
                 services.AddSingleton<CreateMenuViewModel<RevaluationViewModel>>(servicesProvider => () => CreateRevaluationViewModel(servicesProvider));
                 services.AddSingleton<CreateMenuViewModel<ReturnProductFromCustomerViewModel>>(servicesProvider => () => CreateReturnProductFromCustomerViewModel(servicesProvider));
                 services.AddSingleton<CreateMenuViewModel<PriceListViewModel>>(servicesProvider => () => CreatePriceListViewModel(servicesProvider));
+                services.AddSingleton<CreateMenuViewModel<CreateProductViewModel>>(servicesProvider => () => CreateCreateProductViewModel(servicesProvider));
 
                 services.AddSingleton<IMenuViewModelFactory, MenuViewModelFactory>();
             });
+        }
+
+        private static CreateProductViewModel CreateCreateProductViewModel(IServiceProvider services)
+        {
+            return new CreateProductViewModel(services.GetRequiredService<ITypeProductService>(),
+                services.GetRequiredService<IUnitService>(),
+                services.GetRequiredService<IProductService>(),
+                services.GetRequiredService<ISupplierService>(),
+                services.GetRequiredService<IMessageStore>(),
+                services.GetRequiredService<IBarcodeService>());
         }
 
         private static PriceListViewModel CreatePriceListViewModel(IServiceProvider services)
@@ -92,11 +104,9 @@ namespace RetailTradeServer.HostBuilders
         {
             return new ProductViewModel(services.GetRequiredService<ITypeProductService>(),
                 services.GetRequiredService<IProductService>(),
-                services.GetRequiredService<IUnitService>(),
-                services.GetRequiredService<ISupplierService>(),
-                services.GetRequiredService<IMessageStore>(),
-                services.GetRequiredService<IBarcodeService>(),
-                services.GetRequiredService<IReportService>());
+                services.GetRequiredService<IReportService>(),
+                services.GetRequiredService<IMenuNavigator>(),
+                services.GetRequiredService<IMenuViewModelFactory>());
         }
 
         private static ArrivalProductViewModel CreateArrivalProductViewModel(IServiceProvider services)

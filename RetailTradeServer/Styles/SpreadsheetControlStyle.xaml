@@ -1,0 +1,22 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:customs="clr-namespace:RetailTradeServer.Components"
+                    xmlns:dxsps="http://schemas.devexpress.com/winfx/2008/xaml/spreadsheet">
+
+    <Style TargetType="{x:Type customs:CustomSpreadsheetControl}" x:Key="SpreadsheetControl">
+        <Setter Property="HorizontalScrollbarVisibility" Value="Hidden"/>
+        <Setter Property="VerticalScrollbarVisibility" Value="Hidden"/>
+        <Setter Property="ShowTabSelector" Value="False"/>
+        <Setter Property="ReadOnly" Value="True"/>
+        <Setter Property="Options">
+            <Setter.Value>
+                <dxsps:SpreadsheetControlOptions>
+                    <dxsps:SpreadsheetControlOptions.View>
+                        <dxsps:SpreadsheetViewOptions ShowColumnHeaders="False" ShowRowHeaders="False"/>
+                    </dxsps:SpreadsheetControlOptions.View>
+                </dxsps:SpreadsheetControlOptions>
+            </Setter.Value>
+        </Setter>
+    </Style>
+    
+</ResourceDictionary>

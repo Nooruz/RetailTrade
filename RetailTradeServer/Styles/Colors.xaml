@@ -28,5 +28,8 @@
     <Color x:Key="FolderColor">#F6D775</Color>
     <SolidColorBrush x:Key="FolderColorBrush" Color="{StaticResource FolderColor}"/>
 
+    <Color x:Key="DefaultButtonColor">#0173C6</Color>
+    <SolidColorBrush x:Key="DefaultButtonColorBrush" Color="{StaticResource DefaultButtonColor}"/>
+
 
 </ResourceDictionary>

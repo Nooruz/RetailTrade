@@ -99,7 +99,12 @@ namespace RetailTradeServer.State.Navigators
         /// <summary>
         /// Цены (прайс-лист)
         /// </summary>
-        PriceListView
+        PriceListView,
+
+        /// <summary>
+        /// Создание или редактирование товара
+        /// </summary>
+        CreateProductView
     }
 
     public interface IMenuNavigator
