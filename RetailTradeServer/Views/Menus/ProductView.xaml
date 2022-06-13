@@ -192,17 +192,6 @@
                 </dxg:GridColumn>
                 <dxg:GridColumn FieldName="Name" Header="Наименование"/>
                 <dxg:GridColumn FieldName="Unit" Header="Ед. изм."/>
-                <dxg:GridColumn FieldName="Barcode" Header="Штрих код"/>
-                <dxg:GridColumn FieldName="ArrivalPrice" Header="Цена приход">
-                    <dxg:GridColumn.EditSettings>
-                        <dxe:TextEditSettings MaskType="Numeric" MaskUseAsDisplayFormat="True" Mask="n"/>
-                    </dxg:GridColumn.EditSettings>
-                </dxg:GridColumn>
-                <dxg:GridColumn FieldName="SalePrice" Header="Цена продажа">
-                    <dxg:GridColumn.EditSettings>
-                        <dxe:TextEditSettings MaskUseAsDisplayFormat="True" MaskType="Numeric" Mask="n"/>
-                    </dxg:GridColumn.EditSettings>
-                </dxg:GridColumn>
                 <dxg:GridColumn FieldName="TNVED" Header="ТН ВЭД"/>
 
             </dxg:GridControl>

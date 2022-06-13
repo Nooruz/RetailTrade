@@ -52,6 +52,7 @@ namespace RetailTradeServer.HostBuilders
                 services.AddSingleton<IDataService<ContractorType>, GenericService<ContractorType>>();
                 services.AddSingleton<IContractorService, ContractorService>();
                 services.AddSingleton<ICustomerService, CustomerService>();
+                services.AddSingleton<IProductBarcodeService, ProductBarcodeService>();
             });
         }
     }

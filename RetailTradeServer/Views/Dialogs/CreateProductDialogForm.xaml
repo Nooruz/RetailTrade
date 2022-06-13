@@ -1,16 +1,14 @@
 ﻿<dialogs:BaseDialogUserControl
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-    xmlns:dx="http://schemas.devexpress.com/winfx/2008/xaml/core"
     xmlns:dxe="http://schemas.devexpress.com/winfx/2008/xaml/editors"
     xmlns:dxlc="http://schemas.devexpress.com/winfx/2008/xaml/layoutcontrol"
     xmlns:dxmvvm="http://schemas.devexpress.com/winfx/2008/xaml/mvvm"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:components="clr-namespace:RetailTradeServer.Components"
-    xmlns:customs="clr-namespace:RetailTradeServer.Components"
     xmlns:dialogs="clr-namespace:RetailTradeServer.Views.Dialogs"
     x:Class="RetailTradeServer.Views.Dialogs.CreateProductDialogForm"
-    Width="1200"
-    Height="600"
+    Width="600"
+    Height="400"
     KeyUp="BaseDialogUserControl_KeyUp">
 
     <dxmvvm:Interaction.Behaviors>
@@ -26,122 +24,129 @@
         <dxlc:LayoutGroup HorizontalAlignment="Left"
                           VerticalAlignment="Top">
 
-            <Button Content="Записать и закрыть"/>
+            <Button Content="Сохранить и закрыть"
+                    Command="{Binding CreateAndCloseCommand}"/>
+            
+            <Button Content="Сохранить"
+                    Command="{Binding CreateProductCommand}"/>
 
-            <Button Style="{StaticResource FAButton}"
-                    Content="{StaticResource faFloppyDisk}"/>
-
-            <Button Style="{StaticResource ButtonWithHorizontalIcon}"
-                    Tag="{StaticResource faPrint}"
-                    Content="Печать"/>
+            <Button Content="Закрыть"
+                    Command="{Binding CloseCommand}"/>
 
         </dxlc:LayoutGroup>
-        
-        <dx:DXTabControl>
 
-            <dx:DXTabItem Header="Карточка">
+        <dxlc:LayoutGroup Orientation="Vertical">
 
-                <customs:CustomSpreadsheetControl Style="{StaticResource SpreadsheetControl}" 
-                                                  DocumentSource="D:\item card.xlsx">
+            <dxlc:LayoutItem Label="Наименование товара:">
+                <dxe:TextEdit Text="{Binding Name, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
                     <dxmvvm:Interaction.Behaviors>
-                        <dxmvvm:EventToCommand EventName="Loaded"
-                                               Command="{Binding SpreadsheetControlLoadedCommand}"
-                                               PassEventArgsToCommand="True"/>
+                        <dxmvvm:FocusBehavior/>
                     </dxmvvm:Interaction.Behaviors>
-                </customs:CustomSpreadsheetControl>
+                </dxe:TextEdit>
+            </dxlc:LayoutItem>
 
-            </dx:DXTabItem>
-
-            <dx:DXTabItem Header="Реквизиты">
-                <dxlc:LayoutControl ItemSpace="15"
-                                Orientation="Vertical">
-
-                    <dxlc:LayoutGroup Orientation="Vertical">
-
-                        <dxlc:LayoutItem Label="Вид товара:">
-                            <dxe:ComboBoxEdit ItemsSource="{Binding TypeProducts}"
+            <dxlc:LayoutItem Label="Вид товара:">
+                <dxe:ComboBoxEdit ItemsSource="{Binding TypeProducts}"
                                               DisplayMember="Name"
                                               ValueMember="Id"
                                               EditValue="{Binding SelectedTypeProductId}">
 
-                                <dxe:ComboBoxEdit.Buttons>
-                                    <dxe:ButtonInfo GlyphKind="Plus" Command="{Binding CreateTypeProductCommand}"/>
-                                </dxe:ComboBoxEdit.Buttons>
+                    <dxe:ComboBoxEdit.Buttons>
+                        <dxe:ButtonInfo GlyphKind="Plus" Command="{Binding CreateTypeProductCommand}"/>
+                    </dxe:ComboBoxEdit.Buttons>
 
-                                <dxmvvm:Interaction.Behaviors>
-                                    <dxmvvm:EventToCommand EventName="SelectedIndexChanged"
+                    <dxmvvm:Interaction.Behaviors>
+                        <dxmvvm:EventToCommand EventName="SelectedIndexChanged"
                                                            Command="{Binding SelectedProductCategoryChangedCommand}"/>
-                                </dxmvvm:Interaction.Behaviors>
+                    </dxmvvm:Interaction.Behaviors>
 
-                            </dxe:ComboBoxEdit>
-                        </dxlc:LayoutItem>
+                </dxe:ComboBoxEdit>
+            </dxlc:LayoutItem>
 
-                        <dxlc:LayoutItem Label="Поставщик:">
-                            <dxe:ComboBoxEdit ItemsSource="{Binding Suppliers}"
+            <dxlc:LayoutItem Label="Поставщик:">
+                <dxe:ComboBoxEdit ItemsSource="{Binding Suppliers}"
                                           DisplayMember="ShortName"
                                           ValueMember="Id"
                                           IncrementalSearch="True"
                                           AutoComplete="True"
                                           EditValue="{Binding SelectedSupplierId, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
 
-                                <dxe:ComboBoxEdit.Buttons>
-                                    <dxe:ButtonInfo GlyphKind="Plus" Command="{Binding CreateSupplierCommand}"/>
-                                </dxe:ComboBoxEdit.Buttons>
+                    <dxe:ComboBoxEdit.Buttons>
+                        <dxe:ButtonInfo GlyphKind="Plus" Command="{Binding CreateSupplierCommand}"/>
+                    </dxe:ComboBoxEdit.Buttons>
 
-                            </dxe:ComboBoxEdit>
-                        </dxlc:LayoutItem>
+                </dxe:ComboBoxEdit>
+            </dxlc:LayoutItem>
 
-                        <dxlc:LayoutItem Label="Наименование товара:">
-                            <dxe:TextEdit Text="{Binding Name, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
-                        </dxlc:LayoutItem>
-
-                        <dxlc:LayoutItem Label="Штрих код:">
-                            <dxe:TextEdit Text="{Binding Barcode, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
-                        </dxlc:LayoutItem>
-
-                        <dxlc:LayoutItem Label="Единица измерения:">
-                            <dxe:ComboBoxEdit ItemsSource="{Binding Units}"
+            <dxlc:LayoutItem Label="Единица измерения:">
+                <dxe:ComboBoxEdit ItemsSource="{Binding Units}"
                                               DisplayMember="ShortName"
                                               ValueMember="Id"
                                               IncrementalSearch="True"
                                               AutoComplete="True"
                                               EditValue="{Binding SelectedUnitId, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
-                                <dxe:ComboBoxEdit.Buttons>
-                                    <dxe:ButtonInfo GlyphKind="Regular"
+                    <dxe:ComboBoxEdit.Buttons>
+                        <dxe:ButtonInfo GlyphKind="Regular"
                                                     Command="{Binding UnitDialogFormCommand}"/>
-                                </dxe:ComboBoxEdit.Buttons>
-                            </dxe:ComboBoxEdit>
-                        </dxlc:LayoutItem>
+                    </dxe:ComboBoxEdit.Buttons>
+                </dxe:ComboBoxEdit>
+            </dxlc:LayoutItem>
 
-                        <dxlc:LayoutItem Label="ТН ВЭД:">
-                            <dxe:TextEdit Text="{Binding TNVED, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+            <dxlc:LayoutItem Label="ТН ВЭД:">
+                <dxe:TextEdit Text="{Binding TNVED, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                                           MaskType="Numeric"
                                           Mask="d" 
                                           AllowNullInput="True"/>
-                        </dxlc:LayoutItem>
+            </dxlc:LayoutItem>
 
-                        <dxlc:LayoutGroup Orientation="Horizontal"
-                                          HorizontalAlignment="Right"
-                                          VerticalAlignment="Top">
+            <Button Style="{StaticResource LinkButton}"
+                    HorizontalAlignment="Left"
+                    VerticalAlignment="Top"
+                    Content="Штрих-коды (0)"
+                    Command="{Binding BarcodeCommand}"/>
 
-                            <Button Content="Сохранить"
-                                Command="{Binding SaveProductCommand}"/>
+            <dxlc:LayoutGroup View="GroupBox" 
+                              IsCollapsible="True"
+                              IsCollapsed="True"
+                              Header="Цены"
+                              Orientation="Vertical"
+                              VerticalAlignment="Top">
 
-                            <Button Content="Отменить"
-                                    Margin="5 0 0 0"
-                                    Command="{Binding CloseCommand}"/>
+                <dxlc:LayoutItem Label="Розничная:">
+                    <dxe:TextEdit Text="{Binding RetailPrice, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                  MaskType="Numeric"
+                                  Mask="n"
+                                  AllowNullInput="True" MaskUseAsDisplayFormat="True"/>
+                </dxlc:LayoutItem>
 
-                        </dxlc:LayoutGroup>
+                <dxlc:LayoutItem Label="Себестоимость:">
+                    <dxe:TextEdit Text="{Binding CostPrice, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                  MaskType="Numeric"
+                                  Mask="n"
+                                  AllowNullInput="True" MaskUseAsDisplayFormat="True"/>
+                </dxlc:LayoutItem>
 
-                        <components:GlobalMessageBaner DataContext="{Binding GlobalMessageViewModel}"
+                <dxlc:LayoutItem Label="Оптовая:">
+                    <dxe:TextEdit Text="{Binding WholesalePrice, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                  MaskType="Numeric"
+                                  Mask="n"
+                                  AllowNullInput="True" MaskUseAsDisplayFormat="True"/>
+                </dxlc:LayoutItem>
+
+                <dxlc:LayoutItem Label="Минимальная:">
+                    <dxe:TextEdit Text="{Binding MinimumPrice, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                  MaskType="Numeric"
+                                  Mask="n"
+                                  AllowNullInput="True" MaskUseAsDisplayFormat="True"/>
+                </dxlc:LayoutItem>
+
+            </dxlc:LayoutGroup>
+
+
+            <components:GlobalMessageBaner DataContext="{Binding GlobalMessageViewModel}"
                                                        VerticalAlignment="Bottom"/>
 
-                    </dxlc:LayoutGroup>
-
-                </dxlc:LayoutControl>
-            </dx:DXTabItem>
-
-        </dx:DXTabControl>
+        </dxlc:LayoutGroup>
 
     </dxlc:LayoutControl>
 

@@ -83,7 +83,7 @@ namespace RetailTrade.EntityFramework.Services
                 return context.ArrivalProducts
                     .ToList();
             }
-            catch (Exception e)
+            catch (Exception)
             {
                 //ignore
             }

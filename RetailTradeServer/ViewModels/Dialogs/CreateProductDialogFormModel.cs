@@ -30,15 +30,20 @@ namespace RetailTradeServer.ViewModels.Dialogs
         private readonly ITypeProductService _typeProductService;
         private readonly IMessageStore _messageStore;
         private readonly IBarcodeService _barcodeService;
+        private readonly IProductBarcodeService _productBarcodeService;
         private int? _selectedUnitId;
         private int? _selectedSupplierId;
         private int? _selectedTypeProductId;
-        private string _barcode;
         private string _name;
         private string _tnved;
+        private decimal _retailPrice;
+        private decimal _costPrice;
+        private decimal _wholesalePrice;
+        private decimal _minimumPrice;
         private ObservableCollection<Unit> _units = new();
         private ObservableCollection<Supplier> _suppliers = new();
         private ObservableCollection<TypeProduct> _typeProducts = new();
+        private Product _createdProduct;
 
         #endregion
 
@@ -99,15 +104,6 @@ namespace RetailTradeServer.ViewModels.Dialogs
                 OnPropertyChanged(nameof(SelectedSupplierId));
             }
         }
-        public string Barcode
-        {
-            get => _barcode;
-            set
-            {
-                _barcode = value;
-                OnPropertyChanged(nameof(Barcode));
-            }
-        }
         public string Name
         {
             get => _name;
@@ -126,7 +122,52 @@ namespace RetailTradeServer.ViewModels.Dialogs
                 OnPropertyChanged(nameof(TNVED));
             }
         }
+        public decimal RetailPrice
+        {
+            get => _retailPrice;
+            set
+            {
+                _retailPrice = value;
+                OnPropertyChanged(nameof(RetailPrice));
+            }
+        }
+        public decimal CostPrice
+        {
+            get => _costPrice;
+            set
+            {
+                _costPrice = value;
+                OnPropertyChanged(nameof(CostPrice));
+            }
+        }
+        public decimal WholesalePrice
+        {
+            get => _wholesalePrice;
+            set
+            {
+                _wholesalePrice = value;
+                OnPropertyChanged(nameof(WholesalePrice));
+            }
+        }
+        public decimal MinimumPrice
+        {
+            get => _minimumPrice;
+            set
+            {
+                _minimumPrice = value;
+                OnPropertyChanged(nameof(MinimumPrice));
+            }
+        }
         public CustomSpreadsheetControl CustomSpreadsheet { get; set; }
+        public Product CreatedProduct
+        {
+            get => _createdProduct;
+            set
+            {
+                _createdProduct = value;
+                OnPropertyChanged(nameof(CreatedProduct));
+            }
+        }
 
         #endregion
 
@@ -144,7 +185,8 @@ namespace RetailTradeServer.ViewModels.Dialogs
             IProductService productService,
             ISupplierService supplierService,
             IMessageStore messageStore,
-            IBarcodeService barcodeService)
+            IBarcodeService barcodeService,
+            IProductBarcodeService productBarcodeService)
         {
             _typeProductService = typeProductService;
             _unitService = unitService;
@@ -152,6 +194,7 @@ namespace RetailTradeServer.ViewModels.Dialogs
             _supplierService = supplierService;
             _messageStore = messageStore;
             _barcodeService = barcodeService;
+            _productBarcodeService = productBarcodeService;
             GlobalMessageViewModel = new(_messageStore);
 
             _messageStore.Close();
@@ -212,12 +255,12 @@ namespace RetailTradeServer.ViewModels.Dialogs
             {
                 _supplierService.OnSupplierCreated -= SupplierService_OnSupplierCreated;
                 _typeProductService.OnTypeProductCreated -= TypeProductService_OnTypeProductCreated;
-                _barcodeService.OnBarcodeEvent -= BarcodeService_OnBarcodeEvent;
-                if (Enum.IsDefined(typeof(BarcodeDevice), Settings.Default.BarcodeDefaultDevice))
-                {
-                    _barcodeService.Close(Enum.Parse<BarcodeDevice>(Settings.Default.BarcodeDefaultDevice));
-                }
-                _barcodeService.OnBarcodeEvent -= BarcodeService_OnBarcodeEvent;
+                //_barcodeService.OnBarcodeEvent -= BarcodeService_OnBarcodeEvent;
+                //if (Enum.IsDefined(typeof(BarcodeDevice), Settings.Default.BarcodeDefaultDevice))
+                //{
+                //    _barcodeService.Close(Enum.Parse<BarcodeDevice>(Settings.Default.BarcodeDefaultDevice));
+                //}
+                //_barcodeService.OnBarcodeEvent -= BarcodeService_OnBarcodeEvent;
             }
             catch (Exception)
             {
@@ -225,16 +268,11 @@ namespace RetailTradeServer.ViewModels.Dialogs
             }
         }
 
-        private void BarcodeService_OnBarcodeEvent(string barcode)
-        {
-            Barcode = barcode;
-        }
-
         private void CleareAllItems()
         {
             SelectedSupplierId = null;
             SelectedTypeProductId = null;
-            Barcode = string.Empty;
+            //Barcode = string.Empty;
             Name = string.Empty;
             SelectedUnitId = null;
             TNVED = string.Empty;
@@ -329,7 +367,7 @@ namespace RetailTradeServer.ViewModels.Dialogs
                 {
                     _barcodeService.Open(Enum.Parse<BarcodeDevice>(Settings.Default.BarcodeDefaultDevice));
                 }
-                _barcodeService.OnBarcodeEvent += BarcodeService_OnBarcodeEvent;
+                //_barcodeService.OnBarcodeEvent += BarcodeService_OnBarcodeEvent;
             }
             catch (Exception)
             {
@@ -338,48 +376,95 @@ namespace RetailTradeServer.ViewModels.Dialogs
         }
 
         [Command]
-        public async void SaveProduct()
+        public async void CreateProduct()
         {
-            if (SelectedTypeProductId == null || SelectedTypeProductId == 0)
+            try
             {
-                _messageStore.SetCurrentMessage("Выберите вид товара.", MessageType.Error);
-                return;
-            }
-            if (SelectedSupplierId == null || SelectedSupplierId == 0)
-            {
-                _messageStore.SetCurrentMessage("Выберите поставщика.", MessageType.Error);
-                return;
-            }
-            if (string.IsNullOrEmpty(Name))
-            {
-                _messageStore.SetCurrentMessage("Введите наименование товара.", MessageType.Error);
-                return;
-            }
-            if (SelectedUnitId == null || SelectedUnitId == 0)
-            {
-                _messageStore.SetCurrentMessage("Выберите единицу измерения.", MessageType.Error);
-                return;
-            }
-
-            if (await _productService.SearchByBarcode(Barcode))
-            {
-                _ = MessageBoxService.ShowMessage($"Товар со штрих-кодом \"{Barcode}\" существует.", "", MessageButton.OK, MessageIcon.Error);
-            }
-            else
-            {
-                if (await _productService.CreateAsync(new Product
+                if (string.IsNullOrEmpty(Name))
                 {
-                    Barcode = Barcode,
-                    Name = Name,
-                    SupplierId = SelectedSupplierId.Value,
-                    UnitId = SelectedUnitId.Value,
-                    TypeProductId = SelectedTypeProductId.Value,
-                    TNVED = TNVED
-                }) != null)
-                {
-                    _messageStore.SetCurrentMessage("Товар успешно добавлено.", MessageType.Success);
-                    CleareAllItems();
+                    _messageStore.SetCurrentMessage("Введите наименование товара.", MessageType.Error);
+                    return;
                 }
+                if (SelectedTypeProductId == null || SelectedTypeProductId == 0)
+                {
+                    _messageStore.SetCurrentMessage("Выберите вид товара.", MessageType.Error);
+                    return;
+                }
+                if (SelectedUnitId == null || SelectedUnitId == 0)
+                {
+                    _messageStore.SetCurrentMessage("Выберите единицу измерения.", MessageType.Error);
+                    return;
+                }
+                else
+                {
+                    CreatedProduct = await _productService.CreateAsync(new Product
+                    {
+                        Name = Name,
+                        SupplierId = SelectedSupplierId.Value,
+                        UnitId = SelectedUnitId.Value,
+                        TypeProductId = SelectedTypeProductId.Value,
+                        TNVED = TNVED
+                    });
+                    if (CreatedProduct != null)
+                    {
+                        _messageStore.SetCurrentMessage("Товар успешно добавлено.", MessageType.Success);
+                    }
+                    else
+                    {
+                        _messageStore.SetCurrentMessage("Неизвестная ошибка!", MessageType.Error);
+                    }
+                }
+            }
+            catch (Exception)
+            {
+                //ignore
+            }
+        }
+
+        [Command]
+        public async void CreateAndClose()
+        {
+            try
+            {
+                if (string.IsNullOrEmpty(Name))
+                {
+                    _messageStore.SetCurrentMessage("Введите наименование товара.", MessageType.Error);
+                    return;
+                }
+                if (SelectedTypeProductId == null || SelectedTypeProductId == 0)
+                {
+                    _messageStore.SetCurrentMessage("Выберите вид товара.", MessageType.Error);
+                    return;
+                }
+                if (SelectedUnitId == null || SelectedUnitId == 0)
+                {
+                    _messageStore.SetCurrentMessage("Выберите единицу измерения.", MessageType.Error);
+                    return;
+                }
+                else
+                {
+                    CreatedProduct = await _productService.CreateAsync(new Product
+                    {
+                        Name = Name,
+                        SupplierId = SelectedSupplierId.Value,
+                        UnitId = SelectedUnitId.Value,
+                        TypeProductId = SelectedTypeProductId.Value,
+                        TNVED = TNVED
+                    });
+                    if (CreatedProduct != null)
+                    {
+                        _messageStore.SetCurrentMessage("Товар успешно добавлено.", MessageType.Success);
+                        CurrentWindowService.Close();
+                    }
+                    else
+                    {
+                        _messageStore.SetCurrentMessage("Неизвестная ошибка!", MessageType.Error);
+                    }
+                }
+            }
+            catch (Exception)
+            {
+                //ignore
             }
         }
 
@@ -401,6 +486,26 @@ namespace RetailTradeServer.ViewModels.Dialogs
 
                     CustomSpreadsheet.HyperlinkClick += CustomSpreadsheet_HyperlinkClick;
                 }
+            }
+        }
+
+        [Command]
+        public void Barcode()
+        {
+            if (CreatedProduct != null)
+            {
+                WindowService.Show(nameof(ProductBarcodesDialogForm), new ProductBarcodesDialogFormModel(_productService, _productBarcodeService)
+                {
+                    Title = "Штрихкоды товара",
+                    SelectedProduct = CreatedProduct
+                });
+            }
+            else
+            {
+                if (MessageBoxService.ShowMessage("Данные еще не записаны.\nПереход к дополнительной информации возможен только после записи элемента.\nЗаписать элемент?", "Sale Page", MessageButton.YesNo, MessageIcon.Question) == MessageResult.Yes)
+                {
+                    CreateProduct();
+                };
             }
         }
 

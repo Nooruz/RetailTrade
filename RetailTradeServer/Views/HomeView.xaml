@@ -41,25 +41,33 @@
 
         </dxwui:HamburgerSubMenu>
 
-        <dxwui:HamburgerSubMenu Content="Продажи"
+        <dxwui:HamburgerSubMenu Content="Товары"
                                 Style="{StaticResource DefaultHamburgerSubMenu}"
                                 Tag="{StaticResource faShoppingCart}">
 
-            <dxwui:HamburgerSubMenuNavigationButton Content="Товары"
+            <dxwui:HamburgerSubMenuNavigationButton Content="Товары и услуги"
                                                     Command="{Binding RenavigateCommand}"
                                                     CommandParameter="Products"/>
 
-            <dxwui:HamburgerSubMenuNavigationButton Content="Цены (прайс-лист)"
+            <dxwui:HamburgerSubMenuNavigationButton Content="Оприходования"
                                                     Command="{Binding RenavigateCommand}"
                                                     CommandParameter="PriceListView"/>
-            
-            <dxwui:HamburgerSubMenuNavigationButton Content="Возвраты товаров от клиентов"
-                                                    Command="{Binding RenavigateCommand}"
-                                                    CommandParameter="ReturnProductFromCustomerView"/>
 
-            <dxwui:HamburgerSubMenuNavigationButton Content="Клиенты"
+            <dxwui:HamburgerSubMenuNavigationButton Content="Списания"
                                                     Command="{Binding RenavigateCommand}"
-                                                    CommandParameter="Customers"/>
+                                                    CommandParameter="PriceListView"/>
+
+            <!--<dxwui:HamburgerSubMenuNavigationButton Content="Инвентаризации"
+                                                    Command="{Binding RenavigateCommand}"
+                                                    CommandParameter="PriceListView"/>-->
+
+            <dxwui:HamburgerSubMenuNavigationButton Content="Перемещения"
+                                                    Command="{Binding RenavigateCommand}"
+                                                    CommandParameter="PriceListView"/>
+
+            <dxwui:HamburgerSubMenuNavigationButton Content="Прайс-листы"
+                                                    Command="{Binding RenavigateCommand}"
+                                                    CommandParameter="PriceListView"/>
 
         </dxwui:HamburgerSubMenu>
 

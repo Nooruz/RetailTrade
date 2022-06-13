@@ -16,6 +16,7 @@ using RetailTradeServer.ViewModels.Factories;
 using RetailTradeServer.Views.Dialogs;
 using System;
 using System.Collections.ObjectModel;
+using System.Linq;
 using System.Windows;
 using System.Windows.Input;
 
@@ -30,6 +31,11 @@ namespace RetailTradeServer.ViewModels.Menus
         private readonly IReportService _reportService;
         private readonly IMenuNavigator _menuNavigator;
         private readonly IMenuViewModelFactory _menuViewModelFactory;
+        private readonly IUnitService _unitService;
+        private readonly ISupplierService _supplierService;
+        private readonly IMessageStore _messageStore;
+        private readonly IBarcodeService _barcodeService;
+        private readonly IProductBarcodeService _productBarcodeService;
         private TypeProduct _selectedTypeProduct;
         private ObservableCollection<TypeProduct> _typeProducts = new();
         private ObservableCollection<ProductView> _productViews = new();
@@ -119,14 +125,24 @@ namespace RetailTradeServer.ViewModels.Menus
             IProductService productService,
             IReportService reportService,
             IMenuNavigator menuNavigator,
-            IMenuViewModelFactory menuViewModelFactory)
-        { 
+            IMenuViewModelFactory menuViewModelFactory,
+            IUnitService unitService,
+            ISupplierService supplierService,
+            IMessageStore messageStore,
+            IBarcodeService barcodeService,
+            IProductBarcodeService productBarcodeService)
+        {
             _typeProductService = typeProductService;
             _productService = productService;
             _typeProductService = typeProductService;
             _reportService = reportService;
             _menuNavigator = menuNavigator;
             _menuViewModelFactory = menuViewModelFactory;
+            _unitService = unitService;
+            _supplierService = supplierService;
+            _messageStore = messageStore;
+            _barcodeService = barcodeService;
+            _productBarcodeService = productBarcodeService;
 
             Header = "Товары";
 
@@ -217,6 +233,7 @@ namespace RetailTradeServer.ViewModels.Menus
             TypeProducts = new(await _typeProductService.GetAllAsync());
             ProductViews = new(await _productService.GetProductViewsAsync());
             ShowLoadingPanel = false;
+            SelectedProductView = ProductViews.LastOrDefault();
         }
 
         #endregion
@@ -256,7 +273,7 @@ namespace RetailTradeServer.ViewModels.Menus
         [Command]
         public void CreateProduct()
         {
-            UpdateCurrentMenuViewModelCommand.Execute(MenuViewType.CreateProductView);
+            WindowService.Show(nameof(CreateProductDialogForm), new CreateProductDialogFormModel(_typeProductService, _unitService, _productService, _supplierService, _messageStore, _barcodeService, _productBarcodeService) { Title = "Товары и услуги (создание)" });
         }
 
         [Command]
@@ -305,23 +322,23 @@ namespace RetailTradeServer.ViewModels.Menus
         [Command]
         public async void EditProduct()
         {
-            //if (SelectedProductView != null)
-            //{
-            //    WindowService.Show(nameof(EditProductWithBarcodeDialogForm), new EditProductWithBarcodeDialogFormModel(_typeProductService,
-            //    _unitService,
-            //    _productService,
-            //    _supplierService,
-            //    _messageStore,
-            //    _barcodeService)
-            //    {
-            //        Title = $"{SelectedProductView.Name} (Товары)",
-            //        EditProduct = await _productService.GetAsync(SelectedProductView.Id)
-            //    });
-            //}
-            //else
-            //{
-            //    _ = MessageBoxService.Show("Выберите товар", "", MessageBoxButton.OK, MessageBoxImage.Exclamation);
-            //}
+            if (SelectedProductView != null)
+            {
+                WindowService.Show(nameof(EditProductWithBarcodeDialogForm), new EditProductWithBarcodeDialogFormModel(_typeProductService,
+                _unitService,
+                _productService,
+                _supplierService,
+                _messageStore,
+                _barcodeService)
+                {
+                    Title = $"{SelectedProductView.Name} (Товары)",
+                    EditProduct = await _productService.GetAsync(SelectedProductView.Id)
+                });
+            }
+            else
+            {
+                _ = MessageBoxService.Show("Выберите товар", "", MessageBoxButton.OK, MessageBoxImage.Exclamation);
+            }
         }
 
         [Command]

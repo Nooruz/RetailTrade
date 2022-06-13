@@ -192,6 +192,27 @@ namespace RetailTradeServer
                         }
                     }
                 }
+
+                products = await context.Products.Where(p => p.DeleteMark == false && !string.IsNullOrEmpty(p.Barcode)).ToListAsync();
+
+                if (products != null && products.Any())
+                {
+                    foreach (var item in products)
+                    {
+                        await context.ProductBarcode.AddAsync(new()
+                        {
+                            Barcode = item.Barcode,
+                            ProductId = item.Id
+                        });
+
+                        item.Barcode = string.Empty;
+
+                        _ = context.Products.Update(item);
+
+                        _ = await context.SaveChangesAsync();
+                    }
+                }
+
                 MessageBox.Show("Обновление данных успешно выполнено!");
             }
             catch (Exception e)

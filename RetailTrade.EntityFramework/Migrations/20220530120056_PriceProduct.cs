@@ -55,9 +55,7 @@ namespace RetailTrade.EntityFramework.Migrations
                     { 1, "Розничная" },
                     { 2, "Себестоимость" },
                     { 3, "Оптовая" },
-                    { 4, "Мелкооптовая" },
-                    { 5, "Максимальная" },
-                    { 6, "Минимальная" }
+                    { 4, "Минимальная" }
                 });
 
             migrationBuilder.CreateIndex(

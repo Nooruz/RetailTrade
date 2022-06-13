@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using RetailTrade.EntityFramework;
 
@@ -11,9 +12,10 @@ using RetailTrade.EntityFramework;
 namespace RetailTrade.EntityFramework.Migrations
 {
     [DbContext(typeof(RetailTradeDbContext))]
-    partial class RetailTradeDbContextModelSnapshot : ModelSnapshot
+    [Migration("20220613144657_ProductBarcode")]
+    partial class ProductBarcode
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -1280,20 +1282,6 @@ namespace RetailTrade.EntityFramework.Migrations
                     b.HasIndex("WriteDownId");
 
                     b.ToTable("WriteDownProducts");
-                });
-
-            modelBuilder.Entity("RetailTrade.Domain.Views.ProductBarcodeView", b =>
-                {
-                    b.Property<string>("Barcode")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int>("Id")
-                        .HasColumnType("int");
-
-                    b.Property<string>("Name")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.ToView("ProductBarcodeView");
                 });
 
             modelBuilder.Entity("RetailTrade.Domain.Views.ProductView", b =>
