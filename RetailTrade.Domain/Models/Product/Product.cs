@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace RetailTrade.Domain.Models
@@ -21,6 +22,7 @@ namespace RetailTrade.Domain.Models
         private decimal _arrivalPrice;
         private decimal _salePrice;
         private bool _deleteMark;
+        private int? _productPriceId;
         private Unit _unit;
 
         #endregion
@@ -172,6 +174,16 @@ namespace RetailTrade.Domain.Models
             }
         }
 
+        public int? ProductPriceId
+        {
+            get => _productPriceId;
+            set
+            {
+                _productPriceId = value;
+                OnPropertyChanged(nameof(ProductPriceId));
+            }
+        }
+
         public Unit Unit
         {
             get => _unit;
@@ -183,6 +195,7 @@ namespace RetailTrade.Domain.Models
         }
         public Supplier Supplier { get; set; }        
         public TypeProduct TypeProduct { get; set; }
+        public ProductPrice ProductPrice { get; set; }
         public ICollection<ProductSale> ProductSales { get; set; }
         public ICollection<ProductRefund> ProductRefunds { get; set; }
         public ICollection<ArrivalProduct> ArrivalProducts { get; set; }
@@ -192,7 +205,6 @@ namespace RetailTrade.Domain.Models
         public ICollection<WareHouse> WareHouses { get; set; }
         public ICollection<RevaluationProduct> RevaluationProducts { get; set; }
         public ICollection<ProductWareHouse> ProductsWareHouses { get; set; }
-        public ICollection<PriceProduct> PriceProducts { get; set; }
         public ICollection<ProductBarcode> ProductBarcodes { get; set; }
 
         #endregion

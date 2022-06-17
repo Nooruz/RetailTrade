@@ -31,6 +31,7 @@ namespace RetailTradeServer.ViewModels.Dialogs
         private readonly IMessageStore _messageStore;
         private readonly IBarcodeService _barcodeService;
         private readonly IProductBarcodeService _productBarcodeService;
+        //private readonly IPriceProductService _priceProductService;
         private int? _selectedUnitId;
         private int? _selectedSupplierId;
         private int? _selectedTypeProductId;
@@ -195,6 +196,7 @@ namespace RetailTradeServer.ViewModels.Dialogs
             _messageStore = messageStore;
             _barcodeService = barcodeService;
             _productBarcodeService = productBarcodeService;
+            //_priceProductService = priceProductService;
             GlobalMessageViewModel = new(_messageStore);
 
             _messageStore.Close();
@@ -328,6 +330,11 @@ namespace RetailTradeServer.ViewModels.Dialogs
             }
         }
 
+        private bool CheckPrice()
+        {
+            return RetailPrice > 0 || CostPrice > 0 || WholesalePrice > 0 || MinimumPrice > 0;
+        }
+
         #endregion
 
         #region Public Voids
@@ -407,6 +414,13 @@ namespace RetailTradeServer.ViewModels.Dialogs
                     });
                     if (CreatedProduct != null)
                     {
+                        if (CheckPrice())
+                        {
+                            //await _priceProductService.CreateAsync(new PriceProduct
+                            //{
+
+                            //});
+                        }
                         _messageStore.SetCurrentMessage("Товар успешно добавлено.", MessageType.Success);
                     }
                     else
@@ -426,40 +440,47 @@ namespace RetailTradeServer.ViewModels.Dialogs
         {
             try
             {
-                if (string.IsNullOrEmpty(Name))
+                if (CreatedProduct == null)
                 {
-                    _messageStore.SetCurrentMessage("Введите наименование товара.", MessageType.Error);
-                    return;
-                }
-                if (SelectedTypeProductId == null || SelectedTypeProductId == 0)
-                {
-                    _messageStore.SetCurrentMessage("Выберите вид товара.", MessageType.Error);
-                    return;
-                }
-                if (SelectedUnitId == null || SelectedUnitId == 0)
-                {
-                    _messageStore.SetCurrentMessage("Выберите единицу измерения.", MessageType.Error);
-                    return;
-                }
-                else
-                {
-                    CreatedProduct = await _productService.CreateAsync(new Product
+                    if (string.IsNullOrEmpty(Name))
                     {
-                        Name = Name,
-                        SupplierId = SelectedSupplierId.Value,
-                        UnitId = SelectedUnitId.Value,
-                        TypeProductId = SelectedTypeProductId.Value,
-                        TNVED = TNVED
-                    });
-                    if (CreatedProduct != null)
+                        _messageStore.SetCurrentMessage("Введите наименование товара.", MessageType.Error);
+                        return;
+                    }
+                    if (SelectedTypeProductId == null || SelectedTypeProductId == 0)
                     {
-                        _messageStore.SetCurrentMessage("Товар успешно добавлено.", MessageType.Success);
-                        CurrentWindowService.Close();
+                        _messageStore.SetCurrentMessage("Выберите вид товара.", MessageType.Error);
+                        return;
+                    }
+                    if (SelectedUnitId == null || SelectedUnitId == 0)
+                    {
+                        _messageStore.SetCurrentMessage("Выберите единицу измерения.", MessageType.Error);
+                        return;
                     }
                     else
                     {
-                        _messageStore.SetCurrentMessage("Неизвестная ошибка!", MessageType.Error);
+                        CreatedProduct = await _productService.CreateAsync(new Product
+                        {
+                            Name = Name,
+                            SupplierId = SelectedSupplierId.Value,
+                            UnitId = SelectedUnitId.Value,
+                            TypeProductId = SelectedTypeProductId.Value,
+                            TNVED = TNVED
+                        });
+                        if (CreatedProduct != null)
+                        {
+                            _messageStore.SetCurrentMessage("Товар успешно добавлено.", MessageType.Success);
+                            CurrentWindowService.Close();
+                        }
+                        else
+                        {
+                            _messageStore.SetCurrentMessage("Неизвестная ошибка!", MessageType.Error);
+                        }
                     }
+                }
+                else
+                {
+
                 }
             }
             catch (Exception)

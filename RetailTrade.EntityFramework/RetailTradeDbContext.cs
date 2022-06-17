@@ -149,9 +149,8 @@ namespace RetailTrade.EntityFramework
         #region Product
 
         public DbSet<TypeProduct> TypeProducts { get; set; }
-        public DbSet<TypePrice> TypePrices { get; set; }
-        public DbSet<PriceProduct> PriceProducts { get; set; }
         public DbSet<ProductBarcode> ProductBarcode { get; set; }
+        public DbSet<ProductPrice> ProductPrices { get; set; }
 
         #endregion
 
@@ -181,20 +180,6 @@ namespace RetailTrade.EntityFramework
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            modelBuilder.Entity<TypePrice>().HasData(
-                    new TypePrice { Id = 1, Name = "Розничная" },
-                    new TypePrice { Id = 2, Name = "Себестоимость" },
-                    new TypePrice { Id = 3, Name = "Оптовая" },
-                    new TypePrice { Id = 4, Name = "Минимальная" });
-
-            //modelBuilder.Entity<TypePrice>().HasData(
-            //        new TypePrice { Id = 1, Name = "Розничная" },
-            //        new TypePrice { Id = 2, Name = "Себестоимость" },
-            //        new TypePrice { Id = 3, Name = "Оптовая" },
-            //        new TypePrice { Id = 4, Name = "Мелкооптовая" },
-            //        new TypePrice { Id = 5, Name = "Максимальная" },
-            //        new TypePrice { Id = 6, Name = "Минимальная" });
-
             modelBuilder.Entity<ProductBarcodeView>()
                 .ToView(nameof(ProductBarcodeView))
                 .HasNoKey();

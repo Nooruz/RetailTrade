@@ -213,6 +213,33 @@ namespace RetailTradeServer
                     }
                 }
 
+                products = await context.Products.Where(p => p.DeleteMark == false && p.ProductPriceId == null).ToListAsync();
+
+                if (products != null && products.Any())
+                {
+                    foreach (var item in products)
+                    {
+                        var productPrice = await context.ProductPrices.AddAsync(new ProductPrice
+                        {
+                            WholesalePrice = item.ArrivalPrice,
+                            RetailPrice = item.SalePrice
+                        });
+
+                        await context.SaveChangesAsync();
+
+                        if (productPrice != null)
+                        {
+                            item.ArrivalPrice = 0;
+                            item.SalePrice = 0;
+                            item.ProductPriceId = productPrice.Entity.Id;
+                        }
+
+                        context.Update(item);
+
+                        await context.SaveChangesAsync();
+                    }
+                }
+
                 MessageBox.Show("Обновление данных успешно выполнено!");
             }
             catch (Exception e)

@@ -36,6 +36,7 @@ namespace RetailTradeServer.ViewModels.Menus
         private readonly IMessageStore _messageStore;
         private readonly IBarcodeService _barcodeService;
         private readonly IProductBarcodeService _productBarcodeService;
+        //private readonly IPriceProductService _priceProductService;
         private TypeProduct _selectedTypeProduct;
         private ObservableCollection<TypeProduct> _typeProducts = new();
         private ObservableCollection<ProductView> _productViews = new();
@@ -143,6 +144,7 @@ namespace RetailTradeServer.ViewModels.Menus
             _messageStore = messageStore;
             _barcodeService = barcodeService;
             _productBarcodeService = productBarcodeService;
+            //_priceProductService = priceProductService;
 
             Header = "Товары";
 

@@ -107,7 +107,6 @@
 
             <dxlc:LayoutGroup View="GroupBox" 
                               IsCollapsible="True"
-                              IsCollapsed="True"
                               Header="Цены"
                               Orientation="Vertical"
                               VerticalAlignment="Top">
@@ -115,28 +114,28 @@
                 <dxlc:LayoutItem Label="Розничная:">
                     <dxe:TextEdit Text="{Binding RetailPrice, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                                   MaskType="Numeric"
-                                  Mask="n"
+                                  Mask="n2"
                                   AllowNullInput="True" MaskUseAsDisplayFormat="True"/>
                 </dxlc:LayoutItem>
 
                 <dxlc:LayoutItem Label="Себестоимость:">
                     <dxe:TextEdit Text="{Binding CostPrice, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                                   MaskType="Numeric"
-                                  Mask="n"
+                                  Mask="n2"
                                   AllowNullInput="True" MaskUseAsDisplayFormat="True"/>
                 </dxlc:LayoutItem>
 
                 <dxlc:LayoutItem Label="Оптовая:">
                     <dxe:TextEdit Text="{Binding WholesalePrice, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                                   MaskType="Numeric"
-                                  Mask="n"
+                                  Mask="n2"
                                   AllowNullInput="True" MaskUseAsDisplayFormat="True"/>
                 </dxlc:LayoutItem>
 
                 <dxlc:LayoutItem Label="Минимальная:">
                     <dxe:TextEdit Text="{Binding MinimumPrice, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                                   MaskType="Numeric"
-                                  Mask="n"
+                                  Mask="n2"
                                   AllowNullInput="True" MaskUseAsDisplayFormat="True"/>
                 </dxlc:LayoutItem>
 
