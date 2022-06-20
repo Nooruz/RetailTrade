@@ -7,6 +7,7 @@ using RetailTradeServer.ViewModels.Dialogs.Base;
 using RetailTradeServer.Views.Dialogs;
 using System;
 using System.Collections.ObjectModel;
+using System.Linq;
 
 namespace RetailTradeServer.ViewModels.Dialogs
 {
@@ -18,7 +19,7 @@ namespace RetailTradeServer.ViewModels.Dialogs
         private readonly IProductBarcodeService _productBarcodeService;
         private Product _selectedProduct;
         private ObservableCollection<ProductBarcodeView> _productBarcodes = new();
-        private ProductBarcode _selectedProductBarcode;
+        private ProductBarcodeView _selectedProductBarcode;
 
         #endregion
 
@@ -42,7 +43,7 @@ namespace RetailTradeServer.ViewModels.Dialogs
                 OnPropertyChanged(nameof(ProductBarcodes));
             }
         }
-        public ProductBarcode SelectedProductBarcode
+        public ProductBarcodeView SelectedProductBarcode
         {
             get => _selectedProductBarcode;
             set
@@ -109,6 +110,52 @@ namespace RetailTradeServer.ViewModels.Dialogs
         }
 
         [Command]
+        public void EditBarcode()
+        {
+            try
+            {
+                if (SelectedProductBarcode != null)
+                {
+                    WindowService.Show(nameof(CreateBarcodeDialogForm), new CreateBarcodeDialogFormModel(_productService, _productBarcodeService)
+                    {
+                        Title = $"Штрихкод товара ({SelectedProductBarcode.Barcode})",
+                        SelectedProduct = SelectedProduct
+                    });
+                }
+            }
+            catch (Exception)
+            {
+                //ignore
+            }
+        }
+
+        [Command]
+        public async void DeleteBarcode()
+        {
+            try
+            {
+                if (SelectedProductBarcode != null)
+                {
+                    if (MessageBoxService.ShowMessage($"Удалить выбранный элемент?\n\"{SelectedProductBarcode.Barcode}\"", "Sale Page", MessageButton.YesNo, MessageIcon.Question) == MessageResult.Yes)
+                    {
+                        if (await _productBarcodeService.DeleteAsync(SelectedProductBarcode.Id))
+                        {
+                            _ = ProductBarcodes.Remove(SelectedProductBarcode);
+                        }
+                    }
+                }
+                else
+                {
+                    MessageBoxService.ShowMessage("Выберите штрихкод!", "Sale Page", MessageButton.OK, MessageIcon.Exclamation);
+                }
+            }
+            catch (Exception)
+            {
+                //ignore
+            }
+        }
+
+        [Command]
         public async void UserControlLoaded()
         {
             if (SelectedProduct != null)
@@ -118,6 +165,10 @@ namespace RetailTradeServer.ViewModels.Dialogs
             else
             {
                 ProductBarcodes = new(await _productBarcodeService.GetAllViewsAsync());
+            }
+            if (ProductBarcodes != null && ProductBarcodes.Any())
+            {
+                SelectedProductBarcode = ProductBarcodes.LastOrDefault();
             }
         }
 

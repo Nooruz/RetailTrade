@@ -4,6 +4,7 @@ using DevExpress.Spreadsheet;
 using RetailTrade.Barcode.Services;
 using RetailTrade.Domain.Models;
 using RetailTrade.Domain.Services;
+using RetailTrade.Domain.Views;
 using RetailTradeServer.Commands;
 using RetailTradeServer.Components;
 using RetailTradeServer.Properties;
@@ -41,6 +42,7 @@ namespace RetailTradeServer.ViewModels.Dialogs
         private decimal _costPrice;
         private decimal _wholesalePrice;
         private decimal _minimumPrice;
+        private string _productBarcodeCount = "Штрихкод (0)";
         private ObservableCollection<Unit> _units = new();
         private ObservableCollection<Supplier> _suppliers = new();
         private ObservableCollection<TypeProduct> _typeProducts = new();
@@ -169,6 +171,15 @@ namespace RetailTradeServer.ViewModels.Dialogs
                 OnPropertyChanged(nameof(CreatedProduct));
             }
         }
+        public string ProductBarcodeCount
+        {
+            get => _productBarcodeCount;
+            set
+            {
+                _productBarcodeCount = value;
+                OnPropertyChanged(nameof(ProductBarcodeCount));
+            }
+        }
 
         #endregion
 
@@ -207,6 +218,8 @@ namespace RetailTradeServer.ViewModels.Dialogs
             _typeProductService.OnTypeProductCreated += TypeProductService_OnTypeProductCreated;
             _unitService.OnCreated += UnitService_OnCreated;
             _unitService.OnEdited += UnitService_OnEdited;
+            _productBarcodeService.OnCreated += ProductBarcodeService_OnCreated;
+            _productBarcodeService.OnDeleted += ProductBarcodeService_OnDeleted;
         }
 
         #endregion
@@ -333,6 +346,36 @@ namespace RetailTradeServer.ViewModels.Dialogs
         private bool CheckPrice()
         {
             return RetailPrice > 0 || CostPrice > 0 || WholesalePrice > 0 || MinimumPrice > 0;
+        }
+
+        private async void ProductBarcodeService_OnDeleted(int id)
+        {
+            try
+            {
+                if (CreatedProduct != null)
+                {
+                    ProductBarcodeCount = $"Штрихкод ({await _productBarcodeService.GetBarcodeCount(CreatedProduct.Id)})";
+                }
+            }
+            catch (Exception)
+            {
+                //ignore
+            }
+        }
+
+        private async void ProductBarcodeService_OnCreated(ProductBarcodeView productBarcodeView)
+        {
+            try
+            {
+                if (CreatedProduct != null)
+                {
+                    ProductBarcodeCount = $"Штрихкод ({await _productBarcodeService.GetBarcodeCount(CreatedProduct.Id)})";
+                }
+            }
+            catch (Exception)
+            {
+                //ignore
+            }
         }
 
         #endregion

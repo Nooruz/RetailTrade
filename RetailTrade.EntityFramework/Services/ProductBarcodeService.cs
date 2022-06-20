@@ -23,6 +23,7 @@ namespace RetailTrade.EntityFramework.Services
 
         public event Action<ProductBarcodeView> OnCreated;
         public event Action<ProductBarcode> OnEdited;
+        public event Action<int> OnDeleted;
 
         public async Task<bool> CheckAsync(string barcode)
         {
@@ -51,7 +52,12 @@ namespace RetailTrade.EntityFramework.Services
 
         public async Task<bool> DeleteAsync(int id)
         {
-            return await _nonQueryDataService.Delete(id);
+            bool result = await _nonQueryDataService.Delete(id);
+            if (result)
+            {
+                OnDeleted?.Invoke(id);
+            }
+            return result;
         }
 
         public IEnumerable<ProductBarcode> GetAll()
@@ -128,6 +134,21 @@ namespace RetailTrade.EntityFramework.Services
                 //ignore
             }
             return null;
+        }
+
+        public async Task<int> GetBarcodeCount(int id)
+        {
+            try
+            {
+                await using var context = _contextFactory.CreateDbContext();
+                return await context.ProductBarcode
+                    .Where(p => p.ProductId == id).CountAsync();
+            }
+            catch (Exception)
+            {
+                //ignore
+            }
+            return 0;
         }
 
         public async Task<ProductBarcode> UpdateAsync(int id, ProductBarcode entity)

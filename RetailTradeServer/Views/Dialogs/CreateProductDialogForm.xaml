@@ -102,7 +102,7 @@
             <Button Style="{StaticResource LinkButton}"
                     HorizontalAlignment="Left"
                     VerticalAlignment="Top"
-                    Content="Штрих-коды (0)"
+                    Content="{Binding ProductBarcodeCount}"
                     Command="{Binding BarcodeCommand}"/>
 
             <dxlc:LayoutGroup View="GroupBox" 

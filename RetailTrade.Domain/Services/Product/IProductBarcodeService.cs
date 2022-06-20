@@ -10,8 +10,10 @@ namespace RetailTrade.Domain.Services
     {
         Task<IEnumerable<ProductBarcodeView>> GetAllByProductIdAsync(int productId);
         Task<IEnumerable<ProductBarcodeView>> GetAllViewsAsync();
+        Task<int> GetBarcodeCount(int id);
         Task<bool> CheckAsync(string barcode);
         event Action<ProductBarcodeView> OnCreated;
         event Action<ProductBarcode> OnEdited;
+        event Action<int> OnDeleted;
     }
 }

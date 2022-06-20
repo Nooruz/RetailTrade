@@ -21,6 +21,8 @@
 
             <Button Content="Создать"
                     Command="{Binding CreateBarcodeCommand}"/>
+            <Button Content="Изменить"
+                    Command="{Binding EditBarcodeCommand}"/>
             <Button Content="Удалить"
                     Command="{Binding DeleteBarcodeCommand}"/>
 
@@ -29,7 +31,8 @@
         <dxg:GridControl ItemsSource="{Binding ProductBarcodes}"
                          SelectedItem="{Binding SelectedProductBarcode}">
             <dxg:GridControl.View>
-                <dxg:TableView ShowGroupPanel="False"/>
+                <dxg:TableView ShowGroupPanel="False"
+                               AllowEditing="False"/>
             </dxg:GridControl.View>
             <dxg:GridColumn Header="Штрих-код"
                             FieldName="Barcode"/>
