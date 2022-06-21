@@ -32,7 +32,7 @@ namespace RetailTradeServer.ViewModels.Dialogs
         private readonly IMessageStore _messageStore;
         private readonly IBarcodeService _barcodeService;
         private readonly IProductBarcodeService _productBarcodeService;
-        //private readonly IPriceProductService _priceProductService;
+        private readonly IProductPriceService _productPriceService;
         private int? _selectedUnitId;
         private int? _selectedSupplierId;
         private int? _selectedTypeProductId;
@@ -47,6 +47,8 @@ namespace RetailTradeServer.ViewModels.Dialogs
         private ObservableCollection<Supplier> _suppliers = new();
         private ObservableCollection<TypeProduct> _typeProducts = new();
         private Product _createdProduct;
+        private ProductPrice _createdProductPrice;
+        private Product _editProduct;
 
         #endregion
 
@@ -171,6 +173,35 @@ namespace RetailTradeServer.ViewModels.Dialogs
                 OnPropertyChanged(nameof(CreatedProduct));
             }
         }
+        public ProductPrice CreatedProductPrice
+        {
+            get => _createdProductPrice;
+            set
+            {
+                _createdProductPrice = value;
+                OnPropertyChanged(nameof(CreatedProductPrice));
+            }
+        }
+        public Product EditProduct
+        {
+            get => _editProduct;
+            set
+            {
+                _editProduct = value;
+                if (_editProduct != null)
+                {
+                    Name = _editProduct.Name;
+                    SelectedTypeProductId = _editProduct.TypeProductId;
+                    SelectedSupplierId = _editProduct.SupplierId;
+                    SelectedUnitId = _editProduct.UnitId;
+                    TNVED = _editProduct.TNVED;
+                    CreatedProduct = _editProduct;
+                    ProductBarcodeService_OnCreated(null);
+                    SetPrice(_editProduct.ProductPriceId);
+                }
+                OnPropertyChanged(nameof(EditProduct));
+            }
+        }
         public string ProductBarcodeCount
         {
             get => _productBarcodeCount;
@@ -198,7 +229,8 @@ namespace RetailTradeServer.ViewModels.Dialogs
             ISupplierService supplierService,
             IMessageStore messageStore,
             IBarcodeService barcodeService,
-            IProductBarcodeService productBarcodeService)
+            IProductBarcodeService productBarcodeService,
+            IProductPriceService productPriceService)
         {
             _typeProductService = typeProductService;
             _unitService = unitService;
@@ -207,7 +239,7 @@ namespace RetailTradeServer.ViewModels.Dialogs
             _messageStore = messageStore;
             _barcodeService = barcodeService;
             _productBarcodeService = productBarcodeService;
-            //_priceProductService = priceProductService;
+            _productPriceService = productPriceService;
             GlobalMessageViewModel = new(_messageStore);
 
             _messageStore.Close();
@@ -378,6 +410,18 @@ namespace RetailTradeServer.ViewModels.Dialogs
             }
         }
 
+        private async void SetPrice(int? id)
+        {
+            if (id != null)
+            {
+                ProductPrice productPrice = await _productPriceService.GetAsync(id.Value);
+                RetailPrice = productPrice.RetailPrice;
+                CostPrice = productPrice.CostPrice;
+                WholesalePrice = productPrice.WholesalePrice;
+                MinimumPrice = productPrice.MinimumPrice;
+            }
+        }
+
         #endregion
 
         #region Public Voids
@@ -447,28 +491,46 @@ namespace RetailTradeServer.ViewModels.Dialogs
                 }
                 else
                 {
-                    CreatedProduct = await _productService.CreateAsync(new Product
-                    {
-                        Name = Name,
-                        SupplierId = SelectedSupplierId.Value,
-                        UnitId = SelectedUnitId.Value,
-                        TypeProductId = SelectedTypeProductId.Value,
-                        TNVED = TNVED
-                    });
-                    if (CreatedProduct != null)
+                    if (CreatedProduct == null)
                     {
                         if (CheckPrice())
                         {
-                            //await _priceProductService.CreateAsync(new PriceProduct
-                            //{
-
-                            //});
+                            CreatedProductPrice = await _productPriceService.CreateAsync(new ProductPrice
+                            {
+                                RetailPrice = RetailPrice,
+                                CostPrice = CostPrice,
+                                WholesalePrice = WholesalePrice,
+                                MinimumPrice = MinimumPrice
+                            });
                         }
+                        CreatedProduct = await _productService.CreateAsync(new Product
+                        {
+                            Name = Name,
+                            SupplierId = SelectedSupplierId.Value,
+                            UnitId = SelectedUnitId.Value,
+                            TypeProductId = SelectedTypeProductId.Value,
+                            TNVED = TNVED,
+                            ProductPriceId = CreatedProductPrice.Id
+                        });
                         _messageStore.SetCurrentMessage("Товар успешно добавлено.", MessageType.Success);
                     }
                     else
                     {
-                        _messageStore.SetCurrentMessage("Неизвестная ошибка!", MessageType.Error);
+                        if (CreatedProductPrice != null)
+                        {
+                            CreatedProductPrice.RetailPrice = RetailPrice;
+                            CreatedProductPrice.CostPrice = CostPrice;
+                            CreatedProductPrice.WholesalePrice = WholesalePrice;
+                            CreatedProductPrice.MinimumPrice = MinimumPrice;
+                            await _productPriceService.UpdateAsync(CreatedProductPrice.Id, CreatedProductPrice);
+                        }
+                        CreatedProduct.Name = Name;
+                        CreatedProduct.SupplierId = SelectedSupplierId.Value;
+                        CreatedProduct.UnitId = SelectedUnitId.Value;
+                        CreatedProduct.TypeProductId = SelectedTypeProductId.Value;
+                        CreatedProduct.TNVED = TNVED;
+                        await _productService.UpdateAsync(CreatedProduct.Id, CreatedProduct);
+                        _messageStore.SetCurrentMessage("Товар успешно сохранено.", MessageType.Success);
                     }
                 }
             }
@@ -483,47 +545,64 @@ namespace RetailTradeServer.ViewModels.Dialogs
         {
             try
             {
-                if (CreatedProduct == null)
+                if (string.IsNullOrEmpty(Name))
                 {
-                    if (string.IsNullOrEmpty(Name))
+                    _messageStore.SetCurrentMessage("Введите наименование товара.", MessageType.Error);
+                    return;
+                }
+                if (SelectedTypeProductId == null || SelectedTypeProductId == 0)
+                {
+                    _messageStore.SetCurrentMessage("Выберите вид товара.", MessageType.Error);
+                    return;
+                }
+                if (SelectedUnitId == null || SelectedUnitId == 0)
+                {
+                    _messageStore.SetCurrentMessage("Выберите единицу измерения.", MessageType.Error);
+                    return;
+                }
+                else
+                {
+                    if (CreatedProduct == null)
                     {
-                        _messageStore.SetCurrentMessage("Введите наименование товара.", MessageType.Error);
-                        return;
-                    }
-                    if (SelectedTypeProductId == null || SelectedTypeProductId == 0)
-                    {
-                        _messageStore.SetCurrentMessage("Выберите вид товара.", MessageType.Error);
-                        return;
-                    }
-                    if (SelectedUnitId == null || SelectedUnitId == 0)
-                    {
-                        _messageStore.SetCurrentMessage("Выберите единицу измерения.", MessageType.Error);
-                        return;
-                    }
-                    else
-                    {
-                        CreatedProduct = await _productService.CreateAsync(new Product
+                        if (CheckPrice())
+                        {
+                            CreatedProductPrice = await _productPriceService.CreateAsync(new ProductPrice
+                            {
+                                RetailPrice = RetailPrice,
+                                CostPrice = CostPrice,
+                                WholesalePrice = WholesalePrice,
+                                MinimumPrice = MinimumPrice
+                            });
+                        }
+                        _ = await _productService.CreateAsync(new Product
                         {
                             Name = Name,
                             SupplierId = SelectedSupplierId.Value,
                             UnitId = SelectedUnitId.Value,
                             TypeProductId = SelectedTypeProductId.Value,
-                            TNVED = TNVED
+                            TNVED = TNVED,
+                            ProductPriceId = CreatedProductPrice == null ? null : CreatedProductPrice.Id
                         });
-                        if (CreatedProduct != null)
-                        {
-                            _messageStore.SetCurrentMessage("Товар успешно добавлено.", MessageType.Success);
-                            CurrentWindowService.Close();
-                        }
-                        else
-                        {
-                            _messageStore.SetCurrentMessage("Неизвестная ошибка!", MessageType.Error);
-                        }
+                        CurrentWindowService.Close();
                     }
-                }
-                else
-                {
-
+                    else
+                    {
+                        if (CreatedProductPrice != null)
+                        {
+                            CreatedProductPrice.RetailPrice = RetailPrice;
+                            CreatedProductPrice.CostPrice = CostPrice;
+                            CreatedProductPrice.WholesalePrice = WholesalePrice;
+                            CreatedProductPrice.MinimumPrice = MinimumPrice;
+                            await _productPriceService.UpdateAsync(CreatedProductPrice.Id, CreatedProductPrice);
+                        }
+                        CreatedProduct.Name = Name;
+                        CreatedProduct.SupplierId = SelectedSupplierId.Value;
+                        CreatedProduct.UnitId = SelectedUnitId.Value;
+                        CreatedProduct.TypeProductId = SelectedTypeProductId.Value;
+                        CreatedProduct.TNVED = TNVED;
+                        await _productService.UpdateAsync(CreatedProduct.Id, CreatedProduct);
+                        CurrentWindowService.Close();
+                    }
                 }
             }
             catch (Exception)

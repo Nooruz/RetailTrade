@@ -18,8 +18,18 @@
         <dxlc:LayoutGroup HorizontalAlignment="Left"
                           VerticalAlignment="Top">
 
-            <Button Content="Создать"
-                    Command="{Binding CreateBarcodeCommand}"/>
+            <Button Command="{Binding CreateBarcodeCommand}">
+                <Button.Style>
+                    <Style TargetType="Button">
+                        <Setter Property="Content" Value="Создать"/>
+                        <Style.Triggers>
+                            <DataTrigger Binding="{Binding Path=DataContext.IsEditMode, RelativeSource={RelativeSource AncestorType={x:Type dialogs:BaseDialogUserControl}, Mode=FindAncestor}}" Value="True">
+                                <Setter Property="Content" Value="Сохранить"/>
+                            </DataTrigger>
+                        </Style.Triggers>
+                    </Style>
+                </Button.Style>
+            </Button>
             <Button Content="Закрыть"
                     Command="{Binding CloseCommand}"/>
             <Button Content="Новый штрихкод"
@@ -28,7 +38,11 @@
         </dxlc:LayoutGroup>
 
         <dxlc:LayoutItem Label="Штрихкод">
-            <dxe:TextEdit EditValue="{Binding Barcode}"/>
+            <dxe:TextEdit EditValue="{Binding Barcode}">
+                <dxmvvm:Interaction.Behaviors>
+                    <dxmvvm:FocusBehavior/>
+                </dxmvvm:Interaction.Behaviors>
+            </dxe:TextEdit>
         </dxlc:LayoutItem>
 
         <dxlc:LayoutItem Label="Товар">

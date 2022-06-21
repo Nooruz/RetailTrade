@@ -111,7 +111,8 @@ namespace RetailTradeServer.HostBuilders
                 services.GetRequiredService<ISupplierService>(),
                 services.GetRequiredService<IMessageStore>(),
                 services.GetRequiredService<IBarcodeService>(),
-                services.GetRequiredService<IProductBarcodeService>());
+                services.GetRequiredService<IProductBarcodeService>(),
+                services.GetRequiredService<IProductPriceService>());
         }
 
         private static ArrivalProductViewModel CreateArrivalProductViewModel(IServiceProvider services)

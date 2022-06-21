@@ -119,7 +119,8 @@ namespace RetailTradeServer.ViewModels.Dialogs
                     WindowService.Show(nameof(CreateBarcodeDialogForm), new CreateBarcodeDialogFormModel(_productService, _productBarcodeService)
                     {
                         Title = $"Штрихкод товара ({SelectedProductBarcode.Barcode})",
-                        SelectedProduct = SelectedProduct
+                        SelectedProduct = SelectedProduct,
+                        SelectedProductBarcode = SelectedProductBarcode
                     });
                 }
             }

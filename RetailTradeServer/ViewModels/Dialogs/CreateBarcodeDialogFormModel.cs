@@ -2,6 +2,7 @@
 using DevExpress.Mvvm.DataAnnotations;
 using RetailTrade.Domain.Models;
 using RetailTrade.Domain.Services;
+using RetailTrade.Domain.Views;
 using RetailTradeServer.Commands;
 using RetailTradeServer.ViewModels.Dialogs.Base;
 using System;
@@ -19,6 +20,7 @@ namespace RetailTradeServer.ViewModels.Dialogs
         private IEnumerable<Product> _products;
         private int? _selectedProductId;
         private string _barcode;
+        private ProductBarcodeView _selectedProductBarcode;
 
         #endregion
 
@@ -64,6 +66,21 @@ namespace RetailTradeServer.ViewModels.Dialogs
                 OnPropertyChanged(nameof(Barcode));
             }
         }
+        public ProductBarcodeView SelectedProductBarcode
+        {
+            get => _selectedProductBarcode;
+            set
+            {
+                _selectedProductBarcode = value;
+                if (_selectedProductBarcode != null)
+                {
+                    IsEditMode = true;
+                    Barcode = _selectedProductBarcode.Barcode;
+                }
+                OnPropertyChanged(nameof(SelectedProductBarcode));
+            }
+        }
+        public bool IsEditMode { get; set; }
 
         #endregion
 
@@ -106,11 +123,24 @@ namespace RetailTradeServer.ViewModels.Dialogs
                     }
                     else
                     {
-                        _ = await _productBarcodeService.CreateAsync(new ProductBarcode
+                        if (IsEditMode)
                         {
-                            Barcode = Barcode,
-                            ProductId = SelectedProductId.Value
-                        });
+                            ProductBarcode productBarcode = new()
+                            {
+                                Id = SelectedProductBarcode.Id,
+                                Barcode = Barcode,
+                                ProductId = SelectedProductBarcode.ProductId
+                            };
+                            _ = await _productBarcodeService.UpdateAsync(productBarcode.Id, productBarcode);
+                        }
+                        else
+                        {
+                            _ = await _productBarcodeService.CreateAsync(new ProductBarcode
+                            {
+                                Barcode = Barcode,
+                                ProductId = SelectedProductId.Value
+                            });
+                        }
                         CurrentWindowService.Close();
                     }
                 }

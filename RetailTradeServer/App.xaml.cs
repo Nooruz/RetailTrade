@@ -221,7 +221,7 @@ namespace RetailTradeServer
                     {
                         var productPrice = await context.ProductPrices.AddAsync(new ProductPrice
                         {
-                            WholesalePrice = item.ArrivalPrice,
+                            CostPrice = item.ArrivalPrice,
                             RetailPrice = item.SalePrice
                         });
 
