@@ -276,7 +276,8 @@ namespace RetailTradeServer.ViewModels.Menus
         [Command]
         public void CreateProduct()
         {
-            WindowService.Show(nameof(CreateProductDialogForm), new CreateProductDialogFormModel(_typeProductService, _unitService, _productService, _supplierService, _messageStore, _barcodeService, _productBarcodeService, _productPriceService) { Title = "Товары и услуги (создание)" });
+            UpdateCurrentMenuViewModelCommand.Execute(MenuViewType.CreateProductView);
+            //WindowService.Show(nameof(CreateProductDialogForm), new CreateProductDialogFormModel(_typeProductService, _unitService, _productService, _supplierService, _messageStore, _barcodeService, _productBarcodeService, _productPriceService) { Title = "Товары и услуги (создание)" });
         }
 
         [Command]

@@ -1,12 +1,14 @@
-﻿<local:BaseMenuView   x:Class="RetailTradeServer.Views.Menus.CreateProductView"
-                      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-                      xmlns:dxb="http://schemas.devexpress.com/winfx/2008/xaml/bars"
-                      xmlns:dxe="http://schemas.devexpress.com/winfx/2008/xaml/editors"
-                      xmlns:dxlc="http://schemas.devexpress.com/winfx/2008/xaml/layoutcontrol"
-                      xmlns:dxmvvm="http://schemas.devexpress.com/winfx/2008/xaml/mvvm"
-                      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-                      xmlns:local="clr-namespace:RetailTradeServer.Views.Menus"
-                      ShowLoadingPanel="False">
+﻿<local:BaseMenuView       x:Class="RetailTradeServer.Views.Menus.CreateProductView"
+                          xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                          xmlns:dx="http://schemas.devexpress.com/winfx/2008/xaml/core"
+                          xmlns:dxe="http://schemas.devexpress.com/winfx/2008/xaml/editors"
+                          xmlns:dxg="http://schemas.devexpress.com/winfx/2008/xaml/grid"
+                          xmlns:dxlc="http://schemas.devexpress.com/winfx/2008/xaml/layoutcontrol"
+                          xmlns:dxmvvm="http://schemas.devexpress.com/winfx/2008/xaml/mvvm"
+                          xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                          xmlns:components="clr-namespace:RetailTradeServer.Components"
+                          xmlns:local="clr-namespace:RetailTradeServer.Views.Menus"
+                          ShowLoadingPanel="False">
 
     <dxmvvm:Interaction.Behaviors>
         <dxmvvm:EventToCommand Event="PreviewTextInput" 
@@ -18,74 +20,118 @@
 
     <dxlc:LayoutControl Orientation="Vertical">
 
-        <dxlc:LayoutGroup HorizontalAlignment="Left"
+        <dxlc:LayoutGroup VerticalAlignment="Top">
+
+            <dxlc:LayoutGroup HorizontalAlignment="Left"
                           VerticalAlignment="Top">
 
-            <Button Content="Сохранить"/>
+                <Button Content="Сохранить" 
+                    Background="#FFA1B900" 
+                    Foreground="White"/>
 
-            <Button Content="Закрыть"/>
-
-        </dxlc:LayoutGroup>
-
-        <dxlc:LayoutControl ItemSpace="15"
-                                    Padding="0">
-
-            <dxlc:LayoutGroup Orientation="Vertical">
-
-                <dxlc:LayoutItem Label="Вид товара:">
-                    <dxe:ComboBoxEdit ItemsSource="{Binding TypeProducts}"
-                                              DisplayMember="Name"
-                                              ValueMember="Id"
-                                              EditValue="{Binding SelectedTypeProductId}">
-
-                        <dxe:ComboBoxEdit.Buttons>
-                            <dxe:ButtonInfo GlyphKind="Plus" Command="{Binding CreateTypeProductCommand}"/>
-                        </dxe:ComboBoxEdit.Buttons>
-
-                        <dxmvvm:Interaction.Behaviors>
-                            <dxmvvm:EventToCommand EventName="SelectedIndexChanged"
-                                                           Command="{Binding SelectedProductCategoryChangedCommand}"/>
-                        </dxmvvm:Interaction.Behaviors>
-
-                    </dxe:ComboBoxEdit>
-                </dxlc:LayoutItem>
-
-                <dxlc:LayoutItem Label="Штрих код:">
-                    <dxe:TextEdit Text="{Binding Barcode, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
-                </dxlc:LayoutItem>
-
-                <dxlc:LayoutItem Label="Рабочее наименование:">
-                    <dxe:TextEdit Text="{Binding Name, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
-                </dxlc:LayoutItem>
-
-                <dxlc:LayoutItem Label="Наименование для печати:">
-                    <dxe:TextEdit Text="{Binding Name, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
-                </dxlc:LayoutItem>
-
-                <dxlc:LayoutItem Label="Единица измерения:">
-                    <dxe:ComboBoxEdit ItemsSource="{Binding Units}"
-                                              DisplayMember="ShortName"
-                                              ValueMember="Id"
-                                              IncrementalSearch="True"
-                                              AutoComplete="True"
-                                              EditValue="{Binding SelectedUnitId, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
-                        <dxe:ComboBoxEdit.Buttons>
-                            <dxe:ButtonInfo GlyphKind="Regular"
-                                                    Command="{Binding UnitDialogFormCommand}"/>
-                        </dxe:ComboBoxEdit.Buttons>
-                    </dxe:ComboBoxEdit>
-                </dxlc:LayoutItem>
-
-                <dxlc:LayoutItem Label="ТН ВЭД:">
-                    <dxe:TextEdit Text="{Binding TNVED, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-                                          MaskType="Numeric"
-                                          Mask="d" 
-                                          AllowNullInput="True"/>
-                </dxlc:LayoutItem>
+                <Button Content="Закрыть"/>
 
             </dxlc:LayoutGroup>
 
-        </dxlc:LayoutControl>
+            <components:CustomDropDownButton Style="{StaticResource DropDownButtonContentIconic}"
+                                             Icon="{StaticResource faPrint}"
+                                             HorizontalAlignment="Right"
+                                             Content="Создать">
+                <StackPanel Orientation="Vertical">
+                    <components:CustomButton Content="Ценник (70х49,5мм)"
+                                             Command="{Binding CreateWareHouseCommand}"
+                                             Style="{StaticResource InPopupButton}"/>
+                    <components:CustomButton Content="Этикетка (58х40мм)"
+                                             Command="{Binding CreateRetailTradeCommand}"
+                                             Style="{StaticResource InPopupButton}"/>
+                    <Separator/>
+                    <components:CustomButton Content="Настроить..."
+                                             Command="{Binding CreateRetailTradeCommand}"
+                                             Style="{StaticResource InPopupButton}"/>
+                </StackPanel>
+            </components:CustomDropDownButton>
+
+        </dxlc:LayoutGroup>
+
+        <dxlc:LayoutItem LabelPosition="Top"
+                         IsRequired="True"
+                         Label="Наименование">
+            <dxe:TextEdit/>
+
+        </dxlc:LayoutItem>
+
+        <dxlc:LayoutGroup>
+
+            <dxlc:LayoutGroup Orientation="Vertical"
+                              HorizontalAlignment="Left">
+
+                <dxlc:LayoutGroup View="GroupBox"
+                                  Header="Изображения"
+                                  Orientation="Vertical"
+                                  IsCollapsible="True">
+
+                    <dxlc:LayoutItem>
+                        <dxe:ImageEdit ShowMenuMode="Always"/>
+                    </dxlc:LayoutItem>
+
+                </dxlc:LayoutGroup>
+
+                <dxlc:LayoutGroup View="GroupBox"
+                                  Header="Общие данные"
+                                  Orientation="Vertical"
+                                  IsCollapsible="True">
+
+                    <dxlc:LayoutItem Label="Описание">
+                        <dxe:MemoEdit MemoTextWrapping="Wrap" 
+                                      ShowIcon="False"/>
+                    </dxlc:LayoutItem>
+
+                    <dxlc:LayoutItem Label="Вид товара">
+                        <dxe:ComboBoxEdit/>
+                    </dxlc:LayoutItem>
+
+                    <dxlc:LayoutItem Label="Поставщик">
+                        <dxe:ComboBoxEdit/>
+                    </dxlc:LayoutItem>
+
+                    <dxlc:LayoutItem Label="Единица измерения">
+                        <dxe:ComboBoxEdit/>
+                    </dxlc:LayoutItem>
+
+                    <dxlc:LayoutItem Label="ТНВЭД">
+                        <dxe:TextEdit/>
+                    </dxlc:LayoutItem>
+
+                </dxlc:LayoutGroup>
+
+                <dxlc:LayoutGroup View="GroupBox"
+                                  Header="Штрихкоды товара"
+                                  Orientation="Vertical"
+                                  IsCollapsible="True">
+
+                    <dxg:TreeListControl />
+
+                </dxlc:LayoutGroup>
+
+            </dxlc:LayoutGroup>
+
+            <dxlc:LayoutGroup>
+
+                <dx:DXTabControl >
+                    <dx:DXTabItem Header="Цены">
+                        <dxlc:LayoutItem Label="Минимальная цена">
+                            <dxe:TextEdit/>
+                        </dxlc:LayoutItem>
+                    </dx:DXTabItem>
+                    <dx:DXTabItem Header="Остатки">
+                    </dx:DXTabItem>
+                    <dx:DXTabItem Header="История">
+                    </dx:DXTabItem>
+                </dx:DXTabControl>
+
+            </dxlc:LayoutGroup>
+
+        </dxlc:LayoutGroup>
 
     </dxlc:LayoutControl>
 
