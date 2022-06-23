@@ -5,7 +5,6 @@ using RetailTrade.EntityFramework.Services.Common;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace RetailTrade.EntityFramework.Services
@@ -39,16 +38,6 @@ namespace RetailTrade.EntityFramework.Services
             var result = await _nonQueryDataService.Create(entity);
             if (result != null)
             {
-                if (entity.RevaluationProducts.Count != 0)
-                {
-                    foreach (RevaluationProduct item in entity.RevaluationProducts)
-                    {
-                        Product product = await _productService.GetAsync(item.ProductId);
-                        product.ArrivalPrice = item.ArrivalPrice;
-                        product.SalePrice = item.SalePrice;
-                        await _productService.UpdateAsync(product.Id, product);
-                    }
-                }
                 OnRevaluationCreated?.Invoke(result);
             }                                                   
             return result;

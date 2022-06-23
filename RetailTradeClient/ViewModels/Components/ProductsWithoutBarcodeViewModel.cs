@@ -2,7 +2,6 @@
 using RetailTrade.Domain.Services;
 using RetailTradeClient.Commands;
 using RetailTradeClient.Properties;
-using RetailTradeClient.State.ProductSales;
 using RetailTradeClient.ViewModels.Base;
 using System.Collections.ObjectModel;
 using System.Linq;
@@ -15,7 +14,6 @@ namespace RetailTradeClient.ViewModels.Components
         #region Private Members
 
         private readonly IProductService _productService;
-        private readonly IProductSaleStore _productSaleStore;
         private ObservableCollection<Product> _products = new();
 
         #endregion
@@ -44,11 +42,9 @@ namespace RetailTradeClient.ViewModels.Components
 
         #region Constructor
 
-        public ProductsWithoutBarcodeViewModel(IProductService productService,
-            IProductSaleStore productSaleStore)
+        public ProductsWithoutBarcodeViewModel(IProductService productService)
         {
             _productService = productService;
-            _productSaleStore = productSaleStore;
         }
 
         #endregion
@@ -65,7 +61,6 @@ namespace RetailTradeClient.ViewModels.Components
         {
             if (parameter is int id)
             {
-                await _productSaleStore.AddProduct(id);
                 if (IsKeepRecords)
                 {
                     Product product = Products.FirstOrDefault(p => p.Id == id);

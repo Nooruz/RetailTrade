@@ -7,7 +7,6 @@ using RetailTradeClient.Report;
 using RetailTradeClient.State.Authenticators;
 using RetailTradeClient.State.Messages;
 using RetailTradeClient.State.Navigators;
-using RetailTradeClient.State.ProductSales;
 using RetailTradeClient.State.Reports;
 using RetailTradeClient.State.Shifts;
 using RetailTradeClient.State.Users;
@@ -26,7 +25,6 @@ namespace RetailTradeClient.HostBuilders
                 _ = services.AddSingleton<IAuthenticator, Authenticator>();
                 _ = services.AddSingleton<IUserStore, UserStore>();
                 _ = services.AddSingleton<IMessageStore, MessageStore>();
-                _ = services.AddSingleton<IProductWareHouseService, ProductWareHouseService>();
                 _ = services.AddSingleton<IBarcodeService, BarcodeService>();
                 _ = services.AddSingleton<ICashRegisterMachineService, CashRegisterMachineService>();
                 _ = services.AddSingleton<IShiftStore, ShiftStore>();
@@ -35,15 +33,13 @@ namespace RetailTradeClient.HostBuilders
                 _ = services.AddSingleton(CreateDiscountReceiptReport);
                 _ = services.AddSingleton<IReportService, ReportService>();
                 _ = services.AddTransient(CreateProductViewModel);
-                _ = services.AddSingleton<IProductSaleStore, ProductSaleStore>();
             });
         }
 
         private static ProductViewModel CreateProductViewModel(IServiceProvider services)
         {
             return new ProductViewModel(services.GetRequiredService<ITypeProductService>(),
-                services.GetRequiredService<IProductService>(),
-                services.GetRequiredService<IProductWareHouseService>());
+                services.GetRequiredService<IProductService>());
         }
 
         private static XReport CreateXReport(IServiceProvider serviceProvider)

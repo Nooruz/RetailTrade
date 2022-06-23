@@ -68,7 +68,6 @@ namespace RetailTradeServer.ViewModels.Dialogs
                 OnPropertyChanged(nameof(SelectedSupplier));
                 OnPropertyChanged(nameof(Products));
                 Cleare();
-                GetProducts();
             }
         }
         public int SelectedOrderStatusId
@@ -182,7 +181,6 @@ namespace RetailTradeServer.ViewModels.Dialogs
                         {
                             ProductId = product.Id,
                             Product = product,
-                            ArrivalPrice = product.ArrivalPrice,
                             Quantity = 1
                         });
                         SelectedOrderProduct = OrderProducts.FirstOrDefault(o => o.ProductId == product.Id);
@@ -241,7 +239,6 @@ namespace RetailTradeServer.ViewModels.Dialogs
                 {
                     SelectedOrderProduct.ProductId = product.Id;
                     SelectedOrderProduct.Product = product;
-                    SelectedOrderProduct.ArrivalPrice = product.ArrivalPrice;                    
                     SelectedOrderProduct.Quantity = 1;
                     ShowEditor(2);
                 }
@@ -262,7 +259,6 @@ namespace RetailTradeServer.ViewModels.Dialogs
                     {
                         SelectedOrderProduct.ProductId = product.Id;
                         SelectedOrderProduct.Product = product;
-                        SelectedOrderProduct.ArrivalPrice = product.ArrivalPrice;
                         SelectedOrderProduct.Quantity = 1;
                     }
                 }
@@ -296,7 +292,6 @@ namespace RetailTradeServer.ViewModels.Dialogs
                 if (e.Cell.Property == "ProductId")
                 {
                     Product product = Products.FirstOrDefault(p => p.Id == (int)e.Value);
-                    SelectedOrderProduct.ArrivalPrice = product.ArrivalPrice;
                     SelectedOrderProduct.Product = product;
                     SelectedOrderProduct.Quantity = 1;
                     ShowEditor(2);
@@ -322,7 +317,6 @@ namespace RetailTradeServer.ViewModels.Dialogs
                     OrderProducts.Add(new OrderProduct()
                     {
                         ProductId = product.Id,
-                        ArrivalPrice = product.ArrivalPrice,
                         Product = product
                     });
                 }
@@ -441,14 +435,6 @@ namespace RetailTradeServer.ViewModels.Dialogs
         private void Cleare()
         {
             _orderProducts.Clear();
-        }
-
-        private async void GetProducts()
-        {
-            if (SelectedSupplier != null)
-            {
-                Products = await _productService.PredicateSelect(p => p.SupplierId == SelectedSupplier.Id && p.DeleteMark == false, p => new Product { Id = p.Id, Name = p.Name, UnitId = p.UnitId, ArrivalPrice = p.ArrivalPrice, Barcode = p.Barcode });
-            }
         }
 
         #endregion

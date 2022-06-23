@@ -150,8 +150,7 @@ namespace RetailTrade.EntityFramework
 
         public DbSet<TypeProduct> TypeProducts { get; set; }
         public DbSet<ProductBarcode> ProductBarcode { get; set; }
-        public DbSet<ProductPrice> ProductPrices { get; set; }
-
+        
         #endregion
 
         #region Revaluation

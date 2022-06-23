@@ -6,7 +6,6 @@ using RetailTrade.Domain.Services;
 using RetailTrade.Domain.Views;
 using RetailTradeClient.Components;
 using RetailTradeClient.Properties;
-using RetailTradeClient.State.ProductSales;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -21,7 +20,6 @@ namespace RetailTradeClient.ViewModels.Dialogs
 
         private readonly IProductService _productService;
         private readonly ITypeProductService _typeProductService;
-        private readonly IProductWareHouseService _productWareHouseService;
         private ObservableCollection<Nomenclature> _nomenclatures = new();
         private IEnumerable<TypeProduct> _typeProducts;
         private TypeProduct _selectedTypeProduct;
@@ -129,12 +127,10 @@ namespace RetailTradeClient.ViewModels.Dialogs
         #region Constructor
 
         public ProductViewModel(ITypeProductService typeProductService,
-            IProductService productService,
-            IProductWareHouseService productWareHouseService)
+            IProductService productService)
         {
             _typeProductService = typeProductService;
             _productService = productService;
-            _productWareHouseService = productWareHouseService;
             Title = "Товары";
         }
 

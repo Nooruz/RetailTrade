@@ -246,7 +246,7 @@ namespace RetailTradeServer.ViewModels.Dialogs
                 ArrivalProducts.Add(new ArrivalProduct
                 {
                     ProductId = product.Id,
-                    ArrivalPrice = product.ArrivalPrice,
+                    ArrivalPrice = product.PurchasePrice,
                     WareHouseId = SelectedSupplierId.Value,
                     Quantity = 1
                 });
@@ -283,7 +283,7 @@ namespace RetailTradeServer.ViewModels.Dialogs
                 {
                     SelectedArrivalProduct.ProductId = product.Id;
                     SelectedArrivalProduct.Product = product;
-                    SelectedArrivalProduct.ArrivalPrice = product.ArrivalPrice;
+                    SelectedArrivalProduct.ArrivalPrice = product.PurchasePrice;
                     SelectedArrivalProduct.Quantity = 1;
                     ShowEditor(1);
                 }
@@ -306,7 +306,7 @@ namespace RetailTradeServer.ViewModels.Dialogs
                     {
                         SelectedArrivalProduct.ProductId = product.Id;
                         SelectedArrivalProduct.Product = product;
-                        SelectedArrivalProduct.ArrivalPrice = product.ArrivalPrice;
+                        SelectedArrivalProduct.ArrivalPrice = product.PurchasePrice;
                         SelectedArrivalProduct.Quantity = 1;
                     }
                 }
@@ -364,7 +364,7 @@ namespace RetailTradeServer.ViewModels.Dialogs
                         if (SelectedArrivalProduct != null && e.Value != null)
                         {
                             Product product = Products.FirstOrDefault(p => p.Id == (int)e.Value);
-                            SelectedArrivalProduct.ArrivalPrice = product.ArrivalPrice;
+                            SelectedArrivalProduct.ArrivalPrice = product.PurchasePrice;
                             SelectedArrivalProduct.Product = product;
                             ShowEditor(1);
                         }
@@ -436,7 +436,7 @@ namespace RetailTradeServer.ViewModels.Dialogs
         {
             if (SelectedSupplierId != null)
             {
-                Products = await _productService.PredicateSelect(p => p.SupplierId == SelectedSupplierId.Value && p.DeleteMark == false, p => new Product { Id = p.Id, Name = p.Name, ArrivalPrice = p.ArrivalPrice, TypeProductId = p.TypeProductId, Barcode = p.Barcode, UnitId = p.UnitId });
+                Products = await _productService.PredicateSelect(p => p.SupplierId == SelectedSupplierId.Value && p.DeleteMark == false, p => new Product { Id = p.Id, Name = p.Name, PurchasePrice = p.PurchasePrice, TypeProductId = p.TypeProductId, Barcode = p.Barcode, UnitId = p.UnitId });
             }
         }
 

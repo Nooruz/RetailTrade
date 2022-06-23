@@ -36,7 +36,6 @@ namespace RetailTradeServer.ViewModels.Menus
         private readonly IMessageStore _messageStore;
         private readonly IBarcodeService _barcodeService;
         private readonly IProductBarcodeService _productBarcodeService;
-        private readonly IProductPriceService _productPriceService;
         private TypeProduct _selectedTypeProduct;
         private ObservableCollection<TypeProduct> _typeProducts = new();
         private ObservableCollection<ProductView> _productViews = new();
@@ -131,8 +130,7 @@ namespace RetailTradeServer.ViewModels.Menus
             ISupplierService supplierService,
             IMessageStore messageStore,
             IBarcodeService barcodeService,
-            IProductBarcodeService productBarcodeService,
-            IProductPriceService productPriceService)
+            IProductBarcodeService productBarcodeService)
         {
             _typeProductService = typeProductService;
             _productService = productService;
@@ -145,7 +143,6 @@ namespace RetailTradeServer.ViewModels.Menus
             _messageStore = messageStore;
             _barcodeService = barcodeService;
             _productBarcodeService = productBarcodeService;
-            _productPriceService = productPriceService;
 
             Header = "Товары";
 
@@ -328,7 +325,7 @@ namespace RetailTradeServer.ViewModels.Menus
         {
             if (SelectedProductView != null)
             {
-                WindowService.Show(nameof(CreateProductDialogForm), new CreateProductDialogFormModel(_typeProductService, _unitService, _productService, _supplierService, _messageStore, _barcodeService, _productBarcodeService, _productPriceService)
+                WindowService.Show(nameof(CreateProductDialogForm), new CreateProductDialogFormModel(_typeProductService, _unitService, _productService, _supplierService, _messageStore, _barcodeService, _productBarcodeService)
                 {
                     Title = $"{SelectedProductView.Name} (Товары)",
                     EditProduct = await _productService.GetAsync(SelectedProductView.Id)

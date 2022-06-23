@@ -6,7 +6,6 @@ using RetailTrade.Domain.Services;
 using RetailTradeClient.State.Authenticators;
 using RetailTradeClient.State.Messages;
 using RetailTradeClient.State.Navigators;
-using RetailTradeClient.State.ProductSales;
 using RetailTradeClient.State.Reports;
 using RetailTradeClient.State.Shifts;
 using RetailTradeClient.State.Users;
@@ -31,35 +30,15 @@ namespace RetailTradeClient.HostBuilders
                 _ = services.AddTransient(CreateHomeViewModel);
                 _ = services.AddTransient(CreateLoginViewModel);
                 _ = services.AddTransient(CreateGlobalMessageViewModel);
-                _ = services.AddTransient(CreateProductsWithoutBarcodeViewModel);
-                _ = services.AddTransient(CreatePaymentCashViewModel);
-                _ = services.AddTransient(CreatePaymentComplexViewModel);
 
                 _ = services.AddSingleton<CreateViewModel<HomeViewModel>>(servicesProvider => () => CreateHomeViewModel(servicesProvider));
                 _ = services.AddSingleton<CreateViewModel<LoginViewModel>>(servicesProvider => () => CreateLoginViewModel(servicesProvider));
-                _ = services.AddSingleton<CreateViewModel<ProductsWithoutBarcodeViewModel>>(servicesProvider => () => CreateProductsWithoutBarcodeViewModel(servicesProvider));
 
                 _ = services.AddSingleton<IViewModelFactory, ViewModelFactory>();
 
                 _ = services.AddSingleton<ViewModelDelegateRenavigator<LoginViewModel>>();
                 _ = services.AddSingleton<ViewModelDelegateRenavigator<HomeViewModel>>();
             });
-        }
-
-        private static PaymentCashViewModel CreatePaymentCashViewModel(IServiceProvider services)
-        {
-            return new PaymentCashViewModel(services.GetRequiredService<IProductSaleStore>()) { Title = "Оплата наличными" };
-        }
-
-        private static PaymentComplexViewModel CreatePaymentComplexViewModel(IServiceProvider services)
-        {
-            return new PaymentComplexViewModel(services.GetRequiredService<IProductSaleStore>()) { Title = "Оплата наличными" };
-        }
-
-        private static ProductsWithoutBarcodeViewModel CreateProductsWithoutBarcodeViewModel(IServiceProvider services)
-        {
-            return new ProductsWithoutBarcodeViewModel(services.GetRequiredService<IProductService>(),
-                services.GetRequiredService<IProductSaleStore>());
         }
 
         private static MainViewModel CreateMainWindowViewModel(IServiceProvider services)
@@ -77,12 +56,9 @@ namespace RetailTradeClient.HostBuilders
                 services.GetRequiredService<IBarcodeService>(),
                 services.GetRequiredService<IProductService>(),
                 services.GetRequiredService<ICashRegisterMachineService>(),
-                services.GetRequiredService<PaymentCashViewModel>(),
-                services.GetRequiredService<PaymentComplexViewModel>(),
                 services.GetRequiredService<ProductViewModel>(),
                 services.GetRequiredService<MainWindow>(),
-                services.GetRequiredService<IReportService>(),
-                services.GetRequiredService<IProductWareHouseService>());
+                services.GetRequiredService<IReportService>());
         }
 
         private static LoginViewModel CreateLoginViewModel(IServiceProvider services)

@@ -50,8 +50,8 @@ namespace RetailTradeServer.ViewModels.Dialogs
                 if (_editProduct != null)
                 {
                     Name = _editProduct.Name;
-                    ArrivalPrice = _editProduct.ArrivalPrice;
-                    SalePrice = _editProduct.SalePrice;
+                    ArrivalPrice = _editProduct.PurchasePrice;
+                    SalePrice = _editProduct.RetailPrice;
                     TNVED = _editProduct.TNVED;
                     Barcode = _editProduct.Barcode;
                     SelectedSupplierId = _editProduct.SupplierId;
@@ -225,8 +225,8 @@ namespace RetailTradeServer.ViewModels.Dialogs
             }
 
             EditProduct.Name = Name;
-            EditProduct.ArrivalPrice = ArrivalPrice;
-            EditProduct.SalePrice = SalePrice;            
+            EditProduct.PurchasePrice = ArrivalPrice;
+            EditProduct.RetailPrice = SalePrice;            
             EditProduct.TNVED = TNVED;
             EditProduct.Barcode = Barcode;
             EditProduct.SupplierId = SelectedSupplierId.Value;

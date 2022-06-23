@@ -189,8 +189,8 @@ namespace RetailTradeServer.ViewModels.Menus
                         {
                             RevaluationProducts.ToList().ForEach(r =>
                             {
-                                r.OldArrivalPrice = r.Product.ArrivalPrice;
-                                r.OldSalePrice = r.Product.SalePrice;
+                                r.OldArrivalPrice = r.Product.PurchasePrice;
+                                r.OldSalePrice = r.Product.RetailPrice;
                                 r.Product = null;                                
                             });
                             _ = await _revaluationService.CreateAsync(new Revaluation

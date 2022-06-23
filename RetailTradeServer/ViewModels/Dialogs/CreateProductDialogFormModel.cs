@@ -32,7 +32,6 @@ namespace RetailTradeServer.ViewModels.Dialogs
         private readonly IMessageStore _messageStore;
         private readonly IBarcodeService _barcodeService;
         private readonly IProductBarcodeService _productBarcodeService;
-        private readonly IProductPriceService _productPriceService;
         private int? _selectedUnitId;
         private int? _selectedSupplierId;
         private int? _selectedTypeProductId;
@@ -47,7 +46,6 @@ namespace RetailTradeServer.ViewModels.Dialogs
         private ObservableCollection<Supplier> _suppliers = new();
         private ObservableCollection<TypeProduct> _typeProducts = new();
         private Product _createdProduct;
-        private ProductPrice _createdProductPrice;
         private Product _editProduct;
 
         #endregion
@@ -173,15 +171,6 @@ namespace RetailTradeServer.ViewModels.Dialogs
                 OnPropertyChanged(nameof(CreatedProduct));
             }
         }
-        public ProductPrice CreatedProductPrice
-        {
-            get => _createdProductPrice;
-            set
-            {
-                _createdProductPrice = value;
-                OnPropertyChanged(nameof(CreatedProductPrice));
-            }
-        }
         public Product EditProduct
         {
             get => _editProduct;
@@ -197,7 +186,6 @@ namespace RetailTradeServer.ViewModels.Dialogs
                     TNVED = _editProduct.TNVED;
                     CreatedProduct = _editProduct;
                     ProductBarcodeService_OnCreated(null);
-                    SetPrice(_editProduct.ProductPriceId);
                 }
                 OnPropertyChanged(nameof(EditProduct));
             }
@@ -229,8 +217,7 @@ namespace RetailTradeServer.ViewModels.Dialogs
             ISupplierService supplierService,
             IMessageStore messageStore,
             IBarcodeService barcodeService,
-            IProductBarcodeService productBarcodeService,
-            IProductPriceService productPriceService)
+            IProductBarcodeService productBarcodeService)
         {
             _typeProductService = typeProductService;
             _unitService = unitService;
@@ -239,7 +226,6 @@ namespace RetailTradeServer.ViewModels.Dialogs
             _messageStore = messageStore;
             _barcodeService = barcodeService;
             _productBarcodeService = productBarcodeService;
-            _productPriceService = productPriceService;
             GlobalMessageViewModel = new(_messageStore);
 
             _messageStore.Close();
@@ -410,18 +396,6 @@ namespace RetailTradeServer.ViewModels.Dialogs
             }
         }
 
-        private async void SetPrice(int? id)
-        {
-            if (id != null)
-            {
-                ProductPrice productPrice = await _productPriceService.GetAsync(id.Value);
-                RetailPrice = productPrice.RetailPrice;
-                CostPrice = productPrice.CostPrice;
-                WholesalePrice = productPrice.WholesalePrice;
-                MinimumPrice = productPrice.MinimumPrice;
-            }
-        }
-
         #endregion
 
         #region Public Voids
@@ -493,16 +467,6 @@ namespace RetailTradeServer.ViewModels.Dialogs
                 {
                     if (CreatedProduct == null)
                     {
-                        if (CheckPrice())
-                        {
-                            CreatedProductPrice = await _productPriceService.CreateAsync(new ProductPrice
-                            {
-                                RetailPrice = RetailPrice,
-                                CostPrice = CostPrice,
-                                WholesalePrice = WholesalePrice,
-                                MinimumPrice = MinimumPrice
-                            });
-                        }
                         CreatedProduct = await _productService.CreateAsync(new Product
                         {
                             Name = Name,
@@ -510,20 +474,11 @@ namespace RetailTradeServer.ViewModels.Dialogs
                             UnitId = SelectedUnitId.Value,
                             TypeProductId = SelectedTypeProductId.Value,
                             TNVED = TNVED,
-                            ProductPriceId = CreatedProductPrice.Id
                         });
                         _messageStore.SetCurrentMessage("Товар успешно добавлено.", MessageType.Success);
                     }
                     else
                     {
-                        if (CreatedProductPrice != null)
-                        {
-                            CreatedProductPrice.RetailPrice = RetailPrice;
-                            CreatedProductPrice.CostPrice = CostPrice;
-                            CreatedProductPrice.WholesalePrice = WholesalePrice;
-                            CreatedProductPrice.MinimumPrice = MinimumPrice;
-                            await _productPriceService.UpdateAsync(CreatedProductPrice.Id, CreatedProductPrice);
-                        }
                         CreatedProduct.Name = Name;
                         CreatedProduct.SupplierId = SelectedSupplierId.Value;
                         CreatedProduct.UnitId = SelectedUnitId.Value;
@@ -564,16 +519,6 @@ namespace RetailTradeServer.ViewModels.Dialogs
                 {
                     if (CreatedProduct == null)
                     {
-                        if (CheckPrice())
-                        {
-                            CreatedProductPrice = await _productPriceService.CreateAsync(new ProductPrice
-                            {
-                                RetailPrice = RetailPrice,
-                                CostPrice = CostPrice,
-                                WholesalePrice = WholesalePrice,
-                                MinimumPrice = MinimumPrice
-                            });
-                        }
                         _ = await _productService.CreateAsync(new Product
                         {
                             Name = Name,
@@ -581,20 +526,11 @@ namespace RetailTradeServer.ViewModels.Dialogs
                             UnitId = SelectedUnitId.Value,
                             TypeProductId = SelectedTypeProductId.Value,
                             TNVED = TNVED,
-                            ProductPriceId = CreatedProductPrice == null ? null : CreatedProductPrice.Id
                         });
                         CurrentWindowService.Close();
                     }
                     else
                     {
-                        if (CreatedProductPrice != null)
-                        {
-                            CreatedProductPrice.RetailPrice = RetailPrice;
-                            CreatedProductPrice.CostPrice = CostPrice;
-                            CreatedProductPrice.WholesalePrice = WholesalePrice;
-                            CreatedProductPrice.MinimumPrice = MinimumPrice;
-                            await _productPriceService.UpdateAsync(CreatedProductPrice.Id, CreatedProductPrice);
-                        }
                         CreatedProduct.Name = Name;
                         CreatedProduct.SupplierId = SelectedSupplierId.Value;
                         CreatedProduct.UnitId = SelectedUnitId.Value;

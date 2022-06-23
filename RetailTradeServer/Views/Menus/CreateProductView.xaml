@@ -36,7 +36,7 @@
             <components:CustomDropDownButton Style="{StaticResource DropDownButtonContentIconic}"
                                              Icon="{StaticResource faPrint}"
                                              HorizontalAlignment="Right"
-                                             Content="Создать">
+                                             Content="Печать">
                 <StackPanel Orientation="Vertical">
                     <components:CustomButton Content="Ценник (70х49,5мм)"
                                              Command="{Binding CreateWareHouseCommand}"
@@ -56,8 +56,11 @@
         <dxlc:LayoutItem LabelPosition="Top"
                          IsRequired="True"
                          Label="Наименование">
-            <dxe:TextEdit/>
-
+            <dxe:TextEdit>
+                <dxmvvm:Interaction.Behaviors>
+                    <dxmvvm:FocusBehavior/>
+                </dxmvvm:Interaction.Behaviors>
+            </dxe:TextEdit>
         </dxlc:LayoutItem>
 
         <dxlc:LayoutGroup>
@@ -82,8 +85,7 @@
                                   IsCollapsible="True">
 
                     <dxlc:LayoutItem Label="Описание">
-                        <dxe:MemoEdit MemoTextWrapping="Wrap" 
-                                      ShowIcon="False"/>
+                        <dxe:MemoEdit MemoTextWrapping="WrapWithOverflow"  Height="67" Width="212" ShowIcon="False"/>
                     </dxlc:LayoutItem>
 
                     <dxlc:LayoutItem Label="Вид товара">

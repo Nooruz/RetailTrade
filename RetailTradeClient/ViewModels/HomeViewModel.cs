@@ -12,7 +12,6 @@ using RetailTradeClient.Customs;
 using RetailTradeClient.Properties;
 using RetailTradeClient.Report;
 using RetailTradeClient.State.Authenticators;
-using RetailTradeClient.State.ProductSales;
 using RetailTradeClient.State.Reports;
 using RetailTradeClient.State.Shifts;
 using RetailTradeClient.State.Users;
@@ -49,9 +48,6 @@ namespace RetailTradeClient.ViewModels
         private readonly IReportService _reportService;
         private readonly IProductService _productService;
         private readonly ICashRegisterMachineService _cashRegisterMachineService;
-        private readonly IProductWareHouseService _productWareHouseService;
-        private readonly PaymentCashViewModel _paymentCashViewModel;
-        private readonly PaymentComplexViewModel _paymentComplexViewModel;
         private readonly PostponeReceiptViewModel _postponeReceiptViewModel;
         private readonly ProductViewModel _productViewModel;
         private readonly MainWindow _mainWindow;
@@ -202,26 +198,20 @@ namespace RetailTradeClient.ViewModels
             IBarcodeService barcodeService,
             IProductService productService,
             ICashRegisterMachineService cashRegisterMachineService,
-            PaymentCashViewModel paymentCashViewModel,
-            PaymentComplexViewModel paymentComplexViewModel,
             ProductViewModel productViewModel,
             MainWindow mainWindow,
-            IReportService reportService,
-            IProductWareHouseService productWareHouseService)
+            IReportService reportService)
         {
             _userStore = userStore;
             _receiptService = receiptService;
             _authenticator = authenticator;
             _shiftStore = shiftStore;
             _barcodeService = barcodeService;
-            _paymentCashViewModel = paymentCashViewModel;
-            _paymentComplexViewModel = paymentComplexViewModel;
             _productViewModel = productViewModel;
             _mainWindow = mainWindow;
             _productService = productService;
             _reportService = reportService;
             _cashRegisterMachineService = cashRegisterMachineService;
-            _productWareHouseService = productWareHouseService;
             _postponeReceiptViewModel = new() { Title = "Выбор чека" };
 
             BindingOperations.EnableCollectionSynchronization(ProductSales, _syncLock);
@@ -440,25 +430,6 @@ namespace RetailTradeClient.ViewModels
                             SelectedProductSale.Quantity++;
                         }
                     }
-                    else
-                    {
-                        Product product = await _productWareHouseService.GetProductByBarcode(barcode);
-                        if (product != null)
-                        {
-                            AddProductSale(new Sale
-                            {
-                                Id = product.Id,
-                                Name = product.Name,
-                                SalePrice = product.SalePrice,
-                                ArrivalPrice = product.ArrivalPrice,
-                                QuantityInStock = product.Quantity,
-                                TNVED = product.TNVED,
-                                Quantity = 1,
-                                Barcode = product.Barcode,
-                                UnitName = string.Empty
-                            });
-                        }
-                    }
                 }
                 else
                 {
@@ -475,8 +446,8 @@ namespace RetailTradeClient.ViewModels
                         {
                             Id = product.Id,
                             Name = product.Name,
-                            SalePrice = product.SalePrice,
-                            ArrivalPrice = product.ArrivalPrice,
+                            SalePrice = product.RetailPrice,
+                            ArrivalPrice = product.PurchasePrice,
                             TNVED = product.TNVED,
                             Quantity = 1,
                             Barcode = product.Barcode,

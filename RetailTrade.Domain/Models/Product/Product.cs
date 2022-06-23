@@ -1,5 +1,4 @@
 ﻿using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace RetailTrade.Domain.Models
@@ -19,10 +18,9 @@ namespace RetailTrade.Domain.Models
         private string _barcode;
         private double _quantity;
         private bool _withoutBarcode;
-        private decimal _arrivalPrice;
-        private decimal _salePrice;
+        private decimal _purchasePrice;
+        private decimal _retailPrice;
         private bool _deleteMark;
-        private int? _productPriceId;
         private Unit _unit;
 
         #endregion
@@ -121,16 +119,16 @@ namespace RetailTrade.Domain.Models
         }
 
         /// <summary>
-        /// Цена приход
+        /// Закупочная цена
         /// </summary>
         [Column(TypeName = "decimal(18,2)")]
-        public decimal ArrivalPrice
+        public decimal PurchasePrice
         {
-            get => _arrivalPrice;
+            get => _purchasePrice;
             set
             {
-                _arrivalPrice = value;
-                OnPropertyChanged(nameof(ArrivalPrice));
+                _purchasePrice = value;
+                OnPropertyChanged(nameof(PurchasePrice));
             }
         }
 
@@ -148,16 +146,16 @@ namespace RetailTrade.Domain.Models
         }
 
         /// <summary>
-        /// Цена продажа
+        /// Розничная цена
         /// </summary>
         [Column(TypeName = "decimal(18,2)")]
-        public decimal SalePrice
+        public decimal RetailPrice
         {
-            get => _salePrice;
+            get => _retailPrice;
             set
             {
-                _salePrice = value;
-                OnPropertyChanged(nameof(SalePrice));
+                _retailPrice = value;
+                OnPropertyChanged(nameof(RetailPrice));
             }
         }
 
@@ -174,16 +172,6 @@ namespace RetailTrade.Domain.Models
             }
         }
 
-        public int? ProductPriceId
-        {
-            get => _productPriceId;
-            set
-            {
-                _productPriceId = value;
-                OnPropertyChanged(nameof(ProductPriceId));
-            }
-        }
-
         public Unit Unit
         {
             get => _unit;
@@ -195,7 +183,6 @@ namespace RetailTrade.Domain.Models
         }
         public Supplier Supplier { get; set; }        
         public TypeProduct TypeProduct { get; set; }
-        public ProductPrice ProductPrice { get; set; }
         public ICollection<ProductSale> ProductSales { get; set; }
         public ICollection<ProductRefund> ProductRefunds { get; set; }
         public ICollection<ArrivalProduct> ArrivalProducts { get; set; }
