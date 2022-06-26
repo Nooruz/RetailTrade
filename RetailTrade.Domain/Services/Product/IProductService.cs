@@ -10,6 +10,7 @@ namespace RetailTrade.Domain.Services
     public interface IProductService : IDataService<Product>
     {
         Task<Product> GetByIdAsync(int id);
+        Task<Product> GetForEditAsync(int id);
         Task<Product> GetByBarcodeAsync(string barcode);
         IEnumerable<Product> GetForRefund(int supplierId);
         Task<IEnumerable<Product>> PredicateSelect(Expression<Func<Product, bool>> predicate, Expression<Func<Product, Product>> select);

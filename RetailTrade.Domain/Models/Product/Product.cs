@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace RetailTrade.Domain.Models
@@ -22,6 +23,10 @@ namespace RetailTrade.Domain.Models
         private decimal _retailPrice;
         private bool _deleteMark;
         private Unit _unit;
+        private byte[] _image;
+        private string _description;
+        private bool _prohibitDiscount;
+        private ObservableCollection<ProductBarcode> _productBarcodes = new();
 
         #endregion
 
@@ -172,6 +177,45 @@ namespace RetailTrade.Domain.Models
             }
         }
 
+        /// <summary>
+        /// Рисунок продукта
+        /// </summary>
+        public byte[] Image
+        {
+            get => _image;
+            set
+            {
+                _image = value;
+                OnPropertyChanged(nameof(Image));
+            }
+        }
+
+        /// <summary>
+        /// Описание
+        /// </summary>
+        public string Description
+        {
+            get => _description;
+            set
+            {
+                _description = value;
+                OnPropertyChanged(nameof(Description));
+            }
+        }
+
+        /// <summary>
+        /// Запретить скидки
+        /// </summary>
+        public bool ProhibitDiscount
+        {
+            get => _prohibitDiscount;
+            set
+            {
+                _prohibitDiscount = value;
+                OnPropertyChanged(nameof(ProhibitDiscount));
+            }
+        }
+
         public Unit Unit
         {
             get => _unit;
@@ -192,7 +236,15 @@ namespace RetailTrade.Domain.Models
         public ICollection<WareHouse> WareHouses { get; set; }
         public ICollection<RevaluationProduct> RevaluationProducts { get; set; }
         public ICollection<ProductWareHouse> ProductsWareHouses { get; set; }
-        public ICollection<ProductBarcode> ProductBarcodes { get; set; }
+        public ObservableCollection<ProductBarcode> ProductBarcodes
+        {
+            get => _productBarcodes;
+            set
+            {
+                _productBarcodes = value;
+                OnPropertyChanged(nameof(ProductBarcodes));
+            }
+        }
 
         #endregion
     }

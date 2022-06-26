@@ -235,6 +235,20 @@ namespace RetailTradeServer.ViewModels.Menus
             ShowLoadingPanel = false;
             SelectedProductView = ProductViews.LastOrDefault();
         }
+        private async void ProductTableView_RowDoubleClick(object sender, RowDoubleClickEventArgs e)
+        {
+            try
+            {
+                _menuNavigator.CurrentViewModel = new CreateProductViewModel(_typeProductService, _unitService, _productService, _supplierService, _messageStore, _barcodeService, _productBarcodeService)
+                {
+                    CreatedProduct = await _productService.GetForEditAsync(SelectedProductView.Id)
+                };
+            }
+            catch (Exception)
+            {
+                //ignore
+            }
+        }
 
         #endregion
 
@@ -316,6 +330,7 @@ namespace RetailTradeServer.ViewModels.Menus
                 {
                     ProductGridControl = gridControl;
                     ProductTableView = gridControl.View as TableView;
+                    ProductTableView.RowDoubleClick += ProductTableView_RowDoubleClick;
                 }
             }
         }

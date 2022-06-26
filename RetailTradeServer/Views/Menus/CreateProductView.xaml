@@ -8,7 +8,8 @@
                           xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
                           xmlns:components="clr-namespace:RetailTradeServer.Components"
                           xmlns:local="clr-namespace:RetailTradeServer.Views.Menus"
-                          ShowLoadingPanel="False">
+                          ShowLoadingPanel="False"
+                          Title="{Binding Header}">
 
     <dxmvvm:Interaction.Behaviors>
         <dxmvvm:EventToCommand Event="PreviewTextInput" 
@@ -26,8 +27,9 @@
                           VerticalAlignment="Top">
 
                 <Button Content="Сохранить" 
-                    Background="#FFA1B900" 
-                    Foreground="White"/>
+                        Background="#FFA1B900" 
+                        Foreground="White"
+                        Command="{Binding SaveProductCommand}"/>
 
                 <Button Content="Закрыть"/>
 
@@ -56,7 +58,7 @@
         <dxlc:LayoutItem LabelPosition="Top"
                          IsRequired="True"
                          Label="Наименование">
-            <dxe:TextEdit>
+            <dxe:TextEdit EditValue="{Binding CreatedProduct.Name}">
                 <dxmvvm:Interaction.Behaviors>
                     <dxmvvm:FocusBehavior/>
                 </dxmvvm:Interaction.Behaviors>
@@ -66,7 +68,8 @@
         <dxlc:LayoutGroup>
 
             <dxlc:LayoutGroup Orientation="Vertical"
-                              HorizontalAlignment="Left">
+                              HorizontalAlignment="Left"
+                              MinWidth="350">
 
                 <dxlc:LayoutGroup View="GroupBox"
                                   Header="Изображения"
@@ -74,7 +77,11 @@
                                   IsCollapsible="True">
 
                     <dxlc:LayoutItem>
-                        <dxe:ImageEdit ShowMenuMode="Always"/>
+                        <dxe:ImageEdit ShowMenuMode="Always"
+                                       MaxWidth="350"
+                                       MaxHeight="350"
+                                       Stretch="UniformToFill"
+                                       EditValue="{Binding CreatedProduct.Image}"/>
                     </dxlc:LayoutItem>
 
                 </dxlc:LayoutGroup>
@@ -85,23 +92,35 @@
                                   IsCollapsible="True">
 
                     <dxlc:LayoutItem Label="Описание">
-                        <dxe:MemoEdit MemoTextWrapping="WrapWithOverflow"  Height="67" Width="212" ShowIcon="False"/>
+                        <dxe:MemoEdit MemoTextWrapping="WrapWithOverflow"  
+                                      Height="70" 
+                                      ShowIcon="False"
+                                      EditValue="{Binding CreatedProduct.Description}"/>
                     </dxlc:LayoutItem>
 
                     <dxlc:LayoutItem Label="Вид товара">
-                        <dxe:ComboBoxEdit/>
+                        <dxe:ComboBoxEdit ItemsSource="{Binding TypeProducts}"
+                                          DisplayMember="Name"
+                                          ValueMember="Id"
+                                          EditValue="{Binding CreatedProduct.TypeProductId}"/>
                     </dxlc:LayoutItem>
 
                     <dxlc:LayoutItem Label="Поставщик">
-                        <dxe:ComboBoxEdit/>
+                        <dxe:ComboBoxEdit ItemsSource="{Binding Suppliers}"
+                                          DisplayMember="ShortName"
+                                          ValueMember="Id"
+                                          EditValue="{Binding CreatedProduct.SupplierId}"/>
                     </dxlc:LayoutItem>
 
                     <dxlc:LayoutItem Label="Единица измерения">
-                        <dxe:ComboBoxEdit/>
+                        <dxe:ComboBoxEdit ItemsSource="{Binding Units}"
+                                          DisplayMember="ShortName"
+                                          ValueMember="Id"
+                                          EditValue="{Binding CreatedProduct.UnitId}"/>
                     </dxlc:LayoutItem>
 
                     <dxlc:LayoutItem Label="ТНВЭД">
-                        <dxe:TextEdit/>
+                        <dxe:TextEdit EditValue="{Binding CreatedProduct.TNVED}"/>
                     </dxlc:LayoutItem>
 
                 </dxlc:LayoutGroup>
@@ -111,7 +130,35 @@
                                   Orientation="Vertical"
                                   IsCollapsible="True">
 
-                    <dxg:TreeListControl />
+                    <dxg:GridControl ItemsSource="{Binding CreatedProduct.ProductBarcodes}"
+                                     SelectedItem="{Binding SelectedProductBarcode}">
+                        <dxmvvm:Interaction.Behaviors>
+                            <dxmvvm:EventToCommand EventName="Loaded"
+                                                   Command="{Binding BarcodeGridControlLoadedCommand}"
+                                                   PassEventArgsToCommand="True"/>
+                        </dxmvvm:Interaction.Behaviors>
+                        <dxg:GridControl.View>
+                            <dxg:TableView ShowGroupPanel="False"
+                                           AutoWidth="True"
+                                           ShowAutoFilterRow="False" 
+                                           NewItemRowPosition="Top"/>
+                        </dxg:GridControl.View>
+                        <dxg:GridColumn Header="Штрихкод"
+                                        FieldName="Barcode">
+                            <dxg:GridColumn.EditSettings>
+                                <dxe:ButtonEditSettings AllowDefaultButton="False">
+                                    <dxe:ButtonEditSettings.Buttons>
+                                        <dxe:ButtonInfo GlyphKind="Refresh"
+                                                        ToolTip="Сгенерировать"
+                                                        Command="{Binding GenerateBarcodeCommand}"/>
+                                        <dxe:ButtonInfo GlyphKind="Minus"
+                                                        ToolTip="Удалить"
+                                                        Command="{Binding DeleteBarcodeCommand}"/>
+                                    </dxe:ButtonEditSettings.Buttons>
+                                </dxe:ButtonEditSettings>
+                            </dxg:GridColumn.EditSettings>
+                        </dxg:GridColumn>
+                    </dxg:GridControl>
 
                 </dxlc:LayoutGroup>
 
@@ -121,19 +168,64 @@
 
                 <dx:DXTabControl >
                     <dx:DXTabItem Header="Цены">
-                        <dxlc:LayoutItem Label="Минимальная цена">
-                            <dxe:TextEdit/>
-                        </dxlc:LayoutItem>
+                        <dxlc:LayoutControl Orientation="Vertical"
+                                            Padding="0">
+                            <dxlc:LayoutItem Label="Закупочная цена">
+                                <dxe:TextEdit Style="{StaticResource NumericTextBox}"
+                                              EditValue="{Binding CreatedProduct.PurchasePrice}"/>
+                            </dxlc:LayoutItem>
+                            <dxlc:LayoutItem Label="Розничная цена">
+                                <dxe:TextEdit Style="{StaticResource NumericTextBox}"
+                                              EditValue="{Binding CreatedProduct.RetailPrice}"/>
+                            </dxlc:LayoutItem>
+                            <Separator VerticalAlignment="Top"/>
+                            <dxlc:LayoutItem HorizontalAlignment="Left">
+                                <dxe:CheckEdit Content="Запретить скидки при продаже в розницу"
+                                               EditValue="{Binding CreatedProduct.ProhibitDiscount}"/>
+                            </dxlc:LayoutItem>
+                        </dxlc:LayoutControl>
                     </dx:DXTabItem>
-                    <dx:DXTabItem Header="Остатки">
+                    <dx:DXTabItem Header="Остатки"
+                                  Style="{StaticResource ProductTabItem}">
+                        <dxg:GridControl >
+                            <dxg:GridControl.View>
+                                <dxg:TableView ShowTotalSummary="True"
+                                               AutoWidth="True"/>
+                            </dxg:GridControl.View>
+                            <dxg:GridColumn Header="Склад"/>
+                            <dxg:GridColumn Header="Остаток"/>
+                        </dxg:GridControl>
                     </dx:DXTabItem>
-                    <dx:DXTabItem Header="История">
+                    <dx:DXTabItem Header="История"
+                                  Style="{StaticResource ProductTabItem}">
+
+                        <dxlc:LayoutControl Orientation="Vertical"
+                                            Padding="0">
+
+                            <dxlc:LayoutItem Label="Закупки"
+                                             LabelPosition="Top"/>
+                            <dxg:GridControl >
+                                <dxg:GridControl.View>
+                                    <dxg:TableView ShowTotalSummary="True"/>
+                                </dxg:GridControl.View>
+                            </dxg:GridControl>
+
+                            <dxlc:LayoutItem Label="Продажи"
+                                             LabelPosition="Top"/>
+
+                            <dxg:GridControl />
+
+                        </dxlc:LayoutControl>
+                        
                     </dx:DXTabItem>
                 </dx:DXTabControl>
 
             </dxlc:LayoutGroup>
 
         </dxlc:LayoutGroup>
+
+        <components:GlobalMessageBaner DataContext="{Binding GlobalMessageViewModel}"
+                                       VerticalAlignment="Bottom"/>
 
     </dxlc:LayoutControl>
 

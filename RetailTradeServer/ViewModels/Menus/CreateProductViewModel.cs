@@ -1,6 +1,8 @@
 ﻿using DevExpress.Mvvm;
 using DevExpress.Mvvm.DataAnnotations;
 using DevExpress.Spreadsheet;
+using DevExpress.Xpf.Editors;
+using DevExpress.Xpf.Grid;
 using RetailTrade.Barcode.Services;
 using RetailTrade.Domain.Models;
 using RetailTrade.Domain.Services;
@@ -15,6 +17,7 @@ using System;
 using System.Collections.ObjectModel;
 using System.Drawing;
 using System.Linq;
+using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
@@ -31,15 +34,13 @@ namespace RetailTradeServer.ViewModels.Menus
         private readonly ITypeProductService _typeProductService;
         private readonly IMessageStore _messageStore;
         private readonly IBarcodeService _barcodeService;
-        private int? _selectedUnitId;
-        private int? _selectedSupplierId;
-        private int? _selectedTypeProductId;
-        private string _barcode;
-        private string _name;
-        private string _tnved;
+        private readonly IProductBarcodeService _productBarcodeService;
+        private Product _createdProduct = new();
         private ObservableCollection<Unit> _units = new();
         private ObservableCollection<Supplier> _suppliers = new();
         private ObservableCollection<TypeProduct> _typeProducts = new();
+        private ObservableCollection<ProductBarcode> _productBarcodes = new();
+        private ProductBarcode _selectedProductBarcode;
 
         #endregion
 
@@ -73,61 +74,36 @@ namespace RetailTradeServer.ViewModels.Menus
                 OnPropertyChanged(nameof(TypeProducts));
             }
         }
-        public int? SelectedUnitId
+        public ObservableCollection<ProductBarcode> ProductBarcodes
         {
-            get => _selectedUnitId;
+            get => _productBarcodes;
             set
             {
-                _selectedUnitId = value;
-                OnPropertyChanged(nameof(SelectedUnitId));
-            }
-        }
-        public int? SelectedTypeProductId
-        {
-            get => _selectedTypeProductId;
-            set
-            {
-                _selectedTypeProductId = value;
-                OnPropertyChanged(nameof(SelectedTypeProductId));
-            }
-        }
-        public int? SelectedSupplierId
-        {
-            get => _selectedSupplierId;
-            set
-            {
-                _selectedSupplierId = value;
-                OnPropertyChanged(nameof(SelectedSupplierId));
-            }
-        }
-        public string Barcode
-        {
-            get => _barcode;
-            set
-            {
-                _barcode = value;
-                OnPropertyChanged(nameof(Barcode));
-            }
-        }
-        public string Name
-        {
-            get => _name;
-            set
-            {
-                _name = value;
-                OnPropertyChanged(nameof(Name));
-            }
-        }
-        public string TNVED
-        {
-            get => _tnved;
-            set
-            {
-                _tnved = value;
-                OnPropertyChanged(nameof(TNVED));
+                _productBarcodes = value;
+                OnPropertyChanged(nameof(ProductBarcodes));
             }
         }
         public CustomSpreadsheetControl CustomSpreadsheet { get; set; }
+        public Product CreatedProduct
+        {
+            get => _createdProduct;
+            set
+            {
+                _createdProduct = value;
+                OnPropertyChanged(nameof(CreatedProduct));
+            }
+        }
+        public ProductBarcode SelectedProductBarcode
+        {
+            get => _selectedProductBarcode;
+            set
+            {
+                _selectedProductBarcode = value;
+                OnPropertyChanged(nameof(SelectedProductBarcode));
+            }
+        }
+        public TableView BarcodeTableView { get; set; }
+        public GridControl BarcodeGridControl { get; set; }
 
         #endregion
 
@@ -145,7 +121,8 @@ namespace RetailTradeServer.ViewModels.Menus
             IProductService productService,
             ISupplierService supplierService,
             IMessageStore messageStore,
-            IBarcodeService barcodeService)
+            IBarcodeService barcodeService,
+            IProductBarcodeService productBarcodeService)
         {
             _typeProductService = typeProductService;
             _unitService = unitService;
@@ -153,7 +130,10 @@ namespace RetailTradeServer.ViewModels.Menus
             _supplierService = supplierService;
             _messageStore = messageStore;
             _barcodeService = barcodeService;
+            _productBarcodeService = productBarcodeService;
             GlobalMessageViewModel = new(_messageStore);
+
+            Header = "Товары (создание)";
 
             _messageStore.Close();
 
@@ -198,13 +178,13 @@ namespace RetailTradeServer.ViewModels.Menus
         private void TypeProductService_OnTypeProductCreated(TypeProduct obj)
         {
             TypeProducts.Add(obj);
-            SelectedTypeProductId = obj.Id;
+            CreatedProduct.TypeProductId = obj.Id;
         }
 
         private void SupplierService_OnSupplierCreated(Supplier supplier)
         {
             Suppliers.Add(supplier);
-            SelectedSupplierId = supplier.Id;
+            CreatedProduct.SupplierId = supplier.Id;
         }
 
         private void UserControl_Unloaded(object sender, RoutedEventArgs e)
@@ -228,24 +208,14 @@ namespace RetailTradeServer.ViewModels.Menus
 
         private void BarcodeService_OnBarcodeEvent(string barcode)
         {
-            Barcode = barcode;
-        }
-
-        private void CleareAllItems()
-        {
-            SelectedSupplierId = null;
-            SelectedTypeProductId = null;
-            Barcode = string.Empty;
-            Name = string.Empty;
-            SelectedUnitId = null;
-            TNVED = string.Empty;
+            //Barcode = barcode;
         }
 
         private void UnitMeasurementDialogFormModel_OnSelected(Unit unit)
         {
             try
             {
-                SelectedUnitId = unit.Id;
+                //SelectedUnitId = unit.Id;
             }
             catch (Exception)
             {
@@ -288,6 +258,27 @@ namespace RetailTradeServer.ViewModels.Menus
             catch (Exception)
             {
                 //ignore
+            }
+        }
+
+        private void BarcodeTableView_ValidateCell(object sender, GridCellValidationEventArgs e)
+        {
+            try
+            {
+                if (e.Value == null)
+                {
+                    MessageBoxService.ShowMessage($"Штрихкод обязателен для заполнения.", "Sale Page", MessageButton.OK, MessageIcon.Exclamation);
+                    e.ErrorContent = $"Штрихкод обязателен для заполнения.";
+                    e.ErrorType = DevExpress.XtraEditors.DXErrorProvider.ErrorType.Critical;
+                    e.IsValid = false;
+                }
+            }
+            catch (Exception ex)
+            {
+                _ = MessageBoxService.ShowMessage(ex.Message, "Sale Page", MessageButton.OK, MessageIcon.Error);
+                e.ErrorContent = ex.Message;
+                e.ErrorType = DevExpress.XtraEditors.DXErrorProvider.ErrorType.Critical;
+                e.IsValid = false;
             }
         }
 
@@ -341,46 +332,45 @@ namespace RetailTradeServer.ViewModels.Menus
         [Command]
         public async void SaveProduct()
         {
-            if (SelectedTypeProductId == null || SelectedTypeProductId == 0)
-            {
-                _messageStore.SetCurrentMessage("Выберите вид товара.", MessageType.Error);
-                return;
-            }
-            if (SelectedSupplierId == null || SelectedSupplierId == 0)
-            {
-                _messageStore.SetCurrentMessage("Выберите поставщика.", MessageType.Error);
-                return;
-            }
-            if (string.IsNullOrEmpty(Name))
+            if (string.IsNullOrEmpty(CreatedProduct.Name))
             {
                 _messageStore.SetCurrentMessage("Введите наименование товара.", MessageType.Error);
                 return;
             }
-            if (SelectedUnitId == null || SelectedUnitId == 0)
+            if (CreatedProduct.TypeProductId == 0)
+            {
+                _messageStore.SetCurrentMessage("Выберите вид товара.", MessageType.Error);
+                return;
+            }
+            if (CreatedProduct.SupplierId == null || CreatedProduct.SupplierId == 0)
+            {
+                _messageStore.SetCurrentMessage("Выберите поставщика.", MessageType.Error);
+                return;
+            }
+            if (CreatedProduct.UnitId == 0)
             {
                 _messageStore.SetCurrentMessage("Выберите единицу измерения.", MessageType.Error);
                 return;
             }
-
-            if (await _productService.SearchByBarcode(Barcode))
-            {
-                _ = MessageBoxService.ShowMessage($"Товар со штрих-кодом \"{Barcode}\" существует.", "", MessageButton.OK, MessageIcon.Error);
-            }
             else
             {
-                if (await _productService.CreateAsync(new Product
+                if (CreatedProduct.Id == 0)
                 {
-                    Barcode = Barcode,
-                    Name = Name,
-                    SupplierId = SelectedSupplierId.Value,
-                    UnitId = SelectedUnitId.Value,
-                    TypeProductId = SelectedTypeProductId.Value,
-                    TNVED = TNVED
-                }) != null)
-                {
-                    _messageStore.SetCurrentMessage("Товар успешно добавлено.", MessageType.Success);
-                    CleareAllItems();
+                    if (await _productService.CreateAsync(CreatedProduct) != null)
+                    {
+                        _messageStore.SetCurrentMessage("Товар создан.", MessageType.Success);
+                        Header = $"Товары ({CreatedProduct.Name})";
+                    }
                 }
+                else
+                {
+                    if (await _productService.UpdateAsync(CreatedProduct.Id, CreatedProduct) != null)
+                    {
+                        _messageStore.SetCurrentMessage("Товар сохранен.", MessageType.Success);
+                        Header = $"Товары ({CreatedProduct.Name})";
+                    }
+                }
+                
             }
         }
 
@@ -401,6 +391,62 @@ namespace RetailTradeServer.ViewModels.Menus
                     barcodeHyperlink.TooltipText = "Штрихкоды";
 
                     CustomSpreadsheet.HyperlinkClick += CustomSpreadsheet_HyperlinkClick;
+                }
+            }
+        }
+
+        [Command]
+        public void GenerateBarcode()
+        {
+            try
+            {
+                if (CreatedProduct.Id == 0)
+                {
+                    if (MessageBoxService.ShowMessage("Товар еще не создан.\nСоздать товар?", "Sale Page", MessageButton.YesNo, MessageIcon.Question) == MessageResult.Yes)
+                    {
+                        SaveProduct();
+                    };
+                }
+                else
+                {
+                    ((ButtonEdit)BarcodeTableView.ActiveEditor).SetValue(BaseEdit.EditValueProperty, $"2{new('0', 12 - CreatedProduct.Id.ToString().Length)}{CreatedProduct.Id}");
+                }
+            }
+            catch (Exception)
+            {
+                //ignore
+            }
+        }
+
+        [Command]
+        public void DeleteBarcode()
+        {
+            try
+            {
+                if (SelectedProductBarcode != null)
+                {
+                    if (CreatedProduct.ProductBarcodes != null && CreatedProduct.ProductBarcodes.Any())
+                    {
+                        CreatedProduct.ProductBarcodes.Remove(SelectedProductBarcode);
+                    }
+                }
+            }
+            catch (Exception)
+            {
+                //ignore
+            }
+        }
+
+        [Command]
+        public void BarcodeGridControlLoaded(object sender)
+        {
+            if (sender is RoutedEventArgs e)
+            {
+                if (e.Source is GridControl gridControl)
+                {
+                    BarcodeGridControl = gridControl;
+                    BarcodeTableView = BarcodeGridControl.View as TableView;
+                    BarcodeTableView.ValidateCell += BarcodeTableView_ValidateCell;
                 }
             }
         }

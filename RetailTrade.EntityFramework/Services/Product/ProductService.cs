@@ -423,5 +423,21 @@ namespace RetailTrade.EntityFramework.Services
                 return null;
             }
         }
+
+        public async Task<Product> GetForEditAsync(int id)
+        {
+            try
+            {
+                await using var context = _contextFactory.CreateDbContext();
+                return await context.Products
+                    .Include(p => p.ProductBarcodes)
+                    .FirstOrDefaultAsync(p => p.Id == id);
+            }
+            catch (Exception)
+            {
+                //ignore
+            }
+            return null;
+        }
     }
 }

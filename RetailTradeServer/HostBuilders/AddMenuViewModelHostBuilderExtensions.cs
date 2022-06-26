@@ -72,7 +72,8 @@ namespace RetailTradeServer.HostBuilders
                 services.GetRequiredService<IProductService>(),
                 services.GetRequiredService<ISupplierService>(),
                 services.GetRequiredService<IMessageStore>(),
-                services.GetRequiredService<IBarcodeService>());
+                services.GetRequiredService<IBarcodeService>(),
+                services.GetRequiredService<IProductBarcodeService>());
         }
 
         private static PriceListViewModel CreatePriceListViewModel(IServiceProvider services)

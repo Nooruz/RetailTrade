@@ -7,8 +7,8 @@
         private string _name;
         private string _unit;
         private string _barcode;
-        private decimal _arrivalPrice;
-        private decimal _salePrice;
+        private decimal _purchasePrice;
+        private decimal _retailPrice;
         private string _tnved;
         private bool _deleteMark;
         private string _typeProduct;
@@ -44,22 +44,22 @@
                 OnPropertyChanged(nameof(Barcode));
             }
         }
-        public decimal ArrivalPrice
+        public decimal PurchasePrice
         {
-            get => _arrivalPrice;
+            get => _purchasePrice;
             set
             {
-                _arrivalPrice = value;
-                OnPropertyChanged(nameof(ArrivalPrice));
+                _purchasePrice = value;
+                OnPropertyChanged(nameof(PurchasePrice));
             }
         }
-        public decimal SalePrice
+        public decimal RetailPrice
         {
-            get => _salePrice;
+            get => _retailPrice;
             set
             {
-                _salePrice = value;
-                OnPropertyChanged(nameof(SalePrice));
+                _retailPrice = value;
+                OnPropertyChanged(nameof(RetailPrice));
             }
         }
         public string TNVED

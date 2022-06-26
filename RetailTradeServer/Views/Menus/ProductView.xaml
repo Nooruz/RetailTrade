@@ -148,7 +148,8 @@
                     <dxg:TableView ShowTotalSummary="True" 
                                    AllowEditing="False" 
                                    IsColumnMenuEnabled="True"
-                                   AutoWidth="True" ShowAutoFilterRow="True"
+                                   AutoWidth="True" 
+                                   ShowAutoFilterRow="True"
                                    PageSize="500"
                                    ShowGroupPanel="True"                                   
                                    ShowFilterPanelMode="Never"/>
@@ -191,6 +192,21 @@
                     </dxg:GridColumn.EditSettings>
                 </dxg:GridColumn>
                 <dxg:GridColumn FieldName="Name" Header="Наименование"/>
+                <dxg:GridColumn FieldName="TypeProduct" Header="Вид товара"/>
+                <dxg:GridColumn FieldName="PurchasePrice" Header="Закупочная цена">
+                    <dxg:GridColumn.EditSettings>
+                        <dxe:TextEditSettings MaskUseAsDisplayFormat="True" 
+                                              MaskType="Numeric" 
+                                              Mask="n2"/>
+                    </dxg:GridColumn.EditSettings>
+                </dxg:GridColumn>
+                <dxg:GridColumn FieldName="RetailPrice" Header="Розничная цена">
+                    <dxg:GridColumn.EditSettings>
+                        <dxe:TextEditSettings MaskUseAsDisplayFormat="True" 
+                                              MaskType="Numeric" 
+                                              Mask="n2"/>
+                    </dxg:GridColumn.EditSettings>
+                </dxg:GridColumn>
                 <dxg:GridColumn FieldName="Unit" Header="Ед. изм."/>
                 <dxg:GridColumn FieldName="TNVED" Header="ТН ВЭД"/>
 

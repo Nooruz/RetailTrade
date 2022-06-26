@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using RetailTrade.EntityFramework;
 
@@ -11,9 +12,10 @@ using RetailTrade.EntityFramework;
 namespace RetailTrade.EntityFramework.Migrations
 {
     [DbContext(typeof(RetailTradeDbContext))]
-    partial class RetailTradeDbContextModelSnapshot : ModelSnapshot
+    [Migration("20220626094440_UpdateProductView1")]
+    partial class UpdateProductView1
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -534,17 +536,8 @@ namespace RetailTrade.EntityFramework.Migrations
                     b.Property<bool>("DeleteMark")
                         .HasColumnType("bit");
 
-                    b.Property<string>("Description")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<byte[]>("Image")
-                        .HasColumnType("varbinary(max)");
-
                     b.Property<string>("Name")
                         .HasColumnType("nvarchar(max)");
-
-                    b.Property<bool>("ProhibitDiscount")
-                        .HasColumnType("bit");
 
                     b.Property<decimal>("PurchasePrice")
                         .HasColumnType("decimal(18,2)");
