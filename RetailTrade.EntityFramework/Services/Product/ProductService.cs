@@ -431,6 +431,8 @@ namespace RetailTrade.EntityFramework.Services
                 await using var context = _contextFactory.CreateDbContext();
                 return await context.Products
                     .Include(p => p.ProductBarcodes)
+                    .Include(p => p.ProductsWareHouses)
+                    .ThenInclude(p => p.WareHouse)
                     .FirstOrDefaultAsync(p => p.Id == id);
             }
             catch (Exception)

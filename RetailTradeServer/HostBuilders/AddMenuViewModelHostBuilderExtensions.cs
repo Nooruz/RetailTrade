@@ -41,6 +41,8 @@ namespace RetailTradeServer.HostBuilders
                 services.AddTransient(CreateReturnProductFromCustomerViewModel);
                 services.AddTransient(CreatePriceListViewModel);
                 services.AddTransient(CreateCreateProductViewModel);
+                services.AddTransient(CreatePointSaleViewModel);
+                services.AddTransient(CreateCreatePointSaleViewModel);
 
                 services.AddSingleton<CreateMenuViewModel<ProductViewModel>>(servicesProvider => () => CreateProductViewModel(servicesProvider));
                 services.AddSingleton<CreateMenuViewModel<ArrivalProductViewModel>>(servicesProvider => () => CreateArrivalProductViewModel(servicesProvider));
@@ -60,9 +62,22 @@ namespace RetailTradeServer.HostBuilders
                 services.AddSingleton<CreateMenuViewModel<ReturnProductFromCustomerViewModel>>(servicesProvider => () => CreateReturnProductFromCustomerViewModel(servicesProvider));
                 services.AddSingleton<CreateMenuViewModel<PriceListViewModel>>(servicesProvider => () => CreatePriceListViewModel(servicesProvider));
                 services.AddSingleton<CreateMenuViewModel<CreateProductViewModel>>(servicesProvider => () => CreateCreateProductViewModel(servicesProvider));
+                services.AddSingleton<CreateMenuViewModel<PointSaleViewModel>>(servicesProvider => () => CreatePointSaleViewModel(servicesProvider));
+                services.AddSingleton<CreateMenuViewModel<CreatePointSaleViewModel>>(servicesProvider => () => CreateCreatePointSaleViewModel(servicesProvider));
 
                 services.AddSingleton<IMenuViewModelFactory, MenuViewModelFactory>();
             });
+        }
+
+        private static CreatePointSaleViewModel CreateCreatePointSaleViewModel(IServiceProvider services)
+        {
+            return new CreatePointSaleViewModel();
+        }
+
+        private static PointSaleViewModel CreatePointSaleViewModel(IServiceProvider services)
+        {
+            return new PointSaleViewModel(services.GetRequiredService<IMenuNavigator>(),
+                services.GetRequiredService<IMenuViewModelFactory>());
         }
 
         private static CreateProductViewModel CreateCreateProductViewModel(IServiceProvider services)

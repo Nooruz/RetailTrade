@@ -187,13 +187,22 @@
                     </dx:DXTabItem>
                     <dx:DXTabItem Header="Остатки"
                                   Style="{StaticResource ProductTabItem}">
-                        <dxg:GridControl >
+                        <dxg:GridControl ItemsSource="{Binding CreatedProduct.ProductsWareHouses}">
                             <dxg:GridControl.View>
                                 <dxg:TableView ShowTotalSummary="True"
                                                AutoWidth="True"/>
                             </dxg:GridControl.View>
-                            <dxg:GridColumn Header="Склад"/>
-                            <dxg:GridColumn Header="Остаток"/>
+                            <dxg:GridColumn Header="Склад"
+                                            FieldName="WareHouse.Name"/>
+                            <dxg:GridColumn Header="Остаток"
+                                            FieldName="Quantity">
+                                <dxg:GridColumn.EditSettings>
+                                    <dxe:TextEditSettings MaskUseAsDisplayFormat="True" 
+                                                          HorizontalContentAlignment="Left"
+                                                          MaskType="Numeric" 
+                                                          Mask="n2"/>
+                                </dxg:GridColumn.EditSettings>
+                            </dxg:GridColumn>
                         </dxg:GridControl>
                     </dx:DXTabItem>
                     <dx:DXTabItem Header="История"

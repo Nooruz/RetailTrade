@@ -41,6 +41,14 @@
 
             <!--#region Меню-->
 
+            <DataTemplate DataType="{x:Type menuViewModels:CreatePointSaleViewModel}">
+                <menuViews:CreatePointSaleView/>
+            </DataTemplate>
+
+            <DataTemplate DataType="{x:Type menuViewModels:PointSaleViewModel}">
+                <menuViews:PointSaleView/>
+            </DataTemplate>
+
             <DataTemplate DataType="{x:Type menuViewModels:CreateProductViewModel}">
                 <menuViews:CreateProductView/>
             </DataTemplate>

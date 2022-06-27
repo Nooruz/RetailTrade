@@ -69,6 +69,10 @@
                                                     Command="{Binding RenavigateCommand}"
                                                     CommandParameter="PriceListView"/>
 
+            <dxwui:HamburgerSubMenuNavigationButton Content="Остатки"
+                                                    Command="{Binding RenavigateCommand}"
+                                                    CommandParameter="PriceListView"/>
+
         </dxwui:HamburgerSubMenu>
 
         <dxwui:HamburgerSubMenu Content="Закупки"
@@ -79,6 +83,10 @@
                                                     Command="{Binding RenavigateCommand}"
                                                     CommandParameter="OrderProduct"/>
 
+            <dxwui:HamburgerSubMenuNavigationButton Content="Приемки"
+                                                    Command="{Binding RenavigateCommand}"
+                                                    CommandParameter="RefundToSupplier"/>
+            
             <dxwui:HamburgerSubMenuNavigationButton Content="Возвраты поставщикам"
                                                     Command="{Binding RenavigateCommand}"
                                                     CommandParameter="RefundToSupplier"/>
@@ -102,6 +110,32 @@
             <dxwui:HamburgerSubMenuNavigationButton Content="Списание товаров"
                                                     Command="{Binding RenavigateCommand}"
                                                     CommandParameter="WriteDownProduct"
+                                                    Focusable="False"/>
+
+        </dxwui:HamburgerSubMenu>
+
+        <dxwui:HamburgerSubMenu Content="Розница"
+                                Style="{StaticResource DefaultHamburgerSubMenu}"
+                                Tag="{StaticResource faShop}">
+
+            <dxwui:HamburgerSubMenuNavigationButton Content="Точки продажи"
+                                                    Command="{Binding RenavigateCommand}"
+                                                    CommandParameter="PointSale"
+                                                    Focusable="False"/>
+
+            <dxwui:HamburgerSubMenuNavigationButton Content="Смены"
+                                                    Command="{Binding RenavigateCommand}"
+                                                    CommandParameter="Shift"
+                                                    Focusable="False"/>
+
+            <dxwui:HamburgerSubMenuNavigationButton Content="Продажи"
+                                                    Command="{Binding RenavigateCommand}"
+                                                    CommandParameter="Sale"
+                                                    Focusable="False"/>
+
+            <dxwui:HamburgerSubMenuNavigationButton Content="Возвраты"
+                                                    Command="{Binding RenavigateCommand}"
+                                                    CommandParameter="Refund"
                                                     Focusable="False"/>
 
         </dxwui:HamburgerSubMenu>

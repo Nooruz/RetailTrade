@@ -47,5 +47,6 @@
     <system:String x:Key="faBallotCheck">&#xf733;</system:String>
     <system:String x:Key="faCompress">&#xf066;</system:String>
     <system:String x:Key="faFloppyDisk">&#xf0c7;</system:String>
+    <system:String x:Key="faShop">&#xf54f;</system:String>
 
 </ResourceDictionary>

@@ -1,0 +1,106 @@
+﻿<local:BaseMenuView
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:dxe="http://schemas.devexpress.com/winfx/2008/xaml/editors"
+    xmlns:dxlc="http://schemas.devexpress.com/winfx/2008/xaml/layoutcontrol"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:local="clr-namespace:RetailTradeServer.Views.Menus"
+    x:Class="RetailTradeServer.Views.Menus.CreatePointSaleView"
+                      mc:Ignorable="d" ShowLoadingPanel="False"
+             d:DesignHeight="450" d:DesignWidth="800">
+
+    <dxlc:LayoutControl Orientation="Vertical">
+
+        <dxlc:LayoutGroup VerticalAlignment="Top">
+
+            <dxlc:LayoutGroup HorizontalAlignment="Left"
+                          VerticalAlignment="Top">
+
+                <Button Content="Сохранить" 
+                        Background="#FFA1B900" 
+                        Foreground="White"
+                        Command="{Binding SaveProductCommand}"/>
+
+                <Button Content="Закрыть"/>
+
+            </dxlc:LayoutGroup>
+
+        </dxlc:LayoutGroup>
+
+        <dxlc:LayoutGroup>
+
+            <dxlc:LayoutGroup Orientation="Vertical">
+
+                <dxlc:LayoutGroup View="GroupBox"
+                              Header="Основное"
+                              Orientation="Vertical">
+
+                    <dxlc:LayoutItem Label="Включена">
+                        <dxe:CheckEdit HorizontalAlignment="Left"/>
+                    </dxlc:LayoutItem>
+
+                    <dxlc:LayoutItem Label="Наименование">
+                        <dxe:TextEdit/>
+                    </dxlc:LayoutItem>
+
+                </dxlc:LayoutGroup>
+
+                <dxlc:LayoutGroup View="GroupBox"
+                              Header="Кассиры"
+                              Orientation="Vertical">
+
+                    <dxlc:LayoutItem Label="Кассиры">
+                        <dxe:ComboBoxEdit/>
+                    </dxlc:LayoutItem>
+
+                </dxlc:LayoutGroup>
+
+                <dxlc:LayoutGroup View="GroupBox"
+                              Header="Продажи"
+                              Orientation="Vertical">
+
+                    <dxlc:LayoutItem Label="Разрешить скидки">
+                        <dxe:CheckEdit HorizontalAlignment="Left"/>
+                    </dxlc:LayoutItem>
+
+                    <dxlc:LayoutItem Label="Максимальная скидка, %">
+                        <dxe:TextEdit/>
+                    </dxlc:LayoutItem>
+
+                </dxlc:LayoutGroup>
+
+                <dxlc:LayoutGroup View="GroupBox"
+                              Header="Товары"
+                              Orientation="Vertical">
+
+                    <dxlc:LayoutItem Label="Склад">
+                        <dxe:ComboBoxEdit/>
+                    </dxlc:LayoutItem>
+
+                    <dxlc:LayoutItem Label="Учет остатков">
+                        <dxe:CheckEdit HorizontalAlignment="Left"/>
+                    </dxlc:LayoutItem>
+
+                </dxlc:LayoutGroup>
+
+            </dxlc:LayoutGroup>
+
+            <dxlc:LayoutGroup Orientation="Vertical">
+
+                <dxlc:LayoutItem Label="Описание"
+                                 LabelVerticalAlignment="Top">
+                    <dxe:MemoEdit Height="100"/>
+                </dxlc:LayoutItem>
+
+                <dxlc:LayoutItem Label="Адрес">
+                    <dxe:TextEdit/>
+                </dxlc:LayoutItem>
+
+            </dxlc:LayoutGroup>
+
+        </dxlc:LayoutGroup>
+
+    </dxlc:LayoutControl>
+
+</local:BaseMenuView>
