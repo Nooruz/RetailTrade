@@ -13,7 +13,6 @@ namespace RetailTrade.Domain.Models
         private DateTime? _joinedDate;
         private int _roleId;
         private bool _deleteMark;
-        private int? _wareHouseId;
 
         #endregion
 
@@ -85,19 +84,6 @@ namespace RetailTrade.Domain.Models
         }
 
         /// <summary>
-        /// Код точки продажи
-        /// </summary>
-        public int? WareHouseId
-        {
-            get => _wareHouseId;
-            set
-            {
-                _wareHouseId = value;
-                OnPropertyChanged(nameof(WareHouseId));
-            }
-        }
-
-        /// <summary>
         /// Пометка на удаление, по умолчанию false
         /// </summary>
         public bool DeleteMark
@@ -121,14 +107,13 @@ namespace RetailTrade.Domain.Models
         public Branch Branch { get; set; }
 
         /// <summary>
-        /// Точка продажи
-        /// </summary>
-        public WareHouse WareHouse { get; set; }
-
-        /// <summary>
         /// Список смен
         /// </summary>
         public ICollection<Shift> Shifts { get; set; }
+
+        public ICollection<PointSale> PointSales { get; set; }
+
+        public ICollection<UserPointSale> UserPointSales { get; set; }
 
         #endregion
     }

@@ -124,6 +124,8 @@ namespace RetailTrade.EntityFramework
         public DbSet<Customer> Customers { get; set; }
         public DbSet<Contractor> Contractors { get; set; }
         public DbSet<ProductWareHouse> ProductsWareHouses { get; set; }
+        public DbSet<PointSale> PointSales { get; set; }
+        public DbSet<UserPointSale> UserPointSales { get; set; }
 
         #endregion
 
@@ -179,6 +181,24 @@ namespace RetailTrade.EntityFramework
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+            modelBuilder.Entity<PointSale>()
+                .HasMany(p => p.Users)
+                .WithMany(u => u.PointSales)
+                .UsingEntity<UserPointSale>(
+                j => j
+                    .HasOne(pt => pt.User)
+                    .WithMany(p => p.UserPointSales)
+                    .HasForeignKey(pt => pt.UserId),
+                j => j
+                    .HasOne(pt => pt.PointSale)
+                    .WithMany(p => p.UserPointSale)
+                    .HasForeignKey(pt => pt.PointSaleId),
+                j =>
+                    {
+                        j.HasKey(k => new { k.PointSaleId, k.UserId });
+                        j.ToTable("UserPointSales");
+                    });
+
             modelBuilder.Entity<ProductBarcodeView>()
                 .ToView(nameof(ProductBarcodeView))
                 .HasNoKey();

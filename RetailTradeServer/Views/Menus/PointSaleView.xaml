@@ -28,13 +28,17 @@
 
         </dxlc:LayoutGroup>
 
-        <dxg:GridControl >
+        <dxg:GridControl ItemsSource="{Binding PointSales}"
+                         SelectedItem="{Binding SelectedPointSale}">
             <dxg:GridControl.View>
                 <dxg:TableView ShowTotalSummary="True"/>
             </dxg:GridControl.View>
-            <dxg:GridColumn Header="Включена" />
-            <dxg:GridColumn Header="Наименование" />
-            <dxg:GridColumn Header="Выручка" />
+            <dxg:GridColumn Header="Включена"
+                            FieldName="IsEnabled"/>
+            <dxg:GridColumn Header="Наименование"
+                            FieldName="Name"/>
+            <dxg:GridColumn Header="Выручка"
+                            FieldName=""/>
             <dxg:GridColumn Header="Чеки" />
             <dxg:GridColumn Header="Средний чек" />
             <dxg:GridColumn Header="Денег в кассе" />
