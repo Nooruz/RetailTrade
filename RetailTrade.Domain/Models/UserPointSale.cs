@@ -1,8 +1,6 @@
-﻿using System.ComponentModel;
-
-namespace RetailTrade.Domain.Models
+﻿namespace RetailTrade.Domain.Models
 {
-    public class UserPointSale : INotifyPropertyChanged
+    public class UserPointSale : WithoutKeyDomainObject
     {
         #region Private Members
 
@@ -36,17 +34,6 @@ namespace RetailTrade.Domain.Models
         public User User { get; set; }
 
         public PointSale PointSale { get; set; }
-
-        #endregion
-
-        #region PropertyChanged
-
-        public event PropertyChangedEventHandler PropertyChanged;
-
-        protected void OnPropertyChanged(string propertyName)
-        {
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
-        }
 
         #endregion
     }

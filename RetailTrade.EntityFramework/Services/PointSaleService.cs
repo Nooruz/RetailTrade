@@ -27,9 +27,24 @@ namespace RetailTrade.EntityFramework.Services
         public async Task<PointSale> CreateAsync(PointSale entity)
         {
             await using var context = _contextFactory.CreateDbContext();
+            List<User> users = new();
+            if (entity.Users != null && entity.Users.Any())
+            {
+                users = entity.Users;
+                entity.Users = null;
+            }
             PointSale result = await _nonQueryDataService.Create(entity);
             if (result != null)
             {
+                foreach (var item in users)
+                {
+                    _ = await context.UserPointSales.AddAsync(new UserPointSale
+                    {
+                        UserId = item.Id,
+                        PointSaleId = result.Id
+                    });
+                }
+                _ = await context.SaveChangesAsync();
                 OnCreated?.Invoke(result);
             }
             return result;

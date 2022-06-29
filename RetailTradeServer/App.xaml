@@ -18,6 +18,7 @@
             <converters:ClosingDateValueConverter x:Key="ClosingDateValueConverter"/>
             <converters:TypeWareHouseIdConverter x:Key="TypeWareHouseIdConverter"/>
             <converters:BooleanReverseConverter x:Key="BooleanReverseConverter"/>
+            <converters:ObjectToUserConverter x:Key="ObjectToUserConverter"/>
 
             <!--#region Основной меню-->
             

@@ -19,6 +19,7 @@ namespace RetailTradeServer.ViewModels.Menus
         private PointSale _createdPointSale = new();
         private IEnumerable<WareHouse> _wareHouses;
         private IEnumerable<User> _users;
+        private List<object> _selectedUsers;
 
         #endregion
 
@@ -50,6 +51,15 @@ namespace RetailTradeServer.ViewModels.Menus
             {
                 _users = value;
                 OnPropertyChanged(nameof(Users));
+            }
+        }
+        public List<object> SelectedUsers
+        {
+            get => _selectedUsers;
+            set
+            {
+                _selectedUsers = value;
+                OnPropertyChanged(nameof(SelectedUsers));
             }
         }
 
