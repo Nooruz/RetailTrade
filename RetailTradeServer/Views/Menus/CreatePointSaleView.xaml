@@ -62,7 +62,7 @@
                     <dxlc:LayoutItem Label="Кассиры">
                         <dxe:ComboBoxEdit ItemsSource="{Binding Users}"
                                           DisplayMember="FullName" 
-                                          EditValue="{Binding CreatedPoitnSale.Users, Converter={StaticResource ObjectToUserConverter}}" 
+                                          EditValue="{Binding CreatedPoitnSale.UserPointSale, Converter={StaticResource ObjectToUserPointSaleConverter}}"
                                           AllowCollectionView="True" 
                                           ImmediatePopup="True">
                             <dxe:ComboBoxEdit.StyleSettings>
@@ -85,6 +85,7 @@
 
                     <dxlc:LayoutItem Label="Максимальная скидка, %">
                         <dxe:TextEdit EditValue="{Binding CreatedPoitnSale.MaximumDiscount}" 
+                                      MaskUseAsDisplayFormat="True"
                                       MaskType="Numeric" 
                                       Mask="p"/>
                     </dxlc:LayoutItem>
@@ -97,7 +98,9 @@
 
                     <dxlc:LayoutItem Label="Склад">
                         <dxe:ComboBoxEdit ItemsSource="{Binding WareHouses}"
-                                          DisplayMember="Name"
+                                          DisplayMember="Name" 
+                                          ShowError="False"
+                                          ShowErrorToolTip="False"
                                           ValueMember="Id"
                                           EditValue="{Binding CreatedPoitnSale.WareHouseId}"/>
                     </dxlc:LayoutItem>
@@ -116,7 +119,9 @@
                 <dxlc:LayoutItem Label="Описание"
                                  LabelVerticalAlignment="Top">
                     <dxe:MemoEdit Height="100"
-                                  EditValue="{Binding CreatedPoitnSale.Description}"/>
+                                  EditValue="{Binding CreatedPoitnSale.Description}" 
+                                  MemoTextWrapping="Wrap" 
+                                  ShowIcon="False"/>
                 </dxlc:LayoutItem>
 
                 <dxlc:LayoutItem Label="Адрес">

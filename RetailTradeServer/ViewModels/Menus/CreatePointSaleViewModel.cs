@@ -5,6 +5,7 @@ using RetailTradeServer.State.Messages;
 using RetailTradeServer.ViewModels.Base;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace RetailTradeServer.ViewModels.Menus
 {
@@ -16,10 +17,11 @@ namespace RetailTradeServer.ViewModels.Menus
         private readonly IMessageStore _messageStore;
         private readonly IWareHouseService _wareHouseService;
         private readonly IUserService _userService;
+        private readonly IUserPointSaleService _userPointSaleService;
         private PointSale _createdPointSale = new();
         private IEnumerable<WareHouse> _wareHouses;
         private IEnumerable<User> _users;
-        private List<object> _selectedUsers;
+        private List<User> _selectedUsers;
 
         #endregion
 
@@ -53,7 +55,7 @@ namespace RetailTradeServer.ViewModels.Menus
                 OnPropertyChanged(nameof(Users));
             }
         }
-        public List<object> SelectedUsers
+        public List<User> SelectedUsers
         {
             get => _selectedUsers;
             set
@@ -70,16 +72,30 @@ namespace RetailTradeServer.ViewModels.Menus
         public CreatePointSaleViewModel(IPointSaleService pointSaleService,
             IMessageStore messageStore,
             IWareHouseService wareHouseService,
-            IUserService userService)
+            IUserService userService,
+            IUserPointSaleService userPointSaleService)
         {
             _pointSaleService = pointSaleService;
             _messageStore = messageStore;
             _wareHouseService = wareHouseService;
             _userService = userService;
+            _userPointSaleService = userPointSaleService;
 
             GlobalMessageViewModel = new(_messageStore);
 
             Header = "Точка продаж (создание)";
+
+            LoadingData();
+        }
+
+        #endregion
+
+        #region Private Voids
+
+        private async void LoadingData()
+        {
+            Users = await _userService.GetCashiersAsync();
+            WareHouses = await _wareHouseService.GetAllAsync();
         }
 
         #endregion
@@ -103,10 +119,36 @@ namespace RetailTradeServer.ViewModels.Menus
                 }
                 if (CreatedPoitnSale.Id == 0)
                 {
-                    if (await _pointSaleService.CreateAsync(CreatedPoitnSale) != null)
+                    CreatedPoitnSale.UserPointSale.ForEach(u =>
                     {
+                        u.User = null;
+                    });
+                    PointSale result = await _pointSaleService.CreateAsync(CreatedPoitnSale);
+                    if (result != null)
+                    {
+                        //if (SelectedUsers != null && SelectedUsers.Any())
+                        //{
+                        //    if (await _userPointSaleService.AddRangeAsync(SelectedUsers.Select(u => new UserPointSale { UserId = u.Id, PointSaleId = result.Id }).ToList()))
+                        //    {
+                        //        _messageStore.SetCurrentMessage("Точка продаж создан.", MessageType.Success);
+                        //        Header = $"Точка продаж ({CreatedPoitnSale.Name})";
+                        //    }
+                        //    else
+                        //    {
+                        //        _messageStore.SetCurrentMessage("Точка продаж создан, но привязать выбранных кассиров не удалось.\nСвяжитесь с разработчиками.", MessageType.Error);
+                        //    }
+                        //}
+                        //else
+                        //{
+                        //    _messageStore.SetCurrentMessage("Точка продаж создан.", MessageType.Success);
+                        //    Header = $"Точка продаж ({CreatedPoitnSale.Name})";
+                        //}
                         _messageStore.SetCurrentMessage("Точка продаж создан.", MessageType.Success);
                         Header = $"Точка продаж ({CreatedPoitnSale.Name})";
+                    }
+                    else
+                    {
+                        _messageStore.SetCurrentMessage("Не удалось создать точку продаж.", MessageType.Error);
                     }
                 }
                 else
@@ -115,6 +157,10 @@ namespace RetailTradeServer.ViewModels.Menus
                     {
                         _messageStore.SetCurrentMessage("Точка продаж сохранен.", MessageType.Success);
                         Header = $"Точка продаж ({CreatedPoitnSale.Name})";
+                    }
+                    else
+                    {
+                        _messageStore.SetCurrentMessage("Не удалось сохранить.", MessageType.Error);
                     }
                 }
             }
@@ -125,10 +171,9 @@ namespace RetailTradeServer.ViewModels.Menus
         }
 
         [Command]
-        public async void UserControlLoaded()
+        public void UserControlLoaded()
         {
-            Users = await _userService.GetCashiersAsync();
-            WareHouses = await _wareHouseService.GetAllAsync();
+
         }
 
         #endregion

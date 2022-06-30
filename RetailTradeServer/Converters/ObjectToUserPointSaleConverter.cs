@@ -7,11 +7,23 @@ using System.Windows.Data;
 
 namespace RetailTradeServer.Converters
 {
-    public class ObjectToUserConverter : IValueConverter
+    public class ObjectToUserPointSaleConverter : IValueConverter
     {
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
-            return value;
+            try
+            {
+                if (value is List<UserPointSale> userPointsSales)
+                {
+                    var users = userPointsSales.Select(u => u.User).ToList();
+                    return users;
+                }
+            }
+            catch (Exception)
+            {
+                //ignore
+            }
+            return Binding.DoNothing;
         }
 
         public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
@@ -20,14 +32,14 @@ namespace RetailTradeServer.Converters
             {
                 if (value is List<object> users)
                 {
-                    return users.Select(u => (User)u).ToList();
+                    return users.Select(u => new UserPointSale { UserId = ((User)u).Id, User = (User)u }).ToList();
                 }
             }
             catch (Exception)
             {
                 //ignore
             }
-            return null;
+            return Binding.DoNothing;
         }
     }
 }

@@ -18,38 +18,20 @@ namespace RetailTrade.EntityFramework.Services
             _nonQueryDataService = new WithoutKeyNonQueryDataService<UserPointSale>(_contextFactory);
         }
 
-        public event Action<UserPointSale> OnCreated;
-        public event Action<UserPointSale> OnEdited;
-        public event Action<int> OnDeleted;
-
-        public Task<UserPointSale> CreateAsync(UserPointSale entity)
+        public async Task<bool> AddRangeAsync(List<UserPointSale> values)
         {
-            throw new NotImplementedException();
-        }
-
-        public Task<bool> DeleteAsync(int id)
-        {
-            throw new NotImplementedException();
-        }
-
-        public IEnumerable<UserPointSale> GetAll()
-        {
-            throw new NotImplementedException();
-        }
-
-        public Task<IEnumerable<UserPointSale>> GetAllAsync()
-        {
-            throw new NotImplementedException();
-        }
-
-        public Task<UserPointSale> GetAsync(int id)
-        {
-            throw new NotImplementedException();
-        }
-
-        public Task<UserPointSale> UpdateAsync(int id, UserPointSale entity)
-        {
-            throw new NotImplementedException();
+            try
+            {
+                var context = _contextFactory.CreateDbContext();
+                await context.UserPointSales.AddRangeAsync(values);
+                await context.SaveChangesAsync();
+                return true;
+            }
+            catch (Exception)
+            {
+                //ignore
+            }
+            return false;
         }
     }
 }

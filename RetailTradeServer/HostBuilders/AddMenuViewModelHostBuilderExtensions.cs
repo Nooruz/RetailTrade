@@ -74,7 +74,8 @@ namespace RetailTradeServer.HostBuilders
             return new CreatePointSaleViewModel(services.GetRequiredService<IPointSaleService>(),
                 services.GetRequiredService<IMessageStore>(),
                 services.GetRequiredService<IWareHouseService>(),
-                services.GetRequiredService<IUserService>());
+                services.GetRequiredService<IUserService>(),
+                services.GetRequiredService<IUserPointSaleService>());
         }
 
         private static PointSaleViewModel CreatePointSaleViewModel(IServiceProvider services)

@@ -1,12 +1,11 @@
 ﻿using RetailTrade.Domain.Models;
-using System;
+using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace RetailTrade.Domain.Services
 {
-    public interface IUserPointSaleService : IDataService<UserPointSale>
+    public interface IUserPointSaleService
     {
-        event Action<UserPointSale> OnCreated;
-        event Action<UserPointSale> OnEdited;
-        event Action<int> OnDeleted;
+        Task<bool> AddRangeAsync(List<UserPointSale> values);
     }
 }

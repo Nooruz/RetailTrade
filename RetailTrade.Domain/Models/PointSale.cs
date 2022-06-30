@@ -14,7 +14,7 @@ namespace RetailTrade.Domain.Models
         private bool _accountingBalances;
         private string _description;
         private string _address;
-        private List<User> _users = new();
+        private List<UserPointSale> _userPointSales;
 
         #endregion
 
@@ -129,17 +129,17 @@ namespace RetailTrade.Domain.Models
         /// </summary>
         public WareHouse WareHouse { get; set; }
 
-        public List<User> Users
+        public ICollection<User> Users { get; set; }
+
+        public List<UserPointSale> UserPointSale
         {
-            get => _users;
+            get => _userPointSales;
             set
             {
-                _users = value;
-                OnPropertyChanged(nameof(Users));
+                _userPointSales = value;
+                OnPropertyChanged(nameof(UserPointSale));
             }
         }
-
-        public ICollection<UserPointSale> UserPointSale { get; set; }
 
         #endregion
     }
