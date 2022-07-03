@@ -15,8 +15,7 @@ namespace RetailTradeServer.Converters
             {
                 if (value is List<UserPointSale> userPointsSales)
                 {
-                    var users = userPointsSales.Select(u => u.User).ToList();
-                    return users;
+                    return userPointsSales.Select(u => u.User).ToList();
                 }
             }
             catch (Exception)

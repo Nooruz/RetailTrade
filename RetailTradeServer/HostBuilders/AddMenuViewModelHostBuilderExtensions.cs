@@ -74,15 +74,17 @@ namespace RetailTradeServer.HostBuilders
             return new CreatePointSaleViewModel(services.GetRequiredService<IPointSaleService>(),
                 services.GetRequiredService<IMessageStore>(),
                 services.GetRequiredService<IWareHouseService>(),
-                services.GetRequiredService<IUserService>(),
-                services.GetRequiredService<IUserPointSaleService>());
+                services.GetRequiredService<IUserService>());
         }
 
         private static PointSaleViewModel CreatePointSaleViewModel(IServiceProvider services)
         {
             return new PointSaleViewModel(services.GetRequiredService<IMenuNavigator>(),
                 services.GetRequiredService<IMenuViewModelFactory>(),
-                services.GetRequiredService<IPointSaleService>());
+                services.GetRequiredService<IPointSaleService>(),
+                services.GetRequiredService<IMessageStore>(),
+                services.GetRequiredService<IWareHouseService>(),
+                services.GetRequiredService<IUserService>());
         }
 
         private static CreateProductViewModel CreateCreateProductViewModel(IServiceProvider services)

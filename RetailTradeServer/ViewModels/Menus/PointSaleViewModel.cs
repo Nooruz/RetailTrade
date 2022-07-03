@@ -1,11 +1,15 @@
 ﻿using DevExpress.Mvvm.DataAnnotations;
+using DevExpress.Xpf.Grid;
 using RetailTrade.Domain.Models;
 using RetailTrade.Domain.Services;
 using RetailTradeServer.Commands;
+using RetailTradeServer.State.Messages;
 using RetailTradeServer.State.Navigators;
 using RetailTradeServer.ViewModels.Base;
 using RetailTradeServer.ViewModels.Factories;
+using System;
 using System.Collections.ObjectModel;
+using System.Windows;
 using System.Windows.Input;
 
 namespace RetailTradeServer.ViewModels.Menus
@@ -17,6 +21,9 @@ namespace RetailTradeServer.ViewModels.Menus
         private readonly IMenuNavigator _menuNavigator;
         private readonly IMenuViewModelFactory _menuViewModelFactory;
         private readonly IPointSaleService _pointSaleService;
+        private readonly IMessageStore _messageStore;
+        private readonly IWareHouseService _wareHouseService;
+        private readonly IUserService _userService;
         private ObservableCollection<PointSale> _pointSales = new();
         private PointSale _selectedpointSale;
 
@@ -42,6 +49,7 @@ namespace RetailTradeServer.ViewModels.Menus
                 OnPropertyChanged(nameof(SelectedPointSale));
             }
         }
+        public GridControl PointSaleGridControl { get; set; }
 
         #endregion
 
@@ -55,11 +63,17 @@ namespace RetailTradeServer.ViewModels.Menus
 
         public PointSaleViewModel(IMenuNavigator menuNavigator,
             IMenuViewModelFactory menuViewModelFactory,
-            IPointSaleService pointSaleService)
+            IPointSaleService pointSaleService,
+            IMessageStore messageStore,
+            IWareHouseService wareHouseService,
+            IUserService userService)
         {
             _menuNavigator = menuNavigator;
             _menuViewModelFactory = menuViewModelFactory;
             _pointSaleService = pointSaleService;
+            _messageStore = messageStore;
+            _wareHouseService = wareHouseService;
+            _userService = userService;
 
             Header = "Точки продажи";
 
@@ -77,6 +91,21 @@ namespace RetailTradeServer.ViewModels.Menus
             PointSales.Add(pointSale);
         }
 
+        private async void TableView_RowDoubleClick(object sender, RowDoubleClickEventArgs e)
+        {
+            try
+            {
+                _menuNavigator.CurrentViewModel = new CreatePointSaleViewModel(_pointSaleService, _messageStore, _wareHouseService, _userService)
+                {
+                    CreatedPoitnSale = await _pointSaleService.GetPointSaleUserAsync(SelectedPointSale.Id)
+                };
+            }
+            catch (Exception)
+            {
+                //ignore
+            }
+        }
+
         #endregion
 
         #region Public Voids
@@ -86,6 +115,20 @@ namespace RetailTradeServer.ViewModels.Menus
         {
             PointSales = new(await _pointSaleService.GetAllAsync());
             ShowLoadingPanel = false;
+        }
+
+        [Command]
+        public void PointSaleGridControlLoaded(object sender)
+        {
+            if (sender is RoutedEventArgs e)
+            {
+                if (e.Source is GridControl gridControl)
+                {
+                    PointSaleGridControl = gridControl;
+                    TableView tableView = PointSaleGridControl.View as TableView;
+                    tableView.RowDoubleClick += TableView_RowDoubleClick;
+                }
+            }
         }
 
         #endregion

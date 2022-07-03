@@ -1,4 +1,5 @@
 ﻿using DevExpress.Mvvm.DataAnnotations;
+using DevExpress.Xpf.Editors;
 using RetailTrade.Domain.Models;
 using RetailTrade.Domain.Services;
 using RetailTradeServer.State.Messages;
@@ -6,6 +7,7 @@ using RetailTradeServer.ViewModels.Base;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Windows;
 
 namespace RetailTradeServer.ViewModels.Menus
 {
@@ -17,11 +19,10 @@ namespace RetailTradeServer.ViewModels.Menus
         private readonly IMessageStore _messageStore;
         private readonly IWareHouseService _wareHouseService;
         private readonly IUserService _userService;
-        private readonly IUserPointSaleService _userPointSaleService;
         private PointSale _createdPointSale = new();
         private IEnumerable<WareHouse> _wareHouses;
         private IEnumerable<User> _users;
-        private List<User> _selectedUsers;
+        private List<object> _selectedUsers;
 
         #endregion
 
@@ -34,6 +35,10 @@ namespace RetailTradeServer.ViewModels.Menus
             set
             {
                 _createdPointSale = value;
+                if (_createdPointSale.Users != null && _createdPointSale.Users.Any())
+                {
+                    SelectedUsers = _createdPointSale.Users.Cast<object>().ToList();
+                }
                 OnPropertyChanged(nameof(CreatedPoitnSale));
             }
         }
@@ -55,7 +60,7 @@ namespace RetailTradeServer.ViewModels.Menus
                 OnPropertyChanged(nameof(Users));
             }
         }
-        public List<User> SelectedUsers
+        public List<object> SelectedUsers
         {
             get => _selectedUsers;
             set
@@ -72,14 +77,12 @@ namespace RetailTradeServer.ViewModels.Menus
         public CreatePointSaleViewModel(IPointSaleService pointSaleService,
             IMessageStore messageStore,
             IWareHouseService wareHouseService,
-            IUserService userService,
-            IUserPointSaleService userPointSaleService)
+            IUserService userService)
         {
             _pointSaleService = pointSaleService;
             _messageStore = messageStore;
             _wareHouseService = wareHouseService;
             _userService = userService;
-            _userPointSaleService = userPointSaleService;
 
             GlobalMessageViewModel = new(_messageStore);
 
@@ -119,10 +122,6 @@ namespace RetailTradeServer.ViewModels.Menus
                 }
                 if (CreatedPoitnSale.Id == 0)
                 {
-                    CreatedPoitnSale.UserPointSale.ForEach(u =>
-                    {
-                        u.User = null;
-                    });
                     PointSale result = await _pointSaleService.CreateAsync(CreatedPoitnSale);
                     if (result != null)
                     {
@@ -153,8 +152,10 @@ namespace RetailTradeServer.ViewModels.Menus
                 }
                 else
                 {
-                    if (await _pointSaleService.UpdateAsync(CreatedPoitnSale.Id, CreatedPoitnSale) != null)
+                    PointSale updatedPointSale = await _pointSaleService.UpdateAsync(CreatedPoitnSale.Id, CreatedPoitnSale);
+                    if (updatedPointSale != null)
                     {
+                        CreatedPoitnSale = updatedPointSale;
                         _messageStore.SetCurrentMessage("Точка продаж сохранен.", MessageType.Success);
                         Header = $"Точка продаж ({CreatedPoitnSale.Name})";
                     }

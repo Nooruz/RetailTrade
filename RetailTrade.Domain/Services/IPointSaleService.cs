@@ -1,5 +1,6 @@
 ﻿using RetailTrade.Domain.Models;
 using System;
+using System.Threading.Tasks;
 
 namespace RetailTrade.Domain.Services
 {
@@ -8,5 +9,7 @@ namespace RetailTrade.Domain.Services
         event Action<PointSale> OnCreated;
         event Action<PointSale> OnEdited;
         event Action<int> OnDeleted;
+
+        Task<PointSale> GetPointSaleUserAsync(int id);
     }
 }

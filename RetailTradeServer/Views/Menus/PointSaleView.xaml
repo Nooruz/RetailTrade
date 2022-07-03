@@ -30,8 +30,14 @@
 
         <dxg:GridControl ItemsSource="{Binding PointSales}"
                          SelectedItem="{Binding SelectedPointSale}">
+            <dxmvvm:Interaction.Behaviors>
+                <dxmvvm:EventToCommand EventName="Loaded"
+                                       Command="{Binding PointSaleGridControlLoadedCommand}"
+                                       PassEventArgsToCommand="True"
+                                       />
+            </dxmvvm:Interaction.Behaviors>
             <dxg:GridControl.View>
-                <dxg:TableView ShowTotalSummary="True"/>
+                <dxg:TableView AllowEditing="False"/>
             </dxg:GridControl.View>
             <dxg:GridColumn Header="Включена"
                             FieldName="IsEnabled"/>

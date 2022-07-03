@@ -61,13 +61,10 @@
 
                     <dxlc:LayoutItem Label="Кассиры">
                         <dxe:ComboBoxEdit ItemsSource="{Binding Users}"
-                                          DisplayMember="FullName" 
-                                          EditValue="{Binding CreatedPoitnSale.UserPointSale, Converter={StaticResource ObjectToUserPointSaleConverter}}"
-                                          AllowCollectionView="True" 
-                                          ImmediatePopup="True">
+                                          DisplayMember="FullName"
+                                          EditValue="{Binding SelectedUsers, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
                             <dxe:ComboBoxEdit.StyleSettings>
-                                <dxe:CheckedTokenComboBoxStyleSettings NewTokenPosition="None"
-                                                                       />
+                                <dxe:CheckedTokenComboBoxStyleSettings NewTokenPosition="None"/>
                             </dxe:ComboBoxEdit.StyleSettings>
                         </dxe:ComboBoxEdit>
                     </dxlc:LayoutItem>

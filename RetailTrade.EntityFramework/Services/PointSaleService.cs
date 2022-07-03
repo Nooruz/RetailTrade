@@ -27,6 +27,14 @@ namespace RetailTrade.EntityFramework.Services
         public async Task<PointSale> CreateAsync(PointSale entity)
         {
             await using RetailTradeDbContext context = _contextFactory.CreateDbContext();
+            if (entity.UserPointSale != null && entity.UserPointSale.Any())
+            {
+                entity.UserPointSale.ForEach(u =>
+                {
+                    u.User = null;
+                    u.PointSale = null;
+                });
+            }
             PointSale result = await _nonQueryDataService.Create(entity);
             if (result != null)
             {
@@ -91,14 +99,59 @@ namespace RetailTrade.EntityFramework.Services
             return null;
         }
 
+        public async Task<PointSale> GetPointSaleUserAsync(int id)
+        {
+            try
+            {
+                await using var context = _contextFactory.CreateDbContext();
+                return await context.PointSales
+                    .Include(p => p.UserPointSale)
+                    .ThenInclude(p => p.User)
+                    .FirstOrDefaultAsync(a => a.Id == id);
+            }
+            catch (Exception)
+            {
+                //ignore
+            }
+            return null;
+        }
+
         public async Task<PointSale> UpdateAsync(int id, PointSale entity)
         {
-            PointSale result = await _nonQueryDataService.Update(id, entity);
-            if (result != null)
+            try
             {
-                OnEdited?.Invoke(result);
+                RetailTradeDbContext context = _contextFactory.CreateDbContext();
+
+                PointSale pointSale = await context.PointSales.Include(p => p.UserPointSale).FirstOrDefaultAsync(p => p.Id == entity.Id);
+                if (pointSale.UserPointSale != null && pointSale.UserPointSale.Any())
+                {
+                    pointSale.UserPointSale.Clear();
+                    _ = await context.SaveChangesAsync();
+                }
+                if (entity.UserPointSale != null && entity.UserPointSale.Any())
+                {
+                    entity.UserPointSale.ForEach(u =>
+                    {
+                        u.User = null;
+                        u.PointSale = null;
+                    });
+                }
+                PointSale result = await _nonQueryDataService.Update(id, entity);
+                if (result != null)
+                {
+                    result = await context.PointSales
+                        .Include(p => p.UserPointSale)
+                        .ThenInclude(u => u.User)
+                        .FirstOrDefaultAsync(p => p.Id == result.Id);
+                    OnEdited?.Invoke(result);
+                }
+                return result;
             }
-            return result;
+            catch (Exception)
+            {
+                //ignore
+            }
+            return null;
         }
     }
 }
