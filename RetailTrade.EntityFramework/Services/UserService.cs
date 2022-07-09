@@ -56,7 +56,7 @@ namespace RetailTrade.EntityFramework.Services
                 return await context.Users
                     .FirstOrDefaultAsync((e) => e.Id == id);
             }
-            catch (Exception e)
+            catch (Exception)
             {
                 //ignore
             }
@@ -72,7 +72,7 @@ namespace RetailTrade.EntityFramework.Services
                             .Include(u => u.Role)
                             .ToList();
             }
-            catch (Exception e)
+            catch (Exception)
             {
                 //ignore
             }
@@ -88,7 +88,7 @@ namespace RetailTrade.EntityFramework.Services
                     .Include(u => u.Role)
                     .ToListAsync();
             }
-            catch (Exception e)
+            catch (Exception)
             {
                 //ignore
             }
@@ -101,10 +101,11 @@ namespace RetailTrade.EntityFramework.Services
             {
                 await using var context = _contextFactory.CreateDbContext();
                 return await context.Users
+                    .Include(u => u.UserPointSales)
                     .Include(u => u.Role)
                     .FirstOrDefaultAsync(a => a.Username == username);
             }
-            catch (Exception e)
+            catch (Exception)
             {
                 //ignore
             }
@@ -118,7 +119,7 @@ namespace RetailTrade.EntityFramework.Services
                 await using var context = _contextFactory.CreateDbContext();
                 return await context.Users.AnyAsync();
             }
-            catch (Exception e)
+            catch (Exception)
             {
                 //ignore
             }
@@ -134,7 +135,7 @@ namespace RetailTrade.EntityFramework.Services
                     .Where(u => u.Role.Name == "Кассир")
                     .ToList();
             }
-            catch (Exception e)
+            catch (Exception)
             {
                 //ignore
             }
@@ -150,7 +151,7 @@ namespace RetailTrade.EntityFramework.Services
                     .Where(u => u.RoleId == 1)
                     .ToListAsync();
             }
-            catch (Exception e)
+            catch (Exception)
             {
                 //ignore
             }
@@ -166,7 +167,7 @@ namespace RetailTrade.EntityFramework.Services
                     .Where(u => u.RoleId == 2)
                     .ToListAsync();
             }
-            catch (Exception e)
+            catch (Exception)
             {
                 //ignore
             }
@@ -186,7 +187,7 @@ namespace RetailTrade.EntityFramework.Services
                     return true;
                 }
             }
-            catch (Exception e)
+            catch (Exception)
             {
                 //ignore
             }

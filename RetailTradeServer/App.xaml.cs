@@ -141,9 +141,9 @@ namespace RetailTradeServer
                     await context.SaveChangesAsync();
                 }
 
-                WareHouse wareHouse = await context.WareHouses.FirstOrDefaultAsync(w => w.Id == 2);
+                WareHouse wareHouse = await context.WareHouses.FirstOrDefaultAsync(w => w.Id == 1);
 
-                IEnumerable<User> users = await context.Users.Where(u => u.RoleId == 2 ).ToListAsync();
+                IEnumerable<User> users = await context.Users.Where(u => u.RoleId == 2).ToListAsync();
 
                 if (users != null && users.Any())
                 {

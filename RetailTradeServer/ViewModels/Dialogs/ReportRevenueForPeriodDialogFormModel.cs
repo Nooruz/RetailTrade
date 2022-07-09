@@ -73,7 +73,7 @@ namespace RetailTradeServer.ViewModels.Dialogs
             {
                 DataSource = await _receiptService.Predicate(r => r.DateOfPurchase.Date >= SelectedStartDate && r.DateOfPurchase.Date <= SelectedEndDate,
                     r => new Receipt { Total = r.Total, ProductSales =
-                    r.ProductSales.Select(p => new ProductSale { ArrivalPrice = p.ArrivalPrice, SalePrice = p.SalePrice, Quantity = p.Quantity }).ToList(),
+                    r.ProductSales.Select(p => new ProductSale { PurchasePrice = p.PurchasePrice, RetailPrice = p.RetailPrice, Quantity = p.Quantity }).ToList(),
                         Shift = r.Shift
                     })
             };

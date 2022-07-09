@@ -118,7 +118,7 @@ namespace RetailTrade.EntityFramework.Services
                 return await context.ProductSales
                     .Include(p => p.Receipt)
                     .Where(p => p.Receipt.DateOfPurchase.Date >= startDate && p.Receipt.DateOfPurchase.Date <= endDate)
-                    .Select(p => new ProductSale { ArrivalPrice = p.ArrivalPrice, SalePrice = p.SalePrice, Quantity = p.Quantity })
+                    .Select(p => new ProductSale { PurchasePrice = p.PurchasePrice, RetailPrice = p.RetailPrice, Quantity = p.Quantity })
                     .ToListAsync();
             }
             catch (Exception e)

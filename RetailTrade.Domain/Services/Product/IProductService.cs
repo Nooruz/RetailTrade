@@ -24,7 +24,7 @@ namespace RetailTrade.Domain.Services
         Task<bool> SearchByBarcode(string barcode);
         Task<IEnumerable<Product>> GetAllUnmarkedAsync();
         Task<IEnumerable<Product>> Report();
-        Task<IEnumerable<ProductWareHouseView>> GetProducts();
+        Task<IEnumerable<ProductWareHouseView>> GetProducts(int wareHouseId);
         Task<IEnumerable<ProductView>> GetProductViewsAsync();
         Task<ProductView> GetProductViewByIdAsync(int id);
 

@@ -62,13 +62,13 @@ namespace RetailTradeClient.ViewModels.Dialogs
 
                 foreach (ProductSale productSale in SelectedReceipt.ProductSales)
                 {
-                    var sum1NSP = Math.Round(productSale.SalePrice * 1 / 102, 2);
+                    var sum1NSP = Math.Round(productSale.RetailPrice * 1 / 102, 2);
                     //var sum1NDS = Math.Round(productSale.SalePrice * 12 / 113, 2);
                     string sumNSP = Math.Round(sum1NSP * 100, 0).ToString();
                     //string sumNDS = Math.Round(sum1NDS * 100, 0).ToString();
 
                     ShtrihM.Quantity = productSale.Quantity;
-                    ShtrihM.Price = productSale.SalePrice;
+                    ShtrihM.Price = productSale.RetailPrice;
                     ShtrihM.StringForPrinting = string.Join(";", new string[] { "", productSale.Product.TNVED, "", "", "0", "", "2", sumNSP + "\n" + productSale.Product.Name });
 
                     ShtrihM.Tax1 = 0;

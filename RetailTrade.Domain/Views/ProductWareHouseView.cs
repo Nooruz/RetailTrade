@@ -8,10 +8,10 @@
         private string _supplier;
         private string _unit;
         private string _tnved;
-        private string _barcode;
-        private decimal _arrivalPrice;
-        private decimal _salePrice;
+        private decimal _purchasePrice;
+        private decimal _retailPrice;
         private double _quantity;
+        private int _wareHouseId;
 
         #endregion
 
@@ -53,31 +53,22 @@
                 OnPropertyChanged(nameof(TNVED));
             }
         }
-        public string Barcode
+        public decimal PurchasePrice
         {
-            get => _barcode;
+            get => _purchasePrice;
             set
             {
-                _barcode = value;
-                OnPropertyChanged(nameof(Barcode));
+                _purchasePrice = value;
+                OnPropertyChanged(nameof(PurchasePrice));
             }
         }
-        public decimal ArrivalPrice
+        public decimal RetailPrice
         {
-            get => _arrivalPrice;
+            get => _retailPrice;
             set
             {
-                _arrivalPrice = value;
-                OnPropertyChanged(nameof(ArrivalPrice));
-            }
-        }
-        public decimal SalePrice
-        {
-            get => _salePrice;
-            set
-            {
-                _salePrice = value;
-                OnPropertyChanged(nameof(SalePrice));
+                _retailPrice = value;
+                OnPropertyChanged(nameof(RetailPrice));
             }
         }
         public double Quantity
@@ -87,6 +78,15 @@
             {
                 _quantity = value;
                 OnPropertyChanged(nameof(Quantity));
+            }
+        }
+        public int WareHouseId
+        {
+            get => _wareHouseId;
+            set
+            {
+                _wareHouseId = value;
+                OnPropertyChanged(nameof(WareHouseId));
             }
         }
 

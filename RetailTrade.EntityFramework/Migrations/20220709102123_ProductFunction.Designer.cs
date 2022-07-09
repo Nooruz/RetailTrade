@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using RetailTrade.EntityFramework;
 
@@ -11,9 +12,10 @@ using RetailTrade.EntityFramework;
 namespace RetailTrade.EntityFramework.Migrations
 {
     [DbContext(typeof(RetailTradeDbContext))]
-    partial class RetailTradeDbContextModelSnapshot : ModelSnapshot
+    [Migration("20220709102123_ProductFunction")]
+    partial class ProductFunction
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -687,17 +689,14 @@ namespace RetailTrade.EntityFramework.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
 
+                    b.Property<decimal>("ArrivalPrice")
+                        .HasColumnType("decimal(18,2)");
+
                     b.Property<decimal>("DiscountAmount")
                         .HasColumnType("decimal(18,2)");
 
-                    b.Property<int?>("PointSaleId")
-                        .HasColumnType("int");
-
                     b.Property<int>("ProductId")
                         .HasColumnType("int");
-
-                    b.Property<decimal>("PurchasePrice")
-                        .HasColumnType("decimal(18,2)");
 
                     b.Property<double>("Quantity")
                         .HasColumnType("float");
@@ -705,7 +704,7 @@ namespace RetailTrade.EntityFramework.Migrations
                     b.Property<int>("ReceiptId")
                         .HasColumnType("int");
 
-                    b.Property<decimal>("RetailPrice")
+                    b.Property<decimal>("SalePrice")
                         .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal>("Total")
@@ -715,8 +714,6 @@ namespace RetailTrade.EntityFramework.Migrations
                         .HasColumnType("int");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("PointSaleId");
 
                     b.HasIndex("ProductId");
 
@@ -1618,10 +1615,6 @@ namespace RetailTrade.EntityFramework.Migrations
 
             modelBuilder.Entity("RetailTrade.Domain.Models.ProductSale", b =>
                 {
-                    b.HasOne("RetailTrade.Domain.Models.PointSale", "PointSale")
-                        .WithMany("ProductSales")
-                        .HasForeignKey("PointSaleId");
-
                     b.HasOne("RetailTrade.Domain.Models.Product", "Product")
                         .WithMany("ProductSales")
                         .HasForeignKey("ProductId")
@@ -1637,8 +1630,6 @@ namespace RetailTrade.EntityFramework.Migrations
                     b.HasOne("RetailTrade.Domain.Models.WareHouse", "WareHouse")
                         .WithMany("ProductSales")
                         .HasForeignKey("WareHouseId");
-
-                    b.Navigation("PointSale");
 
                     b.Navigation("Product");
 
@@ -1881,8 +1872,6 @@ namespace RetailTrade.EntityFramework.Migrations
 
             modelBuilder.Entity("RetailTrade.Domain.Models.PointSale", b =>
                 {
-                    b.Navigation("ProductSales");
-
                     b.Navigation("UserPointSale");
                 });
 

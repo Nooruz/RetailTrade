@@ -11,7 +11,6 @@ using RetailTradeClient.State.Shifts;
 using RetailTradeClient.State.Users;
 using RetailTradeClient.ViewModels;
 using RetailTradeClient.ViewModels.Base;
-using RetailTradeClient.ViewModels.Components;
 using RetailTradeClient.ViewModels.Dialogs;
 using RetailTradeClient.ViewModels.Factories;
 using System;
@@ -31,8 +30,8 @@ namespace RetailTradeClient.HostBuilders
                 _ = services.AddTransient(CreateLoginViewModel);
                 _ = services.AddTransient(CreateGlobalMessageViewModel);
 
-                _ = services.AddSingleton<CreateViewModel<HomeViewModel>>(servicesProvider => () => CreateHomeViewModel(servicesProvider));
                 _ = services.AddSingleton<CreateViewModel<LoginViewModel>>(servicesProvider => () => CreateLoginViewModel(servicesProvider));
+                _ = services.AddSingleton<CreateViewModel<HomeViewModel>>(servicesProvider => () => CreateHomeViewModel(servicesProvider));
 
                 _ = services.AddSingleton<IViewModelFactory, ViewModelFactory>();
 

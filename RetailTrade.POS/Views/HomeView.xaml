@@ -9,7 +9,7 @@
 
     <dxwui:HamburgerMenu ViewState="Overlay"
                          AllowBuiltInNavigation="True"
-                         Content="{Binding CurrentMenuViewModels}">
+                         Content="{Binding CurrentMenuViewModel}">
 
         <dxwui:HamburgerMenuNavigationButton Content="Продажи"
                                              Command="{Binding RenavigateCommand}"
@@ -32,8 +32,8 @@
             <dxwui:HamburgerSubMenuNavigationButton Content="ККМ"
                                                     CommandParameter="SaleDashboard"/>
 
-            <dxwui:HamburgerSubMenuNavigationButton Content="Работка кассы"
-                                                    CommandParameter="SaleDashboard"/>
+            <dxwui:HamburgerSubMenuNavigationButton Content="Работа кассы"
+                                                    CommandParameter="WorkSale"/>
             
         </dxwui:HamburgerSubMenu>
 

@@ -1,0 +1,32 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+
+    <Style TargetType="TextBlock" x:Key="IconicBase">
+        <Setter Property="FontSize" Value="14"/>
+        <Setter Property="HorizontalAlignment" Value="Center"/>
+        <Setter Property="VerticalAlignment" Value="Center"/>
+    </Style>
+
+    <Style TargetType="TextBlock" x:Key="IconicTextBlock" BasedOn="{StaticResource IconicBase}">
+        <Setter Property="FontFamily" Value="{StaticResource FontAwesomeBold}"/>
+    </Style>
+
+    <Style TargetType="TextBlock" 
+           x:Key="IconicBold"
+           BasedOn="{StaticResource IconicBase}">
+        <Setter Property="FontFamily" Value="{StaticResource FontAwesomeBold}"/>
+    </Style>
+
+    <Style TargetType="TextBlock" 
+           x:Key="IconicBrands"
+           BasedOn="{StaticResource IconicBase}">
+        <Setter Property="FontFamily" Value="{StaticResource FontAwesomeBrands}"/>
+    </Style>
+
+    <Style TargetType="TextBlock" 
+           x:Key="IconicRegular"
+           BasedOn="{StaticResource IconicBase}">
+        <Setter Property="FontFamily" Value="{StaticResource FontAwesomeRegular}"/>
+    </Style>
+
+</ResourceDictionary>

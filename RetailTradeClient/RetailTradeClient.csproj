@@ -52,10 +52,10 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="DevExpress.Reporting.Core.ru" Version="21.2.3" />
-    <PackageReference Include="DevExpress.Wpf.Controls.ru" Version="21.2.3" />
-    <PackageReference Include="devexpress.wpf.pivotgrid" Version="21.2.3" />
-    <PackageReference Include="DevExpress.Wpf.Printing.ru" Version="21.2.3" />
+    <PackageReference Include="DevExpress.Reporting.Core" Version="22.1.3" />
+    <PackageReference Include="DevExpress.Wpf.Controls" Version="22.1.3" />
+    <PackageReference Include="DevExpress.Wpf.PivotGrid" Version="22.1.3" />
+    <PackageReference Include="DevExpress.Wpf.Printing" Version="22.1.3" />
     <PackageReference Include="Microsoft.AspNet.Identity.Core" Version="2.2.3" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="6.0.5">
       <PrivateAssets>all</PrivateAssets>

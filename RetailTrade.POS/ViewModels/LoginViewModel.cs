@@ -1,4 +1,5 @@
-﻿using RetailTrade.Domain.Models;
+﻿using DevExpress.Mvvm.DataAnnotations;
+using RetailTrade.Domain.Models;
 using RetailTrade.Domain.Services;
 using RetailTrade.POS.Commands;
 using RetailTrade.POS.States.Authenticators;
@@ -39,17 +40,19 @@ namespace RetailTrade.POS.ViewModels
             set
             {
                 _selectedUser = value;
+                if (_selectedUser != null)
+                {
+                    _selectedUser.PasswordHash = string.Empty;
+                }
                 OnPropertyChanged(nameof(SelectedUser));
-                OnPropertyChanged(nameof(CanLogin));
             }
         }
-        public bool CanLogin => SelectedUser != null && !string.IsNullOrEmpty(SelectedUser.PasswordHash);
 
         #endregion
 
         #region Commands
 
-        public ICommand LoginCommand => new LoginCommand(this, _authenticator);
+        public ICommand LoginCommand => new LoginCommand(this, _authenticator, _homeNavigato);
 
         #endregion
 
@@ -57,9 +60,23 @@ namespace RetailTrade.POS.ViewModels
 
         public LoginViewModel(IAuthenticator authenticator,
             IRenavigator homeNavigato,
-            IUserService userService)
+            IUserService userService,
+            IUserStore userStore)
         {
+            _userService = userService;
+            _authenticator = authenticator;
+            _userStore = userStore;
+            _homeNavigato = homeNavigato;
+        }
 
+        #endregion
+
+        #region Public Voids
+
+        [Command]
+        public async void UserControlLoaded()
+        {
+            Users = await _userService.GetCashiersAsync();
         }
 
         #endregion

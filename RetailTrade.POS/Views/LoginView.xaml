@@ -7,6 +7,10 @@
              Width="500"
              HorizontalAlignment="Center"
              VerticalAlignment="Center">
+    <dxmvvm:Interaction.Behaviors>
+        <dxmvvm:EventToCommand EventName="Loaded"
+                               Command="{Binding UserControlLoadedCommand}"/>
+    </dxmvvm:Interaction.Behaviors>
 
     <dxlc:LayoutControl>
 
@@ -23,7 +27,7 @@
             </dxlc:LayoutItem>
 
             <dxlc:LayoutItem Label="Пароль:">
-                <dxe:PasswordBoxEdit Text="{Binding Password, UpdateSourceTrigger=PropertyChanged}"/>
+                <dxe:PasswordBoxEdit Text="{Binding SelectedUser.PasswordHash, UpdateSourceTrigger=PropertyChanged}"/>
             </dxlc:LayoutItem>
 
             <Button Content="Войти"

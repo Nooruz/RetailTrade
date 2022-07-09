@@ -125,6 +125,7 @@ namespace RetailTrade.EntityFramework.Services
             {
                 await using var context = _contextFactory.CreateDbContext();
                 return await context.Products
+                    .Where(p => p.DeleteMark == false)
                     .ToListAsync();
             }
             catch (Exception)
@@ -385,12 +386,12 @@ namespace RetailTrade.EntityFramework.Services
             return null;
         }
 
-        public async Task<IEnumerable<ProductWareHouseView>> GetProducts()
+        public async Task<IEnumerable<ProductWareHouseView>> GetProducts(int wareHouseId)
         {
             try
             {
                 await using var context = _contextFactory.CreateDbContext();
-                return await context.ProductWareHouseViews.ToListAsync();
+                return await context.ProductFunction(wareHouseId).ToListAsync();
             }
             catch (Exception)
             {

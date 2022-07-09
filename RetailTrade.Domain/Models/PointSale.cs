@@ -130,6 +130,7 @@ namespace RetailTrade.Domain.Models
         public WareHouse WareHouse { get; set; }
 
         public ICollection<User> Users { get; set; }
+        public ICollection<ProductSale> ProductSales { get; set; }
 
         public List<UserPointSale> UserPointSale
         {

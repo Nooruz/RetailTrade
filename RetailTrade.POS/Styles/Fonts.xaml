@@ -1,0 +1,33 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:system="clr-namespace:System;assembly=mscorlib">
+
+    <FontFamily x:Key="FontAwesomeBold">pack://application:,,,/Fonts/fa-solid-900.ttf#Font Awesome 5 Free Solid</FontFamily>
+    <FontFamily x:Key="FontAwesomeRegular">pack://application:,,,/Fonts/fa-regular-400.ttf#Font Awesome 5 Free Regular</FontFamily>
+    <FontFamily x:Key="FontAwesomeBrands">pack://application:,,,/Fonts/fa-brands-400.ttf#Font Awesome 5 Brands Regular</FontFamily>
+
+    <system:String x:Key="faSignOutAlt">&#xf2f5;</system:String>
+    <system:String x:Key="faUserClock">&#xf4fd;</system:String>
+    <system:String x:Key="faUser">&#xf007;</system:String>
+    <system:String x:Key="faInfoCircle">&#xf05a;</system:String>
+    <system:String x:Key="faExclamationTriangle">&#xf071;</system:String>
+    <system:String x:Key="faCheckCircle">&#xf058;</system:String>
+    <system:String x:Key="faClose">&#xf00d;</system:String>
+    <system:String x:Key="faMoneyBillAlt">&#xf3d1;</system:String>
+    <system:String x:Key="faBackspace">&#xf55a;</system:String>
+    <system:String x:Key="faUndoAlt">&#xf2ea;</system:String>
+    <system:String x:Key="faCreditCard">&#xf09d;</system:String>
+    <system:String x:Key="faFileAlt">&#xf15c;</system:String>
+    <system:String x:Key="faCashRegister">&#xf788;</system:String>
+    <system:String x:Key="faTimesCircle">&#xf057;</system:String>
+    <system:String x:Key="faMagnifyingGlass">&#xf002;</system:String>
+    <system:String x:Key="faFolder">&#xf07b;</system:String>
+    <system:String x:Key="faMinus">&#xf068;</system:String>
+    <system:String x:Key="faTrashAlt">&#xf2ed;</system:String>
+    <system:String x:Key="faPlus">&#xf067;</system:String>
+    <system:String x:Key="faPercent">&#xf295;</system:String>
+    <system:String x:Key="faCube">&#xf1b2;</system:String>
+    <system:String x:Key="faStar">&#xf005;</system:String>
+    <system:String x:Key="faEllipsisVertical">&#xf142;</system:String>
+
+</ResourceDictionary>

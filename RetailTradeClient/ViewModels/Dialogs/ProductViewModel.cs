@@ -150,10 +150,10 @@ namespace RetailTradeClient.ViewModels.Dialogs
         [Command]
         public async void UserControlLoaded()
         {
-            IEnumerable<ProductWareHouseView> productWareHouseViews = await _productService.GetProducts();
+            //IEnumerable<ProductWareHouseView> productWareHouseViews = await _productService.GetProducts();
             //IEnumerable<Product> products = Settings.Default.IsKeepRecords ? await _productWareHouseService.GetProducts() :
             //    await _productService.PredicateSelect(p => p.DeleteMark == false, p => new Product { Id = p.Id, Name = p.Name, Barcode = p.Barcode, TypeProductId = p.TypeProductId, SalePrice = p.SalePrice, ArrivalPrice = p.ArrivalPrice });
-            Nomenclatures = new(productWareHouseViews.Select(p => new Nomenclature { Id = p.Id, Name = p.Name, Barcode = p.Barcode, SalePrice = p.SalePrice, QuantityInStock = p.Quantity, ArrivalPrice = p.ArrivalPrice }));
+            //Nomenclatures = new(productWareHouseViews.Select(p => new Nomenclature { Id = p.Id, Name = p.Name, SalePrice = p.RetailPrice, QuantityInStock = p.Quantity, ArrivalPrice = p.PurchasePrice }));
             TypeProducts = await _typeProductService.GetAllAsync();
         }
 

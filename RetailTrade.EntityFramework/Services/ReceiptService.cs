@@ -131,7 +131,7 @@ namespace RetailTrade.EntityFramework.Services
                     {
                         Quantity = p.Quantity,
                         Sum = p.Total,
-                        SalePrice = p.SalePrice,
+                        SalePrice = p.RetailPrice,
                         ProductId = p.ProductId
                     }).ToList()
                 });

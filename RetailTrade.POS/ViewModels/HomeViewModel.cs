@@ -18,6 +18,12 @@ namespace RetailTrade.POS.ViewModels
 
         #region Public Properties
 
+        public BaseViewModel CurrentMenuViewModel => _menuNavigator.CurrentViewModel;
+
+        #endregion
+
+        #region Commands
+
         public ICommand UpdateCurrentMenuViewModelCommand => new UpdateCurrentMenuViewModelCommand(_menuNavigator, _menuViewModelFactory);
 
         #endregion
@@ -30,13 +36,17 @@ namespace RetailTrade.POS.ViewModels
             _menuNavigator = menuNavigator;
             _menuViewModelFactory = menuViewModelFactory;
 
+            _menuNavigator.StateChanged += MenuNavigator_StateChanged;
         }
 
         #endregion
 
         #region Private Voids
 
-
+        private void MenuNavigator_StateChanged()
+        {
+            OnPropertyChanged(nameof(CurrentMenuViewModel));
+        }
 
         #endregion
 

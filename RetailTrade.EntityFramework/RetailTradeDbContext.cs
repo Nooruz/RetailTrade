@@ -2,6 +2,7 @@
 using RetailTrade.Domain.Models;
 using RetailTrade.Domain.Views;
 using System;
+using System.Linq;
 
 namespace RetailTrade.EntityFramework
 {
@@ -177,10 +178,14 @@ namespace RetailTrade.EntityFramework
 
         #endregion
 
+        public IQueryable<ProductWareHouseView> ProductFunction(int wareHouseId) => FromExpression(() => ProductFunction(wareHouseId));
+
         public RetailTradeDbContext(DbContextOptions<RetailTradeDbContext> options) : base(options) { }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+            modelBuilder.HasDbFunction(() => ProductFunction(default));
+
             modelBuilder.Entity<PointSale>()
                 .HasMany(p => p.Users)
                 .WithMany(u => u.PointSales)
