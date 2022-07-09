@@ -4,6 +4,7 @@
     xmlns:dxlc="http://schemas.devexpress.com/winfx/2008/xaml/layoutcontrol"
     xmlns:dxmvvm="http://schemas.devexpress.com/winfx/2008/xaml/mvvm"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:sys="clr-namespace:System;assembly=mscorlib"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:components="clr-namespace:RetailTradeServer.Components"
@@ -62,6 +63,7 @@
                     <dxlc:LayoutItem Label="Кассиры">
                         <dxe:ComboBoxEdit ItemsSource="{Binding Users}"
                                           DisplayMember="FullName"
+                                          ValueMember="Id"
                                           EditValue="{Binding SelectedUsers, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
                             <dxe:ComboBoxEdit.StyleSettings>
                                 <dxe:CheckedTokenComboBoxStyleSettings NewTokenPosition="None"/>

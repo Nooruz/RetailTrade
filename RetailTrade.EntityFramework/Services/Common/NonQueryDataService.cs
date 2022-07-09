@@ -44,7 +44,7 @@ namespace RetailTrade.EntityFramework.Services.Common
                 }
                 return null;
             }
-            catch (Exception e)
+            catch (Exception)
             {
                 //ignore
             }
@@ -61,7 +61,7 @@ namespace RetailTrade.EntityFramework.Services.Common
                 await context.SaveChangesAsync();
                 return true;
             }
-            catch (Exception e)
+            catch (Exception)
             {
                 //ignore
             }

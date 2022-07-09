@@ -1,0 +1,17 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:dxwui="http://schemas.devexpress.com/winfx/2008/xaml/windowsui"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+
+    <Style TargetType="{x:Type dxwui:HamburgerSubMenu}">
+        <Setter Property="MoreButtonVisibilityMode" Value="Hidden"/>
+    </Style>
+
+    <Style TargetType="{x:Type dxwui:HamburgerSubMenuNavigationButton}">
+        <Setter Property="Command" Value="{Binding RenavigateCommand}"/>
+    </Style>
+
+    <Style TargetType="{x:Type dxwui:HamburgerMenuNavigationButton}">
+        <Setter Property="Command" Value="{Binding RenavigateCommand}"/>
+    </Style>
+
+</ResourceDictionary>

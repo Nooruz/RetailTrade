@@ -1,0 +1,38 @@
+﻿<UserControl xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:dxe="http://schemas.devexpress.com/winfx/2008/xaml/editors"
+             xmlns:dxlc="http://schemas.devexpress.com/winfx/2008/xaml/layoutcontrol"
+             xmlns:dxmvvm="http://schemas.devexpress.com/winfx/2008/xaml/mvvm"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             x:Class="RetailTrade.POS.Views.LoginView"
+             Width="500"
+             HorizontalAlignment="Center"
+             VerticalAlignment="Center">
+
+    <dxlc:LayoutControl>
+
+        <dxlc:LayoutGroup Orientation="Vertical"
+                          View="GroupBox"
+                          Header="Войти в систему">
+
+            <dxlc:LayoutItem Label="Имя пользователя:">
+                <dxe:ComboBoxEdit ItemsSource="{Binding Users}"
+                                  DisplayMember="Username"
+                                  IncrementalSearch="True"
+                                  AutoComplete="True"
+                                  SelectedItem="{Binding SelectedUser, UpdateSourceTrigger=PropertyChanged}"/>
+            </dxlc:LayoutItem>
+
+            <dxlc:LayoutItem Label="Пароль:">
+                <dxe:PasswordBoxEdit Text="{Binding Password, UpdateSourceTrigger=PropertyChanged}"/>
+            </dxlc:LayoutItem>
+
+            <Button Content="Войти"
+                    Command="{Binding LoginCommand}"
+                    VerticalAlignment="Top"
+                    IsDefault="True"/>
+
+        </dxlc:LayoutGroup>
+
+    </dxlc:LayoutControl>
+
+</UserControl>

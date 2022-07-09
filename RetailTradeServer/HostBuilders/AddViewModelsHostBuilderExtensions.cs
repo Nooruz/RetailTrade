@@ -1,6 +1,5 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using RetailTrade.Barcode.Services;
 using RetailTrade.Domain.Services;
 using RetailTradeServer.State.Authenticators;
 using RetailTradeServer.State.Messages;

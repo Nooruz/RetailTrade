@@ -135,6 +135,9 @@ namespace RetailTrade.EntityFramework.Services
                         u.User = null;
                         u.PointSale = null;
                     });
+                    await context.UserPointSales.AddRangeAsync(entity.UserPointSale);
+                    _ = await context.SaveChangesAsync();
+                    entity.UserPointSale = null;
                 }
                 PointSale result = await _nonQueryDataService.Update(id, entity);
                 if (result != null)

@@ -1,5 +1,4 @@
 ﻿using DevExpress.Mvvm.DataAnnotations;
-using DevExpress.Xpf.Editors;
 using RetailTrade.Domain.Models;
 using RetailTrade.Domain.Services;
 using RetailTradeServer.State.Messages;
@@ -7,7 +6,6 @@ using RetailTradeServer.ViewModels.Base;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Windows;
 
 namespace RetailTradeServer.ViewModels.Menus
 {
@@ -37,8 +35,9 @@ namespace RetailTradeServer.ViewModels.Menus
                 _createdPointSale = value;
                 if (_createdPointSale.Users != null && _createdPointSale.Users.Any())
                 {
-                    SelectedUsers = _createdPointSale.Users.Cast<object>().ToList();
+                    SelectedUsers = _createdPointSale.Users.Select(u => u.Id).Cast<object>().ToList();
                 }
+                Header = $"Точка продаж ({_createdPointSale.Name})";
                 OnPropertyChanged(nameof(CreatedPoitnSale));
             }
         }
@@ -122,6 +121,10 @@ namespace RetailTradeServer.ViewModels.Menus
                 }
                 if (CreatedPoitnSale.Id == 0)
                 {
+                    if (SelectedUsers != null && SelectedUsers.Any())
+                    {
+                        CreatedPoitnSale.UserPointSale = SelectedUsers.Select(u => new UserPointSale { UserId = (int)u }).ToList();
+                    }
                     PointSale result = await _pointSaleService.CreateAsync(CreatedPoitnSale);
                     if (result != null)
                     {
@@ -152,6 +155,10 @@ namespace RetailTradeServer.ViewModels.Menus
                 }
                 else
                 {
+                    if (SelectedUsers != null && SelectedUsers.Any())
+                    {
+                        CreatedPoitnSale.UserPointSale = SelectedUsers.Select(u => new UserPointSale { UserId = (int)u, PointSaleId = CreatedPoitnSale.Id }).ToList();
+                    }
                     PointSale updatedPointSale = await _pointSaleService.UpdateAsync(CreatedPoitnSale.Id, CreatedPoitnSale);
                     if (updatedPointSale != null)
                     {

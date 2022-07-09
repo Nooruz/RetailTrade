@@ -266,9 +266,8 @@ namespace RetailTrade.EntityFramework
                     .OnDelete(DeleteBehavior.Restrict);
             });
 
-            modelBuilder.Entity<WareHouse>().HasData(
-                new WareHouse { Id = 1, Name = "Розничный магазин" },
-                new WareHouse { Id = 2, Name = "Основной склад" });
+            _ = modelBuilder.Entity<WareHouse>().HasData(
+                new WareHouse { Id = 1, Name = "Основной склад" });
 
             modelBuilder.Entity<Gender>().HasData(
                 new Gender { Id = 1, Name = "Мужской" },

@@ -137,11 +137,6 @@ namespace RetailTradeServer
                         Name = "Основной склад",
                         Address = "",
                         TypeWareHouseId = 1
-                    }, new WareHouse
-                    {
-                        Name = "Розничный магазин",
-                        Address = "",
-                        TypeWareHouseId = 2
                     });
                     await context.SaveChangesAsync();
                 }
