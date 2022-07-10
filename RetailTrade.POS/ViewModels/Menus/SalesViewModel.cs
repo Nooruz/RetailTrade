@@ -1,9 +1,12 @@
-﻿using DevExpress.Mvvm.DataAnnotations;
+﻿using DevExpress.Mvvm;
+using DevExpress.Mvvm.DataAnnotations;
 using DevExpress.Xpf.Grid;
 using RetailTrade.Domain.Models;
 using RetailTrade.Domain.Services;
 using RetailTrade.Domain.Views;
 using RetailTrade.POS.States.Users;
+using RetailTrade.POS.ViewModels.Dialogs;
+using RetailTrade.POS.Views.Dialogs;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -48,6 +51,7 @@ namespace RetailTrade.POS.ViewModels.Menus
         }
         public User CurrentUser => _userStore.CurrentUser;
         public GridControl ProductGridControl { get; set; }
+        public GridControl ProductSaleGridControl { get; set; }
         public ProductWareHouseView SelectedProduct
         {
             get => _selectedProduct;
@@ -78,12 +82,38 @@ namespace RetailTrade.POS.ViewModels.Menus
         {
             try
             {
-                GetRowType(ProductGridControl.View.GetRowHandleByMouseEventArgs(e as MouseEventArgs));
+                GetRowType(ProductGridControl.View.GetRowHandleByMouseEventArgs(e));
             }
             catch (Exception)
             {
                 //ignore
             }
+        }
+
+        private void ProductSaleTableView_MouseDown(object sender, MouseButtonEventArgs e)
+        {
+            try
+            {
+                GetProductSaleRowType(ProductGridControl.View.GetRowHandleByMouseEventArgs(e));
+            }
+            catch (Exception)
+            {
+                //ignore
+            }
+        }
+
+        private void GetProductSaleRowType(int rowHandle)
+        {
+            if (ProductGridControl.IsGroupRowHandle(rowHandle))
+                return;
+            if (rowHandle == DataControlBase.AutoFilterRowHandle)
+                return;
+            if (rowHandle == DataControlBase.NewItemRowHandle)
+                return;
+            if (rowHandle == DataControlBase.InvalidRowHandle)
+                return;
+
+            WindowService.Show(nameof(PositionEditorView), new PositionEditorViewModel());
         }
 
         private void GetRowType(int rowHandle)
@@ -164,6 +194,27 @@ namespace RetailTrade.POS.ViewModels.Menus
                         ProductGridControl = gridControl;
                         TableView tableView = ProductGridControl.View as TableView;
                         tableView.MouseDown += TableView_MouseDown;
+                    }
+                }
+            }
+            catch (Exception)
+            {
+                //ignore
+            }
+        }
+
+        [Command]
+        public void ProductSaleGridControlLoaded(object sender)
+        {
+            try
+            {
+                if (sender is RoutedEventArgs e)
+                {
+                    if (e.Source is GridControl gridControl)
+                    {
+                        ProductSaleGridControl = gridControl;
+                        TableView productSaleTableView = ProductSaleGridControl.View as TableView;
+                        productSaleTableView.MouseDown += ProductSaleTableView_MouseDown;
                     }
                 }
             }

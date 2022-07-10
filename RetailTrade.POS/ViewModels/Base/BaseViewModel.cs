@@ -7,6 +7,16 @@ namespace RetailTrade.POS.ViewModels
     public delegate TMenuViewModel CreateMenuViewModel<TMenuViewModel>() where TMenuViewModel : BaseViewModel;
     public class BaseViewModel : ViewModelBase, INotifyPropertyChanged
     {
+        #region Services
+
+        protected IWindowService WindowService => GetService<IWindowService>("DialogService");
+        protected IWindowService DocumentViewerService => GetService<IWindowService>("DocumentViewerService");
+        protected IDialogService DialogService => GetService<IDialogService>();
+        protected ICurrentWindowService CurrentWindowService => GetService<ICurrentWindowService>();
+        protected IMessageBoxService MessageBoxService => GetService<IMessageBoxService>();
+
+        #endregion
+
         #region PropertyChanged
 
         public event PropertyChangedEventHandler PropertyChanged;        

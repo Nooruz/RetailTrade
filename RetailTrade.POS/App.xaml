@@ -47,6 +47,8 @@
                 <ResourceDictionary Source="/Styles/GridColumnStyle.xaml"/>
                 <ResourceDictionary Source="/Styles/ButtonStyle.xaml"/>
                 <ResourceDictionary Source="/Styles/SpinEditStyle.xaml"/>
+                <ResourceDictionary Source="/Styles/DialogServiceStyle.xaml"/>
+                <ResourceDictionary Source="/Styles/UserControlStyle.xaml"/>
             </ResourceDictionary.MergedDictionaries>
 
         </ResourceDictionary>
