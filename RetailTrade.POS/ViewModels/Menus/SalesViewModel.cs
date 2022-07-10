@@ -5,6 +5,8 @@ using RetailTrade.Domain.Services;
 using RetailTrade.Domain.Views;
 using RetailTrade.POS.States.Users;
 using System;
+using System.Collections;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Windows;
@@ -55,6 +57,7 @@ namespace RetailTrade.POS.ViewModels.Menus
                 OnPropertyChanged(nameof(SelectedProduct));
             }
         }
+        public decimal TotalSum => ProductSales.Sum(p => p.Total);
 
         #endregion
 
@@ -112,17 +115,36 @@ namespace RetailTrade.POS.ViewModels.Menus
                         Name = SelectedProduct.Name
                     }
                 });
+                ProductSales.Move(ProductSales.Count - 1, 0);
             }
             else
             {
                 productSale.Quantity++;
                 productSale.Total = (decimal)productSale.Quantity * productSale.RetailPrice;
             }
+            OnPropertyChanged(nameof(TotalSum));
         }
 
         #endregion
 
         #region Public Vodis
+
+        [Command]
+        public void ClearProductSale()
+        {
+            try
+            {
+                if (ProductSales.Any())
+                {
+                    ProductSales.Clear();
+                    OnPropertyChanged(nameof(TotalSum));
+                }
+            }
+            catch (Exception)
+            {
+                //ignore
+            }
+        }
 
         [Command]
         public async void UserControlLoaded()

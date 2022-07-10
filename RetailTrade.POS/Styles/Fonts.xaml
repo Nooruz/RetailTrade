@@ -29,5 +29,8 @@
     <system:String x:Key="faCube">&#xf1b2;</system:String>
     <system:String x:Key="faStar">&#xf005;</system:String>
     <system:String x:Key="faEllipsisVertical">&#xf142;</system:String>
+    <system:String x:Key="faHistory">&#xf1da;</system:String>
+    <system:String x:Key="faTag">&#xf02b;</system:String>
+    <system:String x:Key="faMale">&#xf183;</system:String>
 
 </ResourceDictionary>

@@ -45,6 +45,8 @@
                 <ResourceDictionary Source="/Styles/TextBlockStyle.xaml"/>
                 <ResourceDictionary Source="/Styles/HamburgerMenuStyle.xaml"/>
                 <ResourceDictionary Source="/Styles/GridColumnStyle.xaml"/>
+                <ResourceDictionary Source="/Styles/ButtonStyle.xaml"/>
+                <ResourceDictionary Source="/Styles/SpinEditStyle.xaml"/>
             </ResourceDictionary.MergedDictionaries>
 
         </ResourceDictionary>

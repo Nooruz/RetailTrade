@@ -14,9 +14,9 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="DevExpress.Wpf.Controls" Version="22.1.3" />
+    <PackageReference Include="DevExpress.Wpf.Controls" Version="21.2.6" />
     <PackageReference Include="devexpress.wpf.grid.core" Version="22.1.3" />
-    <PackageReference Include="DevExpress.Wpf.LayoutControl" Version="22.1.3" />
+    <PackageReference Include="DevExpress.Wpf.LayoutControl" Version="21.2.6" />
     <PackageReference Include="devexpress.wpf.propertygrid" Version="22.1.3" />
     <PackageReference Include="Microsoft.AspNet.Identity.Core" Version="2.2.3" />
     <PackageReference Include="Microsoft.EntityFrameworkCore" Version="6.0.5" />
@@ -60,12 +60,22 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Page Update="Styles\ButtonStyle.xaml">
+      <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
+    </Page>
     <Page Update="Styles\Fonts.xaml">
+      <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
+    </Page>
+    <Page Update="Styles\SpinEditStyle.xaml">
       <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
     </Page>
     <Page Update="Styles\TextBlockStyle.xaml">
       <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
     </Page>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Customs\" />
   </ItemGroup>
 
 </Project>
