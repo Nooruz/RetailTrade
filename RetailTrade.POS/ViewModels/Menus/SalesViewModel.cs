@@ -8,8 +8,6 @@ using RetailTrade.POS.States.Users;
 using RetailTrade.POS.ViewModels.Dialogs;
 using RetailTrade.POS.Views.Dialogs;
 using System;
-using System.Collections;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Windows;
@@ -26,6 +24,7 @@ namespace RetailTrade.POS.ViewModels.Menus
         private ObservableCollection<ProductWareHouseView> _products;
         private ObservableCollection<ProductSale> _productSales = new();
         private ProductWareHouseView _selectedProduct;
+        private ProductSale _selectedProductSale;
 
         #endregion
 
@@ -59,6 +58,15 @@ namespace RetailTrade.POS.ViewModels.Menus
             {
                 _selectedProduct = value;
                 OnPropertyChanged(nameof(SelectedProduct));
+            }
+        }
+        public ProductSale SelectedProductSale
+        {
+            get => _selectedProductSale;
+            set
+            {
+                _selectedProductSale = value;
+                OnPropertyChanged(nameof(SelectedProductSale));
             }
         }
         public decimal TotalSum => ProductSales.Sum(p => p.Total);
@@ -112,8 +120,11 @@ namespace RetailTrade.POS.ViewModels.Menus
                 return;
             if (rowHandle == DataControlBase.InvalidRowHandle)
                 return;
-
-            WindowService.Show(nameof(PositionEditorView), new PositionEditorViewModel());
+            if (WindowService.IsWindowAlive)
+            {
+                WindowService.Close();
+            }
+            WindowService.Show(nameof(PositionEditorView), new PositionEditorViewModel() { Title = "Редактор позиции", EditProductSale = SelectedProductSale });
         }
 
         private void GetRowType(int rowHandle)

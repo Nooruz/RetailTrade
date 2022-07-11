@@ -30,6 +30,7 @@ namespace RetailTrade.Domain.Models
             set
             {
                 _quantity = value;
+                Total = (decimal)_quantity * RetailPrice;
                 OnPropertyChanged(nameof(Quantity));
             }
         }
@@ -43,7 +44,7 @@ namespace RetailTrade.Domain.Models
             get => _total;
             set
             {
-                _total = value;
+                _total = value - DiscountAmount;
                 OnPropertyChanged(nameof(Total));
             }
         }
@@ -72,6 +73,7 @@ namespace RetailTrade.Domain.Models
             set
             {
                 _retailPrice = value;
+                Total = (decimal)Quantity * _retailPrice;
                 OnPropertyChanged(nameof(RetailPrice));
             }
         }

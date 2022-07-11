@@ -7,6 +7,26 @@ namespace RetailTrade.POS.ViewModels
     public delegate TMenuViewModel CreateMenuViewModel<TMenuViewModel>() where TMenuViewModel : BaseViewModel;
     public class BaseViewModel : ViewModelBase, INotifyPropertyChanged
     {
+        #region Private Members
+
+        private string? _title;
+
+        #endregion
+
+        #region Public Properties
+
+        public string? Title
+        {
+            get => _title;
+            set
+            {
+                _title = value;
+                OnPropertyChanged(nameof(Title));
+            }
+        }
+
+        #endregion
+
         #region Services
 
         protected IWindowService WindowService => GetService<IWindowService>("DialogService");

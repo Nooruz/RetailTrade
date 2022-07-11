@@ -11,14 +11,16 @@
                     <ItemsControl>
                         <dxmvvm:WindowService x:Name="DialogService"
                                               WindowStartupLocation="CenterOwner"
-                                              AllowSetWindowOwner="True">
+                                              AllowSetWindowOwner="True"
+                                              WindowShowMode="Dialog">
                             <dxmvvm:WindowService.WindowStyle>
                                 <Style TargetType="{x:Type dx:ThemedWindow}" BasedOn="{StaticResource DialogService}"/>
                             </dxmvvm:WindowService.WindowStyle>
                         </dxmvvm:WindowService>
                         <dxmvvm:WindowService x:Name="DocumentViewerService"
                                               WindowStartupLocation="CenterOwner"
-                                              AllowSetWindowOwner="True">
+                                              AllowSetWindowOwner="True"
+                                              WindowShowMode="Dialog">
                             <dxmvvm:WindowService.WindowStyle>
                                 <Style TargetType="{x:Type dx:ThemedWindow}" BasedOn="{StaticResource DocumentViewerService}"/>
                             </dxmvvm:WindowService.WindowStyle>

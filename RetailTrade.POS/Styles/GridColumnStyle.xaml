@@ -73,12 +73,28 @@
                                        FontSize="16"/>
 
                             <TextBlock Text="x"
+                                       VerticalAlignment="Center"
                                        Foreground="#ACACAC"
                                        Margin="5 0"/>
 
                             <TextBlock Text="{Binding Path=RowData.Row.RetailPrice, StringFormat=N2}"
                                        FontSize="16"
                                        Foreground="#ACACAC"/>
+
+                            <TextBlock FontSize="16"
+                                       Foreground="#ACACAC">
+                                <Run Text=" -"/>
+                                <Run Text="{Binding Path=RowData.Row.DiscountAmount, StringFormat=N2}"/>
+                                <TextBlock.Style>
+                                    <Style TargetType="{x:Type TextBlock}">
+                                        <Style.Triggers>
+                                            <DataTrigger Binding="{Binding Path=RowData.Row.DiscountAmount}" Value="0">
+                                                <Setter Property="Visibility" Value="Collapsed"/>
+                                            </DataTrigger>
+                                        </Style.Triggers>
+                                    </Style>
+                                </TextBlock.Style>
+                            </TextBlock>
 
 
                         </StackPanel>
