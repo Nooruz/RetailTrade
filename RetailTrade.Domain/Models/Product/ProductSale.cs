@@ -7,6 +7,7 @@ namespace RetailTrade.Domain.Models
         #region Private Members
 
         private double _quantity;
+        private decimal _totalWithDiscount;
         private decimal _total;
         private decimal _discountAmount;
         private decimal _purchasePrice;
@@ -36,7 +37,21 @@ namespace RetailTrade.Domain.Models
         }
 
         /// <summary>
-        /// Итого
+        /// Итого со скидкой
+        /// </summary>
+        [Column(TypeName = "decimal(18,2)")]
+        public decimal TotalWithDiscount
+        {
+            get => _totalWithDiscount;
+            set
+            {
+                _totalWithDiscount = value - DiscountAmount;
+                OnPropertyChanged(nameof(TotalWithDiscount));
+            }
+        }
+
+        /// <summary>
+        /// Итого без скидки
         /// </summary>
         [Column(TypeName = "decimal(18,2)")]
         public decimal Total
@@ -44,7 +59,8 @@ namespace RetailTrade.Domain.Models
             get => _total;
             set
             {
-                _total = value - DiscountAmount;
+                _total = value;
+                TotalWithDiscount = Total;
                 OnPropertyChanged(nameof(Total));
             }
         }
@@ -118,6 +134,9 @@ namespace RetailTrade.Domain.Models
             }
         }
 
+        /// <summary>
+        /// Код точки продаж
+        /// </summary>
         public int? PointSaleId
         {
             get => _pointSaleId;
@@ -159,8 +178,14 @@ namespace RetailTrade.Domain.Models
             }
         }
 
+        /// <summary>
+        /// Точка продаж
+        /// </summary>
         public PointSale PointSale { get; set; }
 
+        /// <summary>
+        /// Склад
+        /// </summary>
         public WareHouse WareHouse { get; set; }
 
 #endregion

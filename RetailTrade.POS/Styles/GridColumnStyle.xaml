@@ -99,7 +99,7 @@
 
                         </StackPanel>
 
-                        <TextBlock Text="{Binding Path=RowData.Row.Total, StringFormat=N2}"
+                        <TextBlock Text="{Binding Path=RowData.Row.TotalWithDiscount, StringFormat=N2}"
                                    Grid.Column="3"                                   
                                    FontWeight="Bold"
                                    FontSize="18"

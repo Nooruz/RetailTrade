@@ -25,6 +25,7 @@ namespace RetailTrade.POS.ViewModels.Menus
         private ObservableCollection<ProductSale> _productSales = new();
         private ProductWareHouseView _selectedProduct;
         private ProductSale _selectedProductSale;
+        private string _searchText;
 
         #endregion
 
@@ -70,6 +71,20 @@ namespace RetailTrade.POS.ViewModels.Menus
             }
         }
         public decimal TotalSum => ProductSales.Sum(p => p.Total);
+        public string SearchText
+        {
+            get => _searchText;
+            set
+            {
+                _searchText = value;
+                if (ProductTableView != null)
+                {                    
+                    ProductTableView.SearchString = SearchText;
+                }
+                OnPropertyChanged(nameof(SearchText));
+            }
+        }
+        public TableView ProductTableView { get; set; }
 
         #endregion
 
@@ -112,58 +127,94 @@ namespace RetailTrade.POS.ViewModels.Menus
 
         private void GetProductSaleRowType(int rowHandle)
         {
-            if (ProductGridControl.IsGroupRowHandle(rowHandle))
-                return;
-            if (rowHandle == DataControlBase.AutoFilterRowHandle)
-                return;
-            if (rowHandle == DataControlBase.NewItemRowHandle)
-                return;
-            if (rowHandle == DataControlBase.InvalidRowHandle)
-                return;
-            if (WindowService.IsWindowAlive)
+            try
             {
-                WindowService.Close();
+                if (ProductGridControl.IsGroupRowHandle(rowHandle))
+                    return;
+                if (rowHandle == DataControlBase.AutoFilterRowHandle)
+                    return;
+                if (rowHandle == DataControlBase.NewItemRowHandle)
+                    return;
+                if (rowHandle == DataControlBase.InvalidRowHandle)
+                    return;
+
+                PositionEditorViewModel viewModel = new()
+                {
+                    Title = "Редактор позиции",
+                    EditProductSale = SelectedProductSale,
+                    Rest = SelectedProduct.Quantity + SelectedProductSale.Quantity
+                };
+
+                viewModel.OnDeleteProductSale += ViewModel_OnDeleteProductSale;
+
+                WindowService.Show(nameof(PositionEditorView), viewModel);
             }
-            WindowService.Show(nameof(PositionEditorView), new PositionEditorViewModel() { Title = "Редактор позиции", EditProductSale = SelectedProductSale });
+            catch (Exception)
+            {
+                //ignore
+            }
+        }
+
+        private void ViewModel_OnDeleteProductSale(ProductSale productSale)
+        {
+            try
+            {
+                ProductWareHouseView product = Products.FirstOrDefault(p => p.Id == productSale.ProductId);
+                product.Quantity += productSale.Quantity;
+                ProductSales.Remove(productSale);
+            }
+            catch (Exception)
+            {
+                //ignore
+            }
         }
 
         private void GetRowType(int rowHandle)
         {
-            if (ProductGridControl.IsGroupRowHandle(rowHandle))
-                return;
-            if (rowHandle == DataControlBase.AutoFilterRowHandle)
-                return;
-            if (rowHandle == DataControlBase.NewItemRowHandle)
-                return;
-            if (rowHandle == DataControlBase.InvalidRowHandle)
-                return;
-
-            ProductSale? productSale = ProductSales.FirstOrDefault(p => p.ProductId == SelectedProduct.Id);
-
-            if (productSale == null)
+            try
             {
-                ProductSales.Add(new ProductSale
+                if (ProductGridControl.IsGroupRowHandle(rowHandle))
+                    return;
+                if (rowHandle == DataControlBase.AutoFilterRowHandle)
+                    return;
+                if (rowHandle == DataControlBase.NewItemRowHandle)
+                    return;
+                if (rowHandle == DataControlBase.InvalidRowHandle)
+                    return;
+
+                ProductSale? productSale = ProductSales.FirstOrDefault(p => p.ProductId == SelectedProduct.Id);
+
+                if (productSale == null)
                 {
-                    ProductId = SelectedProduct.Id,
-                    Quantity = 1,
-                    PurchasePrice = SelectedProduct.PurchasePrice,
-                    RetailPrice = SelectedProduct.RetailPrice,
-                    Total = SelectedProduct.RetailPrice,
-                    WareHouseId = SelectedProduct.WareHouseId,
-                    PointSaleId = Properties.Settings.Default.PointSaleId,
-                    Product = new Product
+                    ProductSales.Add(new ProductSale
                     {
-                        Name = SelectedProduct.Name
-                    }
-                });
-                ProductSales.Move(ProductSales.Count - 1, 0);
+                        ProductId = SelectedProduct.Id,
+                        Quantity = 1,
+                        PurchasePrice = SelectedProduct.PurchasePrice,
+                        RetailPrice = SelectedProduct.RetailPrice,
+                        WareHouseId = SelectedProduct.WareHouseId,
+                        PointSaleId = Properties.Settings.Default.PointSaleId,
+                        Product = new Product
+                        {
+                            Name = SelectedProduct.Name
+                        }
+                    });
+                    SelectedProduct.Quantity -= 1;
+                    ProductSales.Move(ProductSales.Count - 1, 0);
+                    SelectedProductSale = ProductSales.FirstOrDefault(p => p.ProductId == SelectedProduct.Id);
+                }
+                else
+                {
+                    productSale.Quantity++;
+                    SelectedProduct.Quantity--;
+                    SelectedProductSale = productSale;
+                }
+                OnPropertyChanged(nameof(TotalSum));
             }
-            else
+            catch (Exception)
             {
-                productSale.Quantity++;
-                productSale.Total = (decimal)productSale.Quantity * productSale.RetailPrice;
+                //ignore
             }
-            OnPropertyChanged(nameof(TotalSum));
         }
 
         #endregion
@@ -177,6 +228,11 @@ namespace RetailTrade.POS.ViewModels.Menus
             {
                 if (ProductSales.Any())
                 {
+                    ProductSales.ToList().ForEach(s =>
+                    {
+                        ProductWareHouseView product = Products.FirstOrDefault(p => p.Id == s.ProductId);
+                        product.Quantity += s.Quantity;
+                    });
                     ProductSales.Clear();
                     OnPropertyChanged(nameof(TotalSum));
                 }
@@ -203,8 +259,9 @@ namespace RetailTrade.POS.ViewModels.Menus
                     if (e.Source is GridControl gridControl)
                     {
                         ProductGridControl = gridControl;
-                        TableView tableView = ProductGridControl.View as TableView;
-                        tableView.MouseDown += TableView_MouseDown;
+                        ProductTableView = ProductGridControl.View as TableView;
+                        ProductTableView.ShowSearchPanelMode = ShowSearchPanelMode.Never;
+                        ProductTableView.MouseDown += TableView_MouseDown;
                     }
                 }
             }
@@ -233,6 +290,12 @@ namespace RetailTrade.POS.ViewModels.Menus
             {
                 //ignore
             }
+        }
+
+        [Command]
+        public void ClearSearchText()
+        {
+            SearchText = string.Empty;
         }
 
         #endregion

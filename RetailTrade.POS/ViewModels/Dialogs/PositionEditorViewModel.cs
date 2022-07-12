@@ -14,6 +14,7 @@ namespace RetailTrade.POS.ViewModels.Dialogs
         private double _quantity;
         private decimal _retailPrice;
         private decimal _discountSum;
+        private double _rest;
 
         #endregion
 
@@ -48,10 +49,11 @@ namespace RetailTrade.POS.ViewModels.Dialogs
             set
             {
                 _discount = value;
-                _discountSum = (decimal)Discount * RetailPrice;
+                _discountSum = (decimal)Discount * Total;
                 OnPropertyChanged(nameof(Discount));
                 OnPropertyChanged(nameof(DiscountSum));
                 OnPropertyChanged(nameof(Total));
+                OnPropertyChanged(nameof(TotalWithDiscount));
             }
         }
         public decimal DiscountSum
@@ -60,13 +62,15 @@ namespace RetailTrade.POS.ViewModels.Dialogs
             set
             {
                 _discountSum = value;
-                _discount = (double)Math.Round(DiscountSum / RetailPrice, 2);
+                _discount = (double)Math.Round(DiscountSum / Total, 2);
                 OnPropertyChanged(nameof(DiscountSum));
                 OnPropertyChanged(nameof(Total));
                 OnPropertyChanged(nameof(Discount));
+                OnPropertyChanged(nameof(TotalWithDiscount));
             }
         }
-        public decimal Total => ((decimal)Quantity * RetailPrice) - DiscountSum;
+        public decimal Total => ((decimal)Quantity * RetailPrice);
+        public decimal TotalWithDiscount => ((decimal)Quantity * RetailPrice) - DiscountSum;
         public double Quantity
         {
             get => _quantity;
@@ -75,6 +79,8 @@ namespace RetailTrade.POS.ViewModels.Dialogs
                 _quantity = value;
                 OnPropertyChanged(nameof(Quantity));
                 OnPropertyChanged(nameof(Total));
+                OnPropertyChanged(nameof(TotalWithDiscount));
+                OnPropertyChanged(nameof(Rest));
             }
         }
         public decimal RetailPrice
@@ -85,8 +91,24 @@ namespace RetailTrade.POS.ViewModels.Dialogs
                 _retailPrice = value;
                 OnPropertyChanged(nameof(RetailPrice));
                 OnPropertyChanged(nameof(Total));
+                OnPropertyChanged(nameof(TotalWithDiscount));
             }
         }
+        public double Rest
+        {
+            get => _rest - Quantity;
+            set
+            {
+                _rest = value;
+                OnPropertyChanged(nameof(Rest));
+            }
+        }
+
+        #endregion
+
+        #region Action
+
+        public event Action<ProductSale>? OnDeleteProductSale;
 
         #endregion
 
@@ -104,7 +126,15 @@ namespace RetailTrade.POS.ViewModels.Dialogs
             EditProductSale.Quantity = Quantity;
             EditProductSale.RetailPrice = RetailPrice;
             EditProductSale.Total = Total;
+            EditProductSale.TotalWithDiscount = TotalWithDiscount;
             EditProductSale.DiscountAmount = DiscountSum;
+            CurrentWindowService.Close();
+        }
+
+        [Command]
+        public void Delete()
+        {            
+            OnDeleteProductSale?.Invoke(EditProductSale);
             CurrentWindowService.Close();
         }
 

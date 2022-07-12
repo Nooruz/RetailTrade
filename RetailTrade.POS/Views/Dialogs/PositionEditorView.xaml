@@ -51,6 +51,17 @@
 
                 </dxlc:LayoutGroup>
 
+                <Button Style="{StaticResource FAButton}"
+                        Content="{StaticResource faTrashAlt}"
+                        FontSize="25"
+                        HorizontalAlignment="Right"
+                        VerticalAlignment="Top"
+                        Background="Transparent"
+                        BorderBrush="Transparent"
+                        Cursor="Hand"
+                        Foreground="Red"
+                        Command="{Binding DeleteCommand}"/>
+
             </dxlc:LayoutGroup>
 
             <dxlc:LayoutItem Label="Остаток"
@@ -58,7 +69,8 @@
                              LabelPosition="Top">
                 <dxe:TextEdit BorderThickness="0"
                               IsReadOnly="True"
-                              BorderBrush="Transparent"/>
+                              BorderBrush="Transparent"
+                              EditValue="{Binding Rest}" MaskUseAsDisplayFormat="True" MaskType="Numeric" Mask="n2"/>
             </dxlc:LayoutItem>
 
         </dxlc:LayoutGroup>
@@ -132,7 +144,7 @@
             <TextBlock HorizontalAlignment="Center"
                        FontWeight="DemiBold"
                        FontSize="22"
-                       Text="{Binding Total, StringFormat=N2}"/>
+                       Text="{Binding TotalWithDiscount, StringFormat={}Итого: {0:N2}}"/>
 
         </dxlc:LayoutGroup>
 
