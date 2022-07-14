@@ -260,6 +260,7 @@ namespace RetailTrade.POS.ViewModels.Menus
                     {
                         ProductGridControl = gridControl;
                         ProductTableView = ProductGridControl.View as TableView;
+                        ProductTableView.SearchColumns = string.Join(";", ProductGridControl.Columns.Select(g => g.FieldName));
                         ProductTableView.ShowSearchPanelMode = ShowSearchPanelMode.Never;
                         ProductTableView.MouseDown += TableView_MouseDown;
                     }

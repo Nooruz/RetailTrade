@@ -1,4 +1,7 @@
-﻿namespace RetailTrade.Domain.Views
+﻿using RetailTrade.Domain.Models;
+using System.Collections.Generic;
+
+namespace RetailTrade.Domain.Views
 {
     public class ProductWareHouseView : ViewObject
     {

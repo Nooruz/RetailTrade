@@ -41,9 +41,10 @@
                                    ShowGroupPanel="False"
                                    AutoWidth="True"/>
                 </dxg:GridControl.View>
-                <dxg:GridColumn FieldName="Id">
+                <dxg:GridColumn FieldName="Id"
+                                Visible="False">
                     <dxg:GridColumn.EditSettings>
-                        <dxe:TextEditSettings DisplayFormat="D4"/>
+                        <dxe:TextEditSettings DisplayFormat="D5"/>
                     </dxg:GridColumn.EditSettings>
                 </dxg:GridColumn>
                 <dxg:GridColumn FieldName="Name"
