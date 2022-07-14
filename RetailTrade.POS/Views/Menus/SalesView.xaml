@@ -41,14 +41,29 @@
                                    ShowGroupPanel="False"
                                    AutoWidth="True"/>
                 </dxg:GridControl.View>
-                <dxg:GridColumn FieldName="Id"
-                                Visible="False">
+                <dxg:GridControl.DetailDescriptor>
+                    <dxg:TabViewDetailDescriptor>
+                        <dxg:TabViewDetailDescriptor.DetailDescriptors>
+                            <dxg:DataControlDetailDescriptor ItemsSourcePath="ProductBarcodes">
+                                <dxg:DataControlDetailDescriptor.DataControl>
+                                    <dxg:GridControl>
+                                        <dxg:GridControl.View>
+                                            <dxg:TableView AutoWidth="True" ShowGroupPanel="False" />
+                                        </dxg:GridControl.View>
+                                        <dxg:GridColumn FieldName="Barcode"/>
+                                    </dxg:GridControl>
+                                </dxg:DataControlDetailDescriptor.DataControl>
+                            </dxg:DataControlDetailDescriptor>
+                        </dxg:TabViewDetailDescriptor.DetailDescriptors>
+                    </dxg:TabViewDetailDescriptor>
+                </dxg:GridControl.DetailDescriptor>
+                <dxg:GridColumn FieldName="Id">
                     <dxg:GridColumn.EditSettings>
                         <dxe:TextEditSettings DisplayFormat="D5"/>
                     </dxg:GridColumn.EditSettings>
                 </dxg:GridColumn>
                 <dxg:GridColumn FieldName="Name"
-                                Cursor="Hand"
+                                Cursor="Hand" Visible="False"
                                 Style="{StaticResource ProductGridColumn}"/>
             </dxg:GridControl>
 

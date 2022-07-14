@@ -22,6 +22,7 @@ namespace RetailTrade.POS.HostBuilders
                 _ = services.AddSingleton<IArrivalProductService, ArrivalProductService>();
                 _ = services.AddSingleton<IProductService, ProductService>();
                 _ = services.AddSingleton<IPointSaleService, PointSaleService>();
+                _ = services.AddSingleton<IProductBarcodeService, ProductBarcodeService>();
             });
         }
     }

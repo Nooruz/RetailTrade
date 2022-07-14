@@ -41,7 +41,8 @@ namespace RetailTrade.POS.HostBuilders
         private static SalesViewModel CreateSalesViewModel(IServiceProvider services)
         {
             return new SalesViewModel(services.GetRequiredService<IProductService>(),
-                services.GetRequiredService<IUserStore>());
+                services.GetRequiredService<IUserStore>(),
+                services.GetRequiredService<IProductBarcodeService>());
         }
     }
 }

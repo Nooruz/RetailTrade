@@ -8,6 +8,7 @@ using RetailTrade.POS.States.Users;
 using RetailTrade.POS.ViewModels.Dialogs;
 using RetailTrade.POS.Views.Dialogs;
 using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Windows;
@@ -19,6 +20,7 @@ namespace RetailTrade.POS.ViewModels.Menus
     {
         #region Private Members
 
+        private readonly IProductBarcodeService _productBarcodeService;
         private readonly IProductService _productService;
         private readonly IUserStore _userStore;
         private ObservableCollection<ProductWareHouseView> _products;
@@ -26,6 +28,7 @@ namespace RetailTrade.POS.ViewModels.Menus
         private ProductWareHouseView _selectedProduct;
         private ProductSale _selectedProductSale;
         private string _searchText;
+        public IEnumerable<ProductBarcode> _productBarcodes;
 
         #endregion
 
@@ -85,16 +88,27 @@ namespace RetailTrade.POS.ViewModels.Menus
             }
         }
         public TableView ProductTableView { get; set; }
+        public IEnumerable<ProductBarcode> ProductBarcodes
+        {
+            get => _productBarcodes;
+            set
+            {
+                _productBarcodes = value;
+                OnPropertyChanged(nameof(ProductBarcodes));
+            }
+        }
 
         #endregion
 
         #region Constructor
 
         public SalesViewModel(IProductService productService,
-            IUserStore userStore)
+            IUserStore userStore,
+            IProductBarcodeService productBarcodeService)
         {
             _productService = productService;
             _userStore = userStore;
+            _productBarcodeService = productBarcodeService;
         }
 
         #endregion
@@ -246,7 +260,21 @@ namespace RetailTrade.POS.ViewModels.Menus
         [Command]
         public async void UserControlLoaded()
         {
-            Products = new(await _productService.GetProducts(Properties.Settings.Default.WareHouseId));
+            ProductBarcodes = await _productBarcodeService.GetAllAsync();
+            IEnumerable<ProductWareHouseView> products = await _productService.GetProducts(Properties.Settings.Default.WareHouseId);
+            Products = new(products.Select(s => new ProductWareHouseView
+            {
+                Id = s.Id,
+                Name = s.Name,
+                Supplier = s.Supplier,
+                Unit = s.Unit,
+                TNVED = s.TNVED,
+                PurchasePrice = s.PurchasePrice,
+                RetailPrice = s.RetailPrice,
+                Quantity = s.Quantity,
+                WareHouseId = s.WareHouseId,
+                ProductBarcodes = ProductBarcodes.Where(p => p.ProductId == s.Id).ToList(),
+            }).ToList());
         }
 
         [Command]

@@ -92,6 +92,7 @@ namespace RetailTrade.Domain.Views
                 OnPropertyChanged(nameof(WareHouseId));
             }
         }
+        public ICollection<ProductBarcode> ProductBarcodes { get; set; }
 
         #endregion
     }
