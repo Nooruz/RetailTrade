@@ -1,4 +1,5 @@
-﻿using DevExpress.Mvvm;
+﻿using DevExpress.Data.Filtering;
+using DevExpress.Mvvm;
 using DevExpress.Mvvm.DataAnnotations;
 using DevExpress.Xpf.Grid;
 using RetailTrade.Domain.Models;
@@ -27,7 +28,6 @@ namespace RetailTrade.POS.ViewModels.Menus
         private ObservableCollection<ProductSale> _productSales = new();
         private ProductWareHouseView _selectedProduct;
         private ProductSale _selectedProductSale;
-        private string _searchText;
         public IEnumerable<ProductBarcode> _productBarcodes;
 
         #endregion
@@ -74,19 +74,6 @@ namespace RetailTrade.POS.ViewModels.Menus
             }
         }
         public decimal TotalSum => ProductSales.Sum(p => p.Total);
-        public string SearchText
-        {
-            get => _searchText;
-            set
-            {
-                _searchText = value;
-                if (ProductTableView != null)
-                {                    
-                    ProductTableView.SearchString = SearchText;
-                }
-                OnPropertyChanged(nameof(SearchText));
-            }
-        }
         public TableView ProductTableView { get; set; }
         public IEnumerable<ProductBarcode> ProductBarcodes
         {
@@ -289,7 +276,6 @@ namespace RetailTrade.POS.ViewModels.Menus
                         ProductGridControl = gridControl;
                         ProductTableView = ProductGridControl.View as TableView;
                         ProductTableView.SearchColumns = string.Join(";", ProductGridControl.Columns.Select(g => g.FieldName));
-                        ProductTableView.ShowSearchPanelMode = ShowSearchPanelMode.Never;
                         ProductTableView.MouseDown += TableView_MouseDown;
                     }
                 }
@@ -319,12 +305,6 @@ namespace RetailTrade.POS.ViewModels.Menus
             {
                 //ignore
             }
-        }
-
-        [Command]
-        public void ClearSearchText()
-        {
-            SearchText = string.Empty;
         }
 
         #endregion

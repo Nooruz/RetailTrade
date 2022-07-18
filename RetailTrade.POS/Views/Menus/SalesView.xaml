@@ -20,14 +20,6 @@
 
         <dxlc:LayoutGroup Orientation="Vertical">
 
-            <dxe:ButtonEdit VerticalAlignment="Top"
-                            NullText="Название, код или штрихкод"
-                            AllowDefaultButton="False"
-                            EditValue="{Binding SearchText, UpdateSourceTrigger=PropertyChanged}">
-                <dxe:ButtonInfo GlyphKind="Cancel"
-                                Command="{Binding ClearSearchTextCommand}"/>
-            </dxe:ButtonEdit>
-
             <dxg:GridControl ItemsSource="{Binding Products}"
                              SelectedItem="{Binding SelectedProduct}">
                 <dxmvvm:Interaction.Behaviors>
@@ -37,34 +29,40 @@
                 </dxmvvm:Interaction.Behaviors>
                 <dxg:GridControl.View>
                     <dxg:TableView ShowColumnHeaders="False" 
-                                   AllowEditing="False"
+                                   AllowEditing="True"
                                    ShowGroupPanel="False"
-                                   AutoWidth="True"/>
+                                   AutoWidth="True"
+                                   ShowSearchPanelMode="Always"
+                                   SearchPanelNullText="Название, код или штрихкод"
+                                   SearchPanelPosition="OverGroupPanel"
+                                   />
                 </dxg:GridControl.View>
-                <dxg:GridControl.DetailDescriptor>
-                    <dxg:TabViewDetailDescriptor>
-                        <dxg:TabViewDetailDescriptor.DetailDescriptors>
-                            <dxg:DataControlDetailDescriptor ItemsSourcePath="ProductBarcodes">
-                                <dxg:DataControlDetailDescriptor.DataControl>
-                                    <dxg:GridControl>
-                                        <dxg:GridControl.View>
-                                            <dxg:TableView AutoWidth="True" ShowGroupPanel="False" />
-                                        </dxg:GridControl.View>
-                                        <dxg:GridColumn FieldName="Barcode"/>
-                                    </dxg:GridControl>
-                                </dxg:DataControlDetailDescriptor.DataControl>
-                            </dxg:DataControlDetailDescriptor>
-                        </dxg:TabViewDetailDescriptor.DetailDescriptors>
-                    </dxg:TabViewDetailDescriptor>
-                </dxg:GridControl.DetailDescriptor>
-                <dxg:GridColumn FieldName="Id">
+                <dxg:GridColumn FieldName="Id"
+                                Visible="True">
                     <dxg:GridColumn.EditSettings>
                         <dxe:TextEditSettings DisplayFormat="D5"/>
                     </dxg:GridColumn.EditSettings>
                 </dxg:GridColumn>
                 <dxg:GridColumn FieldName="Name"
-                                Cursor="Hand" Visible="False"
+                                Cursor="Hand"
                                 Style="{StaticResource ProductGridColumn}"/>
+                <dxg:GridColumn FieldName="Id">
+                    <dxg:GridColumn.CellTemplate>
+                        <DataTemplate>
+                            <dxe:ComboBoxEdit Name="PART_Editor"
+                                              FilterCondition="Contains"
+                                              IncrementalFiltering="True"
+                                              ItemsSource="{Binding RowData.Row.ProductBarcodes}"
+                                              DisplayMember="Barcode"
+                                              ValidateOnTextInput="False"
+                                              ValueMember="ProductId">
+                                <dxe:ComboBoxEdit.StyleSettings>
+                                    <dxe:CheckedComboBoxStyleSettings/>
+                                </dxe:ComboBoxEdit.StyleSettings>
+                            </dxe:ComboBoxEdit>
+                        </DataTemplate>
+                    </dxg:GridColumn.CellTemplate>
+                </dxg:GridColumn>
             </dxg:GridControl>
 
         </dxlc:LayoutGroup>
