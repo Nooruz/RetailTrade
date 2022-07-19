@@ -60,6 +60,7 @@ namespace RetailTrade.Domain.Models
             set
             {
                 _total = value;
+                TotalWithDiscount = Total - DiscountAmount;
                 OnPropertyChanged(nameof(Total));
             }
         }
@@ -74,6 +75,7 @@ namespace RetailTrade.Domain.Models
             set
             {
                 _discountAmount = value;
+                TotalWithDiscount = Total - DiscountAmount;
                 OnPropertyChanged(nameof(DiscountAmount));
             }
         }

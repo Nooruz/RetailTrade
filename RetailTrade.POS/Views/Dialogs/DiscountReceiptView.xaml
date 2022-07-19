@@ -1,0 +1,95 @@
+﻿<local:BaseView x:Class="RetailTrade.POS.Views.Dialogs.DiscountReceiptView"
+                xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                xmlns:dxe="http://schemas.devexpress.com/winfx/2008/xaml/editors"
+                xmlns:dxlc="http://schemas.devexpress.com/winfx/2008/xaml/layoutcontrol"
+                xmlns:dxmvvm="http://schemas.devexpress.com/winfx/2008/xaml/mvvm"
+                xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                xmlns:sys="clr-namespace:System;assembly=mscorlib"
+                xmlns:local="clr-namespace:RetailTrade.POS.Views"
+                Width="600">
+
+    <dxlc:LayoutControl Orientation="Vertical">
+
+        <dxlc:LayoutGroup Padding="10"
+                          HorizontalAlignment="Stretch"
+                          Orientation="Vertical">
+
+            <dxlc:LayoutGroup VerticalAlignment="Top">
+
+                <Button Style="{StaticResource FAButton}"
+                        Content="{StaticResource faTrashAlt}"
+                        FontSize="25"
+                        HorizontalAlignment="Right"
+                        VerticalAlignment="Top"
+                        Background="Transparent"
+                        BorderBrush="Transparent"
+                        Cursor="Hand"
+                        Foreground="Red"
+                        Command="{Binding DeleteCommand}"/>
+
+            </dxlc:LayoutGroup>
+
+            <TextBlock Text="{Binding TotalSum, StringFormat={}Подитог: {0}:N2, FallbackValue=500.00}"
+                       FontSize="36"/>
+
+        </dxlc:LayoutGroup>
+
+        <dxlc:LayoutGroup Orientation="Vertical"
+                          MinWidth="360"
+                          HorizontalAlignment="Center">
+
+            <dxlc:LayoutItem FontSize="18"
+                             Width="360"
+                             HorizontalAlignment="Left"
+                             LabelPosition="Top">
+                <StackPanel Orientation="Horizontal">
+                    <RadioButton Style="{StaticResource AsButton}"
+                                 Content="Процент"
+                                 IsChecked="{Binding IsDiscountPercentage, UpdateSourceTrigger=PropertyChanged}"/>
+                    <RadioButton Style="{StaticResource AsButton}"
+                                 Content="Сумма"/>
+                    <dxe:TextEdit Width="100"
+                                  Margin="5 0"
+                                  MaskType="Numeric"
+                                  MaskUseAsDisplayFormat="True"
+                                  ShowError="False"
+                                  ShowErrorToolTip="False">
+                        <dxmvvm:Interaction.Behaviors>
+                            <dxmvvm:FocusBehavior/>
+                        </dxmvvm:Interaction.Behaviors>
+                        <dxe:TextEdit.Style>
+                            <Style TargetType="{x:Type dxe:TextEdit}">
+                                <Setter Property="Mask" Value="n2"/>
+                                <Setter Property="EditValue" Value="{Binding DiscountSum, UpdateSourceTrigger=PropertyChanged}"/>
+                                <Setter Property="EditValueType" Value="{x:Type sys:Decimal}"/>
+                                <Style.Triggers>
+                                    <DataTrigger Binding="{Binding IsDiscountPercentage}" Value="True">
+                                        <Setter Property="Mask" Value="p2"/>
+                                        <Setter Property="EditValue" Value="{Binding Discount, UpdateSourceTrigger=PropertyChanged}"/>
+                                        <Setter Property="EditValueType" Value="{x:Type sys:Double}"/>
+                                    </DataTrigger>
+                                </Style.Triggers>
+                            </Style>
+                        </dxe:TextEdit.Style>
+                    </dxe:TextEdit>
+                    <TextBlock Text="{Binding DiscountIcon}"
+                               VerticalAlignment="Center"
+                               Foreground="#acacac"/>
+                </StackPanel>
+            </dxlc:LayoutItem>
+
+            <TextBlock HorizontalAlignment="Center"
+                       FontWeight="DemiBold"
+                       FontSize="22"
+                       Text="{Binding TotalWithDiscount, StringFormat={}Итого: {0:N2}}"/>
+
+        </dxlc:LayoutGroup>
+
+        <Button Content="Сохранить"
+                VerticalAlignment="Bottom"
+                Command="{Binding SaveCommand}"
+                Style="{StaticResource MainButton}"/>
+
+    </dxlc:LayoutControl>
+
+</local:BaseView>

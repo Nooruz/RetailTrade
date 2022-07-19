@@ -107,6 +107,8 @@
                               VerticalAlignment="Bottom">
 
                 <Button Content="Скидка на чек"
+                        Visibility="{Binding DiscountReceiptButtonVisibility}"
+                        Command="{Binding DiscountReceiptCommand}"
                         Cursor="Hand"
                         Padding="10"
                         FontSize="16"
@@ -124,15 +126,8 @@
 
             <Button Style="{StaticResource TwoContent}"
                     Tag="Итого:"
-                    FontSize="30"
-                    Background="#0173C7"
-                    BorderThickness="0"
-                    FontWeight="DemiBold"
                     VerticalAlignment="Bottom"
-                    Padding="20"
-                    Foreground="White"
-                    Cursor="Hand"
-                    Content="{Binding TotalSum, UpdateSourceTrigger=PropertyChanged, StringFormat=N2, FallbackValue=0.00}"/>
+                    Content="{Binding TotalSum}"/>
 
         </dxlc:LayoutGroup>
 

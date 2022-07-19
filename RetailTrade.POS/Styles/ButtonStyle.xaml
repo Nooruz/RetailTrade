@@ -144,7 +144,18 @@
         </Setter>
     </Style>
 
-    <Style TargetType="{x:Type Button}" x:Key="TwoContent">
+    <Style TargetType="{x:Type Button}" x:Key="MainButton">
+        <Setter Property="Background" Value="#0173C7"/>
+        <Setter Property="IsDefault" Value="True"/>
+        <Setter Property="FontSize" Value="30"/>
+        <Setter Property="FontWeight" Value="DemiBold"/>
+        <Setter Property="Padding" Value="20"/>
+        <Setter Property="Foreground" Value="White"/>
+        <Setter Property="Cursor" Value="Hand"/>
+    </Style>
+
+    <Style TargetType="{x:Type Button}" x:Key="TwoContent"
+           BasedOn="{StaticResource MainButton}">
         <Setter Property="HorizontalAlignment" Value="Stretch"/>
         <Setter Property="Template">
             <Setter.Value>
@@ -245,16 +256,6 @@
                 </ControlTemplate>
             </Setter.Value>
         </Setter>
-    </Style>
-
-    <Style TargetType="{x:Type Button}" x:Key="MainButton">
-        <Setter Property="Background" Value="#0173C7"/>
-        <Setter Property="IsDefault" Value="True"/>
-        <Setter Property="FontSize" Value="30"/>
-        <Setter Property="FontWeight" Value="DemiBold"/>
-        <Setter Property="Padding" Value="20"/>
-        <Setter Property="Foreground" Value="White"/>
-        <Setter Property="Cursor" Value="Hand"/>
     </Style>
 
 </ResourceDictionary>

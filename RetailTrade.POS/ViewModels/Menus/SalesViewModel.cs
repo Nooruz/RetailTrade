@@ -11,6 +11,8 @@ using RetailTrade.POS.Views.Dialogs;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Collections.Specialized;
+using System.ComponentModel;
 using System.Linq;
 using System.Windows;
 using System.Windows.Input;
@@ -73,7 +75,7 @@ namespace RetailTrade.POS.ViewModels.Menus
                 OnPropertyChanged(nameof(SelectedProductSale));
             }
         }
-        public decimal TotalSum => ProductSales.Sum(p => p.Total);
+        public string TotalSum => ProductSales.Sum(p => p.TotalWithDiscount).ToString("N2");
         public TableView ProductTableView { get; set; }
         public IEnumerable<ProductBarcode> ProductBarcodes
         {
@@ -84,6 +86,7 @@ namespace RetailTrade.POS.ViewModels.Menus
                 OnPropertyChanged(nameof(ProductBarcodes));
             }
         }
+        public Visibility DiscountReceiptButtonVisibility => ProductSales.Any() ? Visibility.Visible : Visibility.Collapsed;
 
         #endregion
 
@@ -96,6 +99,8 @@ namespace RetailTrade.POS.ViewModels.Menus
             _productService = productService;
             _userStore = userStore;
             _productBarcodeService = productBarcodeService;
+
+            ProductSales.CollectionChanged += ProductSales_CollectionChanged;
         }
 
         #endregion
@@ -210,8 +215,6 @@ namespace RetailTrade.POS.ViewModels.Menus
                 {
                     IncreaseQuantityProductSale(ProductSales.FirstOrDefault(p => p.ProductId == SelectedProduct.Id));
                 }
-                ProductSales.Move(ProductSales.Count - 1, 0);
-                OnPropertyChanged(nameof(TotalSum));
             }
             catch (Exception)
             {
@@ -230,7 +233,8 @@ namespace RetailTrade.POS.ViewModels.Menus
                 }
                 else
                 {
-                    ProductSales.Add(productSale);                    
+                    ProductSales.Add(productSale);
+                    ProductSales.Move(ProductSales.Count - 1, 0);
                 }
                 SelectedProduct.Quantity -= productSale.Quantity;
             }
@@ -282,13 +286,52 @@ namespace RetailTrade.POS.ViewModels.Menus
                         Name = SelectedProduct.Name
                     }
                 });
+                ProductSales.Move(ProductSales.Count - 1, 0);
                 SelectedProduct.Quantity -= 1;
             }
+        }
+
+        private void ProductSales_CollectionChanged(object? sender, NotifyCollectionChangedEventArgs e)
+        {
+            if (e.NewItems != null)
+            {
+                foreach (ProductSale item in e.NewItems)
+                {
+                    item.PropertyChanged += Item_PropertyChanged;
+                }
+            }
+            if (e.OldItems != null)
+            {
+                foreach (ProductSale item in e.OldItems)
+                {
+                    item.PropertyChanged -= Item_PropertyChanged;
+                }
+            }
+            OnPropertyChanged(nameof(TotalSum));
+            OnPropertyChanged(nameof(DiscountReceiptButtonVisibility));
+        }
+
+        private void Item_PropertyChanged(object? sender, PropertyChangedEventArgs e)
+        {
+            OnPropertyChanged(nameof(TotalSum));
         }
 
         #endregion
 
         #region Public Vodis
+
+        [Command]
+        public void DiscountReceipt()
+        {
+            try
+            {
+                WindowService.Show(nameof(DiscountReceiptView), new DiscountReceiptViewModel());
+            }
+            catch (Exception)
+            {
+                //ignore
+            }
+        }
 
         [Command]
         public void ClearProductSale()
