@@ -46,5 +46,17 @@ namespace RetailTrade.POS.Properties {
                 this["WareHouseId"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        public bool EnterQuantityWhenAdding {
+            get {
+                return ((bool)(this["EnterQuantityWhenAdding"]));
+            }
+            set {
+                this["EnterQuantityWhenAdding"] = value;
+            }
+        }
     }
 }

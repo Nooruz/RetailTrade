@@ -143,7 +143,8 @@ namespace RetailTrade.POS.ViewModels.Menus
                 {
                     Title = "Редактор позиции",
                     EditProductSale = SelectedProductSale,
-                    Rest = SelectedProduct.Quantity + SelectedProductSale.Quantity
+                    Rest = SelectedProduct.Quantity + SelectedProductSale.Quantity,
+                    Product = Products.FirstOrDefault(p => p.Id == SelectedProductSale.ProductId)
                 };
 
                 viewModel.OnDeleteProductSale += ViewModel_OnDeleteProductSale;
@@ -183,38 +184,105 @@ namespace RetailTrade.POS.ViewModels.Menus
                 if (rowHandle == DataControlBase.InvalidRowHandle)
                     return;
 
-                ProductSale? productSale = ProductSales.FirstOrDefault(p => p.ProductId == SelectedProduct.Id);
-
-                if (productSale == null)
+                if (Properties.Settings.Default.EnterQuantityWhenAdding)
                 {
-                    ProductSales.Add(new ProductSale
+                    AddingProductViewModel viewModel = new()
                     {
-                        ProductId = SelectedProduct.Id,
-                        Quantity = 1,
-                        PurchasePrice = SelectedProduct.PurchasePrice,
-                        RetailPrice = SelectedProduct.RetailPrice,
-                        WareHouseId = SelectedProduct.WareHouseId,
-                        PointSaleId = Properties.Settings.Default.PointSaleId,
-                        Product = new Product
+                        Title = "Добавление товара",
+                        EditProductSale = new ProductSale
                         {
-                            Name = SelectedProduct.Name
-                        }
-                    });
-                    SelectedProduct.Quantity -= 1;
-                    ProductSales.Move(ProductSales.Count - 1, 0);
-                    SelectedProductSale = ProductSales.FirstOrDefault(p => p.ProductId == SelectedProduct.Id);
+                            ProductId = SelectedProduct.Id,
+                            PurchasePrice = SelectedProduct.PurchasePrice,
+                            RetailPrice = SelectedProduct.RetailPrice,
+                            WareHouseId = SelectedProduct.WareHouseId,
+                            PointSaleId = Properties.Settings.Default.PointSaleId,
+                            Product = new Product
+                            {
+                                Name = SelectedProduct.Name
+                            }
+                        },
+                        Rest = SelectedProduct.Quantity
+                    };
+                    viewModel.OnProductSaleAdding += ViewModel_OnProductSaleAdding;
+                    WindowService.Show(nameof(AddingProductView), viewModel);
                 }
                 else
                 {
-                    productSale.Quantity++;
-                    SelectedProduct.Quantity--;
-                    SelectedProductSale = productSale;
+                    IncreaseQuantityProductSale(ProductSales.FirstOrDefault(p => p.ProductId == SelectedProduct.Id));
                 }
+                ProductSales.Move(ProductSales.Count - 1, 0);
                 OnPropertyChanged(nameof(TotalSum));
             }
             catch (Exception)
             {
                 //ignore
+            }
+        }
+
+        private void ViewModel_OnProductSaleAdding(ProductSale productSale)
+        {
+            try
+            {
+                ProductSale? product = ProductSales.FirstOrDefault(p => p.ProductId == productSale.ProductId);
+                if (product != null)
+                {
+                    product.Quantity += productSale.Quantity;                    
+                }
+                else
+                {
+                    ProductSales.Add(productSale);                    
+                }
+                SelectedProduct.Quantity -= productSale.Quantity;
+            }
+            catch (Exception)
+            {
+                //ignore
+            }
+        }
+
+        private void ProductTableView_SearchStringToFilterCriteria(object sender, SearchStringToFilterCriteriaEventArgs e)
+        {
+            try
+            {
+                if (ProductBarcodes.Any(p => p.Barcode == e.SearchString))
+                {
+                    e.Filter = CriteriaOperator.Parse("[ProductBarcodes][[Barcode] == ?]", e.SearchString);
+                }
+                else
+                {
+                    e.Filter = CriteriaOperator.Parse($"Contains([Name], '{e.SearchString}')");
+                }                
+            }
+            catch (Exception)
+            {
+                //ignore
+            }
+        }
+
+        private void IncreaseQuantityProductSale(ProductSale? productSale)
+        {
+            if (productSale != null)
+            {
+                productSale.Quantity++;
+                productSale.TotalWithDiscount = productSale.Total - productSale.DiscountAmount;
+                SelectedProduct.Quantity--;
+            }
+            else
+            {
+                ProductSales.Add(new ProductSale
+                {
+                    ProductId = SelectedProduct.Id,
+                    Quantity = 1,
+                    PurchasePrice = SelectedProduct.PurchasePrice,
+                    RetailPrice = SelectedProduct.RetailPrice,
+                    WareHouseId = SelectedProduct.WareHouseId,
+                    PointSaleId = Properties.Settings.Default.PointSaleId,
+                    Product = new Product
+                    {
+                        Name = SelectedProduct.Name
+                    }
+                });
+                SelectedProduct.Quantity -= 1;
             }
         }
 
@@ -277,6 +345,7 @@ namespace RetailTrade.POS.ViewModels.Menus
                         ProductTableView = ProductGridControl.View as TableView;
                         ProductTableView.SearchColumns = string.Join(";", ProductGridControl.Columns.Select(g => g.FieldName));
                         ProductTableView.MouseDown += TableView_MouseDown;
+                        ProductTableView.SearchStringToFilterCriteria += ProductTableView_SearchStringToFilterCriteria;
                     }
                 }
             }

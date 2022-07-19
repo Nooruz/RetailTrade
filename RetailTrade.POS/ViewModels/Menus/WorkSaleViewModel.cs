@@ -37,6 +37,16 @@ namespace RetailTrade.POS.ViewModels.Menus
                 OnPropertyChanged(nameof(SelectedPointSaleId));
             }
         }
+        public bool EnterQuantityWhenAdding
+        {
+            get => Properties.Settings.Default.EnterQuantityWhenAdding;
+            set
+            {
+                Properties.Settings.Default.EnterQuantityWhenAdding = value;
+                Properties.Settings.Default.Save();
+                OnPropertyChanged(nameof(EnterQuantityWhenAdding));
+            }
+        }
 
         #endregion
 

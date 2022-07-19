@@ -1,5 +1,6 @@
 ﻿using DevExpress.Mvvm.DataAnnotations;
 using RetailTrade.Domain.Models;
+using RetailTrade.Domain.Views;
 using System;
 
 namespace RetailTrade.POS.ViewModels.Dialogs
@@ -9,6 +10,7 @@ namespace RetailTrade.POS.ViewModels.Dialogs
         #region Private Members
 
         private ProductSale _editProductSale;
+        private ProductWareHouseView _product;
         private bool _isDiscountPercentage = true;
         private double _discount;
         private double _quantity;
@@ -30,6 +32,15 @@ namespace RetailTrade.POS.ViewModels.Dialogs
                 RetailPrice = EditProductSale.RetailPrice;
                 DiscountSum = EditProductSale.DiscountAmount;
                 OnPropertyChanged(nameof(EditProductSale));
+            }
+        }
+        public ProductWareHouseView Product
+        {
+            get => _product;
+            set
+            {
+                _product = value;
+                OnPropertyChanged(nameof(Product));
             }
         }
         public bool IsDiscountPercentage
@@ -69,8 +80,8 @@ namespace RetailTrade.POS.ViewModels.Dialogs
                 OnPropertyChanged(nameof(TotalWithDiscount));
             }
         }
-        public decimal Total => ((decimal)Quantity * RetailPrice);
-        public decimal TotalWithDiscount => ((decimal)Quantity * RetailPrice) - DiscountSum;
+        public decimal Total => (decimal)Quantity * RetailPrice;
+        public decimal TotalWithDiscount => Total - DiscountSum;
         public double Quantity
         {
             get => _quantity;
@@ -128,6 +139,7 @@ namespace RetailTrade.POS.ViewModels.Dialogs
             EditProductSale.Total = Total;
             EditProductSale.TotalWithDiscount = TotalWithDiscount;
             EditProductSale.DiscountAmount = DiscountSum;
+            Product.Quantity = Rest;
             CurrentWindowService.Close();
         }
 

@@ -14,7 +14,7 @@
                                Command="{Binding UserControlLoadedCommand}"/>
     </dxmvvm:Interaction.Behaviors>
 
-    <dxlc:LayoutControl Orientation="Horizontal">
+    <dxlc:LayoutControl Orientation="Vertical">
 
         <dxlc:LayoutItem Label="Точка продаж">
             <dxe:ComboBoxEdit ItemsSource="{Binding PointSales}"
@@ -23,6 +23,18 @@
                               ValueMember="Id"
                               ShowError="False"
                               ShowErrorToolTip="False"/>
+        </dxlc:LayoutItem>
+
+        <dxlc:LayoutItem>
+            <StackPanel Orientation="Vertical">
+                <dxe:CheckEdit HorizontalAlignment="Left"
+                           Content="Предлогать ввести количество при добавлении позиции в чек"
+                           EditValue="{Binding EnterQuantityWhenAdding}"/>
+                <TextBlock Text="Касса будет предлогать ввести количество при добавлении позиции в чек. Если отключено, при добавлении позиции, количество будет увеличиваться на 1 единицу."
+                           VerticalAlignment="Top"
+                           TextWrapping="Wrap"
+                           Foreground="#7F7F7F"/>
+            </StackPanel>
         </dxlc:LayoutItem>
 
     </dxlc:LayoutControl>

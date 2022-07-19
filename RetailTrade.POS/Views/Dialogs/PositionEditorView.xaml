@@ -148,17 +148,10 @@
 
         </dxlc:LayoutGroup>
 
-        <Button FontSize="30" 
-                IsDefault="True"
-                Background="#0173C7"
-                BorderThickness="0"
-                FontWeight="DemiBold"
+        <Button Content="Сохранить"
                 VerticalAlignment="Bottom"
-                Padding="20"
-                Foreground="White"
-                Cursor="Hand"
-                Content="Сохранить"
-                Command="{Binding SaveCommand}"/>
+                Command="{Binding SaveCommand}"
+                Style="{StaticResource MainButton}"/>
 
     </dxlc:LayoutControl>
 

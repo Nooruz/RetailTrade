@@ -33,12 +33,12 @@
                                    ShowGroupPanel="False"
                                    AutoWidth="True"
                                    ShowSearchPanelMode="Always"
-                                   SearchPanelNullText="Название, код или штрихкод"
+                                   SearchPanelNullText="Название или штрихкод"
                                    SearchPanelPosition="OverGroupPanel"
                                    />
                 </dxg:GridControl.View>
-                <dxg:GridColumn FieldName="Id"
-                                Visible="True">
+                <dxg:GridColumn FieldName="Id"                                 
+                                Visible="False">
                     <dxg:GridColumn.EditSettings>
                         <dxe:TextEditSettings DisplayFormat="D5"/>
                     </dxg:GridColumn.EditSettings>
@@ -46,23 +46,6 @@
                 <dxg:GridColumn FieldName="Name"
                                 Cursor="Hand"
                                 Style="{StaticResource ProductGridColumn}"/>
-                <dxg:GridColumn FieldName="Id">
-                    <dxg:GridColumn.CellTemplate>
-                        <DataTemplate>
-                            <dxe:ComboBoxEdit Name="PART_Editor"
-                                              FilterCondition="Contains"
-                                              IncrementalFiltering="True"
-                                              ItemsSource="{Binding RowData.Row.ProductBarcodes}"
-                                              DisplayMember="Barcode"
-                                              ValidateOnTextInput="False"
-                                              ValueMember="ProductId">
-                                <dxe:ComboBoxEdit.StyleSettings>
-                                    <dxe:CheckedComboBoxStyleSettings/>
-                                </dxe:ComboBoxEdit.StyleSettings>
-                            </dxe:ComboBoxEdit>
-                        </DataTemplate>
-                    </dxg:GridColumn.CellTemplate>
-                </dxg:GridColumn>
             </dxg:GridControl>
 
         </dxlc:LayoutGroup>
