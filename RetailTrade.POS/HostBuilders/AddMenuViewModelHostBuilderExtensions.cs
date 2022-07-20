@@ -52,7 +52,7 @@ namespace RetailTrade.POS.HostBuilders
 
         private static ShiftViewModel CreateShiftViewModel(IServiceProvider services)
         {
-            return new ShiftViewModel();
+            return new ShiftViewModel(services.GetRequiredService<IShiftStore>());
         }
 
         private static RefundViewModel CreateRefundViewModel(IServiceProvider services)
@@ -65,7 +65,8 @@ namespace RetailTrade.POS.HostBuilders
             return new SalesViewModel(services.GetRequiredService<IProductService>(),
                 services.GetRequiredService<IUserStore>(),
                 services.GetRequiredService<IProductBarcodeService>(),
-                services.GetRequiredService<IShiftStore>());
+                services.GetRequiredService<IShiftStore>(),
+                services.GetRequiredService<IReceiptService>());
         }
     }
 }

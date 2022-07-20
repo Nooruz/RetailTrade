@@ -13,7 +13,7 @@
         <TextBlock FontSize="32"
                    VerticalAlignment="Top"
                    TextAlignment="Center"
-                   Text="{Binding Receipt.AmountWithoutDiscount, StringFormat={}К оплате: {0:N2}}"/>
+                   Text="{Binding EditReceipt.AmountWithoutDiscount, StringFormat={}К оплате: {0:N2}}"/>
 
         <dxlc:LayoutGroup VerticalAlignment="Top">
 
@@ -35,62 +35,77 @@
 
         </dxlc:LayoutGroup>
 
-        <dxlc:LayoutGroup Orientation="Vertical">
+        <dxlc:LayoutGroup>
+            
+            <dxlc:LayoutGroup Orientation="Vertical">
 
-            <dxlc:LayoutItem Label="Оплата наличными"
-                             FontSize="16"
-                             LabelPosition="Top">
-                <dxe:TextEdit MaskUseAsDisplayFormat="True" 
-                              MaskType="Numeric" 
-                              Mask="n2"
-                              EditValue="{Binding Receipt.PaidInCash, UpdateSourceTrigger=PropertyChanged}">
-                    <dxmvvm:Interaction.Behaviors>
-                        <dxmvvm:FocusBehavior/>
-                    </dxmvvm:Interaction.Behaviors>
-                </dxe:TextEdit>
-            </dxlc:LayoutItem>
+                <dxlc:LayoutItem Label="Оплата наличными"
+                                 FontSize="16"
+                                 LabelPosition="Top">
+                    <dxe:TextEdit MaskUseAsDisplayFormat="True" 
+                                  MaskType="Numeric" 
+                                  Mask="n2"
+                                  Grid.Column="0"
+                                  EditValue="{Binding PayInCash, UpdateSourceTrigger=PropertyChanged}">
+                        <dxmvvm:Interaction.Behaviors>
+                            <dxmvvm:FocusBehavior/>
+                        </dxmvvm:Interaction.Behaviors>
+                    </dxe:TextEdit>
+                </dxlc:LayoutItem>
 
-            <Button Content="Наличными"
-                    IsDefault="True"
-                    Style="{StaticResource CurrentButton}"
-                    VerticalAlignment="Top"
-                    Command="{Binding PaidInCashCommand}"/>
+                <Button Content="Наличными"
+                        IsDefault="True"
+                        Style="{StaticResource CurrentButton}"
+                        VerticalAlignment="Top"
+                        Command="{Binding PaidInCashCommand}"/>
 
-            <Button Content="Оплата картой"
-                    Style="{StaticResource CurrentButton}"
-                    VerticalAlignment="Top"
-                    Command="{Binding PaidInCashlessCommand}"/>
+                <Button Content="Оплата картой"
+                        Style="{StaticResource CurrentButton}"
+                        VerticalAlignment="Top"
+                        Command="{Binding PaidInCashlessCommand}"/>
 
-            <dxlc:LayoutGroup View="GroupBox"                              
-                              Header="Смешенная оптата"
-                              Orientation="Vertical">
+                <dxlc:LayoutGroup View="GroupBox"                              
+                                  Header="Смешенная оптата"
+                                  Orientation="Vertical">
 
-                <dxlc:LayoutGroup>
+                    <dxlc:LayoutGroup>
 
-                    <dxlc:LayoutItem Label="Наличными"
-                                     FontSize="16"
-                                     LabelPosition="Top">
-                        <dxe:TextEdit MaskUseAsDisplayFormat="True" 
-                                      MaskType="Numeric" 
-                                      Mask="n2"/>
-                    </dxlc:LayoutItem>
+                        <dxlc:LayoutItem Label="Наличными"
+                                         FontSize="16"
+                                         LabelPosition="Top">
+                            <dxe:TextEdit MaskUseAsDisplayFormat="True" 
+                                          MaskType="Numeric" 
+                                          Mask="n2"/>
+                        </dxlc:LayoutItem>
 
-                    <dxlc:LayoutItem Label="Безналичными"
-                                     FontSize="16"
-                                     LabelPosition="Top">
-                        <dxe:TextEdit MaskUseAsDisplayFormat="True" 
-                                      MaskType="Numeric" 
-                                      Mask="n2"/>
-                    </dxlc:LayoutItem>
+                        <dxlc:LayoutItem Label="Безналичными"
+                                         FontSize="16"
+                                         LabelPosition="Top">
+                            <dxe:TextEdit MaskUseAsDisplayFormat="True" 
+                                          MaskType="Numeric" 
+                                          Mask="n2"/>
+                        </dxlc:LayoutItem>
+
+                    </dxlc:LayoutGroup>
+
+                    <Button Content="Смешенная"
+                            Command="{Binding OffsetPaymentCommand}"
+                            Style="{StaticResource CurrentButton}"/>
 
                 </dxlc:LayoutGroup>
 
-                <Button Content="Смешенная"
-                        Command="{Binding OffsetPaymentCommand}"
-                        Style="{StaticResource CurrentButton}"/>
-
             </dxlc:LayoutGroup>
 
+            <dxlc:LayoutGroup>
+
+                <dxlc:LayoutItem Label=" "
+                                 FontSize="18"
+                                 LabelPosition="Top">
+                    <TextBlock Text="{Binding Change}"/>
+                </dxlc:LayoutItem>
+                
+            </dxlc:LayoutGroup>
+            
         </dxlc:LayoutGroup>
 
     </dxlc:LayoutControl>

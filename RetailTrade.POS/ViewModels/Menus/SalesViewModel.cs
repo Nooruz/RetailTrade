@@ -28,6 +28,7 @@ namespace RetailTrade.POS.ViewModels.Menus
         private readonly IProductService _productService;
         private readonly IUserStore _userStore;
         private readonly IShiftStore _shiftStore;
+        private readonly IReceiptService _receiptService;
         private ObservableCollection<ProductWareHouseView> _products;
         private ObservableCollection<ProductSale> _productSales = new();
         private ProductWareHouseView _selectedProduct;
@@ -133,12 +134,14 @@ namespace RetailTrade.POS.ViewModels.Menus
         public SalesViewModel(IProductService productService,
             IUserStore userStore,
             IProductBarcodeService productBarcodeService,
-            IShiftStore shiftStore)
+            IShiftStore shiftStore,
+            IReceiptService receiptService)
         {
             _productService = productService;
             _userStore = userStore;
             _productBarcodeService = productBarcodeService;
             _shiftStore = shiftStore;
+            _receiptService = receiptService;
 
             ProductSales.CollectionChanged += ProductSales_CollectionChanged;
             _userStore.StateChanged += () => OnPropertyChanged(nameof(CurrentUser));
@@ -386,10 +389,10 @@ namespace RetailTrade.POS.ViewModels.Menus
         {
             try
             {
-                PaymentViewModel viewModel = new()
+                PaymentViewModel viewModel = new(_receiptService, _shiftStore)
                 {
                     Title = "Оплата",
-                    Receipt = Receipt
+                    EditReceipt = Receipt
                 };
                 WindowService.Show(nameof(PaymentView), viewModel);
             }

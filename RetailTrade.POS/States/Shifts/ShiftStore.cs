@@ -52,21 +52,22 @@ namespace RetailTrade.POS.State.Shifts
 
         public event Action<CheckingResult> CurrentShiftChanged;
 
-        public async Task CheckingShift(IMessageBoxService MessageBoxService)
+        public async Task CheckingShift()
         {
             try
             {
-                CurrentShiftChanged.Invoke(await Check());                
+                CheckingResult result = await Check();
+                CurrentShiftChanged?.Invoke(result);
             }
-            catch (Exception e)
+            catch (Exception)
             {
-                _ = MessageBoxService.ShowMessage(e.Message, "Sale Page", MessageButton.OK, MessageIcon.Error);
+                //ignore
             }
         }        
 
-        public async Task ClosingShift(IMessageBoxService MessageBoxService)
+        public async Task ClosingShift()
         {
-            var result = await _shiftService.GetOpenShiftAsync(_pointSaleId);
+            var result = await _shiftService.GetOpenShiftAsync(_userStore.CurrentUser.Id, _pointSaleId);
             if (result != null)
             {
                 CurrentShiftChanged.Invoke(await Closing());                
@@ -76,17 +77,12 @@ namespace RetailTrade.POS.State.Shifts
             return;
         }
 
-        public async Task OpeningShift(IMessageBoxService MessageBoxService)
+        public async Task OpeningShift()
         {
-            var result = await _shiftService.GetOpenShiftAsync(_pointSaleId);
+            Shift result = await _shiftService.GetOpenShiftAsync(_userStore.CurrentUser.Id, _pointSaleId);
             if (result == null)
             {
                 CurrentShiftChanged.Invoke(await Opening());
-                return;
-            }
-            if (DateTime.Now.Subtract(result.OpeningDate).Days > 0)
-            {
-                CurrentShiftChanged.Invoke(CheckingResult.Exceeded);
                 return;
             }
             CurrentShift = result;
@@ -96,21 +92,14 @@ namespace RetailTrade.POS.State.Shifts
 
         private async Task<CheckingResult> Check()
         {
-            var shift = await _shiftService.GetOpenShiftAsync(_pointSaleId);
+            var shift = await _shiftService.GetOpenShiftAsync(_userStore.CurrentUser.Id, _pointSaleId);
             if (shift != null)
             {
                 if (shift.UserId == _userStore.CurrentUser.Id)
                 {
-                    if (DateTime.Now.Subtract(shift.OpeningDate).Days == 0)
-                    {
-                        IsShiftOpen = true;
-                        CurrentShift = shift;
-                        return CheckingResult.Open;
-                    }
-                    if (DateTime.Now.Subtract(shift.OpeningDate).Days > 0)
-                    {
-                        return CheckingResult.Exceeded;
-                    }
+                    IsShiftOpen = true;
+                    CurrentShift = shift;
+                    return CheckingResult.Open;
                 }
                 else
                 {
@@ -137,7 +126,7 @@ namespace RetailTrade.POS.State.Shifts
 
         private async Task<CheckingResult> Opening()
         {
-            var openShift = await _shiftService.OpeningShiftAsync(_userStore.CurrentUser.Id);
+            var openShift = await _shiftService.OpeningShiftAsync(_userStore.CurrentUser.Id, _pointSaleId);
             if (openShift != null)
             {
                 CurrentShift = openShift;

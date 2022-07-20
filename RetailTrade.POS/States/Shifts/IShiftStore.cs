@@ -91,18 +91,18 @@ namespace RetailTrade.POS.State.Shifts
         /// Открытие смены
         /// </summary>
         /// <returns>Если открыто true, иначи false</returns>
-        Task OpeningShift(IMessageBoxService MessageBoxService);
+        Task OpeningShift();
 
         /// <summary>
         /// Закрытие смены
         /// </summary>
-        Task ClosingShift(IMessageBoxService MessageBoxService);
+        Task ClosingShift();
 
         /// <summary>
         /// Проверка смены
         /// </summary>
         /// <returns>Если открыто true, иначи false</returns>
-        Task CheckingShift(IMessageBoxService MessageBoxService);
+        Task CheckingShift();
 
         /// <summary>
         /// Обработчик

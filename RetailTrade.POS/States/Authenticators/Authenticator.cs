@@ -1,5 +1,6 @@
 ﻿using RetailTrade.Domain.Models;
 using RetailTrade.Domain.Services.AuthenticationServices;
+using RetailTrade.POS.State.Shifts;
 using RetailTrade.POS.States.Navigators;
 using RetailTrade.POS.States.Users;
 using RetailTrade.POS.ViewModels.Factories;
@@ -14,6 +15,7 @@ namespace RetailTrade.POS.States.Authenticators
 
         private readonly IAuthenticationService _authenticationService;
         private readonly IUserStore _userStore;
+        private readonly IShiftStore _shiftStore;
         private readonly INavigator _navigator;
         private readonly IViewModelFactory _viewModelFactory;
 
@@ -24,12 +26,14 @@ namespace RetailTrade.POS.States.Authenticators
         public Authenticator(IAuthenticationService authenticationService,
             IUserStore userStore,
             INavigator navigator,
-            IViewModelFactory viewModelFactory)
+            IViewModelFactory viewModelFactory,
+            IShiftStore shiftStore)
         {
             _authenticationService = authenticationService;
             _userStore = userStore;
             _navigator = navigator;
             _viewModelFactory = viewModelFactory;
+            _shiftStore = shiftStore;
         }
 
         #endregion
@@ -53,6 +57,7 @@ namespace RetailTrade.POS.States.Authenticators
         public async Task Login(string username, string password)
         {
             CurrentUser = await _authenticationService.Login(username, password);
+            await _shiftStore.CheckingShift();
         }
 
         public void Logout()

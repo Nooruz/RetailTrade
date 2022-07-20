@@ -12,7 +12,7 @@ namespace RetailTrade.Domain.Services
         /// </summary>
         /// <param name="userId">Код кассира</param>
         /// <returns>Возврашает открытую смену</returns>
-        Task<Shift> OpeningShiftAsync(int userId);
+        Task<Shift> OpeningShiftAsync(int userId, int poinSaleId);
 
         /// <summary>
         /// Закрыть смену
@@ -25,7 +25,7 @@ namespace RetailTrade.Domain.Services
         /// </summary>
         /// <param name="userId">Код кассира</param>
         /// <returns>Возврашает смену</returns>
-        Task<Shift> GetOpenShiftAsync(int pointSaleId);
+        Task<Shift> GetOpenShiftAsync(int userId, int pointSaleId);
 
         Shift GetOpenShift(int pointSaleId);
 
