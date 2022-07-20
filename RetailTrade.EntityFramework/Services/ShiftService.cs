@@ -87,12 +87,12 @@ namespace RetailTrade.EntityFramework.Services
             return null;
         }
 
-        public async Task<Shift> GetOpenShiftAsync()
+        public async Task<Shift> GetOpenShiftAsync(int pointSaleId)
         {
             try
             {
                 await using RetailTradeDbContext context = _contextFactory.CreateDbContext();
-                return await context.Shifts.FirstOrDefaultAsync(s => s.ClosingDate == null);
+                return await context.Shifts.FirstOrDefaultAsync(s => s.PointSaleId == pointSaleId && s.ClosingDate == null);
             }
             catch (ShiftException e)
             {
@@ -133,12 +133,17 @@ namespace RetailTrade.EntityFramework.Services
                 .ToListAsync();
         }
 
-        public async Task<Shift> GetOpenShift()
+        public Shift GetOpenShift(int pointSaleId)
         {
-            await using RetailTradeDbContext context = _contextFactory.CreateDbContext();
-            return await context.Shifts
-                .Include(sh => sh.User)
-                .FirstOrDefaultAsync(sh => sh.ClosingDate == null);
+            try
+            {
+                using RetailTradeDbContext context = _contextFactory.CreateDbContext();
+                return context.Shifts.FirstOrDefault(s => s.PointSaleId == pointSaleId && s.ClosingDate == null);
+            }
+            catch (ShiftException e)
+            {
+                throw new ShiftException(e.OpeningShiftDate, e.ClosingShiftDate, e.Message, e.InnerException);
+            }
         }
     }
 }

@@ -52,7 +52,7 @@ namespace RetailTradeClient.State.Authenticators
             }
             else
             {
-                Shift shift = await _shiftService.GetOpenShift();
+                Shift shift = new();//await _shiftService.GetOpenShift();
 
                 if (shift != null && shift.UserId != _userStore.CurrentUser.Id)
                 {

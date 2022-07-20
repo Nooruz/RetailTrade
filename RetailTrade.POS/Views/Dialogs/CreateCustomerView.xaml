@@ -1,0 +1,33 @@
+﻿<local:BaseView
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:dxe="http://schemas.devexpress.com/winfx/2008/xaml/editors"
+    xmlns:dxlc="http://schemas.devexpress.com/winfx/2008/xaml/layoutcontrol"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="clr-namespace:RetailTrade.POS.Views"
+    x:Class="RetailTrade.POS.Views.Dialogs.CreateCustomerView"
+                  Width="600">
+
+    <dxlc:LayoutControl Orientation="Vertical">
+
+        <dxlc:LayoutItem Label="ФИО"
+                         LabelPosition="Top">
+            <dxe:TextEdit/>
+        </dxlc:LayoutItem>
+
+        <dxlc:LayoutItem Label="Телефон"
+                         LabelPosition="Top">
+            <dxe:TextEdit/>
+        </dxlc:LayoutItem>
+
+        <dxlc:LayoutItem Label="Комментарий"
+                         LabelPosition="Top">
+            <dxe:TextEdit/>
+        </dxlc:LayoutItem>
+
+        <Button Content="Сохранить"
+                Style="{StaticResource MainButton}"
+                VerticalAlignment="Bottom"/>
+
+    </dxlc:LayoutControl>
+
+</local:BaseView>

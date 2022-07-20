@@ -16,6 +16,7 @@ namespace RetailTrade.Domain.Models
         private int _userId;
         private User _user;
         private decimal _sum;
+        private int? _pointSaleId;
 
         #endregion
 
@@ -88,6 +89,19 @@ namespace RetailTrade.Domain.Models
         }
 
         /// <summary>
+        /// Код точки продаж
+        /// </summary>
+        public int? PointSaleId
+        {
+            get => _pointSaleId;
+            set
+            {
+                _pointSaleId = value;
+                OnPropertyChanged(nameof(PointSaleId));
+            }
+        }
+
+        /// <summary>
         /// Список чеков
         /// </summary>
         public IEnumerable<Receipt> Receipts { get; set; }
@@ -96,6 +110,8 @@ namespace RetailTrade.Domain.Models
         /// Список возвратов
         /// </summary>
         public IEnumerable<Refund> Refunds { get; set; }
+
+        public PointSale PointSale { get; set; }
 
         #endregion
     }

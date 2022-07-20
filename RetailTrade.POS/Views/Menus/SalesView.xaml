@@ -32,6 +32,8 @@
                                    AllowEditing="True"
                                    ShowGroupPanel="False"
                                    AutoWidth="True"
+                                   HorizontalScrollbarVisibility="Hidden"
+                                   VerticalScrollbarVisibility="Hidden"
                                    ShowSearchPanelMode="Always"
                                    SearchPanelNullText="Название или штрихкод"
                                    SearchPanelPosition="OverGroupPanel"
@@ -94,7 +96,9 @@
                                            PassEventArgsToCommand="True"/>
                 </dxmvvm:Interaction.Behaviors>
                 <dxg:GridControl.View>
-                    <dxg:TableView ShowColumnHeaders="False"
+                    <dxg:TableView ShowColumnHeaders="False" 
+                                   HorizontalScrollbarVisibility="Hidden"
+                                   VerticalScrollbarVisibility="Hidden"
                                    ShowGroupPanel="False"
                                    AutoWidth="True"/>
                 </dxg:GridControl.View>
@@ -106,17 +110,16 @@
             <dxlc:LayoutGroup Orientation="Vertical"
                               VerticalAlignment="Bottom">
 
-                <Button Content="Скидка на чек"
-                        Visibility="{Binding DiscountReceiptButtonVisibility}"
-                        Command="{Binding DiscountReceiptCommand}"
-                        Cursor="Hand"
+                <Button Command="{Binding DiscountReceiptCommand}"
+                        Content="Скидка на чек"
                         Padding="10"
                         FontSize="16"
+                        Visibility="{Binding DiscountReceiptButtonVisibility}"
                         Tag="{StaticResource faTag}"
-                        Style="{StaticResource ButtonWithHorizontalIcon}"/>
+                        Style="{StaticResource TwoContentDiscount}"/>
 
                 <Button Content="Покупатель"
-                        Cursor="Hand"
+                        Command="{Binding CustomerCommand}"
                         Padding="10"
                         FontSize="16"
                         Tag="{StaticResource faMale}"
@@ -125,6 +128,7 @@
             </dxlc:LayoutGroup>
 
             <Button Style="{StaticResource TwoContent}"
+                    Command="{Binding PaymentCommand}"
                     Tag="Итого:"
                     VerticalAlignment="Bottom"
                     Content="{Binding TotalSum}"/>

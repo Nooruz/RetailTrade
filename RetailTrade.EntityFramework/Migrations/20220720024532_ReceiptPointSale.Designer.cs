@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using RetailTrade.EntityFramework;
 
@@ -11,9 +12,10 @@ using RetailTrade.EntityFramework;
 namespace RetailTrade.EntityFramework.Migrations
 {
     [DbContext(typeof(RetailTradeDbContext))]
-    partial class RetailTradeDbContextModelSnapshot : ModelSnapshot
+    [Migration("20220720024532_ReceiptPointSale")]
+    partial class ReceiptPointSale
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -970,9 +972,6 @@ namespace RetailTrade.EntityFramework.Migrations
                     b.Property<DateTime>("OpeningDate")
                         .HasColumnType("datetime2");
 
-                    b.Property<int?>("PointSaleId")
-                        .HasColumnType("int");
-
                     b.Property<decimal>("Sum")
                         .HasColumnType("decimal(18,2)");
 
@@ -980,8 +979,6 @@ namespace RetailTrade.EntityFramework.Migrations
                         .HasColumnType("int");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("PointSaleId");
 
                     b.HasIndex("UserId");
 
@@ -1758,17 +1755,11 @@ namespace RetailTrade.EntityFramework.Migrations
 
             modelBuilder.Entity("RetailTrade.Domain.Models.Shift", b =>
                 {
-                    b.HasOne("RetailTrade.Domain.Models.PointSale", "PointSale")
-                        .WithMany("Shifts")
-                        .HasForeignKey("PointSaleId");
-
                     b.HasOne("RetailTrade.Domain.Models.User", "User")
                         .WithMany("Shifts")
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
-
-                    b.Navigation("PointSale");
 
                     b.Navigation("User");
                 });
@@ -1909,8 +1900,6 @@ namespace RetailTrade.EntityFramework.Migrations
                     b.Navigation("ProductSales");
 
                     b.Navigation("Receipts");
-
-                    b.Navigation("Shifts");
 
                     b.Navigation("UserPointSale");
                 });

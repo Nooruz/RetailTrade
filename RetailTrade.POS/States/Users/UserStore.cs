@@ -6,6 +6,7 @@ namespace RetailTrade.POS.States.Users
     public class UserStore : IUserStore
     {
         private User _currentUser;
+
         public User CurrentUser
         {
             get => _currentUser;

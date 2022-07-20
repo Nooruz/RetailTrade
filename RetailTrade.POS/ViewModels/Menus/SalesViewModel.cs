@@ -5,6 +5,7 @@ using DevExpress.Xpf.Grid;
 using RetailTrade.Domain.Models;
 using RetailTrade.Domain.Services;
 using RetailTrade.Domain.Views;
+using RetailTrade.POS.State.Shifts;
 using RetailTrade.POS.States.Users;
 using RetailTrade.POS.ViewModels.Dialogs;
 using RetailTrade.POS.Views.Dialogs;
@@ -26,11 +27,14 @@ namespace RetailTrade.POS.ViewModels.Menus
         private readonly IProductBarcodeService _productBarcodeService;
         private readonly IProductService _productService;
         private readonly IUserStore _userStore;
+        private readonly IShiftStore _shiftStore;
         private ObservableCollection<ProductWareHouseView> _products;
         private ObservableCollection<ProductSale> _productSales = new();
         private ProductWareHouseView _selectedProduct;
         private ProductSale _selectedProductSale;
         public IEnumerable<ProductBarcode> _productBarcodes;
+        private Receipt _receipt = new();
+        private bool _isDiscountReceipt;
 
         #endregion
 
@@ -55,6 +59,7 @@ namespace RetailTrade.POS.ViewModels.Menus
             }
         }
         public User CurrentUser => _userStore.CurrentUser;
+        public Shift CurrentShift => _shiftStore.CurrentShift;
         public GridControl ProductGridControl { get; set; }
         public GridControl ProductSaleGridControl { get; set; }
         public ProductWareHouseView SelectedProduct
@@ -75,7 +80,7 @@ namespace RetailTrade.POS.ViewModels.Menus
                 OnPropertyChanged(nameof(SelectedProductSale));
             }
         }
-        public string TotalSum => ProductSales.Sum(p => p.TotalWithDiscount).ToString("N2");
+        public string TotalSum => Receipt.AmountWithoutDiscount.ToString("N2");
         public TableView ProductTableView { get; set; }
         public IEnumerable<ProductBarcode> ProductBarcodes
         {
@@ -87,6 +92,39 @@ namespace RetailTrade.POS.ViewModels.Menus
             }
         }
         public Visibility DiscountReceiptButtonVisibility => ProductSales.Any() ? Visibility.Visible : Visibility.Collapsed;
+        public Receipt Receipt
+        {
+            get
+            {
+                try
+                {
+                    _receipt.DateOfPurchase = DateTime.Now;
+                    _receipt.PointSaleId = Properties.Settings.Default.PointSaleId;
+                    _receipt.ProductSales = ProductSales.ToList();
+                }
+                catch (Exception)
+                {
+                    //ignore
+                }
+                return _receipt;
+            }
+            set
+            {
+                _receipt = value;
+                OnPropertyChanged(nameof(Receipt));
+            }
+        }
+        public bool IsDiscountReceipt
+        {
+            get => _isDiscountReceipt;
+            set
+            {
+                _isDiscountReceipt = value;
+                OnPropertyChanged(nameof(IsDiscountReceipt));
+                OnPropertyChanged(nameof(ReceiptDiscount));
+            }
+        }
+        public string ReceiptDiscount => IsDiscountReceipt ? $"{Math.Round(Receipt.DiscountAmount / Receipt.Total * 100, 2)}% • {Receipt.DiscountAmount:N2}" : string.Empty;
 
         #endregion
 
@@ -94,13 +132,17 @@ namespace RetailTrade.POS.ViewModels.Menus
 
         public SalesViewModel(IProductService productService,
             IUserStore userStore,
-            IProductBarcodeService productBarcodeService)
+            IProductBarcodeService productBarcodeService,
+            IShiftStore shiftStore)
         {
             _productService = productService;
             _userStore = userStore;
             _productBarcodeService = productBarcodeService;
+            _shiftStore = shiftStore;
 
             ProductSales.CollectionChanged += ProductSales_CollectionChanged;
+            _userStore.StateChanged += () => OnPropertyChanged(nameof(CurrentUser));
+            _shiftStore.CurrentShiftChanged += (value) => OnPropertyChanged(nameof(CurrentShift));
         }
 
         #endregion
@@ -316,16 +358,75 @@ namespace RetailTrade.POS.ViewModels.Menus
             OnPropertyChanged(nameof(TotalSum));
         }
 
+        private void ViewModel_OnDiscountChanged(decimal discountSum)
+        {
+            if (discountSum > 0)
+            {
+                IsDiscountReceipt = true;
+                Receipt.DiscountAmount = discountSum;
+            }
+            OnPropertyChanged(nameof(ReceiptDiscount));
+            OnPropertyChanged(nameof(TotalSum));
+        }
+
+        private void ViewModel_OnDeleteDiscountReceipt()
+        {
+            IsDiscountReceipt = false;
+            Receipt.DiscountAmount = 0;
+            OnPropertyChanged(nameof(ReceiptDiscount));
+            OnPropertyChanged(nameof(TotalSum));
+        }
+
         #endregion
 
         #region Public Vodis
+
+        [Command]
+        public void Payment()
+        {
+            try
+            {
+                PaymentViewModel viewModel = new()
+                {
+                    Title = "Оплата",
+                    Receipt = Receipt
+                };
+                WindowService.Show(nameof(PaymentView), viewModel);
+            }
+            catch (Exception)
+            {
+                //ignore
+            }
+        }
+
+        [Command]
+        public void Customer()
+        {
+            try
+            {
+                WindowService.Show(nameof(CustomerView), new CustomerViewModel() { Title = "Покупатель" });
+            }
+            catch (Exception)
+            {
+                //ignore
+            }
+        }
 
         [Command]
         public void DiscountReceipt()
         {
             try
             {
-                WindowService.Show(nameof(DiscountReceiptView), new DiscountReceiptViewModel());
+                DiscountReceiptViewModel viewModel = new()
+                {
+                    Title = "Скидка",
+                    Receipt = Receipt
+                };
+
+                viewModel.OnDiscountChanged += ViewModel_OnDiscountChanged;
+                viewModel.OnDeleteDiscountReceipt += ViewModel_OnDeleteDiscountReceipt;
+
+                WindowService.Show(nameof(DiscountReceiptView), viewModel);
             }
             catch (Exception)
             {

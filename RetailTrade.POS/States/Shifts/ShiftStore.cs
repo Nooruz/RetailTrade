@@ -1,12 +1,12 @@
 ﻿using DevExpress.Mvvm;
 using RetailTrade.Domain.Models;
 using RetailTrade.Domain.Services;
-using RetailTradeClient.State.Users;
+using RetailTrade.POS.States.Users;
 using System;
 using System.Collections.ObjectModel;
 using System.Threading.Tasks;
 
-namespace RetailTradeClient.State.Shifts
+namespace RetailTrade.POS.State.Shifts
 {
     public class ShiftStore : IShiftStore
     {
@@ -17,6 +17,7 @@ namespace RetailTradeClient.State.Shifts
         private readonly IUserStore _userStore;
         private bool _isShiftOpen;
         private Shift _currentShift;
+        private int _pointSaleId => RetailTrade.POS.Properties.Settings.Default.PointSaleId;
 
         #endregion
 
@@ -65,7 +66,7 @@ namespace RetailTradeClient.State.Shifts
 
         public async Task ClosingShift(IMessageBoxService MessageBoxService)
         {
-            Shift result = new();//await _shiftService.GetOpenShift();
+            var result = await _shiftService.GetOpenShiftAsync(_pointSaleId);
             if (result != null)
             {
                 CurrentShiftChanged.Invoke(await Closing());                
@@ -77,7 +78,7 @@ namespace RetailTradeClient.State.Shifts
 
         public async Task OpeningShift(IMessageBoxService MessageBoxService)
         {
-            Shift result = new();//await _shiftService.GetOpenShift();
+            var result = await _shiftService.GetOpenShiftAsync(_pointSaleId);
             if (result == null)
             {
                 CurrentShiftChanged.Invoke(await Opening());
@@ -95,7 +96,7 @@ namespace RetailTradeClient.State.Shifts
 
         private async Task<CheckingResult> Check()
         {
-            Shift shift = new();//await _shiftService.GetOpenShift();
+            var shift = await _shiftService.GetOpenShiftAsync(_pointSaleId);
             if (shift != null)
             {
                 if (shift.UserId == _userStore.CurrentUser.Id)

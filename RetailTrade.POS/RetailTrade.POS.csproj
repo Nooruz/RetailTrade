@@ -8,6 +8,13 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="Customs\**" />
+    <EmbeddedResource Remove="Customs\**" />
+    <None Remove="Customs\**" />
+    <Page Remove="Customs\**" />
+  </ItemGroup>
+
+  <ItemGroup>
     <None Remove="Fonts\fa-brands-400.ttf" />
     <None Remove="Fonts\fa-regular-400.ttf" />
     <None Remove="Fonts\fa-solid-900.ttf" />
@@ -79,10 +86,6 @@
     <Page Update="Styles\UserControlStyle.xaml">
       <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
     </Page>
-  </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="Customs\" />
   </ItemGroup>
 
 </Project>

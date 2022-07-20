@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
+using System.Linq;
 
 namespace RetailTrade.Domain.Models
 {
@@ -23,6 +24,8 @@ namespace RetailTrade.Domain.Models
         private string _kKMCheckNumber;
         private bool _isRefund;
         private Shift _shift;
+        private List<ProductSale> _productSales;
+        private int? _pointSaleId;
 
         #endregion
 
@@ -79,6 +82,7 @@ namespace RetailTrade.Domain.Models
             set
             {
                 _total = value;
+                AmountWithoutDiscount = Total - DiscountAmount;
                 OnPropertyChanged(nameof(Total));
             }
         }
@@ -93,6 +97,7 @@ namespace RetailTrade.Domain.Models
             set
             {
                 _discountAmount = value;
+                AmountWithoutDiscount = Total - DiscountAmount;
                 OnPropertyChanged(nameof(DiscountAmount));
             }
         }
@@ -152,6 +157,9 @@ namespace RetailTrade.Domain.Models
             }
         }
 
+        /// <summary>
+        /// Код чек из ККМ
+        /// </summary>
         public string KKMCheckNumber
         {
             get => _kKMCheckNumber;
@@ -162,6 +170,9 @@ namespace RetailTrade.Domain.Models
             }
         }
 
+        /// <summary>
+        /// Возвращено
+        /// </summary>
         public bool IsRefund
         {
             get => _isRefund;
@@ -173,9 +184,36 @@ namespace RetailTrade.Domain.Models
         }
 
         /// <summary>
+        /// Код точки продаж
+        /// </summary>
+        public int? PointSaleId
+        {
+            get => _pointSaleId;
+            set
+            {
+                _pointSaleId = value;
+                OnPropertyChanged(nameof(PointSaleId));
+            }
+        }
+
+        /// <summary>
         /// Товары
         /// </summary>
-        public List<ProductSale> ProductSales { get; set; }
+        public List<ProductSale> ProductSales
+        {
+            get => _productSales;
+            set
+            {
+                _productSales = value;
+                if (ProductSales != null && ProductSales.Any())
+                {
+                    Total = ProductSales.Sum(p => p.TotalWithDiscount);
+                }
+                OnPropertyChanged(nameof(ProductSales));
+            }
+        }
+
+        public PointSale PointSale { get; set; }
 
         #endregion
     }

@@ -29,7 +29,8 @@
 
             </dxlc:LayoutGroup>
 
-            <TextBlock Text="{Binding TotalSum, StringFormat={}Подитог: {0}:N2, FallbackValue=500.00}"
+            <TextBlock Text="{Binding Total, StringFormat={}Подитог: {0:N2}}"
+                       TextAlignment="Center"
                        FontSize="36"/>
 
         </dxlc:LayoutGroup>
@@ -81,7 +82,7 @@
             <TextBlock HorizontalAlignment="Center"
                        FontWeight="DemiBold"
                        FontSize="22"
-                       Text="{Binding TotalWithDiscount, StringFormat={}Итого: {0:N2}}"/>
+                       Text="{Binding TotalWithDiscount, StringFormat={}Сумма со скидкой: {0:N2}}"/>
 
         </dxlc:LayoutGroup>
 

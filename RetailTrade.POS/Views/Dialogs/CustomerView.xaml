@@ -1,0 +1,34 @@
+﻿<local:BaseView x:Class="RetailTrade.POS.Views.Dialogs.CustomerView"
+                xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                xmlns:local="clr-namespace:RetailTrade.POS.Views"
+                xmlns:dxlc="http://schemas.devexpress.com/winfx/2008/xaml/layoutcontrol"
+                xmlns:dxg="http://schemas.devexpress.com/winfx/2008/xaml/grid"
+                Width="600">
+
+    <dxlc:LayoutControl Orientation="Vertical">
+
+        <dxlc:LayoutGroup HorizontalAlignment="Left"
+                          VerticalAlignment="Top">
+
+            <Button Content="Новый покупатель"/>
+
+        </dxlc:LayoutGroup>
+
+        <dxg:GridControl ItemsSource="{Binding Products}"
+                             SelectedItem="{Binding SelectedProduct}">
+            <dxg:GridControl.View>
+                <dxg:TableView ShowColumnHeaders="False" 
+                               AllowEditing="True"
+                               ShowGroupPanel="False"
+                               AutoWidth="True"
+                               ShowSearchPanelMode="Always"
+                               SearchPanelNullText="Имя"
+                               SearchPanelPosition="OverGroupPanel"/>
+            </dxg:GridControl.View>
+            <dxg:GridColumn FieldName="Name"/>
+        </dxg:GridControl>
+
+    </dxlc:LayoutControl>
+    
+</local:BaseView>

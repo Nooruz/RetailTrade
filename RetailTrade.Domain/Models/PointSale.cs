@@ -131,6 +131,8 @@ namespace RetailTrade.Domain.Models
 
         public ICollection<User> Users { get; set; }
         public ICollection<ProductSale> ProductSales { get; set; }
+        public ICollection<Receipt> Receipts { get; set; }
+        public ICollection<Shift> Shifts { get; set; }
 
         public List<UserPointSale> UserPointSale
         {
