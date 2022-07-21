@@ -28,7 +28,7 @@
                             <TextBlock.Text>
                                 <MultiBinding Converter="{StaticResource RowIndexConverter}">
                                     <Binding Path="RowData.RowHandle.Value"/>
-                                    <Binding Path="DataContext.ProductSales.Count" RelativeSource="{RelativeSource AncestorType=UserControl, Mode=FindAncestor}"/>
+                                    <Binding Path="DataContext.Receipt.ProductSales.Count" RelativeSource="{RelativeSource AncestorType=UserControl, Mode=FindAncestor}"/>
                                 </MultiBinding>
                             </TextBlock.Text>
                         </TextBlock>

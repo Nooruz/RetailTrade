@@ -30,7 +30,6 @@ namespace RetailTrade.POS.ViewModels.Menus
         private readonly IShiftStore _shiftStore;
         private readonly IReceiptService _receiptService;
         private ObservableCollection<ProductWareHouseView> _products;
-        private ObservableCollection<ProductSale> _productSales = new();
         private ProductWareHouseView _selectedProduct;
         private ProductSale _selectedProductSale;
         public IEnumerable<ProductBarcode> _productBarcodes;
@@ -48,15 +47,6 @@ namespace RetailTrade.POS.ViewModels.Menus
             {
                 _products = value;
                 OnPropertyChanged(nameof(Products));
-            }
-        }
-        public ObservableCollection<ProductSale> ProductSales
-        {
-            get => _productSales;
-            set
-            {
-                _productSales = value;
-                OnPropertyChanged(nameof(ProductSales));
             }
         }
         public User CurrentUser => _userStore.CurrentUser;
@@ -92,7 +82,7 @@ namespace RetailTrade.POS.ViewModels.Menus
                 OnPropertyChanged(nameof(ProductBarcodes));
             }
         }
-        public Visibility DiscountReceiptButtonVisibility => ProductSales.Any() ? Visibility.Visible : Visibility.Collapsed;
+        public Visibility DiscountReceiptButtonVisibility => Receipt.ProductSales.Any() ? Visibility.Visible : Visibility.Collapsed;
         public Receipt Receipt
         {
             get
@@ -101,7 +91,6 @@ namespace RetailTrade.POS.ViewModels.Menus
                 {
                     _receipt.DateOfPurchase = DateTime.Now;
                     _receipt.PointSaleId = Properties.Settings.Default.PointSaleId;
-                    _receipt.ProductSales = ProductSales.ToList();
                 }
                 catch (Exception)
                 {
@@ -143,7 +132,7 @@ namespace RetailTrade.POS.ViewModels.Menus
             _shiftStore = shiftStore;
             _receiptService = receiptService;
 
-            ProductSales.CollectionChanged += ProductSales_CollectionChanged;
+            Receipt.ProductSales.CollectionChanged += ProductSales_CollectionChanged;
             _userStore.StateChanged += () => OnPropertyChanged(nameof(CurrentUser));
             _shiftStore.CurrentShiftChanged += (value) => OnPropertyChanged(nameof(CurrentShift));
         }
@@ -213,7 +202,7 @@ namespace RetailTrade.POS.ViewModels.Menus
             {
                 ProductWareHouseView product = Products.FirstOrDefault(p => p.Id == productSale.ProductId);
                 product.Quantity += productSale.Quantity;
-                ProductSales.Remove(productSale);
+                Receipt.ProductSales.Remove(productSale);
             }
             catch (Exception)
             {
@@ -258,7 +247,7 @@ namespace RetailTrade.POS.ViewModels.Menus
                 }
                 else
                 {
-                    IncreaseQuantityProductSale(ProductSales.FirstOrDefault(p => p.ProductId == SelectedProduct.Id));
+                    IncreaseQuantityProductSale(Receipt.ProductSales.FirstOrDefault(p => p.ProductId == SelectedProduct.Id));
                 }
             }
             catch (Exception)
@@ -271,15 +260,15 @@ namespace RetailTrade.POS.ViewModels.Menus
         {
             try
             {
-                ProductSale? product = ProductSales.FirstOrDefault(p => p.ProductId == productSale.ProductId);
+                ProductSale? product = Receipt.ProductSales.FirstOrDefault(p => p.ProductId == productSale.ProductId);
                 if (product != null)
                 {
                     product.Quantity += productSale.Quantity;                    
                 }
                 else
                 {
-                    ProductSales.Add(productSale);
-                    ProductSales.Move(ProductSales.Count - 1, 0);
+                    Receipt.ProductSales.Add(productSale);
+                    Receipt.ProductSales.Move(Receipt.ProductSales.Count - 1, 0);
                 }
                 SelectedProduct.Quantity -= productSale.Quantity;
             }
@@ -318,7 +307,7 @@ namespace RetailTrade.POS.ViewModels.Menus
             }
             else
             {
-                ProductSales.Add(new ProductSale
+                Receipt.ProductSales.Add(new ProductSale
                 {
                     ProductId = SelectedProduct.Id,
                     Quantity = 1,
@@ -331,7 +320,7 @@ namespace RetailTrade.POS.ViewModels.Menus
                         Name = SelectedProduct.Name
                     }
                 });
-                ProductSales.Move(ProductSales.Count - 1, 0);
+                Receipt.ProductSales.Move(Receipt.ProductSales.Count - 1, 0);
                 SelectedProduct.Quantity -= 1;
             }
         }
@@ -442,14 +431,14 @@ namespace RetailTrade.POS.ViewModels.Menus
         {
             try
             {
-                if (ProductSales.Any())
+                if (Receipt.ProductSales.Any())
                 {
-                    ProductSales.ToList().ForEach(s =>
+                    Receipt.ProductSales.ToList().ForEach(s =>
                     {
                         ProductWareHouseView product = Products.FirstOrDefault(p => p.Id == s.ProductId);
                         product.Quantity += s.Quantity;
                     });
-                    ProductSales.Clear();
+                    Receipt.ProductSales.Clear();
                     OnPropertyChanged(nameof(TotalSum));
                 }
             }

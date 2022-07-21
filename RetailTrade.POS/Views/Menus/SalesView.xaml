@@ -88,7 +88,7 @@
 
             </Menu>
 
-            <dxg:GridControl ItemsSource="{Binding ProductSales}"
+            <dxg:GridControl ItemsSource="{Binding Receipt.ProductSales}"
                              SelectedItem="{Binding SelectedProductSale}">
                 <dxmvvm:Interaction.Behaviors>
                     <dxmvvm:EventToCommand EventName="Loaded"

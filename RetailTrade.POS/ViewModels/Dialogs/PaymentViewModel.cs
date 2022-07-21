@@ -5,10 +5,7 @@ using RetailTrade.Domain.Services;
 using RetailTrade.POS.State.Shifts;
 using RetailTrade.POS.Views.Dialogs;
 using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace RetailTrade.POS.ViewModels.Dialogs
 {
@@ -124,6 +121,12 @@ namespace RetailTrade.POS.ViewModels.Dialogs
             }
 
             EditReceipt.ShiftId = CurrentShift.Id;
+
+            EditReceipt.ProductSales.ToList().ForEach(p =>
+            {
+                p.Product = null;
+                p.Receipt = null;
+            });
 
             _ = await _receiptService.CreateAsync(EditReceipt);
         }

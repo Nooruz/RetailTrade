@@ -1,7 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.ComponentModel.DataAnnotations.Schema;
-using System.Linq;
 
 namespace RetailTrade.Domain.Models
 {
@@ -24,7 +23,7 @@ namespace RetailTrade.Domain.Models
         private string _kKMCheckNumber;
         private bool _isRefund;
         private Shift _shift;
-        private List<ProductSale> _productSales;
+        private ObservableCollection<ProductSale> _productSales = new();
         private int? _pointSaleId;
 
         #endregion
@@ -199,16 +198,12 @@ namespace RetailTrade.Domain.Models
         /// <summary>
         /// Товары
         /// </summary>
-        public List<ProductSale> ProductSales
+        public ObservableCollection<ProductSale> ProductSales
         {
             get => _productSales;
             set
             {
                 _productSales = value;
-                if (ProductSales != null && ProductSales.Any())
-                {
-                    Total = ProductSales.Sum(p => p.TotalWithDiscount);
-                }
                 OnPropertyChanged(nameof(ProductSales));
             }
         }
