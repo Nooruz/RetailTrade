@@ -114,7 +114,21 @@ namespace RetailTrade.POS.ViewModels.Menus
                 OnPropertyChanged(nameof(ReceiptDiscount));
             }
         }
-        public string ReceiptDiscount => IsDiscountReceipt ? $"{Math.Round(Receipt.DiscountAmount / Receipt.Total * 100, 2)}% • {Receipt.DiscountAmount:N2}" : string.Empty;
+        public string ReceiptDiscount
+        {
+            get
+            {
+                try
+                {
+                    return IsDiscountReceipt ? $"{Math.Round(Receipt.DiscountAmount / Receipt.Total * 100, 2)}% • {Receipt.DiscountAmount:N2}" : string.Empty;
+                }
+                catch (Exception)
+                {
+                    //ignore
+                }
+                return string.Empty;
+            }
+        }
 
         #endregion
 
@@ -369,6 +383,11 @@ namespace RetailTrade.POS.ViewModels.Menus
             OnPropertyChanged(nameof(TotalSum));
         }
 
+        private void ViewModel_OnSale()
+        {
+            Receipt = new();
+        }
+
         #endregion
 
         #region Public Vodis
@@ -383,6 +402,9 @@ namespace RetailTrade.POS.ViewModels.Menus
                     Title = "Оплата",
                     EditReceipt = Receipt
                 };
+
+                viewModel.OnSale += ViewModel_OnSale;
+
                 WindowService.Show(nameof(PaymentView), viewModel);
             }
             catch (Exception)
@@ -480,7 +502,7 @@ namespace RetailTrade.POS.ViewModels.Menus
                         ProductGridControl = gridControl;
                         ProductTableView = ProductGridControl.View as TableView;
                         ProductTableView.SearchColumns = string.Join(";", ProductGridControl.Columns.Select(g => g.FieldName));
-                        ProductTableView.MouseDown += TableView_MouseDown;
+                        ProductTableView.MouseLeftButtonDown += TableView_MouseDown;
                         ProductTableView.SearchStringToFilterCriteria += ProductTableView_SearchStringToFilterCriteria;
                     }
                 }

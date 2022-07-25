@@ -51,6 +51,15 @@ namespace RetailTrade.EntityFramework.Services
             return await context.Shifts.ToListAsync(); ;
         }
 
+        public async Task<IEnumerable<Shift>> GetAllAsync(int userId, int pointSaleId)
+        {
+            await using RetailTradeDbContext context = _contextFactory.CreateDbContext();
+            return await context.Shifts
+                .Where(s => s.UserId == userId && s.PointSaleId == pointSaleId)
+                .Include(s => s.Receipts)
+                .ToListAsync(); ;
+        }
+
         public async Task<Shift> UpdateAsync(int id, Shift entity)
         {
             var result = await _nonQueryDataService.Update(id, entity);

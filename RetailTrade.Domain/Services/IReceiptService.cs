@@ -10,6 +10,9 @@ namespace RetailTrade.Domain.Services
     {
         event Action<IEnumerable<ProductSale>> OnProductSale;
         Task<Receipt> CreateAsync(Receipt receipt, bool isKeepRecords);
+
+        Task<IEnumerable<Receipt>> GetAllAsync(int userId, int pointSaleId);
+
         /// <summary>
         /// Получить квитанции из текущего смена
         /// </summary>

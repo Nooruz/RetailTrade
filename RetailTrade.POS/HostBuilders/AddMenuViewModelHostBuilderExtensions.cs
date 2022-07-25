@@ -57,7 +57,8 @@ namespace RetailTrade.POS.HostBuilders
 
         private static RefundViewModel CreateRefundViewModel(IServiceProvider services)
         {
-            return new RefundViewModel();
+            return new RefundViewModel(services.GetRequiredService<IReceiptService>(),
+                services.GetRequiredService<IUserStore>());
         }
 
         private static SalesViewModel CreateSalesViewModel(IServiceProvider services)

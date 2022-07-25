@@ -197,4 +197,159 @@
         </Setter>
     </Style>
 
+    <Style TargetType="{x:Type dxg:GridColumn}" x:Key="RefundGridColumn">
+        <Setter Property="CellTemplate">
+            <Setter.Value>
+                <DataTemplate>
+                    <Grid Margin="10">
+
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto"/>
+                            <ColumnDefinition Width="Auto"/>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="Auto"/>
+                        </Grid.ColumnDefinitions>
+
+                        <TextBlock Text="{Binding Path=RowData.Row.DateOfPurchase, StringFormat=HH:mm}"
+                                   Grid.Column="0"
+                                   FontSize="18"/>
+
+                        <TextBlock x:Name="IconText"
+                                   Visibility="Hidden"
+                                   Margin="5 0"
+                                   Text="{StaticResource faCircleArrowLeft}"
+                                   Foreground="Red"
+                                   Style="{StaticResource IconicTextBlock}"
+                                   FontSize="12"
+                                   Grid.Column="1"/>
+
+                        <TextBlock Text="{Binding Path=RowData.Row.Id, StringFormat={}Продажа №{0:D5}}"
+                                   TextAlignment="Left"
+                                   Grid.Column="2"
+                                   FontSize="18"/>
+
+                        <TextBlock Text="{Binding Path=RowData.Row.AmountWithoutDiscount, StringFormat=N2}"
+                                   FontSize="18"
+                                   Grid.Column="3"/>
+
+                    </Grid>
+                    <DataTemplate.Triggers>
+                        <DataTrigger Binding="{Binding Path=RowData.Row.IsRefund}" Value="True">
+                            <Setter TargetName="IconText" Property="Visibility" Value="Visible"/>
+                        </DataTrigger>
+                    </DataTemplate.Triggers>
+                </DataTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <Style TargetType="{x:Type dxg:GridColumn}" x:Key="RefundProductSaleGridColumn">
+        <Setter Property="CellTemplate">
+            <Setter.Value>
+                <DataTemplate>
+                    <Grid Margin="10">
+
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto"/>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="Auto"/>
+                        </Grid.ColumnDefinitions>
+
+                        <Grid.RowDefinitions>
+                            <RowDefinition/>
+                            <RowDefinition/>
+                            <RowDefinition/>
+                            <RowDefinition/>
+                        </Grid.RowDefinitions>
+
+                        <Border Grid.Row="0"
+                                Grid.Column="0"
+                                Grid.RowSpan="4"
+                                Width="50"
+                                Height="50"
+                                CornerRadius="25"
+                                Margin="10 0"
+                                Background="#E5E5E5"/>
+
+                        <Border CornerRadius="25"
+                                Width="50"
+                                Height="50"
+                                Margin="10 0"
+                                Grid.Column="0"
+                                Grid.Row="0"
+                                Grid.RowSpan="4">
+
+                            <Border.Background>
+                                <ImageBrush Stretch="Fill" 
+                                            ImageSource="{Binding Path=RowData.Row.Product.Image}"/>
+                            </Border.Background>
+
+                        </Border>
+
+                        <TextBlock Text="{Binding Path=RowData.Row.Product.Name}"
+                                   FontSize="18"
+                                   FontWeight="DemiBold"
+                                   Grid.Column="1"
+                                   Grid.Row="0"/>
+
+                        <TextBlock Text="{Binding Path=RowData.Row.Product.Id, StringFormat=D5}"
+                                   FontSize="18"
+                                   FontWeight="DemiBold"
+                                   Grid.Column="1"
+                                   Grid.Row="1"/>
+
+                        <StackPanel Orientation="Horizontal"
+                                    Grid.Column="1"
+                                    Grid.Row="2">
+
+                            <TextBlock Text="{Binding Path=RowData.Row.Quantity}"
+                                       FontSize="18"
+                                       FontWeight="DemiBold"/>
+
+                            <TextBlock Text=" x "
+                                       FontSize="18"
+                                       FontWeight="DemiBold"/>
+                            
+                            <TextBlock Text="{Binding Path=RowData.Row.RetailPrice}"
+                                       FontSize="18"
+                                       FontWeight="DemiBold"/>
+
+
+                        </StackPanel>
+
+                        <StackPanel x:Name="Refund" 
+                                    Visibility="Collapsed"
+                                    Orientation="Horizontal"
+                                    Grid.Column="1"
+                                    Grid.Row="3">
+
+                            <TextBlock Text="{StaticResource faCircleArrowLeft}"
+                                       Foreground="Red"
+                                       FontSize="12"
+                                       Margin="5 0"/>
+                            
+                            <TextBlock Text="{Binding Path=RowData.Row.Name}"
+                                       Foreground="Red"
+                                       FontSize="18"/>
+
+                        </StackPanel>
+
+                        <TextBlock Text="{Binding Path=RowData.Row.TotalWithDiscount, StringFormat=N2}"
+                                   Grid.Column="2"                                   
+                                   FontWeight="Bold"
+                                   FontSize="18"
+                                   Grid.Row="0"
+                                   Grid.RowSpan="4"/>
+
+                    </Grid>
+                    <DataTemplate.Triggers>
+                        <DataTrigger Binding="{Binding Path=RowData.Row.IsRefund}" Value="True">
+                            <Setter TargetName="Refund" Property="Visibility" Value="Visible"/>
+                        </DataTrigger>
+                    </DataTemplate.Triggers>
+                </DataTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
 </ResourceDictionary>

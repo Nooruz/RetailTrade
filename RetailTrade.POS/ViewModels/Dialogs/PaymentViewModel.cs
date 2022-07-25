@@ -82,6 +82,12 @@ namespace RetailTrade.POS.ViewModels.Dialogs
 
         #endregion
 
+        #region Actions
+
+        public event Action OnSale;
+
+        #endregion
+
         #region Constructor
 
         public PaymentViewModel(IReceiptService receiptService,
@@ -109,26 +115,37 @@ namespace RetailTrade.POS.ViewModels.Dialogs
         [Command]
         public async void PaidInCash()
         {
-            if (!IsChange)
+            try
             {
-                PayInCash = EditReceipt.AmountWithoutDiscount;
+                if (!IsChange)
+                {
+                    PayInCash = EditReceipt.AmountWithoutDiscount;
+                }
+                EditReceipt.DateOfPurchase = DateTime.Now;
+
+                if (CurrentShift == null)
+                {
+                    await _shiftStore.OpeningShift();
+                }
+
+                EditReceipt.ShiftId = CurrentShift.Id;
+
+                EditReceipt.ProductSales.ToList().ForEach(p =>
+                {
+                    p.Product = null;
+                    p.Receipt = null;
+                });
+
+                _ = await _receiptService.CreateAsync(EditReceipt);
+
+                OnSale?.Invoke();
+
+                CurrentWindowService.Close();
             }
-            EditReceipt.DateOfPurchase = DateTime.Now;
-
-            if (CurrentShift == null)
+            catch (Exception)
             {
-                await _shiftStore.OpeningShift();
+                //ignore
             }
-
-            EditReceipt.ShiftId = CurrentShift.Id;
-
-            EditReceipt.ProductSales.ToList().ForEach(p =>
-            {
-                p.Product = null;
-                p.Receipt = null;
-            });
-
-            _ = await _receiptService.CreateAsync(EditReceipt);
         }
 
         [Command]

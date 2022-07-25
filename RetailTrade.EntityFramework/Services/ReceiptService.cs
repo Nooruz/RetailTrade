@@ -36,7 +36,9 @@ namespace RetailTrade.EntityFramework.Services
             {
                 var result = await _nonQueryDataService.Create(entity);
                 if (result != null)
+                {
                     OnProductSale?.Invoke(entity.ProductSales);
+                }
                 return result;
             }
             catch (Exception)
@@ -65,6 +67,18 @@ namespace RetailTrade.EntityFramework.Services
         {
             await using RetailTradeDbContext context = _contextFactory.CreateDbContext();
             IEnumerable<Receipt> entities = await context.Receipts.ToListAsync();
+            return entities;
+        }
+
+        public async Task<IEnumerable<Receipt>> GetAllAsync(int userId, int pointSaleId)
+        {
+            await using RetailTradeDbContext context = _contextFactory.CreateDbContext();
+            IEnumerable<Receipt> entities = await context.Receipts
+                .Include(r => r.Shift)
+                .Include(r => r.ProductSales)
+                .ThenInclude(p => p.Product)
+                .Where(r => r.Shift.UserId == userId && r.Shift.PointSaleId == pointSaleId)
+                .ToListAsync();
             return entities;
         }
 

@@ -32,5 +32,8 @@
     <system:String x:Key="faHistory">&#xf1da;</system:String>
     <system:String x:Key="faTag">&#xf02b;</system:String>
     <system:String x:Key="faMale">&#xf183;</system:String>
+    <system:String x:Key="faCircleArrowLeft">&#xf0a8;</system:String>
+    <system:String x:Key="faUndo">&#xf0e2;</system:String>
+    <system:String x:Key="faPrint">&#xf02f;</system:String>
 
 </ResourceDictionary>

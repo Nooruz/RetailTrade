@@ -26,6 +26,7 @@ namespace RetailTrade.Domain.Services
         /// <param name="userId">Код кассира</param>
         /// <returns>Возврашает смену</returns>
         Task<Shift> GetOpenShiftAsync(int userId, int pointSaleId);
+        Task<IEnumerable<Shift>> GetAllAsync(int userId, int pointSaleId);
 
         Shift GetOpenShift(int pointSaleId);
 

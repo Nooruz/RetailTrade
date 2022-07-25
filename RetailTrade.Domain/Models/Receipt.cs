@@ -1,6 +1,9 @@
 ﻿using System;
 using System.Collections.ObjectModel;
+using System.Collections.Specialized;
+using System.ComponentModel;
 using System.ComponentModel.DataAnnotations.Schema;
+using System.Linq;
 
 namespace RetailTrade.Domain.Models
 {
@@ -209,6 +212,46 @@ namespace RetailTrade.Domain.Models
         }
 
         public PointSale PointSale { get; set; }
+
+        #endregion
+
+        #region Constructor
+
+        public Receipt()
+        {
+            _productSales.CollectionChanged += ProductSales_CollectionChanged;
+        }
+
+        #endregion
+
+        #region Private Voids
+
+        private void ProductSales_CollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
+        {
+            if (e.NewItems != null)
+            {
+                foreach (ProductSale item in e.NewItems)
+                {
+                    item.PropertyChanged += Item_PropertyChanged;
+                }
+            }
+            if (e.OldItems != null)
+            {
+                foreach (ProductSale item in e.OldItems)
+                {
+                    item.PropertyChanged -= Item_PropertyChanged;
+                }
+            }
+            Total = ProductSales.Sum(p => p.TotalWithDiscount);
+        }
+
+        private void Item_PropertyChanged(object sender, PropertyChangedEventArgs e)
+        {
+            if (ProductSales != null && ProductSales.Any())
+            {
+                Total = ProductSales.Sum(p => p.TotalWithDiscount);
+            }
+        }
 
         #endregion
     }
