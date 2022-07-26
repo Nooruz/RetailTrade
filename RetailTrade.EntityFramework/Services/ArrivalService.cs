@@ -75,16 +75,6 @@ namespace RetailTrade.EntityFramework.Services
                     .Include(a => a.ArrivalProducts)
                     .FirstOrDefaultAsync(a => a.Id == id);
 
-                if (arrival.ArrivalProducts.Count > 0)
-                {
-                    foreach (var item in arrival.ArrivalProducts)
-                    {
-                        Product product = await _productService.GetByIdAsync(item.ProductId);
-                        product.Quantity -= item.Quantity;
-                        await _productService.UpdateAsync(product.Id, product);
-                    }
-                }
-
                 var result = await _nonQueryDataService.Delete(id);
 
                 if (result)

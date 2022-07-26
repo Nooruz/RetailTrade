@@ -8,7 +8,6 @@ namespace RetailTrade.Domain.Models
 
         private int _productId;
         private int _wareHouseId;
-        private double _quantity;
 
         #endregion
 
@@ -30,15 +29,6 @@ namespace RetailTrade.Domain.Models
             {
                 _wareHouseId = value;
                 OnPropertyChanged(nameof(WareHouseId));
-            }
-        }
-        public double Quantity
-        {
-            get => _quantity;
-            set
-            {
-                _quantity = value;
-                OnPropertyChanged(nameof(Quantity));
             }
         }
         public Product Product { get; set; }

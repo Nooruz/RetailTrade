@@ -53,7 +53,7 @@ namespace RetailTradeClient.ViewModels.Components
 
         private async void UserControlLoaded()
         {
-            Products = IsKeepRecords ? new(await _productService.PredicateSelect(p => p.Quantity > 0 && p.WithoutBarcode && p.DeleteMark == false, p => new Product { Id = p.Id, Name = p.Name, Quantity = p.Quantity })) :
+            Products = IsKeepRecords ? new(await _productService.PredicateSelect(p => p.WithoutBarcode && p.DeleteMark == false, p => new Product { Id = p.Id, Name = p.Name })) :
                 new(await _productService.PredicateSelect(p => p.WithoutBarcode == true && p.DeleteMark == false, p => new Product { Id = p.Id, Name = p.Name }));
         }
 
@@ -64,11 +64,6 @@ namespace RetailTradeClient.ViewModels.Components
                 if (IsKeepRecords)
                 {
                     Product product = Products.FirstOrDefault(p => p.Id == id);
-                    product.Quantity -= 1;
-                    if (product.Quantity <= 0)
-                    {
-                        _ = Products.Remove(product);
-                    }
                 }
             }            
         }

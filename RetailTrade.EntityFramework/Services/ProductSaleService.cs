@@ -33,7 +33,6 @@ namespace RetailTrade.EntityFramework.Services
                 try
                 {
                     Product product = await _productService.GetByIdAsync(entity.ProductId);
-                    product.Quantity -= entity.Quantity;
                     _ = await _productService.UpdateAsync(product.Id, product);
                     PropertiesChanged?.Invoke();
                 }

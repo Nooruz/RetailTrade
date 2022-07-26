@@ -185,7 +185,6 @@ namespace RetailTradeServer.ViewModels.Menus
                         Barcode = item.Barcode,
                         UnitId = item.UnitId,
                         SalePrice = item.RetailPrice,
-                        QuantityInStock = item.Quantity,
                         Quantity = 1,
                         LabelId = 1
                     });
@@ -213,7 +212,6 @@ namespace RetailTradeServer.ViewModels.Menus
                             Barcode = product.Barcode,
                             UnitId = product.UnitId,
                             SalePrice = product.RetailPrice,
-                            QuantityInStock = product.Quantity,
                             Quantity = 1,
                             LabelId = 1
                         });

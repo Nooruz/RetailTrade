@@ -69,7 +69,6 @@ namespace RetailTrade.EntityFramework.Services
                     foreach (var item in entity.RefundToSupplierProducts)
                     {
                         Product product = await _productService.GetByIdAsync(item.ProductId);
-                        product.Quantity -= item.Quantity;
                         _ = await _productService.UpdateAsync(product.Id, product);
                     }
                 }
@@ -92,7 +91,6 @@ namespace RetailTrade.EntityFramework.Services
                     foreach (var item in RefundToSupplier.RefundToSupplierProducts)
                     {
                         Product product = await _productService.GetByIdAsync(item.ProductId);
-                        product.Quantity += item.Quantity;
                         _ = await _productService.UpdateAsync(product.Id, product);
                     }
                 }

@@ -136,7 +136,7 @@ namespace RetailTradeClient.State.Shifts
 
         private async Task<CheckingResult> Opening()
         {
-            var openShift = await _shiftService.OpeningShiftAsync(_userStore.CurrentUser.Id);
+            var openShift = await _shiftService.OpeningShiftAsync(_userStore.CurrentUser.Id, 1);
             if (openShift != null)
             {
                 CurrentShift = openShift;

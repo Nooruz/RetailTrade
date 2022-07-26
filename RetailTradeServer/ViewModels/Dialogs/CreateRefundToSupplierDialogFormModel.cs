@@ -123,10 +123,7 @@ namespace RetailTradeServer.ViewModels.Dialogs
         {
             if (parameter is CellValueChangedEventArgs e)
             {
-                if (e.Cell.Property == nameof(WriteDownProduct.ProductId))
-                {
-                    SelectedRefundToSupplierProduct.Product = new() { Quantity = Products.FirstOrDefault(p => p.Id == (int)e.Value).Quantity };
-                }
+                
             }
             OnPropertyChanged(nameof(CanRefundToSupplierProduct));
         }
@@ -150,12 +147,7 @@ namespace RetailTradeServer.ViewModels.Dialogs
             {
                 if (((RefundToSupplierProduct)e.Row).Product != null)
                 {
-                    if (((RefundToSupplierProduct)e.Row).Product.Quantity < Convert.ToDouble(e.Value))
-                    {
-                        e.IsValid = false;
-                        e.ErrorContent = "Количество не должно превышать количество товаров на складе.";
-                        _ = MessageBoxService.ShowMessage("Количество не должно превышать количество товаров на складе.", "", MessageButton.OK, MessageIcon.Error);
-                    }
+
                 }
             }
             OnPropertyChanged(nameof(CanRefundToSupplierProduct));

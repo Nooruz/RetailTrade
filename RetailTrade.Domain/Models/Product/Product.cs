@@ -17,7 +17,6 @@ namespace RetailTrade.Domain.Models
         private int _unitId;
         private string _TNVED;
         private string _barcode;
-        private double _quantity;
         private bool _withoutBarcode;
         private decimal _purchasePrice;
         private decimal _retailPrice;
@@ -134,19 +133,6 @@ namespace RetailTrade.Domain.Models
             {
                 _purchasePrice = value;
                 OnPropertyChanged(nameof(PurchasePrice));
-            }
-        }
-
-        /// <summary>
-        /// Количество на склада
-        /// </summary>
-        public double Quantity
-        {
-            get => _quantity;
-            set
-            {
-                _quantity = value;
-                OnPropertyChanged(nameof(Quantity));
             }
         }
 

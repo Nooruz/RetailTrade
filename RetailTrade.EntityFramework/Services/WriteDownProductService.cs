@@ -107,7 +107,6 @@ namespace RetailTrade.EntityFramework.Services
                         Quantity = item.Quantity
                     });
                     Product product = await _productService.GetByIdAsync(item.ProductId);
-                    product.Quantity -= item.Quantity;
                     await _productService.UpdateAsync(product.Id, product);
                 }
                 return true;

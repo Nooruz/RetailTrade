@@ -126,7 +126,7 @@ namespace RetailTradeServer.ViewModels.Dialogs
             {
                 if (e.Cell.Property == "ProductId")
                 {
-                    SelectedWriteDownProduct.Product = new() { Quantity = Products.FirstOrDefault(wp => wp.Id == (int)e.Cell.Value).Quantity };
+
                 }
             }
             OnPropertyChanged(nameof(CanWriteDownProduct));
@@ -151,12 +151,7 @@ namespace RetailTradeServer.ViewModels.Dialogs
             {
                 if (((WriteDownProduct)e.Row).Product != null)
                 {
-                    if (Convert.ToDouble(e.Value) > ((WriteDownProduct)e.Row).Product.Quantity)
-                    {
-                        e.IsValid = false;
-                        e.ErrorContent = "Количество списание товаров не должно превышать количество на складе.";
-                        _ = MessageBoxService.ShowMessage("Количество списание товаров не должно превышать количество на складе.", "", MessageButton.OK, MessageIcon.Error);
-                    }
+                    
                 }
             }
             OnPropertyChanged(nameof(CanWriteDownProduct));

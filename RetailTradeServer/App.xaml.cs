@@ -172,9 +172,7 @@ namespace RetailTradeServer
                                 ProductWareHouse productWareHouse = await context.ProductsWareHouses.FirstOrDefaultAsync(p => p.ProductId == product.Id && p.WareHouseId == wareHouse.Id);
                                 if (productWareHouse != null)
                                 {
-                                    productWareHouse.Quantity = product.Quantity;
                                     context.ProductsWareHouses.Update(productWareHouse);
-                                    product.Quantity = 0;
                                     context.Products.Update(product);
                                     _ = await context.SaveChangesAsync();
                                 }
@@ -196,11 +194,24 @@ namespace RetailTradeServer
                         });
 
                         item.Barcode = string.Empty;
-
-                        _ = context.Products.Update(item);
-
-                        _ = await context.SaveChangesAsync();
                     }
+
+                    context.Products.UpdateRange(products);
+
+                    _ = await context.SaveChangesAsync();
+                }
+
+                List<ArrivalProduct> arrivalProducts = await context.ArrivalProducts.Where(a => a.WareHouseId == null).ToListAsync();
+
+                if (arrivalProducts != null && arrivalProducts.Any())
+                {
+                    arrivalProducts.ForEach(a =>
+                    {
+                        a.WareHouseId = 1;
+                    });
+                    context.UpdateRange(arrivalProducts);
+
+                    _ = await context.SaveChangesAsync();
                 }
 
                 MessageBox.Show("Обновление данных успешно выполнено!");

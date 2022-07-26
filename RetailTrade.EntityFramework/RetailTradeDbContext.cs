@@ -230,7 +230,6 @@ namespace RetailTrade.EntityFramework
                     .HasForeignKey(pt => pt.ProductId),
                 j =>
                     {
-                        j.Property(pt => pt.Quantity).HasDefaultValue(0);
                         j.HasKey(t => new { t.ProductId, t.WareHouseId });
                         j.ToTable("ProductsWareHouses");
                     });

@@ -69,7 +69,6 @@ namespace RetailTrade.EntityFramework.Services
                     foreach (var item in entity.WriteDownProducts)
                     {
                         Product product = await _productService.GetByIdAsync(item.ProductId);
-                        product.Quantity -= item.Quantity;
                         await _productService.UpdateAsync(product.Id, product);
                     }
                 }
@@ -92,7 +91,6 @@ namespace RetailTrade.EntityFramework.Services
                     foreach (var item in WriteDown.WriteDownProducts)
                     {
                         Product product = await _productService.GetByIdAsync(item.ProductId);
-                        product.Quantity += item.Quantity;
                         await _productService.UpdateAsync(product.Id, product);
                     }
                 }

@@ -42,7 +42,6 @@ namespace RetailTrade.EntityFramework.Services
                     .FirstOrDefaultAsync(p => p.ProductId == arrivalProduct.ProductId && p.WareHouseId == arrivalProduct.WareHouseId);
                 if (productWareHouse != null)
                 {
-                    productWareHouse.Quantity += arrivalProduct.Quantity;
                     context.ProductsWareHouses.Update(productWareHouse);
                 }
                 else
@@ -51,7 +50,6 @@ namespace RetailTrade.EntityFramework.Services
                     {
                         WareHouseId = arrivalProduct.WareHouseId.Value,
                         ProductId = arrivalProduct.ProductId,
-                        Quantity = arrivalProduct.Quantity
                     };
                     await context.ProductsWareHouses.AddAsync(productWareHouse);
                 }
@@ -172,7 +170,7 @@ namespace RetailTrade.EntityFramework.Services
                 using var context = _contextFactory.CreateDbContext();
                 return context.Products
                     //.Where(p => p.Quantity > 0 && p.SupplierId == supplierId)
-                    .Select(p => new Product { Id = p.Id, Name = p.Name, Quantity = p.Quantity })
+                    .Select(p => new Product { Id = p.Id, Name = p.Name })
                     .ToList();
             }
             catch (Exception)
@@ -217,24 +215,6 @@ namespace RetailTrade.EntityFramework.Services
             return null;
         }
 
-        public async Task<double> GetQuantity(int id)
-        {
-            try
-            {
-                await using var context = _contextFactory.CreateDbContext();
-                Product product = await context.Products
-                                               .Where(p => p.Id == id)
-                                               .Select(p => new Product { Id = p.Id, Quantity = p.Quantity })
-                                               .FirstOrDefaultAsync();
-                return product.Quantity;
-            }
-            catch (Exception)
-            {
-                //ignore
-            }
-            return 0;
-        }
-
         public async Task<double> Refund(int id, double quantity)
         {
             try
@@ -243,11 +223,8 @@ namespace RetailTrade.EntityFramework.Services
                 Product editProduct = await context.Products
                                                .Where(p => p.Id == id)
                                                .FirstOrDefaultAsync();
-                editProduct.Quantity += quantity;
 
                 Product result = await UpdateAsync(id, editProduct);
-
-                OnProductSaleOrRefund?.Invoke(result.Id, result.Quantity);
 
                 return quantity;
             }
@@ -304,7 +281,6 @@ namespace RetailTrade.EntityFramework.Services
                 await using var context = _contextFactory.CreateDbContext();
                 Product editProduct = await context.Products.FirstOrDefaultAsync(p => p.Id == id);
                 //editProduct.ProductsWareHouses
-                editProduct.Quantity -= quantity;
                 _ = await UpdateAsync(id, editProduct);
             }
             catch (Exception)
@@ -324,11 +300,8 @@ namespace RetailTrade.EntityFramework.Services
                     Product editProduct = await context.Products
                                                .Where(p => p.Id == item.ProductId)
                                                .FirstOrDefaultAsync();
-                    editProduct.Quantity += item.Quantity;
 
                     Product result = await UpdateAsync(editProduct.Id, editProduct);
-
-                    OnProductSaleOrRefund?.Invoke(result.Id, result.Quantity);
                 }
                 return true;
             }
