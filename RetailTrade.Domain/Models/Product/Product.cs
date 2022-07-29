@@ -221,7 +221,6 @@ namespace RetailTrade.Domain.Models
         public ICollection<OrderProduct> Orders { get; set; }
         public ICollection<WareHouse> WareHouses { get; set; }
         public ICollection<RevaluationProduct> RevaluationProducts { get; set; }
-        public ICollection<ProductWareHouse> ProductsWareHouses { get; set; }
         public ObservableCollection<ProductBarcode> ProductBarcodes
         {
             get => _productBarcodes;

@@ -57,6 +57,8 @@ namespace RetailTrade.POS
                 window.DataContext = _host.Services.GetRequiredService<MainViewModel>();
                 window.Show();
 
+                //var s = await context.Products.Include(p => p.ProductBarcodes).ToListAsync();
+
                 PointSale pointSale = await context.PointSales.FirstOrDefaultAsync(p => p.Id == Settings.Default.WareHouseId);
 
                 if (pointSale != null)

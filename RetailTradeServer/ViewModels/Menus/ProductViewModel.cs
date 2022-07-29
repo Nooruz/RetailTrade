@@ -166,7 +166,6 @@ namespace RetailTradeServer.ViewModels.Menus
                 SelectedProductView.TypeProduct = productView.TypeProduct;
                 SelectedProductView.Unit = productView.Unit;
                 SelectedProductView.TNVED = productView.TNVED;
-                SelectedProductView.Barcode = productView.Barcode;
                 SelectedProductView.DeleteMark = productView.DeleteMark;
                 FilterProductGridControl();
             }

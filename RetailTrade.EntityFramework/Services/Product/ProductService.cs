@@ -38,21 +38,6 @@ namespace RetailTrade.EntityFramework.Services
             try
             {
                 await using var context = _contextFactory.CreateDbContext();
-                ProductWareHouse productWareHouse = await context.ProductsWareHouses
-                    .FirstOrDefaultAsync(p => p.ProductId == arrivalProduct.ProductId && p.WareHouseId == arrivalProduct.WareHouseId);
-                if (productWareHouse != null)
-                {
-                    context.ProductsWareHouses.Update(productWareHouse);
-                }
-                else
-                {
-                    productWareHouse = new ProductWareHouse
-                    {
-                        WareHouseId = arrivalProduct.WareHouseId.Value,
-                        ProductId = arrivalProduct.ProductId,
-                    };
-                    await context.ProductsWareHouses.AddAsync(productWareHouse);
-                }
                 _ = await context.SaveChangesAsync();
             }
             catch (Exception)
@@ -359,7 +344,7 @@ namespace RetailTrade.EntityFramework.Services
             return null;
         }
 
-        public async Task<IEnumerable<ProductWareHouseView>> GetProducts(int wareHouseId)
+        public async Task<IEnumerable<ProductView>> GetProducts(int wareHouseId)
         {
             try
             {
@@ -405,8 +390,6 @@ namespace RetailTrade.EntityFramework.Services
                 await using var context = _contextFactory.CreateDbContext();
                 return await context.Products
                     .Include(p => p.ProductBarcodes)
-                    .Include(p => p.ProductsWareHouses)
-                    .ThenInclude(p => p.WareHouse)
                     .FirstOrDefaultAsync(p => p.Id == id);
             }
             catch (Exception)

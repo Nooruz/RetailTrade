@@ -17,6 +17,7 @@ namespace RetailTrade.Domain.Models
         private int? _pointSaleId;
         private int _receiptId;
         private Product _product;
+        private bool _isRefund;
 
         #endregion
 
@@ -161,6 +162,16 @@ namespace RetailTrade.Domain.Models
             }
         }
 
+        public bool IsRefund
+        {
+            get => _isRefund;
+            set
+            {
+                _isRefund = value;
+                OnPropertyChanged(nameof(IsRefund));
+            }
+        }
+
         /// <summary>
         /// Чек
         /// </summary>
@@ -188,6 +199,8 @@ namespace RetailTrade.Domain.Models
         /// Склад
         /// </summary>
         public WareHouse WareHouse { get; set; }
+
+        public ProductRefund ProductRefund { get; set; }
 
 #endregion
     }

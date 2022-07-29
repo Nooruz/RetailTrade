@@ -124,7 +124,6 @@ namespace RetailTrade.EntityFramework
         public DbSet<ContractorType> ContractorTypes { get; set; }
         public DbSet<Customer> Customers { get; set; }
         public DbSet<Contractor> Contractors { get; set; }
-        public DbSet<ProductWareHouse> ProductsWareHouses { get; set; }
         public DbSet<PointSale> PointSales { get; set; }
         public DbSet<UserPointSale> UserPointSales { get; set; }
 
@@ -175,10 +174,12 @@ namespace RetailTrade.EntityFramework
         public DbSet<ProductWareHouseView> ProductWareHouseViews { get; set; }
         public DbSet<ProductView> ProductViews { get; set; }
         public DbSet<ProductBarcodeView> ProductBarcodeViews { get; set; }
+        public DbSet<ReceiptView> ReceiptViews { get; set; }
+        public DbSet<ProductSaleView> ProductSaleViews { get; set; }
 
         #endregion
 
-        public IQueryable<ProductWareHouseView> ProductFunction(int wareHouseId) => FromExpression(() => ProductFunction(wareHouseId));
+        public IQueryable<ProductView> ProductFunction(int wareHouseId) => FromExpression(() => ProductFunction(wareHouseId));
 
         public RetailTradeDbContext(DbContextOptions<RetailTradeDbContext> options) : base(options) { }
 
@@ -204,6 +205,14 @@ namespace RetailTrade.EntityFramework
                         j.ToTable("UserPointSales");
                     });
 
+            modelBuilder.Entity<ProductSaleView>()
+                .ToView(nameof(ProductSaleView))
+                .HasNoKey();
+
+            modelBuilder.Entity<ReceiptView>()
+                .ToView(nameof(ReceiptView))
+                .HasNoKey();
+
             modelBuilder.Entity<ProductBarcodeView>()
                 .ToView(nameof(ProductBarcodeView))
                 .HasNoKey();
@@ -215,24 +224,6 @@ namespace RetailTrade.EntityFramework
             modelBuilder.Entity<ProductWareHouseView>()
                 .ToView(nameof(ProductWareHouseView))
                 .HasNoKey();
-
-            modelBuilder.Entity<Product>()
-                .HasMany(p => p.WareHouses)
-                .WithMany(w => w.Products)
-                .UsingEntity<ProductWareHouse>(
-                j => j
-                    .HasOne(pt => pt.WareHouse)
-                    .WithMany(t => t.ProductsWareHouses)
-                    .HasForeignKey(pt => pt.WareHouseId),
-                j => j
-                    .HasOne(pt => pt.Product)
-                    .WithMany(p => p.ProductsWareHouses)
-                    .HasForeignKey(pt => pt.ProductId),
-                j =>
-                    {
-                        j.HasKey(t => new { t.ProductId, t.WareHouseId });
-                        j.ToTable("ProductsWareHouses");
-                    });
 
             modelBuilder.Entity<OrderToSupplier>()
                 .HasMany(o => o.OrderProducts)

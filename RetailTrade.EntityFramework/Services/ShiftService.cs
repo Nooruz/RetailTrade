@@ -57,6 +57,7 @@ namespace RetailTrade.EntityFramework.Services
             return await context.Shifts
                 .Where(s => s.UserId == userId && s.PointSaleId == pointSaleId)
                 .Include(s => s.Receipts)
+                .ThenInclude(s => s.ProductSales)
                 .ToListAsync(); ;
         }
 

@@ -37,7 +37,7 @@
                                    ShowSearchPanelMode="Always"
                                    SearchPanelNullText="Название или штрихкод"
                                    SearchPanelPosition="OverGroupPanel"
-                                   />
+                                   ShowIndicator="False"/>
                 </dxg:GridControl.View>
                 <dxg:GridColumn FieldName="Id"                                 
                                 Visible="False">
@@ -100,7 +100,8 @@
                                    HorizontalScrollbarVisibility="Hidden"
                                    VerticalScrollbarVisibility="Hidden"
                                    ShowGroupPanel="False"
-                                   AutoWidth="True"/>
+                                   AutoWidth="True"
+                                   ShowIndicator="False"/>
                 </dxg:GridControl.View>
                 <dxg:GridColumn FieldName="Name" 
                                 Cursor="Hand"
@@ -118,12 +119,12 @@
                         Tag="{StaticResource faTag}"
                         Style="{StaticResource TwoContentDiscount}"/>
 
-                <Button Content="Покупатель"
+                <!--<Button Content="Покупатель"
                         Command="{Binding CustomerCommand}"
                         Padding="10"
                         FontSize="16"
                         Tag="{StaticResource faMale}"
-                        Style="{StaticResource ButtonWithHorizontalIcon}"/>
+                        Style="{StaticResource TwoContentDiscount}"/>-->
 
             </dxlc:LayoutGroup>
 

@@ -1,6 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using RetailTrade.Domain.Models;
 using RetailTrade.Domain.Services;
+using RetailTrade.Domain.Views;
 using RetailTrade.EntityFramework.Services.Common;
 using System;
 using System.Collections.Generic;
@@ -85,6 +86,22 @@ namespace RetailTrade.EntityFramework.Services
             {
                 await using var context = _contextFactory.CreateDbContext();
                 return await context.ProductSales
+                    .ToListAsync();
+            }
+            catch (Exception e)
+            {
+                //ignore
+            }
+            return null;
+        }
+
+        public async Task<IEnumerable<ProductSaleView>> GetAllAsync(int receiptId)
+        {
+            try
+            {
+                await using var context = _contextFactory.CreateDbContext();
+                return await context.ProductSaleViews
+                    .Where(p => p.ReceiptId == receiptId)
                     .ToListAsync();
             }
             catch (Exception e)

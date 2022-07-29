@@ -29,8 +29,8 @@ namespace RetailTrade.POS.ViewModels.Menus
         private readonly IUserStore _userStore;
         private readonly IShiftStore _shiftStore;
         private readonly IReceiptService _receiptService;
-        private ObservableCollection<ProductWareHouseView> _products;
-        private ProductWareHouseView _selectedProduct;
+        private ObservableCollection<ProductView> _products;
+        private ProductView _selectedProduct;
         private ProductSale _selectedProductSale;
         public IEnumerable<ProductBarcode> _productBarcodes;
         private Receipt _receipt = new();
@@ -40,7 +40,7 @@ namespace RetailTrade.POS.ViewModels.Menus
 
         #region Public Properties
 
-        public ObservableCollection<ProductWareHouseView> Products
+        public ObservableCollection<ProductView> Products
         {
             get => _products;
             set
@@ -53,7 +53,7 @@ namespace RetailTrade.POS.ViewModels.Menus
         public Shift CurrentShift => _shiftStore.CurrentShift;
         public GridControl ProductGridControl { get; set; }
         public GridControl ProductSaleGridControl { get; set; }
-        public ProductWareHouseView SelectedProduct
+        public ProductView SelectedProduct
         {
             get => _selectedProduct;
             set
@@ -82,7 +82,7 @@ namespace RetailTrade.POS.ViewModels.Menus
                 OnPropertyChanged(nameof(ProductBarcodes));
             }
         }
-        public Visibility DiscountReceiptButtonVisibility => Receipt.ProductSales.Any() ? Visibility.Visible : Visibility.Collapsed;
+        public Visibility DiscountReceiptButtonVisibility => Receipt.ProductSales.Any( p => p.Product?.ProhibitDiscount == false) ? Visibility.Visible : Visibility.Collapsed;
         public Receipt Receipt
         {
             get
@@ -214,7 +214,7 @@ namespace RetailTrade.POS.ViewModels.Menus
         {
             try
             {
-                ProductWareHouseView product = Products.FirstOrDefault(p => p.Id == productSale.ProductId);
+                ProductView product = Products.FirstOrDefault(p => p.Id == productSale.ProductId);
                 product.Quantity += productSale.Quantity;
                 Receipt.ProductSales.Remove(productSale);
             }
@@ -247,11 +247,11 @@ namespace RetailTrade.POS.ViewModels.Menus
                             ProductId = SelectedProduct.Id,
                             PurchasePrice = SelectedProduct.PurchasePrice,
                             RetailPrice = SelectedProduct.RetailPrice,
-                            WareHouseId = SelectedProduct.WareHouseId,
                             PointSaleId = Properties.Settings.Default.PointSaleId,
                             Product = new Product
                             {
-                                Name = SelectedProduct.Name
+                                Name = SelectedProduct.Name,
+                                ProhibitDiscount = SelectedProduct.ProhibitDiscount
                             }
                         },
                         Rest = SelectedProduct.Quantity
@@ -263,6 +263,7 @@ namespace RetailTrade.POS.ViewModels.Menus
                 {
                     IncreaseQuantityProductSale(Receipt.ProductSales.FirstOrDefault(p => p.ProductId == SelectedProduct.Id));
                 }
+                OnPropertyChanged(nameof(TotalSum));
             }
             catch (Exception)
             {
@@ -327,11 +328,11 @@ namespace RetailTrade.POS.ViewModels.Menus
                     Quantity = 1,
                     PurchasePrice = SelectedProduct.PurchasePrice,
                     RetailPrice = SelectedProduct.RetailPrice,
-                    WareHouseId = SelectedProduct.WareHouseId,
                     PointSaleId = Properties.Settings.Default.PointSaleId,
                     Product = new Product
                     {
-                        Name = SelectedProduct.Name
+                        Name = SelectedProduct.Name,
+                        ProhibitDiscount = SelectedProduct.ProhibitDiscount
                     }
                 });
                 Receipt.ProductSales.Move(Receipt.ProductSales.Count - 1, 0);
@@ -366,13 +367,40 @@ namespace RetailTrade.POS.ViewModels.Menus
 
         private void ViewModel_OnDiscountChanged(decimal discountSum)
         {
-            if (discountSum > 0)
+            try
             {
-                IsDiscountReceipt = true;
-                Receipt.DiscountAmount = discountSum;
+                if (discountSum > 0)
+                {
+                    Receipt.DiscountAmount = discountSum;
+                    IsDiscountReceipt = true;
+
+                    decimal total = Receipt.ProductSales.Where(p => p.Product?.ProhibitDiscount == false).Sum(p => p.Total);
+                    decimal discount = Math.Round(discountSum / total, 6);
+                    int count = Receipt.ProductSales.Where(p => p.Product?.ProhibitDiscount == false).Count();
+
+                    if (count > 1)
+                    {
+                        Receipt.ProductSales.Where(p => p.Product?.ProhibitDiscount == false).Take(count - 1).ToList().ForEach(p =>
+                        {
+                            p.DiscountAmount = Math.Round(p.Total * discount, 2);
+                        });
+
+                        decimal discountAmount = Receipt.ProductSales.Sum(p => p.DiscountAmount);
+
+                        Receipt.ProductSales.Where(p => p.Product?.ProhibitDiscount == false).LastOrDefault().DiscountAmount = discountSum - discountAmount;
+                    }
+                    else
+                    {
+                        Receipt.ProductSales.FirstOrDefault(p => p.Product?.ProhibitDiscount == false).DiscountAmount = discountSum;
+                    }
+                }
+                OnPropertyChanged(nameof(ReceiptDiscount));
+                OnPropertyChanged(nameof(TotalSum));
             }
-            OnPropertyChanged(nameof(ReceiptDiscount));
-            OnPropertyChanged(nameof(TotalSum));
+            catch (Exception)
+            {
+                //ignore
+            }
         }
 
         private void ViewModel_OnDeleteDiscountReceipt()
@@ -457,7 +485,7 @@ namespace RetailTrade.POS.ViewModels.Menus
                 {
                     Receipt.ProductSales.ToList().ForEach(s =>
                     {
-                        ProductWareHouseView product = Products.FirstOrDefault(p => p.Id == s.ProductId);
+                        ProductView product = Products.FirstOrDefault(p => p.Id == s.ProductId);
                         product.Quantity += s.Quantity;
                     });
                     Receipt.ProductSales.Clear();
@@ -474,20 +502,23 @@ namespace RetailTrade.POS.ViewModels.Menus
         public async void UserControlLoaded()
         {
             ProductBarcodes = await _productBarcodeService.GetAllAsync();
-            IEnumerable<ProductWareHouseView> products = await _productService.GetProducts(Properties.Settings.Default.WareHouseId);
-            Products = new(products.Select(s => new ProductWareHouseView
+            IEnumerable<ProductView> products = await _productService.GetProducts(Properties.Settings.Default.WareHouseId);
+            if (products != null && products.Any())
             {
-                Id = s.Id,
-                Name = s.Name,
-                Supplier = s.Supplier,
-                Unit = s.Unit,
-                TNVED = s.TNVED,
-                PurchasePrice = s.PurchasePrice,
-                RetailPrice = s.RetailPrice,
-                Quantity = s.Quantity,
-                WareHouseId = s.WareHouseId,
-                ProductBarcodes = ProductBarcodes.Where(p => p.ProductId == s.Id).ToList(),
-            }).ToList());
+                Products = new(products.Select(s => new ProductView
+                {
+                    Id = s.Id,
+                    Name = s.Name,
+                    Supplier = s.Supplier,
+                    Unit = s.Unit,
+                    TNVED = s.TNVED,
+                    PurchasePrice = s.PurchasePrice,
+                    RetailPrice = s.RetailPrice,
+                    Quantity = s.Quantity,
+                    ProhibitDiscount = s.ProhibitDiscount,
+                    ProductBarcodes = ProductBarcodes.Where(p => p.ProductId == s.Id).ToList(),
+                }).ToList());
+            }
         }
 
         [Command]

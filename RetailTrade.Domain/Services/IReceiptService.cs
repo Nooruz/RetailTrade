@@ -1,4 +1,5 @@
 ﻿using RetailTrade.Domain.Models;
+using RetailTrade.Domain.Views;
 using System;
 using System.Collections.Generic;
 using System.Linq.Expressions;
@@ -11,7 +12,7 @@ namespace RetailTrade.Domain.Services
         event Action<IEnumerable<ProductSale>> OnProductSale;
         Task<Receipt> CreateAsync(Receipt receipt, bool isKeepRecords);
 
-        Task<IEnumerable<Receipt>> GetAllAsync(int userId, int pointSaleId);
+        Task<IEnumerable<ReceiptView>> GetAllAsync(int userId, int pointSaleId);
 
         /// <summary>
         /// Получить квитанции из текущего смена

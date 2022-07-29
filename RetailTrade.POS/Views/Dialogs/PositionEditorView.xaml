@@ -107,6 +107,7 @@
                              FontSize="18"
                              Width="360"
                              HorizontalAlignment="Left"
+                             Visibility="{Binding DiscountVisibility}"
                              LabelPosition="Top">
                 <StackPanel Orientation="Horizontal">
                     <RadioButton Style="{StaticResource AsButton}"

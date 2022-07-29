@@ -43,7 +43,7 @@ namespace RetailTrade.EntityFramework.Services
                         ProductId = item.ProductId,
                         Quantity = item.Quantity,
                         Sum = item.Sum,
-                        SalePrice = item.SalePrice
+                        RetailPrice = item.RetailPrice
                     });
                 }
 

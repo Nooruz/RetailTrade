@@ -25,6 +25,7 @@ namespace RetailTrade.POS.HostBuilders
                 _ = services.AddSingleton<IProductBarcodeService, ProductBarcodeService>();
                 _ = services.AddSingleton<IReceiptService, ReceiptService>();
                 _ = services.AddSingleton<IRefundService, RefundService>();
+                _ = services.AddSingleton<IProductSaleService, ProductSaleService>();
             });
         }
     }

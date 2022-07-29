@@ -1,0 +1,28 @@
+﻿<local:BaseView     x:Class="RetailTrade.POS.Views.Dialogs.RefundEditorView"
+                    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:dxg="http://schemas.devexpress.com/winfx/2008/xaml/grid"
+                    xmlns:dxlc="http://schemas.devexpress.com/winfx/2008/xaml/layoutcontrol"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:local="clr-namespace:RetailTrade.POS.Views">
+
+    <dxlc:LayoutControl Orientation="Vertical">
+
+        <dxg:GridControl ItemsSource="{Binding ProductSales}">
+            <dxg:GridControl.View>
+                <dxg:TableView ShowIndicator="False"
+                               AutoWidth="True"
+                               ShowColumnHeaders="False"
+                               ShowGroupPanel="False"
+                               VerticalScrollbarVisibility="Hidden"
+                               AllowEditing="False"/>
+            </dxg:GridControl.View>
+            <dxg:GridColumn Style="{StaticResource RefundEditorGridColumn}"/>
+        </dxg:GridControl>
+
+        <Button Content="{Binding Summary}" 
+                Style="{StaticResource MainButton}"
+                VerticalAlignment="Bottom"/>
+
+    </dxlc:LayoutControl>
+    
+</local:BaseView>

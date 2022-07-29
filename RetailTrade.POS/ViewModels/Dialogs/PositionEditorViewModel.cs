@@ -2,6 +2,7 @@
 using RetailTrade.Domain.Models;
 using RetailTrade.Domain.Views;
 using System;
+using System.Windows;
 
 namespace RetailTrade.POS.ViewModels.Dialogs
 {
@@ -10,7 +11,7 @@ namespace RetailTrade.POS.ViewModels.Dialogs
         #region Private Members
 
         private ProductSale _editProductSale;
-        private ProductWareHouseView _product;
+        private ProductView _product;
         private bool _isDiscountPercentage = true;
         private double _discount;
         private double _quantity;
@@ -22,6 +23,7 @@ namespace RetailTrade.POS.ViewModels.Dialogs
 
         #region Public Properties
 
+        public Visibility DiscountVisibility => Product.ProhibitDiscount ? Visibility.Collapsed : Visibility.Visible;
         public ProductSale EditProductSale
         {
             get => _editProductSale;
@@ -34,13 +36,14 @@ namespace RetailTrade.POS.ViewModels.Dialogs
                 OnPropertyChanged(nameof(EditProductSale));
             }
         }
-        public ProductWareHouseView Product
+        public ProductView Product
         {
             get => _product;
             set
             {
                 _product = value;
                 OnPropertyChanged(nameof(Product));
+                OnPropertyChanged(nameof(DiscountVisibility));
             }
         }
         public bool IsDiscountPercentage

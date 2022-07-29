@@ -57,9 +57,9 @@
                 <ResourceDictionary Source="/Styles/Colors.xaml"/>
                 <ResourceDictionary Source="/Styles/TextBlockStyle.xaml"/>
                 <ResourceDictionary Source="/Styles/HamburgerMenuStyle.xaml"/>
-                <ResourceDictionary Source="/Styles/GridColumnStyle.xaml"/>
                 <ResourceDictionary Source="/Styles/ButtonStyle.xaml"/>
                 <ResourceDictionary Source="/Styles/SpinEditStyle.xaml"/>
+                <ResourceDictionary Source="/Styles/GridColumnStyle.xaml"/>
                 <ResourceDictionary Source="/Styles/DialogServiceStyle.xaml"/>
                 <ResourceDictionary Source="/Styles/UserControlStyle.xaml"/>
             </ResourceDictionary.MergedDictionaries>

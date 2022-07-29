@@ -1,6 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using RetailTrade.Domain.Models;
 using RetailTrade.Domain.Services;
+using RetailTrade.Domain.Views;
 using RetailTrade.EntityFramework.Services.Common;
 using System;
 using System.Collections.Generic;
@@ -70,16 +71,10 @@ namespace RetailTrade.EntityFramework.Services
             return entities;
         }
 
-        public async Task<IEnumerable<Receipt>> GetAllAsync(int userId, int pointSaleId)
+        public async Task<IEnumerable<ReceiptView>> GetAllAsync(int userId, int pointSaleId)
         {
             await using RetailTradeDbContext context = _contextFactory.CreateDbContext();
-            IEnumerable<Receipt> entities = await context.Receipts
-                .Include(r => r.Shift)
-                .Include(r => r.ProductSales)
-                .ThenInclude(p => p.Product)
-                .Where(r => r.Shift.UserId == userId && r.Shift.PointSaleId == pointSaleId)
-                .ToListAsync();
-            return entities;
+            return await context.ReceiptViews.ToListAsync();
         }
 
         public async Task<Receipt> UpdateAsync(int id, Receipt entity)
@@ -145,7 +140,7 @@ namespace RetailTrade.EntityFramework.Services
                     {
                         Quantity = p.Quantity,
                         Sum = p.Total,
-                        SalePrice = p.RetailPrice,
+                        RetailPrice = p.RetailPrice,
                         ProductId = p.ProductId
                     }).ToList()
                 });

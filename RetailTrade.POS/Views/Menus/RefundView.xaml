@@ -75,16 +75,8 @@
                             AllowSorting="True" 
                             SortMode="Value"
                             SortOrder="Descending"/>
-            <dxg:GridColumn FieldName="Id"
-                            Style="{StaticResource RefundGridColumn}"/>
-            <dxg:GridColumn FieldName="AmountWithoutDiscount"
-                            Visible="False">
-                <dxg:GridColumn.EditSettings>
-                    <dxe:TextEditSettings MaskUseAsDisplayFormat="True" 
-                                          MaskType="Numeric" 
-                                          Mask="n" />
-                </dxg:GridColumn.EditSettings>
-            </dxg:GridColumn>
+            <dxg:GridColumn Style="{StaticResource RefundGridColumn}"/>
+            <dxg:GridColumn FieldName="AmountWithoutDiscount" Visible="False"/>
         </dxg:GridControl>
 
     </dxlc:LayoutControl>

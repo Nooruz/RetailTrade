@@ -169,13 +169,6 @@ namespace RetailTradeServer
                                 product.WareHouses.Add(wareHouse);
                                 context.Products.Update(product);
                                 _ = await context.SaveChangesAsync();
-                                ProductWareHouse productWareHouse = await context.ProductsWareHouses.FirstOrDefaultAsync(p => p.ProductId == product.Id && p.WareHouseId == wareHouse.Id);
-                                if (productWareHouse != null)
-                                {
-                                    context.ProductsWareHouses.Update(productWareHouse);
-                                    context.Products.Update(product);
-                                    _ = await context.SaveChangesAsync();
-                                }
                             }
                         }
                     }

@@ -212,6 +212,7 @@ namespace RetailTrade.Domain.Models
         }
 
         public PointSale PointSale { get; set; }
+        public Refund Refund { get; set; }
 
         #endregion
 
@@ -242,14 +243,14 @@ namespace RetailTrade.Domain.Models
                     item.PropertyChanged -= Item_PropertyChanged;
                 }
             }
-            Total = ProductSales.Sum(p => p.TotalWithDiscount);
+            Total = ProductSales.Sum(p => p.Total);
         }
 
         private void Item_PropertyChanged(object sender, PropertyChangedEventArgs e)
         {
             if (ProductSales != null && ProductSales.Any())
             {
-                Total = ProductSales.Sum(p => p.TotalWithDiscount);
+                Total = ProductSales.Sum(p => p.Total);
             }
         }
 

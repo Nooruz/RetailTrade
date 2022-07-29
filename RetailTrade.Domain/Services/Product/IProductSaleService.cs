@@ -1,4 +1,5 @@
 ﻿using RetailTrade.Domain.Models;
+using RetailTrade.Domain.Views;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
@@ -16,5 +17,7 @@ namespace RetailTrade.Domain.Services
         Task<IEnumerable<ProductSale>> GetProductSalesByDateRange(DateTime startDate, DateTime endDate);
 
         Task<IEnumerable<ProductSale>> GetRatingTenProducts();
+
+        Task<IEnumerable<ProductSaleView>> GetAllAsync(int receiptId);
     }
 }

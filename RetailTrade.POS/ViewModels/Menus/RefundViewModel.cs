@@ -3,6 +3,7 @@ using DevExpress.Mvvm.DataAnnotations;
 using DevExpress.Xpf.Grid;
 using RetailTrade.Domain.Models;
 using RetailTrade.Domain.Services;
+using RetailTrade.Domain.Views;
 using RetailTrade.POS.States.Users;
 using RetailTrade.POS.ViewModels.Dialogs;
 using RetailTrade.POS.Views.Dialogs;
@@ -18,16 +19,17 @@ namespace RetailTrade.POS.ViewModels.Menus
     {
         #region Private Members
 
+        private readonly IProductSaleService _productSaleService;
         private readonly IReceiptService _receiptService;
         private readonly IUserStore _userStore;
-        private ObservableCollection<Receipt> _receipts = new();
-        private Receipt _selectedReceipt;
+        private ObservableCollection<ReceiptView> _receipts = new();
+        private ReceiptView _selectedReceipt;
 
         #endregion
 
         #region Public Properties
 
-        public ObservableCollection<Receipt> Receipts
+        public ObservableCollection<ReceiptView> Receipts
         {
             get => _receipts;
             set
@@ -39,7 +41,7 @@ namespace RetailTrade.POS.ViewModels.Menus
         public GridControl ProductSaleGridControl { get; set; }
         public TableView ProductSaleTableView { get; set; }
         public User CurrentUser => _userStore.CurrentUser;
-        public Receipt SelectedReceipt
+        public ReceiptView SelectedReceipt
         {
             get => _selectedReceipt;
             set
@@ -54,10 +56,12 @@ namespace RetailTrade.POS.ViewModels.Menus
         #region Constructor
 
         public RefundViewModel(IReceiptService receiptService,
-            IUserStore userStore)
+            IUserStore userStore,
+            IProductSaleService productSaleService)
         {
             _receiptService = receiptService;
             _userStore = userStore;
+            _productSaleService = productSaleService;
 
             _userStore.StateChanged += () => OnPropertyChanged(nameof(CurrentUser));
         }
@@ -68,17 +72,17 @@ namespace RetailTrade.POS.ViewModels.Menus
 
         private void ProductSaleGridControl_CustomGroupDisplayText(object sender, CustomGroupDisplayTextEventArgs e)
         {
-            if (e.Column.FieldName == nameof(Receipt.ShiftId))
+            if (e.Column.FieldName == nameof(ReceiptView.ShiftId))
             {
-                if (e.Row is Receipt receipt)
+                if (e.Row is ReceiptView receipt)
                 {
-                    if (receipt.Shift.ClosingDate == null)
+                    if (receipt.ClosingDate == null)
                     {
-                        e.DisplayText = $"Смена №{receipt.Id:D5} от {receipt.Shift.OpeningDate:dd.MM.yyyy HH:mm} (открыта)";
+                        e.DisplayText = $"Смена №{receipt.ShiftId:D5} от {receipt.OpeningDate:dd.MM.yyyy HH:mm} (открыта)";
                     }
                     else
                     {
-                        e.DisplayText = $"Смена №{receipt.Id:D5} от {receipt.Shift.ClosingDate:dd.MM.yyyy HH:mm} (закрыта)";
+                        e.DisplayText = $"Смена №{receipt.ShiftId:D5} от {receipt.ClosingDate:dd.MM.yyyy HH:mm} (закрыта)";
                     }
                 }
             }
@@ -109,8 +113,8 @@ namespace RetailTrade.POS.ViewModels.Menus
                 if (rowHandle == DataControlBase.InvalidRowHandle)
                     return;
 
-                WindowService.Show(nameof(ProductSaleView), 
-                    new ProductSaleViewModel() 
+                DocumentViewerService.Show(nameof(RefundProductSaleView), 
+                    new RefundProductSaleViewModel(_productSaleService) 
                     { 
                         Title = $"Продажа №{SelectedReceipt.Id:D5} от {SelectedReceipt.DateOfPurchase:dd.MM.yyyy HH:mm}",
                         EditedReceipt = SelectedReceipt

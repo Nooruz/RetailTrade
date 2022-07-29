@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using RetailTrade.EntityFramework;
 
@@ -11,9 +12,10 @@ using RetailTrade.EntityFramework;
 namespace RetailTrade.EntityFramework.Migrations
 {
     [DbContext(typeof(RetailTradeDbContext))]
-    partial class RetailTradeDbContextModelSnapshot : ModelSnapshot
+    [Migration("20220728040041_DeleteWareHouse")]
+    partial class DeleteWareHouse
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -664,9 +666,6 @@ namespace RetailTrade.EntityFramework.Migrations
                     b.Property<int>("ProductId")
                         .HasColumnType("int");
 
-                    b.Property<int?>("ProductSaleId")
-                        .HasColumnType("int");
-
                     b.Property<decimal>("PurchasePrice")
                         .HasColumnType("decimal(18,2)");
 
@@ -689,10 +688,6 @@ namespace RetailTrade.EntityFramework.Migrations
 
                     b.HasIndex("ProductId");
 
-                    b.HasIndex("ProductSaleId")
-                        .IsUnique()
-                        .HasFilter("[ProductSaleId] IS NOT NULL");
-
                     b.HasIndex("RefundId");
 
                     b.ToTable("ProductRefunds");
@@ -708,9 +703,6 @@ namespace RetailTrade.EntityFramework.Migrations
 
                     b.Property<decimal>("DiscountAmount")
                         .HasColumnType("decimal(18,2)");
-
-                    b.Property<bool>("IsRefund")
-                        .HasColumnType("bit");
 
                     b.Property<int?>("PointSaleId")
                         .HasColumnType("int");
@@ -1740,18 +1732,12 @@ namespace RetailTrade.EntityFramework.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("RetailTrade.Domain.Models.ProductSale", "ProductSale")
-                        .WithOne("ProductRefund")
-                        .HasForeignKey("RetailTrade.Domain.Models.ProductRefund", "ProductSaleId");
-
                     b.HasOne("RetailTrade.Domain.Models.Refund", "Refund")
                         .WithMany("ProductRefunds")
                         .HasForeignKey("RefundId")
                         .OnDelete(DeleteBehavior.Cascade);
 
                     b.Navigation("Product");
-
-                    b.Navigation("ProductSale");
 
                     b.Navigation("Refund");
                 });
@@ -2046,11 +2032,6 @@ namespace RetailTrade.EntityFramework.Migrations
                     b.Navigation("RevaluationProducts");
 
                     b.Navigation("WriteDownProducts");
-                });
-
-            modelBuilder.Entity("RetailTrade.Domain.Models.ProductSale", b =>
-                {
-                    b.Navigation("ProductRefund");
                 });
 
             modelBuilder.Entity("RetailTrade.Domain.Models.Receipt", b =>

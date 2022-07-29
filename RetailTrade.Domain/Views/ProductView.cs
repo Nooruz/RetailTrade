@@ -1,17 +1,23 @@
-﻿namespace RetailTrade.Domain.Views
+﻿using RetailTrade.Domain.Models;
+using System.Collections.Generic;
+
+namespace RetailTrade.Domain.Views
 {
     public class ProductView : ViewObject
     {
         #region Private Members
 
         private string _name;
+        private string _typeProduct;        
+        private string _supplier;
         private string _unit;
-        private string _barcode;
+        private string _tnved;
         private decimal _purchasePrice;
         private decimal _retailPrice;
-        private string _tnved;
         private bool _deleteMark;
-        private string _typeProduct;
+        private byte[] _image;
+        private bool _prohibitDiscount;
+        private double _quantity;
 
         #endregion
 
@@ -26,6 +32,24 @@
                 OnPropertyChanged(nameof(Name));
             }
         }
+        public string TypeProduct
+        {
+            get => _typeProduct;
+            set
+            {
+                _typeProduct = value;
+                OnPropertyChanged(nameof(TypeProduct));
+            }
+        }
+        public string Supplier
+        {
+            get => _supplier;
+            set
+            {
+                _supplier = value;
+                OnPropertyChanged(nameof(Supplier));
+            }
+        }
         public string Unit
         {
             get => _unit;
@@ -35,13 +59,13 @@
                 OnPropertyChanged(nameof(Unit));
             }
         }
-        public string Barcode
+        public string TNVED
         {
-            get => _barcode;
+            get => _tnved;
             set
             {
-                _barcode = value;
-                OnPropertyChanged(nameof(Barcode));
+                _tnved = value;
+                OnPropertyChanged(nameof(TNVED));
             }
         }
         public decimal PurchasePrice
@@ -62,15 +86,6 @@
                 OnPropertyChanged(nameof(RetailPrice));
             }
         }
-        public string TNVED
-        {
-            get => _tnved;
-            set
-            {
-                _tnved = value;
-                OnPropertyChanged(nameof(TNVED));
-            }
-        }
         public bool DeleteMark
         {
             get => _deleteMark;
@@ -80,15 +95,34 @@
                 OnPropertyChanged(nameof(DeleteMark));
             }
         }
-        public string TypeProduct
+        public byte[] Image
         {
-            get => _typeProduct;
+            get => _image;
             set
             {
-                _typeProduct = value;
-                OnPropertyChanged(nameof(TypeProduct));
+                _image = value;
+                OnPropertyChanged(nameof(Image));
             }
         }
+        public bool ProhibitDiscount
+        {
+            get => _prohibitDiscount;
+            set
+            {
+                _prohibitDiscount = value;
+                OnPropertyChanged(nameof(ProhibitDiscount));
+            }
+        }
+        public double Quantity
+        {
+            get => _quantity;
+            set
+            {
+                _quantity = value;
+                OnPropertyChanged(nameof(Quantity));
+            }
+        }
+        public ICollection<ProductBarcode> ProductBarcodes { get; set; }
 
         #endregion
     }
