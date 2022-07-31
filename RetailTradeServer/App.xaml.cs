@@ -194,15 +194,15 @@ namespace RetailTradeServer
                     _ = await context.SaveChangesAsync();
                 }
 
-                List<ArrivalProduct> arrivalProducts = await context.ArrivalProducts.Where(a => a.WareHouseId == null).ToListAsync();
+                List<Arrival> arrivals = await context.Arrivals.Where(a => a.WareHouseId == null).ToListAsync();
 
-                if (arrivalProducts != null && arrivalProducts.Any())
+                if (arrivals != null && arrivals.Any())
                 {
-                    arrivalProducts.ForEach(a =>
+                    arrivals.ForEach(a =>
                     {
                         a.WareHouseId = 1;
                     });
-                    context.UpdateRange(arrivalProducts);
+                    context.UpdateRange(arrivals);
 
                     _ = await context.SaveChangesAsync();
                 }

@@ -51,7 +51,7 @@
 
             <dxwui:HamburgerSubMenuNavigationButton Content="Оприходования"
                                                     Command="{Binding RenavigateCommand}"
-                                                    CommandParameter="PriceListView"/>
+                                                    CommandParameter="ProductRegistration"/>
 
             <dxwui:HamburgerSubMenuNavigationButton Content="Списания"
                                                     Command="{Binding RenavigateCommand}"

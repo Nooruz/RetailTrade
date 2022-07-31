@@ -142,7 +142,6 @@ namespace RetailTrade.EntityFramework.Services
                 //    _ = await _productService.UpdateAsync(product.Id, product);
                 //}
                 oldArrivalProduct.Quantity = newArrivalProduct.Quantity;
-                oldArrivalProduct.ArrivalPrice = newArrivalProduct.ArrivalPrice;
                 oldArrivalProduct.SalePrice = newArrivalProduct.SalePrice;
                 oldArrivalProduct.ArrivalSum = newArrivalProduct.ArrivalSum;
                 _ = await UpdateAsync(oldArrivalProduct.Id, oldArrivalProduct);
@@ -179,7 +178,6 @@ namespace RetailTrade.EntityFramework.Services
                 {
                     arrivalProduct.Product = null;
                     arrivalProduct.ArrivalId = arrivalId;
-                    arrivalProduct.WareHouseId = wareHouseId;
                     var result = await _nonQueryDataService.Create(arrivalProduct);
                     OnCreated?.Invoke(result);
                 }
@@ -189,6 +187,22 @@ namespace RetailTrade.EntityFramework.Services
             {
                 return false;
             }
+        }
+
+        public async Task<IEnumerable<ArrivalProduct>> GetByProductId(int productId)
+        {
+            try
+            {
+                await using var context = _contextFactory.CreateDbContext();
+                return await context.ArrivalProducts
+                    .Include(a => a.Arrival)
+                    .Where(a => a.ProductId == productId).ToListAsync();
+            }
+            catch (Exception)
+            {
+                //ignore
+            }
+            return null;
         }
     }
 }

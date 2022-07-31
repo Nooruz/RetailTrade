@@ -180,11 +180,13 @@ namespace RetailTrade.EntityFramework
         #endregion
 
         public IQueryable<ProductView> ProductFunction(int wareHouseId) => FromExpression(() => ProductFunction(wareHouseId));
+        public IQueryable<WareHouseView> WareHouseFunction(int productId) => FromExpression(() => WareHouseFunction(productId));
 
         public RetailTradeDbContext(DbContextOptions<RetailTradeDbContext> options) : base(options) { }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+            modelBuilder.HasDbFunction(() => WareHouseFunction(default));
             modelBuilder.HasDbFunction(() => ProductFunction(default));
 
             modelBuilder.Entity<PointSale>()

@@ -126,6 +126,22 @@ namespace RetailTrade.EntityFramework.Services
             return null;
         }
 
+        public async Task<IEnumerable<ProductSale>> GetByProductId(int productId)
+        {
+            try
+            {
+                await using var context = _contextFactory.CreateDbContext();
+                return await context.ProductSales
+                    .Include(p => p.Receipt)
+                    .Where(p => p.ProductId == productId).ToListAsync();
+            }
+            catch (Exception)
+            {
+                //ignore
+            }
+            return null;
+        }
+
         public async Task<IEnumerable<ProductSale>> GetProductSalesByDateRange(DateTime startDate, DateTime endDate)
         {
             try

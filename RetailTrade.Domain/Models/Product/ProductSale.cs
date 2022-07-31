@@ -13,8 +13,6 @@ namespace RetailTrade.Domain.Models
         private decimal _purchasePrice;
         private decimal _retailPrice;
         private int _productId;
-        private int? _wareHouseId;
-        private int? _pointSaleId;
         private int _receiptId;
         private Product _product;
         private bool _isRefund;
@@ -123,45 +121,6 @@ namespace RetailTrade.Domain.Models
             }
         }
 
-        /// <summary>
-        /// Код склада
-        /// </summary>
-        public int? WareHouseId
-        {
-            get => _wareHouseId;
-            set
-            {
-                _wareHouseId = value;
-                OnPropertyChanged(nameof(WareHouseId));
-            }
-        }
-
-        /// <summary>
-        /// Код точки продаж
-        /// </summary>
-        public int? PointSaleId
-        {
-            get => _pointSaleId;
-            set
-            {
-                _pointSaleId = value;
-                OnPropertyChanged(nameof(PointSaleId));
-            }
-        }
-
-        /// <summary>
-        /// Код чека
-        /// </summary>
-        public int ReceiptId
-        {
-            get => _receiptId;
-            set
-            {
-                _receiptId = value;
-                OnPropertyChanged(nameof(ReceiptId));
-            }
-        }
-
         public bool IsRefund
         {
             get => _isRefund;
@@ -189,16 +148,6 @@ namespace RetailTrade.Domain.Models
                 OnPropertyChanged(nameof(Product));
             }
         }
-
-        /// <summary>
-        /// Точка продаж
-        /// </summary>
-        public PointSale PointSale { get; set; }
-
-        /// <summary>
-        /// Склад
-        /// </summary>
-        public WareHouse WareHouse { get; set; }
 
         public ProductRefund ProductRefund { get; set; }
 

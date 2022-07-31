@@ -142,7 +142,6 @@ namespace RetailTrade.POS.ViewModels.Dialogs
             EditProductSale.Total = Total;
             EditProductSale.TotalWithDiscount = TotalWithDiscount;
             EditProductSale.DiscountAmount = DiscountSum;
-            Product.Quantity = Rest;
             CurrentWindowService.Close();
         }
 

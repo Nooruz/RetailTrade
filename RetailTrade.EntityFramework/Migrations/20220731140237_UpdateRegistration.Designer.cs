@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using RetailTrade.EntityFramework;
 
@@ -11,9 +12,10 @@ using RetailTrade.EntityFramework;
 namespace RetailTrade.EntityFramework.Migrations
 {
     [DbContext(typeof(RetailTradeDbContext))]
-    partial class RetailTradeDbContextModelSnapshot : ModelSnapshot
+    [Migration("20220731140237_UpdateRegistration")]
+    partial class UpdateRegistration
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -86,14 +88,14 @@ namespace RetailTrade.EntityFramework.Migrations
                     b.Property<int>("ArrivalId")
                         .HasColumnType("int");
 
+                    b.Property<decimal>("ArrivalPrice")
+                        .HasColumnType("decimal(18,2)");
+
                     b.Property<decimal>("ArrivalSum")
                         .HasColumnType("decimal(18,2)");
 
                     b.Property<int>("ProductId")
                         .HasColumnType("int");
-
-                    b.Property<decimal>("PurchasePrice")
-                        .HasColumnType("decimal(18,2)");
 
                     b.Property<double>("Quantity")
                         .HasColumnType("float");
@@ -101,11 +103,16 @@ namespace RetailTrade.EntityFramework.Migrations
                     b.Property<decimal>("SalePrice")
                         .HasColumnType("decimal(18,2)");
 
+                    b.Property<int?>("WareHouseId")
+                        .HasColumnType("int");
+
                     b.HasKey("Id");
 
                     b.HasIndex("ArrivalId");
 
                     b.HasIndex("ProductId");
+
+                    b.HasIndex("WareHouseId");
 
                     b.ToTable("ArrivalProducts");
                 });
@@ -719,7 +726,7 @@ namespace RetailTrade.EntityFramework.Migrations
                     b.Property<double>("Quantity")
                         .HasColumnType("float");
 
-                    b.Property<int?>("ReceiptId")
+                    b.Property<int>("ReceiptId")
                         .HasColumnType("int");
 
                     b.Property<decimal>("RetailPrice")
@@ -731,6 +738,9 @@ namespace RetailTrade.EntityFramework.Migrations
                     b.Property<decimal>("TotalWithDiscount")
                         .HasColumnType("decimal(18,2)");
 
+                    b.Property<int?>("WareHouseId")
+                        .HasColumnType("int");
+
                     b.HasKey("Id");
 
                     b.HasIndex("PointSaleId");
@@ -738,6 +748,8 @@ namespace RetailTrade.EntityFramework.Migrations
                     b.HasIndex("ProductId");
 
                     b.HasIndex("ReceiptId");
+
+                    b.HasIndex("WareHouseId");
 
                     b.ToTable("ProductSales");
                 });
@@ -783,16 +795,11 @@ namespace RetailTrade.EntityFramework.Migrations
                     b.Property<decimal>("Total")
                         .HasColumnType("decimal(18,2)");
 
-                    b.Property<int?>("WareHouseId")
-                        .HasColumnType("int");
-
                     b.HasKey("Id");
 
                     b.HasIndex("PointSaleId");
 
                     b.HasIndex("ShiftId");
-
-                    b.HasIndex("WareHouseId");
 
                     b.ToTable("Receipts");
                 });
@@ -1630,9 +1637,15 @@ namespace RetailTrade.EntityFramework.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
+                    b.HasOne("RetailTrade.Domain.Models.WareHouse", "WareHouse")
+                        .WithMany("ArrivalProducts")
+                        .HasForeignKey("WareHouseId");
+
                     b.Navigation("Arrival");
 
                     b.Navigation("Product");
+
+                    b.Navigation("WareHouse");
                 });
 
             modelBuilder.Entity("RetailTrade.Domain.Models.Branch", b =>
@@ -1825,7 +1838,7 @@ namespace RetailTrade.EntityFramework.Migrations
 
             modelBuilder.Entity("RetailTrade.Domain.Models.ProductSale", b =>
                 {
-                    b.HasOne("RetailTrade.Domain.Models.PointSale", null)
+                    b.HasOne("RetailTrade.Domain.Models.PointSale", "PointSale")
                         .WithMany("ProductSales")
                         .HasForeignKey("PointSaleId");
 
@@ -1837,11 +1850,21 @@ namespace RetailTrade.EntityFramework.Migrations
 
                     b.HasOne("RetailTrade.Domain.Models.Receipt", "Receipt")
                         .WithMany("ProductSales")
-                        .HasForeignKey("ReceiptId");
+                        .HasForeignKey("ReceiptId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("RetailTrade.Domain.Models.WareHouse", "WareHouse")
+                        .WithMany("ProductSales")
+                        .HasForeignKey("WareHouseId");
+
+                    b.Navigation("PointSale");
 
                     b.Navigation("Product");
 
                     b.Navigation("Receipt");
+
+                    b.Navigation("WareHouse");
                 });
 
             modelBuilder.Entity("RetailTrade.Domain.Models.Receipt", b =>
@@ -1856,15 +1879,9 @@ namespace RetailTrade.EntityFramework.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("RetailTrade.Domain.Models.WareHouse", "WareHouse")
-                        .WithMany("Receipts")
-                        .HasForeignKey("WareHouseId");
-
                     b.Navigation("PointSale");
 
                     b.Navigation("Shift");
-
-                    b.Navigation("WareHouse");
                 });
 
             modelBuilder.Entity("RetailTrade.Domain.Models.Refund", b =>
@@ -2224,11 +2241,13 @@ namespace RetailTrade.EntityFramework.Migrations
 
             modelBuilder.Entity("RetailTrade.Domain.Models.WareHouse", b =>
                 {
+                    b.Navigation("ArrivalProducts");
+
                     b.Navigation("Arrivals");
 
                     b.Navigation("PointSales");
 
-                    b.Navigation("Receipts");
+                    b.Navigation("ProductSales");
 
                     b.Navigation("Registrations");
 

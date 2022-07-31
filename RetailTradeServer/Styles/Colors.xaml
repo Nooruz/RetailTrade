@@ -31,5 +31,8 @@
     <Color x:Key="DefaultButtonColor">#0173C6</Color>
     <SolidColorBrush x:Key="DefaultButtonColorBrush" Color="{StaticResource DefaultButtonColor}"/>
 
+    <Color x:Key="MainColor">#0173C7</Color>
+    <SolidColorBrush x:Key="MainColorBrush" Color="{StaticResource MainColor}"/>
+
 
 </ResourceDictionary>

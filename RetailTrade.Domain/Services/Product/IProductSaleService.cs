@@ -19,5 +19,7 @@ namespace RetailTrade.Domain.Services
         Task<IEnumerable<ProductSale>> GetRatingTenProducts();
 
         Task<IEnumerable<ProductSaleView>> GetAllAsync(int receiptId);
+
+        Task<IEnumerable<ProductSale>> GetByProductId(int productId);
     }
 }

@@ -29,6 +29,8 @@ namespace RetailTradeServer.ViewModels.Factories
         private readonly CreateMenuViewModel<CreateProductViewModel> _createCreateProductViewModel;
         private readonly CreateMenuViewModel<PointSaleViewModel> _createPointSaleViewModel;
         private readonly CreateMenuViewModel<CreatePointSaleViewModel> _createCreatePointSaleViewModel;
+        private readonly CreateMenuViewModel<ProductRegistrationViewModel> _createProductRegistrationViewModel;
+        private readonly CreateMenuViewModel<CreateProductRegistrationViewModel> _createCreateProductRegistrationViewModel;
 
         #endregion
 
@@ -53,7 +55,9 @@ namespace RetailTradeServer.ViewModels.Factories
             CreateMenuViewModel<PriceListViewModel> createPriceListViewModel,
             CreateMenuViewModel<CreateProductViewModel> createCreateProductViewModel,
             CreateMenuViewModel<PointSaleViewModel> createPointSaleViewModel,
-            CreateMenuViewModel<CreatePointSaleViewModel> createCreatePointSaleViewModel)
+            CreateMenuViewModel<CreatePointSaleViewModel> createCreatePointSaleViewModel,
+            CreateMenuViewModel<ProductRegistrationViewModel> createProductRegistrationViewModel,
+            CreateMenuViewModel<CreateProductRegistrationViewModel> createCreateProductRegistrationViewModel)
         {
             _createProductViewModel = createProductViewModel;
             _createArrivalProductViewModel = createArrivalProductViewModel;
@@ -75,6 +79,8 @@ namespace RetailTradeServer.ViewModels.Factories
             _createCreateProductViewModel = createCreateProductViewModel;
             _createCreatePointSaleViewModel = createCreatePointSaleViewModel;
             _createPointSaleViewModel = createPointSaleViewModel;
+            _createProductRegistrationViewModel = createProductRegistrationViewModel;
+            _createCreateProductRegistrationViewModel = createCreateProductRegistrationViewModel;
         }
 
         #endregion
@@ -103,6 +109,8 @@ namespace RetailTradeServer.ViewModels.Factories
                 MenuViewType.CreateProductView => _createCreateProductViewModel(),
                 MenuViewType.PointSale => _createPointSaleViewModel(),
                 MenuViewType.CreatePointSale => _createCreatePointSaleViewModel(),
+                MenuViewType.ProductRegistration => _createProductRegistrationViewModel(),
+                MenuViewType.CreateProductRegistration => _createCreateProductRegistrationViewModel(),
                 _ => throw new ArgumentException("The ViewType does not have a ViewModel.", "viewType"),
             };
         }

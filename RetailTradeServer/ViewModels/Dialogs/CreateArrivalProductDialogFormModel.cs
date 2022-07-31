@@ -246,8 +246,7 @@ namespace RetailTradeServer.ViewModels.Dialogs
                 ArrivalProducts.Add(new ArrivalProduct
                 {
                     ProductId = product.Id,
-                    ArrivalPrice = product.PurchasePrice,
-                    WareHouseId = SelectedSupplierId.Value,
+                    PurchasePrice = product.PurchasePrice,
                     Quantity = 1
                 });
                 ShowEditor(1);
@@ -283,7 +282,7 @@ namespace RetailTradeServer.ViewModels.Dialogs
                 {
                     SelectedArrivalProduct.ProductId = product.Id;
                     SelectedArrivalProduct.Product = product;
-                    SelectedArrivalProduct.ArrivalPrice = product.PurchasePrice;
+                    SelectedArrivalProduct.PurchasePrice = product.PurchasePrice;
                     SelectedArrivalProduct.Quantity = 1;
                     ShowEditor(1);
                 }
@@ -306,7 +305,7 @@ namespace RetailTradeServer.ViewModels.Dialogs
                     {
                         SelectedArrivalProduct.ProductId = product.Id;
                         SelectedArrivalProduct.Product = product;
-                        SelectedArrivalProduct.ArrivalPrice = product.PurchasePrice;
+                        SelectedArrivalProduct.PurchasePrice = product.PurchasePrice;
                         SelectedArrivalProduct.Quantity = 1;
                     }
                 }
@@ -364,7 +363,7 @@ namespace RetailTradeServer.ViewModels.Dialogs
                         if (SelectedArrivalProduct != null && e.Value != null)
                         {
                             Product product = Products.FirstOrDefault(p => p.Id == (int)e.Value);
-                            SelectedArrivalProduct.ArrivalPrice = product.PurchasePrice;
+                            SelectedArrivalProduct.PurchasePrice = product.PurchasePrice;
                             SelectedArrivalProduct.Product = product;
                             ShowEditor(1);
                         }

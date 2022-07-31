@@ -10,11 +10,10 @@ namespace RetailTrade.Domain.Models
         #region Private Members
 
         private double _quantity;
-        private decimal _arrivalPrice;
+        private decimal _purchasePrice;
         private decimal _arrivalSum;
         private int _productId;
         private int _arrivalId;
-        private int? _wareHouseId;
         private Product _product;
 
         #endregion
@@ -28,16 +27,6 @@ namespace RetailTrade.Domain.Models
             {
                 _arrivalId = value;
                 OnPropertyChanged(nameof(ArrivalId));
-            }
-        }
-
-        public int? WareHouseId
-        {
-            get => _wareHouseId;
-            set
-            {
-                _wareHouseId = value;
-                OnPropertyChanged(nameof(WareHouseId));
             }
         }
 
@@ -63,7 +52,7 @@ namespace RetailTrade.Domain.Models
             set
             {
                 _quantity = value;
-                ArrivalSum = ArrivalPrice * (decimal)Quantity;
+                ArrivalSum = PurchasePrice * (decimal)Quantity;
                 OnPropertyChanged(nameof(Quantity));
                 OnPropertyChanged(nameof(ArrivalSum));
             }
@@ -73,14 +62,14 @@ namespace RetailTrade.Domain.Models
         /// Цена прихода
         /// </summary>
         [Column(TypeName = "decimal(18,2)")]
-        public decimal ArrivalPrice
+        public decimal PurchasePrice
         {
-            get => _arrivalPrice;
+            get => _purchasePrice;
             set
             {
-                _arrivalPrice = value;
-                ArrivalSum = ArrivalPrice * (decimal)Quantity;
-                OnPropertyChanged(nameof(ArrivalPrice));
+                _purchasePrice = value;
+                ArrivalSum = PurchasePrice * (decimal)Quantity;
+                OnPropertyChanged(nameof(PurchasePrice));
                 OnPropertyChanged(nameof(ArrivalSum));
             }
         }
@@ -116,8 +105,6 @@ namespace RetailTrade.Domain.Models
         }
 
         public Arrival Arrival { get; set; }
-
-        public WareHouse WareHouse { get; set; }
 
         #endregion
     }

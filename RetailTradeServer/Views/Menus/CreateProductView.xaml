@@ -187,13 +187,13 @@
                     </dx:DXTabItem>
                     <dx:DXTabItem Header="Остатки"
                                   Style="{StaticResource ProductTabItem}">
-                        <dxg:GridControl ItemsSource="{Binding CreatedProduct.ProductsWareHouses}">
+                        <dxg:GridControl ItemsSource="{Binding WareHouseViews}">
                             <dxg:GridControl.View>
-                                <dxg:TableView ShowTotalSummary="True"
-                                               AutoWidth="True"/>
+                                <dxg:TableView AutoWidth="True"
+                                               ShowGroupPanel="False"/>
                             </dxg:GridControl.View>
                             <dxg:GridColumn Header="Склад"
-                                            FieldName="WareHouse.Name"/>
+                                            FieldName="Name"/>
                             <dxg:GridColumn Header="Остаток"
                                             FieldName="Quantity">
                                 <dxg:GridColumn.EditSettings>
@@ -213,19 +213,75 @@
 
                             <dxlc:LayoutItem Label="Закупки"
                                              LabelPosition="Top"/>
-                            <dxg:GridControl >
+                            <dxg:GridControl ItemsSource="{Binding ArrivalProducts}">
+                                <dxg:GridControl.TotalSummary>
+                                    <dxg:GridSummaryItem FieldName="Quantity"
+                                                         SummaryType="Sum"/>
+                                </dxg:GridControl.TotalSummary>
                                 <dxg:GridControl.View>
-                                    <dxg:TableView ShowTotalSummary="True"/>
+                                    <dxg:TableView AllowEditing="False" 
+                                                   ShowGroupPanel="False"
+                                                   AutoWidth="True" 
+                                                   ShowTotalSummary="True"/>
                                 </dxg:GridControl.View>
+                                <dxg:GridColumn Header="№"
+                                                FieldName="Id"/>
+                                <dxg:GridColumn Header="Дата и время"
+                                                FieldName="Arrival.ArrivalDate">
+                                    <dxg:GridColumn.EditSettings>
+                                        <dxe:DateEditSettings MaskUseAsDisplayFormat="True" Mask="g"/>
+                                    </dxg:GridColumn.EditSettings>
+                                </dxg:GridColumn>
+                                <dxg:GridColumn Header="Количество"
+                                                FieldName="Quantity">
+                                    <dxg:GridColumn.EditSettings>
+                                        <dxe:TextEditSettings MaskUseAsDisplayFormat="True" MaskType="Numeric" Mask="n2"/>
+                                    </dxg:GridColumn.EditSettings>
+                                </dxg:GridColumn>
+                                <dxg:GridColumn Header="Цена"
+                                                FieldName="SalePrice">
+                                    <dxg:GridColumn.EditSettings>
+                                        <dxe:TextEditSettings MaskUseAsDisplayFormat="True" MaskType="Numeric" Mask="n2"/>
+                                    </dxg:GridColumn.EditSettings>
+                                </dxg:GridColumn>
                             </dxg:GridControl>
 
                             <dxlc:LayoutItem Label="Продажи"
                                              LabelPosition="Top"/>
 
-                            <dxg:GridControl />
+                            <dxg:GridControl ItemsSource="{Binding ProductSales}">
+                                <dxg:GridControl.TotalSummary>
+                                    <dxg:GridSummaryItem FieldName="Quantity" SummaryType="Sum"/>
+                                </dxg:GridControl.TotalSummary>
+                                <dxg:GridControl.View>
+                                    <dxg:TableView ShowGroupPanel="False"
+                                                   AutoWidth="True"
+                                                   AllowEditing="False" ShowTotalSummary="True"/>
+                                </dxg:GridControl.View>
+                                <dxg:GridColumn Header="№"
+                                                FieldName="Id"/>
+                                <dxg:GridColumn Header="Дата и время"
+                                                FieldName="Receipt.DateOfPurchase">
+                                    <dxg:GridColumn.EditSettings>
+                                        <dxe:DateEditSettings MaskUseAsDisplayFormat="True" Mask="g"/>
+                                    </dxg:GridColumn.EditSettings>
+                                </dxg:GridColumn>
+                                <dxg:GridColumn Header="Количество"
+                                                FieldName="Quantity">
+                                    <dxg:GridColumn.EditSettings>
+                                        <dxe:TextEditSettings MaskUseAsDisplayFormat="True" MaskType="Numeric" Mask="n2"/>
+                                    </dxg:GridColumn.EditSettings>
+                                </dxg:GridColumn>
+                                <dxg:GridColumn Header="Цена"
+                                                FieldName="RetailPrice">
+                                    <dxg:GridColumn.EditSettings>
+                                        <dxe:TextEditSettings MaskUseAsDisplayFormat="True" MaskType="Numeric" Mask="n2"/>
+                                    </dxg:GridColumn.EditSettings>
+                                </dxg:GridColumn>
+                            </dxg:GridControl>
 
                         </dxlc:LayoutControl>
-                        
+
                     </dx:DXTabItem>
                 </dx:DXTabControl>
 

@@ -36,6 +36,9 @@ namespace RetailTradeServer.ViewModels.Menus
         private readonly IMessageStore _messageStore;
         private readonly IBarcodeService _barcodeService;
         private readonly IProductBarcodeService _productBarcodeService;
+        private readonly IWareHouseService _wareHouseService;
+        private readonly IArrivalProductService _arrivalProductService;
+        private readonly IProductSaleService _productSaleService;
         private TypeProduct _selectedTypeProduct;
         private ObservableCollection<TypeProduct> _typeProducts = new();
         private ObservableCollection<ProductView> _productViews = new();
@@ -130,7 +133,10 @@ namespace RetailTradeServer.ViewModels.Menus
             ISupplierService supplierService,
             IMessageStore messageStore,
             IBarcodeService barcodeService,
-            IProductBarcodeService productBarcodeService)
+            IProductBarcodeService productBarcodeService,
+            IWareHouseService wareHouseService,
+            IArrivalProductService arrivalProductService,
+            IProductSaleService productSaleService)
         {
             _typeProductService = typeProductService;
             _productService = productService;
@@ -143,6 +149,9 @@ namespace RetailTradeServer.ViewModels.Menus
             _messageStore = messageStore;
             _barcodeService = barcodeService;
             _productBarcodeService = productBarcodeService;
+            _wareHouseService = wareHouseService;
+            _arrivalProductService = arrivalProductService;
+            _productSaleService = productSaleService;
 
             Header = "Товары";
 
@@ -238,7 +247,7 @@ namespace RetailTradeServer.ViewModels.Menus
         {
             try
             {
-                _menuNavigator.CurrentViewModel = new CreateProductViewModel(_typeProductService, _unitService, _productService, _supplierService, _messageStore, _barcodeService, _productBarcodeService)
+                _menuNavigator.CurrentViewModel = new CreateProductViewModel(_typeProductService, _unitService, _productService, _supplierService, _messageStore, _barcodeService, _productBarcodeService, _wareHouseService, _productSaleService, _arrivalProductService)
                 {
                     CreatedProduct = await _productService.GetForEditAsync(SelectedProductView.Id)
                 };
@@ -287,7 +296,6 @@ namespace RetailTradeServer.ViewModels.Menus
         public void CreateProduct()
         {
             UpdateCurrentMenuViewModelCommand.Execute(MenuViewType.CreateProductView);
-            //WindowService.Show(nameof(CreateProductDialogForm), new CreateProductDialogFormModel(_typeProductService, _unitService, _productService, _supplierService, _messageStore, _barcodeService, _productBarcodeService, _productPriceService) { Title = "Товары и услуги (создание)" });
         }
 
         [Command]
@@ -339,11 +347,11 @@ namespace RetailTradeServer.ViewModels.Menus
         {
             if (SelectedProductView != null)
             {
-                WindowService.Show(nameof(CreateProductDialogForm), new CreateProductDialogFormModel(_typeProductService, _unitService, _productService, _supplierService, _messageStore, _barcodeService, _productBarcodeService)
+                _menuNavigator.CurrentViewModel = new CreateProductViewModel(_typeProductService, _unitService, _productService, _supplierService, _messageStore, _barcodeService, _productBarcodeService, _wareHouseService, _productSaleService, _arrivalProductService)
                 {
-                    Title = $"{SelectedProductView.Name} (Товары)",
-                    EditProduct = await _productService.GetAsync(SelectedProductView.Id)
-                });
+                    CreatedProduct = await _productService.GetAsync(SelectedProductView.Id)
+                };
+                //WindowService.Show(nameof(CreateProductDialogForm), );
             }
             else
             {

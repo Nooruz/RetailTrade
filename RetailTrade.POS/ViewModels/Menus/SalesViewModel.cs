@@ -196,7 +196,6 @@ namespace RetailTrade.POS.ViewModels.Menus
                 {
                     Title = "Редактор позиции",
                     EditProductSale = SelectedProductSale,
-                    Rest = SelectedProduct.Quantity + SelectedProductSale.Quantity,
                     Product = Products.FirstOrDefault(p => p.Id == SelectedProductSale.ProductId)
                 };
 
@@ -215,7 +214,6 @@ namespace RetailTrade.POS.ViewModels.Menus
             try
             {
                 ProductView product = Products.FirstOrDefault(p => p.Id == productSale.ProductId);
-                product.Quantity += productSale.Quantity;
                 Receipt.ProductSales.Remove(productSale);
             }
             catch (Exception)
@@ -247,14 +245,12 @@ namespace RetailTrade.POS.ViewModels.Menus
                             ProductId = SelectedProduct.Id,
                             PurchasePrice = SelectedProduct.PurchasePrice,
                             RetailPrice = SelectedProduct.RetailPrice,
-                            PointSaleId = Properties.Settings.Default.PointSaleId,
                             Product = new Product
                             {
                                 Name = SelectedProduct.Name,
                                 ProhibitDiscount = SelectedProduct.ProhibitDiscount
                             }
                         },
-                        Rest = SelectedProduct.Quantity
                     };
                     viewModel.OnProductSaleAdding += ViewModel_OnProductSaleAdding;
                     WindowService.Show(nameof(AddingProductView), viewModel);
@@ -285,7 +281,6 @@ namespace RetailTrade.POS.ViewModels.Menus
                     Receipt.ProductSales.Add(productSale);
                     Receipt.ProductSales.Move(Receipt.ProductSales.Count - 1, 0);
                 }
-                SelectedProduct.Quantity -= productSale.Quantity;
             }
             catch (Exception)
             {
@@ -318,7 +313,6 @@ namespace RetailTrade.POS.ViewModels.Menus
             {
                 productSale.Quantity++;
                 productSale.TotalWithDiscount = productSale.Total - productSale.DiscountAmount;
-                SelectedProduct.Quantity--;
             }
             else
             {
@@ -328,7 +322,6 @@ namespace RetailTrade.POS.ViewModels.Menus
                     Quantity = 1,
                     PurchasePrice = SelectedProduct.PurchasePrice,
                     RetailPrice = SelectedProduct.RetailPrice,
-                    PointSaleId = Properties.Settings.Default.PointSaleId,
                     Product = new Product
                     {
                         Name = SelectedProduct.Name,
@@ -336,7 +329,6 @@ namespace RetailTrade.POS.ViewModels.Menus
                     }
                 });
                 Receipt.ProductSales.Move(Receipt.ProductSales.Count - 1, 0);
-                SelectedProduct.Quantity -= 1;
             }
         }
 
@@ -486,7 +478,6 @@ namespace RetailTrade.POS.ViewModels.Menus
                     Receipt.ProductSales.ToList().ForEach(s =>
                     {
                         ProductView product = Products.FirstOrDefault(p => p.Id == s.ProductId);
-                        product.Quantity += s.Quantity;
                     });
                     Receipt.ProductSales.Clear();
                     OnPropertyChanged(nameof(TotalSum));
@@ -514,7 +505,6 @@ namespace RetailTrade.POS.ViewModels.Menus
                     TNVED = s.TNVED,
                     PurchasePrice = s.PurchasePrice,
                     RetailPrice = s.RetailPrice,
-                    Quantity = s.Quantity,
                     ProhibitDiscount = s.ProhibitDiscount,
                     ProductBarcodes = ProductBarcodes.Where(p => p.ProductId == s.Id).ToList(),
                 }).ToList());

@@ -6,6 +6,7 @@ using DevExpress.Xpf.Grid;
 using RetailTrade.Barcode.Services;
 using RetailTrade.Domain.Models;
 using RetailTrade.Domain.Services;
+using RetailTrade.Domain.Views;
 using RetailTradeServer.Commands;
 using RetailTradeServer.Components;
 using RetailTradeServer.Properties;
@@ -14,6 +15,7 @@ using RetailTradeServer.ViewModels.Base;
 using RetailTradeServer.ViewModels.Dialogs;
 using RetailTradeServer.Views.Dialogs;
 using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Drawing;
 using System.Linq;
@@ -35,12 +37,18 @@ namespace RetailTradeServer.ViewModels.Menus
         private readonly IMessageStore _messageStore;
         private readonly IBarcodeService _barcodeService;
         private readonly IProductBarcodeService _productBarcodeService;
+        private readonly IWareHouseService _wareHouseService;
+        private readonly IArrivalProductService _arrivalProductService;
+        private readonly IProductSaleService _productSaleService;
         private Product _createdProduct = new();
         private ObservableCollection<Unit> _units = new();
         private ObservableCollection<Supplier> _suppliers = new();
         private ObservableCollection<TypeProduct> _typeProducts = new();
         private ObservableCollection<ProductBarcode> _productBarcodes = new();
         private ProductBarcode _selectedProductBarcode;
+        private IEnumerable<WareHouseView> _wareHouseViews;
+        private IEnumerable<ArrivalProduct> _arrivalProducts;
+        private IEnumerable<ProductSale> _productSales;
 
         #endregion
 
@@ -91,6 +99,10 @@ namespace RetailTradeServer.ViewModels.Menus
             {
                 _createdProduct = value;
                 OnPropertyChanged(nameof(CreatedProduct));
+                if (CreatedProduct != null && CreatedProduct.Id != 0)
+                {
+                    GetWeareHouse(CreatedProduct.Id);
+                }
             }
         }
         public ProductBarcode SelectedProductBarcode
@@ -104,6 +116,33 @@ namespace RetailTradeServer.ViewModels.Menus
         }
         public TableView BarcodeTableView { get; set; }
         public GridControl BarcodeGridControl { get; set; }
+        public IEnumerable<WareHouseView> WareHouseViews
+        {
+            get => _wareHouseViews;
+            set
+            {
+                _wareHouseViews = value;
+                OnPropertyChanged(nameof(WareHouseViews));
+            }
+        }
+        public IEnumerable<ArrivalProduct> ArrivalProducts
+        {
+            get => _arrivalProducts;
+            set
+            {
+                _arrivalProducts = value;
+                OnPropertyChanged(nameof(ArrivalProducts));
+            }
+        }
+        public IEnumerable<ProductSale> ProductSales
+        {
+            get => _productSales;
+            set
+            {
+                _productSales = value;
+                OnPropertyChanged(nameof(ProductSales));
+            }
+        }
 
         #endregion
 
@@ -122,7 +161,10 @@ namespace RetailTradeServer.ViewModels.Menus
             ISupplierService supplierService,
             IMessageStore messageStore,
             IBarcodeService barcodeService,
-            IProductBarcodeService productBarcodeService)
+            IProductBarcodeService productBarcodeService,
+            IWareHouseService wareHouseService,
+            IProductSaleService productSaleService,
+            IArrivalProductService arrivalProductService)
         {
             _typeProductService = typeProductService;
             _unitService = unitService;
@@ -131,6 +173,9 @@ namespace RetailTradeServer.ViewModels.Menus
             _messageStore = messageStore;
             _barcodeService = barcodeService;
             _productBarcodeService = productBarcodeService;
+            _wareHouseService = wareHouseService;
+            _productSaleService = productSaleService;
+            _arrivalProductService = arrivalProductService;
             GlobalMessageViewModel = new(_messageStore);
 
             Header = "Товары (создание)";
@@ -279,6 +324,20 @@ namespace RetailTradeServer.ViewModels.Menus
                 e.ErrorContent = ex.Message;
                 e.ErrorType = DevExpress.XtraEditors.DXErrorProvider.ErrorType.Critical;
                 e.IsValid = false;
+            }
+        }
+
+        private async void GetWeareHouse(int productId)
+        {
+            try
+            {
+                WareHouseViews = await _wareHouseService.GetByProductId(productId);
+                ArrivalProducts = await _arrivalProductService.GetByProductId(productId);
+                ProductSales = await _productSaleService.GetByProductId(productId);
+            }
+            catch (Exception)
+            {
+                //ignore
             }
         }
 

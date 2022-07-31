@@ -132,7 +132,6 @@ namespace RetailTrade.POS.ViewModels.Dialogs
 
                 EditReceipt.ProductSales.ToList().ForEach(p =>
                 {
-                    p.WareHouseId = Properties.Settings.Default.WareHouseId;
                     p.Product = null;
                     p.Receipt = null;
                 });

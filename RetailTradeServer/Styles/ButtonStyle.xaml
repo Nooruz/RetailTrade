@@ -145,6 +145,13 @@
         </Setter>
     </Style>
 
+    <Style TargetType="{x:Type Button}" x:Key="MainButton">
+        <Setter Property="Background" Value="{StaticResource MainColorBrush}"/>
+        <Setter Property="IsDefault" Value="True"/>
+        <Setter Property="FontWeight" Value="DemiBold"/>
+        <Setter Property="Foreground" Value="White"/>
+    </Style>
+
     <Style TargetType="{x:Type Button}" x:Key="LinkButton">
         <Setter Property="Background" Value="Transparent"/>
         <Setter Property="BorderBrush" Value="Transparent"/>

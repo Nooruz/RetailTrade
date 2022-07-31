@@ -28,6 +28,7 @@ namespace RetailTrade.Domain.Models
         private Shift _shift;
         private ObservableCollection<ProductSale> _productSales = new();
         private int? _pointSaleId;
+        private int? _wareHouseId;
 
         #endregion
 
@@ -198,6 +199,16 @@ namespace RetailTrade.Domain.Models
             }
         }
 
+        public int? WareHouseId
+        {
+            get => _wareHouseId;
+            set
+            {
+                _wareHouseId = value;
+                OnPropertyChanged(nameof(WareHouseId));
+            }
+        }
+
         /// <summary>
         /// Товары
         /// </summary>
@@ -213,6 +224,7 @@ namespace RetailTrade.Domain.Models
 
         public PointSale PointSale { get; set; }
         public Refund Refund { get; set; }
+        public WareHouse WareHouse { get; set; }
 
         #endregion
 

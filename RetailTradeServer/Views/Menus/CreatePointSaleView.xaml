@@ -26,8 +26,7 @@
                           VerticalAlignment="Top">
 
                 <Button Content="Сохранить" 
-                        Background="#FFA1B900" 
-                        Foreground="White"
+                        Style="{StaticResource MainButton}"
                         Command="{Binding SaveCommand}"/>
 
                 <Button Content="Закрыть"

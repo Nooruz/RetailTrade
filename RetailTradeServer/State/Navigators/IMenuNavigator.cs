@@ -114,7 +114,11 @@ namespace RetailTradeServer.State.Navigators
         /// <summary>
         /// Создание или редактирование точки продаж
         /// </summary>
-        CreatePointSale
+        CreatePointSale,
+
+        ProductRegistration,
+
+        CreateProductRegistration
     }
 
     public interface IMenuNavigator

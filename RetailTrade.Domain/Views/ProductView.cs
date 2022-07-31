@@ -15,9 +15,9 @@ namespace RetailTrade.Domain.Views
         private decimal _purchasePrice;
         private decimal _retailPrice;
         private bool _deleteMark;
+        private string _description;
         private byte[] _image;
         private bool _prohibitDiscount;
-        private double _quantity;
 
         #endregion
 
@@ -95,6 +95,15 @@ namespace RetailTrade.Domain.Views
                 OnPropertyChanged(nameof(DeleteMark));
             }
         }
+        public string Description
+        {
+            get => _description;
+            set
+            {
+                _description = value;
+                OnPropertyChanged(nameof(Description));
+            }
+        }
         public byte[] Image
         {
             get => _image;
@@ -111,15 +120,6 @@ namespace RetailTrade.Domain.Views
             {
                 _prohibitDiscount = value;
                 OnPropertyChanged(nameof(ProhibitDiscount));
-            }
-        }
-        public double Quantity
-        {
-            get => _quantity;
-            set
-            {
-                _quantity = value;
-                OnPropertyChanged(nameof(Quantity));
             }
         }
         public ICollection<ProductBarcode> ProductBarcodes { get; set; }
