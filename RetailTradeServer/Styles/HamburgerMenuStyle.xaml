@@ -2,7 +2,8 @@
                     xmlns:dx="http://schemas.devexpress.com/winfx/2008/xaml/core"
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
                     xmlns:customs="clr-namespace:RetailTradeServer.Components"
-                    xmlns:views="clr-namespace:RetailTradeServer.Views">
+                    xmlns:views="clr-namespace:RetailTradeServer.Views"
+                    xmlns:dxwui="http://schemas.devexpress.com/winfx/2008/xaml/windowsui">
 
     <Style x:Key="TabItemStyle" TargetType="{x:Type dx:DXTabItem}">
         <Setter Property="HeaderTemplate">
@@ -22,7 +23,6 @@
     </Style>
 
     <Style TargetType="{x:Type customs:CustomHamburgerMenu}" x:Key="CustomHamburgerMenu">
-
         <Setter Property="ContentTemplate">
             <Setter.Value>
                 <DataTemplate>
@@ -36,7 +36,10 @@
                 </DataTemplate>
             </Setter.Value>
         </Setter>
-        
     </Style>
-    
+
+    <DataTemplate x:Key="HamburgerMenuItemTemplate" DataType="{x:Type dxwui:HamburgerMenu}">
+        <dxwui:HamburgerMenuNavigationButton Content="{Binding Caption}"/>
+    </DataTemplate>
+
 </ResourceDictionary>
