@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.ObjectModel;
 
 namespace RetailTrade.Domain.Models
 {
@@ -10,6 +11,7 @@ namespace RetailTrade.Domain.Models
         private int _wareHouseId;
         private decimal _sum;
         private string _comment;
+        private ObservableCollection<RegistrationProduct> _registrationProducts = new();
 
         #endregion
 
@@ -52,6 +54,15 @@ namespace RetailTrade.Domain.Models
             }
         }
         public WareHouse WareHouse { get; set; }
+        public ObservableCollection<RegistrationProduct> RegistrationProducts
+        {
+            get => _registrationProducts;
+            set
+            {
+                _registrationProducts = value;
+                OnPropertyChanged(nameof(RegistrationProducts));
+            }
+        }
 
         #endregion
     }

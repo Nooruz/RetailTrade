@@ -207,6 +207,18 @@ namespace RetailTradeServer
                     _ = await context.SaveChangesAsync();
                 }
 
+                List<Receipt> receipts = await context.Receipts.Where(r => r.WareHouseId == null).ToListAsync();
+
+                if (receipts != null && receipts.Any())
+                {
+                    receipts.ForEach(r =>
+                    {
+                        r.WareHouseId = 1;
+                    });
+                    context.UpdateRange(receipts);
+                    _ = await context.SaveChangesAsync();
+                }
+
                 MessageBox.Show("Обновление данных успешно выполнено!");
             }
             catch (Exception e)

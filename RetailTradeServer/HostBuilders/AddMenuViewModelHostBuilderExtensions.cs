@@ -81,7 +81,8 @@ namespace RetailTradeServer.HostBuilders
 
         private static CreateProductRegistrationViewModel CreateCreateProductRegistrationViewModel(IServiceProvider services)
         {
-            return new CreateProductRegistrationViewModel();
+            return new CreateProductRegistrationViewModel(services.GetRequiredService<IProductService>(),
+                services.GetRequiredService<IWareHouseService>());
         }
 
         private static CreatePointSaleViewModel CreateCreatePointSaleViewModel(IServiceProvider services)
