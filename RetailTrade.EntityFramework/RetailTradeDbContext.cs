@@ -127,6 +127,8 @@ namespace RetailTrade.EntityFramework
         public DbSet<PointSale> PointSales { get; set; }
         public DbSet<UserPointSale> UserPointSales { get; set; }
 
+        public DbSet<Registration> Registrations { get; set; }
+
         #endregion
 
         #region Employee

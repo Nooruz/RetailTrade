@@ -9,6 +9,7 @@
         private double _quantity;
         private decimal _price;
         private string _comment;
+        private decimal _amount;
 
         #endregion
 
@@ -39,6 +40,7 @@
             {
                 _quantity = value;
                 OnPropertyChanged(nameof(Quantity));
+                Amount = (decimal)Quantity * Price;
             }
         }
         public decimal Price
@@ -48,6 +50,7 @@
             {
                 _price = value;
                 OnPropertyChanged(nameof(Price));
+                Amount = (decimal)Quantity * Price;
             }
         }
         public string Comment
@@ -57,6 +60,15 @@
             {
                 _comment = value;
                 OnPropertyChanged(nameof(Comment));
+            }
+        }
+        public decimal Amount
+        {
+            get => _amount;
+            set
+            {
+                _amount = value;
+                OnPropertyChanged(nameof(Amount));
             }
         }
         public Product Product { get; set; }

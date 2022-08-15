@@ -23,6 +23,7 @@
                           HorizontalAlignment="Left">
 
             <Button Content="Сохранить"
+                    Command="{Binding SaveCommand}"
                     Style="{StaticResource MainButton}"/>
 
             <Button Content="Закрыть"/>
@@ -44,7 +45,8 @@
 
         </dxlc:LayoutGroup>
 
-        <dxg:GridControl ItemsSource="{Binding CreatedRegistration.RegistrationProducts}">
+        <dxg:GridControl ItemsSource="{Binding CreatedRegistration.RegistrationProducts}"
+                         SelectedItem="{Binding SelectedRegistrationProduct}">
             <dxg:GridControl.View>
                 <dxg:TableView ShowGroupPanel="False"
                                AutoWidth="True" 
@@ -57,14 +59,13 @@
                 </dxg:TableView>
             </dxg:GridControl.View>
             <dxg:GridColumn Header="Наименование" 
-                            FieldName="ProductId">
+                            FieldName="Product">
                 <dxg:GridColumn.EditSettings>
                     <dxg:LookUpEditSettings DisplayMember="Name"
-                                            ValueMember="Id"
                                             IncrementalFiltering="True"
                                             AutoComplete="False"                                            
                                             AutoPopulateColumns="False"
-                                            ItemsSource="{Binding Products}"
+                                            ItemsSource="{Binding Products}"                                            
                                             ImmediatePopup="True"
                                             IsPopupAutoWidth="True">
                         <dxg:LookUpEditSettings.PopupContentTemplate>
@@ -92,6 +93,15 @@
             </dxg:GridColumn>
             <dxg:GridColumn Header="Цена"
                             FieldName="Price">
+                <dxg:GridColumn.EditSettings>
+                    <dxe:TextEditSettings MaskUseAsDisplayFormat="True" 
+                                          MaskType="Numeric" 
+                                          Mask="n2"/>
+                </dxg:GridColumn.EditSettings>
+            </dxg:GridColumn>
+            <dxg:GridColumn Header="Сумма"
+                            AllowEditing="False"
+                            FieldName="Amount">
                 <dxg:GridColumn.EditSettings>
                     <dxe:TextEditSettings MaskUseAsDisplayFormat="True" 
                                           MaskType="Numeric" 
