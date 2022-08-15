@@ -1,4 +1,6 @@
 ﻿using DevExpress.Mvvm.DataAnnotations;
+using RetailTrade.Domain.Models;
+using RetailTrade.Domain.Services;
 using RetailTradeServer.Commands;
 using RetailTradeServer.State.Navigators;
 using RetailTradeServer.ViewModels.Base;
@@ -13,6 +15,7 @@ namespace RetailTradeServer.ViewModels.Menus
 
         private readonly IMenuNavigator _menuNavigator;
         private readonly IMenuViewModelFactory _menuViewModelFactory;
+        private readonly IRegistrationService _registrationService;
 
         #endregion
 
@@ -31,12 +34,24 @@ namespace RetailTradeServer.ViewModels.Menus
         #region Constructor
 
         public ProductRegistrationViewModel(IMenuNavigator menuNavigator,
-            IMenuViewModelFactory menuViewModelFactory)
+            IMenuViewModelFactory menuViewModelFactory,
+            IRegistrationService registrationService)
         {
             _menuNavigator = menuNavigator;
             _menuViewModelFactory = menuViewModelFactory;
+            _registrationService = registrationService;
 
             CreateCommand = new RelayCommand(() => UpdateCurrentMenuViewModelCommand.Execute(MenuViewType.CreateProductRegistration));
+            _registrationService.OnCreated += RegistrationService_OnCreated;
+        }
+
+        #endregion
+
+        #region Private Voids
+
+        private void RegistrationService_OnCreated(Registration registration)
+        {
+            
         }
 
         #endregion

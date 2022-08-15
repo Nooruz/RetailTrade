@@ -72,14 +72,14 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="DevExpress.Reporting.Core" Version="22.1.3" />
-    <PackageReference Include="DevExpress.Wpf.Charts" Version="22.1.3" />
-    <PackageReference Include="DevExpress.Wpf.Grid.Core" Version="22.1.3" />
-    <PackageReference Include="DevExpress.Wpf.LayoutControl" Version="22.1.3" />
-    <PackageReference Include="DevExpress.Wpf.NavBar" Version="22.1.3" />
-    <PackageReference Include="DevExpress.Wpf.PivotGrid" Version="22.1.3" />
-    <PackageReference Include="DevExpress.Wpf.Printing" Version="22.1.3" />
-    <PackageReference Include="DevExpress.Wpf.Spreadsheet" Version="22.1.3" />
+    <PackageReference Include="DevExpress.Reporting.Core" Version="22.1.4" />
+    <PackageReference Include="DevExpress.Wpf.Charts" Version="22.1.4" />
+    <PackageReference Include="DevExpress.Wpf.Grid.Core" Version="22.1.4" />
+    <PackageReference Include="DevExpress.Wpf.LayoutControl" Version="22.1.4" />
+    <PackageReference Include="DevExpress.Wpf.NavBar" Version="22.1.4" />
+    <PackageReference Include="DevExpress.Wpf.PivotGrid" Version="22.1.4" />
+    <PackageReference Include="DevExpress.Wpf.Printing" Version="22.1.4" />
+    <PackageReference Include="DevExpress.Wpf.Spreadsheet" Version="22.1.4" />
     <PackageReference Include="Microsoft.AspNet.Identity.Core" Version="2.2.3" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="6.0.5">
       <PrivateAssets>all</PrivateAssets>
