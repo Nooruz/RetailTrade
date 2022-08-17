@@ -5,6 +5,7 @@ using RetailTradeServer.Commands;
 using RetailTradeServer.State.Navigators;
 using RetailTradeServer.ViewModels.Base;
 using RetailTradeServer.ViewModels.Factories;
+using System.Collections.ObjectModel;
 using System.Windows.Input;
 
 namespace RetailTradeServer.ViewModels.Menus
