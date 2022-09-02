@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 
 namespace RetailTrade.Domain.Models
 {
@@ -10,7 +11,7 @@ namespace RetailTrade.Domain.Models
         private DateTime _createdDate;
         private int _userId;
         private decimal _amount;
-        private int _wareHouseId;
+        private int? _wareHouseId;
         private string _comment;
 
         #endregion
@@ -53,7 +54,7 @@ namespace RetailTrade.Domain.Models
                 OnPropertyChanged(nameof(Amount));
             }
         }
-        public int WareHouseId
+        public int? WareHouseId
         {
             get => _wareHouseId;
             set
@@ -74,6 +75,7 @@ namespace RetailTrade.Domain.Models
         public DocumentType DocumentType { get; set; }
         public User User { get; set; }
         public WareHouse WareHouse { get; set; }
+        public ICollection<ProductSale> ProductSales { get; set; }
 
         #endregion
     }

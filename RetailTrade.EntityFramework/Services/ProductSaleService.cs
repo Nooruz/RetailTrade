@@ -132,7 +132,7 @@ namespace RetailTrade.EntityFramework.Services
             {
                 await using var context = _contextFactory.CreateDbContext();
                 return await context.ProductSales
-                    .Include(p => p.Receipt)
+                    .Include(p => p.Document)
                     .Where(p => p.ProductId == productId).ToListAsync();
             }
             catch (Exception)
@@ -148,8 +148,7 @@ namespace RetailTrade.EntityFramework.Services
             {
                 await using var context = _contextFactory.CreateDbContext();
                 return await context.ProductSales
-                    .Include(p => p.Receipt)
-                    .Where(p => p.Receipt.DateOfPurchase.Date >= startDate && p.Receipt.DateOfPurchase.Date <= endDate)
+                    .Include(p => p.Document)
                     .Select(p => new ProductSale { PurchasePrice = p.PurchasePrice, RetailPrice = p.RetailPrice, Quantity = p.Quantity })
                     .ToListAsync();
             }
@@ -167,8 +166,7 @@ namespace RetailTrade.EntityFramework.Services
                 await using var context = _contextFactory.CreateDbContext();
                 var result = await context.ProductSales
                     .Include(p => p.Product)
-                    .Include(p => p.Receipt)
-                    .Where(p => p.Receipt.IsRefund == false)
+                    .Include(p => p.Document)
                     .GroupBy(p => new { p.ProductId, p.Product.Name})
                     .Select(p => new ProductSale { ProductId = p.Key.ProductId, Product = new Product { Name = p.Key.Name }, Quantity = p.Sum(c => c.Quantity) })                    
                     .Take(10)

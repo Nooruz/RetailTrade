@@ -133,7 +133,7 @@ namespace RetailTrade.POS.ViewModels.Dialogs
                 EditReceipt.ProductSales.ToList().ForEach(p =>
                 {
                     p.Product = null;
-                    p.Receipt = null;
+                    p.Document = null;
                 });
 
                 _ = await _receiptService.CreateAsync(EditReceipt);

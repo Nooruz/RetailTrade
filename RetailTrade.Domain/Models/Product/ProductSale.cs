@@ -13,9 +13,9 @@ namespace RetailTrade.Domain.Models
         private decimal _purchasePrice;
         private decimal _retailPrice;
         private int _productId;
-        private int _receiptId;
         private Product _product;
         private bool _isRefund;
+        private int? _documentId;
 
         #endregion
 
@@ -131,10 +131,15 @@ namespace RetailTrade.Domain.Models
             }
         }
 
-        /// <summary>
-        /// Чек
-        /// </summary>
-        public Receipt Receipt { get; set; }
+        public int? DocumentId
+        {
+            get => _documentId;
+            set
+            {
+                _documentId = value;
+                OnPropertyChanged(nameof(DocumentId));
+            }
+        }
 
         /// <summary>
         /// Товар
@@ -150,6 +155,7 @@ namespace RetailTrade.Domain.Models
         }
 
         public ProductRefund ProductRefund { get; set; }
+        public Document Document { get; set; }
 
 #endregion
     }

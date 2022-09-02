@@ -128,6 +128,8 @@ namespace RetailTrade.EntityFramework
         public DbSet<UserPointSale> UserPointSales { get; set; }
 
         public DbSet<Registration> Registrations { get; set; }
+        public DbSet<DocumentType> DocumentTypes { get; set; }
+        public DbSet<Document> Documents { get; set; }
 
         #endregion
 
@@ -188,6 +190,23 @@ namespace RetailTrade.EntityFramework
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+            _ = modelBuilder.Entity<DocumentType>().HasData(
+                new DocumentType { Id = 1, Name = "Приемка" },
+                new DocumentType { Id = 2, Name = "Возврат поставщику" },
+                new DocumentType { Id = 3, Name = "Списание" },
+                new DocumentType { Id = 4, Name = "Оприходование" },
+                new DocumentType { Id = 5, Name = "Перемещение" },
+                new DocumentType { Id = 6, Name = "Инвентаризация" },
+                new DocumentType { Id = 7, Name = "Приходный ордер" },
+                new DocumentType { Id = 8, Name = "Расходный ордер" },
+                new DocumentType { Id = 9, Name = "Корректировка остатков в кассе" },
+                new DocumentType { Id = 10, Name = "Корректировка остатков на счете" },
+                new DocumentType { Id = 11, Name = "Продажа" },
+                new DocumentType { Id = 12, Name = "Возврат" },
+                new DocumentType { Id = 13, Name = "Смена" },
+                new DocumentType { Id = 14, Name = "Внесение" },
+                new DocumentType { Id = 15, Name = "Выплата" });
+
             modelBuilder.HasDbFunction(() => WareHouseFunction(default));
             modelBuilder.HasDbFunction(() => ProductFunction(default));
 
