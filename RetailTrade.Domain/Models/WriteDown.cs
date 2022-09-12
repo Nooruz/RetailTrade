@@ -9,6 +9,6 @@ namespace RetailTrade.Domain.Models
         public int SupplierId { get; set; }
         public string Comment { get; set; }
         public Supplier Supplier { get; set; }
-        public ICollection<WriteDownProduct> WriteDownProducts { get; set; }
+        public ICollection<LossProduct> WriteDownProducts { get; set; }
     }
 }

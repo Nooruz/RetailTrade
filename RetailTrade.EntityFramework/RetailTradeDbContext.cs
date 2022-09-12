@@ -70,7 +70,7 @@ namespace RetailTrade.EntityFramework
         /// <summary>
         /// Списания товаров
         /// </summary>
-        public DbSet<WriteDownProduct> WriteDownProducts { get; set; }
+        public DbSet<LossProduct> LossProducts { get; set; }
 
 
         public DbSet<WriteDown> WriteDowns { get; set; }
@@ -131,6 +131,8 @@ namespace RetailTrade.EntityFramework
         public DbSet<DocumentType> DocumentTypes { get; set; }
         public DbSet<Document> Documents { get; set; }
 
+        public DbSet<MoveProduct> MoveProducts { get; set; }
+
         #endregion
 
         #region Employee
@@ -180,6 +182,9 @@ namespace RetailTrade.EntityFramework
         public DbSet<ProductBarcodeView> ProductBarcodeViews { get; set; }
         public DbSet<ReceiptView> ReceiptViews { get; set; }
         public DbSet<ProductSaleView> ProductSaleViews { get; set; }
+        public DbSet<EnterDocumentView> EnterDocumentViews { get; set; }
+        public DbSet<LossDocumentView> LossDocumentViews { get; set; }
+        public DbSet<MoveDocumentView> MoveDocumentViews { get; set; }
 
         #endregion
 
@@ -190,6 +195,18 @@ namespace RetailTrade.EntityFramework
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+            _ = modelBuilder.Entity<MoveDocumentView>()
+                .ToView(nameof(MoveDocumentView))
+                .HasNoKey();
+
+            _ = modelBuilder.Entity<LossDocumentView>()
+                .ToView(nameof(LossDocumentView))
+                .HasNoKey();
+
+            _ = modelBuilder.Entity<EnterDocumentView>()
+                .ToView(nameof(EnterDocumentView))
+                .HasNoKey();
+
             _ = modelBuilder.Entity<DocumentType>().HasData(
                 new DocumentType { Id = 1, Name = "Приемка" },
                 new DocumentType { Id = 2, Name = "Возврат поставщику" },
@@ -256,11 +273,6 @@ namespace RetailTrade.EntityFramework
             modelBuilder.Entity<Arrival>()
                 .HasMany(o => o.ArrivalProducts)
                 .WithOne(o => o.Arrival)
-                .OnDelete(DeleteBehavior.Cascade);
-
-            modelBuilder.Entity<WriteDown>()
-                .HasMany(o => o.WriteDownProducts)
-                .WithOne(o => o.WriteDown)
                 .OnDelete(DeleteBehavior.Cascade);
 
             modelBuilder.Entity<RefundToSupplier>()

@@ -42,12 +42,16 @@
 
             <!--#region Меню-->
 
-            <DataTemplate DataType="{x:Type menuViewModels:ProductRegistrationViewModel}">
-                <menuViews:ProductRegistrationView/>
+            <DataTemplate DataType="{x:Type menuViewModels:LossProductViewModel}">
+                <menuViews:LossProductView/>
             </DataTemplate>
 
-            <DataTemplate DataType="{x:Type menuViewModels:CreateProductRegistrationViewModel}">
-                <menuViews:CreateProductRegistrationView/>
+            <DataTemplate DataType="{x:Type menuViewModels:EnterViewModel}">
+                <menuViews:EnterView/>
+            </DataTemplate>
+
+            <DataTemplate DataType="{x:Type menuViewModels:EnterProductViewModel}">
+                <menuViews:EnterProductView/>
             </DataTemplate>
 
             <DataTemplate DataType="{x:Type menuViewModels:CreatePointSaleViewModel}">
@@ -74,8 +78,8 @@
                 <menuViews:ArrivalProductView/>
             </DataTemplate>
 
-            <DataTemplate DataType="{x:Type menuViewModels:WriteDownProductViewModel}">
-                <menuViews:WriteDownProductView/>
+            <DataTemplate DataType="{x:Type menuViewModels:LossViewModel}">
+                <menuViews:LossView/>
             </DataTemplate>
 
             <DataTemplate DataType="{x:Type menuViewModels:OrderProductViewModel}">

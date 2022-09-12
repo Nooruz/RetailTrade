@@ -3,9 +3,9 @@
     /// <summary>
     /// Логика взаимодействия для CreateProductRegistrationView.xaml
     /// </summary>
-    public partial class CreateProductRegistrationView : BaseMenuView
+    public partial class EnterProductView : BaseMenuView
     {
-        public CreateProductRegistrationView()
+        public EnterProductView()
         {
             InitializeComponent();
         }

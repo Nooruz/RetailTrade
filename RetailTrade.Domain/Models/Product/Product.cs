@@ -216,12 +216,13 @@ namespace RetailTrade.Domain.Models
         public ICollection<ProductSale> ProductSales { get; set; }
         public ICollection<ProductRefund> ProductRefunds { get; set; }
         public ICollection<ArrivalProduct> ArrivalProducts { get; set; }
-        public ICollection<WriteDownProduct> WriteDownProducts { get; set; }
+        public ICollection<LossProduct> LossProducts { get; set; }
         public ICollection<RefundToSupplierProduct> ProductRefundToSuppliers { get; set; }
         public ICollection<OrderProduct> Orders { get; set; }
         public ICollection<WareHouse> WareHouses { get; set; }
         public ICollection<RevaluationProduct> RevaluationProducts { get; set; }
-        public ICollection<RegistrationProduct> RegistrationProducts { get; set; }
+        public ICollection<EnterProduct> EnterProducts { get; set; }
+        public ICollection<MoveProduct> MoveProducts { get; set; }
         public ObservableCollection<ProductBarcode> ProductBarcodes
         {
             get => _productBarcodes;

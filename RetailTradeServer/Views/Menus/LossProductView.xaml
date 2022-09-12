@@ -8,7 +8,9 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:local="clr-namespace:RetailTradeServer.Views.Menus"
     xmlns:dxmvvm="http://schemas.devexpress.com/winfx/2008/xaml/mvvm"
-    x:Class="RetailTradeServer.Views.Menus.CreateProductRegistrationView"
+    xmlns:components="clr-namespace:RetailTradeServer.Components"
+    xmlns:views="clr-namespace:RetailTradeServer.Views"
+    x:Class="RetailTradeServer.Views.Menus.LossProductView"
                       mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
 
@@ -26,18 +28,34 @@
                     Command="{Binding SaveCommand}"
                     Style="{StaticResource MainButton}"/>
 
-            <Button Content="Закрыть"/>
+            <Button Content="Закрыть"
+                    Command="{Binding Path=DataContext.CloseCommand, RelativeSource={RelativeSource AncestorType={x:Type views:HomeView}, Mode=FindAncestor}}"
+                    CommandParameter="{Binding}"/>
 
         </dxlc:LayoutGroup>
 
-        <dxlc:LayoutGroup VerticalAlignment="Top">
+        <dxlc:LayoutGroup VerticalAlignment="Top"
+                          Orientation="Vertical">
+
+            <dxlc:LayoutGroup>
+
+                <dxlc:LayoutItem Label="Списание №">
+                    <dxe:TextEdit EditValue="{Binding CreatedDocument.Number}"
+                                  ToolTip="Оставьте поле пустым для автоматической подстановки номера"/>
+                </dxlc:LayoutItem>
+
+                <dxlc:LayoutItem Label="от">
+                    <dxe:DateEdit EditValue="{Binding CreatedDocument.CreatedDate}"/>
+                </dxlc:LayoutItem>
+
+            </dxlc:LayoutGroup>
 
             <dxlc:LayoutItem Label="Склад">
 
                 <dxe:ComboBoxEdit ItemsSource="{Binding WareHouses}"
                                   DisplayMember="Name"
                                   ValueMember="Id"
-                                  EditValue="{Binding CreatedRegistration.WareHouseId}"
+                                  EditValue="{Binding CreatedDocument.WareHouseId}"
                                   ShowError="False"
                                   ShowErrorToolTip="False"/>
 
@@ -45,21 +63,22 @@
 
         </dxlc:LayoutGroup>
 
-        <dxg:GridControl ItemsSource="{Binding CreatedRegistration.RegistrationProducts}"
-                         SelectedItem="{Binding SelectedRegistrationProduct}">
+        <dxg:GridControl ItemsSource="{Binding CreatedDocument.LossProducts}"
+                         SelectedItem="{Binding SelectedLossProduct}">
             <dxg:GridControl.View>
                 <dxg:TableView ShowGroupPanel="False"
-                               AutoWidth="True" 
+                               AutoWidth="True"
+                               ShowTotalSummary="True"
                                NewItemRowPosition="Top">
                     <dxmvvm:Interaction.Behaviors>
                         <dxmvvm:EventToCommand EventName="Loaded"
-                                               Command="{Binding RegistrationProductTableViewLoadedCommand}"
+                                               Command="{Binding LossProductTableViewLoadedCommand}"
                                                PassEventArgsToCommand="True"/>
                     </dxmvvm:Interaction.Behaviors>
                 </dxg:TableView>
             </dxg:GridControl.View>
             <dxg:GridColumn Header="Наименование" 
-                            FieldName="Product">
+                            FieldName="ProductId">
                 <dxg:GridColumn.EditSettings>
                     <dxg:LookUpEditSettings DisplayMember="Name"
                                             IncrementalFiltering="True"
@@ -67,7 +86,8 @@
                                             AutoPopulateColumns="False"
                                             ItemsSource="{Binding Products}"                                            
                                             ImmediatePopup="True"
-                                            IsPopupAutoWidth="True">
+                                            IsPopupAutoWidth="True"
+                                            ValueMember="Id">
                         <dxg:LookUpEditSettings.PopupContentTemplate>
                             <ControlTemplate>
                                 <dxg:GridControl Name="PART_GridControl" 
@@ -108,13 +128,30 @@
                                           Mask="n2"/>
                 </dxg:GridColumn.EditSettings>
             </dxg:GridColumn>
-            <dxg:GridColumn Header="Причина оприходования"
+            <dxg:GridColumn Header="Причина списания"
                             FieldName="Comment">
                 <dxg:GridColumn.EditSettings>
                     <dxe:TextEditSettings/>
                 </dxg:GridColumn.EditSettings>
             </dxg:GridColumn>
+            <dxg:GridControl.TotalSummary>
+                <dxg:GridSummaryItem FieldName="Amount" 
+                                     SummaryType="Sum" 
+                                     DisplayFormat="{}Итого: {0:n2}"/>
+            </dxg:GridControl.TotalSummary>
         </dxg:GridControl>
+
+        <dxlc:LayoutItem Label="Комментарий"
+                         LabelVerticalAlignment="Top">
+            <dxe:TextEdit TextWrapping="Wrap"
+                          Height="50"
+                          VerticalContentAlignment="Top"
+                          HorizontalContentAlignment="Left"
+                          EditValue="{Binding CreatedDocument.Comment}"/>
+        </dxlc:LayoutItem>
+
+        <components:GlobalMessageBaner DataContext="{Binding GlobalMessageViewModel}"
+                                       VerticalAlignment="Bottom"/>
 
     </dxlc:LayoutControl>
 

@@ -19,7 +19,7 @@ namespace RetailTradeServer.State.Navigators
         /// <summary>
         /// Списание товара
         /// </summary>
-        WriteDownProduct,
+        Loss,
 
         /// <summary>
         /// Заказ товара
@@ -116,9 +116,11 @@ namespace RetailTradeServer.State.Navigators
         /// </summary>
         CreatePointSale,
 
-        ProductRegistration,
+        Enter,
 
-        CreateProductRegistration
+        EnterProduct,
+
+        LossProduct
     }
 
     public interface IMenuNavigator

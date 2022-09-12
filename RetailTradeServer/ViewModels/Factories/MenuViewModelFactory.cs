@@ -11,7 +11,7 @@ namespace RetailTradeServer.ViewModels.Factories
 
         private readonly CreateMenuViewModel<ProductViewModel> _createProductViewModel;
         private readonly CreateMenuViewModel<ArrivalProductViewModel> _createArrivalProductViewModel;
-        private readonly CreateMenuViewModel<WriteDownProductViewModel> _createWriteDownProductViewModel;
+        private readonly CreateMenuViewModel<LossViewModel> _createLossViewModel;
         private readonly CreateMenuViewModel<OrderProductViewModel> _createOrderProductViewModel;
         private readonly CreateMenuViewModel<ProductBarcodeViewModel> _createProductBarcodeViewModel;
         private readonly CreateMenuViewModel<BranchViewModel> _createBranchViewModel;
@@ -29,8 +29,9 @@ namespace RetailTradeServer.ViewModels.Factories
         private readonly CreateMenuViewModel<CreateProductViewModel> _createCreateProductViewModel;
         private readonly CreateMenuViewModel<PointSaleViewModel> _createPointSaleViewModel;
         private readonly CreateMenuViewModel<CreatePointSaleViewModel> _createCreatePointSaleViewModel;
-        private readonly CreateMenuViewModel<ProductRegistrationViewModel> _createProductRegistrationViewModel;
-        private readonly CreateMenuViewModel<CreateProductRegistrationViewModel> _createCreateProductRegistrationViewModel;
+        private readonly CreateMenuViewModel<EnterViewModel> _createEnterViewModel;
+        private readonly CreateMenuViewModel<EnterProductViewModel> _createEnterProductViewModel;
+        private readonly CreateMenuViewModel<LossProductViewModel> _createLossProductViewModel;
 
         #endregion
 
@@ -38,7 +39,7 @@ namespace RetailTradeServer.ViewModels.Factories
 
         public MenuViewModelFactory(CreateMenuViewModel<ProductViewModel> createProductViewModel,
             CreateMenuViewModel<ArrivalProductViewModel> createArrivalProductViewModel,
-            CreateMenuViewModel<WriteDownProductViewModel> createWriteDownProductViewModel,
+            CreateMenuViewModel<LossViewModel> createLossViewModel,
             CreateMenuViewModel<OrderProductViewModel> createOrderProductViewModel,
             CreateMenuViewModel<ProductBarcodeViewModel> createProductBarcodeViewModel,
             CreateMenuViewModel<BranchViewModel> createBranchViewModel,
@@ -56,12 +57,13 @@ namespace RetailTradeServer.ViewModels.Factories
             CreateMenuViewModel<CreateProductViewModel> createCreateProductViewModel,
             CreateMenuViewModel<PointSaleViewModel> createPointSaleViewModel,
             CreateMenuViewModel<CreatePointSaleViewModel> createCreatePointSaleViewModel,
-            CreateMenuViewModel<ProductRegistrationViewModel> createProductRegistrationViewModel,
-            CreateMenuViewModel<CreateProductRegistrationViewModel> createCreateProductRegistrationViewModel)
+            CreateMenuViewModel<EnterViewModel> createEnterViewModel,
+            CreateMenuViewModel<EnterProductViewModel> createEnterProductViewModel,
+            CreateMenuViewModel<LossProductViewModel> createLossProductViewModel)
         {
             _createProductViewModel = createProductViewModel;
             _createArrivalProductViewModel = createArrivalProductViewModel;
-            _createWriteDownProductViewModel = createWriteDownProductViewModel;
+            _createLossViewModel = createLossViewModel;
             _createOrderProductViewModel = createOrderProductViewModel;
             _createProductBarcodeViewModel = createProductBarcodeViewModel;
             _createBranchViewModel = createBranchViewModel;
@@ -79,8 +81,9 @@ namespace RetailTradeServer.ViewModels.Factories
             _createCreateProductViewModel = createCreateProductViewModel;
             _createCreatePointSaleViewModel = createCreatePointSaleViewModel;
             _createPointSaleViewModel = createPointSaleViewModel;
-            _createProductRegistrationViewModel = createProductRegistrationViewModel;
-            _createCreateProductRegistrationViewModel = createCreateProductRegistrationViewModel;
+            _createEnterViewModel = createEnterViewModel;
+            _createEnterProductViewModel = createEnterProductViewModel;
+            _createLossProductViewModel = createLossProductViewModel;
         }
 
         #endregion
@@ -91,7 +94,7 @@ namespace RetailTradeServer.ViewModels.Factories
             {
                 MenuViewType.Products => _createProductViewModel(),
                 MenuViewType.ArrivalProduct => _createArrivalProductViewModel(),
-                MenuViewType.WriteDownProduct => _createWriteDownProductViewModel(),
+                MenuViewType.Loss => _createLossViewModel(),
                 MenuViewType.OrderProduct => _createOrderProductViewModel(),
                 MenuViewType.ProductBarcode => _createProductBarcodeViewModel(),
                 MenuViewType.SaleDashboard => _createMenuViewModel(),
@@ -109,8 +112,9 @@ namespace RetailTradeServer.ViewModels.Factories
                 MenuViewType.CreateProductView => _createCreateProductViewModel(),
                 MenuViewType.PointSale => _createPointSaleViewModel(),
                 MenuViewType.CreatePointSale => _createCreatePointSaleViewModel(),
-                MenuViewType.ProductRegistration => _createProductRegistrationViewModel(),
-                MenuViewType.CreateProductRegistration => _createCreateProductRegistrationViewModel(),
+                MenuViewType.Enter => _createEnterViewModel(),
+                MenuViewType.EnterProduct => _createEnterProductViewModel(),
+                MenuViewType.LossProduct => _createLossProductViewModel(),
                 _ => throw new ArgumentException("The ViewType does not have a ViewModel.", "viewType"),
             };
         }

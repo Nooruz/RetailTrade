@@ -28,13 +28,11 @@ namespace RetailTradeServer.HostBuilders
                 services.AddSingleton<ISupplierService, SupplierService>();
                 services.AddSingleton<IReceiptService, ReceiptService>();
                 services.AddSingleton<IShiftService, ShiftService>();
-                services.AddSingleton<IWriteDownProductService, WriteDownProductService>();
                 services.AddSingleton<IRefundToSupplierServiceProduct, RefundToSupplierServiceProduct>();
                 services.AddSingleton<IOrderStatusService, OrderStatusService>();
                 services.AddSingleton<IOrderProductService, OrderProductService>();
                 services.AddSingleton<IOrderToSupplierService, OrderToSupplierService>();
                 services.AddSingleton<IArrivalService, ArrivalService>();
-                services.AddSingleton<IWriteDownService, WriteDownService>();
                 services.AddSingleton<IRefundToSupplierService, RefundToSupplierService>();
                 services.AddSingleton<IProductSaleService, ProductSaleService>();
                 services.AddSingleton<IRefundService, RefundService>();
@@ -56,6 +54,7 @@ namespace RetailTradeServer.HostBuilders
                 services.AddSingleton<IPointSaleService, PointSaleService>();
                 services.AddSingleton<IUserPointSaleService, UserPointSaleService>();
                 services.AddSingleton<IRegistrationService, RegistrationService>();
+                services.AddSingleton<IDocumentService, DocumentService>();
             });
         }
     }

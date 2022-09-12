@@ -39,7 +39,7 @@ namespace RetailTradeServer.Report {
 
             // Data Sources
             this.WriteDownProducts = reportInitializer.GetDataSource<DevExpress.DataAccess.ObjectBinding.ObjectDataSource>("WriteDownProducts");
-            this.WriteDownProducts.DataSource = typeof(RetailTrade.Domain.Models.WriteDownProduct);
+            this.WriteDownProducts.DataSource = typeof(RetailTrade.Domain.Models.LossProduct);
         }
         private DevExpress.XtraReports.UI.TopMarginBand topMarginBand1;
         private DevExpress.XtraReports.UI.DetailBand detailBand1;

@@ -11,7 +11,7 @@ namespace RetailTrade.Domain.Models
         private int _wareHouseId;
         private decimal _sum;
         private string _comment;
-        private ObservableCollection<RegistrationProduct> _registrationProducts = new();
+        private ObservableCollection<EnterProduct> _registrationProducts = new();
 
         #endregion
 
@@ -54,7 +54,7 @@ namespace RetailTrade.Domain.Models
             }
         }
         public WareHouse WareHouse { get; set; }
-        public ObservableCollection<RegistrationProduct> RegistrationProducts
+        public ObservableCollection<EnterProduct> RegistrationProducts
         {
             get => _registrationProducts;
             set

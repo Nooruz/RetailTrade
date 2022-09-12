@@ -8,7 +8,7 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:local="clr-namespace:RetailTradeServer.Views.Menus"
     xmlns:dxmvvm="http://schemas.devexpress.com/winfx/2008/xaml/mvvm"
-    x:Class="RetailTradeServer.Views.Menus.ProductRegistrationView"
+    x:Class="RetailTradeServer.Views.Menus.EnterView"
                       mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
 
@@ -27,28 +27,42 @@
                     Tag="{StaticResource faPlus}"
                     Style="{StaticResource ButtonWithHorizontalIcon}"/>
 
+            <Button Content="Редактировать"
+                    Command="{Binding EditEnterDocumentCommand}"/>
+
+            <Button Content="Удалить"
+                    Command="{Binding DeleteEnterDocumentCommand}"/>
+
         </dxlc:LayoutGroup>
 
-        <dxg:GridControl >
+        <dxg:GridControl ItemsSource="{Binding Documents}"
+                         SelectedItem="{Binding SelectedEnterDocumentView}">
             <dxg:GridControl.View>
                 <dxg:TableView AutoWidth="True"
+                               AllowEditing="False"
                                ShowGroupPanel="False"/>
             </dxg:GridControl.View>
-            <dxg:GridColumn Header="№"/>
-            <dxg:GridColumn Header="Время">
+            <dxg:GridColumn Header="№"
+                            FieldName="Number"/>
+            <dxg:GridColumn Header="Время"
+                            FieldName="CreatedDate">
                 <dxg:GridColumn.EditSettings>
                     <dxe:DateEditSettings MaskUseAsDisplayFormat="True" 
                                           Mask="g"/>
                 </dxg:GridColumn.EditSettings>
             </dxg:GridColumn>
-            <dxg:GridColumn Header="Склад"/>
-            <dxg:GridColumn Header="Сумма">
+            <dxg:GridColumn Header="Склад"
+                            FieldName="WareHouse"/>
+            <dxg:GridColumn Header="Сумма"
+                            FieldName="Amount">
                 <dxg:GridColumn.EditSettings>
                     <dxe:TextEditSettings MaskUseAsDisplayFormat="True" 
                                           MaskType="Numeric" 
                                           Mask="n2"/>
                 </dxg:GridColumn.EditSettings>
             </dxg:GridColumn>
+            <dxg:GridColumn Header="Комментарий"
+                            FieldName="Comment"/>
         </dxg:GridControl>
 
     </dxlc:LayoutControl>

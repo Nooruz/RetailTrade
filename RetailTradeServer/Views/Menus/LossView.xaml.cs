@@ -3,9 +3,9 @@
     /// <summary>
     /// Interaction logic for WriteDownProductDialogForm.xaml
     /// </summary>
-    public partial class WriteDownProductView : BaseMenuView
+    public partial class LossView : BaseMenuView
     {
-        public WriteDownProductView()
+        public LossView()
         {
             InitializeComponent();
         }

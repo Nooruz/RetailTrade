@@ -1,0 +1,87 @@
+﻿using System;
+
+namespace RetailTrade.Domain.Views
+{
+    public class LossDocumentView : ViewObject
+    {
+        #region Private Members
+
+        private int _id;
+        private DateTime _createdDate;
+        private string _userName;
+        private decimal _amount;
+        private string _wareHouse;
+        private string _number;
+        private string _comment;
+
+        #endregion
+
+        #region Public Properties
+
+        public int Id
+        {
+            get => _id;
+            set
+            {
+                _id = value;
+                OnPropertyChanged(nameof(Id));
+            }
+        }
+        public DateTime CreatedDate
+        {
+            get => _createdDate;
+            set
+            {
+                _createdDate = value;
+                OnPropertyChanged(nameof(CreatedDate));
+            }
+        }
+        public string Username
+        {
+            get => _userName;
+            set
+            {
+                _userName = value;
+                OnPropertyChanged(nameof(Username));
+            }
+        }
+        public decimal Amount
+        {
+            get => _amount;
+            set
+            {
+                _amount = value;
+                OnPropertyChanged(nameof(Amount));
+            }
+        }
+        public string WareHouse
+        {
+            get => _wareHouse;
+            set
+            {
+                _wareHouse = value;
+                OnPropertyChanged(nameof(WareHouse));
+            }
+        }
+        public string Number
+        {
+            get => _number;
+            set
+            {
+                _number = value;
+                OnPropertyChanged(nameof(Number));
+            }
+        }
+        public string Comment
+        {
+            get => _comment;
+            set
+            {
+                _comment = value;
+                OnPropertyChanged(nameof(Comment));
+            }
+        }
+
+        #endregion
+    }
+}

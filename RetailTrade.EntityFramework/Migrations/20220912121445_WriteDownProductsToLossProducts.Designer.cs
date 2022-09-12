@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using RetailTrade.EntityFramework;
 
@@ -11,9 +12,10 @@ using RetailTrade.EntityFramework;
 namespace RetailTrade.EntityFramework.Migrations
 {
     [DbContext(typeof(RetailTradeDbContext))]
-    partial class RetailTradeDbContextModelSnapshot : ModelSnapshot
+    [Migration("20220912121445_WriteDownProductsToLossProducts")]
+    partial class WriteDownProductsToLossProducts
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -248,9 +250,6 @@ namespace RetailTrade.EntityFramework.Migrations
                     b.Property<string>("Number")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int?>("ToWareHouseId")
-                        .HasColumnType("int");
-
                     b.Property<int>("UserId")
                         .HasColumnType("int");
 
@@ -421,9 +420,6 @@ namespace RetailTrade.EntityFramework.Migrations
 
                     b.Property<int?>("RegistrationId")
                         .HasColumnType("int");
-
-                    b.Property<double>("Stock")
-                        .HasColumnType("float");
 
                     b.HasKey("Id");
 
@@ -604,9 +600,6 @@ namespace RetailTrade.EntityFramework.Migrations
                     b.Property<double>("Quantity")
                         .HasColumnType("float");
 
-                    b.Property<double>("Stock")
-                        .HasColumnType("float");
-
                     b.Property<int?>("WriteDownId")
                         .HasColumnType("int");
 
@@ -619,44 +612,6 @@ namespace RetailTrade.EntityFramework.Migrations
                     b.HasIndex("WriteDownId");
 
                     b.ToTable("LossProducts");
-                });
-
-            modelBuilder.Entity("RetailTrade.Domain.Models.MoveProduct", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
-
-                    b.Property<decimal>("Amount")
-                        .HasColumnType("decimal(18,2)");
-
-                    b.Property<string>("Comment")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int>("DocumentId")
-                        .HasColumnType("int");
-
-                    b.Property<decimal>("Price")
-                        .HasColumnType("decimal(18,2)");
-
-                    b.Property<int>("ProductId")
-                        .HasColumnType("int");
-
-                    b.Property<double>("Quantity")
-                        .HasColumnType("float");
-
-                    b.Property<double>("Stock")
-                        .HasColumnType("float");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("DocumentId");
-
-                    b.HasIndex("ProductId");
-
-                    b.ToTable("MoveProduct");
                 });
 
             modelBuilder.Entity("RetailTrade.Domain.Models.OrderProduct", b =>
@@ -1969,7 +1924,7 @@ namespace RetailTrade.EntityFramework.Migrations
                         .IsRequired();
 
                     b.HasOne("RetailTrade.Domain.Models.Product", "Product")
-                        .WithMany("EnterProducts")
+                        .WithMany("RegistrationProducts")
                         .HasForeignKey("ProductId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -2030,7 +1985,7 @@ namespace RetailTrade.EntityFramework.Migrations
                         .IsRequired();
 
                     b.HasOne("RetailTrade.Domain.Models.Product", "Product")
-                        .WithMany("LossProducts")
+                        .WithMany("WriteDownProducts")
                         .HasForeignKey("ProductId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -2038,25 +1993,6 @@ namespace RetailTrade.EntityFramework.Migrations
                     b.HasOne("RetailTrade.Domain.Models.WriteDown", null)
                         .WithMany("WriteDownProducts")
                         .HasForeignKey("WriteDownId");
-
-                    b.Navigation("Document");
-
-                    b.Navigation("Product");
-                });
-
-            modelBuilder.Entity("RetailTrade.Domain.Models.MoveProduct", b =>
-                {
-                    b.HasOne("RetailTrade.Domain.Models.Document", "Document")
-                        .WithMany("MoveProducts")
-                        .HasForeignKey("DocumentId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("RetailTrade.Domain.Models.Product", "Product")
-                        .WithMany("MoveProducts")
-                        .HasForeignKey("ProductId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
 
                     b.Navigation("Document");
 
@@ -2405,8 +2341,6 @@ namespace RetailTrade.EntityFramework.Migrations
 
                     b.Navigation("LossProducts");
 
-                    b.Navigation("MoveProducts");
-
                     b.Navigation("ProductSales");
                 });
 
@@ -2452,12 +2386,6 @@ namespace RetailTrade.EntityFramework.Migrations
                 {
                     b.Navigation("ArrivalProducts");
 
-                    b.Navigation("EnterProducts");
-
-                    b.Navigation("LossProducts");
-
-                    b.Navigation("MoveProducts");
-
                     b.Navigation("Orders");
 
                     b.Navigation("ProductBarcodes");
@@ -2468,7 +2396,11 @@ namespace RetailTrade.EntityFramework.Migrations
 
                     b.Navigation("ProductSales");
 
+                    b.Navigation("RegistrationProducts");
+
                     b.Navigation("RevaluationProducts");
+
+                    b.Navigation("WriteDownProducts");
                 });
 
             modelBuilder.Entity("RetailTrade.Domain.Models.ProductSale", b =>

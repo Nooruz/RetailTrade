@@ -51,11 +51,11 @@
 
             <dxwui:HamburgerSubMenuNavigationButton Content="Оприходования"
                                                     Command="{Binding RenavigateCommand}"
-                                                    CommandParameter="ProductRegistration"/>
+                                                    CommandParameter="Enter"/>
 
             <dxwui:HamburgerSubMenuNavigationButton Content="Списания"
                                                     Command="{Binding RenavigateCommand}"
-                                                    CommandParameter="PriceListView"/>
+                                                    CommandParameter="Loss"/>
 
             <!--<dxwui:HamburgerSubMenuNavigationButton Content="Инвентаризации"
                                                     Command="{Binding RenavigateCommand}"

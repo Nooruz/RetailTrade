@@ -25,7 +25,7 @@ namespace RetailTradeServer.HostBuilders
 
                 services.AddTransient(CreateProductViewModel);
                 services.AddTransient(CreateArrivalProductViewModel);
-                services.AddTransient(CreateWriteDownProductViewModel);
+                services.AddTransient(CreateLossViewModel);
                 services.AddTransient(CreateOrderProductViewModel);
                 services.AddTransient(CreateProductBarcodeViewModel);
                 services.AddTransient(CreateSaleDashboardView);
@@ -43,12 +43,13 @@ namespace RetailTradeServer.HostBuilders
                 services.AddTransient(CreateCreateProductViewModel);
                 services.AddTransient(CreatePointSaleViewModel);
                 services.AddTransient(CreateCreatePointSaleViewModel);
-                services.AddTransient(CreateProductRegistrationViewModel);
-                services.AddTransient(CreateCreateProductRegistrationViewModel);
+                services.AddTransient(CreateEnterViewModel);
+                services.AddTransient(CreateEnterProductViewModel);
+                services.AddTransient(CreateLossProductViewModel);
 
                 services.AddSingleton<CreateMenuViewModel<ProductViewModel>>(servicesProvider => () => CreateProductViewModel(servicesProvider));
                 services.AddSingleton<CreateMenuViewModel<ArrivalProductViewModel>>(servicesProvider => () => CreateArrivalProductViewModel(servicesProvider));
-                services.AddSingleton<CreateMenuViewModel<WriteDownProductViewModel>>(servicesProvider => () => CreateWriteDownProductViewModel(servicesProvider));
+                services.AddSingleton<CreateMenuViewModel<LossViewModel>>(servicesProvider => () => CreateLossViewModel(servicesProvider));
                 services.AddSingleton<CreateMenuViewModel<OrderProductViewModel>>(servicesProvider => () => CreateOrderProductViewModel(servicesProvider));
                 services.AddSingleton<CreateMenuViewModel<ProductBarcodeViewModel>>(servicesProvider => () => CreateProductBarcodeViewModel(servicesProvider));
                 services.AddSingleton<CreateMenuViewModel<SaleDashboardView>>(servicesProvider => () => CreateSaleDashboardView(servicesProvider));
@@ -66,25 +67,41 @@ namespace RetailTradeServer.HostBuilders
                 services.AddSingleton<CreateMenuViewModel<CreateProductViewModel>>(servicesProvider => () => CreateCreateProductViewModel(servicesProvider));
                 services.AddSingleton<CreateMenuViewModel<PointSaleViewModel>>(servicesProvider => () => CreatePointSaleViewModel(servicesProvider));
                 services.AddSingleton<CreateMenuViewModel<CreatePointSaleViewModel>>(servicesProvider => () => CreateCreatePointSaleViewModel(servicesProvider));
-                services.AddSingleton<CreateMenuViewModel<ProductRegistrationViewModel>>(servicesProvider => () => CreateProductRegistrationViewModel(servicesProvider));
-                services.AddSingleton<CreateMenuViewModel<CreateProductRegistrationViewModel>>(servicesProvider => () => CreateCreateProductRegistrationViewModel(servicesProvider));
+                services.AddSingleton<CreateMenuViewModel<EnterViewModel>>(servicesProvider => () => CreateEnterViewModel(servicesProvider));
+                services.AddSingleton<CreateMenuViewModel<EnterProductViewModel>>(servicesProvider => () => CreateEnterProductViewModel(servicesProvider));
+                services.AddSingleton<CreateMenuViewModel<LossProductViewModel>>(servicesProvider => () => CreateLossProductViewModel(servicesProvider));
 
                 services.AddSingleton<IMenuViewModelFactory, MenuViewModelFactory>();
             });
         }
 
-        private static ProductRegistrationViewModel CreateProductRegistrationViewModel(IServiceProvider services)
+        private static LossProductViewModel CreateLossProductViewModel(IServiceProvider services)
         {
-            return new ProductRegistrationViewModel(services.GetRequiredService<IMenuNavigator>(),
-                services.GetRequiredService<IMenuViewModelFactory>(),
-                services.GetRequiredService<IRegistrationService>());
+            return new LossProductViewModel(services.GetRequiredService<IProductService>(),
+                services.GetRequiredService<IWareHouseService>(),
+                services.GetRequiredService<IDocumentService>(),
+                services.GetRequiredService<IUserStore>(),
+                services.GetRequiredService<IMessageStore>());
         }
 
-        private static CreateProductRegistrationViewModel CreateCreateProductRegistrationViewModel(IServiceProvider services)
+        private static EnterViewModel CreateEnterViewModel(IServiceProvider services)
         {
-            return new CreateProductRegistrationViewModel(services.GetRequiredService<IProductService>(),
+            return new EnterViewModel(services.GetRequiredService<IMenuNavigator>(),
+                services.GetRequiredService<IMenuViewModelFactory>(),
+                services.GetRequiredService<IDocumentService>(),
+                services.GetRequiredService<IProductService>(),
                 services.GetRequiredService<IWareHouseService>(),
-                services.GetRequiredService<IRegistrationService>());
+                services.GetRequiredService<IUserStore>(),
+                services.GetRequiredService<IMessageStore>());
+        }
+
+        private static EnterProductViewModel CreateEnterProductViewModel(IServiceProvider services)
+        {
+            return new EnterProductViewModel(services.GetRequiredService<IProductService>(),
+                services.GetRequiredService<IWareHouseService>(),
+                services.GetRequiredService<IDocumentService>(),
+                services.GetRequiredService<IUserStore>(),
+                services.GetRequiredService<IMessageStore>());
         }
 
         private static CreatePointSaleViewModel CreateCreatePointSaleViewModel(IServiceProvider services)
@@ -173,11 +190,15 @@ namespace RetailTradeServer.HostBuilders
                 services.GetRequiredService<IWareHouseService>());
         }
 
-        private static WriteDownProductViewModel CreateWriteDownProductViewModel(IServiceProvider services)
+        private static LossViewModel CreateLossViewModel(IServiceProvider services)
         {
-            return new WriteDownProductViewModel(services.GetRequiredService<IProductService>(),
-                services.GetRequiredService<IWriteDownService>(),
-                services.GetRequiredService<ISupplierService>());
+            return new LossViewModel(services.GetRequiredService<IProductService>(),
+                services.GetRequiredService<IDocumentService>(),
+                services.GetRequiredService<IMenuNavigator>(),
+                services.GetRequiredService<IMenuViewModelFactory>(),
+                services.GetRequiredService<IWareHouseService>(),
+                services.GetRequiredService<IUserStore>(),
+                services.GetRequiredService<IMessageStore>());
         }
 
         private static OrderProductViewModel CreateOrderProductViewModel(IServiceProvider services)

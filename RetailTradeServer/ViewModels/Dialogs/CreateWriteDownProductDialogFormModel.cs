@@ -19,13 +19,12 @@ namespace RetailTradeServer.ViewModels.Dialogs
 
         private readonly IProductService _productService;
         private readonly ISupplierService _supplierService;
-        private readonly IWriteDownService _writeDownService;
         private Supplier _selectedSupplier;
-        private WriteDownProduct _selectedWriteDownProduct;
+        private LossProduct _selectedWriteDownProduct;
         private string _comment;
         private IEnumerable<Supplier> _suppliers;
         private IEnumerable<Product> _products;
-        private ObservableQueue<WriteDownProduct> _writeDownProducts;
+        private ObservableQueue<LossProduct> _writeDownProducts;
 
         #endregion
 
@@ -70,8 +69,8 @@ namespace RetailTradeServer.ViewModels.Dialogs
                 OnPropertyChanged(nameof(Products));
             }
         }
-        public IEnumerable<WriteDownProduct> WriteDownProducts => _writeDownProducts;
-        public WriteDownProduct SelectedWriteDownProduct
+        public IEnumerable<LossProduct> WriteDownProducts => _writeDownProducts;
+        public LossProduct SelectedWriteDownProduct
         {
             get => _selectedWriteDownProduct;
             set
@@ -97,12 +96,10 @@ namespace RetailTradeServer.ViewModels.Dialogs
         #region Constructor
 
         public CreateWriteDownProductDialogFormModel(IProductService productService,
-            ISupplierService supplierService,
-            IWriteDownService writeDownService)
+            ISupplierService supplierService)
         {
             _productService = productService;
             _supplierService = supplierService;
-            _writeDownService = writeDownService;
 
             GetSupplier();
 
@@ -136,7 +133,7 @@ namespace RetailTradeServer.ViewModels.Dialogs
         {
             if (SelectedSupplier != null)
             {
-                _writeDownProducts.Enqueue(new WriteDownProduct());
+                _writeDownProducts.Enqueue(new LossProduct());
                 OnPropertyChanged(nameof(CanWriteDownProduct));
             }
             else
@@ -149,7 +146,7 @@ namespace RetailTradeServer.ViewModels.Dialogs
         {
             if (parameter is GridCellValidationEventArgs e)
             {
-                if (((WriteDownProduct)e.Row).Product != null)
+                if (((LossProduct)e.Row).Product != null)
                 {
                     
                 }
@@ -163,13 +160,7 @@ namespace RetailTradeServer.ViewModels.Dialogs
             {
                 try
                 {
-                    _ = await _writeDownService.CreateAsync(new WriteDown
-                    {
-                        WriteDownDate = DateTime.Now,
-                        SupplierId = SelectedSupplier.Id,
-                        Comment = Comment,
-                        WriteDownProducts = WriteDownProducts.Select(p => new WriteDownProduct { Quantity = p.Quantity, ProductId = p.ProductId }).ToList()
-                    });
+                    
                 }
                 catch (Exception e)
                 {
