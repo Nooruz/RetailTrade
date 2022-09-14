@@ -8,6 +8,7 @@
         private int _documentId;
         private double _quantity;
         private double _stock;
+        private double _stockTo;
         private decimal _price;
         private decimal _amount;
         private string _comment;
@@ -60,6 +61,16 @@
             {
                 _stock = value;
                 OnPropertyChanged(nameof(Stock));
+            }
+        }
+
+        public double StockTo
+        {
+            get => _stockTo;
+            set
+            {
+                _stockTo = value;
+                OnPropertyChanged(nameof(StockTo));
             }
         }
 

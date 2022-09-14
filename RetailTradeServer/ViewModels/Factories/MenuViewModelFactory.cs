@@ -32,6 +32,8 @@ namespace RetailTradeServer.ViewModels.Factories
         private readonly CreateMenuViewModel<EnterViewModel> _createEnterViewModel;
         private readonly CreateMenuViewModel<EnterProductViewModel> _createEnterProductViewModel;
         private readonly CreateMenuViewModel<LossProductViewModel> _createLossProductViewModel;
+        private readonly CreateMenuViewModel<MoveViewModel> _createMoveViewModel;
+        private readonly CreateMenuViewModel<MoveProductViewModel> _createMoveProductViewModel;
 
         #endregion
 
@@ -59,7 +61,9 @@ namespace RetailTradeServer.ViewModels.Factories
             CreateMenuViewModel<CreatePointSaleViewModel> createCreatePointSaleViewModel,
             CreateMenuViewModel<EnterViewModel> createEnterViewModel,
             CreateMenuViewModel<EnterProductViewModel> createEnterProductViewModel,
-            CreateMenuViewModel<LossProductViewModel> createLossProductViewModel)
+            CreateMenuViewModel<LossProductViewModel> createLossProductViewModel,
+            CreateMenuViewModel<MoveViewModel> createMoveViewModel,
+            CreateMenuViewModel<MoveProductViewModel> createMoveProductViewModel)
         {
             _createProductViewModel = createProductViewModel;
             _createArrivalProductViewModel = createArrivalProductViewModel;
@@ -84,6 +88,8 @@ namespace RetailTradeServer.ViewModels.Factories
             _createEnterViewModel = createEnterViewModel;
             _createEnterProductViewModel = createEnterProductViewModel;
             _createLossProductViewModel = createLossProductViewModel;
+            _createMoveViewModel = createMoveViewModel;
+            _createMoveProductViewModel = createMoveProductViewModel;
         }
 
         #endregion
@@ -115,6 +121,8 @@ namespace RetailTradeServer.ViewModels.Factories
                 MenuViewType.Enter => _createEnterViewModel(),
                 MenuViewType.EnterProduct => _createEnterProductViewModel(),
                 MenuViewType.LossProduct => _createLossProductViewModel(),
+                MenuViewType.Move => _createMoveViewModel(),
+                MenuViewType.MoveProduct => _createMoveProductViewModel(),
                 _ => throw new ArgumentException("The ViewType does not have a ViewModel.", "viewType"),
             };
         }

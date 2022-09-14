@@ -2,7 +2,6 @@
 using DevExpress.Xpf.Grid;
 using RetailTrade.Domain.Models;
 using RetailTrade.Domain.Services;
-using RetailTradeServer.Commands;
 using RetailTradeServer.State.Messages;
 using RetailTradeServer.State.Users;
 using RetailTradeServer.ViewModels.Base;
@@ -10,11 +9,10 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Windows;
-using System.Windows.Input;
 
 namespace RetailTradeServer.ViewModels.Menus
 {
-    public class EnterProductViewModel : BaseViewModel
+    public class MoveProductViewModel : BaseViewModel
     {
         #region Private Members
 
@@ -26,7 +24,7 @@ namespace RetailTradeServer.ViewModels.Menus
         private readonly IMessageStore _messageStore;
         private IEnumerable<Product> _products;
         private IEnumerable<WareHouse> _wareHouses;
-        private EnterProduct _selectedEnterProduct;
+        private MoveProduct _selectedMoveProduct;
 
         #endregion
 
@@ -60,28 +58,22 @@ namespace RetailTradeServer.ViewModels.Menus
                 OnPropertyChanged(nameof(WareHouses));
             }
         }
-        public TableView EnterProductTableView { get; set; }
-        public EnterProduct SelectedEnterProduct
+        public TableView MoveProductTableView { get; set; }
+        public MoveProduct SelectedMoveProduct
         {
-            get => _selectedEnterProduct;
+            get => _selectedMoveProduct;
             set
             {
-                _selectedEnterProduct = value;
-                OnPropertyChanged(nameof(SelectedEnterProduct));
+                _selectedMoveProduct = value;
+                OnPropertyChanged(nameof(SelectedMoveProduct));
             }
         }
 
         #endregion
 
-        #region Commands
-
-        public ICommand WareHouseSelectedIndexChangedCommand => new RelayCommand(() => GetData());
-
-        #endregion
-
         #region Constructor
 
-        public EnterProductViewModel(IProductService productService,
+        public MoveProductViewModel(IProductService productService,
             IWareHouseService wareHouseService,
             IDocumentService documentService,
             IUserStore userStore,
@@ -93,7 +85,7 @@ namespace RetailTradeServer.ViewModels.Menus
             _userStore = userStore;
             _messageStore = messageStore;
             GlobalMessageViewModel = new(_messageStore);
-            Header = "Оприходование (создание)";
+            Header = "Перемещение (создание)";
         }
 
         #endregion
@@ -105,17 +97,18 @@ namespace RetailTradeServer.ViewModels.Menus
         {
             ShowLoadingPanel = false;
             WareHouses = await _wareHouseService.GetAllAsync();
+            Products = await _productService.GetAllAsync();
         }
 
         [Command]
-        public void EnterProductTableViewLoadedCommand(object sender)
+        public void MoveProductTableViewLoadedCommand(object sender)
         {
             if (sender is RoutedEventArgs e)
             {
                 if (e.Source is TableView tableView)
                 {
-                    EnterProductTableView = tableView;
-                    EnterProductTableView.CellValueChanged += EnterProductTableView_CellValueChanged;
+                    MoveProductTableView = tableView;
+                    MoveProductTableView.CellValueChanged += MoveProductTableView_CellValueChanged;
                 }
             }
         }
@@ -141,9 +134,9 @@ namespace RetailTradeServer.ViewModels.Menus
                                 return;
                             }
                         }
-                        if (CreatedDocument.EnterProducts != null && CreatedDocument.EnterProducts.Any())
+                        if (CreatedDocument.MoveProducts != null && CreatedDocument.MoveProducts.Any())
                         {
-                            CreatedDocument.Amount = CreatedDocument.EnterProducts.Sum(r => r.Amount);
+                            CreatedDocument.Amount = CreatedDocument.MoveProducts.Sum(r => r.Amount);
                             CreatedDocument.UserId = _userStore.CurrentUser.Id;
                             if (await _documentService.CreateAsync(CreatedDocument, DocumentTypeEnum.Enter) == null)
                             {
@@ -152,16 +145,16 @@ namespace RetailTradeServer.ViewModels.Menus
                             else
                             {
                                 _messageStore.SetCurrentMessage("Данные созданы!", MessageType.Success);
-                                Header = $"Оприходование №{CreatedDocument.Number} от {CreatedDocument.CreatedDate:dd.MM.yyyy}";
+                                Header = $"Перемещение №{CreatedDocument.Number} от {CreatedDocument.CreatedDate:dd.MM.yyyy}";
                             }
                         }
                     }
                 }
                 else
                 {
-                    if (CreatedDocument.EnterProducts != null && CreatedDocument.EnterProducts.Any())
+                    if (CreatedDocument.MoveProducts != null && CreatedDocument.MoveProducts.Any())
                     {
-                        CreatedDocument.Amount = CreatedDocument.EnterProducts.Sum(d => d.Amount);
+                        CreatedDocument.Amount = CreatedDocument.MoveProducts.Sum(d => d.Amount);
                         if (await _documentService.UpdateAsync(CreatedDocument.Id, CreatedDocument) != null)
                         {
                             _messageStore.SetCurrentMessage("Данные сохранены!", MessageType.Success);
@@ -183,37 +176,22 @@ namespace RetailTradeServer.ViewModels.Menus
 
         #region Private Voids
 
-        private async void GetData()
+        private void MoveProductTableView_CellValueChanged(object sender, CellValueChangedEventArgs e)
         {
             try
             {
-                if (CreatedDocument.WareHouseId != null)
+                if (e.Cell.Property == nameof(MoveProduct.ProductId))
                 {
-                    Products = await _productService.GetAllAsync();
-                }
-            }
-            catch (Exception)
-            {
-                //ignore
-            }
-        }
-
-        private void EnterProductTableView_CellValueChanged(object sender, CellValueChangedEventArgs e)
-        {
-            try
-            {
-                if (e.Cell.Property == nameof(EnterProduct.ProductId))
-                {
-                    if (SelectedEnterProduct != null && SelectedEnterProduct.ProductId != 0)
+                    if (SelectedMoveProduct != null && SelectedMoveProduct.ProductId != 0)
                     {
-                        Product product = Products.FirstOrDefault(p => p.Id == SelectedEnterProduct.ProductId);
+                        Product product = Products.FirstOrDefault(p => p.Id == SelectedMoveProduct.ProductId);
                         if (product != null)
                         {
-                            SelectedEnterProduct.Price = product.PurchasePrice;
+                            SelectedMoveProduct.Price = product.PurchasePrice;
                         }
-                        SelectedEnterProduct.Quantity = 1;
-                        EnterProductTableView.Grid.UpdateTotalSummary();
-                        EnterProductTableView.Grid.UpdateGroupSummary();
+                        SelectedMoveProduct.Quantity = 1;
+                        MoveProductTableView.Grid.UpdateTotalSummary();
+                        MoveProductTableView.Grid.UpdateGroupSummary();
                     }
                 }
             }

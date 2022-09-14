@@ -177,6 +177,9 @@
     <Compile Update="Report\WriteDownProductReport.Designer.cs">
       <DependentUpon>WriteDownProductReport.vsrepx</DependentUpon>
     </Compile>
+    <Compile Update="Views\Menus\MoveProductView.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
   </ItemGroup>
 
   <ItemGroup>
@@ -193,6 +196,10 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Page Update="Views\Menus\MoveProductView.xaml">
+      <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
+      <SubType>Designer</SubType>
+    </Page>
     <Page Update="Views\Menus\MoveView.xaml">
       <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
     </Page>

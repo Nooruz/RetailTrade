@@ -10,7 +10,7 @@
     xmlns:dxmvvm="http://schemas.devexpress.com/winfx/2008/xaml/mvvm"
     xmlns:components="clr-namespace:RetailTradeServer.Components"
     xmlns:views="clr-namespace:RetailTradeServer.Views"
-    x:Class="RetailTradeServer.Views.Menus.EnterProductView"
+    x:Class="RetailTradeServer.Views.Menus.MoveProductView"
                       mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
 
@@ -44,32 +44,43 @@
                                   ToolTip="Оставьте поле пустым для автоматической подстановки номера"/>
                 </dxlc:LayoutItem>
 
-                <dxlc:LayoutItem Label="от">
+                <dxlc:LayoutItem Label="от"
+                                 LabelHorizontalAlignment="Center">
                     <dxe:DateEdit EditValue="{Binding CreatedDocument.CreatedDate}"/>
                 </dxlc:LayoutItem>
                 
             </dxlc:LayoutGroup>
-            
-            <dxlc:LayoutItem Label="Склад">
 
-                <dxe:ComboBoxEdit ItemsSource="{Binding WareHouses}"
+            <dxlc:LayoutGroup>
+
+                <dxlc:LayoutItem Label="Со склад">
+
+                    <dxe:ComboBoxEdit ItemsSource="{Binding WareHouses}"
+                                  DisplayMember="Name"
+                                  ValueMember="Id"
+                                  EditValue="{Binding CreatedDocument.ToWareHouseId}"
+                                  ShowError="False"
+                                  ShowErrorToolTip="False"/>
+
+                </dxlc:LayoutItem>
+
+                <dxlc:LayoutItem Label="На склад">
+
+                    <dxe:ComboBoxEdit ItemsSource="{Binding WareHouses}"
                                   DisplayMember="Name"
                                   ValueMember="Id"
                                   EditValue="{Binding CreatedDocument.WareHouseId}"
                                   ShowError="False"
-                                  ShowErrorToolTip="False">
-                    <dxmvvm:Interaction.Behaviors>
-                        <dxmvvm:EventToCommand EventName="SelectedIndexChanged"
-                                               Command="{Binding WareHouseSelectedIndexChangedCommand}"/>
-                    </dxmvvm:Interaction.Behaviors>
-                </dxe:ComboBoxEdit>
+                                  ShowErrorToolTip="False"/>
 
-            </dxlc:LayoutItem>
+                </dxlc:LayoutItem>
+
+            </dxlc:LayoutGroup>
 
         </dxlc:LayoutGroup>
 
-        <dxg:GridControl ItemsSource="{Binding CreatedDocument.EnterProducts}"
-                         SelectedItem="{Binding SelectedEnterProduct}">
+        <dxg:GridControl ItemsSource="{Binding CreatedDocument.MoveProducts}"
+                         SelectedItem="{Binding SelectedMoveProduct}">
             <dxg:GridControl.View>
                 <dxg:TableView ShowGroupPanel="False"
                                AutoWidth="True"
@@ -77,7 +88,7 @@
                                NewItemRowPosition="Top">
                     <dxmvvm:Interaction.Behaviors>
                         <dxmvvm:EventToCommand EventName="Loaded"
-                                               Command="{Binding EnterProductTableViewLoadedCommand}"
+                                               Command="{Binding MoveProductTableViewLoadedCommand}"
                                                PassEventArgsToCommand="True"/>
                     </dxmvvm:Interaction.Behaviors>
                 </dxg:TableView>
@@ -116,9 +127,18 @@
                                           Mask="n2"/>
                 </dxg:GridColumn.EditSettings>
             </dxg:GridColumn>
-            <dxg:GridColumn Header="Остаток"
+            <dxg:GridColumn Header="Остаток (со склада)"
                             AllowEditing="False"
                             FieldName="Stock">
+                <dxg:GridColumn.EditSettings>
+                    <dxe:TextEditSettings MaskUseAsDisplayFormat="True" 
+                                          MaskType="Numeric" 
+                                          Mask="n2"/>
+                </dxg:GridColumn.EditSettings>
+            </dxg:GridColumn>
+            <dxg:GridColumn Header="Остаток (на склад)"
+                            AllowEditing="False"
+                            FieldName="StockTo">
                 <dxg:GridColumn.EditSettings>
                     <dxe:TextEditSettings MaskUseAsDisplayFormat="True" 
                                           MaskType="Numeric" 

@@ -120,7 +120,11 @@ namespace RetailTradeServer.State.Navigators
 
         EnterProduct,
 
-        LossProduct
+        LossProduct,
+
+        Move,
+
+        MoveProduct
     }
 
     public interface IMenuNavigator

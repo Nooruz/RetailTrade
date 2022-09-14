@@ -131,7 +131,7 @@ namespace RetailTradeServer.ViewModels.Menus
         [Command]
         public void UserControlLoaded()
         {
-            Header = "Оприходования";
+            Header = "Перемещения";
             ShowLoadingPanel = false;
         }
 
@@ -144,7 +144,7 @@ namespace RetailTradeServer.ViewModels.Menus
                 {
                     _menuNavigator.CurrentViewModel = new MoveProductViewModel(_productService, _wareHouseService, _documentService, _userStore, _messageStore)
                     {
-                        Header = $"Оприходование №{SelectedMoveDocumentView.Number} от {SelectedMoveDocumentView.CreatedDate:dd.MM.yyyy}",
+                        Header = $"Перемещение №{SelectedMoveDocumentView.Number} от {SelectedMoveDocumentView.CreatedDate:dd.MM.yyyy}",
                         CreatedDocument = await _documentService.GetIncludeMoveProduct(SelectedMoveDocumentView.Id)
                     };
                 }

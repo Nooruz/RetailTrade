@@ -111,6 +111,15 @@
                                           Mask="n2"/>
                 </dxg:GridColumn.EditSettings>
             </dxg:GridColumn>
+            <dxg:GridColumn Header="Остаток"
+                            AllowEditing="False"
+                            FieldName="Stock">
+                <dxg:GridColumn.EditSettings>
+                    <dxe:TextEditSettings MaskUseAsDisplayFormat="True" 
+                                          MaskType="Numeric" 
+                                          Mask="n2"/>
+                </dxg:GridColumn.EditSettings>
+            </dxg:GridColumn>
             <dxg:GridColumn Header="Цена"
                             FieldName="Price">
                 <dxg:GridColumn.EditSettings>

@@ -46,6 +46,8 @@ namespace RetailTradeServer.HostBuilders
                 services.AddTransient(CreateEnterViewModel);
                 services.AddTransient(CreateEnterProductViewModel);
                 services.AddTransient(CreateLossProductViewModel);
+                services.AddTransient(CreateMoveViewModel);
+                services.AddTransient(CreateMoveProductViewModel);
 
                 services.AddSingleton<CreateMenuViewModel<ProductViewModel>>(servicesProvider => () => CreateProductViewModel(servicesProvider));
                 services.AddSingleton<CreateMenuViewModel<ArrivalProductViewModel>>(servicesProvider => () => CreateArrivalProductViewModel(servicesProvider));
@@ -70,9 +72,31 @@ namespace RetailTradeServer.HostBuilders
                 services.AddSingleton<CreateMenuViewModel<EnterViewModel>>(servicesProvider => () => CreateEnterViewModel(servicesProvider));
                 services.AddSingleton<CreateMenuViewModel<EnterProductViewModel>>(servicesProvider => () => CreateEnterProductViewModel(servicesProvider));
                 services.AddSingleton<CreateMenuViewModel<LossProductViewModel>>(servicesProvider => () => CreateLossProductViewModel(servicesProvider));
+                services.AddSingleton<CreateMenuViewModel<MoveViewModel>>(servicesProvider => () => CreateMoveViewModel(servicesProvider));
+                services.AddSingleton<CreateMenuViewModel<MoveProductViewModel>>(servicesProvider => () => CreateMoveProductViewModel(servicesProvider));
 
                 services.AddSingleton<IMenuViewModelFactory, MenuViewModelFactory>();
             });
+        }
+
+        private static MoveViewModel CreateMoveViewModel(IServiceProvider services)
+        {
+            return new MoveViewModel(services.GetRequiredService<IMenuNavigator>(),
+                services.GetRequiredService<IMenuViewModelFactory>(),
+                services.GetRequiredService<IDocumentService>(),
+                services.GetRequiredService<IProductService>(),
+                services.GetRequiredService<IWareHouseService>(),
+                services.GetRequiredService<IUserStore>(),
+                services.GetRequiredService<IMessageStore>());
+        }
+
+        private static MoveProductViewModel CreateMoveProductViewModel(IServiceProvider services)
+        {
+            return new MoveProductViewModel(services.GetRequiredService<IProductService>(),
+                services.GetRequiredService<IWareHouseService>(),
+                services.GetRequiredService<IDocumentService>(),
+                services.GetRequiredService<IUserStore>(),
+                services.GetRequiredService<IMessageStore>());
         }
 
         private static LossProductViewModel CreateLossProductViewModel(IServiceProvider services)
