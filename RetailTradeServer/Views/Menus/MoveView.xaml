@@ -12,7 +12,7 @@
 
     <dxmvvm:Interaction.Behaviors>
         <dxmvvm:EventToCommand EventName="Loaded" 
-                               Command="{Binding LoadedCommand}"/>
+                               Command="{Binding UserControlLoadedCommand}"/>
     </dxmvvm:Interaction.Behaviors>
 
     <dxlc:LayoutControl Grid.Row="1"

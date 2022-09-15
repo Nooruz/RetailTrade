@@ -67,12 +67,6 @@ namespace RetailTrade.EntityFramework
         /// </summary>
         public DbSet<ArrivalProduct> ArrivalProducts { get; set; }
 
-        /// <summary>
-        /// Списания товаров
-        /// </summary>
-        public DbSet<LossProduct> LossProducts { get; set; }
-
-
         public DbSet<WriteDown> WriteDowns { get; set; }
 
         /// <summary>
@@ -127,11 +121,9 @@ namespace RetailTrade.EntityFramework
         public DbSet<PointSale> PointSales { get; set; }
         public DbSet<UserPointSale> UserPointSales { get; set; }
 
-        public DbSet<Registration> Registrations { get; set; }
         public DbSet<DocumentType> DocumentTypes { get; set; }
         public DbSet<Document> Documents { get; set; }
-
-        public DbSet<MoveProduct> MoveProducts { get; set; }
+        public DbSet<DocumentProduct> DocumentProducts { get; set; }
 
         #endregion
 
@@ -182,9 +174,8 @@ namespace RetailTrade.EntityFramework
         public DbSet<ProductBarcodeView> ProductBarcodeViews { get; set; }
         public DbSet<ReceiptView> ReceiptViews { get; set; }
         public DbSet<ProductSaleView> ProductSaleViews { get; set; }
-        public DbSet<EnterDocumentView> EnterDocumentViews { get; set; }
-        public DbSet<LossDocumentView> LossDocumentViews { get; set; }
-        public DbSet<MoveDocumentView> MoveDocumentViews { get; set; }
+        public DbSet<DocumentView> DocumentViews { get; set; }
+        public DbSet<DocumentProductView> EnterDocumentViews { get; set; }
 
         #endregion
 
@@ -195,16 +186,12 @@ namespace RetailTrade.EntityFramework
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            _ = modelBuilder.Entity<MoveDocumentView>()
-                .ToView(nameof(MoveDocumentView))
+            _ = modelBuilder.Entity<DocumentProductView>()
+                .ToView(nameof(DocumentProductView))
                 .HasNoKey();
 
-            _ = modelBuilder.Entity<LossDocumentView>()
-                .ToView(nameof(LossDocumentView))
-                .HasNoKey();
-
-            _ = modelBuilder.Entity<EnterDocumentView>()
-                .ToView(nameof(EnterDocumentView))
+            _ = modelBuilder.Entity<DocumentView>()
+                .ToView(nameof(DocumentView))
                 .HasNoKey();
 
             _ = modelBuilder.Entity<DocumentType>().HasData(

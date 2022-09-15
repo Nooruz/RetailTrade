@@ -24,7 +24,7 @@ namespace RetailTradeServer.ViewModels.Menus
         private readonly IMessageStore _messageStore;
         private IEnumerable<Product> _products;
         private IEnumerable<WareHouse> _wareHouses;
-        private MoveProduct _selectedMoveProduct;
+        private DocumentProduct _selectedDocumentProduct;
 
         #endregion
 
@@ -58,14 +58,14 @@ namespace RetailTradeServer.ViewModels.Menus
                 OnPropertyChanged(nameof(WareHouses));
             }
         }
-        public TableView MoveProductTableView { get; set; }
-        public MoveProduct SelectedMoveProduct
+        public TableView DocumentProductTableView { get; set; }
+        public DocumentProduct SelectedDocumentProduct
         {
-            get => _selectedMoveProduct;
+            get => _selectedDocumentProduct;
             set
             {
-                _selectedMoveProduct = value;
-                OnPropertyChanged(nameof(SelectedMoveProduct));
+                _selectedDocumentProduct = value;
+                OnPropertyChanged(nameof(SelectedDocumentProduct));
             }
         }
 
@@ -101,14 +101,14 @@ namespace RetailTradeServer.ViewModels.Menus
         }
 
         [Command]
-        public void MoveProductTableViewLoadedCommand(object sender)
+        public void DocumentProductTableViewLoadedCommand(object sender)
         {
             if (sender is RoutedEventArgs e)
             {
                 if (e.Source is TableView tableView)
                 {
-                    MoveProductTableView = tableView;
-                    MoveProductTableView.CellValueChanged += MoveProductTableView_CellValueChanged;
+                    DocumentProductTableView = tableView;
+                    DocumentProductTableView.CellValueChanged += DocumentProductTableView_CellValueChanged;
                 }
             }
         }
@@ -128,17 +128,17 @@ namespace RetailTradeServer.ViewModels.Menus
                     {
                         if (!string.IsNullOrEmpty(CreatedDocument.Number))
                         {
-                            if (await _documentService.CheckNumber(CreatedDocument.Number, DocumentTypeEnum.Enter))
+                            if (await _documentService.CheckNumber(CreatedDocument.Number, DocumentTypeEnum.Move))
                             {
                                 _messageStore.SetCurrentMessage($"Документ с номером \"{CreatedDocument.Number}\" уже существует.", MessageType.Error);
                                 return;
                             }
                         }
-                        if (CreatedDocument.MoveProducts != null && CreatedDocument.MoveProducts.Any())
+                        if (CreatedDocument.DocumentProducts != null && CreatedDocument.DocumentProducts.Any())
                         {
-                            CreatedDocument.Amount = CreatedDocument.MoveProducts.Sum(r => r.Amount);
+                            CreatedDocument.Amount = CreatedDocument.DocumentProducts.Sum(r => r.Amount);
                             CreatedDocument.UserId = _userStore.CurrentUser.Id;
-                            if (await _documentService.CreateAsync(CreatedDocument, DocumentTypeEnum.Enter) == null)
+                            if (await _documentService.CreateAsync(CreatedDocument, DocumentTypeEnum.Move) == null)
                             {
                                 _messageStore.SetCurrentMessage("Ошибка!", MessageType.Error);
                             }
@@ -152,9 +152,9 @@ namespace RetailTradeServer.ViewModels.Menus
                 }
                 else
                 {
-                    if (CreatedDocument.MoveProducts != null && CreatedDocument.MoveProducts.Any())
+                    if (CreatedDocument.DocumentProducts != null && CreatedDocument.DocumentProducts.Any())
                     {
-                        CreatedDocument.Amount = CreatedDocument.MoveProducts.Sum(d => d.Amount);
+                        CreatedDocument.Amount = CreatedDocument.DocumentProducts.Sum(d => d.Amount);
                         if (await _documentService.UpdateAsync(CreatedDocument.Id, CreatedDocument) != null)
                         {
                             _messageStore.SetCurrentMessage("Данные сохранены!", MessageType.Success);
@@ -176,22 +176,22 @@ namespace RetailTradeServer.ViewModels.Menus
 
         #region Private Voids
 
-        private void MoveProductTableView_CellValueChanged(object sender, CellValueChangedEventArgs e)
+        private void DocumentProductTableView_CellValueChanged(object sender, CellValueChangedEventArgs e)
         {
             try
             {
-                if (e.Cell.Property == nameof(MoveProduct.ProductId))
+                if (e.Cell.Property == nameof(DocumentProduct.ProductId))
                 {
-                    if (SelectedMoveProduct != null && SelectedMoveProduct.ProductId != 0)
+                    if (SelectedDocumentProduct != null && SelectedDocumentProduct.ProductId != 0)
                     {
-                        Product product = Products.FirstOrDefault(p => p.Id == SelectedMoveProduct.ProductId);
+                        Product product = Products.FirstOrDefault(p => p.Id == SelectedDocumentProduct.ProductId);
                         if (product != null)
                         {
-                            SelectedMoveProduct.Price = product.PurchasePrice;
+                            SelectedDocumentProduct.Price = product.PurchasePrice;
                         }
-                        SelectedMoveProduct.Quantity = 1;
-                        MoveProductTableView.Grid.UpdateTotalSummary();
-                        MoveProductTableView.Grid.UpdateGroupSummary();
+                        SelectedDocumentProduct.Quantity = 1;
+                        DocumentProductTableView.Grid.UpdateTotalSummary();
+                        DocumentProductTableView.Grid.UpdateGroupSummary();
                     }
                 }
             }

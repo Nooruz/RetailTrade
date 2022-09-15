@@ -20,11 +20,9 @@ namespace RetailTradeServer.ViewModels.Dialogs
         private readonly IProductService _productService;
         private readonly ISupplierService _supplierService;
         private Supplier _selectedSupplier;
-        private LossProduct _selectedWriteDownProduct;
         private string _comment;
         private IEnumerable<Supplier> _suppliers;
         private IEnumerable<Product> _products;
-        private ObservableQueue<LossProduct> _writeDownProducts;
 
         #endregion
 
@@ -69,18 +67,7 @@ namespace RetailTradeServer.ViewModels.Dialogs
                 OnPropertyChanged(nameof(Products));
             }
         }
-        public IEnumerable<LossProduct> WriteDownProducts => _writeDownProducts;
-        public LossProduct SelectedWriteDownProduct
-        {
-            get => _selectedWriteDownProduct;
-            set
-            {
-                _selectedWriteDownProduct = value;
-                OnPropertyChanged(nameof(SelectedWriteDownProduct));
-            }
-        }
-        public bool CanWriteDownProduct => WriteDownProducts.Any() && !WriteDownProducts.Any(p => p.Quantity == 0);
-
+        
         #endregion
 
         #region Commands
@@ -110,7 +97,6 @@ namespace RetailTradeServer.ViewModels.Dialogs
             AddProductToWriteDownCommand = new RelayCommand(AddProductToWriteDown);
             CellValueChangedCommand = new ParameterCommand(p => CellValueChanged(p));
 
-            _writeDownProducts = new();
         }
 
         #endregion
@@ -126,16 +112,13 @@ namespace RetailTradeServer.ViewModels.Dialogs
 
                 }
             }
-            OnPropertyChanged(nameof(CanWriteDownProduct));
         }
 
         private void AddProductToWriteDown()
         {
             if (SelectedSupplier != null)
             {
-                _writeDownProducts.Enqueue(new LossProduct());
-                OnPropertyChanged(nameof(CanWriteDownProduct));
-            }
+           }
             else
             {
                 _ = MessageBoxService.ShowMessage("Выберите поставщика!", "", MessageButton.OK, MessageIcon.Exclamation);
@@ -146,34 +129,15 @@ namespace RetailTradeServer.ViewModels.Dialogs
         {
             if (parameter is GridCellValidationEventArgs e)
             {
-                if (((LossProduct)e.Row).Product != null)
-                {
-                    
-                }
             }
-            OnPropertyChanged(nameof(CanWriteDownProduct));
         }
 
         private async void CreateArrival()
         {
-            if (CanWriteDownProduct)
-            {
-                try
-                {
-                    
-                }
-                catch (Exception e)
-                {
-                    //ignore
-                }
-
-                CurrentWindowService.Close();
-            }
         }
 
         private void Cleare()
         {
-            _writeDownProducts.Clear();
         }
 
         private async void GetProducts()

@@ -1,7 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using RetailTrade.Domain.Models;
 using RetailTrade.Domain.Services;
-using RetailTrade.Domain.Views;
 using RetailTrade.EntityFramework.Services.Common;
 using System;
 using System.Collections.Generic;
@@ -23,12 +22,6 @@ namespace RetailTrade.EntityFramework.Services
 
         public event Action<Document> OnEdited;
         public event Action<Document> OnCreated;
-        public event Action<EnterDocumentView> OnEnterCreated;
-        public event Action<EnterDocumentView> OnEnterUpdated;
-        public event Action<LossDocumentView> OnLossCreated;
-        public event Action<LossDocumentView> OnLossUpdated;
-        public event Action<MoveDocumentView> OnMoveCreated;
-        public event Action<MoveDocumentView> OnMoveUpdated;
 
         public async Task<Document> CreateAsync(Document entity)
         {
@@ -55,13 +48,13 @@ namespace RetailTrade.EntityFramework.Services
                     case DocumentTypeEnum.PurchaseReturn:
                         break;
                     case DocumentTypeEnum.Loss:
-                        OnLossCreated?.Invoke(await GetLossDocumentView(entity.Id));
+                        //OnLossCreated?.Invoke(await GetLossDocumentView(entity.Id));
                         break;
                     case DocumentTypeEnum.Enter:
-                        OnEnterCreated?.Invoke(await GetEnterDocumentView(entity.Id));
+                        //OnEnterCreated?.Invoke(await GetEnterDocumentView(entity.Id));
                         break;
                     case DocumentTypeEnum.Move:
-                        OnMoveCreated?.Invoke(await GetMoveDocumentView(entity.Id));
+                        //OnMoveCreated?.Invoke(await GetMoveDocumentView(entity.Id));
                         break;
                     case DocumentTypeEnum.Inventory:
                         break;
@@ -148,185 +141,11 @@ namespace RetailTrade.EntityFramework.Services
             return null;
         }
 
-        public async Task<EnterDocumentView> GetEnterDocumentView(int id)
-        {
-            try
-            {
-                await using var context = _contextFactory.CreateDbContext();
-                return await context.EnterDocumentViews
-                    .FirstOrDefaultAsync(e => e.Id == id);
-            }
-            catch (Exception)
-            {
-                //ignore
-            }
-            return null;
-        }
-
-        public async Task<LossDocumentView> GetLossDocumentView(int id)
-        {
-            try
-            {
-                await using var context = _contextFactory.CreateDbContext();
-                return await context.LossDocumentViews
-                    .FirstOrDefaultAsync(e => e.Id == id);
-            }
-            catch (Exception)
-            {
-                //ignore
-            }
-            return null;
-        }
-
-        public async Task<MoveDocumentView> GetMoveDocumentView(int id)
-        {
-            try
-            {
-                await using var context = _contextFactory.CreateDbContext();
-                return await context.MoveDocumentViews
-                    .FirstOrDefaultAsync(e => e.Id == id);
-            }
-            catch (Exception)
-            {
-                //ignore
-            }
-            return null;
-        }
-
-        public async Task<IEnumerable<EnterDocumentView>> GetEnterDocumentViews()
-        {
-            try
-            {
-                await using var context = _contextFactory.CreateDbContext();
-                return await context.EnterDocumentViews
-                    .ToListAsync();
-            }
-            catch (Exception)
-            {
-                //ignore
-            }
-            return null;
-        }
-
-        public async Task<IEnumerable<LossDocumentView>> GetLossDocumentViews()
-        {
-            try
-            {
-                await using var context = _contextFactory.CreateDbContext();
-                return await context.LossDocumentViews
-                    .ToListAsync();
-            }
-            catch (Exception)
-            {
-                //ignore
-            }
-            return null;
-        }
-
-        public async Task<IEnumerable<MoveDocumentView>> GetMoveDocumentViews()
-        {
-            try
-            {
-                await using var context = _contextFactory.CreateDbContext();
-                return await context.MoveDocumentViews
-                    .ToListAsync();
-            }
-            catch (Exception)
-            {
-                //ignore
-            }
-            return null;
-        }
-
-        public async Task<Document> GetIncludeEnterProduct(int id)
-        {
-            try
-            {
-                await using var context = _contextFactory.CreateDbContext();
-                return await context.Documents
-                    .Include(d => d.EnterProducts)
-                    .FirstOrDefaultAsync((e) => e.Id == id);
-            }
-            catch (Exception)
-            {
-                //ignore
-            }
-            return null;
-        }
-
-        public async Task<Document> GetIncludeLossProduct(int id)
-        {
-            try
-            {
-                await using var context = _contextFactory.CreateDbContext();
-                return await context.Documents
-                    .Include(d => d.LossProducts)
-                    .FirstOrDefaultAsync((e) => e.Id == id);
-            }
-            catch (Exception)
-            {
-                //ignore
-            }
-            return null;
-        }
-
-        public async Task<Document> GetIncludeMoveProduct(int id)
-        {
-            try
-            {
-                await using var context = _contextFactory.CreateDbContext();
-                return await context.Documents
-                    .Include(d => d.MoveProducts)
-                    .FirstOrDefaultAsync((e) => e.Id == id);
-            }
-            catch (Exception)
-            {
-                //ignore
-            }
-            return null;
-        }
-
         public async Task<Document> UpdateAsync(int id, Document entity)
         {
             try
             {
                 var result = await _nonQueryDataService.Update(id, entity);
-                switch ((DocumentTypeEnum)result.DocumentTypeId)
-                {
-                    case DocumentTypeEnum.Supply:
-                        break;
-                    case DocumentTypeEnum.PurchaseReturn:
-                        break;
-                    case DocumentTypeEnum.Loss:
-                        OnLossUpdated?.Invoke(await GetLossDocumentView(result.Id));
-                        break;
-                    case DocumentTypeEnum.Enter:
-                        OnEnterUpdated?.Invoke(await GetEnterDocumentView(result.Id));
-                        break;
-                    case DocumentTypeEnum.Move:
-                        OnMoveUpdated?.Invoke(await GetMoveDocumentView(result.Id));
-                        break;
-                    case DocumentTypeEnum.Inventory:
-                        break;
-                    case DocumentTypeEnum.CashIn:
-                        break;
-                    case DocumentTypeEnum.CashOut:
-                        break;
-                    case DocumentTypeEnum.CashboxAdjustment:
-                        break;
-                    case DocumentTypeEnum.AccountAdjustment:
-                        break;
-                    case DocumentTypeEnum.RetailDemand:
-                        break;
-                    case DocumentTypeEnum.RetailSalesReturn:
-                        break;
-                    case DocumentTypeEnum.RetailShift:
-                        break;
-                    case DocumentTypeEnum.RetailDrawerCashIn:
-                        break;
-                    case DocumentTypeEnum.RetailDrawerCashOut:
-                        break;
-                }
                 return result;
             }
             catch (Exception)
@@ -364,6 +183,22 @@ namespace RetailTrade.EntityFramework.Services
                 //ignore
             }
             return false;
+        }
+
+        public async Task<Document> GetDocumentByIncludeAsync(int id, DocumentTypeEnum documentType)
+        {
+            try
+            {
+                await using var context = _contextFactory.CreateDbContext();
+                return await context.Documents
+                    .Include(d => d.DocumentProducts)
+                    .FirstOrDefaultAsync(d => d.DocumentTypeId == (int)documentType);
+            }
+            catch (Exception)
+            {
+                //ignore
+            }
+            return null;
         }
     }
 }

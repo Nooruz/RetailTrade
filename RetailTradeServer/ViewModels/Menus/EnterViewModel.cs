@@ -26,14 +26,14 @@ namespace RetailTradeServer.ViewModels.Menus
         private readonly IWareHouseService _wareHouseService;
         private readonly IUserStore _userStore;
         private readonly IMessageStore _messageStore;
-        private ObservableCollection<EnterDocumentView> _documents = new();
-        private EnterDocumentView _selectedEnterDocumentView;
+        private ObservableCollection<DocumentView> _documents = new();
+        private DocumentView _selectedDocumentView;
 
         #endregion
 
         #region Public Properties
 
-        public ObservableCollection<EnterDocumentView> Documents
+        public ObservableCollection<DocumentView> Documents
         {
             get => _documents;
             set
@@ -42,13 +42,13 @@ namespace RetailTradeServer.ViewModels.Menus
                 OnPropertyChanged(nameof(Documents));
             }
         }
-        public EnterDocumentView SelectedEnterDocumentView
+        public DocumentView SelectedDocumentView
         {
-            get => _selectedEnterDocumentView;
+            get => _selectedDocumentView;
             set
             {
-                _selectedEnterDocumentView = value;
-                OnPropertyChanged(nameof(SelectedEnterDocumentView));
+                _selectedDocumentView = value;
+                OnPropertyChanged(nameof(SelectedDocumentView));
             }
         }
 
@@ -79,8 +79,8 @@ namespace RetailTradeServer.ViewModels.Menus
             _messageStore = messageStore;
 
             CreateCommand = new RelayCommand(() => UpdateCurrentMenuViewModelCommand.Execute(MenuViewType.EnterProduct));
-            _documentService.OnEnterCreated += DocumentService_OnEnterCreated;
-            _documentService.OnEnterUpdated += DocumentService_OnEnterUpdated;
+            //_documentService.OnEnterCreated += DocumentService_OnEnterCreated;
+            //_documentService.OnEnterUpdated += DocumentService_OnEnterUpdated;
 
             GetData();
         }
@@ -89,17 +89,17 @@ namespace RetailTradeServer.ViewModels.Menus
 
         #region Private Voids
 
-        private void DocumentService_OnEnterUpdated(EnterDocumentView updatedEnterDocumentView)
+        private void DocumentService_OnEnterUpdated(DocumentView updatedDocumentView)
         {
             try
             {
-                EnterDocumentView enterDocumentView = Documents.FirstOrDefault(d => d.Id == updatedEnterDocumentView.Id);
-                enterDocumentView.WareHouse = updatedEnterDocumentView.WareHouse;
-                enterDocumentView.Username = updatedEnterDocumentView.Username;
-                enterDocumentView.Amount = updatedEnterDocumentView.Amount;
-                enterDocumentView.CreatedDate = updatedEnterDocumentView.CreatedDate;
-                enterDocumentView.Number = updatedEnterDocumentView.Number;
-                enterDocumentView.Comment = updatedEnterDocumentView.Comment;
+                DocumentView documentView = Documents.FirstOrDefault(d => d.Id == updatedDocumentView.Id);
+                documentView.WareHouse = updatedDocumentView.WareHouse;
+                documentView.Username = updatedDocumentView.Username;
+                documentView.Amount = updatedDocumentView.Amount;
+                documentView.CreatedDate = updatedDocumentView.CreatedDate;
+                documentView.Number = updatedDocumentView.Number;
+                documentView.Comment = updatedDocumentView.Comment;
             }
             catch (Exception)
             {
@@ -107,11 +107,11 @@ namespace RetailTradeServer.ViewModels.Menus
             }
         }
 
-        private void DocumentService_OnEnterCreated(EnterDocumentView enterDocumentView)
+        private void DocumentService_OnEnterCreated(DocumentView documentView)
         {
             try
             {
-                Documents.Add(enterDocumentView);
+                Documents.Add(documentView);
             }
             catch (Exception)
             {
@@ -121,7 +121,7 @@ namespace RetailTradeServer.ViewModels.Menus
 
         private async void GetData()
         {
-            Documents = new(await _documentService.GetEnterDocumentViews());
+            //Documents = new(await _documentService.GetDocumentProductViews());
         }
 
         #endregion
@@ -140,12 +140,12 @@ namespace RetailTradeServer.ViewModels.Menus
         {
             try
             {
-                if (SelectedEnterDocumentView != null)
+                if (SelectedDocumentView != null)
                 {
                     _menuNavigator.CurrentViewModel = new EnterProductViewModel(_productService, _wareHouseService, _documentService, _userStore, _messageStore)
                     {
-                        Header = $"Оприходование №{SelectedEnterDocumentView.Number} от {SelectedEnterDocumentView.CreatedDate:dd.MM.yyyy}",
-                        CreatedDocument = await _documentService.GetIncludeEnterProduct(SelectedEnterDocumentView.Id)
+                        Header = $"Оприходование №{SelectedDocumentView.Number} от {SelectedDocumentView.CreatedDate:dd.MM.yyyy}",
+                        //CreatedDocument = await _documentService.GetIncludeEnterProduct(SelectedDocumentView.Id)
                     };
                 }
             }
@@ -160,13 +160,13 @@ namespace RetailTradeServer.ViewModels.Menus
         {
             try
             {
-                if (SelectedEnterDocumentView != null)
+                if (SelectedDocumentView != null)
                 {
                     if (MessageBoxService.ShowMessage("Удалить выбранный элемент?", "Sale Page", MessageButton.YesNo, MessageIcon.Question) == MessageResult.Yes)
                     {
-                        if (await _documentService.DeleteAsync(SelectedEnterDocumentView.Id))
+                        if (await _documentService.DeleteAsync(SelectedDocumentView.Id))
                         {
-                            _ = Documents.Remove(SelectedEnterDocumentView);
+                            _ = Documents.Remove(SelectedDocumentView);
                         }
                     }
                 }

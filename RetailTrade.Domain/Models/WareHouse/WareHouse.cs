@@ -72,7 +72,6 @@ namespace RetailTrade.Domain.Models
         public ICollection<Product> Products { get; set; }
         public ICollection<Arrival> Arrivals { get; set; }
         public ICollection<PointSale> PointSales { get; set; }
-        public ICollection<Registration> Registrations { get; set; }
         public ICollection<Receipt> Receipts { get; set; }
 
         #endregion        

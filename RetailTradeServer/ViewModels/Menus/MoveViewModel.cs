@@ -26,14 +26,14 @@ namespace RetailTradeServer.ViewModels.Menus
         private readonly IWareHouseService _wareHouseService;
         private readonly IUserStore _userStore;
         private readonly IMessageStore _messageStore;
-        private ObservableCollection<MoveDocumentView> _documents = new();
-        private MoveDocumentView _selectedMoveDocumentView;
+        private ObservableCollection<DocumentProductView> _documents = new();
+        private DocumentProductView _selectedMoveDocumentView;
 
         #endregion
 
         #region Public Properties
 
-        public ObservableCollection<MoveDocumentView> Documents
+        public ObservableCollection<DocumentProductView> Documents
         {
             get => _documents;
             set
@@ -42,7 +42,7 @@ namespace RetailTradeServer.ViewModels.Menus
                 OnPropertyChanged(nameof(Documents));
             }
         }
-        public MoveDocumentView SelectedMoveDocumentView
+        public DocumentProductView SelectedMoveDocumentView
         {
             get => _selectedMoveDocumentView;
             set
@@ -79,8 +79,8 @@ namespace RetailTradeServer.ViewModels.Menus
             _messageStore = messageStore;
 
             CreateCommand = new RelayCommand(() => UpdateCurrentMenuViewModelCommand.Execute(MenuViewType.MoveProduct));
-            _documentService.OnMoveCreated += DocumentService_OnMoveCreated;
-            _documentService.OnMoveUpdated += DocumentService_OnMoveUpdated;
+            //_documentService.OnMoveCreated += DocumentService_OnMoveCreated;
+            //_documentService.OnMoveUpdated += DocumentService_OnMoveUpdated;
 
             GetData();
         }
@@ -89,11 +89,11 @@ namespace RetailTradeServer.ViewModels.Menus
 
         #region Private Voids
 
-        private void DocumentService_OnMoveUpdated(MoveDocumentView updatedMoveDocumentView)
+        private void DocumentService_OnMoveUpdated(DocumentProductView updatedMoveDocumentView)
         {
             try
             {
-                MoveDocumentView enterDocumentView = Documents.FirstOrDefault(d => d.Id == updatedMoveDocumentView.Id);
+                DocumentProductView enterDocumentView = Documents.FirstOrDefault(d => d.Id == updatedMoveDocumentView.Id);
                 enterDocumentView.WareHouse = updatedMoveDocumentView.WareHouse;
                 enterDocumentView.Username = updatedMoveDocumentView.Username;
                 enterDocumentView.Amount = updatedMoveDocumentView.Amount;
@@ -107,7 +107,7 @@ namespace RetailTradeServer.ViewModels.Menus
             }
         }
 
-        private void DocumentService_OnMoveCreated(MoveDocumentView enterDocumentView)
+        private void DocumentService_OnMoveCreated(DocumentProductView enterDocumentView)
         {
             try
             {
@@ -121,7 +121,7 @@ namespace RetailTradeServer.ViewModels.Menus
 
         private async void GetData()
         {
-            Documents = new(await _documentService.GetMoveDocumentViews());
+            //Documents = new(await _documentService.GetMoveDocumentViews());
         }
 
         #endregion
@@ -136,7 +136,7 @@ namespace RetailTradeServer.ViewModels.Menus
         }
 
         [Command]
-        public async void EditMoveDocument()
+        public async void EditMove()
         {
             try
             {
@@ -145,7 +145,7 @@ namespace RetailTradeServer.ViewModels.Menus
                     _menuNavigator.CurrentViewModel = new MoveProductViewModel(_productService, _wareHouseService, _documentService, _userStore, _messageStore)
                     {
                         Header = $"Перемещение №{SelectedMoveDocumentView.Number} от {SelectedMoveDocumentView.CreatedDate:dd.MM.yyyy}",
-                        CreatedDocument = await _documentService.GetIncludeMoveProduct(SelectedMoveDocumentView.Id)
+                        //CreatedDocument = await _documentService.GetIncludeMoveProduct(SelectedMoveDocumentView.Id)
                     };
                 }
             }

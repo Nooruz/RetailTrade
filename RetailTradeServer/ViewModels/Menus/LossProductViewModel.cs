@@ -24,7 +24,7 @@ namespace RetailTradeServer.ViewModels.Menus
         private readonly IMessageStore _messageStore;
         private IEnumerable<Product> _products;
         private IEnumerable<WareHouse> _wareHouses;
-        private LossProduct _selectedLossProduct;
+        private DocumentProduct _selectedDocumentProduct;
 
         #endregion
 
@@ -58,14 +58,14 @@ namespace RetailTradeServer.ViewModels.Menus
                 OnPropertyChanged(nameof(WareHouses));
             }
         }
-        public TableView LossProductTableView { get; set; }
-        public LossProduct SelectedLossProduct
+        public TableView DocumentProductTableView { get; set; }
+        public DocumentProduct SelectedDocumentProduct
         {
-            get => _selectedLossProduct;
+            get => _selectedDocumentProduct;
             set
             {
-                _selectedLossProduct = value;
-                OnPropertyChanged(nameof(SelectedLossProduct));
+                _selectedDocumentProduct = value;
+                OnPropertyChanged(nameof(SelectedDocumentProduct));
             }
         }
 
@@ -101,14 +101,14 @@ namespace RetailTradeServer.ViewModels.Menus
         }
 
         [Command]
-        public void LossProductTableViewLoadedCommand(object sender)
+        public void DocumentProductTableViewLoadedCommand(object sender)
         {
             if (sender is RoutedEventArgs e)
             {
                 if (e.Source is TableView tableView)
                 {
-                    LossProductTableView = tableView;
-                    LossProductTableView.CellValueChanged += LossProductTableView_CellValueChanged;
+                    DocumentProductTableView = tableView;
+                    DocumentProductTableView.CellValueChanged += DocumentProductTableView_CellValueChanged;
                 }
             }
         }
@@ -134,9 +134,9 @@ namespace RetailTradeServer.ViewModels.Menus
                                 return;
                             }
                         }
-                        if (CreatedDocument.LossProducts != null && CreatedDocument.LossProducts.Any())
+                        if (CreatedDocument.DocumentProducts != null && CreatedDocument.DocumentProducts.Any())
                         {
-                            CreatedDocument.Amount = CreatedDocument.LossProducts.Sum(r => r.Amount);
+                            CreatedDocument.Amount = CreatedDocument.DocumentProducts.Sum(r => r.Amount);
                             CreatedDocument.UserId = _userStore.CurrentUser.Id;
                             if (await _documentService.CreateAsync(CreatedDocument, DocumentTypeEnum.Loss) == null)
                             {
@@ -152,9 +152,9 @@ namespace RetailTradeServer.ViewModels.Menus
                 }
                 else
                 {
-                    if (CreatedDocument.LossProducts != null && CreatedDocument.LossProducts.Any())
+                    if (CreatedDocument.DocumentProducts != null && CreatedDocument.DocumentProducts.Any())
                     {
-                        CreatedDocument.Amount = CreatedDocument.LossProducts.Sum(d => d.Amount);
+                        CreatedDocument.Amount = CreatedDocument.DocumentProducts.Sum(d => d.Amount);
                         if (await _documentService.UpdateAsync(CreatedDocument.Id, CreatedDocument) != null)
                         {
                             _messageStore.SetCurrentMessage("Данные сохранены!", MessageType.Success);
@@ -176,20 +176,20 @@ namespace RetailTradeServer.ViewModels.Menus
 
         #region Private Voids
 
-        private void LossProductTableView_CellValueChanged(object sender, CellValueChangedEventArgs e)
+        private void DocumentProductTableView_CellValueChanged(object sender, CellValueChangedEventArgs e)
         {
             try
             {
-                if (e.Cell.Property == nameof(LossProduct.ProductId))
+                if (e.Cell.Property == nameof(DocumentProduct.ProductId))
                 {
-                    if (SelectedLossProduct != null && SelectedLossProduct.ProductId != 0)
+                    if (SelectedDocumentProduct != null && SelectedDocumentProduct.ProductId != 0)
                     {
-                        Product product = Products.FirstOrDefault(p => p.Id == SelectedLossProduct.ProductId);
+                        Product product = Products.FirstOrDefault(p => p.Id == SelectedDocumentProduct.ProductId);
                         if (product != null)
                         {
-                            SelectedLossProduct.Price = product.PurchasePrice;
+                            SelectedDocumentProduct.Price = product.PurchasePrice;
                         }
-                        SelectedLossProduct.Quantity = 1;
+                        SelectedDocumentProduct.Quantity = 1;
                     }
                 }
             }

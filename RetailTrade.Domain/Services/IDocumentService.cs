@@ -88,23 +88,9 @@ namespace RetailTrade.Domain.Services
     {
         event Action<Document> OnEdited;
         event Action<Document> OnCreated;
-        event Action<EnterDocumentView> OnEnterCreated;
-        event Action<EnterDocumentView> OnEnterUpdated;
-        event Action<LossDocumentView> OnLossCreated;
-        event Action<LossDocumentView> OnLossUpdated;
-        event Action<MoveDocumentView> OnMoveCreated;
-        event Action<MoveDocumentView> OnMoveUpdated;
 
-        Task<IEnumerable<EnterDocumentView>> GetEnterDocumentViews();
-        Task<IEnumerable<LossDocumentView>> GetLossDocumentViews();
-        Task<IEnumerable<MoveDocumentView>> GetMoveDocumentViews();
         Task<Document> CreateAsync(Document entity, DocumentTypeEnum documentType);
-        Task<EnterDocumentView> GetEnterDocumentView(int id);
-        Task<LossDocumentView> GetLossDocumentView(int id);
-        Task<MoveDocumentView> GetMoveDocumentView(int id);
-        Task<Document> GetIncludeEnterProduct(int id);
-        Task<Document> GetIncludeLossProduct(int id);
-        Task<Document> GetIncludeMoveProduct(int id);
+        Task<Document> GetDocumentByIncludeAsync(int id, DocumentTypeEnum documentType);
         Task<string> GetNewNumber(DocumentTypeEnum documentType);
         Task<bool> CheckNumber(string number, DocumentTypeEnum documentType);
     }

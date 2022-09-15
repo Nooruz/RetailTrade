@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
 
 namespace RetailTrade.Domain.Models
@@ -16,9 +15,7 @@ namespace RetailTrade.Domain.Models
         private int? _toWareHouseId;
         private string _number;
         private string _comment;
-        private ObservableCollection<EnterProduct> _enterProducts = new();
-        private ObservableCollection<LossProduct> _lossProducts = new();
-        private ObservableCollection<MoveProduct> _moveProducts = new();
+        private ObservableCollection<DocumentProduct> _documentProducts = new();
 
         #endregion
 
@@ -110,32 +107,13 @@ namespace RetailTrade.Domain.Models
         public DocumentType DocumentType { get; set; }
         public User User { get; set; }
         public WareHouse WareHouse { get; set; }
-        public ICollection<ProductSale> ProductSales { get; set; }
-        public ObservableCollection<EnterProduct> EnterProducts
+        public ObservableCollection<DocumentProduct> DocumentProducts
         {
-            get => _enterProducts;
+            get => _documentProducts;
             set
             {
-                _enterProducts = value;
-                OnPropertyChanged(nameof(EnterProducts));
-            }
-        }
-        public ObservableCollection<LossProduct> LossProducts
-        {
-            get => _lossProducts;
-            set
-            {
-                _lossProducts = value;
-                OnPropertyChanged(nameof(LossProducts));
-            }
-        }
-        public ObservableCollection<MoveProduct> MoveProducts
-        {
-            get => _moveProducts;
-            set
-            {
-                _moveProducts = value;
-                OnPropertyChanged(nameof(MoveProducts));
+                _documentProducts = value;
+                OnPropertyChanged(nameof(DocumentProducts));
             }
         }
 

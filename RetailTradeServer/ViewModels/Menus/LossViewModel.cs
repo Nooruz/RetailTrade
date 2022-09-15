@@ -26,14 +26,14 @@ namespace RetailTradeServer.ViewModels.Menus
         private readonly IWareHouseService _wareHouseService;
         private readonly IUserStore _userStore;
         private readonly IMessageStore _messageStore;
-        private LossDocumentView _selectedLossDocumentView;
-        private ObservableCollection<LossDocumentView> _documents;
+        private DocumentProductView _selectedLossDocumentView;
+        private ObservableCollection<DocumentProductView> _documents;
 
         #endregion
 
         #region Public properties
 
-        public ObservableCollection<LossDocumentView> Documents
+        public ObservableCollection<DocumentProductView> Documents
         {
             get => _documents;
             set
@@ -42,7 +42,7 @@ namespace RetailTradeServer.ViewModels.Menus
                 OnPropertyChanged(nameof(Documents));
             }
         }
-        public LossDocumentView SelectedLossDocumentView
+        public DocumentProductView SelectedLossDocumentView
         {
             get => _selectedLossDocumentView;
             set
@@ -81,8 +81,8 @@ namespace RetailTradeServer.ViewModels.Menus
             Header = "Списание товара";
 
             CreateCommand = new RelayCommand(() => UpdateCurrentMenuViewModelCommand.Execute(MenuViewType.LossProduct));
-            _documentService.OnLossCreated += DocumentService_OnLossCreated;
-            _documentService.OnLossUpdated += DocumentService_OnLossUpdated;
+            //_documentService.OnLossCreated += DocumentService_OnLossCreated;
+            //_documentService.OnLossUpdated += DocumentService_OnLossUpdated;
 
             GetData();
         }
@@ -91,11 +91,11 @@ namespace RetailTradeServer.ViewModels.Menus
 
         #region Private Voids
 
-        private void DocumentService_OnLossUpdated(LossDocumentView updatedLossDocumentView)
+        private void DocumentService_OnLossUpdated(DocumentProductView updatedLossDocumentView)
         {
             try
             {
-                LossDocumentView lossDocumentView = Documents.FirstOrDefault(d => d.Id == updatedLossDocumentView.Id);
+                DocumentProductView lossDocumentView = Documents.FirstOrDefault(d => d.Id == updatedLossDocumentView.Id);
                 lossDocumentView.WareHouse = updatedLossDocumentView.WareHouse;
                 lossDocumentView.Username = updatedLossDocumentView.Username;
                 lossDocumentView.Amount = updatedLossDocumentView.Amount;
@@ -107,7 +107,7 @@ namespace RetailTradeServer.ViewModels.Menus
             }
         }
 
-        private void DocumentService_OnLossCreated(LossDocumentView lossDocumentView)
+        private void DocumentService_OnLossCreated(DocumentProductView lossDocumentView)
         {
             try
             {
@@ -123,7 +123,7 @@ namespace RetailTradeServer.ViewModels.Menus
         {
             try
             {
-                Documents = new(await _documentService.GetLossDocumentViews());
+                //Documents = new(await _documentService.GetLossDocumentViews());
             }
             catch (Exception)
             {
@@ -145,7 +145,7 @@ namespace RetailTradeServer.ViewModels.Menus
                     _menuNavigator.CurrentViewModel = new LossProductViewModel(_productService, _wareHouseService, _documentService, _userStore, _messageStore)
                     {
                         Header = $"Спиание №{SelectedLossDocumentView.Number} от {SelectedLossDocumentView.CreatedDate:dd.MM.yyyy}",
-                        CreatedDocument = await _documentService.GetIncludeLossProduct(SelectedLossDocumentView.Id)
+                        //CreatedDocument = await _documentService.GetIncludeLossProduct(SelectedLossDocumentView.Id)
                     };
                 }
             }

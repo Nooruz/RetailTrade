@@ -1,9 +1,12 @@
-﻿namespace RetailTrade.Domain.Models
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace RetailTrade.Domain.Models
 {
-    /// <summary>
-    /// Списание товаров
-    /// </summary>
-    public class LossProduct : DomainObject
+    public class DocumentProduct : DomainObject
     {
         #region Private Members
 
@@ -11,6 +14,7 @@
         private int _documentId;
         private double _quantity;
         private double _stock;
+        private double _stockTo;
         private decimal _price;
         private decimal _amount;
         private string _comment;
@@ -32,6 +36,9 @@
             }
         }
 
+        /// <summary>
+        /// Код документа
+        /// </summary>
         public int DocumentId
         {
             get => _documentId;
@@ -43,7 +50,7 @@
         }
 
         /// <summary>
-        /// Количество для списания
+        /// Количество товара
         /// </summary>
         public double Quantity
         {
@@ -56,6 +63,9 @@
             }
         }
 
+        /// <summary>
+        /// Остаток, если перемещение то со склада
+        /// </summary>
         public double Stock
         {
             get => _stock;
@@ -66,6 +76,22 @@
             }
         }
 
+        /// <summary>
+        /// Остаток на склад
+        /// </summary>
+        public double StockTo
+        {
+            get => _stockTo;
+            set
+            {
+                _stockTo = value;
+                OnPropertyChanged(nameof(StockTo));
+            }
+        }
+
+        /// <summary>
+        /// Цена товара
+        /// </summary>
         public decimal Price
         {
             get => _price;
@@ -77,6 +103,9 @@
             }
         }
 
+        /// <summary>
+        /// Сумма товара
+        /// </summary>
         public decimal Amount
         {
             get => _amount;
@@ -87,6 +116,9 @@
             }
         }
 
+        /// <summary>
+        /// Комментарий
+        /// </summary>
         public string Comment
         {
             get => _comment;

@@ -2,16 +2,16 @@
 
 namespace RetailTrade.Domain.Views
 {
-    public class LossDocumentView : ViewObject
+    public class DocumentProductView : ViewObject
     {
         #region Private Members
 
         private int _id;
+        private string _number;
         private DateTime _createdDate;
         private string _userName;
         private decimal _amount;
         private string _wareHouse;
-        private string _number;
         private string _comment;
 
         #endregion
@@ -25,6 +25,15 @@ namespace RetailTrade.Domain.Views
             {
                 _id = value;
                 OnPropertyChanged(nameof(Id));
+            }
+        }
+        public string Number
+        {
+            get => _number;
+            set
+            {
+                _number = value;
+                OnPropertyChanged(nameof(Number));
             }
         }
         public DateTime CreatedDate
@@ -61,15 +70,6 @@ namespace RetailTrade.Domain.Views
             {
                 _wareHouse = value;
                 OnPropertyChanged(nameof(WareHouse));
-            }
-        }
-        public string Number
-        {
-            get => _number;
-            set
-            {
-                _number = value;
-                OnPropertyChanged(nameof(Number));
             }
         }
         public string Comment

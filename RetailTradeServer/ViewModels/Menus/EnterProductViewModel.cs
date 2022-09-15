@@ -26,7 +26,7 @@ namespace RetailTradeServer.ViewModels.Menus
         private readonly IMessageStore _messageStore;
         private IEnumerable<Product> _products;
         private IEnumerable<WareHouse> _wareHouses;
-        private EnterProduct _selectedEnterProduct;
+        private DocumentProduct _selectedDocumentProduct;
 
         #endregion
 
@@ -60,14 +60,14 @@ namespace RetailTradeServer.ViewModels.Menus
                 OnPropertyChanged(nameof(WareHouses));
             }
         }
-        public TableView EnterProductTableView { get; set; }
-        public EnterProduct SelectedEnterProduct
+        public TableView DocumentProductTableView { get; set; }
+        public DocumentProduct SelectedDocumentProduct
         {
-            get => _selectedEnterProduct;
+            get => _selectedDocumentProduct;
             set
             {
-                _selectedEnterProduct = value;
-                OnPropertyChanged(nameof(SelectedEnterProduct));
+                _selectedDocumentProduct = value;
+                OnPropertyChanged(nameof(SelectedDocumentProduct));
             }
         }
 
@@ -108,14 +108,14 @@ namespace RetailTradeServer.ViewModels.Menus
         }
 
         [Command]
-        public void EnterProductTableViewLoadedCommand(object sender)
+        public void DocumentProductTableViewLoadedCommand(object sender)
         {
             if (sender is RoutedEventArgs e)
             {
                 if (e.Source is TableView tableView)
                 {
-                    EnterProductTableView = tableView;
-                    EnterProductTableView.CellValueChanged += EnterProductTableView_CellValueChanged;
+                    DocumentProductTableView = tableView;
+                    DocumentProductTableView.CellValueChanged += DocumentProductTableView_CellValueChanged;
                 }
             }
         }
@@ -141,9 +141,9 @@ namespace RetailTradeServer.ViewModels.Menus
                                 return;
                             }
                         }
-                        if (CreatedDocument.EnterProducts != null && CreatedDocument.EnterProducts.Any())
+                        if (CreatedDocument.DocumentProducts != null && CreatedDocument.DocumentProducts.Any())
                         {
-                            CreatedDocument.Amount = CreatedDocument.EnterProducts.Sum(r => r.Amount);
+                            CreatedDocument.Amount = CreatedDocument.DocumentProducts.Sum(r => r.Amount);
                             CreatedDocument.UserId = _userStore.CurrentUser.Id;
                             if (await _documentService.CreateAsync(CreatedDocument, DocumentTypeEnum.Enter) == null)
                             {
@@ -159,9 +159,9 @@ namespace RetailTradeServer.ViewModels.Menus
                 }
                 else
                 {
-                    if (CreatedDocument.EnterProducts != null && CreatedDocument.EnterProducts.Any())
+                    if (CreatedDocument.DocumentProducts != null && CreatedDocument.DocumentProducts.Any())
                     {
-                        CreatedDocument.Amount = CreatedDocument.EnterProducts.Sum(d => d.Amount);
+                        CreatedDocument.Amount = CreatedDocument.DocumentProducts.Sum(d => d.Amount);
                         if (await _documentService.UpdateAsync(CreatedDocument.Id, CreatedDocument) != null)
                         {
                             _messageStore.SetCurrentMessage("Данные сохранены!", MessageType.Success);
@@ -187,6 +187,7 @@ namespace RetailTradeServer.ViewModels.Menus
         {
             try
             {
+                Products = await _productService.GetAllAsync();
                 if (CreatedDocument.WareHouseId != null)
                 {
                     Products = await _productService.GetAllAsync();
@@ -198,22 +199,22 @@ namespace RetailTradeServer.ViewModels.Menus
             }
         }
 
-        private void EnterProductTableView_CellValueChanged(object sender, CellValueChangedEventArgs e)
+        private void DocumentProductTableView_CellValueChanged(object sender, CellValueChangedEventArgs e)
         {
             try
             {
-                if (e.Cell.Property == nameof(EnterProduct.ProductId))
+                if (e.Cell.Property == nameof(DocumentProduct.ProductId))
                 {
-                    if (SelectedEnterProduct != null && SelectedEnterProduct.ProductId != 0)
+                    if (SelectedDocumentProduct != null && SelectedDocumentProduct.ProductId != 0)
                     {
-                        Product product = Products.FirstOrDefault(p => p.Id == SelectedEnterProduct.ProductId);
+                        Product product = Products.FirstOrDefault(p => p.Id == SelectedDocumentProduct.ProductId);
                         if (product != null)
                         {
-                            SelectedEnterProduct.Price = product.PurchasePrice;
+                            SelectedDocumentProduct.Price = product.PurchasePrice;
                         }
-                        SelectedEnterProduct.Quantity = 1;
-                        EnterProductTableView.Grid.UpdateTotalSummary();
-                        EnterProductTableView.Grid.UpdateGroupSummary();
+                        SelectedDocumentProduct.Quantity = 1;
+                        DocumentProductTableView.Grid.UpdateTotalSummary();
+                        DocumentProductTableView.Grid.UpdateGroupSummary();
                     }
                 }
             }
