@@ -1,4 +1,5 @@
-﻿using DevExpress.Mvvm.DataAnnotations;
+﻿using DevExpress.Mvvm;
+using DevExpress.Mvvm.DataAnnotations;
 using DevExpress.Xpf.Grid;
 using RetailTrade.Domain.Models;
 using RetailTrade.Domain.Services;
@@ -38,6 +39,7 @@ namespace RetailTradeServer.ViewModels.Menus
             get => _document;
             set
             {
+                GetData();
                 _document = value;
                 OnPropertyChanged(nameof(CreatedDocument));
             }
@@ -179,6 +181,25 @@ namespace RetailTradeServer.ViewModels.Menus
             }
         }
 
+        [Command]
+        public void DeleteSelectedDocumentProduct()
+        {
+            try
+            {
+                if (SelectedDocumentProduct != null)
+                {
+                    if (MessageBoxService.ShowMessage("Удалить выбранный элемент?", "Sale Page", MessageButton.YesNo, MessageIcon.Question) == MessageResult.Yes)
+                    {
+                        CreatedDocument.DocumentProducts.Remove(SelectedDocumentProduct);
+                    }
+                }
+            }
+            catch (Exception)
+            {
+                //ignore
+            }
+        }
+
         #endregion
 
         #region Private Voids
@@ -188,10 +209,6 @@ namespace RetailTradeServer.ViewModels.Menus
             try
             {
                 Products = await _productService.GetAllAsync();
-                if (CreatedDocument.WareHouseId != null)
-                {
-                    Products = await _productService.GetAllAsync();
-                }
             }
             catch (Exception)
             {

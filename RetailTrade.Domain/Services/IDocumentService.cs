@@ -86,11 +86,13 @@ namespace RetailTrade.Domain.Services
 
     public interface IDocumentService : IDataService<Document>
     {
-        event Action<Document> OnEdited;
-        event Action<Document> OnCreated;
+        event Action<DocumentView, DocumentTypeEnum> OnUpdated;
+        event Action<DocumentView, DocumentTypeEnum> OnCreated;
 
         Task<Document> CreateAsync(Document entity, DocumentTypeEnum documentType);
-        Task<Document> GetDocumentByIncludeAsync(int id, DocumentTypeEnum documentType);
+        Task<Document> GetDocumentByIncludeAsync(int id);
+        Task<DocumentView> GetDocumentViewById(int id);
+        Task<IEnumerable<DocumentView>> GetDocumentViews(DocumentTypeEnum documentType);
         Task<string> GetNewNumber(DocumentTypeEnum documentType);
         Task<bool> CheckNumber(string number, DocumentTypeEnum documentType);
     }

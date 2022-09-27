@@ -36,7 +36,7 @@
         </dxlc:LayoutGroup>
 
         <dxg:GridControl ItemsSource="{Binding Documents}"
-                         SelectedItem="{Binding SelectedEnterDocumentView}">
+                         SelectedItem="{Binding SelectedDocumentView}">
             <dxg:GridControl.View>
                 <dxg:TableView AutoWidth="True"
                                AllowEditing="False"

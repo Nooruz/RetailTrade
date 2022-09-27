@@ -1,6 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using RetailTrade.Domain.Models;
 using RetailTrade.Domain.Services;
+using RetailTrade.Domain.Views;
 using RetailTrade.EntityFramework.Services.Common;
 using System;
 using System.Collections.Generic;
@@ -20,15 +21,14 @@ namespace RetailTrade.EntityFramework.Services
             _nonQueryDataService = new NonQueryDataService<Document>(_contextFactory);
         }
 
-        public event Action<Document> OnEdited;
-        public event Action<Document> OnCreated;
+        public event Action<DocumentView, DocumentTypeEnum> OnUpdated;
+        public event Action<DocumentView, DocumentTypeEnum> OnCreated;
 
         public async Task<Document> CreateAsync(Document entity)
         {
             var result = await _nonQueryDataService.Create(entity);
             if (result != null)
             {
-                OnCreated?.Invoke(result);
                 return result;
             }
             return null;
@@ -41,42 +41,7 @@ namespace RetailTrade.EntityFramework.Services
             var result = await _nonQueryDataService.Create(entity);
             if (result != null)
             {
-                switch (documentType)
-                {
-                    case DocumentTypeEnum.Supply:
-                        break;
-                    case DocumentTypeEnum.PurchaseReturn:
-                        break;
-                    case DocumentTypeEnum.Loss:
-                        //OnLossCreated?.Invoke(await GetLossDocumentView(entity.Id));
-                        break;
-                    case DocumentTypeEnum.Enter:
-                        //OnEnterCreated?.Invoke(await GetEnterDocumentView(entity.Id));
-                        break;
-                    case DocumentTypeEnum.Move:
-                        //OnMoveCreated?.Invoke(await GetMoveDocumentView(entity.Id));
-                        break;
-                    case DocumentTypeEnum.Inventory:
-                        break;
-                    case DocumentTypeEnum.CashIn:
-                        break;
-                    case DocumentTypeEnum.CashOut:
-                        break;
-                    case DocumentTypeEnum.CashboxAdjustment:
-                        break;
-                    case DocumentTypeEnum.AccountAdjustment:
-                        break;
-                    case DocumentTypeEnum.RetailDemand:
-                        break;
-                    case DocumentTypeEnum.RetailSalesReturn:
-                        break;
-                    case DocumentTypeEnum.RetailShift:
-                        break;
-                    case DocumentTypeEnum.RetailDrawerCashIn:
-                        break;
-                    case DocumentTypeEnum.RetailDrawerCashOut:
-                        break;
-                }
+                OnCreated?.Invoke(await GetDocumentViewById(result.Id), documentType);
                 return result;
             }
             return null;
@@ -146,6 +111,7 @@ namespace RetailTrade.EntityFramework.Services
             try
             {
                 var result = await _nonQueryDataService.Update(id, entity);
+                OnUpdated?.Invoke(await GetDocumentViewById(result.Id), (DocumentTypeEnum)result.DocumentTypeId);
                 return result;
             }
             catch (Exception)
@@ -185,14 +151,44 @@ namespace RetailTrade.EntityFramework.Services
             return false;
         }
 
-        public async Task<Document> GetDocumentByIncludeAsync(int id, DocumentTypeEnum documentType)
+        public async Task<Document> GetDocumentByIncludeAsync(int id)
         {
             try
             {
                 await using var context = _contextFactory.CreateDbContext();
                 return await context.Documents
                     .Include(d => d.DocumentProducts)
-                    .FirstOrDefaultAsync(d => d.DocumentTypeId == (int)documentType);
+                    .FirstOrDefaultAsync(d => d.Id == id);
+            }
+            catch (Exception)
+            {
+                //ignore
+            }
+            return null;
+        }
+
+        public async Task<IEnumerable<DocumentView>> GetDocumentViews(DocumentTypeEnum documentType)
+        {
+            try
+            {
+                await using var context = _contextFactory.CreateDbContext();
+                return await context.DocumentViews
+                    .Where(d => d.DocumentTypeId == (int)documentType)
+                    .ToListAsync();
+            }
+            catch (Exception)
+            {
+                //ignore
+            }
+            return null;
+        }
+
+        public async Task<DocumentView> GetDocumentViewById(int id)
+        {
+            try
+            {
+                await using var context = _contextFactory.CreateDbContext();
+                return await context.DocumentViews.FirstOrDefaultAsync(d => d.Id == id);
             }
             catch (Exception)
             {

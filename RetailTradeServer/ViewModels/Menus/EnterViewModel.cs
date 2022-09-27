@@ -79,8 +79,8 @@ namespace RetailTradeServer.ViewModels.Menus
             _messageStore = messageStore;
 
             CreateCommand = new RelayCommand(() => UpdateCurrentMenuViewModelCommand.Execute(MenuViewType.EnterProduct));
-            //_documentService.OnEnterCreated += DocumentService_OnEnterCreated;
-            //_documentService.OnEnterUpdated += DocumentService_OnEnterUpdated;
+            _documentService.OnCreated += DocumentService_OnCreated;
+            _documentService.OnUpdated += DocumentService_OnUpdated;
 
             GetData();
         }
@@ -89,17 +89,20 @@ namespace RetailTradeServer.ViewModels.Menus
 
         #region Private Voids
 
-        private void DocumentService_OnEnterUpdated(DocumentView updatedDocumentView)
+        private void DocumentService_OnCreated(DocumentView updatedDocumentView, DocumentTypeEnum documentTypeEnum)
         {
             try
             {
-                DocumentView documentView = Documents.FirstOrDefault(d => d.Id == updatedDocumentView.Id);
-                documentView.WareHouse = updatedDocumentView.WareHouse;
-                documentView.Username = updatedDocumentView.Username;
-                documentView.Amount = updatedDocumentView.Amount;
-                documentView.CreatedDate = updatedDocumentView.CreatedDate;
-                documentView.Number = updatedDocumentView.Number;
-                documentView.Comment = updatedDocumentView.Comment;
+                if (documentTypeEnum == DocumentTypeEnum.Enter)
+                {
+                    DocumentView documentView = Documents.FirstOrDefault(d => d.Id == updatedDocumentView.Id);
+                    documentView.WareHouse = updatedDocumentView.WareHouse;
+                    documentView.Username = updatedDocumentView.Username;
+                    documentView.Amount = updatedDocumentView.Amount;
+                    documentView.CreatedDate = updatedDocumentView.CreatedDate;
+                    documentView.Number = updatedDocumentView.Number;
+                    documentView.Comment = updatedDocumentView.Comment;
+                }
             }
             catch (Exception)
             {
@@ -107,11 +110,14 @@ namespace RetailTradeServer.ViewModels.Menus
             }
         }
 
-        private void DocumentService_OnEnterCreated(DocumentView documentView)
+        private void DocumentService_OnUpdated(DocumentView documentView, DocumentTypeEnum documentTypeEnum)
         {
             try
             {
-                Documents.Add(documentView);
+                if (documentTypeEnum == DocumentTypeEnum.Enter)
+                {
+                    Documents.Add(documentView);
+                }
             }
             catch (Exception)
             {
@@ -121,7 +127,7 @@ namespace RetailTradeServer.ViewModels.Menus
 
         private async void GetData()
         {
-            //Documents = new(await _documentService.GetDocumentProductViews());
+            Documents = new(await _documentService.GetDocumentViews(DocumentTypeEnum.Enter));
         }
 
         #endregion
@@ -145,7 +151,7 @@ namespace RetailTradeServer.ViewModels.Menus
                     _menuNavigator.CurrentViewModel = new EnterProductViewModel(_productService, _wareHouseService, _documentService, _userStore, _messageStore)
                     {
                         Header = $"Оприходование №{SelectedDocumentView.Number} от {SelectedDocumentView.CreatedDate:dd.MM.yyyy}",
-                        //CreatedDocument = await _documentService.GetIncludeEnterProduct(SelectedDocumentView.Id)
+                        CreatedDocument = await _documentService.GetDocumentByIncludeAsync(SelectedDocumentView.Id)
                     };
                 }
             }
