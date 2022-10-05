@@ -110,7 +110,7 @@ namespace RetailTradeServer.ViewModels.Menus
         }
 
         [Command]
-        public void DocumentProductTableViewLoadedCommand(object sender)
+        public void DocumentProductTableViewLoaded(object sender)
         {
             if (sender is RoutedEventArgs e)
             {
@@ -167,6 +167,7 @@ namespace RetailTradeServer.ViewModels.Menus
                         if (await _documentService.UpdateAsync(CreatedDocument.Id, CreatedDocument) != null)
                         {
                             _messageStore.SetCurrentMessage("Данные сохранены!", MessageType.Success);
+                            Header = $"Оприходование №{CreatedDocument.Number} от {CreatedDocument.CreatedDate:dd.MM.yyyy}";
                         }
                         else
                         {
@@ -188,9 +189,27 @@ namespace RetailTradeServer.ViewModels.Menus
             {
                 if (SelectedDocumentProduct != null)
                 {
-                    if (MessageBoxService.ShowMessage("Удалить выбранный элемент?", "Sale Page", MessageButton.YesNo, MessageIcon.Question) == MessageResult.Yes)
+                    CreatedDocument.DocumentProducts.Remove(SelectedDocumentProduct);
+                }
+            }
+            catch (Exception)
+            {
+                //ignore
+            }
+        }
+
+        [Command]
+        public void TableViewPreviewMouseLeftButtonDown(object sender)
+        {
+            try
+            {
+                if (sender is MouseButtonEventArgs e)
+                {
+                    var hInfo = DocumentProductTableView.CalcHitInfo((DependencyObject)e.OriginalSource);
+                    var r = SelectedDocumentProduct;
+                    if (hInfo.RowHandle == DocumentProductTableView.FocusedRowHandle)
                     {
-                        CreatedDocument.DocumentProducts.Remove(SelectedDocumentProduct);
+
                     }
                 }
             }

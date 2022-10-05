@@ -42,7 +42,6 @@ namespace RetailTrade.EntityFramework.Services.Common
                 {
                     return entity;
                 }
-                return null;
             }
             catch (Exception)
             {

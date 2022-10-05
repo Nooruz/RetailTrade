@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.ComponentModel;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace RetailTrade.Domain.Models
@@ -7,7 +8,7 @@ namespace RetailTrade.Domain.Models
     /// <summary>
     /// Товары
     /// </summary>
-    public class Product : DomainObject
+    public class Product : DomainObject, IDataErrorInfo
     {
         #region Private Members
 
@@ -34,6 +35,7 @@ namespace RetailTrade.Domain.Models
         /// <summary>
         /// Наименование товара
         /// </summary>
+        [DisplayName("Наименование")]
         public string Name
         {
             get => _name;
@@ -223,6 +225,25 @@ namespace RetailTrade.Domain.Models
                 OnPropertyChanged(nameof(ProductBarcodes));
             }
         }
+
+        #endregion
+
+        #region Validate
+
+        public string Error
+        {
+            get
+            {
+                return this[nameof(Name)] != null || this[nameof(TypeProductId)] != null ? "Исправьте входные значения." : null;
+            }
+        }
+
+        public string this[string columnName] => columnName switch
+        {
+            nameof(Name) => string.IsNullOrEmpty(Name) ? "Наименование товара обязательно для заполнения." : null,
+            nameof(TypeProductId) => TypeProductId != 0 ? "Выберите вид товара." : null,
+            _ => null,
+        };
 
         #endregion
     }

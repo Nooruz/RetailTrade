@@ -145,7 +145,7 @@ namespace RetailTradeServer.ViewModels.Menus
 
             DailySalesChart = new(await _receiptService.GetSaleAmoundToday());
             MonthlySalesChart = new(await _receiptService.GetSaleAmoundCurrentMonth());
-            RatingTenProducts = new(await _productSaleService.GetRatingTenProducts());
+            //RatingTenProducts = new(await _productSaleService.GetRatingTenProducts());
             SaleAmountToday = DailySalesChart.Sum(s => s.Total);
             SaleAmountYesterday = MonthlySalesChart.Where(s => s.DateOfPurchase.Date == DateTime.Now.Date.AddDays(-1)).Sum(s => s.Total);
             SaleAmountLastWeek = MonthlySalesChart.Where(r => r.DateOfPurchase.Date >= mondayOfLastWeek && r.DateOfPurchase <= mondayOfLastWeek.AddDays(6)).Sum(s => s.Total);

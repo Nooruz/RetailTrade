@@ -1,4 +1,5 @@
 ﻿using DevExpress.Mvvm;
+using DevExpress.Mvvm.DataAnnotations;
 using RetailTrade.Domain.Models;
 using RetailTradeServer.State.Authenticators;
 using System.ComponentModel;
@@ -9,6 +10,7 @@ namespace RetailTradeServer.ViewModels.Base
 {
     public delegate TViewModel CreateViewModel<TViewModel>() where TViewModel : BaseViewModel;
     public delegate TMenuViewModel CreateMenuViewModel<TMenuViewModel>() where TMenuViewModel : BaseViewModel;
+    [POCOViewModel]
     public class BaseViewModel : ViewModelBase, INotifyPropertyChanged
     {
         #region Private Members
@@ -181,6 +183,6 @@ namespace RetailTradeServer.ViewModels.Base
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
 
-        #endregion        
+        #endregion
     }
 }

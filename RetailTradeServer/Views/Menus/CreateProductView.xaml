@@ -58,7 +58,7 @@
         <dxlc:LayoutItem LabelPosition="Top"
                          IsRequired="True"
                          Label="Наименование">
-            <dxe:TextEdit EditValue="{Binding CreatedProduct.Name}">
+            <dxe:TextEdit EditValue="{Binding CreatedProduct.Name, UpdateSourceTrigger=PropertyChanged, ValidatesOnDataErrors=True}">
                 <dxmvvm:Interaction.Behaviors>
                     <dxmvvm:FocusBehavior/>
                 </dxmvvm:Interaction.Behaviors>
@@ -102,7 +102,7 @@
                         <dxe:ComboBoxEdit ItemsSource="{Binding TypeProducts}"
                                           DisplayMember="Name"
                                           ValueMember="Id"
-                                          EditValue="{Binding CreatedProduct.TypeProductId}"/>
+                                          EditValue="{Binding CreatedProduct.TypeProductId, UpdateSourceTrigger=PropertyChanged, ValidatesOnDataErrors=True}"/>
                     </dxlc:LayoutItem>
 
                     <dxlc:LayoutItem Label="Поставщик">

@@ -110,7 +110,20 @@ namespace RetailTrade.EntityFramework.Services
         {
             try
             {
+                var context = _contextFactory.CreateDbContext();
                 var result = await _nonQueryDataService.Update(id, entity);
+                Document existingDocument = await context.Documents.Include(d => d.DocumentProducts).FirstOrDefaultAsync(d => d.Id == entity.Id);
+                if (existingDocument != null)
+                {
+                    foreach (var item in entity.DocumentProducts)
+                    {
+                        if (!entity.DocumentProducts.Any(d => d.Id == item.Id))
+                        {
+                            existingDocument.DocumentProducts.Remove(item);
+                        }
+                    }
+                    await context.SaveChangesAsync();
+                }
                 OnUpdated?.Invoke(await GetDocumentViewById(result.Id), (DocumentTypeEnum)result.DocumentTypeId);
                 return result;
             }

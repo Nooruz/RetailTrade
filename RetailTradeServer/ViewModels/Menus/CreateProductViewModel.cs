@@ -11,22 +11,23 @@ using RetailTradeServer.Commands;
 using RetailTradeServer.Components;
 using RetailTradeServer.Properties;
 using RetailTradeServer.State.Messages;
+using RetailTradeServer.Validation;
 using RetailTradeServer.ViewModels.Base;
 using RetailTradeServer.ViewModels.Dialogs;
 using RetailTradeServer.Views.Dialogs;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.ComponentModel;
 using System.Drawing;
 using System.Linq;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 
 namespace RetailTradeServer.ViewModels.Menus
 {
-    public class CreateProductViewModel : BaseViewModel
+    public class CreateProductViewModel : BaseViewModel, IDataErrorInfo
     {
         #region Private Members
 
@@ -391,46 +392,52 @@ namespace RetailTradeServer.ViewModels.Menus
         [Command]
         public async void SaveProduct()
         {
-            if (string.IsNullOrEmpty(CreatedProduct.Name))
+            string error = EnableValidationAndGetError();
+            if (error != null)
             {
-                _messageStore.SetCurrentMessage("Введите наименование товара.", MessageType.Error);
+                _messageStore.SetCurrentMessage(error, MessageType.Error);
                 return;
             }
-            if (CreatedProduct.TypeProductId == 0)
-            {
-                _messageStore.SetCurrentMessage("Выберите вид товара.", MessageType.Error);
-                return;
-            }
-            if (CreatedProduct.SupplierId == null || CreatedProduct.SupplierId == 0)
-            {
-                _messageStore.SetCurrentMessage("Выберите поставщика.", MessageType.Error);
-                return;
-            }
-            if (CreatedProduct.UnitId == 0)
-            {
-                _messageStore.SetCurrentMessage("Выберите единицу измерения.", MessageType.Error);
-                return;
-            }
-            else
-            {
-                if (CreatedProduct.Id == 0)
-                {
-                    if (await _productService.CreateAsync(CreatedProduct) != null)
-                    {
-                        _messageStore.SetCurrentMessage("Товар создан.", MessageType.Success);
-                        Header = $"Товары ({CreatedProduct.Name})";
-                    }
-                }
-                else
-                {
-                    if (await _productService.UpdateAsync(CreatedProduct.Id, CreatedProduct) != null)
-                    {
-                        _messageStore.SetCurrentMessage("Товар сохранен.", MessageType.Success);
-                        Header = $"Товары ({CreatedProduct.Name})";
-                    }
-                }
+            //if (string.IsNullOrEmpty(CreatedProduct.Name))
+            //{
+            //    _messageStore.SetCurrentMessage("Введите наименование товара.", MessageType.Error);
+            //    return;
+            //}
+            //if (CreatedProduct.TypeProductId == 0)
+            //{
+            //    _messageStore.SetCurrentMessage("Выберите вид товара.", MessageType.Error);
+            //    return;
+            //}
+            //if (CreatedProduct.SupplierId == null || CreatedProduct.SupplierId == 0)
+            //{
+            //    _messageStore.SetCurrentMessage("Выберите поставщика.", MessageType.Error);
+            //    return;
+            //}
+            //if (CreatedProduct.UnitId == 0)
+            //{
+            //    _messageStore.SetCurrentMessage("Выберите единицу измерения.", MessageType.Error);
+            //    return;
+            //}
+            //else
+            //{
+            //    if (CreatedProduct.Id == 0)
+            //    {
+            //        if (await _productService.CreateAsync(CreatedProduct) != null)
+            //        {
+            //            _messageStore.SetCurrentMessage("Товар создан.", MessageType.Success);
+            //            Header = $"Товары ({CreatedProduct.Name})";
+            //        }
+            //    }
+            //    else
+            //    {
+            //        if (await _productService.UpdateAsync(CreatedProduct.Id, CreatedProduct) != null)
+            //        {
+            //            _messageStore.SetCurrentMessage("Товар сохранен.", MessageType.Success);
+            //            Header = $"Товары ({CreatedProduct.Name})";
+            //        }
+            //    }
                 
-            }
+            //}
         }
 
         [Command]
@@ -517,6 +524,54 @@ namespace RetailTradeServer.ViewModels.Menus
         public override void Dispose()
         {
             base.Dispose();
+        }
+
+        #endregion
+
+        #region Validate
+
+        bool allowValidation = false;
+        string EnableValidationAndGetError()
+        {
+            allowValidation = true;
+            string error = ((IDataErrorInfo)this).Error;
+            if (!string.IsNullOrEmpty(error))
+            {
+                this.RaisePropertiesChanged();
+                return error;
+            }
+            return null;
+        }
+
+        string IDataErrorInfo.Error
+        {
+            get
+            {
+                if (!allowValidation) return null;
+                IDataErrorInfo me = (IDataErrorInfo)this;
+                string error =
+                    me[BindableBase.GetPropertyName(() => CreatedProduct.Name)] +
+                    me[BindableBase.GetPropertyName(() => CreatedProduct.TypeProductId)];
+                if (!string.IsNullOrEmpty(error))
+                    return "Пожалуйста, проверьте введенные данные.\n" + error;
+                return null;
+            }
+        }
+
+        string IDataErrorInfo.this[string columnName]
+        {
+            get
+            {
+                if (!allowValidation) return null;
+
+                string name = BindableBase.GetPropertyName(() => CreatedProduct.Name);
+                string typeProductId = BindableBase.GetPropertyName(() => CreatedProduct.TypeProductId);
+                if (columnName == name)
+                    return RequiredValidationRule.GetErrorMessage(name, CreatedProduct.Name);
+                else if (columnName == typeProductId)
+                    return RequiredValidationRule.GetErrorMessage(typeProductId, CreatedProduct.TypeProductId);
+                return null;
+            }
         }
 
         #endregion

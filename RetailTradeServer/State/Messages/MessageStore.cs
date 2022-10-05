@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Timers;
 
 namespace RetailTradeServer.State.Messages
 {
@@ -8,6 +9,7 @@ namespace RetailTradeServer.State.Messages
 
         private string _currentMessage;
         private MessageType _currentMessageType;
+        private Timer _timer = new Timer(5000);
 
         #endregion
 
@@ -42,12 +44,22 @@ namespace RetailTradeServer.State.Messages
 
         #endregion
 
+        #region Constructor
+
+        public MessageStore()
+        {
+            _timer.Elapsed += (s, e) => Close();
+        }
+
+        #endregion
+
         #region Public Voids
 
         public void SetCurrentMessage(string message, MessageType messageType)
         {
             CurrentMessage = message;
             CurrentMessageType = messageType;
+            _timer.Start();
         }
 
         public void Close()

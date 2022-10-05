@@ -89,7 +89,7 @@ namespace RetailTradeServer.ViewModels.Menus
 
         #region Private Voids
 
-        private void DocumentService_OnCreated(DocumentView updatedDocumentView, DocumentTypeEnum documentTypeEnum)
+        private void DocumentService_OnUpdated(DocumentView updatedDocumentView, DocumentTypeEnum documentTypeEnum)
         {
             try
             {
@@ -110,7 +110,7 @@ namespace RetailTradeServer.ViewModels.Menus
             }
         }
 
-        private void DocumentService_OnUpdated(DocumentView documentView, DocumentTypeEnum documentTypeEnum)
+        private void DocumentService_OnCreated(DocumentView documentView, DocumentTypeEnum documentTypeEnum)
         {
             try
             {
