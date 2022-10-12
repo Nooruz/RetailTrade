@@ -1,17 +1,21 @@
-﻿using System.Globalization;
+﻿using DevExpress.Xpf.PivotGrid;
+using System.Globalization;
 using System.Windows.Controls;
 
 namespace RetailTradeServer.Validation
 {
     public class RequiredValidationRule : ValidationRule
     {
-        public static string GetErrorMessage(string fieldName, object fieldValue, object nullValue = null)
+        public static string GetErrorMessage(string fieldName, object fieldValue)
         {
             string errorMessage = string.Empty;
-            if (nullValue != null && nullValue.Equals(fieldValue))
-                errorMessage = $"Вы не можете оставить поле \"{fieldName}\" пустым.";
+            if (fieldValue != null && int.TryParse(fieldValue.ToString(), out int id))
+            {
+                if (id == 0)
+                    errorMessage = $"\nВы не можете оставить поле \"{fieldName}\" пустым.";
+            }
             if (fieldValue == null || string.IsNullOrEmpty(fieldValue.ToString()))
-                errorMessage = $"Вы не можете оставить поле \"{fieldName}\" пустым.";
+                errorMessage = $"\nВы не можете оставить поле \"{fieldName}\" пустым.";
             return errorMessage;
         }
 

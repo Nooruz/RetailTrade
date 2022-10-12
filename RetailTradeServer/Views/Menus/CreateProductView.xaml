@@ -109,14 +109,14 @@
                         <dxe:ComboBoxEdit ItemsSource="{Binding Suppliers}"
                                           DisplayMember="ShortName"
                                           ValueMember="Id"
-                                          EditValue="{Binding CreatedProduct.SupplierId}"/>
+                                          EditValue="{Binding CreatedProduct.SupplierId, UpdateSourceTrigger=PropertyChanged, ValidatesOnDataErrors=True}"/>
                     </dxlc:LayoutItem>
 
                     <dxlc:LayoutItem Label="Единица измерения">
                         <dxe:ComboBoxEdit ItemsSource="{Binding Units}"
                                           DisplayMember="ShortName"
                                           ValueMember="Id"
-                                          EditValue="{Binding CreatedProduct.UnitId}"/>
+                                          EditValue="{Binding CreatedProduct.UnitId, UpdateSourceTrigger=PropertyChanged, ValidatesOnDataErrors=True}"/>
                     </dxlc:LayoutItem>
 
                     <dxlc:LayoutItem Label="ТНВЭД">

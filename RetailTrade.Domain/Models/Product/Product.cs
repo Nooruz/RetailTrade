@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace RetailTrade.Domain.Models
@@ -35,7 +36,6 @@ namespace RetailTrade.Domain.Models
         /// <summary>
         /// Наименование товара
         /// </summary>
-        [DisplayName("Наименование")]
         public string Name
         {
             get => _name;
@@ -234,14 +234,17 @@ namespace RetailTrade.Domain.Models
         {
             get
             {
-                return this[nameof(Name)] != null || this[nameof(TypeProductId)] != null ? "Исправьте входные значения." : null;
+                return this[nameof(Name)] != null || this[nameof(TypeProductId)] != null || this[nameof(SupplierId)] != null || this[nameof(UnitId)] != null
+                    ? "Исправьте входные значения." : null;
             }
         }
 
         public string this[string columnName] => columnName switch
         {
             nameof(Name) => string.IsNullOrEmpty(Name) ? "Наименование товара обязательно для заполнения." : null,
-            nameof(TypeProductId) => TypeProductId != 0 ? "Выберите вид товара." : null,
+            nameof(TypeProductId) => TypeProductId == 0 ? "Выберите вид товара." : null,
+            nameof(SupplierId) => SupplierId == null ? "Выберите поставщика." : null,
+            nameof(UnitId) => UnitId == 0 ? "Выберите единицу измерения." : null,
             _ => null,
         };
 
