@@ -11,7 +11,6 @@ using RetailTradeServer.Commands;
 using RetailTradeServer.Components;
 using RetailTradeServer.Properties;
 using RetailTradeServer.State.Messages;
-using RetailTradeServer.Validation;
 using RetailTradeServer.ViewModels.Base;
 using RetailTradeServer.ViewModels.Dialogs;
 using RetailTradeServer.Views.Dialogs;
@@ -19,10 +18,8 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
-using System.ComponentModel.DataAnnotations;
 using System.Drawing;
 using System.Linq;
-using System.Reflection;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
@@ -49,9 +46,9 @@ namespace RetailTradeServer.ViewModels.Menus
         private ObservableCollection<TypeProduct> _typeProducts = new();
         private ObservableCollection<ProductBarcode> _productBarcodes = new();
         private ProductBarcode _selectedProductBarcode;
-        private IEnumerable<WareHouseView> _wareHouseViews;
-        private IEnumerable<ArrivalProduct> _arrivalProducts;
-        private IEnumerable<ProductSale> _productSales;
+        private IEnumerable<ProductStockView> _productStockView;
+        private IEnumerable<ProductIncomingHistoryView> _productIncomingHistoryViews;
+        private IEnumerable<ProductOutcomingHistoryView> _productOutcomingHistoryViews;
 
         #endregion
 
@@ -119,33 +116,34 @@ namespace RetailTradeServer.ViewModels.Menus
         }
         public TableView BarcodeTableView { get; set; }
         public GridControl BarcodeGridControl { get; set; }
-        public IEnumerable<WareHouseView> WareHouseViews
+        public IEnumerable<ProductStockView> ProductStockViews
         {
-            get => _wareHouseViews;
+            get => _productStockView;
             set
             {
-                _wareHouseViews = value;
-                OnPropertyChanged(nameof(WareHouseViews));
+                _productStockView = value;
+                OnPropertyChanged(nameof(ProductStockViews));
             }
         }
-        public IEnumerable<ArrivalProduct> ArrivalProducts
+        public IEnumerable<ProductIncomingHistoryView> ProductIncomingHistoryViews
         {
-            get => _arrivalProducts;
+            get => _productIncomingHistoryViews;
             set
             {
-                _arrivalProducts = value;
-                OnPropertyChanged(nameof(ArrivalProducts));
+                _productIncomingHistoryViews = value;
+                OnPropertyChanged(nameof(ProductIncomingHistoryViews));
             }
         }
-        public IEnumerable<ProductSale> ProductSales
+        public IEnumerable<ProductOutcomingHistoryView> ProductOutcomingHistoryViews
         {
-            get => _productSales;
+            get => _productOutcomingHistoryViews;
             set
             {
-                _productSales = value;
-                OnPropertyChanged(nameof(ProductSales));
+                _productOutcomingHistoryViews = value;
+                OnPropertyChanged(nameof(ProductOutcomingHistoryViews));
             }
         }
+        public ObservableCollection<ProductBarcode> DeletedProductBarcodes { get; set; } = new();
 
         #endregion
 
@@ -334,9 +332,9 @@ namespace RetailTradeServer.ViewModels.Menus
         {
             try
             {
-                WareHouseViews = await _wareHouseService.GetByProductId(productId);
-                ArrivalProducts = await _arrivalProductService.GetByProductId(productId);
-                ProductSales = await _productSaleService.GetByProductId(productId);
+                ProductStockViews = await _wareHouseService.GetProductStockByProductId(productId);
+                ProductIncomingHistoryViews = await _productService.GetProductIncomingHistoryById(productId);
+                ProductOutcomingHistoryViews = await _productService.GetProductOutcomingHistoryById(productId);
             }
             catch (Exception)
             {
@@ -394,28 +392,39 @@ namespace RetailTradeServer.ViewModels.Menus
         [Command]
         public async void SaveProduct()
         {
-            string error = EnableValidationAndGetError();
-            if (error != null)
+            try
             {
-                _messageStore.SetCurrentMessage(error, MessageType.Error);
-                return;
-            }
+                string error = EnableValidationAndGetError();
+                if (error != null)
+                {
+                    _messageStore.SetCurrentMessage(error, MessageType.Error);
+                    return;
+                }
 
-            if (CreatedProduct.Id == 0)
-            {
-                if (await _productService.CreateAsync(CreatedProduct) != null)
+                if (CreatedProduct.Id == 0)
                 {
-                    _messageStore.SetCurrentMessage("Товар создан.", MessageType.Success);
-                    Header = $"Товары ({CreatedProduct.Name})";
+                    if (await _productService.CreateAsync(CreatedProduct) != null)
+                    {
+                        _messageStore.SetCurrentMessage("Товар создан.", MessageType.Success);
+                        Header = $"Товары ({CreatedProduct.Name})";
+                    }
+                }
+                else
+                {
+                    if (await _productService.UpdateAsync(CreatedProduct.Id, CreatedProduct) != null)
+                    {
+                        _messageStore.SetCurrentMessage("Товар сохранен.", MessageType.Success);
+                        Header = $"Товары ({CreatedProduct.Name})";
+                    }
+                }
+                if (DeletedProductBarcodes != null && DeletedProductBarcodes.Any())
+                {
+                    await _productBarcodeService.RemoveRangeAsync(DeletedProductBarcodes);
                 }
             }
-            else
+            catch (Exception)
             {
-                if (await _productService.UpdateAsync(CreatedProduct.Id, CreatedProduct) != null)
-                {
-                    _messageStore.SetCurrentMessage("Товар сохранен.", MessageType.Success);
-                    Header = $"Товары ({CreatedProduct.Name})";
-                }
+                //ignore
             }
         }
 
@@ -472,6 +481,8 @@ namespace RetailTradeServer.ViewModels.Menus
                 {
                     if (CreatedProduct.ProductBarcodes != null && CreatedProduct.ProductBarcodes.Any())
                     {
+                        SelectedProductBarcode.Product = null;
+                        DeletedProductBarcodes.Add(SelectedProductBarcode);
                         CreatedProduct.ProductBarcodes.Remove(SelectedProductBarcode);
                     }
                 }

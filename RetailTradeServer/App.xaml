@@ -19,6 +19,8 @@
             <converters:TypeWareHouseIdConverter x:Key="TypeWareHouseIdConverter"/>
             <converters:BooleanReverseConverter x:Key="BooleanReverseConverter"/>
             <converters:ObjectToUserPointSaleConverter x:Key="ObjectToUserPointSaleConverter"/>
+            <converters:DoublePositiveToNegativeConverter x:Key="DoublePositiveToNegativeConverter"/>
+            <converters:DoubleNegativeToPositiveConverter x:Key="DoubleNegativeToPositiveConverter"/>
 
             <!--#region Основной меню-->
             

@@ -11,6 +11,7 @@
     xmlns:components="clr-namespace:RetailTradeServer.Components"
     xmlns:views="clr-namespace:RetailTradeServer.Views"
     x:Class="RetailTradeServer.Views.Menus.LossProductView"
+    xmlns:converters="clr-namespace:RetailTradeServer.Converters"
                       mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
 
@@ -63,8 +64,8 @@
 
         </dxlc:LayoutGroup>
 
-        <dxg:GridControl ItemsSource="{Binding CreatedDocument.LossProducts}"
-                         SelectedItem="{Binding SelectedLossProduct}">
+        <dxg:GridControl ItemsSource="{Binding CreatedDocument.DocumentProducts}"
+                         SelectedItem="{Binding SelectedDocumentProduct}">
             <dxg:GridControl.View>
                 <dxg:TableView ShowGroupPanel="False"
                                AutoWidth="True"
@@ -72,7 +73,7 @@
                                NewItemRowPosition="Top">
                     <dxmvvm:Interaction.Behaviors>
                         <dxmvvm:EventToCommand EventName="Loaded"
-                                               Command="{Binding LossProductTableViewLoadedCommand}"
+                                               Command="{Binding DocumentProductTableViewLoadedCommand}"
                                                PassEventArgsToCommand="True"/>
                     </dxmvvm:Interaction.Behaviors>
                 </dxg:TableView>
@@ -106,7 +107,7 @@
             <dxg:GridColumn Header="Количество"
                             FieldName="Quantity">
                 <dxg:GridColumn.EditSettings>
-                    <dxe:TextEditSettings MaskUseAsDisplayFormat="True" 
+                    <dxe:TextEditSettings MaskUseAsDisplayFormat="True"                                           
                                           MaskType="Numeric" 
                                           Mask="n2"/>
                 </dxg:GridColumn.EditSettings>

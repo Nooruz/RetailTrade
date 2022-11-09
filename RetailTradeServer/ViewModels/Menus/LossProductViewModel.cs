@@ -101,7 +101,7 @@ namespace RetailTradeServer.ViewModels.Menus
         }
 
         [Command]
-        public void DocumentProductTableViewLoadedCommand(object sender)
+        public void DocumentProductTableViewLoaded(object sender)
         {
             if (sender is RoutedEventArgs e)
             {
@@ -189,8 +189,8 @@ namespace RetailTradeServer.ViewModels.Menus
                         {
                             SelectedDocumentProduct.Price = product.PurchasePrice;
                         }
-                        SelectedDocumentProduct.Quantity = 1;
                     }
+                    return;
                 }
             }
             catch (Exception)

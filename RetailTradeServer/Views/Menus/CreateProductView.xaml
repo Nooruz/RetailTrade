@@ -7,6 +7,7 @@
                           xmlns:dxmvvm="http://schemas.devexpress.com/winfx/2008/xaml/mvvm"
                           xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
                           xmlns:components="clr-namespace:RetailTradeServer.Components"
+                          xmlns:views="clr-namespace:RetailTradeServer.Views"
                           xmlns:local="clr-namespace:RetailTradeServer.Views.Menus"
                           ShowLoadingPanel="False"
                           Title="{Binding Header}">
@@ -31,7 +32,9 @@
                         Foreground="White"
                         Command="{Binding SaveProductCommand}"/>
 
-                <Button Content="Закрыть"/>
+                <Button Content="Закрыть"
+                        Command="{Binding Path=DataContext.CloseCommand, RelativeSource={RelativeSource AncestorType={x:Type views:HomeView}, Mode=FindAncestor}}"
+                        CommandParameter="{Binding}"/>
 
             </dxlc:LayoutGroup>
 
@@ -139,25 +142,28 @@
                         </dxmvvm:Interaction.Behaviors>
                         <dxg:GridControl.View>
                             <dxg:TableView ShowGroupPanel="False"
-                                           AutoWidth="True"
                                            ShowAutoFilterRow="False" 
-                                           NewItemRowPosition="Top"/>
+                                           AutoWidth="True"
+                                           BestFitModeOnSourceChange="AllRows"
+                                           NewItemRowPosition="Bottom"/>
                         </dxg:GridControl.View>
-                        <dxg:GridColumn Header="Штрихкод"
-                                        FieldName="Barcode">
-                            <dxg:GridColumn.EditSettings>
-                                <dxe:ButtonEditSettings AllowDefaultButton="False">
-                                    <dxe:ButtonEditSettings.Buttons>
-                                        <dxe:ButtonInfo GlyphKind="Refresh"
+                        <dxg:GridControl.Columns>
+                            <dxg:GridColumn Header="Штрихкод"
+                                            FieldName="Barcode">
+                                <dxg:GridColumn.EditSettings>
+                                    <dxe:ButtonEditSettings AllowDefaultButton="False">
+                                        <dxe:ButtonEditSettings.Buttons>
+                                            <dxe:ButtonInfo GlyphKind="Refresh"
                                                         ToolTip="Сгенерировать"
                                                         Command="{Binding GenerateBarcodeCommand}"/>
-                                        <dxe:ButtonInfo GlyphKind="Minus"
+                                            <dxe:ButtonInfo GlyphKind="Minus"
                                                         ToolTip="Удалить"
                                                         Command="{Binding DeleteBarcodeCommand}"/>
-                                    </dxe:ButtonEditSettings.Buttons>
-                                </dxe:ButtonEditSettings>
-                            </dxg:GridColumn.EditSettings>
-                        </dxg:GridColumn>
+                                        </dxe:ButtonEditSettings.Buttons>
+                                    </dxe:ButtonEditSettings>
+                                </dxg:GridColumn.EditSettings>
+                            </dxg:GridColumn>
+                        </dxg:GridControl.Columns>
                     </dxg:GridControl>
 
                 </dxlc:LayoutGroup>
@@ -187,13 +193,13 @@
                     </dx:DXTabItem>
                     <dx:DXTabItem Header="Остатки"
                                   Style="{StaticResource ProductTabItem}">
-                        <dxg:GridControl ItemsSource="{Binding WareHouseViews}">
+                        <dxg:GridControl ItemsSource="{Binding ProductStockViews}">
                             <dxg:GridControl.View>
                                 <dxg:TableView AutoWidth="True"
                                                ShowGroupPanel="False"/>
                             </dxg:GridControl.View>
                             <dxg:GridColumn Header="Склад"
-                                            FieldName="Name"/>
+                                            FieldName="WareHouseName"/>
                             <dxg:GridColumn Header="Остаток"
                                             FieldName="Quantity">
                                 <dxg:GridColumn.EditSettings>
@@ -213,7 +219,7 @@
 
                             <dxlc:LayoutItem Label="Закупки"
                                              LabelPosition="Top"/>
-                            <dxg:GridControl ItemsSource="{Binding ArrivalProducts}">
+                            <dxg:GridControl ItemsSource="{Binding ProductIncomingHistoryViews}">
                                 <dxg:GridControl.TotalSummary>
                                     <dxg:GridSummaryItem FieldName="Quantity"
                                                          SummaryType="Sum"/>
@@ -225,9 +231,11 @@
                                                    ShowTotalSummary="True"/>
                                 </dxg:GridControl.View>
                                 <dxg:GridColumn Header="№"
-                                                FieldName="Id"/>
+                                                FieldName="Number"/>
+                                <dxg:GridColumn Header="Тип документа"
+                                                FieldName="DocumentType"/>
                                 <dxg:GridColumn Header="Дата и время"
-                                                FieldName="Arrival.ArrivalDate">
+                                                FieldName="CreatedDate">
                                     <dxg:GridColumn.EditSettings>
                                         <dxe:DateEditSettings MaskUseAsDisplayFormat="True" Mask="g"/>
                                     </dxg:GridColumn.EditSettings>
@@ -239,7 +247,13 @@
                                     </dxg:GridColumn.EditSettings>
                                 </dxg:GridColumn>
                                 <dxg:GridColumn Header="Цена"
-                                                FieldName="SalePrice">
+                                                FieldName="Price">
+                                    <dxg:GridColumn.EditSettings>
+                                        <dxe:TextEditSettings MaskUseAsDisplayFormat="True" MaskType="Numeric" Mask="n2"/>
+                                    </dxg:GridColumn.EditSettings>
+                                </dxg:GridColumn>
+                                <dxg:GridColumn Header="Сумма"
+                                                FieldName="Amount">
                                     <dxg:GridColumn.EditSettings>
                                         <dxe:TextEditSettings MaskUseAsDisplayFormat="True" MaskType="Numeric" Mask="n2"/>
                                     </dxg:GridColumn.EditSettings>
@@ -249,7 +263,7 @@
                             <dxlc:LayoutItem Label="Продажи"
                                              LabelPosition="Top"/>
 
-                            <dxg:GridControl ItemsSource="{Binding ProductSales}">
+                            <dxg:GridControl ItemsSource="{Binding ProductOutcomingHistoryViews}">
                                 <dxg:GridControl.TotalSummary>
                                     <dxg:GridSummaryItem FieldName="Quantity" SummaryType="Sum"/>
                                 </dxg:GridControl.TotalSummary>
@@ -259,9 +273,11 @@
                                                    AllowEditing="False" ShowTotalSummary="True"/>
                                 </dxg:GridControl.View>
                                 <dxg:GridColumn Header="№"
-                                                FieldName="Id"/>
+                                                FieldName="Number"/>
+                                <dxg:GridColumn Header="Тип документа"
+                                                FieldName="DocumentType"/>
                                 <dxg:GridColumn Header="Дата и время"
-                                                FieldName="Receipt.DateOfPurchase">
+                                                FieldName="CreatedDate">
                                     <dxg:GridColumn.EditSettings>
                                         <dxe:DateEditSettings MaskUseAsDisplayFormat="True" Mask="g"/>
                                     </dxg:GridColumn.EditSettings>
@@ -273,7 +289,13 @@
                                     </dxg:GridColumn.EditSettings>
                                 </dxg:GridColumn>
                                 <dxg:GridColumn Header="Цена"
-                                                FieldName="RetailPrice">
+                                                FieldName="Price">
+                                    <dxg:GridColumn.EditSettings>
+                                        <dxe:TextEditSettings MaskUseAsDisplayFormat="True" MaskType="Numeric" Mask="n2"/>
+                                    </dxg:GridColumn.EditSettings>
+                                </dxg:GridColumn>
+                                <dxg:GridColumn Header="Сумма"
+                                                FieldName="Amount">
                                     <dxg:GridColumn.EditSettings>
                                         <dxe:TextEditSettings MaskUseAsDisplayFormat="True" MaskType="Numeric" Mask="n2"/>
                                     </dxg:GridColumn.EditSettings>

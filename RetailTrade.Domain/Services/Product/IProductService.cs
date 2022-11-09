@@ -26,6 +26,8 @@ namespace RetailTrade.Domain.Services
         Task<IEnumerable<ProductView>> GetProducts(int wareHouseId);
         Task<IEnumerable<ProductView>> GetProductViewsAsync();
         Task<ProductView> GetProductViewByIdAsync(int id);
+        Task<IEnumerable<ProductIncomingHistoryView>> GetProductIncomingHistoryById(int productId);
+        Task<IEnumerable<ProductOutcomingHistoryView>> GetProductOutcomingHistoryById(int productId);
 
         event Action<ProductView> OnProductCreated;
         event Action<ProductView> OnProductUpdated;

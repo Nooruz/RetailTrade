@@ -1,5 +1,6 @@
-﻿using DevExpress.Mvvm;
-using DevExpress.Mvvm.DataAnnotations;
+﻿using DevExpress.Mvvm.DataAnnotations;
+using DevExpress.Mvvm.Native;
+using DevExpress.Xpf.Editors;
 using DevExpress.Xpf.Grid;
 using RetailTrade.Domain.Models;
 using RetailTrade.Domain.Services;
@@ -39,7 +40,6 @@ namespace RetailTradeServer.ViewModels.Menus
             get => _document;
             set
             {
-                GetData();
                 _document = value;
                 OnPropertyChanged(nameof(CreatedDocument));
             }
@@ -63,6 +63,7 @@ namespace RetailTradeServer.ViewModels.Menus
             }
         }
         public TableView DocumentProductTableView { get; set; }
+        public GridControl DocumentProductGridControl { get; set; }
         public DocumentProduct SelectedDocumentProduct
         {
             get => _selectedDocumentProduct;
@@ -72,12 +73,6 @@ namespace RetailTradeServer.ViewModels.Menus
                 OnPropertyChanged(nameof(SelectedDocumentProduct));
             }
         }
-
-        #endregion
-
-        #region Commands
-
-        public ICommand WareHouseSelectedIndexChangedCommand => new RelayCommand(() => GetData());
 
         #endregion
 
@@ -96,6 +91,7 @@ namespace RetailTradeServer.ViewModels.Menus
             _messageStore = messageStore;
             GlobalMessageViewModel = new(_messageStore);
             Header = "Оприходование (создание)";
+            GetData();
         }
 
         #endregion
@@ -103,10 +99,48 @@ namespace RetailTradeServer.ViewModels.Menus
         #region Public Voids
 
         [Command]
+        public async void WareHouseEditValueChanged(object sender)
+        {
+            try
+            {
+                if (sender is EditValueChangedEventArgs e)
+                {
+                    if (int.TryParse(e.NewValue.ToString(), out int wareHouseId))
+                    {
+                        if (CreatedDocument.DocumentProducts.Any())
+                        {
+                            foreach (DocumentProduct item in CreatedDocument.DocumentProducts)
+                            {
+                                item.Stock = await _wareHouseService.GetProductQuantityByProductId(item.ProductId, wareHouseId);
+                            }
+                        }
+                    }
+                }
+            }
+            catch (Exception)
+            {
+                //ignore
+            }
+        }
+
+        [Command]
         public async void UserControlLoaded()
         {
             ShowLoadingPanel = false;
             WareHouses = await _wareHouseService.GetAllAsync();
+        }
+
+        [Command]
+        public void DocumentProductGridControlLoaded(object sender)
+        {
+            try
+            {
+                
+            }
+            catch (Exception)
+            {
+                //ignore
+            }
         }
 
         [Command]
@@ -118,6 +152,8 @@ namespace RetailTradeServer.ViewModels.Menus
                 {
                     DocumentProductTableView = tableView;
                     DocumentProductTableView.CellValueChanged += DocumentProductTableView_CellValueChanged;
+                    DocumentProductTableView.CellValueChanging += DocumentProductTableView_CellValueChanging;
+                    DocumentProductTableView.ValidateCell += DocumentProductTableView_ValidateCell;
                 }
             }
         }
@@ -235,6 +271,65 @@ namespace RetailTradeServer.ViewModels.Menus
             }
         }
 
+        private void DocumentProductTableView_ValidateCell(object sender, GridCellValidationEventArgs e)
+        {
+            try
+            {
+                if (int.TryParse(e.Value.ToString(), out int id))
+                {
+                    DocumentProduct documentProduct = CreatedDocument.DocumentProducts.FirstOrDefault(p => p.ProductId == id);
+                    if (documentProduct != null)
+                    {
+                        _messageStore.SetCurrentMessage("Выбранный товар уже добавлен.", MessageType.Error);
+                        if (e.IsNewItem)
+                        {
+                            DocumentProductTableView.CancelRowEdit();
+                        }
+                        SelectedDocumentProduct = documentProduct;
+                    }
+                }
+            }
+            catch (Exception)
+            {
+                //ignore
+            }
+        }
+
+        private async void GetQuantity()
+        {
+            try
+            {
+                if (SelectedDocumentProduct != null)
+                {
+                    SelectedDocumentProduct.Stock = await _wareHouseService.GetProductQuantityByProductId(SelectedDocumentProduct.ProductId, CreatedDocument.WareHouseId);
+                }
+            }
+            catch (Exception)
+            {
+                //ignore
+            }
+        }
+
+        private void DocumentProductTableView_CellValueChanging(object sender, CellValueChangedEventArgs e)
+        {
+            try
+            {
+                if (int.TryParse(e.Value.ToString(), out int productId))
+                {
+                    DocumentProduct documentProduct = CreatedDocument.DocumentProducts.FirstOrDefault(p => p.ProductId == productId);
+                    if (documentProduct != null)
+                    {
+                        _messageStore.SetCurrentMessage("Товар уже добавлен.", MessageType.Error);
+                        SelectedDocumentProduct = documentProduct;
+                    }
+                }
+            }
+            catch (Exception)
+            {
+                //ignore
+            }
+        }
+
         private void DocumentProductTableView_CellValueChanged(object sender, CellValueChangedEventArgs e)
         {
             try
@@ -251,7 +346,8 @@ namespace RetailTradeServer.ViewModels.Menus
                         SelectedDocumentProduct.Quantity = 1;
                         DocumentProductTableView.Grid.UpdateTotalSummary();
                         DocumentProductTableView.Grid.UpdateGroupSummary();
-                    }
+                        GetQuantity();
+                    }                    
                 }
             }
             catch (Exception)

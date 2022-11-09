@@ -176,6 +176,9 @@ namespace RetailTrade.EntityFramework
         public DbSet<ProductSaleView> ProductSaleViews { get; set; }
         public DbSet<DocumentView> DocumentViews { get; set; }
         public DbSet<DocumentProductView> EnterDocumentViews { get; set; }
+        public DbSet<ProductStockView> ProductStockViews { get; set; }
+        public DbSet<ProductIncomingHistoryView> ProductIncomingHistoryViews { get; set; }
+        public DbSet<ProductOutcomingHistoryView> ProductOutcomingHistoryViews { get; set; }
 
         #endregion
 
@@ -186,6 +189,18 @@ namespace RetailTrade.EntityFramework
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+            _ = modelBuilder.Entity<ProductOutcomingHistoryView>()
+                .ToView(nameof(ProductOutcomingHistoryView))
+                .HasNoKey();
+
+            _ = modelBuilder.Entity<ProductIncomingHistoryView>()
+                .ToView(nameof(ProductIncomingHistoryView))
+                .HasNoKey();
+
+            _ = modelBuilder.Entity<ProductStockView>()
+                .ToView(nameof(ProductStockView))
+                .HasNoKey();
+
             _ = modelBuilder.Entity<DocumentProductView>()
                 .ToView(nameof(DocumentProductView))
                 .HasNoKey();

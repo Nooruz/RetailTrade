@@ -151,6 +151,20 @@ namespace RetailTrade.EntityFramework.Services
             return 0;
         }
 
+        public async Task RemoveRangeAsync(IEnumerable<ProductBarcode> productBarcodes)
+        {
+            try
+            {
+                await using var context = _contextFactory.CreateDbContext();
+                context.ProductBarcode.RemoveRange(productBarcodes);
+                await context.SaveChangesAsync();
+            }
+            catch (Exception)
+            {
+                //ignore
+            }
+        }
+
         public async Task<ProductBarcode> UpdateAsync(int id, ProductBarcode entity)
         {
             ProductBarcode result = await _nonQueryDataService.Update(id, entity);

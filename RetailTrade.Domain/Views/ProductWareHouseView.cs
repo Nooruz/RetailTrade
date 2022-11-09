@@ -11,10 +11,10 @@ namespace RetailTrade.Domain.Views
         private string _supplier;
         private string _unit;
         private string _tnved;
-        private decimal _purchasePrice;
-        private decimal _retailPrice;
         private double _quantity;
         private int _wareHouseId;
+        private decimal _purchasePrice;
+        private decimal _retailPrice;
 
         #endregion
 

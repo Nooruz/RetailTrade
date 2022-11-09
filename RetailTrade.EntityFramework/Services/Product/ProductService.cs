@@ -78,6 +78,7 @@ namespace RetailTrade.EntityFramework.Services
             {
                 await using var context = _contextFactory.CreateDbContext();
                 return await context.Products
+                    .Include(p => p.ProductBarcodes)
                     .FirstOrDefaultAsync((e) => e.Id == id);
             }
             catch (Exception)
@@ -391,6 +392,34 @@ namespace RetailTrade.EntityFramework.Services
                 return await context.Products
                     .Include(p => p.ProductBarcodes)
                     .FirstOrDefaultAsync(p => p.Id == id);
+            }
+            catch (Exception)
+            {
+                //ignore
+            }
+            return null;
+        }
+
+        public async Task<IEnumerable<ProductIncomingHistoryView>> GetProductIncomingHistoryById(int productId)
+        {
+            try
+            {
+                await using var context = _contextFactory.CreateDbContext();
+                return await context.ProductIncomingHistoryViews.Where(p => p.ProductId == productId).ToListAsync();
+            }
+            catch (Exception)
+            {
+                //ignore
+            }
+            return null;
+        }
+
+        public async Task<IEnumerable<ProductOutcomingHistoryView>> GetProductOutcomingHistoryById(int productId)
+        {
+            try
+            {
+                await using var context = _contextFactory.CreateDbContext();
+                return await context.ProductOutcomingHistoryViews.Where(p => p.ProductId == productId).ToListAsync();
             }
             catch (Exception)
             {

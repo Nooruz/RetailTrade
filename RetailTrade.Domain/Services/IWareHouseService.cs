@@ -11,6 +11,7 @@ namespace RetailTrade.Domain.Services
         event Action<WareHouse> OnWareHouseCreated;
         event Action<WareHouse> OnWareHouseEdited;
         Task MarkingForDeletion(WareHouse wareHouse);
-        Task<IEnumerable<WareHouseView>> GetByProductId(int productId);
+        Task<IEnumerable<ProductStockView>> GetProductStockByProductId(int productId);
+        Task<double> GetProductQuantityByProductId(int productId, int? wareHouseId);
     }
 }

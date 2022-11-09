@@ -60,8 +60,9 @@
                                   ShowError="False"
                                   ShowErrorToolTip="False">
                     <dxmvvm:Interaction.Behaviors>
-                        <dxmvvm:EventToCommand EventName="SelectedIndexChanged"
-                                               Command="{Binding WareHouseSelectedIndexChangedCommand}"/>
+                        <dxmvvm:EventToCommand EventName="EditValueChanged"
+                                               Command="{Binding WareHouseEditValueChangedCommand}"
+                                               PassEventArgsToCommand="True"/>
                     </dxmvvm:Interaction.Behaviors>
                 </dxe:ComboBoxEdit>
 
@@ -71,6 +72,11 @@
 
         <dxg:GridControl ItemsSource="{Binding CreatedDocument.DocumentProducts}"
                          SelectedItem="{Binding SelectedDocumentProduct}">
+            <dxmvvm:Interaction.Behaviors>
+                <dxmvvm:EventToCommand EventName="Loaded"
+                                       Command="{Binding DocumentProductGridControlLoadedCommand}"
+                                       PassEventArgsToCommand="True"/>
+            </dxmvvm:Interaction.Behaviors>
             <dxg:GridControl.View>
                 <dxg:TableView ShowGroupPanel="False"
                                EditorShowMode="MouseDownFocused"
@@ -104,7 +110,7 @@
                                             IncrementalFiltering="True"
                                             AutoComplete="False"                                            
                                             AutoPopulateColumns="False"
-                                            ItemsSource="{Binding Products}"                                            
+                                            ItemsSource="{Binding Products}"
                                             ImmediatePopup="True"
                                             IsPopupAutoWidth="True"
                                             ValueMember="Id">
@@ -128,7 +134,8 @@
                 <dxg:GridColumn.EditSettings>
                     <dxe:TextEditSettings MaskUseAsDisplayFormat="True" 
                                           MaskType="Numeric" 
-                                          Mask="n2"/>
+                                          Mask="n2"
+                                          SelectAllOnMouseUp="True"/>
                 </dxg:GridColumn.EditSettings>
             </dxg:GridColumn>
             <dxg:GridColumn Header="Остаток"
