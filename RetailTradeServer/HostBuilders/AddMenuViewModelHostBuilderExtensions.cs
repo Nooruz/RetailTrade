@@ -40,7 +40,7 @@ namespace RetailTradeServer.HostBuilders
                 services.AddTransient(CreateRevaluationViewModel);
                 services.AddTransient(CreateReturnProductFromCustomerViewModel);
                 services.AddTransient(CreatePriceListViewModel);
-                services.AddTransient(CreateCreateProductViewModel);
+                services.AddTransient(CreateProductDetailViewModel);
                 services.AddTransient(CreatePointSaleViewModel);
                 services.AddTransient(CreateCreatePointSaleViewModel);
                 services.AddTransient(CreateEnterViewModel);
@@ -66,7 +66,7 @@ namespace RetailTradeServer.HostBuilders
                 services.AddSingleton<CreateMenuViewModel<RevaluationViewModel>>(servicesProvider => () => CreateRevaluationViewModel(servicesProvider));
                 services.AddSingleton<CreateMenuViewModel<ReturnProductFromCustomerViewModel>>(servicesProvider => () => CreateReturnProductFromCustomerViewModel(servicesProvider));
                 services.AddSingleton<CreateMenuViewModel<PriceListViewModel>>(servicesProvider => () => CreatePriceListViewModel(servicesProvider));
-                services.AddSingleton<CreateMenuViewModel<CreateProductViewModel>>(servicesProvider => () => CreateCreateProductViewModel(servicesProvider));
+                services.AddSingleton<CreateMenuViewModel<ProductDetailViewModel>>(servicesProvider => () => CreateProductDetailViewModel(servicesProvider));
                 services.AddSingleton<CreateMenuViewModel<PointSaleViewModel>>(servicesProvider => () => CreatePointSaleViewModel(servicesProvider));
                 services.AddSingleton<CreateMenuViewModel<CreatePointSaleViewModel>>(servicesProvider => () => CreateCreatePointSaleViewModel(servicesProvider));
                 services.AddSingleton<CreateMenuViewModel<EnterViewModel>>(servicesProvider => () => CreateEnterViewModel(servicesProvider));
@@ -146,9 +146,9 @@ namespace RetailTradeServer.HostBuilders
                 services.GetRequiredService<IUserService>());
         }
 
-        private static CreateProductViewModel CreateCreateProductViewModel(IServiceProvider services)
+        private static ProductDetailViewModel CreateProductDetailViewModel(IServiceProvider services)
         {
-            return new CreateProductViewModel(services.GetRequiredService<ITypeProductService>(),
+            return new ProductDetailViewModel(services.GetRequiredService<ITypeProductService>(),
                 services.GetRequiredService<IUnitService>(),
                 services.GetRequiredService<IProductService>(),
                 services.GetRequiredService<ISupplierService>(),

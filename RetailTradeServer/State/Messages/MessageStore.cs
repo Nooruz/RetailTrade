@@ -9,7 +9,7 @@ namespace RetailTradeServer.State.Messages
 
         private string _currentMessage;
         private MessageType _currentMessageType;
-        private Timer _timer = new Timer(5000);
+        private Timer _timer = new(10000);
 
         #endregion
 

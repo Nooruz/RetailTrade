@@ -104,7 +104,7 @@ namespace RetailTradeServer.State.Navigators
         /// <summary>
         /// Создание или редактирование товара
         /// </summary>
-        CreateProductView,
+        ProductDetailView,
 
         /// <summary>
         /// Точки продажи

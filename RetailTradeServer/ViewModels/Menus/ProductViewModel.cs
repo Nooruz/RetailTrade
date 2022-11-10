@@ -247,7 +247,7 @@ namespace RetailTradeServer.ViewModels.Menus
         {
             try
             {
-                _menuNavigator.CurrentViewModel = new CreateProductViewModel(_typeProductService, _unitService, _productService, _supplierService, _messageStore, _barcodeService, _productBarcodeService, _wareHouseService, _productSaleService, _arrivalProductService)
+                _menuNavigator.CurrentViewModel = new ProductDetailViewModel(_typeProductService, _unitService, _productService, _supplierService, _messageStore, _barcodeService, _productBarcodeService, _wareHouseService, _productSaleService, _arrivalProductService)
                 {
                     CreatedProduct = await _productService.GetForEditAsync(SelectedProductView.Id)
                 };
@@ -295,7 +295,7 @@ namespace RetailTradeServer.ViewModels.Menus
         [Command]
         public void CreateProduct()
         {
-            UpdateCurrentMenuViewModelCommand.Execute(MenuViewType.CreateProductView);
+            UpdateCurrentMenuViewModelCommand.Execute(MenuViewType.ProductDetailView);
         }
 
         [Command]
@@ -347,7 +347,7 @@ namespace RetailTradeServer.ViewModels.Menus
         {
             if (SelectedProductView != null)
             {
-                _menuNavigator.CurrentViewModel = new CreateProductViewModel(_typeProductService, _unitService, _productService, _supplierService, _messageStore, _barcodeService, _productBarcodeService, _wareHouseService, _productSaleService, _arrivalProductService)
+                _menuNavigator.CurrentViewModel = new ProductDetailViewModel(_typeProductService, _unitService, _productService, _supplierService, _messageStore, _barcodeService, _productBarcodeService, _wareHouseService, _productSaleService, _arrivalProductService)
                 {
                     CreatedProduct = await _productService.GetAsync(SelectedProductView.Id)
                 };

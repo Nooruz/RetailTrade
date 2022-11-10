@@ -48,8 +48,13 @@
             <dxg:GridColumn Header="№"
                             FieldName="Number"/>
 
-            <dxg:GridColumn Header="Дата" 
-                            FieldName="CreatedDate"/>
+            <dxg:GridColumn Header="Время"
+                            FieldName="CreatedDate">
+                <dxg:GridColumn.EditSettings>
+                    <dxe:DateEditSettings MaskUseAsDisplayFormat="True" 
+                                          Mask="g"/>
+                </dxg:GridColumn.EditSettings>
+            </dxg:GridColumn>
 
             <dxg:GridColumn Header="Со склада" 
                             FieldName="WareHouse"/>

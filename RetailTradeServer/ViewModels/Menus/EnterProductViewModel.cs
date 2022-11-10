@@ -111,7 +111,7 @@ namespace RetailTradeServer.ViewModels.Menus
                         {
                             foreach (DocumentProduct item in CreatedDocument.DocumentProducts)
                             {
-                                item.Stock = await _wareHouseService.GetProductQuantityByProductId(item.ProductId, wareHouseId);
+                                item.Stock = await _wareHouseService.GetProductQuantityByProductId(item.ProductId, wareHouseId, CreatedDocument.Id);
                             }
                         }
                     }
@@ -234,27 +234,6 @@ namespace RetailTradeServer.ViewModels.Menus
             }
         }
 
-        [Command]
-        public void TableViewPreviewMouseLeftButtonDown(object sender)
-        {
-            try
-            {
-                if (sender is MouseButtonEventArgs e)
-                {
-                    var hInfo = DocumentProductTableView.CalcHitInfo((DependencyObject)e.OriginalSource);
-                    var r = SelectedDocumentProduct;
-                    if (hInfo.RowHandle == DocumentProductTableView.FocusedRowHandle)
-                    {
-
-                    }
-                }
-            }
-            catch (Exception)
-            {
-                //ignore
-            }
-        }
-
         #endregion
 
         #region Private Voids
@@ -301,7 +280,7 @@ namespace RetailTradeServer.ViewModels.Menus
             {
                 if (SelectedDocumentProduct != null)
                 {
-                    SelectedDocumentProduct.Stock = await _wareHouseService.GetProductQuantityByProductId(SelectedDocumentProduct.ProductId, CreatedDocument.WareHouseId);
+                    SelectedDocumentProduct.Stock = await _wareHouseService.GetProductQuantityByProductId(SelectedDocumentProduct.ProductId, CreatedDocument.WareHouseId, CreatedDocument.Id);
                 }
             }
             catch (Exception)

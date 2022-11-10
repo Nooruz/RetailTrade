@@ -87,9 +87,6 @@
                         <dxmvvm:EventToCommand EventName="Loaded"
                                                Command="{Binding DocumentProductTableViewLoadedCommand}"
                                                PassEventArgsToCommand="True"/>
-                        <dxmvvm:EventToCommand EventName="PreviewMouseLeftButtonDown"
-                                               Command="{Binding TableViewPreviewMouseLeftButtonDownCommand}"
-                                               PassEventArgsToCommand="True"/>
                         <dxmvvm:KeyToCommand KeyGesture="Delete"
                                              Command="{Binding DeleteSelectedDocumentProductCommand}"
                                              EventName="KeyDown"/>

@@ -95,7 +95,7 @@ namespace RetailTradeServer.ViewModels.Menus
         {
             try
             {
-                if (documentTypeEnum == DocumentTypeEnum.Enter)
+                if (documentTypeEnum == DocumentTypeEnum.Loss)
                 {
                     Documents.Add(documentView);
                 }
@@ -110,7 +110,7 @@ namespace RetailTradeServer.ViewModels.Menus
         {
             try
             {
-                if (documentTypeEnum == DocumentTypeEnum.Enter)
+                if (documentTypeEnum == DocumentTypeEnum.Loss)
                 {
                     DocumentView documentView = Documents.FirstOrDefault(d => d.Id == updatedDocumentView.Id);
                     documentView.WareHouse = updatedDocumentView.WareHouse;

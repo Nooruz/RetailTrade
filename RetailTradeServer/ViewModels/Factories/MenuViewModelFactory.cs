@@ -26,7 +26,7 @@ namespace RetailTradeServer.ViewModels.Factories
         private readonly CreateMenuViewModel<RevaluationViewModel> _createRevaluationViewModel;
         private readonly CreateMenuViewModel<ReturnProductFromCustomerViewModel> _createReturnProductFromCustomerViewModel;
         private readonly CreateMenuViewModel<PriceListViewModel> _createPriceListViewModel;
-        private readonly CreateMenuViewModel<CreateProductViewModel> _createCreateProductViewModel;
+        private readonly CreateMenuViewModel<ProductDetailViewModel> _createProductDetailViewModel;
         private readonly CreateMenuViewModel<PointSaleViewModel> _createPointSaleViewModel;
         private readonly CreateMenuViewModel<CreatePointSaleViewModel> _createCreatePointSaleViewModel;
         private readonly CreateMenuViewModel<EnterViewModel> _createEnterViewModel;
@@ -56,7 +56,7 @@ namespace RetailTradeServer.ViewModels.Factories
             CreateMenuViewModel<RevaluationViewModel> createRevaluationViewModel,
             CreateMenuViewModel<ReturnProductFromCustomerViewModel> createReturnProductFromCustomerViewModel,
             CreateMenuViewModel<PriceListViewModel> createPriceListViewModel,
-            CreateMenuViewModel<CreateProductViewModel> createCreateProductViewModel,
+            CreateMenuViewModel<ProductDetailViewModel> createProductDetailViewModel,
             CreateMenuViewModel<PointSaleViewModel> createPointSaleViewModel,
             CreateMenuViewModel<CreatePointSaleViewModel> createCreatePointSaleViewModel,
             CreateMenuViewModel<EnterViewModel> createEnterViewModel,
@@ -82,7 +82,7 @@ namespace RetailTradeServer.ViewModels.Factories
             _createRevaluationViewModel = createRevaluationViewModel;
             _createReturnProductFromCustomerViewModel = createReturnProductFromCustomerViewModel;
             _createPriceListViewModel = createPriceListViewModel;
-            _createCreateProductViewModel = createCreateProductViewModel;
+            _createProductDetailViewModel = createProductDetailViewModel;
             _createCreatePointSaleViewModel = createCreatePointSaleViewModel;
             _createPointSaleViewModel = createPointSaleViewModel;
             _createEnterViewModel = createEnterViewModel;
@@ -115,7 +115,7 @@ namespace RetailTradeServer.ViewModels.Factories
                 MenuViewType.RevaluationView => _createRevaluationViewModel(),
                 MenuViewType.ReturnProductFromCustomerView => _createReturnProductFromCustomerViewModel(),
                 MenuViewType.PriceListView => _createPriceListViewModel(),
-                MenuViewType.CreateProductView => _createCreateProductViewModel(),
+                MenuViewType.ProductDetailView => _createProductDetailViewModel(),
                 MenuViewType.PointSale => _createPointSaleViewModel(),
                 MenuViewType.CreatePointSale => _createCreatePointSaleViewModel(),
                 MenuViewType.Enter => _createEnterViewModel(),

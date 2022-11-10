@@ -1,4 +1,5 @@
 ﻿using DevExpress.Mvvm.DataAnnotations;
+using DevExpress.Xpf.Editors;
 using DevExpress.Xpf.Grid;
 using RetailTrade.Domain.Models;
 using RetailTrade.Domain.Services;
@@ -9,6 +10,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Windows;
+using System.Windows.Input;
 
 namespace RetailTradeServer.ViewModels.Menus
 {
@@ -86,6 +88,7 @@ namespace RetailTradeServer.ViewModels.Menus
             _messageStore = messageStore;
             GlobalMessageViewModel = new(_messageStore);
             Header = "Списание (создание)";
+            GetData();
         }
 
         #endregion
@@ -93,11 +96,35 @@ namespace RetailTradeServer.ViewModels.Menus
         #region Public Voids
 
         [Command]
+        public async void WareHouseEditValueChanged(object sender)
+        {
+            try
+            {
+                if (sender is EditValueChangedEventArgs e)
+                {
+                    if (int.TryParse(e.NewValue.ToString(), out int wareHouseId))
+                    {
+                        if (CreatedDocument.DocumentProducts.Any())
+                        {
+                            foreach (DocumentProduct item in CreatedDocument.DocumentProducts)
+                            {
+                                item.Stock = await _wareHouseService.GetProductQuantityByProductId(item.ProductId, wareHouseId, CreatedDocument.Id);
+                            }
+                        }
+                    }
+                }
+            }
+            catch (Exception)
+            {
+                //ignore
+            }
+        }
+
+        [Command]
         public async void UserControlLoaded()
         {
             ShowLoadingPanel = false;
             WareHouses = await _wareHouseService.GetAllAsync();
-            Products = await _productService.GetAllAsync();
         }
 
         [Command]
@@ -109,6 +136,8 @@ namespace RetailTradeServer.ViewModels.Menus
                 {
                     DocumentProductTableView = tableView;
                     DocumentProductTableView.CellValueChanged += DocumentProductTableView_CellValueChanged;
+                    DocumentProductTableView.CellValueChanging += DocumentProductTableView_CellValueChanging;
+                    DocumentProductTableView.ValidateCell += DocumentProductTableView_ValidateCell;
                 }
             }
         }
@@ -128,7 +157,7 @@ namespace RetailTradeServer.ViewModels.Menus
                     {
                         if (!string.IsNullOrEmpty(CreatedDocument.Number))
                         {
-                            if (await _documentService.CheckNumber(CreatedDocument.Number, DocumentTypeEnum.Enter))
+                            if (await _documentService.CheckNumber(CreatedDocument.Number, DocumentTypeEnum.Loss))
                             {
                                 _messageStore.SetCurrentMessage($"Документ с номером \"{CreatedDocument.Number}\" уже существует.", MessageType.Error);
                                 return;
@@ -145,7 +174,7 @@ namespace RetailTradeServer.ViewModels.Menus
                             else
                             {
                                 _messageStore.SetCurrentMessage("Данные созданы!", MessageType.Success);
-                                Header = $"Списание №{CreatedDocument.Number} от {CreatedDocument.CreatedDate:dd.MM.yyyy}";
+                                Header = $"Оприходование №{CreatedDocument.Number} от {CreatedDocument.CreatedDate:dd.MM.yyyy}";
                             }
                         }
                     }
@@ -158,6 +187,7 @@ namespace RetailTradeServer.ViewModels.Menus
                         if (await _documentService.UpdateAsync(CreatedDocument.Id, CreatedDocument) != null)
                         {
                             _messageStore.SetCurrentMessage("Данные сохранены!", MessageType.Success);
+                            Header = $"Оприходование №{CreatedDocument.Number} от {CreatedDocument.CreatedDate:dd.MM.yyyy}";
                         }
                         else
                         {
@@ -172,9 +202,52 @@ namespace RetailTradeServer.ViewModels.Menus
             }
         }
 
+        [Command]
+        public void DeleteSelectedDocumentProduct()
+        {
+            try
+            {
+                if (SelectedDocumentProduct != null)
+                {
+                    CreatedDocument.DocumentProducts.Remove(SelectedDocumentProduct);
+                }
+            }
+            catch (Exception)
+            {
+                //ignore
+            }
+        }
+
         #endregion
 
         #region Private Voids
+
+        private async void GetData()
+        {
+            try
+            {
+                Products = await _productService.GetAllAsync();
+            }
+            catch (Exception)
+            {
+                //ignore
+            }
+        }
+
+        private async void GetQuantity()
+        {
+            try
+            {
+                if (SelectedDocumentProduct != null)
+                {
+                    SelectedDocumentProduct.Stock = await _wareHouseService.GetProductQuantityByProductId(SelectedDocumentProduct.ProductId, CreatedDocument.WareHouseId, CreatedDocument.Id);
+                }
+            }
+            catch (Exception)
+            {
+                //ignore
+            }
+        }
 
         private void DocumentProductTableView_CellValueChanged(object sender, CellValueChangedEventArgs e)
         {
@@ -189,8 +262,55 @@ namespace RetailTradeServer.ViewModels.Menus
                         {
                             SelectedDocumentProduct.Price = product.PurchasePrice;
                         }
+                        SelectedDocumentProduct.Quantity = 1;
+                        DocumentProductTableView.Grid.UpdateTotalSummary();
+                        DocumentProductTableView.Grid.UpdateGroupSummary();
+                        GetQuantity();
                     }
-                    return;
+                }
+            }
+            catch (Exception)
+            {
+                //ignore
+            }
+        }
+
+        private void DocumentProductTableView_CellValueChanging(object sender, CellValueChangedEventArgs e)
+        {
+            try
+            {
+                if (int.TryParse(e.Value.ToString(), out int productId))
+                {
+                    DocumentProduct documentProduct = CreatedDocument.DocumentProducts.FirstOrDefault(p => p.ProductId == productId);
+                    if (documentProduct != null)
+                    {
+                        _messageStore.SetCurrentMessage("Товар уже добавлен.", MessageType.Error);
+                        SelectedDocumentProduct = documentProduct;
+                    }
+                }
+            }
+            catch (Exception)
+            {
+                //ignore
+            }
+        }
+
+        private void DocumentProductTableView_ValidateCell(object sender, GridCellValidationEventArgs e)
+        {
+            try
+            {
+                if (int.TryParse(e.Value.ToString(), out int id))
+                {
+                    DocumentProduct documentProduct = CreatedDocument.DocumentProducts.FirstOrDefault(p => p.ProductId == id);
+                    if (documentProduct != null)
+                    {
+                        _messageStore.SetCurrentMessage("Выбранный товар уже добавлен.", MessageType.Error);
+                        if (e.IsNewItem)
+                        {
+                            DocumentProductTableView.CancelRowEdit();
+                        }
+                        SelectedDocumentProduct = documentProduct;
+                    }
                 }
             }
             catch (Exception)

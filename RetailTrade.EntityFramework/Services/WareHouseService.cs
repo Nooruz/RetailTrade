@@ -85,19 +85,24 @@ namespace RetailTrade.EntityFramework.Services
             return null;
         }
 
-        public async Task<double> GetProductQuantityByProductId(int productId, int? wareHouseId)
+        public async Task<double> GetProductQuantityByProductId(int productId, int? wareHouseId, int documentId)
         {
             try
             {
                 await using var context = _contextFactory.CreateDbContext();
                 if (wareHouseId != null && wareHouseId != 0)
                 {
+                    if (documentId != 0)
+                    {
+                        return await context.ProductStockViews.Where(p => p.ProductId == productId && p.WareHouseId == wareHouseId && p.DocumentId < documentId).SumAsync(p => p.Quantity);
+                    }
                     return await context.ProductStockViews.Where(p => p.ProductId == productId && p.WareHouseId == wareHouseId).SumAsync(p => p.Quantity);
                 }
-                else
+                if (documentId != 0)
                 {
-                    return await context.ProductStockViews.Where(p => p.ProductId == productId).SumAsync(p => p.Quantity);
+                    return await context.ProductStockViews.Where(p => p.ProductId == productId && p.DocumentId < documentId).SumAsync(p => p.Quantity);
                 }
+                return await context.ProductStockViews.Where(p => p.ProductId == productId).SumAsync(p => p.Quantity);
             }
             catch (Exception)
             {

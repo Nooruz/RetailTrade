@@ -26,7 +26,7 @@ using System.Windows.Input;
 
 namespace RetailTradeServer.ViewModels.Menus
 {
-    public class CreateProductViewModel : BaseViewModel, IDataErrorInfo
+    public class ProductDetailViewModel : BaseViewModel, IDataErrorInfo
     {
         #region Private Members
 
@@ -156,7 +156,7 @@ namespace RetailTradeServer.ViewModels.Menus
 
         #region Constructor
 
-        public CreateProductViewModel(ITypeProductService typeProductService,
+        public ProductDetailViewModel(ITypeProductService typeProductService,
             IUnitService unitService,
             IProductService productService,
             ISupplierService supplierService,

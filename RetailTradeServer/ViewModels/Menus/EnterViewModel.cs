@@ -78,6 +78,8 @@ namespace RetailTradeServer.ViewModels.Menus
             _userStore = userStore;
             _messageStore = messageStore;
 
+            Header = "Оприходования";
+
             CreateCommand = new RelayCommand(() => UpdateCurrentMenuViewModelCommand.Execute(MenuViewType.EnterProduct));
             _documentService.OnCreated += DocumentService_OnCreated;
             _documentService.OnUpdated += DocumentService_OnUpdated;
@@ -127,7 +129,14 @@ namespace RetailTradeServer.ViewModels.Menus
 
         private async void GetData()
         {
-            Documents = new(await _documentService.GetDocumentViews(DocumentTypeEnum.Enter));
+            try
+            {
+                Documents = new(await _documentService.GetDocumentViews(DocumentTypeEnum.Enter));
+            }
+            catch (Exception)
+            {
+                //ignore
+            }
         }
 
         #endregion
@@ -137,7 +146,6 @@ namespace RetailTradeServer.ViewModels.Menus
         [Command]
         public void UserControlLoaded()
         {
-            Header = "Оприходования";
             ShowLoadingPanel = false;
         }
 

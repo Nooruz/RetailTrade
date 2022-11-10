@@ -1,4 +1,6 @@
-﻿namespace RetailTrade.Domain.Views
+﻿using System;
+
+namespace RetailTrade.Domain.Views
 {
     public class ProductStockView : ViewOnlyNotifyPropertyCahnged
     {
@@ -8,6 +10,7 @@
         private double _quantity;
         private string _wareHouseName;
         private int _wareHouseId;
+        private int _documentId;
 
         #endregion
 
@@ -50,6 +53,16 @@
             {
                 _wareHouseId = value;
                 OnPropertyChanged(nameof(WareHouseId));
+            }
+        }
+
+        public int DocumentId
+        {
+            get => _documentId;
+            set
+            {
+                _documentId = value;
+                OnPropertyChanged(nameof(DocumentId));
             }
         }
 

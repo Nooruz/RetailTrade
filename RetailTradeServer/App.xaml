@@ -72,8 +72,8 @@
                 <menuViews:PointSaleView/>
             </DataTemplate>
 
-            <DataTemplate DataType="{x:Type menuViewModels:CreateProductViewModel}">
-                <menuViews:CreateProductView/>
+            <DataTemplate DataType="{x:Type menuViewModels:ProductDetailViewModel}">
+                <menuViews:ProductDetailView/>
             </DataTemplate>
             
             <DataTemplate DataType="{x:Type menuViewModels:PriceListViewModel}">
